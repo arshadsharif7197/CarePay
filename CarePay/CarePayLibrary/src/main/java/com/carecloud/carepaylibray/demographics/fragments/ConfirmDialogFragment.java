@@ -1,6 +1,8 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
+
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,19 +11,42 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 /**
- * Created by lmenendez on 10/9/17
+ * @author pjohnson
  */
-public class ConfirmDialogFragment extends BaseDialogFragment implements View.OnClickListener {
+public class ConfirmDialogFragment extends BaseDialogFragment {
+
 
     private ConfirmationCallback callback;
 
-    public static ConfirmDialogFragment newInstance(String title, String subTitle,
-                                                    String negativeButtonLabel, String positiveButtonLabel) {
+    public ConfirmDialogFragment() {
+        // Required empty public constructor
+    }
+
+    /**
+     * @param title   the dialog title
+     * @param message the dialog message
+     * @return a new instance
+     */
+    public static ConfirmDialogFragment newInstance(String title, String message) {
         Bundle args = new Bundle();
         args.putString("title", title);
-        args.putString("subTitle", subTitle);
+        args.putString("message", message);
+        ConfirmDialogFragment fragment = new ConfirmDialogFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static ConfirmDialogFragment newInstance(String title,
+                                                    String message,
+                                                    String negativeButtonLabel,
+                                                    String positiveButtonLabel) {
+        Bundle args = new Bundle();
+        args.putString("title", title);
+        args.putString("message", message);
         args.putString("negativeButtonLabel", negativeButtonLabel);
         args.putString("positiveButtonLabel", positiveButtonLabel);
         ConfirmDialogFragment fragment = new ConfirmDialogFragment();
@@ -29,63 +54,60 @@ public class ConfirmDialogFragment extends BaseDialogFragment implements View.On
         return fragment;
     }
 
-    public static ConfirmDialogFragment newInstance() {
-        return new ConfirmDialogFragment();
-    }
-
-    public void setCallback(ConfirmationCallback callback) {
-        this.callback = callback;
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_home_alert_dialog, container, false);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
-        return inflater.inflate(R.layout.dialog_confirm_exit, container, false);
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle icicle) {
-        View close = view.findViewById(R.id.dialogCloseHeaderImageView);
-        close.setOnClickListener(this);
-
-        Bundle args = getArguments() != null ? getArguments() : new Bundle();
-
-        Button cancel = (Button) view.findViewById(R.id.button_no);
-        if (args.getString("negativeButtonLabel") != null) {
-            cancel.setText(args.getString("negativeButtonLabel"));
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        String title = getArguments().getString("title");
+        if (!StringUtil.isNullOrEmpty(title)) {
+            ((TextView) view.findViewById(R.id.dialogTitleTextView)).setText(title);
         }
-        cancel.setOnClickListener(this);
-
-        Button proceed = (Button) view.findViewById(R.id.button_yes);
-        if (args.getString("positiveButtonLabel") != null) {
-            proceed.setText(args.getString("positiveButtonLabel"));
+        String message = getArguments().getString("message");
+        if (!StringUtil.isNullOrEmpty(message)) {
+            ((TextView) view.findViewById(R.id.dialogMessageTextView)).setText(message);
         }
-
-        TextView titleTextView = (TextView) view.findViewById(R.id.confirm_exit_title);
-        if (args.getString("title") != null) {
-            titleTextView.setText(args.getString("title"));
+        Button yesButton = (Button) view.findViewById(R.id.button_right_action);
+        String positiveButtonLabel = getArguments().getString("positiveButtonLabel");
+        if (positiveButtonLabel != null) {
+            yesButton.setText(positiveButtonLabel);
         }
-
-        TextView subTitleTextView = (TextView) view.findViewById(R.id.confirm_exit_message);
-        if (args.getString("subTitle") != null) {
-            subTitleTextView.setText(args.getString("subTitle"));
-        }
-
-        proceed.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.button_yes) {
-            dismiss();
-            if (callback != null) {
+        yesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
                 callback.onConfirm();
             }
-        } else {
-            cancel();
+        });
+        Button noButton = (Button) view.findViewById(R.id.button_left_action);
+        String negativeButtonLabel = getArguments().getString("negativeButtonLabel");
+        if (negativeButtonLabel != null) {
+            noButton.setText(negativeButtonLabel);
+        }
+        if (noButton != null) {
+            noButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dismiss();
+                }
+            });
+        }
+        View closeView = view.findViewById(R.id.closeViewLayout);
+        if (closeView != null) {
+            closeView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dismiss();
+                }
+            });
         }
     }
 
-    public interface ConfirmationCallback {
-        void onConfirm();
+    public void setCallback(ConfirmationCallback homeAlertInterface) {
+        this.callback = homeAlertInterface;
     }
 }

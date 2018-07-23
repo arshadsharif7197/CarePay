@@ -13,6 +13,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -118,7 +119,7 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
         hideDialog();
     }
 
-    private ConfirmDialogFragment.ConfirmationCallback confirmDeleteCallback = new ConfirmDialogFragment.ConfirmationCallback() {
+    private ConfirmationCallback confirmDeleteCallback = new ConfirmationCallback() {
         @Override
         public void onConfirm() {
             Map<String, String> queryMap = new HashMap<>();

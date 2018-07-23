@@ -17,6 +17,7 @@ import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.PhysicianDto;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
@@ -25,7 +26,7 @@ import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.EmergencyContactFragment;
 import com.carecloud.carepaylibray.demographics.fragments.FormsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
-import com.carecloud.carepaylibray.demographics.fragments.HomeAlertDialogFragment;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.IntakeFormsFragment;
@@ -402,15 +403,15 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     @Override
-    public void showRemovePrimaryInsuranceDialog(HomeAlertDialogFragment.HomeAlertInterface callback) {
+    public void showRemovePrimaryInsuranceDialog(ConfirmationCallback callback) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         String message = isPatientMode ? Label.getLabel("demographics_insurance_primary_alert_message_patient")
                 : Label.getLabel("demographics_insurance_primary_alert_message");
-        HomeAlertDialogFragment homeAlertDialogFragment = HomeAlertDialogFragment
+        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment
                 .newInstance(Label.getLabel("demographics_insurance_primary_alert_title"), message);
-        homeAlertDialogFragment.setCallback(callback);
-        String tag = homeAlertDialogFragment.getClass().getName();
-        homeAlertDialogFragment.show(ft, tag);
+        confirmDialogFragment.setCallback(callback);
+        String tag = confirmDialogFragment.getClass().getName();
+        confirmDialogFragment.show(ft, tag);
     }
 
     protected CheckInDemographicsBaseFragment getDemographicFragment(int step) {

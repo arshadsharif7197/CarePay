@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -13,6 +14,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.MerchantServiceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
@@ -55,6 +57,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     private PaymentCreditCardsPayloadDTO creditCard;
     private boolean canEditPaymentPlan;
     protected PaymentPlanEditInterface callback;
+    protected Button editPaymentPlanButton;
 
     /**
      * @param paymentsModel  the payment model
@@ -98,7 +101,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         getPaymentPlanSettings(paymentPlanDTO.getMetadata().getPracticeId());
         currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
         canEditPaymentPlan = checkCanEditPaymentPlan(paymentPlanDTO.getMetadata().getPracticeId());
-        if(!canEditPaymentPlan){
+        if (!canEditPaymentPlan) {
             setValidationRules();
         }
     }
@@ -117,27 +120,16 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         paymentDateEditText.setText(StringUtil.getOrdinal(getApplicationPreferences().getUserLanguage(),
                 paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfMonth()));
 
-        numberPaymentsEditText.setText(String.valueOf(paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments()));
+        numberPaymentsEditText.setText(String.valueOf(paymentPlanDTO.getPayload().getPaymentPlanDetails()
+                .getInstallments()));
         numberPaymentsEditText.getOnFocusChangeListener().onFocusChange(numberPaymentsEditText, true);
 
-        monthlyPaymentEditText.setText(currencyFormatter.format(paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount()));
-        createPlanButton.setText(Label.getLabel("save_button_label"));
-        createPlanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (validateFields(true)) {
-                    SystemUtil.hideSoftKeyboard(getContext(), view);
-                    if (creditCard!=null && creditCard.getCreditCardsId() == null) {
-                        authorizeCreditCard();
-                    } else {
-                        updatePaymentPlan();
-                    }
-                }
-            }
-        });
+        monthlyPaymentEditText.setText(currencyFormatter.format(paymentPlanDTO.getPayload()
+                .getPaymentPlanDetails().getAmount()));
+
         TextView headerMessage = (TextView) view.findViewById(R.id.headerMessage);
         if (headerMessage != null) {
-                headerMessage.setVisibility(View.GONE);
+            headerMessage.setVisibility(View.GONE);
         }
         View addExistingPlan = view.findViewById(R.id.payment_plan_add_existing);
         if (addExistingPlan != null) {
@@ -146,11 +138,81 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         setUpPaymentMethodLabel(view);
         isCalculatingTime = false;
         isCalculatingAmount = false;
-        if(!canEditPaymentPlan){
+        if (!canEditPaymentPlan) {
             TextView parameters = (TextView) view.findViewById(R.id.paymentPlanParametersTextView);
             parameters.setText(Label.getLabel("payment_plan_edit_fields_disabled"));
             disableFields();
         }
+
+    }
+
+    @Override
+    protected void setupButtons(final View view) {
+        editPaymentPlanButton = (Button) view.findViewById(R.id.editPaymentPlanButton);
+        super.setupButtons(view);
+        createPlanButton.setVisibility(View.GONE);
+        view.findViewById(R.id.editButtonsLayout).setVisibility(View.VISIBLE);
+        editPaymentPlanButton.setText(Label.getLabel("save_button_label"));
+        editPaymentPlanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (validateFields(true)) {
+                    SystemUtil.hideSoftKeyboard(getContext(), view);
+                    if (creditCard != null && creditCard.getCreditCardsId() == null) {
+                        authorizeCreditCard();
+                    } else {
+                        updatePaymentPlan();
+                    }
+                }
+            }
+        });
+        Button cancelPaymentPlanButton = (Button) view.findViewById(R.id.cancelPaymentPlanButton);
+        cancelPaymentPlanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCancelPaymentPlanConfirmDialog();
+            }
+        });
+    }
+
+    private void showCancelPaymentPlanConfirmDialog() {
+        callback.showCancelPaymentPlanConfirmDialog(new ConfirmationCallback() {
+            @Override
+            public void onConfirm() {
+                cancelPaymentPlan();
+            }
+        });
+    }
+
+    private void cancelPaymentPlan() {
+        TransitionDTO updatePaymentTransition = paymentsModel.getPaymentsMetadata()
+                .getPaymentsTransitions().getDeletePaymentPlan();
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", paymentPlanDTO.getMetadata().getPracticeMgmt());
+        queryMap.put("practice_id", paymentPlanDTO.getMetadata().getPracticeId());
+        queryMap.put("patient_id", paymentPlanDTO.getMetadata().getPatientId());
+        queryMap.put("payment_plan_id", paymentPlanDTO.getMetadata().getPaymentPlanId());
+
+        getWorkflowServiceHelper().execute(updatePaymentTransition, new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                dismiss();
+                callback.onPaymentPlanCanceled(workflowDTO);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                SystemUtil.showErrorToast(getContext(), exceptionMessage);
+
+            }
+        }, queryMap);
     }
 
     private void setUpPaymentMethodLabel(View view) {
@@ -167,7 +229,8 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         paymentMethodContainer.setVisibility(View.VISIBLE);
         TextInputLayout paymentMethodInputLayout = (TextInputLayout) view.findViewById(R.id.paymentMethodInputLayout);
         EditText paymentMethodEditText = (EditText) view.findViewById(R.id.creditCardNumberTextView);
-        paymentMethodEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(paymentMethodInputLayout, null));
+        paymentMethodEditText.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(paymentMethodInputLayout, null));
         if (creditCard != null) {
             setCreditCardInfo(creditCard, paymentMethodEditText);
         }
@@ -183,7 +246,8 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     private void setCreditCardInfo(PaymentCreditCardsPayloadDTO creditCard,
                                    EditText paymentMethodEditText) {
 
-        String paymentMethodMessage = creditCard.getToken() != null ? CreditCardUtil.getCreditCardType(creditCard.getToken()) : null;
+        String paymentMethodMessage = creditCard.getToken() != null ? CreditCardUtil
+                .getCreditCardType(creditCard.getToken()) : null;
         if (paymentMethodMessage == null) {
             paymentMethodMessage = creditCard.getCardType();
         }
@@ -278,7 +342,8 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         creditCardModel.setSaveCard(creditCardsPayloadDTO.isSaveCardOnFile());
         creditCardModel.setDefault(creditCardsPayloadDTO.isDefaultCardChecked());
 
-        @IntegratedPaymentCardData.TokenizationService String tokenizationService = creditCardsPayloadDTO.getTokenizationService().toString();
+        @IntegratedPaymentCardData.TokenizationService String tokenizationService = creditCardsPayloadDTO
+                .getTokenizationService().toString();
         creditCardModel.setTokenizationService(tokenizationService);
 
         return creditCardModel;
@@ -373,7 +438,8 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         Gson gson = new Gson();
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getAddCreditCard();
         String body = gson.toJson(creditCard);
-        getWorkflowServiceHelper().execute(transitionDTO, addNewCreditCardCallback, body, getWorkflowServiceHelper().getPreferredLanguageHeader());
+        getWorkflowServiceHelper().execute(transitionDTO, addNewCreditCardCallback, body,
+                getWorkflowServiceHelper().getPreferredLanguageHeader());
     }
 
     private WorkflowServiceCallback addNewCreditCardCallback = new WorkflowServiceCallback() {
@@ -387,7 +453,8 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
             hideProgressDialog();
             PaymentsModel paymentsDto = new Gson().fromJson(workflowDTO.toString(), PaymentsModel.class);
             if (callback.getDto() instanceof PaymentsModel) {
-                ((PaymentsModel) callback.getDto()).getPaymentPayload().setPatientCreditCards(paymentsDto.getPaymentPayload().getPatientCreditCards());
+                ((PaymentsModel) callback.getDto()).getPaymentPayload().setPatientCreditCards(paymentsDto
+                        .getPaymentPayload().getPatientCreditCards());
             }
             updatePaymentPlan();
             MixPanelUtil.logEvent(getString(R.string.event_updated_credit_cards));
@@ -404,7 +471,8 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     private boolean checkCanEditPaymentPlan(String practiceId) {
         for (PaymentsPayloadSettingsDTO settings : paymentsModel.getPaymentPayload().getPaymentSettings()) {
             if (settings.getMetadata().getPracticeId().equals(practiceId)) {
-                for (PaymentSettingsBalanceRangeRule rules : settings.getPayload().getPaymentPlans().getBalanceRangeRules()) {
+                for (PaymentSettingsBalanceRangeRule rules : settings.getPayload()
+                        .getPaymentPlans().getBalanceRangeRules()) {
                     if (rules.getMaxBalance().getValue() >= paymentPlanDTO.getPayload().getAmount()
                             && rules.getMinBalance().getValue() <= paymentPlanDTO.getPayload().getAmount()) {
                         return true;
@@ -415,7 +483,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         return false;
     }
 
-    private void disableFields(){
+    private void disableFields() {
         numberPaymentsEditText.setEnabled(false);
         numberPaymentsEditText.setFocusable(false);
         numberPaymentsEditText.setFocusableInTouchMode(false);
@@ -425,11 +493,17 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         monthlyPaymentEditText.setFocusableInTouchMode(false);
     }
 
-    private void setValidationRules(){
+    private void setValidationRules() {
         paymentPlanBalanceRules.getMaxBalance().setValue(paymentPlanAmount);
         paymentPlanBalanceRules.getMinBalance().setValue(paymentPlanAmount);
-        paymentPlanBalanceRules.getMaxDuration().setValue(paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments());
-        paymentPlanBalanceRules.getMinPaymentRequired().setValue(paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount());
+        paymentPlanBalanceRules.getMaxDuration().setValue(paymentPlanDTO.getPayload()
+                .getPaymentPlanDetails().getInstallments());
+        paymentPlanBalanceRules.getMinPaymentRequired().setValue(paymentPlanDTO.getPayload()
+                .getPaymentPlanDetails().getAmount());
     }
 
+    @Override
+    protected Button getActionButton() {
+        return editPaymentPlanButton;
+    }
 }

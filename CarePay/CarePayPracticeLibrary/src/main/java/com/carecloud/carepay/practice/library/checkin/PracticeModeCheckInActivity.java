@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -70,9 +71,11 @@ import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
@@ -139,6 +142,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     CheckInDTO checkInDTO;
     private PaymentsModel selectedPaymentModel;
     private PaymentHistoryItem recentRefundItem;
+    private String patientId;
 
     private boolean paymentMethodCancelled = false;
 
@@ -569,6 +573,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
      */
     @Override
     public void onCheckInItemClick(AppointmentsPayloadDTO appointmentPayloadDTO, int theRoom) {
+        patientId = appointmentPayloadDTO.getPatient().getPatientId();
         AppointmentDetailDialog dialog = new AppointmentDetailDialog(getContext(),
                 checkInDTO, getPatientBalanceDTOs(appointmentPayloadDTO.getPatient().getPatientId()),
                 appointmentPayloadDTO, theRoom, this);
@@ -873,7 +878,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void onDismissPaymentMethodDialog(PaymentsModel paymentsModel) {
-        if(paymentMethodCancelled){
+        if (paymentMethodCancelled) {
             paymentMethodCancelled = false;
             return;
         }
@@ -1278,6 +1283,51 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
             }
         });
         displayDialogFragment(fragment, false);
+    }
+
+    @Override
+    public void onPaymentPlanCanceled(WorkflowDTO workflowDTO) {
+        getSupportFragmentManager().popBackStackImmediate(PaymentDistributionFragment.class.getName(),
+                FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("patient_id", patientId);
+
+        TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getPatientBalances();
+        getWorkflowServiceHelper().execute(transitionDTO, new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                PaymentsModel patientDetails = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
+                if (patientDetails != null && !patientDetails.getPaymentPayload().getPatientBalances().isEmpty()) {
+                    patientDetails.getPaymentPayload().setLocations(checkInDTO.getPayload().getLocations());
+                    patientDetails.getPaymentPayload().setLocationIndex(checkInDTO.getPayload().getLocationIndex());
+                    patientDetails.getPaymentPayload().setProviders(checkInDTO.getPayload().getProviders());
+                    patientDetails.getPaymentPayload().setProviderIndex(checkInDTO.getPayload().getProviderIndex());
+                    showPaymentDistributionDialog(patientDetails);
+                }
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+            }
+        }, queryMap);
+    }
+
+    @Override
+    public void showCancelPaymentPlanConfirmDialog(ConfirmationCallback confirmationCallback) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment
+                .newInstance(Label.getLabel("payment.cancelPaymentPlan.confirmDialog.title.cancelPaymentPlanTitle"),
+                        Label.getLabel("payment.cancelPaymentPlan.confirmDialog.message.cancelPaymentPlanMessage"));
+        confirmDialogFragment.setCallback(confirmationCallback);
+        String tag = confirmDialogFragment.getClass().getName();
+        confirmDialogFragment.show(ft, tag);
     }
 
     @Override
