@@ -34,7 +34,7 @@ import java.util.Locale;
 public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragmentDialog {
 
     private PaymentsModel paymentsModel;
-    private PaymentPlanDTO paymentPlanDTO;
+    protected PaymentPlanDTO paymentPlanDTO;
     private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 
     private PaymentPlanEditInterface callback;
