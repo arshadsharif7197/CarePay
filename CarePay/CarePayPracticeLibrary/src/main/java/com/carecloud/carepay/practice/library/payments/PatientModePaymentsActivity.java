@@ -65,6 +65,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
+import com.carecloud.carepaylibray.payments.models.ScheduledPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -650,7 +651,12 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
     }
 
     @Override
-    public void showDeleteScheduledPaymentConfirmation(WorkflowDTO workflowDTO) {
+    public void showDeleteScheduledPaymentConfirmation(WorkflowDTO workflowDTO, ScheduledPaymentPayload scheduledPaymentPayload) {
+        showSuccessToast(String.format(
+                Label.getLabel("payment.oneTimePayment.scheduled.delete.success"),
+                DateUtil.getInstance()
+                        .setDateRaw(scheduledPaymentPayload.getPaymentDate())
+                        .toStringWithFormatMmSlashDdSlashYyyy()));
         completePaymentProcess(workflowDTO);
     }
 

@@ -93,7 +93,11 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
     private void deletePayment() {
         ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(
                 Label.getLabel("payment.oneTimePayment.scheduled.delete.title"),
-                Label.getLabel("payment.oneTimePayment.scheduled.delete.subtitle"),
+                String.format(
+                        Label.getLabel("payment.oneTimePayment.scheduled.delete.subtitle"),
+                        DateUtil.getInstance()
+                                .setDateRaw(scheduledPaymentModel.getPayload().getPaymentDate())
+                                .toStringWithFormatMmSlashDdSlashYyyy()),
                 Label.getLabel("button_no"),
                 Label.getLabel("button_yes"));
         confirmDialogFragment.setCallback(confirmDeleteCallback);
@@ -166,7 +170,7 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ((ISession) context).hideProgressDialog();
             dismiss();
-            callback.showDeleteScheduledPaymentConfirmation(workflowDTO);
+            callback.showDeleteScheduledPaymentConfirmation(workflowDTO, scheduledPaymentModel.getPayload());
         }
 
         @Override
@@ -225,7 +229,8 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
             double amountPay = Double.parseDouble(amountText);
             paymentButton.setEnabled(paymentDate != null &&
                     (!DateUtil.isSameDay(originalDate, paymentDate) ||
-                            originalAmount != amountPay));
+                            originalAmount != amountPay)
+                    && amountPay <= calculateFullAmount());
 
         }
 

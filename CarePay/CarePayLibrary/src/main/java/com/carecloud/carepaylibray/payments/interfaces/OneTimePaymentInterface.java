@@ -4,6 +4,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.ScheduledPaymentPayload;
 
 import java.util.Date;
 
@@ -24,7 +25,7 @@ public interface OneTimePaymentInterface extends PaymentMethodInterface {
 
     void showScheduledPaymentConfirmation(WorkflowDTO workflowDTO);
 
-    void showDeleteScheduledPaymentConfirmation(WorkflowDTO workflowDTO);
+    void showDeleteScheduledPaymentConfirmation(WorkflowDTO workflowDTO, ScheduledPaymentPayload scheduledPaymentPayload);
 
     void showPaymentConfirmation(WorkflowDTO workflowDTO, boolean isOneTimePayment);
 
