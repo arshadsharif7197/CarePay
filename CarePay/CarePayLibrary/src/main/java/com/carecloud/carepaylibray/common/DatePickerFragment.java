@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.squareup.timessquare.CalendarPickerView;
 
@@ -104,6 +103,7 @@ public class DatePickerFragment extends DialogFragment {
         toolbar.setNavigationIcon(closeIcon);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
+        Date today = new Date();
         View todayButton = toolbar.findViewById(R.id.today_button);
         todayButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +111,9 @@ public class DatePickerFragment extends DialogFragment {
                 onTodayClicked();
             }
         });
+        if(today.before(startDate)){
+            todayButton.setVisibility(View.GONE);
+        }
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

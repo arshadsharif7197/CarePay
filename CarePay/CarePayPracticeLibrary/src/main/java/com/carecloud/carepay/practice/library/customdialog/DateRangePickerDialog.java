@@ -155,8 +155,12 @@ public class DateRangePickerDialog extends BasePracticeDialogFragment {
         TextView dialogTitleTextView = (TextView) view.findViewById(R.id.dialog_date_range_picker_dialog_title);
         dialogTitleTextView.setText(dialogTitle);
 
+        Date today = new Date();
         Button todayButton = (Button) view.findViewById(R.id.dialog_date_range_picker_today_button);
         todayButton.setOnClickListener(todayButtonClickListener);
+        if(today.before(startDate)){
+            todayButton.setVisibility(View.GONE);
+        }
     }
 
     /**
