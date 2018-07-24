@@ -68,6 +68,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
     protected double totalBalance;
     protected double minAmount = 0.1;
     private CreditCardsListAdapter creditCardsListAdapter;
+    private Button addNewCardButton;
 
     public static PracticeModePaymentPlanFragment newInstance(PaymentsModel paymentsModel,
                                                               PendingBalanceDTO selectedBalance) {
@@ -161,13 +162,16 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
                 }
             }
         });
-        Button addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
+        addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
         addNewCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 callback.onAddPaymentPlanCard(paymentsModel, null, true);
             }
         });
+        if(paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()){
+            addNewCardButton.setText(Label.getLabel("payment_new_credit_card"));
+        }
     }
 
     protected void mainButtonAction() {
@@ -392,6 +396,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
                 paymentPlanAmount = SystemUtil.safeAdd(paymentPlanAmount, itemDTO.getAmountSelected());
                 paymentValueTextView.setText(currencyFormatter.format(paymentPlanAmount));
                 adapter.notifyDataSetChanged();
+                refreshNumberOfPayments(String.valueOf(monthlyPaymentCount));
                 enableCreatePlanButton();
             }
         });
@@ -590,5 +595,6 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         creditCardsListAdapter.notifyDataSetChanged();
         selectedCreditCard = creditCardPayload;
         enableCreatePlanButton();
+        addNewCardButton.setText(Label.getLabel("payment_add_new_credit_card_button"));
     }
 }
