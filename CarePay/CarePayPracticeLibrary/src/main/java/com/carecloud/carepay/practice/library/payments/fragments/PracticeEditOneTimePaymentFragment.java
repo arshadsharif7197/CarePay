@@ -105,7 +105,11 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
     private void deletePayment(){
         ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(
                 Label.getLabel("payment.oneTimePayment.scheduled.delete.title"),
-                Label.getLabel("payment.oneTimePayment.scheduled.delete.subtitle"),
+                String.format(
+                        Label.getLabel("payment.oneTimePayment.scheduled.delete.subtitle"),
+                        DateUtil.getInstance()
+                                .setDateRaw(scheduledPaymentModel.getPayload().getPaymentDate())
+                                .toStringWithFormatMmSlashDdSlashYyyy()),
                 Label.getLabel("button_no"),
                 Label.getLabel("button_yes"));
         confirmDialogFragment.setCallback(confirmDeleteCallback);
@@ -168,7 +172,7 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            callback.showDeleteScheduledPaymentConfirmation(workflowDTO);
+            callback.showDeleteScheduledPaymentConfirmation(workflowDTO, scheduledPaymentModel.getPayload());
             dismiss();
         }
 
@@ -228,7 +232,8 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
             double amountPay = Double.parseDouble(amountText);
             applyButton.setEnabled(paymentDate != null &&
                     (!DateUtil.isSameDay(originalDate, paymentDate) ||
-                            originalAmount != amountPay));
+                            originalAmount != amountPay)
+                    && amountPay <= fullAmount);
 
         }
 
