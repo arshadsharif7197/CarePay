@@ -225,7 +225,8 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
             double amountPay = Double.parseDouble(amountText);
             paymentButton.setEnabled(paymentDate != null &&
                     (!DateUtil.isSameDay(originalDate, paymentDate) ||
-                            originalAmount != amountPay));
+                            originalAmount != amountPay)
+                    && amountPay <= calculateFullAmount());
 
         }
 

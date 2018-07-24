@@ -228,7 +228,8 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
             double amountPay = Double.parseDouble(amountText);
             applyButton.setEnabled(paymentDate != null &&
                     (!DateUtil.isSameDay(originalDate, paymentDate) ||
-                            originalAmount != amountPay));
+                            originalAmount != amountPay)
+                    && amountPay <= fullAmount);
 
         }
 
