@@ -172,7 +172,7 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            callback.showDeleteScheduledPaymentConfirmation(workflowDTO);
+            callback.showDeleteScheduledPaymentConfirmation(workflowDTO, scheduledPaymentModel.getPayload());
             dismiss();
         }
 

@@ -170,7 +170,7 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             ((ISession) context).hideProgressDialog();
             dismiss();
-            callback.showDeleteScheduledPaymentConfirmation(workflowDTO);
+            callback.showDeleteScheduledPaymentConfirmation(workflowDTO, scheduledPaymentModel.getPayload());
         }
 
         @Override
