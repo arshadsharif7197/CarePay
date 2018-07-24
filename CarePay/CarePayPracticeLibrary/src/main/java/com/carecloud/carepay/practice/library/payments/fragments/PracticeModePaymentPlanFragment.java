@@ -97,8 +97,8 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         setUpAmounts(view);
         balanceItems = filterItems();
         setUpItems(view, balanceItems);
-        setupFields(view);
         setupButtons(view);
+        setupFields(view);
         setUpCreditCards(view);
     }
 
@@ -461,7 +461,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         return creditCardModel;
     }
 
-    private void authorizeCreditCard() {
+    protected void authorizeCreditCard() {
         String currency = "USD";
         String cvv = selectedCreditCard.getCvv();
         String expiryDate = selectedCreditCard.getExpireDt();
