@@ -589,5 +589,6 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         creditCardsListAdapter.setSelectedCreditCard(creditCardPayload);
         creditCardsListAdapter.notifyDataSetChanged();
         selectedCreditCard = creditCardPayload;
+        enableCreatePlanButton();
     }
 }
