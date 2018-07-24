@@ -105,7 +105,11 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
     private void deletePayment(){
         ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(
                 Label.getLabel("payment.oneTimePayment.scheduled.delete.title"),
-                Label.getLabel("payment.oneTimePayment.scheduled.delete.subtitle"),
+                String.format(
+                        Label.getLabel("payment.oneTimePayment.scheduled.delete.subtitle"),
+                        DateUtil.getInstance()
+                                .setDateRaw(scheduledPaymentModel.getPayload().getPaymentDate())
+                                .toStringWithFormatMmSlashDdSlashYyyy()),
                 Label.getLabel("button_no"),
                 Label.getLabel("button_yes"));
         confirmDialogFragment.setCallback(confirmDeleteCallback);
