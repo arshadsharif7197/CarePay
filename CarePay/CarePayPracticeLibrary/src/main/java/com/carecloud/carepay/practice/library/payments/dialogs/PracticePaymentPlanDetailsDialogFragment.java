@@ -154,7 +154,7 @@ public class PracticePaymentPlanDetailsDialogFragment extends BaseDialogFragment
         balanceTextView.setText(currencyFormatter.format(totalAmount - amountPaid));
 
         final ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload().findScheduledPayment(paymentPlan);
-        if(scheduledPayment != null){
+        if (scheduledPayment != null) {
             ScheduledPaymentPayload scheduledPayload = scheduledPayment.getPayload();
 
             View scheduledPaymentLayout = view.findViewById(R.id.scheduledPaymentLayout);

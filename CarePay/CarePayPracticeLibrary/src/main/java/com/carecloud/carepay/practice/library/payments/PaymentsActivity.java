@@ -24,6 +24,7 @@ import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog
 import com.carecloud.carepay.practice.library.payments.dialogs.IntegratedPaymentsChooseDeviceFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
+import com.carecloud.carepay.practice.library.payments.dialogs.PracticeModePaymentPlanEditFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PracticePaymentPlanDetailsDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.AddPaymentItemFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientModePaymentPlanEditFragment;
@@ -70,7 +71,6 @@ import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanEditFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
@@ -557,9 +557,9 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     @Override
     public void onCreditCardSelected(PaymentCreditCardsPayloadDTO creditCard) {
         Fragment fragment = getSupportFragmentManager()
-                .findFragmentByTag(PatientModePaymentPlanEditFragment.class.getName());
-        if (fragment != null && fragment instanceof PatientModePaymentPlanEditFragment) {
-            ((PaymentPlanEditFragment) fragment).replacePaymentMethod(creditCard);
+                .findFragmentByTag(PracticeModePaymentPlanEditFragment.class.getName());
+        if (fragment != null && fragment instanceof PracticeModePaymentPlanEditFragment) {
+            ((PracticeModePaymentPlanEditFragment) fragment).replacePaymentMethod(creditCard);
             return;
         }
 
@@ -576,7 +576,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         Gson gson = new Gson();
         PaymentsModel paymentsModel = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
         UpdatePatientBalancesDTO updatePatientBalance = null;
-        if(!paymentsModel.getPaymentPayload().getPatientBalances().isEmpty()) {
+        if (!paymentsModel.getPaymentPayload().getPatientBalances().isEmpty()) {
             PatientBalanceDTO balance = paymentsModel.getPaymentPayload().getPatientBalances().get(0);
             String patientBalance = gson.toJson(balance);
             updatePatientBalance = gson.fromJson(patientBalance,
@@ -665,7 +665,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void onDismissPaymentMethodDialog(PaymentsModel paymentsModel) {
-        if(paymentMethodCancelled){
+        if (paymentMethodCancelled) {
             paymentMethodCancelled = false;
             return;
         }
@@ -1072,7 +1072,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void onEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
-        PatientModePaymentPlanEditFragment fragment = PatientModePaymentPlanEditFragment
+        PracticeModePaymentPlanEditFragment fragment = PracticeModePaymentPlanEditFragment
                 .newInstance(paymentsModel, paymentPlanDTO);
         displayDialogFragment(fragment, true);
     }

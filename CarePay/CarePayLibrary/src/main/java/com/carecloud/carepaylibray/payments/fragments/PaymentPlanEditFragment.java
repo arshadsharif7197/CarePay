@@ -54,7 +54,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         BaseAddCreditCardFragment.IAuthoriseCreditCardResponse {
 
     protected PaymentPlanDTO paymentPlanDTO;
-    private PaymentCreditCardsPayloadDTO creditCard;
+    protected PaymentCreditCardsPayloadDTO creditCard;
     private boolean canEditPaymentPlan;
     protected PaymentPlanEditInterface callback;
     protected Button editPaymentPlanButton;
@@ -175,7 +175,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         });
     }
 
-    private void showCancelPaymentPlanConfirmDialog() {
+    protected void showCancelPaymentPlanConfirmDialog() {
         callback.showCancelPaymentPlanConfirmDialog(new ConfirmationCallback() {
             @Override
             public void onConfirm() {
@@ -215,7 +215,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         }, queryMap);
     }
 
-    private void setUpPaymentMethodLabel(View view) {
+    protected void setUpPaymentMethodLabel(View view) {
         PaymentCreditCardsPayloadDTO creditCard = null;
         for (PaymentsPatientsCreditCardsPayloadListDTO creditCardModel :
                 paymentsModel.getPaymentPayload().getPatientCreditCards()) {
@@ -262,7 +262,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         this.creditCard = creditCard;
     }
 
-    private void updatePaymentPlan() {
+    protected void updatePaymentPlan() {
         PaymentPlanPostModel postModel = new PaymentPlanPostModel();
         postModel.setAmount(paymentPlanAmount);
         postModel.setExecution(paymentPlanDTO.getPayload().getExecution());
@@ -349,7 +349,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         return creditCardModel;
     }
 
-    private void authorizeCreditCard() {
+    protected void authorizeCreditCard() {
         String currency = "USD";
         String cvv = creditCard.getCvv();
         String expiryDate = creditCard.getExpireDt();
