@@ -173,6 +173,41 @@
             android:paddingStart="@dimen/dimen_24dp">
 
             <LinearLayout
+                android:id="@+id/scheduledPaymentLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/round_border"
+                android:layout_marginStart="@dimen/dimen_20dp"
+                android:layout_marginEnd="@dimen/dimen_20dp"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:layout_marginBottom="@dimen/dimen_4dp"
+                android:padding="@dimen/dimen_15dp"
+                android:gravity="center_vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_22dp"
+                    android:layout_height="@dimen/dimen_22dp"
+                    android:layout_marginEnd="@dimen/dimen_10dp"
+                    android:src="@drawable/icn_pending"/>
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/scheduledPaymentMessage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:textColor="@color/slateGray"
+                    android:textSize="@dimen/text_size_16sp"
+                    app:customAssetFont="proxima_nova_regular"
+                    tools:text="$20.00 scheduled for 12/10/2018" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -367,7 +402,7 @@
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_22sp"
             app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="payment_details_pay_now"
+            breeze:textKey="payment.paymentPlan.oneTimePayment.button.make"
             tools:text="Pay Now" />
     </LinearLayout>
 </RelativeLayout>

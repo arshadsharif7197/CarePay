@@ -1,5 +1,7 @@
 package com.carecloud.carepay.patient.payment.activities;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,21 +15,28 @@ import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentHistoryDetailDialogFragment;
+import com.carecloud.carepay.patient.payment.dialogs.PaymentPlanHistoryDetailDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.NoPaymentsFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentDisabledAlertDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.AddExistingPaymentPlanFragment;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
+import com.carecloud.carepaylibray.payments.fragments.EditOneTimePaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.OneTimePaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
@@ -46,17 +55,26 @@ import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
+import com.carecloud.carepaylibray.payments.models.ScheduledPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.gms.wallet.MaskedWallet;
 
+import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_BALANCES;
+
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -73,6 +91,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     private String toolBarTitle;
 
     private Fragment androidPayTargetFragment;
+    private int displayPage = PAGE_BALANCES;
+    private PaymentPlanDTO paymentPlan;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,7 +107,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     private void initFragments() {
         if (hasPayments() || hasPaymentPlans() || hasCharges()) {
-            replaceFragment(PaymentBalanceHistoryFragment.newInstance(), false);
+            replaceFragment(PaymentBalanceHistoryFragment.newInstance(displayPage), false);
         } else {
             showNoPaymentsLayout();
         }
@@ -116,7 +136,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     private boolean hasPaymentPlans() {
         if (!paymentsDTO.getPaymentPayload().getActivePlans(null).isEmpty()) {
             for (PaymentPlanDTO paymentPlanDTO : paymentsDTO.getPaymentPayload().getActivePlans(null)) {
-                if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanStatus().equals(PaymentPlanDetailsDTO.STATUS_PROCESSING)) {
+                if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanStatus()
+                        .equals(PaymentPlanDetailsDTO.STATUS_PROCESSING)) {
                     return true;
                 }
             }
@@ -167,7 +188,9 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
-        replaceFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount, false), true);
+        paymentPlan = null;
+        replaceFragment(PatientPaymentMethodFragment
+                .newInstance(paymentsModel, amount, false), true);
         displayToolbar(false, toolBarTitle);
         MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment));
     }
@@ -217,12 +240,9 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
-        PaymentsModel updatePaymentModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        updateBalances(updatePaymentModel.getPaymentPayload().getPatientBalances());
-        if (updatePaymentModel.getPaymentPayload().getPaymentPlanUpdate() != null) {
-            updatePaymentPlan(updatePaymentModel.getPaymentPayload().getPaymentPlanUpdate());
-        }
+        displayPage = PAGE_BALANCES;
         initFragments();
+        refreshBalance(true);
     }
 
     @Override
@@ -248,19 +268,31 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void onPaymentPlanAction(PaymentsModel paymentsModel) {
-        PendingBalanceDTO reducedBalancesItem = paymentsModel.getPaymentPayload().reduceBalanceItems(selectedBalancesItem, false);
-        new PaymentPlanAmountDialog(getContext(), paymentsModel, reducedBalancesItem, this).show();
+    public void onPaymentPlanAction(final PaymentsModel paymentsModel) {
+        PendingBalanceDTO reducedBalancesItem = paymentsModel.getPaymentPayload()
+                .reduceBalanceItems(selectedBalancesItem, false);
+        Dialog dialog = new PaymentPlanAmountDialog(getContext(), paymentsModel,
+                reducedBalancesItem, this);
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                startPaymentProcess(paymentsModel);
+            }
+        });
+        dialog.show();
     }
 
     @Override
-    public void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
+    public void onPaymentPlanAmount(PaymentsModel paymentsModel,
+                                    PendingBalanceDTO selectedBalance,
+                                    double amount) {
         boolean addExisting = false;
         if (paymentsModel.getPaymentPayload().mustAddToExisting(amount, selectedBalance)) {
             onAddBalanceToExistingPlan(paymentsModel, selectedBalance, amount);
             addExisting = true;
         } else {
-            PaymentPlanFragment fragment = PaymentPlanFragment.newInstance(paymentsModel, selectedBalance, amount);
+            PaymentPlanFragment fragment = PaymentPlanFragment.newInstance(paymentsModel,
+                    selectedBalance, amount);
             replaceFragment(fragment, true);
         }
         displayToolbar(false, null);
@@ -278,28 +310,13 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
-        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
-        if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
-            StringBuilder builder = new StringBuilder();
-            for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
-                builder.append(processingError.getError());
-                builder.append("\n");
-            }
-            int last = builder.lastIndexOf("\n");
-            builder.replace(last, builder.length(), "");
-            showErrorNotification(builder.toString());
-        } else {
-            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment.newInstance(workflowDTO);
-            displayDialogFragment(confirmationFragment, false);
-        }
-
+        showPaymentConfirmation(workflowDTO, false);
     }
 
     @Override
     public void showPaymentPendingConfirmation(PaymentsModel paymentsModel) {
-        new CustomMessageToast(this, Label.getLabel("payments_external_pending"), CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
+        new CustomMessageToast(this, Label.getLabel("payments_external_pending"),
+                CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
         initFragments();
     }
 
@@ -351,15 +368,46 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void loadPaymentPlanScreen(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
         selectedUserPractice = getUserPracticeById(paymentPlanDTO.getMetadata().getPracticeId());
-        PaymentPlanDetailsDialogFragment fragment = PaymentPlanDetailsDialogFragment.newInstance(paymentsModel, paymentPlanDTO);
+        PaymentPlanDetailsDialogFragment fragment = PaymentPlanDetailsDialogFragment
+                .newInstance(paymentsModel, paymentPlanDTO);
         displayDialogFragment(fragment, false);
     }
 
     @Override
     public void displayPaymentHistoryDetails(PaymentHistoryItem paymentHistoryItem) {
         selectedUserPractice = getUserPracticeById(paymentHistoryItem.getMetadata().getPracticeId());
-        PaymentHistoryDetailDialogFragment fragment = PaymentHistoryDetailDialogFragment.newInstance(paymentHistoryItem, selectedUserPractice);
+        PaymentHistoryDetailDialogFragment fragment = PaymentHistoryDetailDialogFragment
+                .newInstance(paymentHistoryItem, selectedUserPractice);
         displayDialogFragment(fragment, false);
+    }
+
+    @Override
+    public void onRequestRefresh(int requestedPage) {
+        displayPage = requestedPage;
+        refreshBalance(false);
+    }
+
+    @Override
+    public void displayPaymentPlanHistoryDetails(final PaymentHistoryItem historyItem, PaymentPlanPayloadDTO paymentPlanPayloadDTO) {
+        String taskId = paymentPlanPayloadDTO.getMetadata().getTaskId();
+        PaymentPlanDTO selectedPaymentPlan = null;
+        for(PaymentPlanDTO paymentPlanDTO : paymentsDTO.getPaymentPayload().getPatientPaymentPlans()){
+            if(taskId.equals(paymentPlanDTO.getPayload().getMetadata().getTaskId())){
+                selectedPaymentPlan =paymentPlanDTO;
+                break;
+            }
+        }
+
+        selectedUserPractice = getUserPracticeById(historyItem.getMetadata().getPracticeId());
+        PaymentPlanHistoryDetailDialogFragment planHistoryFragment = PaymentPlanHistoryDetailDialogFragment.newInstance(selectedPaymentPlan, selectedUserPractice);
+        planHistoryFragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                PaymentHistoryDetailDialogFragment historyFragment = PaymentHistoryDetailDialogFragment.newInstance(historyItem, selectedUserPractice);
+                displayDialogFragment(historyFragment, false);
+            }
+        });
+        displayDialogFragment(planHistoryFragment, false);
     }
 
     @Override
@@ -374,30 +422,6 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         this.selectedBalancesItem = pendingBalanceDTO;
     }
 
-    private void updateBalances(List<PatientBalanceDTO> updatedBalances) {
-        for (PatientBalanceDTO updatedManagementBalance : updatedBalances) {//should contain just 1 element
-            for (PendingBalanceDTO updatedBalance : updatedManagementBalance.getBalances()) {//should contain just 1 element - the updated balance that was just paid
-                for (PatientBalanceDTO existingManagementBalance : paymentsDTO.getPaymentPayload().getPatientBalances()) {//should contain only 1 element until another PM is supported
-                    for (PendingBalanceDTO existingBalance : existingManagementBalance.getBalances()) {//can contain multiple balances in multi practice mode, otherwise just 1
-                        if (existingBalance.getMetadata().getPracticeId().equals(updatedBalance.getMetadata().getPracticeId())) {
-                            existingBalance.setPayload(updatedBalance.getPayload());
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private void updatePaymentPlan(PaymentPlanDTO paymentPlanUpdate) {
-        for (PaymentPlanDTO paymentPlanDTO : paymentsDTO.getPaymentPayload().getPatientPaymentPlans()) {
-            if (paymentPlanDTO.getMetadata().getPaymentPlanId().equals(paymentPlanUpdate.getMetadata().getPaymentPlanId())) {
-                paymentPlanDTO.setMetadata(paymentPlanUpdate.getMetadata());
-                paymentPlanDTO.setPayload(paymentPlanUpdate.getPayload());
-                return;
-            }
-        }
-    }
-
     private UserPracticeDTO getUserPracticeById(String practiceId) {
         for (UserPracticeDTO userPracticeDTO : paymentsDTO.getPaymentPayload().getUserPractices()) {
             if (userPracticeDTO.getPracticeId().equals(practiceId)) {
@@ -409,7 +433,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void createWalletFragment(MaskedWallet maskedWallet, Double amount) {
-        replaceFragment(AndroidPayDialogFragment.newInstance(maskedWallet, paymentsDTO, amount), true);
+        replaceFragment(AndroidPayDialogFragment
+                .newInstance(maskedWallet, paymentsDTO, amount), true);
     }
 
     @Override
@@ -421,8 +446,10 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void onStartPaymentPlan(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
-        PaymentPlanPaymentMethodFragment fragment = PaymentPlanPaymentMethodFragment.newInstance(paymentsModel, paymentPlanPostModel);
+    public void onStartPaymentPlan(PaymentsModel paymentsModel,
+                                   PaymentPlanPostModel paymentPlanPostModel) {
+        PaymentPlanPaymentMethodFragment fragment = PaymentPlanPaymentMethodFragment
+                .newInstance(paymentsModel, paymentPlanPostModel);
         replaceFragment(fragment, true);
     }
 
@@ -447,11 +474,20 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void onAddPaymentPlanCard(PaymentsModel paymentsModel,
-                                     PaymentPlanPostModel paymentPlanPostModel,
+    public void onAddPaymentPlanCard(final PaymentsModel paymentsModel,
+                                     final PaymentPlanPostModel paymentPlanPostModel,
                                      boolean onlySelectMode) {
         PaymentPlanAddCreditCardFragment fragment = PaymentPlanAddCreditCardFragment
                 .newInstance(paymentsModel, paymentPlanPostModel, onlySelectMode);
+        fragment.setChangePaymentMethodListener(new LargeAlertDialog.LargeAlertInterface() {
+            @Override
+            public void onActionButton() {
+                PaymentPlanPaymentMethodFragment fragment = PaymentPlanPaymentMethodFragment
+                        .newInstance(paymentsModel, paymentPlanPostModel);
+                replaceFragment(fragment, true);
+                displayToolbar(false, toolBarTitle);
+            }
+        });
         replaceFragment(fragment, true);
     }
 
@@ -468,13 +504,16 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         }
 
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        String practiceId = paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0).getMetadata().getPracticeId();
-        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment.newInstance(workflowDTO, getUserPracticeById(practiceId), PaymentPlanConfirmationFragment.MODE_CREATE);
-        displayDialogFragment(confirmationFragment, false);
+        String practiceId = paymentsModel.getPaymentPayload()
+                .getPatientPaymentPlans().get(0).getMetadata().getPracticeId();
+        PaymentPlanConfirmationFragment fragment = PaymentPlanConfirmationFragment
+                .newInstance(workflowDTO, getUserPracticeById(practiceId), PaymentPlanConfirmationFragment.MODE_CREATE);
+        displayDialogFragment(fragment, false);
     }
 
     @Override
     public void onMakeOneTimePayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+        paymentPlan = paymentPlanDTO;
         new OneTimePaymentDialog(getContext(), paymentsModel, paymentPlanDTO, this).show();
     }
 
@@ -500,28 +539,119 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     public void onSelectPaymentPlanMethod(PaymentsMethodsDTO selectedPaymentMethod,
                                           PaymentsModel paymentsModel,
                                           PaymentPlanDTO paymentPlanDTO,
-                                          boolean onlySelectMode) {
+                                          boolean onlySelectMode,
+                                          Date paymentDate) {
         if ((paymentsModel.getPaymentPayload().getPatientCreditCards() != null)
                 && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             PaymentPlanChooseCreditCardFragment fragment = PaymentPlanChooseCreditCardFragment
-                    .newInstance(paymentsModel, selectedPaymentMethod.getLabel(), paymentPlanDTO, onlySelectMode);
+                    .newInstance(paymentsModel, selectedPaymentMethod.getLabel(), paymentPlanDTO,
+                            onlySelectMode, paymentDate);
             replaceFragment(fragment, true);
         } else {
-            onAddPaymentPlanCard(paymentsModel, paymentPlanDTO, onlySelectMode);
+            onAddPaymentPlanCard(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
         }
     }
 
     @Override
-    public void onAddPaymentPlanCard(PaymentsModel paymentsModel,
-                                     PaymentPlanDTO paymentPlanDTO,
-                                     boolean onlySelectMode) {
+    public void onAddPaymentPlanCard(final PaymentsModel paymentsModel,
+                                     final PaymentPlanDTO paymentPlanDTO,
+                                     boolean onlySelectMode,
+                                     final Date paymentDate) {
         PaymentPlanAddCreditCardFragment fragment = PaymentPlanAddCreditCardFragment
-                .newInstance(paymentsModel, paymentPlanDTO, onlySelectMode);
+                .newInstance(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
+        fragment.setChangePaymentMethodListener(new LargeAlertDialog.LargeAlertInterface() {
+            @Override
+            public void onActionButton() {
+                PaymentPlanPaymentMethodFragment fragment = PaymentPlanPaymentMethodFragment
+                        .newInstance(paymentsModel, paymentPlan, false, paymentDate);
+                fragment.setOnCancelListener(new Dialog.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        onMakeOneTimePayment(paymentsModel, paymentPlanDTO);
+                    }
+                });
+                replaceFragment(fragment, true);
+                displayToolbar(false, toolBarTitle);
+            }
+        });
         replaceFragment(fragment, true);
     }
 
     @Override
-    public void displayBalanceDetails(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem, PendingBalanceDTO selectedBalance) {
+    public void onScheduleOneTimePayment(PaymentsModel paymentsModel,
+                                         PaymentPlanDTO paymentPlanDTO,
+                                         Date paymentDate) {
+        PaymentPlanPaymentMethodFragment fragment = PaymentPlanPaymentMethodFragment
+                .newInstance(paymentsModel, paymentPlanDTO, false, paymentDate);
+        replaceFragment(fragment, true);
+        displayToolbar(false, toolBarTitle);
+    }
+
+    @Override
+    public void showScheduledPaymentConfirmation(WorkflowDTO workflowDTO) {
+        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+        ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload()
+                .getScheduledPaymentModel();
+        if(scheduledPayment.getMetadata().getOneTimePaymentId() == null &&
+                !paymentsModel.getPaymentPayload().getScheduledOneTimePayments().isEmpty()){
+            scheduledPayment = paymentsModel.getPaymentPayload().getScheduledOneTimePayments().get(0);
+        }
+        List<ScheduledPaymentModel> scheduledPaymentModels = this.paymentsDTO.getPaymentPayload().getScheduledOneTimePayments();
+        for(ScheduledPaymentModel scheduledPaymentModel : scheduledPaymentModels){
+            if(scheduledPaymentModel.getMetadata().getOneTimePaymentId().equals(scheduledPayment.getMetadata().getOneTimePaymentId())){
+                scheduledPaymentModels.remove(scheduledPayment);
+                break;
+            }
+        }
+        scheduledPaymentModels.add(scheduledPayment);
+        completePaymentProcess(workflowDTO);
+
+        DateUtil.getInstance().setDateRaw(scheduledPayment.getPayload().getPaymentDate());
+        String message = String.format(Label.getLabel("payment.oneTimePayment.schedule.success"),
+                StringUtil.getFormattedBalanceAmount(scheduledPayment.getPayload().getAmount()),
+                DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal());
+        showSuccessToast(message);
+
+    }
+
+    @Override
+    public void showDeleteScheduledPaymentConfirmation(WorkflowDTO workflowDTO, ScheduledPaymentPayload scheduledPaymentPayload) {
+        SystemUtil.hideSoftKeyboard(this);
+        showSuccessToast(String.format(
+                Label.getLabel("payment.oneTimePayment.scheduled.delete.success"),
+                DateUtil.getInstance()
+                        .setDateRaw(scheduledPaymentPayload.getPaymentDate())
+                        .toStringWithFormatMmSlashDdSlashYyyy()));
+        completePaymentProcess(workflowDTO);
+    }
+
+    @Override
+    public void showPaymentConfirmation(WorkflowDTO workflowDTO, boolean isOneTimePayment) {
+        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload()
+                .getPatientPayments().getPayload();
+        if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
+            StringBuilder builder = new StringBuilder();
+            for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload
+                    .getProcessingErrors()) {
+                builder.append(processingError.getError());
+                builder.append("\n");
+            }
+            int last = builder.lastIndexOf("\n");
+            builder.replace(last, builder.length(), "");
+            showErrorNotification(builder.toString());
+        } else {
+            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
+                    .newInstance(workflowDTO, isOneTimePayment);
+            displayDialogFragment(confirmationFragment, false);
+        }
+    }
+
+    @Override
+    public void displayBalanceDetails(PaymentsModel paymentsModel,
+                                      PendingBalancePayloadDTO paymentLineItem,
+                                      PendingBalanceDTO selectedBalance) {
         PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
                 .newInstance(paymentsModel, paymentLineItem, selectedBalance, false);
         displayDialogFragment(dialog, false);
@@ -529,6 +659,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void onEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+        paymentPlan = paymentPlanDTO;
         PaymentPlanEditFragment fragment = PaymentPlanEditFragment.newInstance(paymentsModel, paymentPlanDTO);
         replaceFragment(fragment, true);
         displayToolbar(false, null);
@@ -537,18 +668,28 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void onPaymentPlanEdited(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        String practiceId = paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0).getMetadata().getPracticeId();
+        if (paymentsModel.getPaymentPayload().getPatientPaymentPlans().isEmpty()) {
+            //no changes to plan
+            initFragments();
+            return;
+        }
+        String practiceId = paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0)
+                .getMetadata().getPracticeId();
 
-        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment.newInstance(workflowDTO, getUserPracticeById(practiceId), PaymentPlanConfirmationFragment.MODE_EDIT);
-        displayDialogFragment(confirmationFragment, false);
+        PaymentPlanConfirmationFragment fragment = PaymentPlanConfirmationFragment
+                .newInstance(workflowDTO, getUserPracticeById(practiceId), PaymentPlanConfirmationFragment.MODE_EDIT);
+        displayDialogFragment(fragment, false);
     }
 
     @Override
     public void onPaymentPlanAddedExisting(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        String practiceId = paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0).getMetadata().getPracticeId();
+        String practiceId = paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0)
+                .getMetadata().getPracticeId();
 
-        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment.newInstance(workflowDTO, getUserPracticeById(practiceId), PaymentPlanConfirmationFragment.MODE_ADD);
+        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment
+                .newInstance(workflowDTO, getUserPracticeById(practiceId),
+                        PaymentPlanConfirmationFragment.MODE_ADD);
         displayDialogFragment(confirmationFragment, false);
     }
 
@@ -558,14 +699,20 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void onAddBalanceToExistingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
+    public void onAddBalanceToExistingPlan(PaymentsModel paymentsModel,
+                                           PendingBalanceDTO selectedBalance,
+                                           double amount) {
         ValidPlansFragment fragment = ValidPlansFragment.newInstance(paymentsModel, selectedBalance, amount);
         replaceFragment(fragment, true);
     }
 
     @Override
-    public void onSelectedPlanToAdd(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO selectedPlan, double amount) {
-        AddExistingPaymentPlanFragment fragment = AddExistingPaymentPlanFragment.newInstance(paymentsModel, selectedBalance, selectedPlan, amount);
+    public void onSelectedPlanToAdd(PaymentsModel paymentsModel,
+                                    PendingBalanceDTO selectedBalance,
+                                    PaymentPlanDTO selectedPlan,
+                                    double amount) {
+        AddExistingPaymentPlanFragment fragment = AddExistingPaymentPlanFragment
+                .newInstance(paymentsModel, selectedBalance, selectedPlan, amount);
         replaceFragment(fragment, true);
     }
 
@@ -580,16 +727,38 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel) {
+    public void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
         addFragment(PaymentPlanPaymentMethodFragment
-                .newInstance(paymentsModel, new PaymentPlanDTO(), true), true);
+                .newInstance(paymentsModel, paymentPlanDTO, true), true);
+    }
+
+    @Override
+    public void onStartEditScheduledPayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO, ScheduledPaymentModel scheduledPaymentModel) {
+        new EditOneTimePaymentDialog(this, paymentsDTO, paymentPlanDTO,
+                scheduledPaymentModel, this).show();
+    }
+
+    @Override
+    public void onPaymentPlanCanceled(WorkflowDTO workflowDTO) {
+        initFragments();
+        refreshBalance(true);
+    }
+
+    @Override
+    public void showCancelPaymentPlanConfirmDialog(ConfirmationCallback confirmationCallback) {
+        ConfirmDialogFragment fragment = ConfirmDialogFragment
+                .newInstance(Label.getLabel("payment.cancelPaymentPlan.confirmDialog.title.cancelPaymentPlanTitle"),
+                        Label.getLabel("payment.cancelPaymentPlan.confirmDialog.message.cancelPaymentPlanMessage"),
+                        Label.getLabel("no"),
+                        Label.getLabel("yes"));
+        fragment.setCallback(confirmationCallback);
+        fragment.show(getSupportFragmentManager().beginTransaction(), fragment.getClass().getName());
     }
 
     @Override
     public void completePaymentPlanProcess(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         List<PaymentPlanDTO> paymentPlanList = this.paymentsDTO.getPaymentPayload().getPatientPaymentPlans();
-
 
         if (!paymentPlanList.isEmpty()) {
             PaymentPlanDTO modifiedPaymentPlan = paymentsModel.getPaymentPayload().getPatientPaymentPlans().get(0);
@@ -609,4 +778,41 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         completePaymentProcess(workflowDTO);
 
     }
+
+    private void refreshBalance(boolean showProgress) {
+        TransitionDTO transitionDTO = paymentsDTO.getPaymentsMetadata().getPaymentsLinks()
+                .getPaymentsPatientBalances();
+        getWorkflowServiceHelper().execute(transitionDTO, getPatientBalancesCallback(showProgress));
+    }
+
+
+    private WorkflowServiceCallback getPatientBalancesCallback(final boolean showProgress) {
+        return new WorkflowServiceCallback() {
+
+            @Override
+            public void onPreExecute() {
+                if (showProgress) {
+                    showProgressDialog();
+                }
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                if (showProgress) {
+                    hideProgressDialog();
+                }
+                paymentsDTO = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
+                initFragments();
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                if (showProgress) {
+                    hideProgressDialog();
+                }
+                showErrorNotification(exceptionMessage);
+            }
+        };
+    }
+
 }

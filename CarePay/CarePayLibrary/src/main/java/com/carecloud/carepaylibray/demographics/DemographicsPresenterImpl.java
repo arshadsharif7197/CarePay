@@ -17,6 +17,7 @@ import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.PhysicianDto;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
@@ -25,12 +26,13 @@ import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.EmergencyContactFragment;
 import com.carecloud.carepaylibray.demographics.fragments.FormsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
-import com.carecloud.carepaylibray.demographics.fragments.HomeAlertDialogFragment;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.IntakeFormsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
 import com.carecloud.carepaylibray.demographics.fragments.SearchPhysicianFragment;
+import com.carecloud.carepaylibray.demographics.fragments.ThirdPartyTaskFragment;
 import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactFragmentInterface;
 import com.carecloud.carepaylibray.demographics.interfaces.PhysicianFragmentInterface;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
@@ -39,6 +41,7 @@ import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearch
 import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
+import com.carecloud.carepaylibray.third_party.models.ThirdPartyWorkflowDto;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -134,6 +137,9 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             case NavigationStateConstants.INTAKE_FORMS:
                 navigateToIntakeForms(workflowDTO);
                 break;
+            case NavigationStateConstants.THIRD_PARTY_CHECK_IN:
+                navigateToThirdParty(workflowDTO);
+                break;
             default:
                 navigateToDemographicFragment(currentDemographicStep);
 
@@ -195,6 +201,14 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
         IntakeFormsFragment fragment = new IntakeFormsFragment();
         fragment.setArguments(bundle);
+        navigateToFragment(fragment, true);
+    }
+
+    @Override
+    public void navigateToThirdParty(WorkflowDTO workflowDTO){
+        ThirdPartyWorkflowDto thirdPartyWorkflow = DtoHelper
+                .getConvertedDTO(ThirdPartyWorkflowDto.class, workflowDTO);
+        ThirdPartyTaskFragment fragment = ThirdPartyTaskFragment.newInstance(thirdPartyWorkflow);
         navigateToFragment(fragment, true);
     }
 
@@ -389,15 +403,15 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     @Override
-    public void showRemovePrimaryInsuranceDialog(HomeAlertDialogFragment.HomeAlertInterface callback) {
+    public void showRemovePrimaryInsuranceDialog(ConfirmationCallback callback) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         String message = isPatientMode ? Label.getLabel("demographics_insurance_primary_alert_message_patient")
                 : Label.getLabel("demographics_insurance_primary_alert_message");
-        HomeAlertDialogFragment homeAlertDialogFragment = HomeAlertDialogFragment
+        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment
                 .newInstance(Label.getLabel("demographics_insurance_primary_alert_title"), message);
-        homeAlertDialogFragment.setCallback(callback);
-        String tag = homeAlertDialogFragment.getClass().getName();
-        homeAlertDialogFragment.show(ft, tag);
+        confirmDialogFragment.setCallback(callback);
+        String tag = confirmDialogFragment.getClass().getName();
+        confirmDialogFragment.show(ft, tag);
     }
 
     protected CheckInDemographicsBaseFragment getDemographicFragment(int step) {

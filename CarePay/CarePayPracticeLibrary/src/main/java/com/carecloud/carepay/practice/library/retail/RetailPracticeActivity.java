@@ -14,7 +14,6 @@ import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -32,7 +31,6 @@ import com.carecloud.carepaylibray.retail.fragments.RetailFragment;
 import com.carecloud.carepaylibray.retail.interfaces.RetailInterface;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.google.gson.Gson;
 
 import java.util.List;
 import java.util.Map;
@@ -186,19 +184,14 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
 
     @Override
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
-        Gson gson = new Gson();
-        Bundle args = new Bundle();
-        String paymentsDTOString = gson.toJson(paymentsModel);
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, paymentsDTOString);
-        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-        PracticeAddNewCreditCardFragment fragment = new PracticeAddNewCreditCardFragment();
-        fragment.setArguments(args);
+        PracticeAddNewCreditCardFragment fragment = PracticeAddNewCreditCardFragment
+                .newInstance(paymentsModel, amount);
         displayDialogFragment(fragment, true);
     }
 
     @Override
     public void onCreditCardSelected(PaymentCreditCardsPayloadDTO papiPaymentMethod) {
-        
+
     }
 
     @Override
@@ -279,5 +272,10 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
         //when dismissing the payment method dialog the nav bar was showing up
         setSystemUiVisibility();
         setNavigationBarVisibility();
+    }
+
+    @Override
+    public void onCashSelected(PaymentsModel paymentsModel) {
+        //Not implemented
     }
 }

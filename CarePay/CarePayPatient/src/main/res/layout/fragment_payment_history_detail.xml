@@ -78,7 +78,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:minHeight="@dimen/list_dialog_min_height">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/practice_name"
@@ -114,6 +115,25 @@
                     android:layout_marginStart="@dimen/dimen_20dp"
                     android:layout_marginTop="@dimen/dimen_20dp"
                     android:background="@color/light_gray" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/paymentPlanDetailsButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="@dimen/dimen_22dp"
+                    android:background="@drawable/button_blue_border"
+                    android:paddingTop="@dimen/dimen_10dp"
+                    android:paddingBottom="@dimen/dimen_10dp"
+                    android:paddingEnd="@dimen/dimen_20dp"
+                    android:paddingStart="@dimen/dimen_20dp"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_size_12sp"
+                    android:textAllCaps="true"
+                    android:visibility="visible"
+                    app:customAssetFont="proxima_nova_regular"
+                    breeze:textKey="payment_payment_plan_details_txt"
+                    tools:text="Payment Plan Details"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/receiptNumberLabel"
@@ -177,11 +197,6 @@
 
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_1dp"
-                    android:background="@color/light_gray" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -212,11 +227,6 @@
                         tools:text="$999.99" />
 
                 </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_1dp"
-                    android:background="@color/light_gray" />
 
                 <LinearLayout
                     android:id="@+id/completedOnContainer"

@@ -76,7 +76,6 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostMode
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.google.android.gms.wallet.MaskedWallet;
-import com.google.gson.Gson;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -226,18 +225,9 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     public void selectDateRange(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO,
                                 AppointmentResourcesItemDTO appointmentResource,
                                 AppointmentsResultModel appointmentsResultModel) {
-        Bundle bundle = new Bundle();
-        Gson gson = new Gson();
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, startDate);
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(appointmentResource));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(visitTypeDTO));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE,
-                gson.toJson(appointmentsResultModel));
-
-        AppointmentDateRangeFragment appointmentDateRangeFragment = new AppointmentDateRangeFragment();
-        appointmentDateRangeFragment.setArguments(bundle);
-        replaceFragment(appointmentDateRangeFragment, true);
+        AppointmentDateRangeFragment fragment = AppointmentDateRangeFragment
+                .newInstance(appointmentsResultModel, startDate, endDate, appointmentResource, visitTypeDTO);
+        replaceFragment(fragment, true);
     }
 
     @Override
@@ -346,15 +336,16 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     @Override
     public void onPaymentPlanAddedExisting(WorkflowDTO workflowDTO) {
-        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment.newInstance(workflowDTO, getPracticeInfo(paymentsModel), PaymentPlanConfirmationFragment.MODE_ADD);
+        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment
+                .newInstance(workflowDTO, getPracticeInfo(paymentsModel),
+                        PaymentPlanConfirmationFragment.MODE_ADD);
         displayDialogFragment(confirmationFragment, false);
     }
 
     @Override
     public void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
         boolean addExisting = false;
-        if(paymentsModel.getPaymentPayload().mustAddToExisting(amount, selectedBalance)){
+        if (paymentsModel.getPaymentPayload().mustAddToExisting(amount, selectedBalance)) {
             onAddBalanceToExistingPlan(paymentsModel, selectedBalance, amount);
             addExisting = true;
         } else {

@@ -60,7 +60,7 @@ public class CarePayPracticeApplication extends CarePayApplication
         HttpConstants.setDeepStreamUrl(BuildConfig.DEEPSTREAM_URL);
         HttpConstants.setPaymentsUrl(BuildConfig.PAYMENTS_BASE_URL);
         HttpConstants.setPaymentsApiKey(BuildConfig.PAYMENTS_API_KEY);
-        HttpConstants.setRetailPaymentsRedirectUrl(BuildConfig.RETAIL_REDIRECT_URL);
+        HttpConstants.setRetailUrl(BuildConfig.RETAIL_URL);
     }
 
     @Override

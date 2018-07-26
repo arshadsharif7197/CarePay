@@ -9,7 +9,6 @@ import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.interfaces.DemographicExtendedInterface;
-import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactInterface;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearchFragment;
 import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
@@ -53,6 +52,8 @@ public interface DemographicsPresenter extends HealthInsuranceFragment.Insurance
     void navigateToIntakeForms(WorkflowDTO workflowDTO);
 
     void navigateToMedicationsAllergy(WorkflowDTO workflowDTO);
+
+    void navigateToThirdParty(WorkflowDTO workflowDTO);
 
     Fragment getCurrentFragment();
 

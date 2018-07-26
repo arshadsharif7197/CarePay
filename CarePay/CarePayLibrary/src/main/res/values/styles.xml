@@ -486,7 +486,7 @@
     <style name="errorTextAppearance" parent="@android:style/TextAppearance">
         <item name="android:fontFamily">ProximaNova-Semibold</item>
         <item name="android:textColor">@color/harvard_crimson</item>
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">@dimen/errorTextSize</item>
         <item name="android:textAllCaps">true</item>
     </style>
 
@@ -982,5 +982,4 @@
         <item name="colorControlNormal">@color/colorPrimary</item>
         <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
-
 </resources>

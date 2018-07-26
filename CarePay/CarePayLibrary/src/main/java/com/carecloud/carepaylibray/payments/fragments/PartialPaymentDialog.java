@@ -91,7 +91,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.dialog_partial_payment);
+        setContentView(getContentLayout());
         setCancelable(false);
         if (getWindow() != null) {
             getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -103,7 +103,11 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         initViews();
     }
 
-    private void initViews() {
+    protected int getContentLayout(){
+        return R.layout.dialog_partial_payment;
+    }
+
+    protected void initViews() {
         amountText = (EditText) findViewById(R.id.enterPartialAmountEditText);
         partialPaymentTotalAmountTitle = (TextView) findViewById(R.id.partialPaymentTotalAmountTitle);
         payPartialButton = (Button) findViewById(R.id.payPartialButton);

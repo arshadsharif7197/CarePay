@@ -239,16 +239,18 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             boolean showShop = practiceHomeScreenPayloadDTO.getUserPractices().get(0).isRetailEnabled();
             if (showShop) {
                 View shopContainer = findViewById(R.id.homeShopClickable);
-                shopContainer.setVisibility(View.VISIBLE);
-                shopContainer.setOnClickListener(this);
-                findViewById(R.id.separator).setVisibility(View.VISIBLE);
+                if(shopContainer != null) {
+                    shopContainer.setVisibility(View.VISIBLE);
+                    shopContainer.setOnClickListener(this);
+                    findViewById(R.id.separator).setVisibility(View.VISIBLE);
 
-                ImageView checkinImageView = (ImageView) findViewById(R.id.homeCheckinImageView);
-                redesignTopLayouts(checkinLabelTextView, checkinImageView, R.id.checkInFakeCenter);
+                    ImageView checkinImageView = (ImageView) findViewById(R.id.homeCheckinImageView);
+                    redesignTopLayouts(checkinLabelTextView, checkinImageView, R.id.checkInFakeCenter);
 
-                TextView checkOutLabelTextView = (TextView) findViewById(R.id.homeCheckoutLabel);
-                ImageView checkoutImageView = (ImageView) findViewById(R.id.checkoutImageView);
-                redesignTopLayouts(checkOutLabelTextView, checkoutImageView, R.id.checkoutFakeCenter);
+                    TextView checkOutLabelTextView = (TextView) findViewById(R.id.homeCheckoutLabel);
+                    ImageView checkoutImageView = (ImageView) findViewById(R.id.checkoutImageView);
+                    redesignTopLayouts(checkOutLabelTextView, checkoutImageView, R.id.checkoutFakeCenter);
+                }
             }
         } else {
             if (homeCheckInLl != null) {
@@ -424,7 +426,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private void unlockPracticeMode() {
         Gson gson = new Gson();
         PatientModeLinksDTO pinPadObject = gson.fromJson(homeScreenDTO.getMetadata().getLinks(), PatientModeLinksDTO.class);
-        ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this, pinPadObject.getPinpad(), false);
+        ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this,
+                pinPadObject.getPinpad(), false, pinPadObject.getLanguage());
         confirmationPinDialog.show();
     }
 
@@ -685,20 +688,20 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
                     PracticeHomeScreenPayloadDTO.class);
             List<HomeScreenOfficeNewsDTO> officeNews = practiceHomePayloadDTO.getOfficeNews();
             if (!officeNews.isEmpty()) {
-                RecyclerView newsList = (RecyclerView) findViewById(R.id.office_news_list);
-                if (newsList != null) {
-                    newsList.setVisibility(View.VISIBLE);
+                RecyclerView newsListRecyclerView = (RecyclerView) findViewById(R.id.office_news_list);
+                if (newsListRecyclerView != null) {
+                    newsListRecyclerView.setVisibility(View.VISIBLE);
                     findViewById(R.id.office_news_header).setVisibility(View.VISIBLE);
                     LinearLayoutManager layoutManager = new LinearLayoutManager(CloverMainActivity.this,
                             LinearLayoutManager.HORIZONTAL, false);
-                    DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(newsList.getContext(),
+                    DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(newsListRecyclerView.getContext(),
                             layoutManager.getOrientation());
-                    newsList.setLayoutManager(layoutManager);
-                    newsList.addItemDecoration(dividerItemDecoration);
+                    newsListRecyclerView.setLayoutManager(layoutManager);
+                    newsListRecyclerView.addItemDecoration(dividerItemDecoration);
 
                     OfficeNewsListAdapter adapter = new OfficeNewsListAdapter(CloverMainActivity.this,
                             officeNews, officeNewsClickedListener);
-                    newsList.setAdapter(adapter);
+                    newsListRecyclerView.setAdapter(adapter);
                 }
             } else {
                 DisplayMetrics metrics = getResources().getDisplayMetrics();

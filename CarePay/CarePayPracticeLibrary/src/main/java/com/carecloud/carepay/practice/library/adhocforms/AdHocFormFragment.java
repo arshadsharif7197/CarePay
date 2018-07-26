@@ -36,7 +36,6 @@ public class AdHocFormFragment extends BaseWebFormFragment {
 
     private AdHocFormsModel adhocFormsModel;
     private List<JsonObject> jsonFormSaveResponseArray = new ArrayList<>();
-    private List<PracticeForm> formsList;
     private AdHocFormsInterface callback;
 
     /**
@@ -62,11 +61,16 @@ public class AdHocFormFragment extends BaseWebFormFragment {
         callback = null;
     }
 
+    @Override
+    public void onCreate(Bundle icicle) {
+        super.onCreate(icicle);
+        adhocFormsModel = (AdHocFormsModel) callback.getDto();
+        filledForms = adhocFormsModel.getPayload().getPatientFormsResponse();
+    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        adhocFormsModel = (AdHocFormsModel) callback.getDto();
         formsList = callback.getFormsList();
         if (formsList != null) {
             setTotalForms(formsList.size());
@@ -89,7 +93,7 @@ public class AdHocFormFragment extends BaseWebFormFragment {
     }
 
     @Override
-    protected void displayNextForm() {
+    protected void displayNextForm(List<ConsentFormUserResponseDTO> filledForms) {
         int displayedFormsIndex = getDisplayedFormsIndex();
         if (getDisplayedFormsIndex() < getTotalForms()) {
             Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolbar_layout);
@@ -104,9 +108,9 @@ public class AdHocFormFragment extends BaseWebFormFragment {
             if (!jsonFormSaveResponseArray.isEmpty() && jsonFormSaveResponseArray.size() > displayedFormsIndex) {
                 userResponse = jsonFormSaveResponseArray.get(displayedFormsIndex);
             } else {
-                String uuid = payload.get("uuid").toString().replace("\"", "");
-                if(adhocFormsModel.getPayload().getPatientFormsResponse() != null) {
-                    for (ConsentFormUserResponseDTO response : adhocFormsModel.getPayload().getPatientFormsResponse()) {
+                String uuid = payload.get("uuid").getAsString();
+                if (adhocFormsModel.getPayload().getPatientFormsResponse() != null) {
+                    for (ConsentFormUserResponseDTO response : filledForms) {
                         if (uuid.equals(response.getFormId())) {
                             JsonObject json = new JsonObject();
                             json.addProperty("uuid", response.getFormId());
@@ -194,7 +198,7 @@ public class AdHocFormFragment extends BaseWebFormFragment {
     public boolean navigateBack() {
         if (getTotalForms() > 1 && getDisplayedFormsIndex() > 0) {
             setDisplayedFormsIndex(getDisplayedFormsIndex() - 1);
-            displayNextForm();
+            displayNextForm(filledForms);
             return true;
         }
         return false;

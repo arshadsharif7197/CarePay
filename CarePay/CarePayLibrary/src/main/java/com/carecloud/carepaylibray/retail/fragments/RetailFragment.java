@@ -44,6 +44,7 @@ public class RetailFragment extends BaseFragment {
     protected static final String QUERY_ORDER = "transaction_id";
     protected static final String QUERY_STORE = "store_id";
     protected static final String QUERY_AMOUNT = "amount";
+    protected static final String PATH_PAYMENTS_REDIRECT = "/payment";
 
     protected RetailModel retailModel;
     protected RetailPracticeDTO retailPractice;
@@ -166,7 +167,8 @@ public class RetailFragment extends BaseFragment {
     }
 
     private void loadRetailHome() {
-        Uri storeUrl = Uri.parse(HttpConstants.getFormsUrl() + BASE_URL);
+        Uri storeUrl = Uri.parse(HttpConstants.getRetailUrl() + BASE_URL);
+
         shoppingWebView.clearCache(true);
         shoppingWebView.clearHistory();
         shoppingWebView.loadUrl(storeUrl.toString());
@@ -215,8 +217,9 @@ public class RetailFragment extends BaseFragment {
                 if (query == null) {
                     query = "";
                 }
+                String redirectUrl = HttpConstants.getRetailUrl() + PATH_PAYMENTS_REDIRECT;
                 String baseUrl = url.replace(query, "").replace("?", "");
-                if (HttpConstants.getRetailPaymentsRedirectUrl().equals(baseUrl)) {
+                if (redirectUrl.equals(baseUrl)) {
                     String orderId = uri.getQueryParameter(QUERY_ORDER);
                     String amountString = uri.getQueryParameter(QUERY_AMOUNT);
                     String storeId = uri.getQueryParameter(QUERY_STORE);

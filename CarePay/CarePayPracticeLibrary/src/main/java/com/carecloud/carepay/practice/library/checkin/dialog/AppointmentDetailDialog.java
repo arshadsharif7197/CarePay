@@ -399,7 +399,40 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             updatePageOptions(workflowDTO);
-            updateQueueStatus(workflowDTO);
+            if (appointmentPayloadDTO.getAppointmentStatus().getOriginalName() == null) {
+                updateQueueStatus(workflowDTO);
+            }else{
+                queueTextLayout.setVisibility(View.GONE);
+                checkboxLayout.setVisibility(View.GONE);
+                queueText.setVisibility(View.GONE);
+
+                View roomLayout = findViewById(R.id.roomStatusLayout);
+                roomLayout.setVisibility(View.VISIBLE);
+
+                TextView roomTitleTextView = (TextView) findViewById(R.id.roomStatusTitle);
+                TextView roomMessageTextView = (TextView) findViewById(R.id.roomStatusMessage);
+
+                Date checkinTime = DateUtil.getInstance().setDateRaw(appointmentPayloadDTO.getAppointmentStatus()
+                        .getLastUpdated().replaceAll("\\.\\d\\d\\dZ", "-00:00")).getDate();
+                String roomMessage;
+                switch (appointmentPayloadDTO.getAppointmentStatus().getOriginalCode()){
+                    case CarePayConstants.IN_PROGRESS_IN_ROOM:
+                        default:
+                        roomMessage = String.format(Label.getLabel("appointments_queue_in_room_message"),
+                                appointmentPayloadDTO.getPatient().getFirstName(),
+                                DateUtil.getContextualTimeElapsed(checkinTime, new Date()));
+                        roomTitleTextView.setText(Label.getLabel("appointments_queue_in_room_title"));
+                        roomMessageTextView.setText(roomMessage);
+                        break;
+                    case CarePayConstants.IN_PROGRESS_OUT_ROOM:
+                        roomMessage = String.format(Label.getLabel("appointments_queue_out_room_message"),
+                                appointmentPayloadDTO.getPatient().getFirstName(),
+                                DateUtil.getContextualTimeElapsed(checkinTime, new Date()));
+                        roomTitleTextView.setText(Label.getLabel("appointments_queue_out_room_title"));
+                        roomMessageTextView.setText(roomMessage);
+                        break;
+                }
+            }
         }
 
         @Override
@@ -696,7 +729,8 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
             @Override
             public void run() {
                 PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-                pageButton.setEnabled(paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getNotificationOptions().hasPushNotification());
+                pageButton.setEnabled(paymentsModel.getPaymentPayload().getPatientBalances().get(0)
+                        .getDemographics().getPayload().getNotificationOptions().hasPushNotification());
             }
         });
     }

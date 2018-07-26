@@ -30,7 +30,8 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import java.util.Set;
 
 public class FilterDialog extends PopupWindow
-        implements CustomFilterListAdapter.CustomFilterListAdapterListener, CustomSearchAdapter.OnSearchChangedListener {
+        implements CustomFilterListAdapter.CustomFilterListAdapterListener,
+        CustomSearchAdapter.OnSearchChangedListener {
 
     private Context context;
     private View parentView;
@@ -190,6 +191,14 @@ public class FilterDialog extends PopupWindow
                 } else {
                     callBack.refreshData();
                 }
+            }
+        });
+
+        View blankSpace = popupWindowLayout.findViewById(R.id.blankSpace);
+        blankSpace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
             }
         });
     }

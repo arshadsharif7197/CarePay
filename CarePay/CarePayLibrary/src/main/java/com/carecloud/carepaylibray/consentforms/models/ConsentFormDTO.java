@@ -37,7 +37,7 @@ public class ConsentFormDTO implements DTO {
         this.metadata = metadata;
     }
 
-    public ConsentFormPayloadDTO getConsentFormPayloadDTO() {
+    public ConsentFormPayloadDTO getPayload() {
         return consentFormPayloadDTO;
     }
 

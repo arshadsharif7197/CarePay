@@ -18,7 +18,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
@@ -28,7 +27,6 @@ import java.util.regex.Matcher;
 public class FormsFragment extends BaseWebFormFragment {
 
     private ConsentFormDTO consentFormDTO;
-    private List<PracticeForm> consentFormList;
 
     public static FormsFragment newInstance(WorkflowDTO workflowDTO) {
         Bundle args = new Bundle();
@@ -45,8 +43,8 @@ public class FormsFragment extends BaseWebFormFragment {
         Gson gson = new Gson();
         String jsonString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
         consentFormDTO = gson.fromJson(jsonString, ConsentFormDTO.class);
-        consentFormList = consentFormDTO.getMetadata().getDataModels().getPracticeForms();
-        setTotalForms(consentFormList.size());
+        formsList = consentFormDTO.getMetadata().getDataModels().getPracticeForms();
+        setTotalForms(formsList.size());
     }
 
     @Override
@@ -60,14 +58,14 @@ public class FormsFragment extends BaseWebFormFragment {
     protected void displayNextForm() {
         int displayedFormsIndex = getDisplayedFormsIndex();
         if (getDisplayedFormsIndex() < getTotalForms()) {
-            PracticeForm practiceForm = consentFormList.get(displayedFormsIndex);
+            PracticeForm practiceForm = formsList.get(displayedFormsIndex);
             JsonObject payload = practiceForm.getPayload();
             JsonObject userResponse = null;
             if (!jsonFormSaveResponseArray.isEmpty() && jsonFormSaveResponseArray.size() > displayedFormsIndex) {
                 userResponse = jsonFormSaveResponseArray.get(displayedFormsIndex);
             } else {
-                String uuid = payload.get("uuid").toString().replace("\"", "");
-                for (ConsentFormUserResponseDTO response : consentFormDTO.getConsentFormPayloadDTO().getResponses()) {
+                String uuid = payload.get("uuid").getAsString();
+                for (ConsentFormUserResponseDTO response : consentFormDTO.getPayload().getResponses()) {
                     if (uuid.equals(response.getFormId())) {
                         JsonObject json = new JsonObject();
                         json.addProperty("uuid", response.getFormId());
@@ -104,14 +102,14 @@ public class FormsFragment extends BaseWebFormFragment {
     @Override
     protected void submitAllForms() {
         Map<String, String> queries = new HashMap<>();
-        queries.put("practice_mgmt", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getPracticeMgmt());
-        queries.put("practice_id", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getPracticeId());
-        queries.put("appointment_id", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getAppointmentId());
-        queries.put("patient_id", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getPatientId());
+        queries.put("practice_mgmt", consentFormDTO.getPayload().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getPracticeMgmt());
+        queries.put("practice_id", consentFormDTO.getPayload().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getPracticeId());
+        queries.put("appointment_id", consentFormDTO.getPayload().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getAppointmentId());
+        queries.put("patient_id", consentFormDTO.getPayload().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getPatientId());
 
         Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
         header.put("transition", "true");
-        header.put("username_patient", consentFormDTO.getConsentFormPayloadDTO().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getUsername());
+        header.put("username_patient", consentFormDTO.getPayload().getConsentFormAppointmentPayload().get(0).getAppointmentMetadata().getUsername());
 
         Gson gson = new Gson();
         String body = gson.toJson(jsonFormSaveResponseArray);

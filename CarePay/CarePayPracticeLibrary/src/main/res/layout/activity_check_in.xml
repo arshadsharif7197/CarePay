@@ -18,25 +18,26 @@
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/goBackTextview"
-            android:layout_width="180dp"
-            android:layout_height="53dp"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/goBackHeight"
             android:layout_alignParentStart="true"
             android:background="?attr/selectableItemBackground"
             android:drawablePadding="@dimen/dimen_10dp"
+            android:layout_marginEnd="@dimen/dimen_10dp"
             android:drawableStart="@drawable/icn_arrow_left"
             android:gravity="center_vertical"
             android:includeFontPadding="false"
-            android:paddingEnd="0dp"
+            android:paddingEnd="10dp"
             android:paddingStart="@dimen/dimen_10dp"
             android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textSize="@dimen/goBackTextSize"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="go_back" />
 
         <LinearLayout
             android:id="@+id/filterLayout"
             android:layout_width="120dp"
-            android:layout_height="53dp"
+            android:layout_height="@dimen/goBackHeight"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:background="?attr/selectableItemBackground"
@@ -61,7 +62,7 @@
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textSize="@dimen/filterLabelTextSize"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="practice_checkin_filter" />
 
@@ -91,36 +92,36 @@
         android:scrollbars="horizontal">
 
         <LinearLayout
-            android:layout_width="1600dp"
+            android:layout_width="@dimen/checkInPanelWidth"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/dimen_20dp"
-            android:paddingEnd="@dimen/dimen_20dp"
-            android:minWidth="1600dp"
+            android:minWidth="@dimen/checkInPanelWidth"
             android:orientation="horizontal"
             android:paddingBottom="10dp"
-            android:paddingTop="15dp"
+            android:paddingEnd="@dimen/dimen_20dp"
+            android:paddingStart="@dimen/dimen_20dp"
+            android:paddingTop="@dimen/checkInMainPanelTopPadding"
             android:weightSum="4">
 
             <RelativeLayout
-                android:layout_width="400dp"
-                android:layout_height="match_parent">
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/checkingInTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/dimen_34dp"
-                    android:gravity="center_vertical"
-                    android:layout_alignBaseline="@+id/checkingInCounterTextview"
                     android:layout_marginStart="@dimen/dimen_15dp"
+                    android:gravity="center_vertical"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/checkinColumnTitleTextSize"
                     app:customAssetFont="gotham_rounded_medium"
                     breeze:textKey="practice_checkin_checking_in" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/checkingInCounterTextview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dimen_34dp"
+                    android:layout_width="@dimen/queueCounterNoBorderWidth"
+                    android:layout_height="@dimen/queueCounterNoBorderHeight"
                     android:layout_marginStart="10dp"
                     android:layout_toEndOf="@id/checkingInTextView"
                     android:background="@drawable/queue_counter_noborder_background"
@@ -128,7 +129,7 @@
                     android:minWidth="@dimen/dimen_34dp"
                     android:padding="@dimen/dimen_3dp"
                     android:textColor="@color/practice_mode_counter_text"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/checkInTitleCounterTextSize"
                     app:customAssetFont="gotham_rounded_bold"
                     tools:text="0" />
 
@@ -142,7 +143,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginEnd="2dp"
-                        android:layout_marginTop="@dimen/dimen_15dp"
+                        android:layout_marginTop="@dimen/checkInColumnTopMargin"
                         android:background="@drawable/checking_left_list_background" />
 
                     <RelativeLayout
@@ -166,28 +167,28 @@
                     </RelativeLayout>
                 </RelativeLayout>
 
-
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="400dp"
-                android:layout_height="match_parent">
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/waitingRoomTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/dimen_34dp"
-                    android:gravity="center_vertical"
                     android:layout_marginStart="@dimen/dimen_15dp"
+                    android:gravity="center_vertical"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/checkinColumnTitleTextSize"
                     app:customAssetFont="gotham_rounded_medium"
                     breeze:textKey="practice_checkin_checked_in" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/waitingCounterTextview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dimen_34dp"
+                    android:layout_width="@dimen/queueCounterNoBorderWidth"
+                    android:layout_height="@dimen/queueCounterNoBorderHeight"
                     android:layout_marginStart="10dp"
                     android:layout_toEndOf="@id/waitingRoomTextView"
                     android:background="@drawable/queue_counter_noborder_background"
@@ -195,7 +196,7 @@
                     android:minWidth="@dimen/dimen_34dp"
                     android:padding="@dimen/dimen_3dp"
                     android:textColor="@color/practice_mode_counter_text"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/checkInTitleCounterTextSize"
                     app:customAssetFont="gotham_rounded_bold"
                     tools:text="0" />
 
@@ -209,7 +210,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginEnd="2dp"
-                        android:layout_marginTop="@dimen/dimen_15dp"
+                        android:layout_marginTop="@dimen/checkInColumnTopMargin"
                         android:background="@drawable/checking_middle_left_list_background" />
 
                     <RelativeLayout
@@ -235,24 +236,25 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="400dp"
-                android:layout_height="match_parent">
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/checkingOutTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/dimen_34dp"
-                    android:gravity="center_vertical"
                     android:layout_marginStart="@dimen/dimen_15dp"
+                    android:gravity="center_vertical"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/checkinColumnTitleTextSize"
                     app:customAssetFont="gotham_rounded_medium"
                     breeze:textKey="practice_checkin_checking_out" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/checkingOutCounterTextview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dimen_34dp"
+                    android:layout_width="@dimen/queueCounterNoBorderWidth"
+                    android:layout_height="@dimen/queueCounterNoBorderHeight"
                     android:layout_marginStart="10dp"
                     android:layout_toEndOf="@id/checkingOutTextView"
                     android:background="@drawable/queue_counter_noborder_background"
@@ -260,7 +262,7 @@
                     android:minWidth="@dimen/dimen_34dp"
                     android:padding="@dimen/dimen_3dp"
                     android:textColor="@color/practice_mode_counter_text"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/checkInTitleCounterTextSize"
                     app:customAssetFont="gotham_rounded_bold"
                     tools:text="0" />
 
@@ -270,29 +272,30 @@
                     android:layout_height="match_parent"
                     android:layout_below="@id/checkingOutCounterTextview"
                     android:layout_marginEnd="2dp"
-                    android:layout_marginTop="@dimen/dimen_15dp"
+                    android:layout_marginTop="@dimen/checkInColumnTopMargin"
                     android:background="@drawable/checking_middle_right_list_background" />
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="400dp"
-                android:layout_height="match_parent">
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/checkedOutTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/dimen_34dp"
-                    android:gravity="center_vertical"
                     android:layout_marginStart="@dimen/dimen_15dp"
+                    android:gravity="center_vertical"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/checkinColumnTitleTextSize"
                     app:customAssetFont="gotham_rounded_medium"
                     breeze:textKey="practice_checkin_checked_out" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/checkedOutCounterTextview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dimen_34dp"
+                    android:layout_width="@dimen/queueCounterNoBorderWidth"
+                    android:layout_height="@dimen/queueCounterNoBorderHeight"
                     android:layout_marginStart="10dp"
                     android:layout_toEndOf="@id/checkedOutTextView"
                     android:background="@drawable/queue_counter_noborder_background"
@@ -300,7 +303,7 @@
                     android:minWidth="@dimen/dimen_34dp"
                     android:padding="@dimen/dimen_3dp"
                     android:textColor="@color/practice_mode_counter_text"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/checkInTitleCounterTextSize"
                     app:customAssetFont="gotham_rounded_bold"
                     tools:text="0" />
 
@@ -310,10 +313,9 @@
                     android:layout_height="match_parent"
                     android:layout_below="@id/checkedOutCounterTextview"
                     android:layout_marginEnd="2dp"
-                    android:layout_marginTop="@dimen/dimen_15dp"
+                    android:layout_marginTop="@dimen/checkInColumnTopMargin"
                     android:background="@drawable/checking_right_list_background" />
             </RelativeLayout>
-
 
         </LinearLayout>
 

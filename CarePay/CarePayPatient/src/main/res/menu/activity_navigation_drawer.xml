@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_my_health"
+            android:icon="@drawable/icn_drawer_my_health"
+            android:title="My Health" />
+
+        <item
+            android:id="@+id/nav_appointments"
+            android:icon="@drawable/icn_drawer_appointments"
+            android:title="Appointments" />
+        <item
+            android:id="@+id/nav_payments"
+            android:icon="@drawable/ic_icn_drawer_payments_default"
+            android:title="Payments" />
+        <item
+            android:id="@+id/nav_messages"
+            android:icon="@drawable/icn_messages"
+            android:title="Messages"
+            app:actionLayout="@layout/layout_badge_item" />
+        <item
+            android:id="@+id/nav_forms"
+            android:icon="@drawable/ic_forms"
+            android:title="Forms"
+            app:actionLayout="@layout/layout_badge_item" />
+        <item
+            android:id="@+id/nav_purchase"
+            android:icon="@drawable/icn_drawer_purchase_default"
+            android:title="Shop" />
+        <item
+            android:id="@+id/nav_notification"
+            android:icon="@drawable/icn_drawer_notifications"
+            android:title="Notifications" />
+    </group>
+    <item android:title="">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_settings"
+                    android:title="Settings" />
+                <item
+                    android:id="@+id/nav_logout"
+                    android:title="Logout" />
+            </group>
+        </menu>
+    </item>
+
+</menu>

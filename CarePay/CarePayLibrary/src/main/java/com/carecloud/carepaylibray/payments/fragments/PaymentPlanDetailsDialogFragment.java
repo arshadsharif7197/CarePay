@@ -17,6 +17,8 @@ import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
@@ -137,6 +139,25 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
                 dismiss();
             }
         });
+
+        final ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload().
+                findScheduledPayment(paymentPlanDTO);
+        if(scheduledPayment != null){
+            View scheduledPaymentLayout = view.findViewById(R.id.scheduledPaymentLayout);
+            scheduledPaymentLayout.setVisibility(View.VISIBLE);
+            TextView scheduledPaymentMessage = (TextView) view.findViewById(R.id.scheduledPaymentMessage);
+            String message = String.format(Label.getLabel("payment.oneTimePayment.schedule.success"),
+                    StringUtil.getFormattedBalanceAmount(scheduledPayment.getPayload().getAmount()),
+                    DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal());
+            scheduledPaymentMessage.setText(message);
+            scheduledPaymentLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callback.onStartEditScheduledPayment(paymentsModel, paymentPlanDTO, scheduledPayment);
+                    dismiss();
+                }
+            });
+        }
     }
 
     @Override

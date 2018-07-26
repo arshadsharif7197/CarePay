@@ -100,6 +100,7 @@
                 android:paddingBottom="@dimen/dimen_5dp"
                 android:textColor="@color/glitter"
                 android:visibility="gone"
+                tools:text="Enter amount between\n $100 and $500"
                 app:customAssetFont="gotham_rounded_book" />
 
         </LinearLayout>

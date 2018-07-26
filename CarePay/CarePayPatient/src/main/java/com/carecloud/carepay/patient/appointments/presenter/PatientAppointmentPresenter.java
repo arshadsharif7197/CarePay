@@ -151,19 +151,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     public void selectDateRange(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO,
                                 AppointmentResourcesItemDTO appointmentResource,
                                 AppointmentsResultModel appointmentsResultModel) {
-        Bundle bundle = new Bundle();
-        Gson gson = new Gson();
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, startDate);
-        bundle.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(appointmentResource));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(visitTypeDTO));
-        bundle.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE,
-                gson.toJson(appointmentsResultModel));
-
-        AppointmentDateRangeFragment appointmentDateRangeFragment = new AppointmentDateRangeFragment();
-        appointmentDateRangeFragment.setArguments(bundle);
-
-        viewHandler.navigateToFragment(appointmentDateRangeFragment, false);
+        AppointmentDateRangeFragment fragment = AppointmentDateRangeFragment
+                .newInstance(appointmentsResultModel, startDate, endDate, appointmentResource, visitTypeDTO);
+        viewHandler.navigateToFragment(fragment, false);
     }
 
     @Override
@@ -264,12 +254,18 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void onAppointmentRequestSuccess() {
-        viewHandler.confirmAppointment(true);
+        viewHandler.confirmAppointment(true,
+                getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests());
     }
 
     @Override
     public ApplicationMode getApplicationMode() {
         return viewHandler.getApplicationMode();
+    }
+
+    @Override
+    public AppointmentsSettingDTO getAppointmentsSettings() {
+        return getPracticeSettings();
     }
 
     @Override
@@ -668,7 +664,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             builder.replace(last, builder.length(), "");
             ((ISession) viewHandler.getContext()).showErrorNotification(builder.toString());
         } else {
-            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment.newInstance(workflowDTO);
+            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
+                    .newInstance(workflowDTO, Label.getLabel("appointment.confirmationScreen.type.label.paymentType"),
+                            Label.getLabel("add_appointment_back_to_appointments_button"));
             viewHandler.displayDialogFragment(confirmationFragment, false);
         }
     }
@@ -748,7 +746,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
         if (startCancelationFeePayment) {
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_cancellation_success_message_HTML"));
-            viewHandler.confirmAppointment(false);
+            viewHandler.confirmAppointment(false, false);
             //log appt cancelation to mixpanel
             String[] params = {getString(R.string.param_appointment_cancel_reason), getString(R.string.param_practice_id), getString(R.string.param_practice_name)};
             Object[] values = {cancellationReasonString, practiceId, practiceName};

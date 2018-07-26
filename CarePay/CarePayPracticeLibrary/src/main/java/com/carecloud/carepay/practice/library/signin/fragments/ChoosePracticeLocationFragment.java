@@ -48,7 +48,8 @@ public class ChoosePracticeLocationFragment extends BaseDialogFragment
     private PracticeSelectionUserPractice selectedPractice;
     private WorkflowDTO workflowDTO;
 
-    public static ChoosePracticeLocationFragment newInstance(PracticeSelectionUserPractice selectedPractice, WorkflowDTO workflowDTO) {
+    public static ChoosePracticeLocationFragment newInstance(PracticeSelectionUserPractice selectedPractice,
+                                                             WorkflowDTO workflowDTO) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, selectedPractice);
         if (workflowDTO != null) {
@@ -66,7 +67,7 @@ public class ChoosePracticeLocationFragment extends BaseDialogFragment
         try {
             callback = (SelectPracticeCallback) context;
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached Context must implement SelectPracticeLocationAdapterCallback");
+            throw new ClassCastException("Attached Context must implement SelectPracticeCallback");
         }
     }
 
@@ -74,9 +75,11 @@ public class ChoosePracticeLocationFragment extends BaseDialogFragment
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         workflowDTO = DtoHelper.getConvertedDTO(WorkflowDTO.class, getArguments());
-        selectedPractice = DtoHelper.getConvertedDTO(PracticeSelectionUserPractice.class, getArguments());
+        selectedPractice = DtoHelper.getConvertedDTO(PracticeSelectionUserPractice.class,
+                getArguments());
         if (selectedPractice == null && workflowDTO != null) {
-            PracticeSelectionDTO practiceSelectionDTO = DtoHelper.getConvertedDTO(PracticeSelectionDTO.class, workflowDTO);
+            PracticeSelectionDTO practiceSelectionDTO = DtoHelper
+                    .getConvertedDTO(PracticeSelectionDTO.class, workflowDTO);
             selectedPractice = practiceSelectionDTO.getPayload().getUserPracticesList().get(0);
         }
         locationsList = selectedPractice.getLocations();
@@ -123,7 +126,7 @@ public class ChoosePracticeLocationFragment extends BaseDialogFragment
         searchView.setQueryHint(Label.getLabel("search_field_hint"));
         searchView.setOnQueryTextListener(queryTextListener);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         searchRecycler = (RecyclerView) view.findViewById(R.id.search_recycler);
         searchRecycler.setLayoutManager(layoutManager);
 
@@ -206,7 +209,8 @@ public class ChoosePracticeLocationFragment extends BaseDialogFragment
 
     private void clearSelectedLocationPractice() {
         selectedLocation = null;
-        PracticeLocationSearchAdapter searchAdapter = (PracticeLocationSearchAdapter) searchRecycler.getAdapter();
+        PracticeLocationSearchAdapter searchAdapter = (PracticeLocationSearchAdapter)
+                searchRecycler.getAdapter();
         searchAdapter.setSelectedLocation(selectedLocation);
     }
 

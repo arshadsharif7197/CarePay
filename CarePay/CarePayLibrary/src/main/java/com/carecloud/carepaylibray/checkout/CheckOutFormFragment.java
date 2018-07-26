@@ -38,7 +38,6 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
 
     private AppointmentsResultModel appointmentsResultModel;
     private List<JsonObject> jsonFormSaveResponseArray = new ArrayList<>();
-    private List<PracticeForm> formsList;
     private CheckOutInterface callback;
 
     /**
@@ -73,6 +72,7 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, getArguments());
+        filledForms = appointmentsResultModel.getPayload().getPatientFormsResponse();
         formsList = appointmentsResultModel.getMetadata().getDataModels().getPracticeForms();
         setTotalForms(formsList.size());
     }
@@ -90,7 +90,7 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
     }
 
     @Override
-    protected void displayNextForm() {
+    protected void displayNextForm(List<ConsentFormUserResponseDTO> filledForms) {
         int displayedFormsIndex = getDisplayedFormsIndex();
         if (getDisplayedFormsIndex() < getTotalForms()) {
             PracticeForm practiceForm = formsList.get(displayedFormsIndex);
@@ -99,9 +99,8 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
             if (!jsonFormSaveResponseArray.isEmpty() && jsonFormSaveResponseArray.size() > displayedFormsIndex) {
                 userResponse = jsonFormSaveResponseArray.get(displayedFormsIndex);
             } else {
-                String uuid = payload.get("uuid").toString().replace("\"", "");
-                for (ConsentFormUserResponseDTO response : appointmentsResultModel.getPayload()
-                        .getPatientFormsResponse()) {
+                String uuid = payload.get("uuid").getAsString();
+                for (ConsentFormUserResponseDTO response : filledForms) {
                     if (uuid.equals(response.getFormId())) {
                         JsonObject json = new JsonObject();
                         json.addProperty("uuid", response.getFormId());

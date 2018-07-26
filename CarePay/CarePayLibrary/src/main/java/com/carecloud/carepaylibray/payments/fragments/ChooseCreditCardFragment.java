@@ -122,9 +122,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
                 creditCardList = paymentsModel.getPaymentPayload().getPatientCreditCards();
                 userPracticeDTO = callback.getPracticeInfo(paymentsModel);
             }
-
         }
-
     }
 
     @Override
@@ -184,8 +182,15 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
 
         creditCardsRecyclerView = (RecyclerView) view.findViewById(R.id.list_credit_cards);
         creditCardsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        final CreditCardsListAdapter creditCardsListAdapter = new CreditCardsListAdapter(getContext(), creditCardList, this, false);
+        final CreditCardsListAdapter creditCardsListAdapter = new CreditCardsListAdapter(getContext(),
+                creditCardList, this, false);
         creditCardsRecyclerView.setAdapter(creditCardsListAdapter);
+        for (PaymentsPatientsCreditCardsPayloadListDTO creditCard : creditCardList) {
+            if (creditCard.getPayload().isDefault()) {
+                onCreditCardItemSelected(creditCard.getPayload());
+                break;
+            }
+        }
 
     }
 
@@ -276,7 +281,8 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
             queries.put("patient_id", metadata.getPatientId());
         }
 
-        if (!StringUtil.isNullOrEmpty(paymentsModel.getPaymentPayload().getPaymentPostModel().getOrderId())) {
+        if (paymentsModel.getPaymentPayload().getPaymentPostModel() != null &&
+                !StringUtil.isNullOrEmpty(paymentsModel.getPaymentPayload().getPaymentPostModel().getOrderId())) {
             IntegratedPaymentPostModel paymentPostModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
             queries.put("store_id", paymentPostModel.getStoreId());
             queries.put("transaction_id", paymentPostModel.getOrderId());
@@ -350,7 +356,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payments_completed), 1);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.total_payments_amount), amountToMakePayment);
 
-            callback.showPaymentConfirmation(workflowDTO);
+            showConfirmation(workflowDTO);
             if (getDialog() != null) {
                 dismiss();
             }
@@ -383,6 +389,10 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     public void onCreditCardItemSelected(PaymentCreditCardsPayloadDTO creditCard) {
         selectedCreditCard = creditCard;
         nextButton.setEnabled(true);
+    }
+
+    protected void showConfirmation(WorkflowDTO workflowDTO){
+        callback.showPaymentConfirmation(workflowDTO);
     }
 
 }

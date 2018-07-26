@@ -48,6 +48,7 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
+import com.squareup.timessquare.CalendarPickerView;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -87,12 +88,13 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
      * Shows Confirmation after Appointment Created
      */
     public void showAppointmentConfirmation() {
-
         if (isVisible()) {
             ApplicationMode.ApplicationType applicationType = getApplicationMode().getApplicationType();
+            boolean autoScheduleAppointments = getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests();
+
             SystemUtil.showSuccessToast(getContext(),
-                    Label.getLabel(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
-                            "appointment_request_success_message_HTML" : "appointment_schedule_success_message_HTML"));
+                    Label.getLabel(applicationType == ApplicationMode.ApplicationType.PRACTICE || autoScheduleAppointments ?
+                            "appointment_schedule_success_message_HTML" : "appointment_request_success_message_HTML"));
         }
 
         onAppointmentRequestSuccess();
@@ -185,7 +187,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
                     patientId};
             MixPanelUtil.logEvent(getString(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
                     R.string.event_appointment_requested : R.string.event_appointment_scheduled), params, values);
-            if(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            if (applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
                 MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
             }
         }
@@ -273,8 +275,8 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
                 endDate,
                 dateUtil.getDate(),
                 dateUtil.addDays(92).getDate(),
-                this
-        );
+                this,
+                CalendarPickerView.SelectionMode.RANGE.name());
 
         displayDialogFragment(dialog, false);
     }
@@ -312,7 +314,8 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     protected abstract LinksDTO getLinks();
 
-    private AppointmentsSettingDTO getAppointmentsSettings() {
+    @Override
+    public AppointmentsSettingDTO getAppointmentsSettings() {
         List<AppointmentsSettingDTO> appointmentsSettingDTOList = appointmentsResultModel
                 .getPayload().getAppointmentsSettings();
         if (!appointmentsSettingDTOList.isEmpty()) {
@@ -349,7 +352,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     @Override
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
-        PracticeAddNewCreditCardFragment fragment = PracticeAddNewCreditCardFragment.newInstance(paymentsModel,amount);
+        PracticeAddNewCreditCardFragment fragment = PracticeAddNewCreditCardFragment.newInstance(paymentsModel, amount);
         displayDialogFragment(fragment, false);
     }
 
@@ -408,7 +411,9 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
             builder.replace(last, builder.length(), "");
             showErrorNotification(builder.toString());
         } else {
-            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment.newInstance(workflowDTO);
+            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
+                    .newInstance(workflowDTO, Label.getLabel("appointment.confirmationScreen.type.label.paymentType"),
+                            Label.getLabel("add_appointment_back_to_appointments_button"));
             displayDialogFragment(confirmationFragment, false);
         }
     }

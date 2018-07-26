@@ -5,8 +5,10 @@ import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
@@ -30,7 +32,9 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     private boolean isPracticeAppPracticeMode;
 
     private DialogInterface.OnDismissListener onDismissListener;
-    private DialogInterface.OnCancelListener onCancelListener;
+    protected DialogInterface.OnCancelListener onCancelListener;
+
+    private long lastFullScreenSet;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -68,6 +72,19 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         if (dialog != null) {
             View decorView = dialog.getWindow().getDecorView();
             hideKeyboardOnViewTouch(decorView);
+            if(isPracticeAppPatientMode){
+                decorView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        long now = System.currentTimeMillis();
+                        if(now - lastFullScreenSet > 1000) {
+                            Log.d("Base", "Hide Nav Bar");
+                            setNavigationBarVisibility();
+                            lastFullScreenSet = now;
+                        }
+                    }
+                });
+            }
         }
         setLastInteraction(System.currentTimeMillis());
     }
@@ -93,6 +110,13 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
      */
     public void setOnCancelListener(Dialog.OnCancelListener cancelListener) {
         this.onCancelListener = cancelListener;
+    }
+
+    public void cancel(){
+        if (onCancelListener != null && getDialog() != null) {
+            onCancelListener.onCancel(getDialog());
+        }
+        dismiss();
     }
 
 
@@ -260,13 +284,16 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         }
     }
 
-    private void setNavigationBarVisibility() {
-        View decorView = getDialog().getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_IMMERSIVE
-                | FULLSCREEN_VALUE;
-        decorView.setSystemUiVisibility(uiOptions);
+    @Override
+    public void setNavigationBarVisibility() {
+        if(getDialog().getWindow() != null) {
+            View decorView = getDialog().getWindow().getDecorView();
+            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE
+                    | FULLSCREEN_VALUE;
+            decorView.setSystemUiVisibility(uiOptions);
+        }
     }
 
 }

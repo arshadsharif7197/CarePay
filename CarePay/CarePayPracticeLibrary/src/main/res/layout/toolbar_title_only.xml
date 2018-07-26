@@ -4,8 +4,8 @@
     android:id="@+id/toolbar_layout"
     style="@style/CustomToolbarStyle"
     android:background="@color/transparent_apt"
-    android:paddingBottom="@dimen/dimen_10dp"
-    android:paddingTop="@dimen/dimen_10dp">
+    android:paddingBottom="@dimen/toolbar_vertical_padding"
+    android:paddingTop="@dimen/toolbar_vertical_padding">
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/toolbar_title"

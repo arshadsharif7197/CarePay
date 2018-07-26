@@ -479,6 +479,46 @@
             android:layout_height="@dimen/dimen_1dp"
             android:background="@color/light_gray" />
 
+        <LinearLayout
+            android:id="@+id/editButtonsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/patient_mode_dialog_body_bg"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:weightSum="2">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/cancelPaymentPlanButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_10dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_rounded_red"
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/respons_button_text_size"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="payment_plan_cancel"
+                tools:text="Cancel Plan" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/editPaymentPlanButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_10dp"
+                android:layout_weight="1"
+                android:background="@drawable/green_rounded_button_selector_always_click"
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/respons_button_text_size"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="payment_plan_edit_save_button_label"
+                tools:text="Save Changes" />
+        </LinearLayout>
+
         <FrameLayout
             android:id="@+id/footer"
             android:layout_width="match_parent"

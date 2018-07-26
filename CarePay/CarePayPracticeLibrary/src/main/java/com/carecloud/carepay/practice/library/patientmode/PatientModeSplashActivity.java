@@ -144,8 +144,9 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         lockIcnImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(context, patientModeSplashDTO
-                        .getMetadata().getLinks().getPinpad(), false);
+                ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(context,
+                        patientModeSplashDTO.getMetadata().getLinks().getPinpad(), false,
+                        patientModeSplashDTO.getMetadata().getLinks().getLanguage());
                 confirmationPinDialog.show();
             }
         });

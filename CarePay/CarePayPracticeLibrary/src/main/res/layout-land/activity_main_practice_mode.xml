@@ -147,9 +147,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginEnd="@dimen/dimen_50dp"
-        android:layout_marginStart="@dimen/dimen_50dp"
-        android:layout_marginTop="@dimen/dimen_200dp"
+        android:layout_marginEnd="@dimen/mainLayoutContainerHorizontalMargin"
+        android:layout_marginStart="@dimen/mainLayoutContainerHorizontalMargin"
+        android:layout_marginTop="@dimen/mainLayoutContainerTopMargin"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -159,8 +159,8 @@
             android:layout_height="@dimen/home_button_height"
             android:background="@drawable/home_button_selector_top_left"
             android:clickable="true"
-            android:paddingBottom="@dimen/dimen_40dp"
-            android:paddingTop="@dimen/dimen_40dp">
+            android:paddingBottom="@dimen/homeItemVerticalPadding"
+            android:paddingTop="@dimen/homeItemVerticalPadding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/homeCheckinLabel"
@@ -196,8 +196,8 @@
             android:layout_height="@dimen/home_button_height"
             android:background="@drawable/home_button_selector"
             android:clickable="true"
-            android:paddingBottom="@dimen/dimen_40dp"
-            android:paddingTop="@dimen/dimen_40dp">
+            android:paddingBottom="@dimen/homeItemVerticalPadding"
+            android:paddingTop="@dimen/homeItemVerticalPadding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/homePaymentsLabel"
@@ -230,9 +230,10 @@
             android:id="@+id/homeAppointmentsClickable"
             android:layout_width="@dimen/home_button_width"
             android:layout_height="@dimen/home_button_height"
-            android:background="?homeButtonSelector"
+            android:background="@drawable/home_button_selector_top_right"
             android:clickable="true"
-            android:padding="@dimen/dimen_40dp">
+            android:paddingTop="@dimen/homeItemVerticalPadding"
+            android:paddingBottom="@dimen/homeItemVerticalPadding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/homeAppointmentsLabel"
@@ -260,7 +261,8 @@
             android:layout_marginStart="1dp"
             android:background="@drawable/home_button_selector_top_right"
             android:clickable="true"
-            android:padding="@dimen/dimen_40dp"
+            android:paddingTop="@dimen/homeItemVerticalPadding"
+            android:paddingBottom="@dimen/homeItemVerticalPadding"
             android:visibility="gone">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -288,7 +290,7 @@
         android:layout_width="@dimen/home_logo_width"
         android:layout_height="wrap_content"
         android:layout_below="@id/headerLayout"
-        android:layout_marginTop="@dimen/dimen_40dp"
+        android:layout_marginTop="@dimen/mainTitleHeaderMarginTop"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:contentDescription="@string/home_logo"
@@ -308,10 +310,11 @@
         android:id="@+id/office_news_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/shadow"
+        android:layout_below="@id/layoutContainer"
+        android:layout_marginTop="@dimen/officeNewsHeaderTopMargin"
         android:layout_centerHorizontal="true"
         android:textColor="@color/soft_sky"
-        android:textSize="@dimen/text_size_26sp"
+        android:textSize="@dimen/officeNewsHeaderTextSize"
         android:visibility="gone"
         app:customAssetFont="gotham_rounded_medium"
         breeze:textKey="officenews_button"

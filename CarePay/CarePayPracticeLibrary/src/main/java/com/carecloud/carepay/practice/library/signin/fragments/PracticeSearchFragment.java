@@ -33,7 +33,6 @@ import java.util.List;
 
 public class PracticeSearchFragment extends BaseDialogFragment implements PracticeSearchAdapter.SelectPracticeAdapterCallback {
 
-    private PracticeSelectionDTO practiceSelectionModel;
     private List<PracticeSelectionUserPractice> practiceList = new ArrayList<>();
     private PracticeSelectionUserPractice selectedPractice;
 
@@ -67,7 +66,7 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        practiceSelectionModel = (PracticeSelectionDTO) callback.getDto();
+        PracticeSelectionDTO practiceSelectionModel = (PracticeSelectionDTO) callback.getDto();
         if (practiceSelectionModel != null) {
             practiceList = practiceSelectionModel.getPayload().getUserPracticesList();
         }
@@ -108,7 +107,7 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
 
         searchView = (SearchView) view.findViewById(R.id.search_entry_view);
         for (TextView textView : ViewUtils.findChildrenByClass(searchView, TextView.class)) {
-            textView.setHintTextColor(getResources().getColor(R.color.textview_default_textcolor));
+            textView.setHintTextColor(getResources().getColor(R.color.optional_gray));
             textView.setTextColor(getResources().getColor(R.color.textview_default_textcolor));
         }
 

@@ -12,13 +12,14 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
-import com.carecloud.carepay.patient.demographics.fragments.ConfirmDialogFragment;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepay.patient.payment.PatientPaymentPresenter;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.ISession;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenterImpl;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
@@ -43,7 +44,7 @@ import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class ReviewDemographicsActivity extends BasePatientActivity implements DemographicsView,
-        PaymentViewHandler, ConfirmDialogFragment.ConfirmationCallback {
+        PaymentViewHandler, ConfirmationCallback {
 
 
     private static final String KEY_PAYMENT_DTO = "KEY_PAYMENT_DTO";
@@ -118,7 +119,11 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.exitFlow) {
-            ConfirmDialogFragment fragment = ConfirmDialogFragment.newInstance();
+            ConfirmDialogFragment fragment = ConfirmDialogFragment
+                    .newInstance(Label.getLabel("checkin_confirm_exit_title"),
+                            Label.getLabel("checkin_confirm_exit_message"),
+                            Label.getLabel("button_no"),
+                            Label.getLabel("button_yes"));
             fragment.setCallback(this);
             displayDialogFragment(fragment, false);
             return true;
@@ -158,6 +163,11 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     @Override
     public void navigateToIntakeForms(WorkflowDTO workflowDTO) {
         demographicsPresenter.navigateToIntakeForms(workflowDTO);
+    }
+
+    @Override
+    public void navigateToThirdParty(WorkflowDTO workflowDTO) {
+        demographicsPresenter.navigateToThirdParty(workflowDTO);
     }
 
     @Override

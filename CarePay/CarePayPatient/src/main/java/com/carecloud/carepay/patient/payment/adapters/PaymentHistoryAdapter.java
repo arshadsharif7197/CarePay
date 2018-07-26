@@ -101,17 +101,14 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
         holder.dateLabel.setVisibility(View.GONE);
         double totalPaid = item.getPayload().getTotalPaid();
         if (item.getPayload().getMetadata().getPaymentPlan() != null) {
-            holder.amount.setText(String.format(Label
-                            .getLabel("payment.history.item.label.amountPlaceHolder"),
-                    currencyFormatter.format(totalPaid)));
             if (!StringUtil.isNullOrEmpty(item.getPayload().getMetadata().getPaymentPlan().getDescription())) {
                 holder.historyPlanName.setText(item.getPayload().getMetadata().getPaymentPlan().getDescription());
                 holder.historyPlanName.setVisibility(View.VISIBLE);
             }
-            holder.dateLabel.setVisibility(View.VISIBLE);
-        } else {
-            holder.amount.setText(currencyFormatter.format(totalPaid));
         }
+
+        holder.amount.setText(currencyFormatter.format(totalPaid));
+
         DateUtil dateUtil = DateUtil.getInstance().setDateRaw(item.getPayload().getDate());
         holder.paymentDate.setText(dateUtil.getDateAsMonthAbbrDayOrdinalYear());
 

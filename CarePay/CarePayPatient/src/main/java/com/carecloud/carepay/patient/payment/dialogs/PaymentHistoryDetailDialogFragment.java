@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.payments.fragments.PaymentHistoryDetailFragment;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -82,23 +83,24 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
         });
 
         String paymentMethod = getPaymentMethod(historyItem.getPayload().getPapiPaymentMethod());
-        TextView transactionNumber = (TextView) view.findViewById(R.id.transaction_number);
+        View paymentPlanDetailsButton = view.findViewById(R.id.paymentPlanDetailsButton);
+        TextView paymentPlanNameTextView = (TextView) view.findViewById(R.id.paymentPlanNameTextView);
         if (historyItem.getPayload().getMetadata().getPaymentPlan() != null) {
-            paymentMethod = "Payment Plan";
-            TextView paymentPlanNameTextView = (TextView) view.findViewById(R.id.paymentPlanNameTextView);
+            paymentPlanDetailsButton.setVisibility(View.VISIBLE);
+            paymentPlanDetailsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callback.displayPaymentPlanHistoryDetails(historyItem,
+                            historyItem.getPayload().getMetadata().getPaymentPlan());
+                }
+            });
+            paymentMethod = Label.getLabel("payment_plan_payment_text");
             paymentPlanNameTextView.setText(historyItem.getPayload().getMetadata()
                     .getPaymentPlan().getDescription());
-            view.findViewById(R.id.receiptNumberLabel).setVisibility(View.GONE);
-            transactionNumber.setVisibility(View.GONE);
             paymentPlanNameTextView.setVisibility(View.VISIBLE);
-            view.findViewById(R.id.installmentsContainer).setVisibility(View.VISIBLE);
-            ((TextView) view.findViewById(R.id.installmentsTextView)).setText(String
-                    .valueOf(historyItem.getPayload().getMetadata().getPaymentPlan()
-                            .getPaymentPlanDetails().getInstallments()));
-            view.findViewById(R.id.completedOnContainer).setVisibility(View.VISIBLE);
-            DateUtil dateUtil = DateUtil.getInstance().setDateRaw(historyItem.getPayload().getDate());
-            ((TextView) view.findViewById(R.id.completedOnTextView)).setText(dateUtil
-                    .getDateAsMonthAbbrDayOrdinalYear());
+        }else{
+            paymentPlanDetailsButton.setVisibility(View.GONE);
+            paymentPlanNameTextView.setVisibility(View.GONE);
         }
         TextView transactionType = (TextView) view.findViewById(R.id.transaction_type);
         transactionType.setText(paymentMethod);
@@ -111,6 +113,7 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
         TextView transactionDate = (TextView) view.findViewById(R.id.transaction_date);
         transactionDate.setText(dateUtil.getDateAsMonthLiteralDayOrdinalYear());
 
+        TextView transactionNumber = (TextView) view.findViewById(R.id.transaction_number);
         transactionNumber.setText(historyItem.getPayload().getConfirmation());
 
         TextView transactionTotal = (TextView) view.findViewById(R.id.transaction_total);

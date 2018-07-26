@@ -28,9 +28,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
+import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.utils.KeyboardWatcher;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.WebViewKeyboardAdjuster;
@@ -38,7 +41,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.marcok.stepprogressbar.StepProgressBar;
 
-import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TAG;
+import java.util.List;
 
 
 /**
@@ -47,15 +50,18 @@ import static com.carecloud.carepaylibray.keyboard.KeyboardHolderActivity.LOG_TA
 
 public abstract class BaseWebFormFragment extends BaseFragment {
 
+    private static final String LOG_TAG = "BaseWebFormFragment";
     private WebView webView;
     private ProgressBar progressBar;
     protected Button nextButton;
+    protected List<ConsentFormUserResponseDTO> filledForms;
     private TextView header;
     private StepProgressBar progressIndicator;
 
     private int totalForms;
     private int displayedFormsIndex;
     protected String lastFormButtonLabel;
+    protected List<PracticeForm> formsList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -91,8 +97,10 @@ public abstract class BaseWebFormFragment extends BaseFragment {
         progressBar.setVisibility(View.VISIBLE);
         initWebView();
 
-        WebViewKeyboardAdjuster adjuster = new WebViewKeyboardAdjuster(view, (int) getResources().getDimension(R.dimen.checkinNavBarOpenOffset));
-        new KeyboardWatcher(getActivity().findViewById(android.R.id.content), false, adjuster);
+        if (!getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PATIENT)) {
+            WebViewKeyboardAdjuster adjuster = new WebViewKeyboardAdjuster(view, (int) getResources().getDimension(R.dimen.checkinNavBarOpenOffset));
+            new KeyboardWatcher(getActivity().findViewById(android.R.id.content), false, adjuster);
+        }
     }
 
     protected void setHeader(String text) {
@@ -164,8 +172,10 @@ public abstract class BaseWebFormFragment extends BaseFragment {
 
     /**
      * call Interface to load next consent forms
+     *
+     * @param filledForms
      */
-    protected abstract void displayNextForm();
+    protected abstract void displayNextForm(List<ConsentFormUserResponseDTO> filledForms);
 
     protected abstract String getBaseUrl();
 
@@ -181,8 +191,12 @@ public abstract class BaseWebFormFragment extends BaseFragment {
 
     protected void loadFormUrl(String formString, String function) {
         showProgressDialog();
-        webView.loadUrl("javascript:window." + function + "('" + formString + "')");
-        if(displayedFormsIndex > -1 && progressIndicator.getNumDots() > displayedFormsIndex) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            webView.evaluateJavascript("javascript:window." + function + "('" + formString + "')", null);
+        }else {
+            webView.loadUrl("javascript:window." + function + "('" + formString + "')");
+        }
+        if (displayedFormsIndex > -1 && progressIndicator.getNumDots() > displayedFormsIndex) {
             progressIndicator.setCurrentProgressDot(displayedFormsIndex);
         }
         if (getDisplayedFormsIndex() == getTotalForms() - 1) {
@@ -229,7 +243,7 @@ public abstract class BaseWebFormFragment extends BaseFragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    displayNextForm();
+                    displayNextForm(filledForms);
                     nextButton.setEnabled(true);
                 }
             });
@@ -247,11 +261,10 @@ public abstract class BaseWebFormFragment extends BaseFragment {
                 @Override
                 public void run() {
                     JsonObject jsonResponse = new JsonParser().parse(response).getAsJsonObject();
-
+                    jsonResponse.addProperty("version",
+                            formsList.get(getDisplayedFormsIndex()).getMetadata().getVersion());
                     saveForm(jsonResponse);
-
                     getNextStep();
-
                 }
             });
 
@@ -292,9 +305,6 @@ public abstract class BaseWebFormFragment extends BaseFragment {
          */
         @JavascriptInterface
         public void loadedForm() {
-            if (getActivity() != null) {
-                hideProgressDialog();
-            }
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -303,11 +313,12 @@ public abstract class BaseWebFormFragment extends BaseFragment {
                             @Override
                             public void run() {
                                 nextButton.setEnabled(true);
+                                hideProgressDialog();
                             }
                         });
                     }
                 }
-            }, 1000);
+            }, 500);
         }
 
     }
@@ -316,7 +327,7 @@ public abstract class BaseWebFormFragment extends BaseFragment {
         nextButton.setEnabled(false);
         if (displayedFormsIndex < totalForms - 1) {
             ++displayedFormsIndex;
-            displayNextForm();
+            displayNextForm(filledForms);
 
         } else {
             submitAllForms();

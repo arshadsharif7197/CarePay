@@ -5,6 +5,7 @@ public class NavigationStateConstants {
     public static final String LANGUAGE_SELECTION = "language_selection";
     public static final String DEMOGRAPHIC_VERIFY = "demographics_verify";
     public static final String CONSENT_FORMS = "consent_forms";
+    public static final String FORMS_HISTORY = "forms_history";
     public static final String DEMOGRAPHICS = "demographics";
     public static final String INTAKE_FORMS = "intake_forms";
     public static final String PAYMENTS = "payments";
@@ -31,4 +32,7 @@ public class NavigationStateConstants {
     public static final String PATIENT_MY_HEALTH = "myhealth";
     public static final String EXTRA_INFO = "extra_info";
     public static final String RETAIL = "retail";
+    public static final String THIRD_PARTY_CHECK_IN = "third_party_checkin";
+    public static final String THIRD_PARTY_CHECK_OUT = "third_party_checkout";
+
 }

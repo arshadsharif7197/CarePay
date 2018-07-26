@@ -91,6 +91,7 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.google.gson.Gson;
+import com.squareup.timessquare.CalendarPickerView;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -123,6 +124,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     private boolean isUserInteraction = false;
 
     private WorkflowDTO continuePaymentsDTO;
+    private boolean isCashPayment = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -612,8 +614,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                 endDate,
                 dateUtil.getDate(),
                 dateUtil.addDays(92).getDate(),
-                this
-        );
+                this,
+                CalendarPickerView.SelectionMode.RANGE.name());
 
         displayDialogFragment(dialog, false);
     }
@@ -673,6 +675,15 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             WorkFlowRecord workFlowRecord = new WorkFlowRecord(paymentConfirmationWorkflow);
             workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
             extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save());
+        } else if (isCashPayment) {
+            extra.putBoolean(CarePayConstants.EXTRA_PAYMENT_CASH, isCashPayment);
+
+            WorkflowDTO paymentWorkflow = DtoHelper.getConvertedDTO(WorkflowDTO.class, DtoHelper.getStringDTO(paymentsModel));
+            paymentWorkflow.setState(workflowDTO.getState());
+
+            WorkFlowRecord workFlowRecord = new WorkFlowRecord(paymentWorkflow);
+            workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
+            extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save());
         } else {
             WorkflowDTO appointmentWorkflowDTO = getAppointmentWorkflowDto(workflowDTO);
             WorkFlowRecord workFlowRecord = new WorkFlowRecord(appointmentWorkflowDTO);
@@ -682,6 +693,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
         appointmentsResultModel.getMetadata().getLinks().setPinpad(practiceAppointmentDTO
                 .getMetadata().getLinks().getPinpad());
+        appointmentsResultModel.getMetadata().getLinks().setShop(practiceAppointmentDTO
+                .getMetadata().getLinks().getShop());
         appointmentsResultModel.getMetadata().getTransitions()
                 .setPracticeMode(practiceAppointmentDTO.getMetadata().getTransitions().getPracticeMode());
         extra.putString(CarePayConstants.EXTRA_APPOINTMENT_TRANSITIONS,
@@ -739,6 +752,11 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     public void onDateRangeCancelled() {
         onDateRangeSelected(startDate, endDate, visitTypeDTO, appointmentResourcesDTO.getResource(),
                 resourcesToSchedule);
+    }
+
+    @Override
+    public void onDateSelected(Date selectedDate) {
+        //Not Implemented
     }
 
     WorkflowServiceCallback resourcesToScheduleCallback = new WorkflowServiceCallback() {
@@ -802,6 +820,19 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     @Override
+    public void onCashSelected(PaymentsModel paymentsModel) {
+        AppointmentDTO appointmentDTO = getAppointment();
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
+        queryMap.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
+        queryMap.put("patient_id", appointmentDTO.getMetadata().getPatientId());
+        queryMap.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
+
+        TransitionDTO transition = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getContinueTransition();
+        getWorkflowServiceHelper().execute(transition, cashPaymentCallback, queryMap);
+    }
+
+    @Override
     protected void processExternalPayment(PaymentExecution execution, Intent data) {
         switch (execution) {
             case clover: {
@@ -847,10 +878,12 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                 break;
             }
         }
+
         String appointmentWorkflowString = DtoHelper.getStringDTO(appointmentsResultModel);
         WorkflowDTO appointmentWorkflowDTO = DtoHelper.getConvertedDTO(WorkflowDTO.class,
                 appointmentWorkflowString);
         if (appointmentWorkflowDTO != null) {
+            appointmentWorkflowDTO.setMetadata(workflowDTO.getMetadata());
             appointmentWorkflowDTO.setState(workflowDTO.getState());
         }
         return appointmentWorkflowDTO;
@@ -1025,5 +1058,25 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             }
         };
     }
+
+    private WorkflowServiceCallback cashPaymentCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            isCashPayment = true;
+            showAllDone(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
+        }
+    };
 
 }
