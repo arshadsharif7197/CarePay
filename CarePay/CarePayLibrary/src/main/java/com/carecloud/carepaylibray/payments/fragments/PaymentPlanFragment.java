@@ -71,7 +71,9 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
     protected EditText planNameEditText;
     protected EditText frequencyCodeEditText;
     protected EditText paymentDateEditText;
+    private CarePayTextInputLayout numberPaymentsInputLayout;
     protected EditText numberPaymentsEditText;
+    private CarePayTextInputLayout paymentAmountInputLayout;
     protected EditText monthlyPaymentEditText;
     private TextView lastPaymentMessage;
 
@@ -228,37 +230,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
                             @Override
                             public void onValueOption(DemographicsOption option) {
                                 if (!frequencyOption.getName().equals(option.getName())) {
-                                    frequencyOption = option;
-                                    frequencyCodeEditText.setText(option.getLabel());
-                                    List<DemographicsOption> options;
-                                    if (option.getName().equals(PaymentPlanModel.FREQUENCY_WEEKLY)) {
-                                        paymentDayInputLayout.setHint(Label
-                                                .getLabel("payment.paymentPlan.frequency.weekly.hint"));
-                                        paymentDateOption = dayOptions.get(0);
-                                        options = dayOptions;
-
-                                    } else {
-                                        paymentDateOption = dateOptions.get(0);
-                                        paymentDayInputLayout.setHint(Label
-                                                .getLabel("payment.paymentPlan.frequency.monthly.hint"));
-                                        options = dateOptions;
-                                    }
-                                    final List<DemographicsOption> finalOptions = options;
-                                    paymentDateEditText.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            showChooseDialog(getContext(), finalOptions, Label.getLabel("payment_day_of_the_month"),
-                                                    new ValueOptionCallback() {
-                                                        @Override
-                                                        public void onValueOption(DemographicsOption option) {
-                                                            paymentDateOption = option;
-                                                            paymentDateEditText.setText(option.getLabel());
-                                                        }
-                                                    });
-                                        }
-                                    });
-
-                                    paymentDateEditText.setText(paymentDateOption.getLabel());
+                                    manageFrequencyChange(option, paymentDayInputLayout);
                                 }
 
                             }
@@ -267,7 +239,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         });
 
         numberPaymentsEditText = (EditText) view.findViewById(R.id.paymentMonthCount);
-        CarePayTextInputLayout numberPaymentsInputLayout = (CarePayTextInputLayout) view
+        numberPaymentsInputLayout = (CarePayTextInputLayout) view
                 .findViewById(R.id.paymentMonthCountInputLayout);
         numberPaymentsInputLayout.setRequestFocusWhenError(false);
         numberPaymentsEditText.setOnFocusChangeListener(SystemUtil
@@ -280,7 +252,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         }));
 
         monthlyPaymentEditText = (EditText) view.findViewById(R.id.paymentAmount);
-        CarePayTextInputLayout paymentAmountInputLayout = (CarePayTextInputLayout) view
+        paymentAmountInputLayout = (CarePayTextInputLayout) view
                 .findViewById(R.id.paymentAmountInputLayout);
         paymentAmountInputLayout.setRequestFocusWhenError(false);
         monthlyPaymentEditText.setOnFocusChangeListener(SystemUtil
@@ -296,7 +268,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
                         isCalculatingTime = true;
                         try {
                             monthlyPaymentAmount = Double.parseDouble(input);
-                            monthlyPaymentAmount = Math.round(monthlyPaymentAmount * 100) / 100D;//make sure we don't consider eztra decimals here.. these will get formatted out
+                            //make sure we don't consider eztra decimals here.. these will get formatted out
+                            monthlyPaymentAmount = Math.round(monthlyPaymentAmount * 100) / 100D;
                             installments = calculatePaymentCount(monthlyPaymentAmount);
                             if (numberPaymentsEditText.getOnFocusChangeListener() != null) {
                                 numberPaymentsEditText.getOnFocusChangeListener().onFocusChange(numberPaymentsEditText, true);
@@ -310,6 +283,47 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
                 }));
         lastPaymentMessage = (TextView) view.findViewById(R.id.lastPaymentMessage);
         lastPaymentMessage.setVisibility(View.INVISIBLE);
+    }
+
+    protected void manageFrequencyChange(DemographicsOption option, TextInputLayout paymentDayInputLayout) {
+        frequencyOption = option;
+        frequencyCodeEditText.setText(option.getLabel());
+        List<DemographicsOption> options;
+        String dialogTitle;
+        if (option.getName().equals(PaymentPlanModel.FREQUENCY_WEEKLY)) {
+            paymentDayInputLayout.setHint(Label
+                    .getLabel("payment.paymentPlan.frequency.weekly.hint"));
+            paymentDateOption = dayOptions.get(0);
+            options = dayOptions;
+            dialogTitle = Label.getLabel("payment.paymentPlan.frequency.weekly.hint");
+            numberPaymentsInputLayout.setHint(Label.getLabel("payment.paymentPlan.frequency.weekly.numberOfWeeks"));
+            paymentAmountInputLayout.setHint(Label.getLabel("payment.paymentPlan.frequency.weekly.weeklyPayments"));
+        } else {
+            paymentDateOption = dateOptions.get(0);
+            paymentDayInputLayout.setHint(Label
+                    .getLabel("payment.paymentPlan.frequency.monthly.hint"));
+            options = dateOptions;
+            dialogTitle = Label.getLabel("payment.paymentPlan.frequency.monthly.hint");
+            numberPaymentsInputLayout.setHint(Label.getLabel("payment_number_of_months"));
+            paymentAmountInputLayout.setHint(Label.getLabel("payment_monthly_payment"));
+        }
+        final List<DemographicsOption> finalOptions = options;
+        final String finalDialogTitle = dialogTitle;
+        paymentDateEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showChooseDialog(getContext(), finalOptions, finalDialogTitle,
+                        new ValueOptionCallback() {
+                            @Override
+                            public void onValueOption(DemographicsOption option) {
+                                paymentDateOption = option;
+                                paymentDateEditText.setText(option.getLabel());
+                            }
+                        });
+            }
+        });
+
+        paymentDateEditText.setText(paymentDateOption.getLabel());
     }
 
     protected void refreshNumberOfPayments(String day) {
@@ -586,10 +600,18 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
             paymentPlanModel.setInstallments(installments);
             paymentPlanModel.setEnabled(true);
 
-            try {
-                paymentPlanModel.setDayOfMonth(Integer.parseInt(paymentDateOption.getName()));
-            } catch (NumberFormatException nfe) {
-                nfe.printStackTrace();
+            if (frequencyOption.getName().equals(PaymentPlanModel.FREQUENCY_MONTHLY)) {
+                try {
+                    paymentPlanModel.setDayOfMonth(Integer.parseInt(paymentDateOption.getName()));
+                } catch (NumberFormatException nfe) {
+                    nfe.printStackTrace();
+                }
+            } else {
+                try {
+                    paymentPlanModel.setDayOfWeek(Integer.parseInt(paymentDateOption.getName()));
+                } catch (NumberFormatException nfe) {
+                    nfe.printStackTrace();
+                }
             }
 
             postModel.setPaymentPlanModel(paymentPlanModel);

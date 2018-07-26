@@ -1,6 +1,5 @@
 package com.carecloud.carepaylibray.payments.models.postmodel;
 
-import android.support.annotation.IntDef;
 import android.support.annotation.StringDef;
 
 import com.carecloud.carepay.service.library.label.Label;
@@ -16,11 +15,11 @@ import java.lang.annotation.RetentionPolicy;
 public class PaymentPlanModel {
     public static final String FREQUENCY_MONTHLY = "monthly";
     public static final String FREQUENCY_WEEKLY = "weekly";
-    public static final String MONDAY = "0";
-    public static final String TUESDAY = "1";
-    public static final String WEDNESDAY = "2";
-    public static final String THURSDAY = "3";
-    public static final String FRIDAY = "4";
+    public static final String MONDAY = "1";
+    public static final String TUESDAY = "2";
+    public static final String WEDNESDAY = "3";
+    public static final String THURSDAY = "4";
+    public static final String FRIDAY = "5";
 
 
     @Retention(RetentionPolicy.SOURCE)
@@ -42,6 +41,9 @@ public class PaymentPlanModel {
 
     @SerializedName("day_of_month")
     private int dayOfMonth;
+
+    @SerializedName("day_of_week")
+    private int dayOfWeek;
 
     @SerializedName("installments")
     private int installments;
@@ -78,6 +80,14 @@ public class PaymentPlanModel {
 
     public void setDayOfMonth(int dayOfMonth) {
         this.dayOfMonth = dayOfMonth;
+    }
+
+    public int getDayOfWeek() {
+        return dayOfWeek;
+    }
+
+    public void setDayOfWeek(int dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
     }
 
     public int getInstallments() {
