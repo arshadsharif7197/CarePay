@@ -252,8 +252,8 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
-                        android:paddingStart="@dimen/dimen_24dp"
-                        android:paddingEnd="@dimen/dimen_24dp"
+                        android:paddingStart="@dimen/dimen_15dp"
+                        android:paddingEnd="@dimen/dimen_15dp"
                         android:paddingTop="@dimen/dimen_18dp"
                         android:paddingBottom="@dimen/dimen_18dp">
 
