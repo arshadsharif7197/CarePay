@@ -630,6 +630,12 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload()
                 .getScheduledPaymentModel();
+
+        if (scheduledPayment.getMetadata().getOneTimePaymentId() == null &&
+                !paymentsModel.getPaymentPayload().getScheduledOneTimePayments().isEmpty()) {
+            scheduledPayment = paymentsModel.getPaymentPayload().getScheduledOneTimePayments().get(0);
+        }
+
         List<ScheduledPaymentModel> scheduledPaymentModels = this.paymentResultModel
                 .getPaymentPayload().getScheduledOneTimePayments();
         for (ScheduledPaymentModel scheduledPaymentModel : scheduledPaymentModels) {
