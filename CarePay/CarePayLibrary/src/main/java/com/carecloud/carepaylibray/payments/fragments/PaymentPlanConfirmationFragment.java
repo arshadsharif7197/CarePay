@@ -14,6 +14,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCompletedInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -39,7 +40,8 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
 
     @IntDef({MODE_CREATE, MODE_EDIT, MODE_ADD})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface ConfirmationMode {}
+    public @interface ConfirmationMode {
+    }
 
     protected static final String KEY_MODE = "mode";
 
@@ -48,12 +50,13 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
     private PaymentPlanPayloadDTO paymentPlanPayloadDTO;
     private PaymentPlanMetadataDTO paymentPlanMetadataDTO;
     private NumberFormat currencyFormatter;
-    protected  @ConfirmationMode int mode;
+    protected @ConfirmationMode
+    int mode;
     private UserPracticeDTO userPracticeDTO;
 
     public static PaymentPlanConfirmationFragment newInstance(WorkflowDTO workflowDTO,
                                                               UserPracticeDTO userPracticeDTO,
-                                                              @ConfirmationMode int mode){
+                                                              @ConfirmationMode int mode) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, workflowDTO);
         DtoHelper.bundleDto(args, userPracticeDTO);
@@ -66,21 +69,21 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
 
 
     @Override
-    protected void attachCallback(Context context){
-        try{
+    protected void attachCallback(Context context) {
+        try {
             if (context instanceof PaymentViewHandler) {
                 callback = (PaymentPlanCompletedInterface) ((PaymentViewHandler) context)
                         .getPaymentPresenter();
             } else {
                 callback = (PaymentPlanCompletedInterface) context;
             }
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached Context must implement PaymentPlanCompletedInterface");
         }
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
         Bundle args = getArguments();
@@ -140,8 +143,16 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
         paymentAmount.setText(paymentAmountString);
 
         TextView dueDate = (TextView) view.findViewById(R.id.payment_confirm_due_value);
-        dueDate.setText(StringUtil.getOrdinal(getApplicationPreferences().getUserLanguage(),
-                paymentPlanPayloadDTO.getPaymentPlanDetails().getDayOfMonth()));
+        String dueDateString;
+        if (paymentPlanPayloadDTO.getPaymentPlanDetails().getFrequencyCode()
+                .equals(PaymentPlanDetailsDTO.FREQUENCY_MONTHLY)) {
+            dueDateString = StringUtil.getOrdinal(getApplicationPreferences().getUserLanguage(),
+                    paymentPlanPayloadDTO.getPaymentPlanDetails().getDayOfMonth());
+        } else {
+            dueDateString = StringUtil
+                    .getDayOfTheWeek(paymentPlanPayloadDTO.getPaymentPlanDetails().getDayOfWeek());
+        }
+        dueDate.setText(dueDateString);
 
         TextView title = (TextView) view.findViewById(R.id.payment_confirm_message);
         title.setText(getMessageLabel());
@@ -150,7 +161,7 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
         confirmation.setText(paymentPlanMetadataDTO.getIndex().getConfirmation());
 
         TextView practiceNameTextView = (TextView) view.findViewById(R.id.payment_confirm_practice_name);
-        if(practiceNameTextView != null){
+        if (practiceNameTextView != null) {
             String practiceName = userPracticeDTO.getPracticeName();
             practiceNameTextView.setText(practiceName);
         }
@@ -166,8 +177,8 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
         }
     };
 
-    protected String getMessageLabel(){
-        switch (mode){
+    protected String getMessageLabel() {
+        switch (mode) {
             case MODE_ADD:
                 return Label.getLabel("payment_plan_success_add_short");
             case MODE_EDIT:
@@ -178,7 +189,7 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
         }
     }
 
-    private void logPaymentPlanEvent(){
+    private void logPaymentPlanEvent() {
         String[] params = {getString(R.string.param_practice_id),
                 getString(R.string.param_payment_plan_id),
                 getString(R.string.param_payment_plan_amount),
@@ -186,17 +197,27 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
                 getString(R.string.param_payment_plan_payment),
                 getString(R.string.param_payment_plan_day),
                 getString(R.string.param_payment_plan_installments)};
+
+        String dueDateString;
+        if (paymentPlanPayloadDTO.getPaymentPlanDetails().getFrequencyCode()
+                .equals(PaymentPlanDetailsDTO.FREQUENCY_MONTHLY)) {
+            dueDateString = StringUtil.getOrdinal("en",
+                    paymentPlanPayloadDTO.getPaymentPlanDetails().getDayOfMonth());
+        } else {
+            dueDateString = StringUtil
+                    .getDayOfTheWeek(paymentPlanPayloadDTO.getPaymentPlanDetails().getDayOfWeek());
+        }
+
         Object[] values = {
                 paymentPlanMetadataDTO.getPracticeId(),
                 paymentPlanMetadataDTO.getPaymentPlanId(),
                 paymentPlanPayloadDTO.getAmount(),
                 paymentPlanPayloadDTO.getPaymentPlanDetails().getFrequencyString(),
                 paymentPlanPayloadDTO.getPaymentPlanDetails().getAmount(),
-                StringUtil.getOrdinal("en", paymentPlanPayloadDTO.getPaymentPlanDetails()
-                        .getDayOfMonth()),
+                dueDateString,
                 paymentPlanPayloadDTO.getPaymentPlanDetails().getInstallments()};
 
-        switch (mode){
+        switch (mode) {
             case MODE_EDIT:
                 MixPanelUtil.logEvent(getString(R.string.event_paymentplan_edited), params, values);
                 break;

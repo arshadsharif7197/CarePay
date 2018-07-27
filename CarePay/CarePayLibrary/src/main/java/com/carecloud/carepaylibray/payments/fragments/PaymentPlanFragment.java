@@ -34,6 +34,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
@@ -84,6 +85,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
     protected DemographicsOption frequencyOption;
     protected double monthlyPaymentAmount;
     protected int installments;
+    protected boolean applyRangeRules = true;
 
     protected boolean isCalculatingAmount = false;
     protected boolean isCalculatingTime = false;
@@ -127,7 +129,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
         //calculateTotalAmount(selectedBalance);
         paymentPlanAmount = calculateTotalAmount(args.getDouble(KEY_PLAN_AMOUNT));
-        frequencyOptions = generateFrequencyOptions();
+        frequencyOptions = generateFrequencyOptions(paymentsModel.getPaymentPayload()
+                .getPaymentSettings().get(0).getPayload().getPaymentPlans());
         frequencyOption = frequencyOptions.get(0);
         dateOptions = generateDateOptions();
         paymentDateOption = dateOptions.get(0);
@@ -485,16 +488,20 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         return optionList;
     }
 
-    private List<DemographicsOption> generateFrequencyOptions() {
+    private List<DemographicsOption> generateFrequencyOptions(PaymentsSettingsPaymentPlansDTO paymentPlansRules) {
         List<DemographicsOption> optionList = new ArrayList<>();
-        DemographicsOption monthly = new DemographicsOption();
-        monthly.setName(PaymentPlanModel.FREQUENCY_MONTHLY);
-        monthly.setLabel(Label.getLabel("payment.paymentPlan.frequency.option.monthly"));
-        DemographicsOption weekly = new DemographicsOption();
-        weekly.setName(PaymentPlanModel.FREQUENCY_WEEKLY);
-        weekly.setLabel(Label.getLabel("payment.paymentPlan.frequency.option.weekly"));
-        optionList.add(monthly);
-        optionList.add(weekly);
+        if (paymentPlansRules.getFrequencyCode().getMonthly().isAllowed()) {
+            DemographicsOption monthly = new DemographicsOption();
+            monthly.setName(PaymentPlanModel.FREQUENCY_MONTHLY);
+            monthly.setLabel(Label.getLabel("payment.paymentPlan.frequency.option.monthly"));
+            optionList.add(monthly);
+        }
+        if (paymentPlansRules.getFrequencyCode().getWeekly().isAllowed()) {
+            DemographicsOption weekly = new DemographicsOption();
+            weekly.setName(PaymentPlanModel.FREQUENCY_WEEKLY);
+            weekly.setLabel(Label.getLabel("payment.paymentPlan.frequency.option.weekly"));
+            optionList.add(weekly);
+        }
         return optionList;
     }
 

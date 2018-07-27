@@ -40,10 +40,10 @@ public class PaymentPlanModel {
     private String frequencyCode;
 
     @SerializedName("day_of_month")
-    private int dayOfMonth;
+    private Integer dayOfMonth;
 
     @SerializedName("day_of_week")
-    private int dayOfWeek;
+    private Integer dayOfWeek;
 
     @SerializedName("installments")
     private int installments;
@@ -74,7 +74,7 @@ public class PaymentPlanModel {
         this.frequencyCode = frequencyCode;
     }
 
-    public int getDayOfMonth() {
+    public Integer getDayOfMonth() {
         return dayOfMonth;
     }
 
@@ -82,7 +82,7 @@ public class PaymentPlanModel {
         this.dayOfMonth = dayOfMonth;
     }
 
-    public int getDayOfWeek() {
+    public Integer getDayOfWeek() {
         return dayOfWeek;
     }
 
@@ -124,6 +124,8 @@ public class PaymentPlanModel {
 
     public String getFrequencyString() {
         switch (frequencyCode) {
+            case PaymentPlanModel.FREQUENCY_WEEKLY:
+                return Label.getLabel("payment_plan_frequency_week");
             case PaymentPlanModel.FREQUENCY_MONTHLY:
             default:
                 return Label.getLabel("payment_plan_frequency_month");

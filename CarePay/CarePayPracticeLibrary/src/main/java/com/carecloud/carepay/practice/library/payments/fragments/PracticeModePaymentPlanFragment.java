@@ -84,6 +84,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         paymentPlanAmount = 0.00;
+        applyRangeRules = false;
     }
 
     @Override
