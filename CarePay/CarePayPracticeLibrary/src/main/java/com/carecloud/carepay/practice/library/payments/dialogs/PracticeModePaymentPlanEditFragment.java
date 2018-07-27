@@ -15,16 +15,18 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.adapter.ExistingChargesItemAdapter;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeModePaymentPlanFragment;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
@@ -76,6 +78,12 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
         paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, getArguments());
         selectedBalance = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
         paymentPlanAmount = paymentPlanDTO.getPayload().getAmount();
+        if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode()
+                .equals(PaymentPlanDetailsDTO.FREQUENCY_MONTHLY)) {
+            frequencyOption = frequencyOptions.get(0);
+        } else {
+            frequencyOption = frequencyOptions.get(1);
+        }
     }
 
     @Nullable
@@ -126,8 +134,14 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
     protected void setupFields(View view) {
         super.setupFields(view);
         planNameEditText.setText(paymentPlanDTO.getPayload().getDescription());
-        paymentDateEditText.setText(StringUtil.getOrdinal(ApplicationPreferences.getInstance().getUserLanguage(),
-                paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfMonth()));
+        if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode()
+                .equals(PaymentPlanDetailsDTO.FREQUENCY_MONTHLY)) {
+            paymentDateEditText.setText(StringUtil.getOrdinal(getApplicationPreferences().getUserLanguage(),
+                    paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfMonth()));
+        } else {
+            paymentDateEditText.setText(StringUtil
+                    .getDayOfTheWeek(paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfWeek()));
+        }
         numberPaymentsEditText.setText(String.valueOf(paymentPlanDTO.getPayload()
                 .getPaymentPlanDetails().getInstallments()));
         monthlyPaymentEditText.setText(currencyFormatter
@@ -240,14 +254,22 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
 
         PaymentPlanModel paymentPlanModel = new PaymentPlanModel();
         paymentPlanModel.setAmount(monthlyPaymentAmount);
-        paymentPlanModel.setFrequencyCode(PaymentPlanModel.FREQUENCY_MONTHLY);
-        paymentPlanModel.setInstallments(monthlyPaymentCount);
+        paymentPlanModel.setFrequencyCode(frequencyOption.getName());
+        paymentPlanModel.setInstallments(installments);
         paymentPlanModel.setEnabled(true);
 
-        try {
-            paymentPlanModel.setDayOfMonth(Integer.parseInt(paymentDateOption.getName()));
-        } catch (NumberFormatException nfe) {
-            nfe.printStackTrace();
+        if (frequencyOption.getName().equals(PaymentPlanModel.FREQUENCY_MONTHLY)) {
+            try {
+                paymentPlanModel.setDayOfMonth(Integer.parseInt(paymentDateOption.getName()));
+            } catch (NumberFormatException nfe) {
+                nfe.printStackTrace();
+            }
+        } else {
+            try {
+                paymentPlanModel.setDayOfWeek(Integer.parseInt(paymentDateOption.getName()));
+            } catch (NumberFormatException nfe) {
+                nfe.printStackTrace();
+            }
         }
 
         postModel.setPaymentPlanModel(paymentPlanModel);

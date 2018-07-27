@@ -15,6 +15,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.MerchantServiceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
@@ -25,6 +26,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRu
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentCardData;
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
@@ -41,6 +43,7 @@ import com.payeezy.sdk.payeezytokenised.TransactionDataProvider;
 
 import java.text.NumberFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -94,10 +97,8 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
-        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
         paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
         paymentPlanAmount = paymentPlanDTO.getPayload().getAmount();
-        dateOptions = generateDateOptions();
         paymentDateOption = dateOptions.get(0);
         getPaymentPlanSettings(paymentPlanDTO.getMetadata().getPracticeId());
         currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
@@ -292,14 +293,22 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
 
         PaymentPlanModel paymentPlanModel = new PaymentPlanModel();
         paymentPlanModel.setAmount(monthlyPaymentAmount);
-        paymentPlanModel.setFrequencyCode(PaymentPlanModel.FREQUENCY_MONTHLY);
+        paymentPlanModel.setFrequencyCode(frequencyOption.getName());
         paymentPlanModel.setInstallments(installments);
         paymentPlanModel.setEnabled(true);
 
-        try {
-            paymentPlanModel.setDayOfMonth(Integer.parseInt(paymentDateOption.getName()));
-        } catch (NumberFormatException nfe) {
-            nfe.printStackTrace();
+        if (frequencyOption.getName().equals(PaymentPlanModel.FREQUENCY_MONTHLY)) {
+            try {
+                paymentPlanModel.setDayOfMonth(Integer.parseInt(paymentDateOption.getName()));
+            } catch (NumberFormatException nfe) {
+                nfe.printStackTrace();
+            }
+        } else {
+            try {
+                paymentPlanModel.setDayOfWeek(Integer.parseInt(paymentDateOption.getName()));
+            } catch (NumberFormatException nfe) {
+                nfe.printStackTrace();
+            }
         }
 
         postModel.setPaymentPlanModel(paymentPlanModel);

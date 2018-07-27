@@ -83,9 +83,9 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
 
     @Override
     public void onCreate(Bundle icicle) {
+        applyRangeRules = false;
         super.onCreate(icicle);
         paymentPlanAmount = 0.00;
-        applyRangeRules = false;
     }
 
     @Override
@@ -170,7 +170,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
                 callback.onAddPaymentPlanCard(paymentsModel, null, true);
             }
         });
-        if(paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()){
+        if (paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             addNewCardButton.setText(Label.getLabel("payment_new_credit_card"));
         }
     }
@@ -397,7 +397,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
                 paymentPlanAmount = SystemUtil.safeAdd(paymentPlanAmount, itemDTO.getAmountSelected());
                 paymentValueTextView.setText(currencyFormatter.format(paymentPlanAmount));
                 adapter.notifyDataSetChanged();
-                refreshNumberOfPayments(String.valueOf(monthlyPaymentCount));
+                refreshNumberOfPayments(String.valueOf(installments));
                 enableCreatePlanButton();
             }
         });

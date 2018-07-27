@@ -223,11 +223,11 @@ public class PracticePaymentPlanDetailsDialogFragment extends BaseDialogFragment
             }
             calendar.set(Calendar.DAY_OF_MONTH, drawDay);
         } else {
-            int day = planPayload.getPaymentPlanDetails().getDayOfWeek() + 1; //Monday ==2
-            if (calendar.get(Calendar.DAY_OF_WEEK) > day) {
-                calendar.add(Calendar.DAY_OF_WEEK, 7 - day);
+            int dayOfWeek = planPayload.getPaymentPlanDetails().getDayOfWeek() + 1; //Monday ==2
+            if (calendar.get(Calendar.DAY_OF_WEEK) > dayOfWeek) {
+                calendar.add(Calendar.DAY_OF_WEEK, dayOfWeek + 1);
             } else {
-                calendar.add(Calendar.DAY_OF_WEEK, day - calendar.get(Calendar.DAY_OF_WEEK));
+                calendar.add(Calendar.DAY_OF_WEEK, dayOfWeek - calendar.get(Calendar.DAY_OF_WEEK));
             }
             drawDay = calendar.get(Calendar.DAY_OF_MONTH);
         }

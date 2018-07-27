@@ -356,7 +356,6 @@
                         app:customAssetFont="gotham_rounded_book"
                         tools:text="Your last payment will be adjusted to $108.00" />
 
-
                 </LinearLayout>
 
                 <LinearLayout
