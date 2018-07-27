@@ -95,8 +95,7 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
     }
 
     @Override
-    protected void setupToolBar(View view) {
-        super.setupToolBar(view);
+    protected void setupToolbar(View view, String titleString) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.payment_toolbar);
         if (toolbar != null) {
             TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
@@ -134,6 +133,7 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
     protected void setupFields(View view) {
         super.setupFields(view);
         planNameEditText.setText(paymentPlanDTO.getPayload().getDescription());
+        planNameEditText.getOnFocusChangeListener().onFocusChange(planNameEditText, true);
         if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode()
                 .equals(PaymentPlanDetailsDTO.FREQUENCY_MONTHLY)) {
             paymentDateEditText.setText(StringUtil.getOrdinal(getApplicationPreferences().getUserLanguage(),
@@ -144,6 +144,7 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
         }
         numberPaymentsEditText.setText(String.valueOf(paymentPlanDTO.getPayload()
                 .getPaymentPlanDetails().getInstallments()));
+        numberPaymentsEditText.getOnFocusChangeListener().onFocusChange(numberPaymentsEditText, true);
         monthlyPaymentEditText.setText(currencyFormatter
                 .format(paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount()));
 

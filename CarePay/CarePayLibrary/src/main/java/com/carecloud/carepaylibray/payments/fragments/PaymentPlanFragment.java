@@ -73,7 +73,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
     protected EditText frequencyCodeEditText;
     private TextInputLayout paymentDayInputLayout;
     protected EditText paymentDateEditText;
-    private CarePayTextInputLayout numberPaymentsInputLayout;
+    protected CarePayTextInputLayout numberPaymentsInputLayout;
     protected EditText numberPaymentsEditText;
     private CarePayTextInputLayout paymentAmountInputLayout;
     protected EditText monthlyPaymentEditText;
@@ -82,6 +82,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
     protected List<DemographicsOption> frequencyOptions;
     protected List<DemographicsOption> dateOptions;
     protected List<DemographicsOption> dayOfWeekOptions;
+    protected List<DemographicsOption> selectedDateOptions;
     protected DemographicsOption paymentDateOption;
     protected DemographicsOption frequencyOption;
     protected double monthlyPaymentAmount;
@@ -204,24 +205,11 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
                 .getHintFocusChangeListener(paymentDayInputLayout, null));
         paymentDateEditText.setText(paymentDateOption.getLabel());
         paymentDateEditText.getOnFocusChangeListener().onFocusChange(paymentDateEditText, true);
-        paymentDateEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showChooseDialog(getContext(), dateOptions, Label.getLabel("payment.paymentPlan.frequency.dialog.title"),
-                        new ValueOptionCallback() {
-                            @Override
-                            public void onValueOption(DemographicsOption option) {
-                                paymentDateOption = option;
-                                paymentDateEditText.setText(option.getLabel());
-                            }
-                        });
-            }
-        });
 
         paymentDateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showChooseDialog(getContext(), dateOptions, dialogTitle,
+                showChooseDialog(getContext(), selectedDateOptions, dialogTitle,
                         new ValueOptionCallback() {
                             @Override
                             public void onValueOption(DemographicsOption option) {
@@ -304,11 +292,13 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
                     .getLabel("payment.paymentPlan.frequency.monthly.hint"));
             numberPaymentsInputLayout.setHint(Label.getLabel("payment_number_of_months"));
             paymentAmountInputLayout.setHint(Label.getLabel("payment_monthly_payment"));
+            selectedDateOptions = dateOptions;
         } else {
             paymentDayInputLayout.setHint(Label
                     .getLabel("payment.paymentPlan.frequency.weekly.hint"));
             numberPaymentsInputLayout.setHint(Label.getLabel("payment.paymentPlan.frequency.weekly.numberOfWeeks"));
             paymentAmountInputLayout.setHint(Label.getLabel("payment.paymentPlan.frequency.weekly.weeklyPayments"));
+            selectedDateOptions = dayOfWeekOptions;
         }
         updateHints();
     }
@@ -323,6 +313,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
                     .getLabel("payment.paymentPlan.frequency.monthly.hint"));
             numberPaymentsInputLayout.setHint(Label.getLabel("payment_number_of_months"));
             paymentAmountInputLayout.setHint(Label.getLabel("payment_monthly_payment"));
+            selectedDateOptions = dateOptions;
         } else {
             paymentDateOption = dayOfWeekOptions.get(0);
             dialogTitle = Label.getLabel("payment.paymentPlan.frequency.weekly.hint");
@@ -330,6 +321,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
                     .getLabel("payment.paymentPlan.frequency.weekly.hint"));
             numberPaymentsInputLayout.setHint(Label.getLabel("payment.paymentPlan.frequency.weekly.numberOfWeeks"));
             paymentAmountInputLayout.setHint(Label.getLabel("payment.paymentPlan.frequency.weekly.weeklyPayments"));
+            selectedDateOptions = dayOfWeekOptions;
         }
         updateHints();
         paymentDateEditText.setText(paymentDateOption.getLabel());
@@ -551,28 +543,28 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
 
         if (StringUtil.isNullOrEmpty(numberPaymentsEditText.getText().toString())) {
             if (isUserInteraction) {
-                setError(R.id.paymentMonthCountInputLayout, Label.getLabel("validation_required_field")
+                setError(numberPaymentsInputLayout, Label.getLabel("validation_required_field")
                         , isUserInteraction);
                 return false;
             } else {
-                clearError(R.id.paymentMonthCountInputLayout);
+                clearError(numberPaymentsInputLayout);
             }
         } else if (installments < 2) {
-            setError(R.id.paymentMonthCountInputLayout,
+            setError(numberPaymentsInputLayout,
                     String.format(Label.getLabel("payment_plan_min_months_error"),
                             String.valueOf(2))
                     , isUserInteraction);
             clearError(R.id.paymentAmountInputLayout);
             return false;
         } else if (installments > paymentPlanBalanceRules.getMaxDuration().getValue()) {
-            setError(R.id.paymentMonthCountInputLayout,
+            setError(numberPaymentsInputLayout,
                     String.format(Label.getLabel("payment_plan_max_months_error"),
                             String.valueOf(paymentPlanBalanceRules.getMaxDuration().getValue()))
                     , isUserInteraction);
             clearError(R.id.paymentAmountInputLayout);
             return false;
         } else {
-            clearError(R.id.paymentMonthCountInputLayout);
+            clearError(numberPaymentsInputLayout);
         }
 
         if (StringUtil.isNullOrEmpty(monthlyPaymentEditText.getText().toString())) {

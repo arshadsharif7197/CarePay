@@ -27,7 +27,6 @@ import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDial
 import com.carecloud.carepay.practice.library.payments.dialogs.PracticeModePaymentPlanEditFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PracticePaymentPlanDetailsDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.AddPaymentItemFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PatientModePaymentPlanEditFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionEntryFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentHistoryFragment;
@@ -1071,9 +1070,15 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void onEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+    public void onEditPaymentPlan(final PaymentsModel paymentsModel, final PaymentPlanDTO paymentPlanDTO) {
         PracticeModePaymentPlanEditFragment fragment = PracticeModePaymentPlanEditFragment
                 .newInstance(paymentsModel, paymentPlanDTO);
+        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                onDismissEditPaymentPlan(paymentsModel, paymentPlanDTO);
+            }
+        });
         displayDialogFragment(fragment, true);
     }
 

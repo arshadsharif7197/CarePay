@@ -288,21 +288,21 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
 
         if (StringUtil.isNullOrEmpty(numberPaymentsEditText.getText().toString())) {
             if (isUserInteraction) {
-                setError(R.id.paymentMonthCountInputLayout, Label.getLabel("validation_required_field")
+                setError(numberPaymentsInputLayout, Label.getLabel("validation_required_field")
                         , isUserInteraction);
                 return false;
             } else {
-                clearError(R.id.paymentMonthCountInputLayout);
+                clearError(numberPaymentsInputLayout);
             }
         } else if (installments < 2) {
-            setError(R.id.paymentMonthCountInputLayout,
+            setError(numberPaymentsInputLayout,
                     String.format(Label.getLabel("payment_plan_min_months_error"),
                             String.valueOf(2))
                     , isUserInteraction);
             clearError(R.id.paymentAmountInputLayout);
             return false;
         } else {
-            clearError(R.id.paymentMonthCountInputLayout);
+            clearError(numberPaymentsInputLayout);
         }
 
         if (StringUtil.isNullOrEmpty(monthlyPaymentEditText.getText().toString())) {
