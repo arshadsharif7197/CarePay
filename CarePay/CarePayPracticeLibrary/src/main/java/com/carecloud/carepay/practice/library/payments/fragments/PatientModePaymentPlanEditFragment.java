@@ -60,7 +60,9 @@ public class PatientModePaymentPlanEditFragment extends PaymentPlanEditFragment 
     @Override
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
-        view.findViewById(R.id.bottomContainer).setVisibility(View.GONE);
+        if (view.findViewById(R.id.bottomContainer) != null) {
+            view.findViewById(R.id.bottomContainer).setVisibility(View.GONE);
+        }
     }
 
     @Override
