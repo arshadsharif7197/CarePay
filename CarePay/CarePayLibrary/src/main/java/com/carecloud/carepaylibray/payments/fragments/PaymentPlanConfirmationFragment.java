@@ -149,8 +149,9 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
             dueDateString = StringUtil.getOrdinal(getApplicationPreferences().getUserLanguage(),
                     paymentPlanPayloadDTO.getPaymentPlanDetails().getDayOfMonth());
         } else {
-            dueDateString = StringUtil
-                    .getDayOfTheWeek(paymentPlanPayloadDTO.getPaymentPlanDetails().getDayOfWeek());
+            dueDateString = String.format(Label
+                            .getLabel("payment.confirmationPaymentPlan.successDialog.dueDate.weeklyPlaceHolder"),
+                    StringUtil.getDayOfTheWeek(paymentPlanPayloadDTO.getPaymentPlanDetails().getDayOfWeek()));
         }
         dueDate.setText(dueDateString);
 

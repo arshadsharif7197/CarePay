@@ -92,6 +92,9 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
     protected boolean isCalculatingAmount = false;
     protected boolean isCalculatingTime = false;
     private String dialogTitle;
+    private TextView parametersTextView;
+    @PaymentSettingsBalanceRangeRule.IntervalRange
+    private String interval = PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS;
 
     /**
      * @param paymentsModel   the payment model
@@ -181,13 +184,24 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         TextView totalTextView = (TextView) view.findViewById(R.id.payment_plan_total);
         totalTextView.setText(currencyFormatter.format(paymentPlanAmount));
 
-        TextView parameters = (TextView) view.findViewById(R.id.paymentPlanParametersTextView);
-        if (parameters != null) {
-            parameters.setText(String.format(Locale.US, Label.getLabel("payment_plan_parameters"),
-                    paymentPlanBalanceRules.getMaxDuration().getValue(),
-                    currencyFormatter.format(paymentPlanBalanceRules.getMinPaymentRequired().getValue())));
-            parameters.setVisibility(View.VISIBLE);
+        parametersTextView = (TextView) view.findViewById(R.id.paymentPlanParametersTextView);
+        if (parametersTextView != null) {
+            updatePaymentPlanParameters();
+            parametersTextView.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void updatePaymentPlanParameters() {
+        String monthOrWeek = interval == PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS
+                ? Label.getLabel("pluralRule.many.month") : Label.getLabel("pluralRule.many.week");
+        String monthlyOrWeekly = interval == PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS
+                ? Label.getLabel("payment.paymentPlan.frequency.option.monthly").toLowerCase()
+                : Label.getLabel("payment.paymentPlan.frequency.option.weekly").toLowerCase();
+        parametersTextView.setText(String.format("This balance must be paid over a maximum of %s %s and the minimum %s payment is %s.",//Locale.US, Label.getLabel("payment_plan_parameters"),
+                paymentPlanBalanceRules.getMaxDuration().getValue(),
+                monthOrWeek,
+                monthlyOrWeekly,
+                currencyFormatter.format(paymentPlanBalanceRules.getMinPaymentRequired().getValue())));
     }
 
     protected void setupFields(View view) {
@@ -293,12 +307,14 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
             numberPaymentsInputLayout.setHint(Label.getLabel("payment_number_of_months"));
             paymentAmountInputLayout.setHint(Label.getLabel("payment_monthly_payment"));
             selectedDateOptions = dateOptions;
+            interval = PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS;
         } else {
             paymentDayInputLayout.setHint(Label
                     .getLabel("payment.paymentPlan.frequency.weekly.hint"));
             numberPaymentsInputLayout.setHint(Label.getLabel("payment.paymentPlan.frequency.weekly.numberOfWeeks"));
             paymentAmountInputLayout.setHint(Label.getLabel("payment.paymentPlan.frequency.weekly.weeklyPayments"));
             selectedDateOptions = dayOfWeekOptions;
+            interval = PaymentSettingsBalanceRangeRule.INTERVAL_WEEKS;
         }
         updateHints();
     }
@@ -314,6 +330,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
             numberPaymentsInputLayout.setHint(Label.getLabel("payment_number_of_months"));
             paymentAmountInputLayout.setHint(Label.getLabel("payment_monthly_payment"));
             selectedDateOptions = dateOptions;
+            interval = PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS;
         } else {
             paymentDateOption = dayOfWeekOptions.get(0);
             dialogTitle = Label.getLabel("payment.paymentPlan.frequency.weekly.hint");
@@ -322,9 +339,15 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
             numberPaymentsInputLayout.setHint(Label.getLabel("payment.paymentPlan.frequency.weekly.numberOfWeeks"));
             paymentAmountInputLayout.setHint(Label.getLabel("payment.paymentPlan.frequency.weekly.weeklyPayments"));
             selectedDateOptions = dayOfWeekOptions;
+            interval = PaymentSettingsBalanceRangeRule.INTERVAL_WEEKS;
         }
         updateHints();
+        if (selectedBalance != null && applyRangeRules) {
+            getPaymentPlanSettings(selectedBalance.getMetadata().getPracticeId());
+        }
+        updatePaymentPlanParameters();
         paymentDateEditText.setText(paymentDateOption.getLabel());
+
     }
 
     private void updateHints() {
@@ -449,11 +472,13 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
             if (practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())) {
                 for (PaymentSettingsBalanceRangeRule balanceRangeRule : settingsDTO.getPayload()
                         .getPaymentPlans().getBalanceRangeRules()) {
-                    double minAmount = balanceRangeRule.getMinBalance().getValue();
-                    double maxAmount = balanceRangeRule.getMaxBalance().getValue();
-                    if (paymentPlanAmount >= minAmount && paymentPlanAmount <= maxAmount &&
-                            minAmount > paymentPlanBalanceRules.getMinBalance().getValue()) {
-                        paymentPlanBalanceRules = balanceRangeRule;
+                    if (interval.equals(balanceRangeRule.getMaxDuration().getInterval())) {
+                        double minAmount = balanceRangeRule.getMinBalance().getValue();
+                        double maxAmount = balanceRangeRule.getMaxBalance().getValue();
+                        if (paymentPlanAmount >= minAmount && paymentPlanAmount <= maxAmount &&
+                                minAmount > paymentPlanBalanceRules.getMinBalance().getValue()) {
+                            paymentPlanBalanceRules = balanceRangeRule;
+                        }
                     }
                 }
                 return;
@@ -541,6 +566,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
             clearError(R.id.paymentDrawDayInputLayout);
         }
 
+        String monthOrWeek = interval == PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS
+                ? Label.getLabel("pluralRule.many.month") : Label.getLabel("pluralRule.many.week");
         if (StringUtil.isNullOrEmpty(numberPaymentsEditText.getText().toString())) {
             if (isUserInteraction) {
                 setError(numberPaymentsInputLayout, Label.getLabel("validation_required_field")
@@ -552,13 +579,16 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         } else if (installments < 2) {
             setError(numberPaymentsInputLayout,
                     String.format(Label.getLabel("payment_plan_min_months_error"),
+                            monthOrWeek,
                             String.valueOf(2))
                     , isUserInteraction);
             clearError(R.id.paymentAmountInputLayout);
             return false;
         } else if (installments > paymentPlanBalanceRules.getMaxDuration().getValue()) {
+
             setError(numberPaymentsInputLayout,
                     String.format(Label.getLabel("payment_plan_max_months_error"),
+                            monthOrWeek,
                             String.valueOf(paymentPlanBalanceRules.getMaxDuration().getValue()))
                     , isUserInteraction);
             clearError(R.id.paymentAmountInputLayout);
