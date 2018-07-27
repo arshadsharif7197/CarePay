@@ -252,11 +252,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingBottom="@dimen/dimen_18dp"
-                        android:paddingEnd="@dimen/dimen_24dp"
-                        android:paddingStart="@dimen/dimen_24dp"
-                        android:paddingTop="@dimen/dimen_18dp">
+                        android:paddingStart="@dimen/dimen_15dp"
+                        android:paddingEnd="@dimen/dimen_15dp"
+                        android:paddingTop="@dimen/dimen_18dp"
+                        android:paddingBottom="@dimen/dimen_18dp">
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                             android:id="@+id/scheduledPaymentMessage"
