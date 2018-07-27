@@ -152,7 +152,6 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         super.setupButtons(view);
         createPlanButton.setVisibility(View.GONE);
         view.findViewById(R.id.editButtonsLayout).setVisibility(View.VISIBLE);
-        editPaymentPlanButton.setText(Label.getLabel("save_button_label"));
         editPaymentPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

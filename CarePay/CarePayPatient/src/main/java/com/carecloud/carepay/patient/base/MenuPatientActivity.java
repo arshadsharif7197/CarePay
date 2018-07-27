@@ -127,6 +127,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         super.onResume();
         setUserImage();
         updateBadgeCounterViews();
+        setUserFullName();
         if (appointmentsDrawerUserIdTextView != null) {
             String userId = getApplicationPreferences().getUserId();
             if (userId != null) {
