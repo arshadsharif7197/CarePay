@@ -199,7 +199,6 @@
                             android:id="@+id/frequencyCodeLayout"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/dimen_5dp"
                             android:layout_weight="1">
 
                             <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
@@ -235,7 +234,6 @@
                             android:id="@+id/paymentDrawDayLayout"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
                             android:layout_weight="1">
 
                             <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
@@ -280,7 +278,6 @@
                             android:id="@+id/paymentMonthCountLayout"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/dimen_5dp"
                             android:layout_weight="1">
 
                             <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout

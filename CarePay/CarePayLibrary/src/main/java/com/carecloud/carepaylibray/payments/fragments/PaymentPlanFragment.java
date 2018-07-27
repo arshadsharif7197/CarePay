@@ -95,6 +95,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
     private TextView parametersTextView;
     @PaymentSettingsBalanceRangeRule.IntervalRange
     private String interval = PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS;
+    protected String practiceId;
 
     /**
      * @param paymentsModel   the payment model
@@ -138,7 +139,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         frequencyOptions = generateFrequencyOptions(paymentsModel.getPaymentPayload()
                 .getPaymentSettings().get(0).getPayload().getPaymentPlans());
         if (selectedBalance != null) {
-            getPaymentPlanSettings(selectedBalance.getMetadata().getPracticeId());
+            practiceId = selectedBalance.getMetadata().getPracticeId();
+            getPaymentPlanSettings(practiceId);
         }
         currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
     }
@@ -342,10 +344,12 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
             interval = PaymentSettingsBalanceRangeRule.INTERVAL_WEEKS;
         }
         updateHints();
-        if (selectedBalance != null && applyRangeRules) {
-            getPaymentPlanSettings(selectedBalance.getMetadata().getPracticeId());
+        if (applyRangeRules) {
+            getPaymentPlanSettings(practiceId);
         }
-        updatePaymentPlanParameters();
+        if (parametersTextView != null) {
+            updatePaymentPlanParameters();
+        }
         paymentDateEditText.setText(paymentDateOption.getLabel());
 
     }
@@ -638,7 +642,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         String[] params = {getString(R.string.param_practice_id),
                 getString(R.string.param_balance_amount),
                 getString(R.string.param_is_add_existing)};
-        Object[] values = {selectedBalance.getMetadata().getPracticeId(), paymentPlanAmount, true};
+        Object[] values = {practiceId, paymentPlanAmount, true};
         MixPanelUtil.logEvent(getString(R.string.event_paymentplan_started), params, values);
     }
 
@@ -741,7 +745,6 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
     }
 
     private boolean hasExistingPlans() {
-        String practiceId = selectedBalance.getMetadata().getPracticeId();
         for (PaymentPlanDTO paymentPlanDTO : paymentsModel.getPaymentPayload().getActivePlans(practiceId)) {
             if (paymentPlanDTO.getMetadata().getPracticeId() != null &&
                     paymentPlanDTO.getMetadata().getPracticeId().equals(practiceId)) {
@@ -752,7 +755,6 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
     }
 
     private boolean canAddToExisting() {
-        String practiceId = selectedBalance.getMetadata().getPracticeId();
         for (PaymentsPayloadSettingsDTO settingsDTO : paymentsModel.getPaymentPayload().getPaymentSettings()) {
             if (settingsDTO.getMetadata().getPracticeId() != null &&
                     settingsDTO.getMetadata().getPracticeId().equals(practiceId)) {
@@ -764,7 +766,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
 
     protected boolean enableAddToExisting() {
         return hasExistingPlans() && canAddToExisting()
-                && !paymentsModel.getPaymentPayload().getValidPlans(selectedBalance.getMetadata().getPracticeId(),
+                && !paymentsModel.getPaymentPayload().getValidPlans(practiceId,
                 selectedBalance.getPayload().get(0).getAmount()).isEmpty();
     }
 
