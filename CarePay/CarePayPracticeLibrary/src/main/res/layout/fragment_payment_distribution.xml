@@ -72,7 +72,19 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_16sp"
                 breeze:textKey="payment_history"
-                app:customAssetFont="proxima_nova_semi_bold"/>
+                app:customAssetFont="proxima_nova_semi_bold"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/action_button"
+                android:layout_width="@dimen/dimen_88dp"
+                android:layout_height="@dimen/dimen_38dp"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/dimen_8dp"
+                android:background="@drawable/bg_border_trans_selectable"
+                android:src="@drawable/menu_dots"
+                android:scaleType="fitCenter"
+                android:padding="@dimen/dimen_15dp"/>
 
             <View
                 android:layout_width="0dp"

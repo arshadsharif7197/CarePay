@@ -20,6 +20,7 @@ import com.carecloud.carepay.practice.library.payments.adapter.PaymentDistributi
 import com.carecloud.carepay.practice.library.payments.adapter.PopupPickLocationAdapter;
 import com.carecloud.carepay.practice.library.payments.adapter.PopupPickProviderAdapter;
 import com.carecloud.carepay.practice.library.payments.adapter.PopupPickerAdapter;
+import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerPayments;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerWindow;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentNavigationCallback;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -57,7 +58,7 @@ import java.util.Locale;
 public class PaymentDistributionFragment extends BaseDialogFragment
         implements PaymentDistributionAdapter.PaymentDistributionCallback, PopupPickerAdapter.PopupPickCallback,
         AddPaymentItemFragment.AddItemCallback, PaymentDistributionEntryFragment.PaymentDistributionAmountCallback,
-        BounceHelper.BounceHelperListener {
+        BounceHelper.BounceHelperListener, PopupPickerPayments.PaymentPopupListener {
 
     private TextView balanceTextView;
     private TextView paymentTotalTextView;
@@ -71,12 +72,14 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     private Button payButton;
     private Button paymentPlanButton;
     private View emptyBalanceLayout;
+    private View actionButton;
 
     private BounceHelper balanceViewSwipeHelper;
     private BounceHelper chargeViewSwipeHelper;
 
     private PopupPickerWindow locationPickerWindow;
     private PopupPickerWindow providerPickerWindow;
+    private PopupPickerPayments paymentsPickerWindow;
 
     private PaymentsModel paymentsModel;
     private List<BalanceItemDTO> balanceItems = new ArrayList<>();
@@ -173,15 +176,17 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         setupPickerWindows();
         setDefaultProviderLocation();
 
-        View container = view.findViewById(R.id.container_main);
-        container.setSoundEffectsEnabled(false);
-        container.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener clearViews = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 clearPickers();
                 clearLastSwipeView();
             }
-        });
+        };
+        View container = view.findViewById(R.id.container_main);
+        container.setSoundEffectsEnabled(false);
+        container.setOnClickListener(clearViews);
+        emptyBalanceLayout.setOnClickListener(clearViews);
     }
 
     private void setupToolbar(View view, String titleString) {
@@ -254,12 +259,22 @@ public class PaymentDistributionFragment extends BaseDialogFragment
                 .getTransactionHistory().getPaymentHistoryList().isEmpty();
         boolean hasPlans = !paymentsModel.getPaymentPayload()
                 .getFilteredPlans(getApplicationMode().getUserPracticeDTO().getPracticeId()).isEmpty();
-        historyButton.setVisibility(hasHistory || hasPlans ? View.VISIBLE : View.INVISIBLE);
+//        historyButton.setVisibility(hasHistory || hasPlans ? View.VISIBLE : View.INVISIBLE);
         historyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 callback.showPaymentHistory(paymentsModel);
                 hideDialog();
+            }
+        });
+
+        actionButton = view.findViewById(R.id.action_button);
+        actionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int offset = view.getWidth() / 2 - paymentsPickerWindow.getWidth() / 2;
+                paymentsPickerWindow.showAsDropDown(view, offset, 3);
+                view.setSelected(true);
             }
         });
 
@@ -395,6 +410,13 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         providers = paymentsModel.getPaymentPayload().getProviders();
         PopupPickProviderAdapter providerAdapter = new PopupPickProviderAdapter(getContext(), providers, this);
         providerPickerWindow.setAdapter(providerAdapter);
+
+        boolean hasHistory = !paymentsModel.getPaymentPayload()
+                .getTransactionHistory().getPaymentHistoryList().isEmpty();
+        paymentsPickerWindow = new PopupPickerPayments(getContext(),
+                paymentsModel.getPaymentPayload().getUserPractices().get(0),
+                this,
+                hasHistory);
     }
 
     private double calculateTotalBalance() {
@@ -696,6 +718,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     private void clearPickers() {
         providerPickerWindow.dismiss();
         locationPickerWindow.dismiss();
+        paymentsPickerWindow.dismiss();
+        actionButton.setSelected(false);
     }
 
     private void clearLastSwipeView() {
@@ -854,5 +878,25 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         return paymentsModel.getPaymentPayload().getPatientBalances().size() > 0
                 && paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().size() > 0
                 && paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload().size() > 0;
+    }
+
+    @Override
+    public void onHistoryAction() {
+        callback.showPaymentHistory(paymentsModel);
+        actionButton.setSelected(false);
+        hideDialog();
+    }
+
+    @Override
+    public void onAddChargeAction() {
+        callback.lookupChargeItem(paymentsModel.getPaymentPayload().getSimpleChargeItems(),
+                PaymentDistributionFragment.this);
+        actionButton.setSelected(false);
+        hideDialog();
+    }
+
+    @Override
+    public void onAddRetailAction() {
+        actionButton.setSelected(false);
     }
 }

@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="@dimen/popup_picker_width"
     android:layout_height="@dimen/popup_picker_height"
-    android:background="@drawable/popup_picker_bg">
+    android:background="@drawable/popup_picker_bg_new">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/pick_list_recycler"

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    android:id="@+id/popup_container"
+    android:layout_width="@dimen/popup_picker_width"
+    android:layout_height="wrap_content"
+    android:background="@drawable/popup_picker_bg_new">
+
+    <ImageView
+        android:layout_width="@dimen/dimen_25dp"
+        android:layout_height="@dimen/dimen_25dp"
+        android:layout_gravity="center|top"
+        android:src="@drawable/sort_up"
+        android:tint="@color/white"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/round_white_background">
+
+        <LinearLayout
+            android:id="@+id/history_item_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/history_action_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/dimen_8dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_17"
+                tools:text="View History"
+                breeze:textKey="payment_history"
+                app:customAssetFont="gotham_rounded_medium"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_1dp"
+                android:background="@color/gray_divider"/>
+
+        </LinearLayout>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/add_charge_action_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="@dimen/dimen_8dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_17"
+            tools:text="Add Extra Charge"
+            breeze:textKey="payment_new_charges_header"
+            app:customAssetFont="gotham_rounded_medium"/>
+
+        <LinearLayout
+            android:id="@+id/retail_item_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_1dp"
+                android:background="@color/gray_divider"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/add_retail_action_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/dimen_8dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_17"
+                tools:text="Add Retail Charge"
+                breeze:textKey="payment_shop_transaction"
+                app:customAssetFont="gotham_rounded_medium"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>
