@@ -199,7 +199,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         String monthlyOrWeekly = interval == PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS
                 ? Label.getLabel("payment.paymentPlan.frequency.option.monthly").toLowerCase()
                 : Label.getLabel("payment.paymentPlan.frequency.option.weekly").toLowerCase();
-        parametersTextView.setText(String.format("This balance must be paid over a maximum of %s %s and the minimum %s payment is %s.",//Locale.US, Label.getLabel("payment_plan_parameters"),
+        parametersTextView.setText(String.format(Locale.US, Label.getLabel("payment_plan_parameters"),
                 paymentPlanBalanceRules.getMaxDuration().getValue(),
                 monthOrWeek,
                 monthlyOrWeekly,
