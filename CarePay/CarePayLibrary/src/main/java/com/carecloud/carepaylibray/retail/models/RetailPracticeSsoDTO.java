@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.retail;
+package com.carecloud.carepaylibray.retail.models;
 
 import com.google.gson.annotations.SerializedName;
 

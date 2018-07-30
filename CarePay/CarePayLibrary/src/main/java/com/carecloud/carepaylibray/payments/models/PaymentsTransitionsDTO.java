@@ -52,6 +52,9 @@ public class PaymentsTransitionsDTO {
     @SerializedName("update_one_time_payment")
     @Expose
     private TransitionDTO updateScheduledPayment = new TransitionDTO();
+    @SerializedName("products")
+    @Expose
+    private TransitionDTO products = new TransitionDTO();
 
 
     /**
@@ -199,5 +202,13 @@ public class PaymentsTransitionsDTO {
 
     public void setUpdateScheduledPayment(TransitionDTO updateScheduledPayment) {
         this.updateScheduledPayment = updateScheduledPayment;
+    }
+
+    public TransitionDTO getProducts() {
+        return products;
+    }
+
+    public void setProducts(TransitionDTO products) {
+        this.products = products;
     }
 }

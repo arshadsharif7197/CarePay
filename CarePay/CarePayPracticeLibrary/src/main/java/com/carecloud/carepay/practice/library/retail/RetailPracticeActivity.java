@@ -25,8 +25,8 @@ import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterf
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.retail.RetailModel;
-import com.carecloud.carepaylibray.retail.RetailPracticeDTO;
+import com.carecloud.carepaylibray.retail.models.RetailModel;
+import com.carecloud.carepaylibray.retail.models.RetailPracticeDTO;
 import com.carecloud.carepaylibray.retail.fragments.RetailFragment;
 import com.carecloud.carepaylibray.retail.interfaces.RetailInterface;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
