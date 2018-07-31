@@ -5,6 +5,9 @@
     <dimen name="languageSpinnerWidth">100dp</dimen>
     <dimen name="languageSpinnerHeight">40dp</dimen>
 
+    <!--Common-->
+    <dimen name="dialog_profile_pic_size">88dp</dimen>
+
     <!-- Default dimens which will be use for any default styling  -->
     <dimen name="dimen_1dp">1dp</dimen>
     <dimen name="dimen_3dp">3dp</dimen>
@@ -114,9 +117,10 @@
     <dimen name="appointment_detail_dialog_checkbox_divider_margin_top">20dp</dimen>
     <dimen name="custom_appointment_dialog_checkbox_textsize">15sp</dimen>
     <dimen name="custom_appointment_dialog_button_textsize">22sp</dimen>
-
     <dimen name="custom_appointment_dialog_background_shape_radius">7dp</dimen>
     <dimen name="custom_appointment_dialog_checkbox_normal_size">16dp</dimen>
+    <dimen name="checkin_info_label_width">150dp</dimen>
+    <dimen name="checked_in_card_status_top_margin">36dp</dimen>
 
     <!-- Home Screen -->
 
@@ -162,10 +166,6 @@
 
     <!--Signature view dialog-->
 
-    <!-- Check-in -->
-    <dimen name="checkin_info_label_width">150dp</dimen>
-    <dimen name="checked_in_card_status_top_margin">36dp</dimen>
-
     <!--Provider lists-->
     <dimen name="provider_list_title_margin">34dp</dimen>
     <dimen name="provider_no_list_margin">72dp</dimen>
@@ -191,9 +191,6 @@
     <dimen name="dimen_72dp">72dp</dimen>
     <dimen name="payment_distibution_dialog_height">600dp</dimen>
     <dimen name="payment_distribution_dialog_width">860dp</dimen>
-
-    <dimen name="popup_picker_width">300dp</dimen>
-    <dimen name="popup_picker_height">200dp</dimen>
 
     <dimen name="keypad_width">600dp</dimen>
     <dimen name="keypad_height">700dp</dimen>
@@ -255,6 +252,22 @@
     <dimen name="clearFiltersButtonHeight">45dp</dimen>
     <dimen name="cutomFilterItemTextSize">18sp</dimen>
     <dimen name="clearFiltersButtonTextSize">17sp</dimen>
+
+    <dimen name="popup_picker_width">300dp</dimen>
+    <dimen name="popup_picker_height">200dp</dimen>
+
     <!--&#45;&#45;-->
+    <dimen name="dialog_header_height">205dp</dimen>
+
+    <dimen name="profilePicMarginTop">26dp</dimen>
+    <dimen name="checkinPatientNameTextSize">34sp</dimen>
+    <dimen name="doctorNameTextSize">18sp</dimen>
+    <dimen name="balanceTextPadding">19dp</dimen>
+    <dimen name="balanceTextSize">24sp</dimen>
+    <dimen name="queueTextSize">30sp</dimen>
+    <dimen name="demographicsCheckBoxWidth">120dp</dimen>
+    <dimen name="pickItemTextSize">17sp</dimen>
+    <dimen name="pickItemVerticalPadding">8dp</dimen>
+    <dimen name="lineItemDetailButtonTextSize">13sp</dimen>
 
 </resources>

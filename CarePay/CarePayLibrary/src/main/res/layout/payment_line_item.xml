@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/history_item_linear_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -22,10 +23,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"
+            android:gravity="start"
             android:textAlignment="viewStart"
             android:textColor="@color/textview_default_textcolor"
-            android:textSize="@dimen/textview_default_textsize"
-            app:customAssetFont="proxima_nova_regular" />
+            android:textSize="@dimen/lineItemTextSize"
+            app:customAssetFont="proxima_nova_regular"
+            tools:text="Patient Balance" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/lineItemNameLabelDetails"
@@ -40,7 +43,8 @@
             android:padding="@dimen/dimen_5dp"
             android:textColor="@color/colorPrimary"
             android:textSize="13sp"
-            app:customAssetFont="gotham_rounded_medium" />
+            app:customAssetFont="gotham_rounded_medium"
+            tools:text="Details" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/lineItemAmountLabel"
@@ -52,7 +56,8 @@
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/textview_textsize"
             android:textStyle="bold"
-            app:customAssetFont="proxima_nova_semi_bold" />
+            app:customAssetFont="proxima_nova_semi_bold"
+            tools:text="4,808.67" />
     </LinearLayout>
 
     <View

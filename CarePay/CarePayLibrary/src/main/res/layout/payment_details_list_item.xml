@@ -22,7 +22,7 @@
             android:layout_marginBottom="@dimen/dimen_3dp"
             android:gravity="end"
             android:textColor="@color/lightSlateGray"
-            android:textSize="@dimen/text_size_15"
+            android:textSize="@dimen/paymentDetailAmountTextSize"
             app:customAssetFont="proxima_nova_regular"
             tools:text="$69.00" />
 
@@ -35,7 +35,7 @@
             android:layout_marginTop="@dimen/dimen_3dp"
             android:gravity="end"
             android:textColor="@color/lightSlateGray"
-            android:textSize="@dimen/text_size_12sp"
+            android:textSize="@dimen/paymentDetailDateTextSize"
             app:customAssetFont="proxima_nova_regular"
             tools:text="12/22/2017" />
 
@@ -49,7 +49,7 @@
             android:ellipsize="end"
             android:gravity="start"
             android:textColor="@color/lightSlateGray"
-            android:textSize="@dimen/text_size_16"
+            android:textSize="@dimen/paymentDetailLabelTextSize"
             app:customAssetFont="proxima_nova_regular"
             tools:text="Visual Film Examination(s)" />
     </RelativeLayout>
