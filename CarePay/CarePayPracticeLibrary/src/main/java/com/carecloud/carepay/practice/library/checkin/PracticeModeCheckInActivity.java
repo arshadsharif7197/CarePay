@@ -33,6 +33,7 @@ import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFra
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PracticePaymentPlanDetailsDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.AddPaymentItemFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.AddRetailItemFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientModePaymentPlanEditFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionEntryFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionFragment;
@@ -790,6 +791,14 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     public void showPaymentPlanDashboard(PaymentsModel paymentsModel) {
         PaymentPlanDashboardFragment fragment = PaymentPlanDashboardFragment.newInstance(paymentsModel);
         displayDialogFragment(fragment, true);
+    }
+
+    @Override
+    public void showRetailItems(PaymentsModel paymentsModel,
+                                AddRetailItemFragment.AddRetailItemCallback callback) {
+        AddRetailItemFragment retailItemFragment = AddRetailItemFragment.getInstance(paymentsModel);
+        retailItemFragment.setCallback(callback);
+        displayDialogFragment(retailItemFragment, false);
     }
 
     @Override

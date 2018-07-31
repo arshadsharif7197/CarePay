@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.payments.interfaces;
 
 import com.carecloud.carepay.practice.library.payments.fragments.AddPaymentItemFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.AddRetailItemFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionEntryFragment;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
@@ -20,4 +21,6 @@ public interface PracticePaymentNavigationCallback extends PaymentNavigationCall
     void showAmountEntry(PaymentDistributionEntryFragment.PaymentDistributionAmountCallback callback, BalanceItemDTO balanceItemDTO, SimpleChargeItem chargeItem);
 
     void showPaymentPlanDashboard(PaymentsModel paymentsModel);
+
+    void showRetailItems(PaymentsModel paymentsModel, AddRetailItemFragment.AddRetailItemCallback callback);
 }

@@ -24,6 +24,10 @@ import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerPaymen
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerWindow;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentNavigationCallback;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
@@ -41,15 +45,20 @@ import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanLineItem;
+import com.carecloud.carepaylibray.retail.models.RetailItemDto;
+import com.carecloud.carepaylibray.retail.models.RetailProductsModel;
 import com.carecloud.carepaylibray.utils.BounceHelper;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Created by lmenendez on 3/14/17
@@ -58,7 +67,8 @@ import java.util.Locale;
 public class PaymentDistributionFragment extends BaseDialogFragment
         implements PaymentDistributionAdapter.PaymentDistributionCallback, PopupPickerAdapter.PopupPickCallback,
         AddPaymentItemFragment.AddItemCallback, PaymentDistributionEntryFragment.PaymentDistributionAmountCallback,
-        BounceHelper.BounceHelperListener, PopupPickerPayments.PaymentPopupListener {
+        BounceHelper.BounceHelperListener, PopupPickerPayments.PaymentPopupListener,
+        AddRetailItemFragment.AddRetailItemCallback {
 
     private TextView balanceTextView;
     private TextView paymentTotalTextView;
@@ -414,7 +424,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         boolean hasHistory = !paymentsModel.getPaymentPayload()
                 .getTransactionHistory().getPaymentHistoryList().isEmpty();
         paymentsPickerWindow = new PopupPickerPayments(getContext(),
-                paymentsModel.getPaymentPayload().getUserPractices().get(0),
+                callback.getPracticeInfo(paymentsModel),
                 this,
                 hasHistory);
     }
@@ -685,6 +695,12 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     }
 
     @Override
+    public void addRetailItem(RetailItemDto retailItem) {
+        //TODO
+        showDialog();
+    }
+
+    @Override
     public void onDismissAddItemFragment() {
         showDialog();
     }
@@ -898,5 +914,41 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     @Override
     public void onAddRetailAction() {
         actionButton.setSelected(false);
+        hideDialog();
+        if(paymentsModel.getPaymentPayload().getRetailProducts().getProducts().getItems().isEmpty()) {
+            UserPracticeDTO practiceDTO = callback.getPracticeInfo(paymentsModel);
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("practice_id", practiceDTO.getPracticeId());
+            queryMap.put("practice_mgmt", practiceDTO.getPracticeMgmt());
+
+            TransitionDTO getProducts = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getProducts();
+            getWorkflowServiceHelper().execute(getProducts, getRetailProductsCallback, queryMap);
+        }else{
+            callback.showRetailItems(paymentsModel, PaymentDistributionFragment.this);
+        }
     }
+
+
+    private WorkflowServiceCallback getRetailProductsCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            PaymentsModel retailPaymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+            RetailProductsModel retailProductsModel = retailPaymentsModel.getPaymentPayload().getRetailProducts();
+            paymentsModel.getPaymentPayload().setRetailProducts(retailProductsModel);
+            callback.showRetailItems(paymentsModel, PaymentDistributionFragment.this);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
+        }
+    };
+
 }
