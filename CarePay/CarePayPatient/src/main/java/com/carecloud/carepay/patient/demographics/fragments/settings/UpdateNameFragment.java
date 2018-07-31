@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -208,7 +209,10 @@ public class UpdateNameFragment extends DemographicsBaseSettingsFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             DemographicDTO updatedModel = DtoHelper.getConvertedDTO(DemographicDTO.class, workflowDTO);
-            demographicsSettingsDTO.getPayload().getDemographics().getPayload().setPersonalDetails(updatedModel.getPayload().getDemographics().getPayload().getPersonalDetails());
+            PatientModel personalDetails = updatedModel.getPayload().getDemographics().getPayload().getPersonalDetails();
+            demographicsSettingsDTO.getPayload().getDemographics().getPayload().setPersonalDetails(personalDetails);
+            ApplicationPreferences.getInstance().setUserFullName(StringUtil
+                    .getCapitalizedUserName(personalDetails.getFirstName(), personalDetails.getLastName()));
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
             getActivity().onBackPressed();
         }

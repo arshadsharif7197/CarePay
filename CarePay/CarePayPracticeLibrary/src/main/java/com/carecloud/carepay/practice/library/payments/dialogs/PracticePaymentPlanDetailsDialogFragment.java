@@ -132,9 +132,11 @@ public class PracticePaymentPlanDetailsDialogFragment extends BaseDialogFragment
         TextView paymentPlanValueTextView = (TextView) view.findViewById(R.id.paymentPlanValueTextView);
         paymentPlanValueTextView.setText(currencyFormatter.format(paymentPlan.getPayload().getAmount()));
 
+        String paymentAmount = currencyFormatter.format(paymentPlan.getPayload()
+                .getPaymentPlanDetails().getAmount()) +
+                paymentPlan.getPayload().getPaymentPlanDetails().getFrequencyString();
         TextView paymentAmountTextView = (TextView) view.findViewById(R.id.paymentAmountTextView);
-        paymentAmountTextView.setText(currencyFormatter.format(paymentPlan.getPayload()
-                .getPaymentPlanDetails().getAmount()));
+        paymentAmountTextView.setText(paymentAmount);
 
         int paymentCount = paymentPlan.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
         int installmentTotal = paymentPlan.getPayload().getPaymentPlanDetails().getInstallments();

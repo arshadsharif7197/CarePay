@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class UnifiedSignInPayload {
 
-    @SerializedName(value="practice_mode_signin", alternate={"patient_app_signin"})
+    @SerializedName(value = "practice_mode_signin", alternate = {"patient_app_signin"})
     @Expose
     private UnifiedAuthorizationModel authorizationModel = new UnifiedAuthorizationModel();
 
@@ -17,11 +17,23 @@ public class UnifiedSignInPayload {
     @Expose
     private UnifiedPatientModeModel signIn = new UnifiedPatientModeModel();
 
+    @SerializedName("badge_counters")
+    @Expose
+    private BadgeCounter badgeCounter = new BadgeCounter();
+
     public UnifiedAuthorizationModel getAuthorizationModel() {
         return authorizationModel;
     }
 
     public UnifiedPatientModeModel getSignIn() {
         return signIn;
+    }
+
+    public BadgeCounter getBadgeCounter() {
+        return badgeCounter;
+    }
+
+    public void setBadgeCounter(BadgeCounter badgeCounter) {
+        this.badgeCounter = badgeCounter;
     }
 }

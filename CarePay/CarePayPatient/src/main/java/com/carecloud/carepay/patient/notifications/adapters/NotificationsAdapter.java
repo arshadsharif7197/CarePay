@@ -93,7 +93,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     @Override
     public void onBindViewHolder(final NotificationViewHolder holder, int position) {
         final NotificationItem notificationItem = notificationItems.get(position);
-        NotificationType notificationType = notificationItem.getPayload().getNotificationType();
+        NotificationType notificationType = notificationItem.getMetadata().getNotificationType();
 
         resetViews(holder);
         if (notificationType != null) {
@@ -103,6 +103,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                     break;
                 case credit_card:
                     displayCreditCardNotification(holder, notificationItem);
+                    break;
+                case pending_forms:
+                    displayPendingFormNotification(holder, notificationItem);
                     break;
                 default:
                 case appointment:
@@ -132,6 +135,30 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             }
         });
 
+    }
+
+    private void displayPendingFormNotification(NotificationViewHolder holder, NotificationItem notificationItem) {
+        holder.initials.setText(StringUtil.getShortName(notificationItem.getPayload().getPracticeName()));
+        holder.initials.setTextColor(ContextCompat.getColor(context, R.color.lightning_yellow));
+        holder.initials.setBackgroundResource(R.drawable.round_list_tv_yellow_border);
+
+        String headerText = Label.getLabel("consentForms.providersList.item.label.pendingFormCount");
+        if (notificationItem.getPayload().getPendingForms() > 1) {
+            headerText = String.format(Label.getLabel("consentForms.providersList.item.label.pendingFormsCount"),
+                    notificationItem.getPayload().getPendingForms());
+        }
+        holder.header.setText(headerText);
+        holder.header.setTextColor(ContextCompat.getColor(context, R.color.lightning_yellow));
+
+        String practiceName = notificationItem.getPayload().getPracticeName();
+        holder.message.setTextColor(ContextCompat.getColor(context, R.color.charcoal));
+        SpannableStringBuilder stringBuilder = new SpannableStringBuilder(String
+                .format(Label.getLabel("consentForms.notification.message.label.pendingFormNotification")
+                        , practiceName));
+        stringBuilder.setSpan(new CarePayCustomSpan(context,
+                        CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD), 0, practiceName.length(),
+                Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        holder.message.setText(stringBuilder);
     }
 
     private void displayPaymentNotification(NotificationViewHolder holder, NotificationItem notificationItem) {

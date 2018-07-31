@@ -82,9 +82,9 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
         holder.swipeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                thread.setRead(true);
                 holder.unreadCount.setVisibility(View.GONE);
                 callback.onMessageSelected(thread);
+                thread.setRead(true);
             }
         });
 

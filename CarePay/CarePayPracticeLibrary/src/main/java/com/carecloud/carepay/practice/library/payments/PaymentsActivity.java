@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -62,8 +63,10 @@ import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
@@ -78,6 +81,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
+import com.carecloud.carepaylibray.payments.models.ScheduledPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
@@ -114,6 +118,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     private Date endDate;
 
     private PaymentHistoryItem recentRefundItem;
+    private String patientId;
     private boolean paymentMethodCancelled = false;
 
     @Override
@@ -189,7 +194,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 PatientBalanceDTO balancessDTO = (PatientBalanceDTO) dto;
                 PatientModel patient = new PatientModel();
                 patient.setPatientId(balancessDTO.getBalances().get(0).getMetadata().getPatientId());
-                getPatientBalanceDetails(patient);
+                patientId = patient.getPatientId();
+                getPatientBalanceDetails(patientId);
             }
         });
         applyFilter();
@@ -314,14 +320,15 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         findPatientDialog.setClickedListener(new FindPatientDialog.OnItemClickedListener() {
             @Override
             public void onItemClicked(PatientModel patient) {
-                getPatientBalanceDetails(patient);
+                patientId = patient.getPatientId();
+                getPatientBalanceDetails(patientId);
             }
         });
     }
 
-    private void getPatientBalanceDetails(PatientModel patient) {
+    private void getPatientBalanceDetails(String patientId) {
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("patient_id", patient.getPatientId());
+        queryMap.put("patient_id", patientId);
 
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getPaymentsPatientBalances();
         getWorkflowServiceHelper().execute(transitionDTO, patientBalancesCallback, queryMap);
@@ -568,11 +575,13 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
         Gson gson = new Gson();
         PaymentsModel paymentsModel = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
-        PatientBalanceDTO balance = paymentsModel.getPaymentPayload().getPatientBalances().get(0);
-        String patientBalance = gson.toJson(balance);
-        UpdatePatientBalancesDTO updatePatientBalance = gson.fromJson(patientBalance,
-                UpdatePatientBalancesDTO.class);
-
+        UpdatePatientBalancesDTO updatePatientBalance = null;
+        if(!paymentsModel.getPaymentPayload().getPatientBalances().isEmpty()) {
+            PatientBalanceDTO balance = paymentsModel.getPaymentPayload().getPatientBalances().get(0);
+            String patientBalance = gson.toJson(balance);
+            updatePatientBalance = gson.fromJson(patientBalance,
+                    UpdatePatientBalancesDTO.class);
+        }
         hidePaymentDistributionFragment(updatePatientBalance);
     }
 
@@ -941,6 +950,12 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload()
                 .getScheduledPaymentModel();
+
+        if (scheduledPayment.getMetadata().getOneTimePaymentId() == null &&
+                !paymentsModel.getPaymentPayload().getScheduledOneTimePayments().isEmpty()) {
+            scheduledPayment = paymentsModel.getPaymentPayload().getScheduledOneTimePayments().get(0);
+        }
+
         List<ScheduledPaymentModel> scheduledPaymentModels = this.paymentsModel.getPaymentPayload().getScheduledOneTimePayments();
         for (ScheduledPaymentModel scheduledPaymentModel : scheduledPaymentModels) {
             if (scheduledPaymentModel.getMetadata().getOneTimePaymentId().equals(scheduledPayment.getMetadata().getOneTimePaymentId())) {
@@ -960,7 +975,12 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void showDeleteScheduledPaymentConfirmation(WorkflowDTO workflowDTO) {
+    public void showDeleteScheduledPaymentConfirmation(WorkflowDTO workflowDTO, ScheduledPaymentPayload scheduledPaymentPayload) {
+        showSuccessToast(String.format(
+                Label.getLabel("payment.oneTimePayment.scheduled.delete.success"),
+                DateUtil.getInstance()
+                        .setDateRaw(scheduledPaymentPayload.getPaymentDate())
+                        .toStringWithFormatMmSlashDdSlashYyyy()));
         completePaymentProcess(workflowDTO);
     }
 
@@ -1139,6 +1159,24 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             }
         });
         displayDialogFragment(fragment, false);
+    }
+
+    @Override
+    public void onPaymentPlanCanceled(WorkflowDTO workflowDTO) {
+        getSupportFragmentManager().popBackStackImmediate(PaymentDistributionFragment.class.getName(),
+                FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        getPatientBalanceDetails(patientId);
+    }
+
+    @Override
+    public void showCancelPaymentPlanConfirmDialog(ConfirmationCallback confirmationCallback) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment
+                .newInstance(Label.getLabel("payment.cancelPaymentPlan.confirmDialog.title.cancelPaymentPlanTitle"),
+                        Label.getLabel("payment.cancelPaymentPlan.confirmDialog.message.cancelPaymentPlanMessage"));
+        confirmDialogFragment.setCallback(confirmationCallback);
+        String tag = confirmDialogFragment.getClass().getName();
+        confirmDialogFragment.show(ft, tag);
     }
 
     @Override

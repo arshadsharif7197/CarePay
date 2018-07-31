@@ -2,6 +2,7 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -60,5 +61,16 @@ public class PatientModePaymentPlanEditFragment extends PaymentPlanEditFragment 
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         view.findViewById(R.id.bottomContainer).setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void setupButtons(View view) {
+        super.setupButtons(view);
+        view.findViewById(R.id.footer).setVisibility(View.GONE);
+    }
+
+    @Override
+    protected Button getActionButton() {
+        return editPaymentPlanButton;
     }
 }
