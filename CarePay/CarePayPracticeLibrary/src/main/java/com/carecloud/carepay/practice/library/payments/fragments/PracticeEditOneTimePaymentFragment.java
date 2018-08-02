@@ -113,9 +113,9 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
                 Label.getLabel("button_no"),
                 Label.getLabel("button_yes"));
         confirmDialogFragment.setCallback(confirmDeleteCallback);
-        confirmDialogFragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+        confirmDialogFragment.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
-            public void onCancel(DialogInterface dialog) {
+            public void onDismiss(DialogInterface dialog) {
                 showDialog();
             }
         });
