@@ -14,15 +14,22 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.consentforms.adapters.ConsentFormsAdapter;
 import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormPracticeFormInterface;
 import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormsFormsInterface;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.models.Paging;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.PendingFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.UserFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -30,12 +37,17 @@ import java.util.List;
  */
 public class ConsentFormPracticeFormsFragment extends BaseFragment implements ConsentFormsFormsInterface {
 
+    private static final int BOTTOM_ROW_OFFSET = 2;
+
     private ConsentFormPracticeFormInterface callback;
     private ConsentFormDTO consentFormDto;
     private List<PracticeForm> selectedForms;
     private Button signSelectedFormsButton;
     private int selectedPracticeIndex;
     private int mode;
+    private Paging paging;
+    private boolean isPaging;
+    private ConsentFormsAdapter adapter;
 
     public static ConsentFormPracticeFormsFragment newInstance(int selectedProviderIndex, int mode) {
         Bundle args = new Bundle();
@@ -100,9 +112,14 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
                 .findViewById(R.id.providerConsentFormsRecyclerView);
         practiceConsentFormsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         List<PracticeForm> practiceForms = getPracticeForms(userFormDto);
-        ConsentFormsAdapter adapter = new ConsentFormsAdapter(practiceForms, mode);
+        adapter = new ConsentFormsAdapter(practiceForms, mode);
         adapter.setCallback(this);
         practiceConsentFormsRecyclerView.setAdapter(adapter);
+
+        if (mode == ConsentFormViewPagerFragment.HISTORIC_MODE) {
+            paging = userFormDto.getHistoryForms().getPaging();
+            practiceConsentFormsRecyclerView.addOnScrollListener(scrollListener);
+        }
     }
 
     private List<PracticeForm> getPracticeForms(UserFormDTO userFormDTO) {
@@ -142,6 +159,68 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
         localSelectedForm.add(localPracticeForm);
         callback.showForms(localSelectedForm, selectedPracticeIndex, false);
     }
+
+    private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            super.onScrolled(recyclerView, dx, dy);
+            if (hasMorePages()) {
+                int last = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+                if (last > recyclerView.getAdapter().getItemCount() - BOTTOM_ROW_OFFSET && !isPaging) {
+                    loadNextPage();
+                    isPaging = true;
+                }
+            }
+
+        }
+    };
+
+    private boolean hasMorePages() {
+        return paging.getCurrentPage() != paging.getTotalPages();
+    }
+
+    private void loadNextPage() {
+        PendingBalanceMetadataDTO metadata = consentFormDto.getPayload().getUserForms()
+                .get(selectedPracticeIndex).getMetadata();
+        HashMap<String, String> query = new HashMap<>();
+        query.put("practice_mgmt", metadata.getPracticeMgmt());
+        query.put("practice_id", metadata.getPracticeId());
+        query.put("page_number", String.valueOf(paging.getCurrentPage() + 1));
+        query.put("page_count", String.valueOf(paging.getResultsPerPage()));
+
+        TransitionDTO nextPageTransition = consentFormDto.getMetadata().getLinks().getHistoryForms();
+        getWorkflowServiceHelper().execute(nextPageTransition, nextPageCallback, query);
+    }
+
+    private WorkflowServiceCallback nextPageCallback = new WorkflowServiceCallback() {
+
+        @Override
+        public void onPreExecute() {
+            adapter.setLoading(true);
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            adapter.setLoading(false);
+            ConsentFormDTO consentFormModel = DtoHelper.getConvertedDTO(ConsentFormDTO.class, workflowDTO);
+            Paging nextPage = consentFormModel.getPayload().getUserForms().get(0).getHistoryForms().getPaging();
+            if (nextPage.getCurrentPage() != paging.getCurrentPage()) {
+                paging = nextPage;
+                List<PracticeForm> newItems = getPracticeForms(consentFormModel.getPayload().getUserForms()
+                        .get(0));
+                adapter.addHistoryList(newItems);
+            }
+            isPaging = false;
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            adapter.setLoading(false);
+            isPaging = false;
+            showErrorNotification(exceptionMessage);
+        }
+    };
 
 
 }

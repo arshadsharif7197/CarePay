@@ -31,6 +31,9 @@ public class ConsentFormsLinksDTO {
     @Expose
     @SerializedName("self")
     private TransitionDTO self;
+    @Expose
+    @SerializedName("history_forms")
+    private TransitionDTO historyForms;
 
     public TransitionDTO getAppointments() {
         return appointments;
@@ -86,5 +89,13 @@ public class ConsentFormsLinksDTO {
 
     public void setSelf(TransitionDTO self) {
         this.self = self;
+    }
+
+    public TransitionDTO getHistoryForms() {
+        return historyForms;
+    }
+
+    public void setHistoryForms(TransitionDTO historyForms) {
+        this.historyForms = historyForms;
     }
 }

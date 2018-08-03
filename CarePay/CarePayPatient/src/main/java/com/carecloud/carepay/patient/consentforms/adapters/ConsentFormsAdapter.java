@@ -18,6 +18,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
 import java.util.List;
@@ -27,9 +28,11 @@ import java.util.List;
  */
 public class ConsentFormsAdapter extends RecyclerView.Adapter<ConsentFormsAdapter.ViewHolder> {
 
+    private static final int VIEW_TYPE_LOADING = 1;
     private final List<PracticeForm> forms;
     private ConsentFormsFormsInterface callback;
     private final int mode;
+    private boolean isLoading;
 
     public ConsentFormsAdapter(List<PracticeForm> pendingForms, int mode) {
         this.forms = pendingForms;
@@ -38,12 +41,29 @@ public class ConsentFormsAdapter extends RecyclerView.Adapter<ConsentFormsAdapte
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        int layout;
+        if (viewType == VIEW_TYPE_LOADING) {
+            layout = R.layout.item_loading;
+        } else {
+            layout = R.layout.item_provider_forms;
+        }
         return new ViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_provider_forms, parent, false));
+                .inflate(layout, parent, false));
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position >= forms.size()) {
+            return VIEW_TYPE_LOADING;
+        }
+        return 0;
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        if (position >= forms.size()) {
+            return;
+        }
         final PracticeForm form = forms.get(position);
         holder.container.setOnClickListener(null);
         holder.formNameTextView.setText(form.getPayload().get("title").getAsString());
@@ -100,7 +120,20 @@ public class ConsentFormsAdapter extends RecyclerView.Adapter<ConsentFormsAdapte
 
     @Override
     public int getItemCount() {
+        if (isLoading && !forms.isEmpty()) {
+            return forms.size() + 1;
+        }
         return forms.size();
+    }
+
+    public void addHistoryList(List<PracticeForm> newItems) {
+        this.forms.addAll(newItems);
+        notifyDataSetChanged();
+    }
+
+    public void setLoading(boolean isLoading) {
+        this.isLoading = isLoading;
+        notifyDataSetChanged();
     }
 
     public void setCallback(ConsentFormsFormsInterface callback) {
