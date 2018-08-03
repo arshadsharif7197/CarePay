@@ -1,27 +1,24 @@
 package com.carecloud.carepay.patient.consentforms;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormPracticeFormsFragment;
 import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormProvidersListFragment;
+import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormViewPagerFragment;
 import com.carecloud.carepay.patient.consentforms.fragments.FilledFormFragment;
 import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormActivityInterface;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
+import com.carecloud.carepaylibray.consentforms.models.UserFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
-import com.carecloud.carepaylibray.consentforms.models.payload.FormDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
 
 import java.util.List;
@@ -41,9 +38,9 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Consent
         Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
         if (extra != null && !extra.isEmpty()) {
             String practiceId = extra.getString("practiceId");
-            for (int i = 0; i < consentFormsDTO.getPayload().getForms().size(); i++) {
-                if (practiceId.equals(consentFormsDTO.getPayload().getForms().get(i).getMetadata().getPracticeId())) {
-                    addFragment(ConsentFormPracticeFormsFragment.newInstance(i), true);
+            for (int i = 0; i < consentFormsDTO.getPayload().getUserForms().size(); i++) {
+                if (practiceId.equals(consentFormsDTO.getPayload().getUserForms().get(i).getMetadata().getPracticeId())) {
+                    addFragment(ConsentFormViewPagerFragment.newInstance(i), true);
                 }
             }
         }
@@ -85,8 +82,8 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Consent
     }
 
     @Override
-    public void onProviderSelected(FormDTO practiceForm, int position) {
-        addFragment(ConsentFormPracticeFormsFragment.newInstance(position), true);
+    public void onProviderSelected(UserFormDTO practiceForm, int position) {
+        addFragment(ConsentFormViewPagerFragment.newInstance(position), true);
     }
 
     @Override

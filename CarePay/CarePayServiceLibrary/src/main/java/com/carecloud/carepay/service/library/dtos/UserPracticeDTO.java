@@ -29,7 +29,7 @@ public class UserPracticeDTO {
     private String practicePhone;
     @SerializedName("practice_address")
     @Expose
-    private UserPracticeAddressDTO addressDTO = new UserPracticeAddressDTO();
+    private UserPracticeAddress addressDTO = new UserPracticeAddress();
     @SerializedName("prefix")
     @Expose
     private String prefix;
@@ -154,11 +154,11 @@ public class UserPracticeDTO {
         this.practicePhone = practicePhone;
     }
 
-    public UserPracticeAddressDTO getAddressDTO() {
+    public UserPracticeAddress getAddressDTO() {
         return addressDTO;
     }
 
-    public void setAddressDTO(UserPracticeAddressDTO addressDTO) {
+    public void setAddressDTO(UserPracticeAddress addressDTO) {
         this.addressDTO = addressDTO;
     }
 

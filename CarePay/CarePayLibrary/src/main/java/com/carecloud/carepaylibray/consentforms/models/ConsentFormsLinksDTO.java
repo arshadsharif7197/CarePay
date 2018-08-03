@@ -26,7 +26,7 @@ public class ConsentFormsLinksDTO {
     @SerializedName("patient_balances")
     private TransitionDTO patientBalances = new TransitionDTO();
     @Expose
-    @SerializedName("update_forms")
+    @SerializedName(value = "update_forms", alternate = "update_pending_forms")
     private TransitionDTO updateForms;
     @Expose
     @SerializedName("self")

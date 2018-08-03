@@ -123,8 +123,8 @@ public class NotificationActivity extends MenuPatientActivity
             case pending_forms:
                 if (notificationItem.getPayload().getReadStatus() == NotificationStatus.unread) {
                     markNotificationRead(notificationItem);
-                    callFormsScreen(notificationItem);
                 }
+                callFormsScreen(notificationItem);
                 break;
             default:
                 //todo handle other notification types

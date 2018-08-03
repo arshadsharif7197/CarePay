@@ -12,6 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormViewPagerFragment;
 import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormsFormsInterface;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
@@ -24,16 +25,15 @@ import java.util.List;
 /**
  * @author pjohnson on 6/04/18.
  */
-public class PracticeConsentPracticeFormsAdapter
-        extends RecyclerView.Adapter<PracticeConsentPracticeFormsAdapter.ViewHolder> {
+public class ConsentFormsAdapter extends RecyclerView.Adapter<ConsentFormsAdapter.ViewHolder> {
 
     private final List<PracticeForm> forms;
-    private final List<String> pendingForms;
     private ConsentFormsFormsInterface callback;
+    private final int mode;
 
-    public PracticeConsentPracticeFormsAdapter(List<PracticeForm> forms, List<String> pendingForms) {
-        this.forms = forms;
-        this.pendingForms = pendingForms;
+    public ConsentFormsAdapter(List<PracticeForm> pendingForms, int mode) {
+        this.forms = pendingForms;
+        this.mode = mode;
     }
 
     @Override
@@ -59,22 +59,24 @@ public class PracticeConsentPracticeFormsAdapter
                     callback.onFilledFormSelected(form);
                 }
             });
+        } else {
+            sb.append(Label.getLabel("consentForms.providersFormList.item.status.neverReviewedStatus"));
         }
-        holder.formDateTextView.setTextColor(holder.formDateTextView.getContext().getResources()
-                .getColor(R.color.cadet_gray));
-        if (pendingForms.contains(form.getPayload().get("uuid").getAsString())) {
+
+        if (mode == ConsentFormViewPagerFragment.PENDING_MODE) {
+            holder.formDateTextView.setTextColor(holder.formDateTextView.getContext().getResources()
+                    .getColor(R.color.cadet_gray));
             holder.formCheckBox.setVisibility(View.VISIBLE);
             holder.formDateTextView.setTextColor(holder.formDateTextView.getContext().getResources()
                     .getColor(R.color.lightning_yellow));
-            if (sb.length() > 0) {
-                sb.insert(0, " - ");
-                sb.setSpan(new ForegroundColorSpan(holder.formDateTextView.getContext()
-                                .getResources().getColor(R.color.cadet_gray)), 0, sb.length(),
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-            sb.insert(0, Label.getLabel("consentForms.providersFormList.item.status.pendingStatus"));
 
+            sb.insert(0, " - ");
+            sb.setSpan(new ForegroundColorSpan(holder.formDateTextView.getContext()
+                            .getResources().getColor(R.color.cadet_gray)), 0, sb.length(),
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            sb.insert(0, Label.getLabel("consentForms.providersFormList.item.status.pendingStatus"));
         }
+
         holder.formDateTextView.setText(sb);
         holder.formCheckBox.setOnCheckedChangeListener(null);
         holder.formCheckBox.setChecked(form.isSelected());

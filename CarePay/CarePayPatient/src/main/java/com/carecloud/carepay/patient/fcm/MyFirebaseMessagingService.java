@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
-    private static final String TAG = "Pablo";
+    private static final String TAG = "Breeze";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
