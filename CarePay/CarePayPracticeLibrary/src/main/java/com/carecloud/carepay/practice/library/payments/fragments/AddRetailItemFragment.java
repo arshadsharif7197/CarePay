@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.adapter.AddRetailItemAdapter;
+import com.carecloud.carepay.practice.library.payments.interfaces.AddPaymentItemCallback;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -27,16 +28,10 @@ import java.util.List;
  */
 
 public class AddRetailItemFragment extends BaseDialogFragment implements AddRetailItemAdapter.AddRetailItemCallback {
-    public interface AddRetailItemCallback{
-        void addRetailItem(RetailItemDto retailItemDto);
-
-        void onDismissAddItemFragment();
-    }
-
     private SearchView searchView;
     private RecyclerView searchRecycler;
 
-    private AddRetailItemCallback callback;
+    private AddPaymentItemCallback callback;
     private PaymentsModel paymentsModel;
     private RetailProductsModel retailProductsModel;
 
@@ -71,7 +66,7 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dismiss();
+                cancel();
                 callback.onDismissAddItemFragment();
             }
         });
@@ -90,7 +85,7 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
     private void setupToolbar(View view){
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.search_toolbar);
         TextView textView = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        textView.setText(Label.getLabel("payment_add_item_button"));//todo label
+        textView.setText(Label.getLabel("payment_retail_items_title"));
 
     }
 
@@ -126,7 +121,7 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
 
 
 
-    public void setCallback(AddRetailItemCallback callback) {
+    public void setCallback(AddPaymentItemCallback callback) {
         this.callback = callback;
     }
 

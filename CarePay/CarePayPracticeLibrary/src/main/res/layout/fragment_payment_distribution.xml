@@ -305,11 +305,43 @@
 
                         </LinearLayout>
 
+                        <LinearLayout
+                            android:id="@+id/retail_charges_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/dimen_24dp"
+                                android:layout_marginTop="@dimen/dimen_20dp"
+                                android:layout_marginBottom="@dimen/dimen_10dp"
+                                android:textColor="@color/textview_default_textcolor"
+                                android:textSize="@dimen/text_size_18sp"
+                                android:textAllCaps="true"
+                                breeze:textKey="payment_retail_charges_header"
+                                app:customAssetFont="proxima_nova_semi_bold"/>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/dimen_1dp"
+                                android:background="@color/light_gray"/>
+
+                            <android.support.v7.widget.RecyclerView
+                                android:id="@+id/retail_charges_recycler"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+
+                        </LinearLayout>
+
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/white"
-                            android:padding="@dimen/dimen_8dp">
+                            android:padding="@dimen/dimen_8dp"
+                            android:visibility="gone">
 
                             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                                 android:id="@+id/add_item_button"

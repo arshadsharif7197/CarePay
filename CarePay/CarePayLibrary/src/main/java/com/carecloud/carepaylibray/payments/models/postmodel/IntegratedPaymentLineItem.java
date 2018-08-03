@@ -21,8 +21,9 @@ public class IntegratedPaymentLineItem {
     public static final String TYPE_APPLICATION = "debit_application";
     public static final String TYPE_UNAPPLIED = "unapplied";
     public static final String TYPE_OTHER = "other";
+    public static final String TYPE_RETAIL = "retail";
 
-    @StringDef({TYPE_COPAY, TYPE_COINSURANCE, TYPE_DEDUCTABLE, TYPE_PREPAYMENT, TYPE_CANCELLATION, TYPE_NEWCHARGE, TYPE_APPLICATION, TYPE_UNAPPLIED, TYPE_OTHER})
+    @StringDef({TYPE_COPAY, TYPE_COINSURANCE, TYPE_DEDUCTABLE, TYPE_PREPAYMENT, TYPE_CANCELLATION, TYPE_NEWCHARGE, TYPE_APPLICATION, TYPE_UNAPPLIED, TYPE_OTHER, TYPE_RETAIL})
     @Retention(RetentionPolicy.SOURCE)
     public @interface LineItemType{}
 

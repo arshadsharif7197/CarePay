@@ -1,9 +1,11 @@
 package com.carecloud.carepaylibray.retail.models;
 
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class RetailItemDto {
 
@@ -128,4 +130,29 @@ public class RetailItemDto {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    /**
+     * Get price modification based on selected options
+     * @param selectedOptions selected item options
+     * @return modification amount
+     */
+    public double getPriceModification(Map<Integer, RetailItemOptionChoiceDto> selectedOptions){
+        double basePrice = getPrice();
+        for(RetailItemOptionChoiceDto choiceDto : selectedOptions.values()){
+            double modificationAmount = choiceDto.getPriceModify();
+            if(modificationAmount != 0){
+                switch (choiceDto.getPriceModifyType()){
+                    case RetailItemOptionChoiceDto.MODIFIER_TYPE_PERCENT:
+                        basePrice = basePrice + SystemUtil.safeMultiply(basePrice,
+                                modificationAmount/100);
+                        break;
+                    case RetailItemOptionChoiceDto.MODIFIER_TYPE_AMOUNT:
+                    default:
+                        basePrice += modificationAmount;
+                }
+            }
+        }
+        return SystemUtil.safeSubtract(basePrice, getPrice());
+    }
+
 }

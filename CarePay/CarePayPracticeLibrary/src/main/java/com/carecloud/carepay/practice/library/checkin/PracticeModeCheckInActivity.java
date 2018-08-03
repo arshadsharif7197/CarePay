@@ -56,6 +56,8 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticePayment
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeValidPlansFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.RefundDetailFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.RefundProcessFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.RetailItemOptionsFragment;
+import com.carecloud.carepay.practice.library.payments.interfaces.AddPaymentItemCallback;
 import com.carecloud.carepay.practice.library.payments.interfaces.PaymentPlanDashboardInterface;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentNavigationCallback;
 import com.carecloud.carepay.practice.library.payments.interfaces.ShamrockPaymentsCallback;
@@ -97,6 +99,7 @@ import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
+import com.carecloud.carepaylibray.retail.models.RetailItemDto;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
@@ -758,7 +761,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void lookupChargeItem(List<SimpleChargeItem> simpleChargeItems,
-                                 AddPaymentItemFragment.AddItemCallback callback) {
+                                 AddPaymentItemCallback callback) {
         Bundle args = new Bundle();
         Gson gson = new Gson();
         args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(simpleChargeItems));
@@ -795,10 +798,17 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void showRetailItems(PaymentsModel paymentsModel,
-                                AddRetailItemFragment.AddRetailItemCallback callback) {
+                                AddPaymentItemCallback callback) {
         AddRetailItemFragment retailItemFragment = AddRetailItemFragment.getInstance(paymentsModel);
         retailItemFragment.setCallback(callback);
         displayDialogFragment(retailItemFragment, false);
+    }
+
+    @Override
+    public void showRetailItemOptions(RetailItemDto retailItemDto, AddPaymentItemCallback callback) {
+        RetailItemOptionsFragment optionsFragment = RetailItemOptionsFragment.newInstance(retailItemDto);
+        optionsFragment.setCallback(callback);
+        displayDialogFragment(optionsFragment, false);
     }
 
     @Override

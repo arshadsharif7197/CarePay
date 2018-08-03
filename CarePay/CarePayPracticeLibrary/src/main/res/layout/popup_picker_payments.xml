@@ -38,7 +38,7 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_17"
                 tools:text="View History"
-                breeze:textKey="payment_history"
+                breeze:textKey="payment_action_view_history"
                 app:customAssetFont="gotham_rounded_medium"/>
 
             <View
@@ -57,7 +57,7 @@
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_17"
             tools:text="Add Extra Charge"
-            breeze:textKey="payment_new_charges_header"
+            breeze:textKey="payment_action_add_charge"
             app:customAssetFont="gotham_rounded_medium"/>
 
         <LinearLayout
@@ -80,7 +80,7 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_17"
                 tools:text="Add Retail Charge"
-                breeze:textKey="payment_shop_transaction"
+                breeze:textKey="payment_action_add_retail"
                 app:customAssetFont="gotham_rounded_medium"/>
 
         </LinearLayout>
