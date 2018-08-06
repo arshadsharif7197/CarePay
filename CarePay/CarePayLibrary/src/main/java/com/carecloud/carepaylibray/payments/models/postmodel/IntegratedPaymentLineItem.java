@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.payments.models.postmodel;
 
 import android.support.annotation.StringDef;
 
+import com.carecloud.carepaylibray.retail.models.RetailLineItemMetadata;
 import com.google.gson.annotations.SerializedName;
 
 import java.lang.annotation.Retention;
@@ -44,6 +45,9 @@ public class IntegratedPaymentLineItem {
 
     @SerializedName("description")
     private String description;
+
+    @SerializedName("metadata")
+    private RetailLineItemMetadata retailMetadata;
 
     public double getAmount() {
         return amount;
@@ -92,5 +96,14 @@ public class IntegratedPaymentLineItem {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public RetailLineItemMetadata getRetailMetadata() {
+        return retailMetadata;
+    }
+
+    public void setRetailMetadata(RetailLineItemMetadata retailMetadata) {
+        this.retailMetadata = retailMetadata;
+    }
+
 
 }

@@ -46,10 +46,10 @@ import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanLineItem;
-import com.carecloud.carepaylibray.retail.models.IntegratedRetailPaymentLineItem;
 import com.carecloud.carepaylibray.retail.models.RetailItemDto;
 import com.carecloud.carepaylibray.retail.models.RetailItemOptionChoiceDto;
 import com.carecloud.carepaylibray.retail.models.RetailItemPayload;
+import com.carecloud.carepaylibray.retail.models.RetailLineItemMetadata;
 import com.carecloud.carepaylibray.retail.models.RetailLineItemOrderItem;
 import com.carecloud.carepaylibray.retail.models.RetailLineItemSelectedOption;
 import com.carecloud.carepaylibray.retail.models.RetailLineItemSelectionChoice;
@@ -995,7 +995,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     }
 
     private void generateRetailOrder(IntegratedPaymentPostModel postModel){
-        IntegratedRetailPaymentLineItem retailPaymentLineItem = new IntegratedRetailPaymentLineItem();
+        IntegratedPaymentLineItem retailPaymentLineItem = new IntegratedPaymentLineItem();
+        retailPaymentLineItem.setRetailMetadata(new RetailLineItemMetadata());
         double subtotal = 0D;
         double total = 0D;
         for(BalanceItemDTO balanceItemDTO : retailItems){
@@ -1030,16 +1031,16 @@ public class PaymentDistributionFragment extends BaseDialogFragment
                 orderItem.getSelectedOptions().add(selectedOption);
             }
 
-            retailPaymentLineItem.getMetadata().getOrder().getItems().add(orderItem);
+            retailPaymentLineItem.getRetailMetadata().getOrder().getItems().add(orderItem);
         }
 
         retailPaymentLineItem.setAmount(total);
         retailPaymentLineItem.setDescription("Retail Order");
-        retailPaymentLineItem.setItemType(IntegratedRetailPaymentLineItem.TYPE_RETAIL);
+        retailPaymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_RETAIL);
         retailPaymentLineItem.setLocationID(retailItems.get(0).getLocation().getGuid());
         retailPaymentLineItem.setProviderID(retailItems.get(0).getProvider().getGuid());
-        retailPaymentLineItem.getMetadata().getOrder().setSubTotal(subtotal);
-        retailPaymentLineItem.getMetadata().getOrder().setTotal(total);
+        retailPaymentLineItem.getRetailMetadata().getOrder().setSubTotal(subtotal);
+        retailPaymentLineItem.getRetailMetadata().getOrder().setTotal(total);
         postModel.addLineItem(retailPaymentLineItem);
     }
 
