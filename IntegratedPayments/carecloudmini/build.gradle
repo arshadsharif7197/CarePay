@@ -68,7 +68,7 @@ android {
             buildConfigField 'String', 'NEW_RELIC_ID', '"AA12527e863b828f6ba40ac70e80f743c34fac0f82"'
         }
         production_support{
-            applicationId "com.carecloud.carepay.mini"
+            applicationId "com.carecloud.carepay.support"
             buildConfigField 'String', 'X_API_KEY', '"m4I4rb4DW5469Jzn1Glev3kKl6RvWT6o8guq2NA9"'
             buildConfigField 'String', 'API_BASE_URL', '"https://payments.carecloud.com/"'
             buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream.carecloud.com:443"'
