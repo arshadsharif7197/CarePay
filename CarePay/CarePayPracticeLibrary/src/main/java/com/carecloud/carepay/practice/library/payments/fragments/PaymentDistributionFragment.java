@@ -52,7 +52,6 @@ import com.carecloud.carepaylibray.retail.models.RetailItemPayload;
 import com.carecloud.carepaylibray.retail.models.RetailLineItemMetadata;
 import com.carecloud.carepaylibray.retail.models.RetailLineItemOrderItem;
 import com.carecloud.carepaylibray.retail.models.RetailLineItemSelectedOption;
-import com.carecloud.carepaylibray.retail.models.RetailLineItemSelectionChoice;
 import com.carecloud.carepaylibray.retail.models.RetailProductsModel;
 import com.carecloud.carepaylibray.utils.BounceHelper;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -1020,13 +1019,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             for (int i=0; i<retailItemDto.getOptions().size(); i++) {
                 RetailLineItemSelectedOption selectedOption = new RetailLineItemSelectedOption();
                 selectedOption.setName(retailItemDto.getOptions().get(i).getName());
-
-                RetailLineItemSelectionChoice selectionChoice = new RetailLineItemSelectionChoice();
-                selectionChoice.setTitle(selectedOptions.get(i).getName());
-                selectionChoice.setModifier(selectedOptions.get(i).getPriceModify());
-                selectionChoice.setModifierType(selectedOptions.get(i).getPriceModifyType());
-
-                selectedOption.getChoices().add(selectionChoice);
+                selectedOption.setValue(selectedOptions.get(i).getName());
 
                 orderItem.getSelectedOptions().add(selectedOption);
             }
