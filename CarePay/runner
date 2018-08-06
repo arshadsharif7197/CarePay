@@ -16,7 +16,7 @@ shopt -s nocasematch
 #####################################################################################
 if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "travis" ]]; then
     echo "${green}*** BUILDING DEVELOPMENT PAYMENTS APK ***${reset}"
-    ../IntegratedPayments/gradlew :carecloudmini:assembleDevelopment --profile --configure-on-demand
+    ../../IntegratedPayments/gradlew :carecloudmini:assembleDevelopment --profile --configure-on-demand
 
     echo "${green}*** DELETING DEVELOPMENT APKS FROM AWS ***${reset}"
     AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 rm s3://automation-zeus --recursive --exclude "*" --include "*carecloudmini*development*.apk"
