@@ -14,7 +14,7 @@ shopt -s nocasematch
 ########## CHECKS TO SEE IF BUILD IS TRIGGERED FROM PULL REQUEST ####################
 ##########  IF IT IS NOT IT CHECKS BRANCH TO BUILD SPECIFIC APK  ####################
 #####################################################################################
-if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "travis" ]]; then
+if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "development" ]]; then
     echo "${green}*** BUILDING DEVELOPMENT PAYMENTS APK ***${reset}"
     ./gradlew :carecloudmini:assembleDevelopment --profile --configure-on-demand
 
