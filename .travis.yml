@@ -42,6 +42,8 @@ android:
     - addon-google_apis-google-19
 script:
    - jdk_switcher use oraclejdk8
+   - cd /home/travis/build/CareCloud/shamrock_android/IntegratedPayments
+   - ./runner testfairy
    - cd /home/travis/build/CareCloud/shamrock_android/CarePay
    - ./runner testfairy
 branches:
