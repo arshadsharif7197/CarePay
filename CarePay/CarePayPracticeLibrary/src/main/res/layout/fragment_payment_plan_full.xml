@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:breeze="http://schemas.carecloud.com/breeze"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -24,9 +24,9 @@
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_30sp"
-            breeze:textKey="payment_plan_heading"
             app:customAssetFont="gotham_rounded_medium"
-            tools:text="Payment Plan"/>
+            breeze:textKey="payment_plan_heading"
+            tools:text="Payment Plan" />
 
 
     </FrameLayout>
@@ -74,10 +74,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/headerPlanTotal"
             android:gravity="center"
-            android:paddingTop="@dimen/dimen_10dp"
             android:paddingBottom="@dimen/dimen_10dp"
-            android:paddingStart="@dimen/dimen_100dp"
             android:paddingEnd="@dimen/dimen_100dp"
+            android:paddingStart="@dimen/dimen_100dp"
+            android:paddingTop="@dimen/dimen_10dp"
             android:textColor="@color/light_gray"
             android:textSize="@dimen/text_size_16sp"
             android:visibility="visible"
@@ -118,10 +118,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:paddingTop="@dimen/dimen_30dp"
                 android:paddingBottom="@dimen/dimen_30dp"
+                android:paddingEnd="@dimen/dimen_150dp"
                 android:paddingStart="@dimen/dimen_150dp"
-                android:paddingEnd="@dimen/dimen_150dp">
+                android:paddingTop="@dimen/dimen_30dp">
 
                 <FrameLayout
                     android:id="@+id/paymentMethodContainer"
@@ -221,7 +221,44 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <FrameLayout
+                            android:id="@+id/frequencyCodeLayout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dimen_5dp"
+                            android:layout_weight="1">
+
+                            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                                android:id="@+id/frequencyCodeInputLayout"
+                                style="@style/SigninSignupTextInputStyle"
+                                android:tag="@string/tag_demographics_error_scroll"
+                                app:customAssetFont="proxima_nova_semi_bold"
+                                app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                                    android:id="@+id/frequencyCodeEditText"
+                                    style="@style/DemographicsReviewEditTextStyle"
+                                    android:clickable="false"
+                                    android:cursorVisible="false"
+                                    android:drawableEnd="@drawable/icon_drop_down"
+                                    android:editable="false"
+                                    android:focusableInTouchMode="false"
+                                    android:imeOptions="actionNext"
+                                    app:customAssetFont="proxima_nova_regular"
+                                    app:hintTextAppearance="@style/FloatingLabelStyle"
+                                    breeze:hintKey="payment.paymentPlan.frequency.field.hint"
+                                    tools:hint="Frequency" />
+
+                            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+                            <include
+                                android:id="@+id/paymentMonthCountOptional"
+                                layout="@layout/layout_optional_text_view" />
+
+                        </FrameLayout>
 
                         <FrameLayout
                             android:id="@+id/paymentDrawDayLayout"
@@ -249,7 +286,7 @@
                                     android:imeOptions="actionNext"
                                     app:customAssetFont="proxima_nova_regular"
                                     app:hintTextAppearance="@style/FloatingLabelStyle"
-                                    breeze:hintKey="payment_day_of_the_month"
+                                    breeze:hintKey="payment.paymentPlan.frequency.monthly.hint"
                                     tools:hint="Day of the month" />
 
                             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
@@ -259,6 +296,14 @@
                                 layout="@layout/layout_optional_text_view" />
 
                         </FrameLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
 
                         <FrameLayout
                             android:id="@+id/paymentMonthCountLayout"
@@ -293,38 +338,39 @@
 
                         </FrameLayout>
 
+                        <FrameLayout
+                            android:id="@+id/paymentAmountLayout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
+
+                            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                                android:id="@+id/paymentAmountInputLayout"
+                                style="@style/SigninSignupTextInputStyle"
+                                android:tag="@string/tag_demographics_error_scroll"
+                                app:customAssetFont="proxima_nova_semi_bold"
+                                app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                                    android:id="@+id/paymentAmount"
+                                    style="@style/DemographicsReviewEditTextStyle"
+                                    android:imeOptions="actionNext"
+                                    android:inputType="numberDecimal"
+                                    android:textColor="@color/primary_color_enabled_selector"
+                                    app:customAssetFont="proxima_nova_regular"
+                                    app:hintTextAppearance="@style/FloatingLabelStyle"
+                                    breeze:hintKey="payment_monthly_payment"
+                                    tools:hint="Monthly Payment" />
+
+                            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+                            <include
+                                android:id="@+id/paymentAmountOptional"
+                                layout="@layout/layout_optional_text_view" />
+
+                        </FrameLayout>
+
                     </LinearLayout>
-
-                    <FrameLayout
-                        android:id="@+id/paymentAmountLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
-                            android:id="@+id/paymentAmountInputLayout"
-                            style="@style/SigninSignupTextInputStyle"
-                            android:tag="@string/tag_demographics_error_scroll"
-                            app:customAssetFont="proxima_nova_semi_bold"
-                            app:hintTextAppearance="@style/FloatingLabelStyle">
-
-                            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
-                                android:id="@+id/paymentAmount"
-                                style="@style/DemographicsReviewEditTextStyle"
-                                android:imeOptions="actionNext"
-                                android:inputType="numberDecimal"
-                                android:textColor="@color/primary_color_enabled_selector"
-                                app:customAssetFont="proxima_nova_regular"
-                                app:hintTextAppearance="@style/FloatingLabelStyle"
-                                breeze:hintKey="payment_monthly_payment"
-                                tools:hint="Monthly Payment" />
-
-                        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
-
-                        <include
-                            android:id="@+id/paymentAmountOptional"
-                            layout="@layout/layout_optional_text_view" />
-
-                    </FrameLayout>
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/lastPaymentMessage"
@@ -450,28 +496,28 @@
             android:id="@+id/cancel_button"
             android:layout_width="0dp"
             android:layout_height="@dimen/dimen_48dp"
-            android:layout_weight="1"
             android:layout_margin="@dimen/dimen_10dp"
+            android:layout_weight="1"
             android:background="@drawable/round_border_button_bg"
             android:textAllCaps="false"
             android:textColor="@color/primary_color_enabled_selector"
             android:textSize="@dimen/text_size_18sp"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="cancel"
-            tools:text="Cancel"
-            tools:ignore="ButtonStyle"/>
+            tools:ignore="ButtonStyle"
+            tools:text="Cancel" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/create_payment_plan_button"
             android:layout_width="0dp"
             android:layout_height="@dimen/dimen_48dp"
-            android:layout_weight="3"
             android:layout_margin="@dimen/dimen_10dp"
+            android:layout_weight="3"
             android:background="@drawable/green_rounded_button_selector_always_click"
             android:gravity="center"
+            android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="@dimen/respons_button_text_size"
-            android:textAllCaps="false"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="payment_create_payment_plan"
             tools:text="Create Payment Plan" />

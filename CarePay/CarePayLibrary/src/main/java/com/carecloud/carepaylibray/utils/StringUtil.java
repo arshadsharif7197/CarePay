@@ -7,7 +7,6 @@ import android.util.Log;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.base.models.PatientModel;
 
 import java.text.NumberFormat;
 import java.util.Collection;
@@ -485,5 +484,22 @@ public class StringUtil {
             lastName = "";
         }
         return (StringUtil.capitalize(firstName + " " + lastName)).trim();
+    }
+
+    public static String getDayOfTheWeek(int dayOfTheWeek) {
+        switch (dayOfTheWeek) {
+            case 1:
+                return Label.getLabel("monday");
+            case 2:
+                return Label.getLabel("tuesday");
+            case 3:
+                return Label.getLabel("wednesday");
+            case 4:
+                return Label.getLabel("thursday");
+            case 5:
+                return Label.getLabel("friday");
+            default:
+                return "";
+        }
     }
 }

@@ -151,7 +151,7 @@ public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePa
         PaymentPlanModel paymentPlanModel = new PaymentPlanModel();
         paymentPlanModel.setAmount(monthlyPaymentAmount);
         paymentPlanModel.setFrequencyCode(PaymentPlanModel.FREQUENCY_MONTHLY);
-        paymentPlanModel.setInstallments(monthlyPaymentCount);
+        paymentPlanModel.setInstallments(installments);
         paymentPlanModel.setEnabled(true);
 
         try {

@@ -83,6 +83,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
 
     @Override
     public void onCreate(Bundle icicle) {
+        applyRangeRules = false;
         super.onCreate(icicle);
         paymentPlanAmount = 0.00;
     }
@@ -169,7 +170,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
                 callback.onAddPaymentPlanCard(paymentsModel, null, true);
             }
         });
-        if(paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()){
+        if (paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             addNewCardButton.setText(Label.getLabel("payment_new_credit_card"));
         }
     }
@@ -287,21 +288,21 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
 
         if (StringUtil.isNullOrEmpty(numberPaymentsEditText.getText().toString())) {
             if (isUserInteraction) {
-                setError(R.id.paymentMonthCountInputLayout, Label.getLabel("validation_required_field")
+                setError(numberPaymentsInputLayout, Label.getLabel("validation_required_field")
                         , isUserInteraction);
                 return false;
             } else {
-                clearError(R.id.paymentMonthCountInputLayout);
+                clearError(numberPaymentsInputLayout);
             }
-        } else if (monthlyPaymentCount < 2) {
-            setError(R.id.paymentMonthCountInputLayout,
+        } else if (installments < 2) {
+            setError(numberPaymentsInputLayout,
                     String.format(Label.getLabel("payment_plan_min_months_error"),
                             String.valueOf(2))
                     , isUserInteraction);
             clearError(R.id.paymentAmountInputLayout);
             return false;
         } else {
-            clearError(R.id.paymentMonthCountInputLayout);
+            clearError(numberPaymentsInputLayout);
         }
 
         if (StringUtil.isNullOrEmpty(monthlyPaymentEditText.getText().toString())) {
@@ -396,7 +397,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
                 paymentPlanAmount = SystemUtil.safeAdd(paymentPlanAmount, itemDTO.getAmountSelected());
                 paymentValueTextView.setText(currencyFormatter.format(paymentPlanAmount));
                 adapter.notifyDataSetChanged();
-                refreshNumberOfPayments(String.valueOf(monthlyPaymentCount));
+                refreshNumberOfPayments(String.valueOf(installments));
                 enableCreatePlanButton();
             }
         });
