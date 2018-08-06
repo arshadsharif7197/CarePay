@@ -15,6 +15,7 @@ shopt -s nocasematch
 ##########  IF IT IS NOT IT CHECKS BRANCH TO BUILD SPECIFIC APK  ####################
 #####################################################################################
 if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "development" ]]; then
+
     echo "${green}*** BUILDING DEVELOPMENT PRACTICE APK ***${reset}"
     ./gradlew :CarePayPracticeTablet:assembleDevelopment --profile --configure-on-demand
 
@@ -24,8 +25,6 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "development"
     echo "${green}*** DEPLOYING DEVELOPMENT PRACTICE APK TO AWS ***${reset}"
     mkdir $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/temp/
     find $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/apk/ -name "*development*.apk" -exec cp {}  $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/temp/ \;
-
-    PRACTICE_APP=$(echo $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/temp/$(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/temp/ | grep -i '.*practice.*release.*\.apk') )
 
     AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/temp s3://automation-zeus/ --recursive
 
@@ -38,8 +37,6 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "development"
     echo "${green}*** DEPLOYING DEVELOPMENT PATIENT APK TO AWS ***${reset}"
     mkdir $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp/
     find $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/ -name "*development*.apk" -exec cp {}  $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp/ \;
-
-    PATIENT_APP=$(echo $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp/$(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp/ | grep -i '.*patient.*release.*\.apk') )
 
     AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp s3://automation-zeus/ --recursive
 
@@ -55,6 +52,8 @@ elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "QA" ]]; th
     mkdir $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/temp/
     find $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/apk/ -name "*qa*.apk" -exec cp {}  $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/temp/ \;
 
+    PRACTICE_APP=$(echo $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/temp/$(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/temp/ | grep -i '.*practice.*release.*\.apk') )
+
     AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPracticeTablet/build/outputs/temp s3://automation-zeus/ --recursive
 
     echo "${green}*** BUILDING QA PATIENT APK ***${reset}"
@@ -66,6 +65,8 @@ elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "QA" ]]; th
     echo "${green}*** DEPLOYING QA PATIENT APK TO AWS ***${reset}"
     mkdir $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp/
     find $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/apk/ -name "*qa*.apk" -exec cp {}  $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp/ \;
+
+    PATIENT_APP=$(echo $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp/$(ls $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp/ | grep -i '.*patient.*release.*\.apk') )
 
     AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/CarePay/CarePayPatient/build/outputs/temp s3://automation-zeus/ --recursive
 
