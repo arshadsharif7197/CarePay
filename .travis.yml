@@ -27,6 +27,7 @@ before_install:
   - ./CarePay/gradlew dependencies || true
   - ./IntegratedPayments/gradlew dependencies || true
   - chmod +x ./CarePay/runner
+  - chmod +x ./IntegratedPayments/runner
   - pip install --user awscli
 android:
   components:
