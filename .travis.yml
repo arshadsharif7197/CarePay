@@ -48,3 +48,4 @@ branches:
     - Staging
     - QA
     - development
+    - travis
