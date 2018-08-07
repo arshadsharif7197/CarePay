@@ -12,6 +12,7 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.text.NumberFormat;
@@ -64,6 +65,10 @@ public class PaymentPlanListAdapter extends RecyclerView.Adapter<PaymentPlanList
 
         holder.planProgress.setProgress(paymentPlanItem.getPayload().getPaymentPlanProgress());
 
+        ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload()
+                .findScheduledPayment(paymentPlanItem);
+        holder.scheduledIcon.setVisibility(scheduledPayment != null ? View.VISIBLE : View.GONE);
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,6 +89,7 @@ public class PaymentPlanListAdapter extends RecyclerView.Adapter<PaymentPlanList
         private TextView amount;
         private TextView planDetail;
         private ProgressBar planProgress;
+        private View scheduledIcon;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -92,6 +98,7 @@ public class PaymentPlanListAdapter extends RecyclerView.Adapter<PaymentPlanList
             shortName = (TextView) itemView.findViewById(R.id.balancesAvatarTextView);
             planDetail = (TextView) itemView.findViewById(R.id.planInstallmentDetail);
             planProgress = (ProgressBar) itemView.findViewById(R.id.paymentPlanProgress);
+            scheduledIcon = itemView.findViewById(R.id.scheduledPaymentIcon);
         }
     }
 
