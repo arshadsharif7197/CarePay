@@ -95,18 +95,19 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                deletePayment();
+                deletePayment(scheduledPaymentModel);
             }
         });
 
         updateLayout();
     }
 
-    private void deletePayment(){
+    private void deletePayment(ScheduledPaymentModel scheduledPaymentModel) {
         ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(
                 Label.getLabel("payment.oneTimePayment.scheduled.delete.title"),
                 String.format(
                         Label.getLabel("payment.oneTimePayment.scheduled.delete.subtitle"),
+                        StringUtil.getFormattedBalanceAmount(scheduledPaymentModel.getPayload().getAmount()),
                         DateUtil.getInstance()
                                 .setDateRaw(scheduledPaymentModel.getPayload().getPaymentDate())
                                 .toStringWithFormatMmSlashDdSlashYyyy()),
