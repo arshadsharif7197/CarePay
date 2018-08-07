@@ -13,27 +13,42 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.adapter.AddRetailItemAdapter;
 import com.carecloud.carepay.practice.library.payments.interfaces.AddPaymentItemCallback;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.base.models.Paging;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.retail.models.RetailItemDto;
 import com.carecloud.carepaylibray.retail.models.RetailProductsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lmenendez on 3/16/17
  */
 
 public class AddRetailItemFragment extends BaseDialogFragment implements AddRetailItemAdapter.AddRetailItemCallback {
+    private static final int BOTTOM_ROW_OFFSET = 2;
+
     private SearchView searchView;
     private RecyclerView searchRecycler;
 
     private AddPaymentItemCallback callback;
     private PaymentsModel paymentsModel;
     private RetailProductsModel retailProductsModel;
+    private Paging paging;
+    private boolean isPaging = false;
+
+    private String searchString;
 
     public static AddRetailItemFragment getInstance(PaymentsModel paymentsModel){
         Bundle args = new Bundle();
@@ -51,6 +66,7 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
         Bundle args = getArguments();
         paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
         retailProductsModel = paymentsModel.getPaymentPayload().getRetailProducts();
+        paging = retailProductsModel.getProducts().getPaging();
     }
 
     @Override
@@ -74,12 +90,15 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         searchRecycler = (RecyclerView) view.findViewById(R.id.search_recycler);
         searchRecycler.setLayoutManager(layoutManager);
+        searchRecycler.addOnScrollListener(retailScrollListener);
 
         searchView = (SearchView) view.findViewById(R.id.search_entry_view);
         searchView.setOnQueryTextListener(queryTextListener);
 
         setAdapter(retailProductsModel.getProducts().getItems());
 
+        View searchLayout = view.findViewById(R.id.search_edit_frame);
+        searchLayout.setVisibility(View.GONE);
     }
 
     private void setupToolbar(View view){
@@ -109,16 +128,120 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
 
         @Override
         public boolean onQueryTextChange(String newText) {
-            //todo search
-//            if(newText.length()>0){
-//                searchItems(newText);
-//            }else{
-//                setAdapter(templateItems, simpleChargeItems);
-//            }
+            searchString = newText;
+            loadSearchResults();
             return true;
         }
     };
 
+    private RecyclerView.OnScrollListener retailScrollListener = new RecyclerView.OnScrollListener(){
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            if (hasMorePages()) {
+                int last = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+                if(last > recyclerView.getAdapter().getItemCount() - BOTTOM_ROW_OFFSET && !isPaging){
+                    loadNextPage();
+                    isPaging = true;
+                }
+            }
+        }
+    };
+
+    private boolean hasMorePages(){
+        return paging.getCurrentPage() != paging.getTotalPages();
+    }
+
+    private void loadNextPage(){
+        UserPracticeDTO practiceDTO = paymentsModel.getPaymentPayload().getUserPractices().get(0);//safe in practice mode
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", practiceDTO.getPracticeMgmt());
+        queryMap.put("practice_id", practiceDTO.getPracticeId());
+        queryMap.put("products.page", String.valueOf(paging.getCurrentPage()+1));
+        queryMap.put("products.limit", String.valueOf(paging.getResultsPerPage()));
+
+        if(!StringUtil.isNullOrEmpty(searchString)){
+            queryMap.put("products.search", searchString);
+        }
+
+        TransitionDTO nextPageTransition = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getProducts();
+        getWorkflowServiceHelper().execute(nextPageTransition, nextPageCallback, queryMap);
+    }
+
+    private WorkflowServiceCallback nextPageCallback = new WorkflowServiceCallback() {
+        AddRetailItemAdapter adapter;
+        @Override
+        public void onPreExecute() {
+            adapter = (AddRetailItemAdapter) searchRecycler.getAdapter();
+            adapter.setLoading(true);
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            adapter.setLoading(false);
+            PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+            RetailProductsModel.ProductsDto productsDto = paymentsModel.getPaymentPayload()
+                    .getRetailProducts().getProducts();
+            Paging nextPage = productsDto.getPaging();
+            if(nextPage.getCurrentPage() != paging.getCurrentPage()){
+                paging = nextPage;
+                List<RetailItemDto> newItems =  productsDto.getItems();
+                adapter.addRetailItems(newItems);
+            }
+            isPaging = false;
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            adapter.setLoading(false);
+            isPaging = false;
+            showErrorNotification(exceptionMessage);
+        }
+    };
+
+    private void loadSearchResults(){
+        UserPracticeDTO practiceDTO = paymentsModel.getPaymentPayload().getUserPractices().get(0);//safe in practice mode
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", practiceDTO.getPracticeMgmt());
+        queryMap.put("practice_id", practiceDTO.getPracticeId());
+        queryMap.put("products.page", String.valueOf(1));
+        queryMap.put("products.limit", String.valueOf(paging.getResultsPerPage()));
+
+        if(!StringUtil.isNullOrEmpty(searchString)){
+            queryMap.put("products.search", searchString);
+        }
+
+        TransitionDTO nextPageTransition = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getProducts();
+        getWorkflowServiceHelper().execute(nextPageTransition, searchCallback, queryMap);
+    }
+
+    private WorkflowServiceCallback searchCallback = new WorkflowServiceCallback() {
+        AddRetailItemAdapter adapter;
+        @Override
+        public void onPreExecute() {
+            adapter = (AddRetailItemAdapter) searchRecycler.getAdapter();
+            adapter.setRetailItems(new ArrayList<RetailItemDto>());
+            adapter.setLoading(true);
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            adapter.setLoading(false);
+            PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+            RetailProductsModel.ProductsDto productsDto = paymentsModel.getPaymentPayload()
+                    .getRetailProducts().getProducts();
+            paging = productsDto.getPaging();
+            List<RetailItemDto> searchItems =  productsDto.getItems();
+            adapter.setRetailItems(searchItems);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            adapter.setLoading(false);
+            showErrorNotification(exceptionMessage);
+        }
+    };
 
 
     public void setCallback(AddPaymentItemCallback callback) {

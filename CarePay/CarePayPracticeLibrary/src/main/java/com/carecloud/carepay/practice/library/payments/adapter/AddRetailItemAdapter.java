@@ -25,6 +25,7 @@ import java.util.List;
  */
 
 public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdapter.ViewHolder> {
+    private static final int VIEW_TYPE_LOADING = 1;
 
     public interface AddRetailItemCallback{
         void retailItemSelected(RetailItemDto retailItem);
@@ -33,6 +34,7 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
     private Context context;
     private List<RetailItemDto> retailItems;
     private AddRetailItemCallback callback;
+    private boolean isLoading = false;
 
     /**
      * Constructor
@@ -49,12 +51,21 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.item_add_retail_row, parent, false);
+        View view;
+        if(viewType == VIEW_TYPE_LOADING) {
+            view = inflater.inflate(R.layout.item_loading, parent, false);
+        }else {
+            view = inflater.inflate(R.layout.item_add_retail_row, parent, false);
+        }
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        if(position >= retailItems.size()){
+            return;
+        }
+
         final RetailItemDto retailItem = retailItems.get(position);
 
         holder.productName.setText(retailItem.getName());
@@ -91,8 +102,23 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
     }
 
     @Override
+    public int getItemViewType(int position){
+        if(position >= retailItems.size()){
+            return VIEW_TYPE_LOADING;
+        }
+        return 0;
+    }
+
+    @Override
     public int getItemCount() {
+        if(isLoading){
+            return retailItems.size()+1;
+        }
         return retailItems.size();
+    }
+
+    public void setLoading(boolean isLoading){
+        this.isLoading = isLoading;
     }
 
     /**

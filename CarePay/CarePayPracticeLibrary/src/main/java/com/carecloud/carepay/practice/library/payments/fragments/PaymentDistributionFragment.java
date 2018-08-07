@@ -201,6 +201,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         emptyBalanceLayout = view.findViewById(R.id.empty_balance_layout);
         TextView emptyMessage = (TextView) view.findViewById(R.id.no_payment_message);
         emptyMessage.setText(Label.getLabel("payment_balance_empty_payment_screen"));
+        emptyMessage.setVisibility(View.GONE);
 
         setInitialValues(view);
         setAdapter();
@@ -1072,7 +1073,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             queryMap.put("practice_id", practiceDTO.getPracticeId());
             queryMap.put("practice_mgmt", practiceDTO.getPracticeMgmt());
 
-            TransitionDTO getProducts = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getProducts();
+            TransitionDTO getProducts = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getProducts();
             getWorkflowServiceHelper().execute(getProducts, getRetailProductsCallback, queryMap);
         }else{
             callback.showRetailItems(paymentsModel, PaymentDistributionFragment.this);
