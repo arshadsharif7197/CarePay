@@ -151,7 +151,8 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
         findViewById(R.id.emptyPaymentsImageView).setVisibility(View.GONE);
         recyclerView.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.HORIZONTAL, false));
-        paymentBalancesAdapter = new PaymentBalancesAdapter(this, getBalances(paymentsModel),
+        paymentBalancesAdapter = new PaymentBalancesAdapter(this,
+                paymentsModel, getBalances(paymentsModel),
                 paymentsModel.getPaymentPayload().getUserPractices().get(0), this);
         recyclerView.setAdapter(paymentBalancesAdapter);
 
