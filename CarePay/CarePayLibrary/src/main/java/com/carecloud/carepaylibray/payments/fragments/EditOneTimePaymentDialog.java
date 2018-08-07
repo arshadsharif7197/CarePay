@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.payments.fragments;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -79,6 +80,8 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
         schedulePaymentDateText.setText(DateUtil.getInstance().setDateRaw(dateString)
                 .toStringWithFormatMmSlashDdSlashYyyy());
         schedulePaymentDateText.setOnClickListener(selectDateButtonListener);
+        schedulePaymentDateText.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                ContextCompat.getDrawable(getContext(), R.drawable.icon_drop_down), null);
 
         amountEditText = (EditText) findViewById(R.id.enterPartialAmountEditText);
         amountEditText.setText(String.valueOf(scheduledPaymentModel.getPayload().getAmount()));

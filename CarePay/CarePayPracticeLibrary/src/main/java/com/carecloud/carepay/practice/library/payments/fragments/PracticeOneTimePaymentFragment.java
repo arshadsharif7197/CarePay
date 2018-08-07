@@ -102,6 +102,8 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
                 findScheduledPayment(paymentPlanDTO);
         if (scheduledPayment == null) {//only allow scheduling payment if there is not one already scheduled
             schedulePaymentDateText.setOnClickListener(selectDateButtonListener);
+        } else {
+            schedulePaymentDateText.setCompoundDrawables(null, null, null, null);
         }
 
         TextView paymentHeader = (TextView) findViewById(R.id.partialPaymentHeader);

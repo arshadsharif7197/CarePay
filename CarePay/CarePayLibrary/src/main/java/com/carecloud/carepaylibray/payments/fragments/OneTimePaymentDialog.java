@@ -59,7 +59,6 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
     }
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +68,7 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
     }
 
     @Override
-    protected int getContentLayout(){
+    protected int getContentLayout() {
         return R.layout.dialog_one_time_payment;
     }
 
@@ -89,6 +88,8 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
                 findScheduledPayment(paymentPlanDTO);
         if (scheduledPayment == null) {//only allow scheduling payment if there is not one already scheduled
             schedulePaymentDateText.setOnClickListener(selectDateButtonListener);
+        } else {
+            schedulePaymentDateText.setCompoundDrawables(null, null, null, null);
         }
 
         TextView paymentHeader = (TextView) findViewById(R.id.partialPaymentHeader);
@@ -171,7 +172,7 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
         ((FragmentActivityInterface) callback).displayDialogFragment(fragment, true);
     }
 
-    protected void setSelectedDate(Date selectedDate){
+    protected void setSelectedDate(Date selectedDate) {
         paymentDate = selectedDate;
         DateUtil.getInstance().setDate(paymentDate);
         if (DateUtil.isSameDay(paymentDate, new Date())) {

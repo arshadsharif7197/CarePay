@@ -241,21 +241,25 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         frequencyCodeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(frequencyCodeInputLayout, null));
         frequencyCodeEditText.setText(frequencyOption.getLabel());
         frequencyCodeEditText.getOnFocusChangeListener().onFocusChange(frequencyCodeEditText, true);
-        frequencyCodeEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showChooseDialog(getContext(), frequencyOptions, Label.getLabel("payment_day_of_the_month"),
-                        new ValueOptionCallback() {
-                            @Override
-                            public void onValueOption(DemographicsOption option) {
-                                if (!frequencyOption.getName().equals(option.getName())) {
-                                    manageFrequencyChange(option);
-                                }
+        if (frequencyOptions.size() > 1) {
+            frequencyCodeEditText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showChooseDialog(getContext(), frequencyOptions, Label.getLabel("payment_day_of_the_month"),
+                            new ValueOptionCallback() {
+                                @Override
+                                public void onValueOption(DemographicsOption option) {
+                                    if (!frequencyOption.getName().equals(option.getName())) {
+                                        manageFrequencyChange(option);
+                                    }
 
-                            }
-                        });
-            }
-        });
+                                }
+                            });
+                }
+            });
+        } else {
+            frequencyCodeEditText.setCompoundDrawables(null, null, null, null);
+        }
 
         numberPaymentsEditText = (EditText) view.findViewById(R.id.paymentMonthCount);
         numberPaymentsInputLayout = (CarePayTextInputLayout) view

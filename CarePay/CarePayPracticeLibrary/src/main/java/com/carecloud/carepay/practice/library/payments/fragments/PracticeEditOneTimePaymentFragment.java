@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,6 +84,8 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
         schedulePaymentDateText.setText(DateUtil.getInstance().setDateRaw(dateString)
                 .toStringWithFormatMmSlashDdSlashYyyy());
         schedulePaymentDateText.setOnClickListener(selectDateButtonListener);
+        schedulePaymentDateText.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                ContextCompat.getDrawable(getContext(), R.drawable.icon_drop_down), null);
 
         numberStr = String.valueOf(scheduledPaymentModel.getPayload().getAmount());
         char last = numberStr.charAt(numberStr.length() - 1);
