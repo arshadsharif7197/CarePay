@@ -96,7 +96,6 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         Bundle args = getArguments();
         paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
         paymentPlanAmount = paymentPlanDTO.getPayload().getAmount();
-        paymentDateOption = dateOptions.get(0);
         practiceId = paymentPlanDTO.getMetadata().getPracticeId();
         getPaymentPlanSettings(practiceId);
         currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
