@@ -147,7 +147,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
             View scheduledPaymentLayout = view.findViewById(R.id.scheduledPaymentLayout);
             scheduledPaymentLayout.setVisibility(View.VISIBLE);
             TextView scheduledPaymentMessage = (TextView) view.findViewById(R.id.scheduledPaymentMessage);
-            String message = String.format(Label.getLabel("payment.oneTimePayment.schedule.success"),
+            String message = String.format(Label.getLabel("payment.oneTimePayment.scheduled.details"),
                     StringUtil.getFormattedBalanceAmount(scheduledPayment.getPayload().getAmount()),
                     DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal());
             scheduledPaymentMessage.setText(message);
