@@ -22,6 +22,7 @@ import com.carecloud.carepaylibray.payments.models.ScheduledPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
 import java.util.Calendar;
@@ -34,9 +35,9 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
     private ScheduledPaymentModel scheduledPaymentModel;
 
     /**
-     * @param paymentResultModel the payment model
-     * @param owedAmount         fullAmount owed
-     * @param paymentPlanDTO     payment plan dto
+     * @param paymentResultModel    the payment model
+     * @param owedAmount            fullAmount owed
+     * @param paymentPlanDTO        payment plan dto
      * @param scheduledPaymentModel scheduled payment
      * @return an instance of PracticeEditOneTimePaymentFragment
      */
@@ -79,14 +80,15 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
 
         applyButton.setText(Label.getLabel("payment_plan_reschedule_payment"));
         String dateString = scheduledPaymentModel.getPayload().getPaymentDate();
-        schedulePaymentDateText.setText(DateUtil.getInstance().setDateRaw(dateString).toStringWithFormatMmSlashDdSlashYyyy());
+        schedulePaymentDateText.setText(DateUtil.getInstance().setDateRaw(dateString)
+                .toStringWithFormatMmSlashDdSlashYyyy());
         schedulePaymentDateText.setOnClickListener(selectDateButtonListener);
 
         numberStr = String.valueOf(scheduledPaymentModel.getPayload().getAmount());
-        char last = numberStr.charAt(numberStr.length()-1);
-        while(last == '0' || last == '.'){
-            numberStr = numberStr.substring(0, numberStr.length()-1);
-            last = numberStr.charAt(numberStr.length()-1);
+        char last = numberStr.charAt(numberStr.length() - 1);
+        while (last == '0' || last == '.') {
+            numberStr = numberStr.substring(0, numberStr.length() - 1);
+            last = numberStr.charAt(numberStr.length() - 1);
         }
         amountTextView = (EditText) findViewById(R.id.enter_amount_text);
         amountTextView.setText(currencyFormat.format(scheduledPaymentModel.getPayload().getAmount()));

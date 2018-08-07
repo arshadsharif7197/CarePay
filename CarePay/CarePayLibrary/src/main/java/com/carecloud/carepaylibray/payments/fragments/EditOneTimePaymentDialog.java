@@ -46,7 +46,10 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
      * @param paymentPlanDTO payment plan
      * @param callback
      */
-    public EditOneTimePaymentDialog(Context context, PaymentsModel paymentsDTO, PaymentPlanDTO paymentPlanDTO, ScheduledPaymentModel scheduledPaymentModel, OneTimePaymentInterface callback) {
+    public EditOneTimePaymentDialog(Context context, PaymentsModel paymentsDTO,
+                                    PaymentPlanDTO paymentPlanDTO,
+                                    ScheduledPaymentModel scheduledPaymentModel,
+                                    OneTimePaymentInterface callback) {
         super(context, paymentsDTO, paymentPlanDTO, callback);
         this.scheduledPaymentModel = scheduledPaymentModel;
     }
@@ -73,7 +76,8 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
 
         paymentButton.setText(Label.getLabel("payment_plan_reschedule_payment_short"));
         String dateString = scheduledPaymentModel.getPayload().getPaymentDate();
-        schedulePaymentDateText.setText(DateUtil.getInstance().setDateRaw(dateString).toStringWithFormatMmSlashDdSlashYyyy());
+        schedulePaymentDateText.setText(DateUtil.getInstance().setDateRaw(dateString)
+                .toStringWithFormatMmSlashDdSlashYyyy());
         schedulePaymentDateText.setOnClickListener(selectDateButtonListener);
 
         amountEditText = (EditText) findViewById(R.id.enterPartialAmountEditText);
@@ -203,7 +207,9 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
     };
 
     @Override
-    protected void onPendingAmountValidation(String amountEditText, Button payPartialButton, TextView partialPaymentTotalAmountTitle) {
+    protected void onPendingAmountValidation(String amountEditText,
+                                             Button payPartialButton,
+                                             TextView partialPaymentTotalAmountTitle) {
         super.onPendingAmountValidation(amountEditText, payPartialButton, partialPaymentTotalAmountTitle);
 
         validatePaymentRescheduled();
