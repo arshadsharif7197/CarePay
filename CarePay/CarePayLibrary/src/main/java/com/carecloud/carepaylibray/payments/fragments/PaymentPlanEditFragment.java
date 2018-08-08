@@ -15,6 +15,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.MerchantServiceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
@@ -25,6 +26,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRu
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentCardData;
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
@@ -41,6 +43,7 @@ import com.payeezy.sdk.payeezytokenised.TransactionDataProvider;
 
 import java.text.NumberFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -92,9 +95,9 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
 
     @Override
     public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
         Bundle args = getArguments();
         paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
+        super.onCreate(icicle);
         paymentPlanAmount = paymentPlanDTO.getPayload().getAmount();
         practiceId = paymentPlanDTO.getMetadata().getPracticeId();
         getPaymentPlanSettings(practiceId);
@@ -149,6 +152,16 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
             disableFields();
         }
 
+        boolean canEditDates = canEditDate(paymentPlanDTO);
+        if (!canEditDates) {
+            frequencyCodeEditText.setEnabled(false);
+            frequencyCodeEditText.setFocusable(false);
+            frequencyCodeEditText.setFocusableInTouchMode(false);
+
+            paymentDateEditText.setEnabled(false);
+            paymentDateEditText.setFocusable(false);
+            paymentDateEditText.setFocusableInTouchMode(false);
+        }
     }
 
     @Override
@@ -495,6 +508,16 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         return false;
     }
 
+    private boolean canEditDate(PaymentPlanDTO paymentPlan) {
+        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = paymentsModel.getPaymentPayload()
+                .getPaymentSettings().get(0).getPayload().getPaymentPlans();
+        String frequencyCode = paymentPlan.getPayload().getPaymentPlanDetails().getFrequencyCode();
+        return (frequencyCode.equals(PaymentPlanModel.FREQUENCY_MONTHLY)
+                && paymentPlanSettings.getFrequencyCode().getMonthly().isAllowed())
+                || (frequencyCode.equals(PaymentPlanModel.FREQUENCY_WEEKLY)
+                && paymentPlanSettings.getFrequencyCode().getWeekly().isAllowed());
+    }
+
     private void disableFields() {
         numberPaymentsEditText.setEnabled(false);
         numberPaymentsEditText.setFocusable(false);
@@ -517,5 +540,24 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     @Override
     protected Button getActionButton() {
         return editPaymentPlanButton;
+    }
+
+    @Override
+    protected List<DemographicsOption> generateFrequencyOptions(PaymentsSettingsPaymentPlansDTO paymentPlansRules) {
+        List<DemographicsOption> options = super.generateFrequencyOptions(paymentPlansRules);
+        String name;
+        String label;
+        if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode()
+                .equals(PaymentPlanModel.FREQUENCY_MONTHLY)) {
+            name = PaymentPlanModel.FREQUENCY_MONTHLY;
+            label = Label.getLabel("payment.paymentPlan.frequency.option.monthly");
+        } else {
+            name = PaymentPlanModel.FREQUENCY_WEEKLY;
+            label = Label.getLabel("payment.paymentPlan.frequency.option.weekly");
+        }
+
+        frequencyOption.setName(name);
+        frequencyOption.setLabel(label);
+        return options;
     }
 }
