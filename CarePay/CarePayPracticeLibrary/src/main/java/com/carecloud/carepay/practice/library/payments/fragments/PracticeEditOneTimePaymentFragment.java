@@ -79,7 +79,7 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
 
-        applyButton.setText(Label.getLabel("payment_plan_reschedule_payment"));
+        applyButton.setText(Label.getLabel("payment_plan_reschedule_payment_short"));
         String dateString = scheduledPaymentModel.getPayload().getPaymentDate();
         schedulePaymentDateText.setText(DateUtil.getInstance().setDateRaw(dateString)
                 .toStringWithFormatMmSlashDdSlashYyyy());
