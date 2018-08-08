@@ -21,6 +21,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -160,16 +161,32 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
     private void showCalendar() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(minDate);
-        int paymentDueDay = paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfMonth();
-        Calendar dueCal = Calendar.getInstance();
-        dueCal.set(Calendar.DAY_OF_MONTH, paymentDueDay);
-        int monthsRemaining = paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments() -
-                paymentPlanDTO.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
+
+        int paymentDueDay;
         int offset = 0;
-        if (paymentDueDay >= calendar.get(Calendar.DAY_OF_MONTH)) {
-            offset = 1;
+        int period;
+        String frequencyCode = paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode();
+
+        Calendar dueCal = Calendar.getInstance();
+        if (frequencyCode.equals(PaymentPlanModel.FREQUENCY_MONTHLY)) {
+            paymentDueDay = paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfMonth();
+            if (paymentDueDay >= calendar.get(Calendar.DAY_OF_MONTH)) {
+                offset = 1;
+            }
+            period = Calendar.MONTH;
+            dueCal.set(Calendar.DAY_OF_MONTH, paymentDueDay);
+        } else {
+            paymentDueDay = paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfWeek() + 1;
+            if (paymentDueDay >= calendar.get(Calendar.DAY_OF_WEEK)) {
+                offset = 1;
+            }
+            period = Calendar.WEEK_OF_YEAR;
+            dueCal.set(Calendar.DAY_OF_WEEK, paymentDueDay);
         }
-        dueCal.add(Calendar.MONTH, monthsRemaining - offset);
+
+        int periodsRemaining = paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments() -
+                paymentPlanDTO.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
+        dueCal.add(period, periodsRemaining - offset);
         dueCal.add(Calendar.DAY_OF_MONTH, 1);
 
         DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(
