@@ -58,7 +58,6 @@ import com.newrelic.agent.android.NewRelic;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
@@ -326,6 +325,7 @@ public class SigninFragment extends BaseFragment {
                 getApplicationPreferences().setUserPhotoUrl(null);
                 getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants
                         .DEMOGRAPHICS_ADDRESS_BUNDLE, null);
+                getApplicationPreferences().setLandingScreen(true);
                 if (shouldShowNotificationScreen) {
                     manageNotificationAsLandingScreen(workflowDTO.toString());
                 } else {
