@@ -64,6 +64,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
     protected DrawerLayout drawer;
     protected Toolbar toolbar;
     protected boolean toolbarVisibility = false;
+    private TextView userFullNameTextView;
     private BadgeDrawerArrowDrawable badgeDrawable;
 
     @Override
@@ -75,7 +76,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         appointmentsDrawerUserIdTextView = (TextView) navigationView.getHeaderView(0)
                 .findViewById(R.id.appointmentsDrawerIdTextView);
-
+        userFullNameTextView = (TextView) navigationView.getHeaderView(0)
+                .findViewById(R.id.userNameTextView);
         inflateDrawer();
         LocalBroadcastManager.getInstance(this).registerReceiver(badgeReceiver,
                 new IntentFilter(CarePayConstants.UPDATE_BADGES_BROADCAST));
@@ -106,7 +108,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
     }
 
     private void setUserImage() {
-        String imageUrl = getApplicationPreferences().getUserPhotoUrl();
+        String imageUrl = ApplicationPreferences.getInstance().getUserPhotoUrl();
         ImageView userImageView = (ImageView) navigationView.getHeaderView(0)
                 .findViewById(R.id.appointmentDrawerIdImageView);
         if (!StringUtil.isNullOrEmpty(imageUrl)) {
@@ -125,6 +127,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         super.onResume();
         setUserImage();
         updateBadgeCounterViews();
+        setUserFullName();
         if (appointmentsDrawerUserIdTextView != null) {
             String userId = getApplicationPreferences().getUserId();
             if (userId != null) {
@@ -133,6 +136,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity
                 appointmentsDrawerUserIdTextView.setText("");
             }
         }
+    }
+
+    private void setUserFullName() {
+        userFullNameTextView.setText(ApplicationPreferences.getInstance().getFullName());
     }
 
     @Override
@@ -196,7 +203,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
                 headersMap.put("transition", "true");
 
                 UnifiedSignInUser user = new UnifiedSignInUser();
-                user.setEmail(getApplicationPreferences().getUserId());
+                user.setEmail(ApplicationPreferences.getInstance().getUserId());
                 user.setDeviceToken(((AndroidPlatform) Platform.get()).openDefaultSharedPreferences()
                         .getString(CarePayConstants.FCM_TOKEN, null));
                 UnifiedSignInDTO signInDTO = new UnifiedSignInDTO();

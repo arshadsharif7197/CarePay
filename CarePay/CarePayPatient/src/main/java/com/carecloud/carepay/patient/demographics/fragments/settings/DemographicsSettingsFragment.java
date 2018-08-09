@@ -96,14 +96,16 @@ public class DemographicsSettingsFragment extends BaseFragment {
 
     private void setUpUi(View view) {
         CarePayTextView patientNameTextView = (CarePayTextView) view.findViewById(R.id.patient_name);
-        patientNameTextView.setText(getCapitalizedUserName());
+        PatientModel demographicsPersonalDetails = demographicsSettingsDTO.getPayload().getDemographics()
+                .getPayload().getPersonalDetails();
+        String firstName = demographicsPersonalDetails.getFirstName();
+        String lastName = demographicsPersonalDetails.getLastName();
+        patientNameTextView.setText(StringUtil.getCapitalizedUserName(firstName, lastName));
         CarePayTextView patientIdTextView = (CarePayTextView) view.findViewById(R.id.patient_id);
         patientIdTextView.setText(demographicsSettingsDTO.getPayload().getCurrentEmail());
 
         initializeHelpButton(view);
 
-        PatientModel demographicsPersonalDetails = demographicsSettingsDTO.getPayload().getDemographics()
-                .getPayload().getPersonalDetails();
         String imageUrl = demographicsPersonalDetails.getProfilePhoto();
         if (!StringUtil.isNullOrEmpty(imageUrl)) {
             ImageView profileImageview = (ImageView) view.findViewById(R.id.providerPicImageView);
@@ -211,20 +213,6 @@ public class DemographicsSettingsFragment extends BaseFragment {
         TransitionDTO transitionDTO = demographicsSettingsDTO.getMetadata()
                 .getTransitions().getUpdateNotifications();
         getWorkflowServiceHelper().execute(transitionDTO, updateNotificationPreferencesCallback, jsonObject.toString());
-    }
-
-    private String getCapitalizedUserName() {
-        PatientModel demographicsPersonalDetails = demographicsSettingsDTO.getPayload().getDemographics()
-                .getPayload().getPersonalDetails();
-        String firstName = demographicsPersonalDetails.getFirstName();
-        String lastName = demographicsPersonalDetails.getLastName();
-        if (firstName == null) {
-            firstName = "";
-        }
-        if (lastName == null) {
-            lastName = "";
-        }
-        return (StringUtil.capitalize(firstName + " " + lastName));
     }
 
     WorkflowServiceCallback updateNotificationPreferencesCallback = new WorkflowServiceCallback() {

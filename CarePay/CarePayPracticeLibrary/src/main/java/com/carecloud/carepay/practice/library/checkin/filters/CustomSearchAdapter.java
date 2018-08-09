@@ -130,13 +130,13 @@ public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             } else {
                 selectedItemImageView.setVisibility(View.GONE);
             }
-            if(!StringUtil.isNullOrEmpty(filterDataDTO.getImageURL())) {
+            if (!StringUtil.isNullOrEmpty(filterDataDTO.getImageURL())) {
                 Picasso.with(context)
                         .load(filterDataDTO.getImageURL())
                         .transform(new CircleImageTransform())
                         .placeholder(R.drawable.icn_placeholder_user_profile_png)
                         .into(patientImageView);
-            }else{
+            } else {
                 patientImageView.setImageResource(R.drawable.icn_placeholder_user_profile_png);
             }
         }
@@ -148,7 +148,7 @@ public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     /*
      * Create our filter
-	 */
+     */
     @Override
     public Filter getFilter() {
         if (filter == null) {
@@ -180,8 +180,8 @@ public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         String[] nameList = displayName.split(" ");
                         String middleName = "";
                         String lastName = "";
-                        if(nameList.length > 0) {
-                            if(nameList.length > 2) {
+                        if (nameList.length > 0) {
+                            if (nameList.length > 2) {
                                 middleName = nameList[1];
                                 lastName = nameList[2];
                             } else {

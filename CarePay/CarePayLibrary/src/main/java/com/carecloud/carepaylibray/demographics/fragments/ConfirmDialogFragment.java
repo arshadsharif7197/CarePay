@@ -11,17 +11,18 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 /**
  * @author pjohnson
  */
-public class HomeAlertDialogFragment extends BaseDialogFragment {
+public class ConfirmDialogFragment extends BaseDialogFragment {
 
 
-    private HomeAlertInterface callback;
+    private ConfirmationCallback callback;
 
-    public HomeAlertDialogFragment() {
+    public ConfirmDialogFragment() {
         // Required empty public constructor
     }
 
@@ -30,11 +31,25 @@ public class HomeAlertDialogFragment extends BaseDialogFragment {
      * @param message the dialog message
      * @return a new instance
      */
-    public static HomeAlertDialogFragment newInstance(String title, String message) {
+    public static ConfirmDialogFragment newInstance(String title, String message) {
         Bundle args = new Bundle();
         args.putString("title", title);
         args.putString("message", message);
-        HomeAlertDialogFragment fragment = new HomeAlertDialogFragment();
+        ConfirmDialogFragment fragment = new ConfirmDialogFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static ConfirmDialogFragment newInstance(String title,
+                                                    String message,
+                                                    String negativeButtonLabel,
+                                                    String positiveButtonLabel) {
+        Bundle args = new Bundle();
+        args.putString("title", title);
+        args.putString("message", message);
+        args.putString("negativeButtonLabel", negativeButtonLabel);
+        args.putString("positiveButtonLabel", positiveButtonLabel);
+        ConfirmDialogFragment fragment = new ConfirmDialogFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,14 +72,22 @@ public class HomeAlertDialogFragment extends BaseDialogFragment {
             ((TextView) view.findViewById(R.id.dialogMessageTextView)).setText(message);
         }
         Button yesButton = (Button) view.findViewById(R.id.button_right_action);
+        String positiveButtonLabel = getArguments().getString("positiveButtonLabel");
+        if (positiveButtonLabel != null) {
+            yesButton.setText(positiveButtonLabel);
+        }
         yesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dismiss();
-                callback.onAcceptExit();
+                callback.onConfirm();
             }
         });
-        View noButton = view.findViewById(R.id.button_left_action);
+        Button noButton = (Button) view.findViewById(R.id.button_left_action);
+        String negativeButtonLabel = getArguments().getString("negativeButtonLabel");
+        if (negativeButtonLabel != null) {
+            noButton.setText(negativeButtonLabel);
+        }
         if (noButton != null) {
             noButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -84,11 +107,7 @@ public class HomeAlertDialogFragment extends BaseDialogFragment {
         }
     }
 
-    public void setCallback(HomeAlertInterface homeAlertInterface) {
+    public void setCallback(ConfirmationCallback homeAlertInterface) {
         this.callback = homeAlertInterface;
-    }
-
-    public interface HomeAlertInterface {
-        void onAcceptExit();
     }
 }

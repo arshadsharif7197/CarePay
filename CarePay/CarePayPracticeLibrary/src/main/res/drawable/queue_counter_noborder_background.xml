@@ -4,7 +4,7 @@
 
     <solid android:color="@color/practice_mode_counter_background" />
     <size
-        android:width="@dimen/dimen_34dp"
-        android:height="@dimen/dimen_34dp"/>
+        android:width="@dimen/queueCounterNoBorderWidth"
+        android:height="@dimen/queueCounterNoBorderHeight"/>
     <corners android:radius="@dimen/dimen_17dp"/>
 </shape>

@@ -17,7 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.demographics.fragments.ConfirmDialogFragment;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepay.patient.notifications.adapters.NotificationsAdapter;
 import com.carecloud.carepay.patient.notifications.models.NotificationItem;
 import com.carecloud.carepay.patient.notifications.models.NotificationType;
@@ -27,6 +27,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.SwipeViewHolder;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SwipeHelper;
@@ -174,7 +175,7 @@ public class NotificationFragment extends BaseFragment
                         Label.getLabel("notification.notificationList.button.label.deleteAllMessage"),
                         Label.getLabel("cancel"),
                         Label.getLabel("confirm"));
-        fragment.setCallback(new ConfirmDialogFragment.ConfirmationCallback() {
+        fragment.setCallback(new ConfirmationCallback() {
             @Override
             public void onConfirm() {
                 deleteAllNotifications();

@@ -37,6 +37,7 @@ import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.PdfUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.List;
 
@@ -56,7 +57,13 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         myHealthDto = getConvertedDTO(MyHealthDto.class);
+        setInitialData();
+        if (icicle == null) {
+            replaceFragment(MyHealthMainFragment.newInstance(), false);
+        }
+    }
 
+    private void setInitialData() {
         List<PracticePatientIdsDTO> practicePatientIds = myHealthDto.getPayload().getPracticePatientIds();
         if (!practicePatientIds.isEmpty()) {
             getApplicationPreferences().writeObjectToSharedPreference(
@@ -74,15 +81,17 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
         ApplicationPreferences.getInstance().writeObjectToSharedPreference(CarePayConstants
                 .DEMOGRAPHICS_ADDRESS_BUNDLE, myHealthDto.getPayload().getDemographicDTO().getAddress());
 
-        ApplicationPreferences.getInstance().setPracticesWithBreezeEnabled(myHealthDto.getPayload().getPracticeInformation());
+        ApplicationPreferences.getInstance().setPracticesWithBreezeEnabled(myHealthDto.getPayload()
+                .getPracticeInformation());
+
+        ApplicationPreferences.getInstance().setUserFullName(StringUtil
+                .getCapitalizedUserName(myHealthDto.getPayload().getDemographicDTO().getPersonalDetails().getFirstName(),
+                        myHealthDto.getPayload().getDemographicDTO().getPersonalDetails().getLastName()));
 
         String userImageUrl = myHealthDto.getPayload().getDemographicDTO()
                 .getPersonalDetails().getProfilePhoto();
         if (userImageUrl != null) {
             getApplicationPreferences().setUserPhotoUrl(userImageUrl);
-        }
-        if (icicle == null) {
-            replaceFragment(MyHealthMainFragment.newInstance(), false);
         }
     }
 
@@ -179,7 +188,8 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
                             public void onClick(DialogInterface dialog, int id) {
                                 selectedLab = lab;
                                 MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewLabResult));
-                                if (ContextCompat.checkSelfPermission(MyHealthActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                if (ContextCompat.checkSelfPermission(MyHealthActivity.this,
+                                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
                                         != PermissionChecker.PERMISSION_GRANTED
                                         && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
                                     requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
@@ -218,7 +228,8 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
             String url = String.format("%s?%s=%s", transitionDTO.getUrl(), "patient_id",
                     String.valueOf(patientDto.getId()));
 
-            PdfUtil.downloadPdf(getContext(), url, patientDto.getFullName(), ".pdf", "Medical Record");
+            PdfUtil.downloadPdf(getContext(), url, patientDto.getFullName(),
+                    ".pdf", "Medical Record");
             MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewMedicalRecord));
         } else {
             showErrorNotification("Unable to find Patient Record");
