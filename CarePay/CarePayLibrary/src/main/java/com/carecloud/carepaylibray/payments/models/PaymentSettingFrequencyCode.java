@@ -8,8 +8,9 @@ import com.google.gson.annotations.SerializedName;
  */
 public class PaymentSettingFrequencyCode {
 
+    //TODO: (#WeeklyPaymentPlans) Change back the serialized name to "weekly"
     @Expose
-    @SerializedName("weekly")
+    @SerializedName("weekly_fake")
     private FrequencyCodeDTO weekly = new FrequencyCodeDTO();
 
     @Expose
