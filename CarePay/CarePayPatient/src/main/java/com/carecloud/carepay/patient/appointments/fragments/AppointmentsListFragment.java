@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
 import com.carecloud.carepay.patient.appointments.adapters.AppointmentListAdapter;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -29,6 +28,7 @@ import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentFragmen
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -36,7 +36,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class AppointmentsListFragment extends BaseAppointmentFragment implements AppointmentListAdapter.SelectAppointmentCallback {
+public class AppointmentsListFragment extends BaseAppointmentFragment
+        implements AppointmentListAdapter.SelectAppointmentCallback {
 
     private AppointmentsResultModel appointmentsResultModel;
     private SwipeRefreshLayout refreshLayout;
@@ -49,6 +50,15 @@ public class AppointmentsListFragment extends BaseAppointmentFragment implements
     private PatientAppointmentNavigationCallback callback;
     private FloatingActionButton floatingActionButton;
 
+
+    public static AppointmentsListFragment newInstance(AppointmentsResultModel appointmentsResultModel) {
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, appointmentsResultModel);
+        AppointmentsListFragment fragment = new AppointmentsListFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -59,7 +69,8 @@ public class AppointmentsListFragment extends BaseAppointmentFragment implements
     protected void attachCallback(Context context) {
         try {
             if (context instanceof AppointmentViewHandler) {
-                callback = (PatientAppointmentNavigationCallback) ((AppointmentViewHandler) context).getAppointmentPresenter();
+                callback = (PatientAppointmentNavigationCallback) ((AppointmentViewHandler) context)
+                        .getAppointmentPresenter();
             } else {
                 callback = (PatientAppointmentNavigationCallback) context;
             }
@@ -69,38 +80,22 @@ public class AppointmentsListFragment extends BaseAppointmentFragment implements
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (callback == null) {
-            attachCallback(getContext());
-        }
-        doRefreshAction();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Gson gson = new Gson();
-        Bundle bundle = getArguments();
-        String appointmentInfoString = bundle.getString(CarePayConstants.APPOINTMENT_INFO_BUNDLE);
-        appointmentsResultModel = gson.fromJson(appointmentInfoString, AppointmentsResultModel.class);
+        appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, getArguments());
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_appointments_list, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle icicle) {
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         appointmentRecyclerView = (RecyclerView) view.findViewById(R.id.appointments_recycler_view);
         appointmentRecyclerView.setLayoutManager(layoutManager);
         // Set Title
@@ -144,21 +139,18 @@ public class AppointmentsListFragment extends BaseAppointmentFragment implements
     }
 
     private void loadAppointmentList() {
-        if (appointmentsItems != null) {
-            appointmentsItems.clear();
-        }
         if (appointmentsResultModel != null && appointmentsResultModel.getPayload().getAppointments().size() > 0) {
             appointmentsItems = appointmentsResultModel.getPayload().getAppointments();
             noAppointmentView.setVisibility(View.GONE);
             floatingActionButton.setVisibility(View.VISIBLE);
             appointmentView.setVisibility(View.VISIBLE);
-            setAdapter();
+            setAdapter(appointmentsItems);
         } else {
             showNoAppointmentScreen();
         }
     }
 
-    private void setAdapter() {
+    private void setAdapter(List<AppointmentDTO> appointmentsItems) {
         if (appointmentRecyclerView.getAdapter() == null) {
             Map<String, Set<String>> enabledPracticeLocations = new HashMap<>();
             for (AppointmentDTO appointmentDTO : appointmentsItems) {
@@ -184,6 +176,19 @@ public class AppointmentsListFragment extends BaseAppointmentFragment implements
         floatingActionButton.setVisibility(View.GONE);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (callback == null) {
+            attachCallback(getContext());
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
     private void showAppointmentPopup(AppointmentDTO appointmentDTO) {
         callback.displayAppointmentDetails(appointmentDTO);
     }
@@ -192,6 +197,7 @@ public class AppointmentsListFragment extends BaseAppointmentFragment implements
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                refreshLayout.setRefreshing(false);
                 doRefreshAction();
             }
         });
@@ -201,7 +207,6 @@ public class AppointmentsListFragment extends BaseAppointmentFragment implements
      * Reload appointment list
      */
     public void refreshAppointmentList() {
-        refreshLayout.setRefreshing(true);
         doRefreshAction();
     }
 
@@ -220,7 +225,6 @@ public class AppointmentsListFragment extends BaseAppointmentFragment implements
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            refreshLayout.setRefreshing(false);
             if (appointmentsResultModel != null) {
                 Gson gson = new Gson();
                 appointmentsResultModel = gson.fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
@@ -231,7 +235,6 @@ public class AppointmentsListFragment extends BaseAppointmentFragment implements
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            refreshLayout.setRefreshing(false);
             showErrorNotification(null);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }

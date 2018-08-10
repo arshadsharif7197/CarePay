@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
@@ -14,15 +13,20 @@ import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPr
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.gson.Gson;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class AppointmentsActivity extends MenuPatientActivity implements AppointmentViewHandler {
 
@@ -34,13 +38,48 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
-        paymentsModel = getConvertedDTO(PaymentsModel.class);
-        //hold off on calling super until imageURL can be stored to shared pref
         super.onCreate(savedInstanceState);
+        Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
+        boolean forceRefresh = false;
+        if (extra != null) {
+            forceRefresh = extra.getBoolean(CarePayConstants.REFRESH, false);
+        }
+        appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
+        if (appointmentsResultModel == null || forceRefresh) {
+            callAppointmentService();
+        } else {
+            resumeOnCreate();
+        }
 
+    }
+
+    private void callAppointmentService() {
+        Map<String, String> queryMap = new HashMap<>();
+        getWorkflowServiceHelper().execute(getTransitionAppointments(), new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
+                resumeOnCreate();
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+
+            }
+        }, queryMap);
+    }
+
+    private void resumeOnCreate() {
+        paymentsModel = getConvertedDTO(PaymentsModel.class);
         initPresenter();
-        gotoAppointmentFragment();
+        gotoAppointmentListFragment();
     }
 
     @Override
@@ -62,23 +101,19 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         super.onResume();
         MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_appointments);
         menuItem.setChecked(true);
-        if(!toolbarHidden) {
+        if (!toolbarHidden) {
             displayToolbar(true, menuItem.getTitle().toString());
         }
     }
 
-    private void gotoAppointmentFragment() {
-        AppointmentsListFragment appointmentsListFragment = new AppointmentsListFragment();
-        Bundle bundle = new Bundle();
-        Gson gson = new Gson();
-        bundle.putString(CarePayConstants.APPOINTMENT_INFO_BUNDLE, gson.toJson(appointmentsResultModel));
-        appointmentsListFragment.setArguments(bundle);
-
+    private void gotoAppointmentListFragment() {
+        AppointmentsListFragment appointmentsListFragment = AppointmentsListFragment
+                .newInstance(appointmentsResultModel);
         replaceFragment(R.id.container_main, appointmentsListFragment, false);
     }
 
     private void initPresenter() {
-        this.presenter = new  PatientAppointmentPresenter(this, appointmentsResultModel, paymentsModel);
+        this.presenter = new PatientAppointmentPresenter(this, appointmentsResultModel, paymentsModel);
     }
 
     @Override
@@ -93,21 +128,9 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                 toolbarHidden = false;
             }
         } else {
-
-            if (!HttpConstants.isUseUnifiedAuth() && getAppAuthorizationHelper().getPool().getUser() != null) {
-                getAppAuthorizationHelper().getPool().getUser().signOut();
-                getAppAuthorizationHelper().setUser(null);
-            }
             // finish the app
             finishAffinity();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.navigation, menu);
-        return true;
     }
 
     @Override
@@ -134,7 +157,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         toolbarHidden = false;
 
         refreshAppointments();
-        if(showSuccess) {
+        if (showSuccess) {
             showAppointmentConfirmation(isAutoScheduled);
         }
     }
@@ -142,7 +165,6 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     @Override
     public void refreshAppointments() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container_main);
-
         if (fragment != null && fragment instanceof AppointmentsListFragment) {
             AppointmentsListFragment appointmentsListFragment = (AppointmentsListFragment) fragment;
             appointmentsListFragment.refreshAppointmentList();

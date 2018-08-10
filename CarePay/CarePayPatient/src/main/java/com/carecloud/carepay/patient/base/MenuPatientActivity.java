@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -84,7 +85,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         inflateDrawer();
         LocalBroadcastManager.getInstance(this).registerReceiver(badgeReceiver,
                 new IntentFilter(CarePayConstants.UPDATE_BADGES_BROADCAST));
-        if(getApplicationPreferences().isLandingScreen()){
+        if (getApplicationPreferences().isLandingScreen()) {
             setInitialData();
         }
     }
@@ -218,9 +219,11 @@ public abstract class MenuPatientActivity extends BasePatientActivity
                 transition = transitionForms;
                 break;
             case R.id.nav_appointments:
-                callback = appointmentsWorkflowCallback;
-                transition = transitionAppointments;
-                break;
+                startAppointmentsActivity();
+                return false;
+//            callback = appointmentsWorkflowCallback;
+//            transition = transitionAppointments;
+//            break;
             case R.id.nav_payments:
                 callback = paymentsCallBack;
                 transition = transitionBalance;
@@ -277,6 +280,11 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         drawer.closeDrawer(GravityCompat.START);
         return false;
 
+    }
+
+    private void startAppointmentsActivity() {
+        Intent intent = new Intent(this, AppointmentsActivity.class);
+        startActivity(intent);
     }
 
     private WorkflowServiceCallback paymentsCallBack = new WorkflowServiceCallback() {
