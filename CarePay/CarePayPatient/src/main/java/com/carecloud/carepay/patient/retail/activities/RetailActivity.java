@@ -14,7 +14,6 @@ import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.retail.fragments.RetailListFragment;
 import com.carecloud.carepay.patient.retail.interfaces.RetailPatientInterface;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -26,8 +25,8 @@ import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.retail.RetailModel;
-import com.carecloud.carepaylibray.retail.RetailPracticeDTO;
+import com.carecloud.carepaylibray.retail.models.RetailModel;
+import com.carecloud.carepaylibray.retail.models.RetailPracticeDTO;
 import com.carecloud.carepaylibray.retail.fragments.RetailFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;

@@ -53,7 +53,6 @@ public class PaymentsTransitionsDTO {
     @Expose
     private TransitionDTO updateScheduledPayment = new TransitionDTO();
 
-
     /**
      * @return The makePayment
      */

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingTop="@dimen/dimen_16dp"
+        android:paddingBottom="@dimen/dimen_16dp">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/product_placeholder"
+                android:layout_width="@dimen/profile_pic_size"
+                android:layout_height="@dimen/profile_pic_size"
+                android:layout_gravity="center"
+                android:background="@drawable/round_list_tv"
+                android:textColor="@color/lightSlateGray"
+                android:textSize="@dimen/patientShortNameTextSize"
+                app:customAssetFont="gotham_rounded_medium" />
+
+            <ImageView
+                android:id="@+id/product_thumbnail"
+                android:layout_width="@dimen/profile_pic_size"
+                android:layout_height="@dimen/profile_pic_size"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/dimen_20dp"
+            android:orientation="vertical">
+
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/product_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textSize="@dimen/text_size_22sp"
+                android:textColor="@color/textview_default_textcolor"
+                tools:text="Description of Product"
+                app:customAssetFont="proxima_nova_semi_bold"/>
+
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/product_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textSize="@dimen/text_size_17sp"
+                android:textColor="@color/optional_gray"
+                tools:text="Description of Product"
+                app:customAssetFont="proxima_nova_semi_bold"/>
+
+        </LinearLayout>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/product_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_10dp"
+            android:textSize="@dimen/text_size_20"
+            tools:text="$00.00"
+            android:textColor="@color/emerald"
+            app:customAssetFont="proxima_nova_semi_bold"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:background="@color/light_gray"/>
+
+</LinearLayout>

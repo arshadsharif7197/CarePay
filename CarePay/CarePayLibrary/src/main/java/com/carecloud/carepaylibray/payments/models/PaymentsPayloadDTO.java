@@ -11,6 +11,7 @@ import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItemPay
 import com.carecloud.carepaylibray.payments.models.history.PaymentsTransactionHistory;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanLineItem;
+import com.carecloud.carepaylibray.retail.models.RetailProductsModel;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -112,6 +113,8 @@ public class PaymentsPayloadDTO implements Serializable {
     private ScheduledPaymentModel scheduledPaymentModel = new ScheduledPaymentModel();
     @SerializedName("one_time_payments")
     private List<ScheduledPaymentModel> scheduledOneTimePayments = new ArrayList<>();
+    @SerializedName("retail")
+    private RetailProductsModel retailProducts = new RetailProductsModel();
 
     public List<PatientModel> getPatients() {
         return patients;
@@ -371,6 +374,14 @@ public class PaymentsPayloadDTO implements Serializable {
 
     public void setScheduledOneTimePayments(List<ScheduledPaymentModel> scheduledOneTimePayments) {
         this.scheduledOneTimePayments = scheduledOneTimePayments;
+    }
+
+    public RetailProductsModel getRetailProducts() {
+        return retailProducts;
+    }
+
+    public void setRetailProducts(RetailProductsModel retailProducts) {
+        this.retailProducts = retailProducts;
     }
 
     /**
