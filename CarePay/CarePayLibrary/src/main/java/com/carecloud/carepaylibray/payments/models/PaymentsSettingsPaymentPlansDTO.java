@@ -40,6 +40,10 @@ public class PaymentsSettingsPaymentPlansDTO {
     @Expose
     private TermsAndConditionsDTO termsAndConditions = new TermsAndConditionsDTO();
 
+    @SerializedName("frequency_code")
+    @Expose
+    private PaymentSettingFrequencyCode frequencyCode = new PaymentSettingFrequencyCode();
+
     public boolean isPaymentPlansEnabled() {
         return paymentPlansEnabled;
     }
@@ -94,5 +98,13 @@ public class PaymentsSettingsPaymentPlansDTO {
 
     public void setTermsAndConditions(TermsAndConditionsDTO termsAndConditions) {
         this.termsAndConditions = termsAndConditions;
+    }
+
+    public PaymentSettingFrequencyCode getFrequencyCode() {
+        return frequencyCode;
+    }
+
+    public void setFrequencyCode(PaymentSettingFrequencyCode frequencyCode) {
+        this.frequencyCode = frequencyCode;
     }
 }
