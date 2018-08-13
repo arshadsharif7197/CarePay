@@ -73,7 +73,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             @Override
             public void onFailure(String exceptionMessage) {
                 hideProgressDialog();
-
+                showErrorNotification(exceptionMessage);
             }
         }, queryMap);
     }

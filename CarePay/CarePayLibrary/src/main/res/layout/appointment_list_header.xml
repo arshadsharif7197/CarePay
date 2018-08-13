@@ -16,7 +16,6 @@
         android:text="@string/shimmerToday"
         android:textColor="@color/lightSlateGray"
         android:textSize="@dimen/textview_textsize"
-        app:colored="false"
         app:customAssetFont="gotham_rounded_medium" />
 
 </LinearLayout>

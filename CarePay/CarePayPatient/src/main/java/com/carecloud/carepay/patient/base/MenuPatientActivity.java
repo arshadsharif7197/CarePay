@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
+import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -219,15 +220,11 @@ public abstract class MenuPatientActivity extends BasePatientActivity
                 transition = transitionForms;
                 break;
             case R.id.nav_appointments:
-                startAppointmentsActivity();
+                startActivity(AppointmentsActivity.class);
                 return false;
-//            callback = appointmentsWorkflowCallback;
-//            transition = transitionAppointments;
-//            break;
             case R.id.nav_payments:
-                callback = paymentsCallBack;
-                transition = transitionBalance;
-                break;
+                startActivity(ViewPaymentBalanceHistoryActivity.class);
+                return false;
             case R.id.nav_settings:
                 callback = demographicsSettingsCallBack;
                 transition = transitionProfile;
@@ -282,8 +279,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity
 
     }
 
-    private void startAppointmentsActivity() {
-        Intent intent = new Intent(this, AppointmentsActivity.class);
+    private void startActivity(Class<?> clazz) {
+        Intent intent = new Intent(this, clazz);
         startActivity(intent);
     }
 
@@ -481,6 +478,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity
 
     public static TransitionDTO getTransitionLogout() {
         return transitionLogout;
+    }
+
+    public static TransitionDTO getTransitionBalance() {
+        return transitionBalance;
     }
 
     private void displayMessagesScreen() {
