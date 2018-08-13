@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/careTeamNoDataContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/dimen_10dp"
+    android:layout_marginTop="@dimen/dimen_10dp"
+    android:background="@drawable/my_health_no_data_background"
+    android:orientation="vertical"
+    android:padding="@dimen/dimen_20dp"
+    android:paddingBottom="@dimen/dimen_40dp"
+    android:paddingEnd="@dimen/dimen_15dp"
+    android:paddingStart="@dimen/dimen_15dp"
+    android:paddingTop="@dimen/dimen_40dp">
+
+    <View
+        android:layout_width="@dimen/dimen_100dp"
+        android:layout_height="@dimen/dimen_100dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/round_list_tv" />
+
+    <View
+        android:layout_width="@dimen/dimen_300dp"
+        android:layout_height="@dimen/dimmerTextHeight"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:background="#eceff1" />
+
+    <View
+        android:layout_width="@dimen/dimen_100dp"
+        android:layout_height="@dimen/dimmerTextHeight"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:background="#eceff1" />
+
+</LinearLayout>

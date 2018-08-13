@@ -4,4 +4,5 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="menuItemBadgeSize">25dp</dimen>
     <dimen name="menuItemBadeTextSize">13sp</dimen>
+    <dimen name="dimmerTextHeight">30dp</dimen>
 </resources>

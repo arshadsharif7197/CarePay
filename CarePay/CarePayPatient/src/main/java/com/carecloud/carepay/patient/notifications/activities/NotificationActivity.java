@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
+import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.patient.notifications.fragments.NotificationFragment;
 import com.carecloud.carepay.patient.notifications.models.NotificationItem;
 import com.carecloud.carepay.patient.notifications.models.NotificationStatus;
@@ -44,12 +45,43 @@ public class NotificationActivity extends MenuPatientActivity
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         notificationsDTO = getConvertedDTO(NotificationsDTO.class);
+        if (notificationsDTO == null) {
+            callNotificationService(icicle);
+        } else {
+            resumeOnCreate(icicle);
+        }
 
+
+    }
+
+    private void callNotificationService(final Bundle icicle) {
+        Map<String, String> queryMap = new HashMap<>();
+        getWorkflowServiceHelper().execute(getTransitionNotifications(), new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                replaceFragment(ShimmerFragment.newInstance(R.layout.item_appointment), false);
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                notificationsDTO = DtoHelper.getConvertedDTO(NotificationsDTO.class, workflowDTO);
+                resumeOnCreate(icicle);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+            }
+        }, queryMap);
+    }
+
+    protected void resumeOnCreate(Bundle icicle) {
         if (icicle == null) {
             NotificationFragment notificationFragment = NotificationFragment.newInstance(notificationsDTO);
             navigateToFragment(notificationFragment, false);
         }
-
         initPresenter(null);
     }
 
@@ -242,4 +274,8 @@ public class NotificationActivity extends MenuPatientActivity
             Log.d(NotificationActivity.class.getName(), "Notification NOT marked as read");
         }
     };
+
+    private void replaceFragment(Fragment fragment, boolean addToStack) {
+        replaceFragment(com.carecloud.carepaylibrary.R.id.container_main, fragment, addToStack);
+    }
 }
