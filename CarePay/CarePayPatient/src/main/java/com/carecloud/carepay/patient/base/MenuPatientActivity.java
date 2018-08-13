@@ -22,7 +22,10 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.consentforms.ConsentFormsActivity;
+import com.carecloud.carepay.patient.messages.activities.MessagesActivity;
+import com.carecloud.carepay.patient.myhealth.MyHealthActivity;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
+import com.carecloud.carepay.patient.notifications.activities.NotificationActivity;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -199,8 +202,9 @@ public abstract class MenuPatientActivity extends BasePatientActivity
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        WorkflowServiceCallback callback;
-        TransitionDTO transition;
+        drawer.closeDrawer(GravityCompat.START);
+        WorkflowServiceCallback callback = null;
+        TransitionDTO transition = null;
         Map<String, String> headersMap = new HashMap<>();
         Map<String, String> queryMap = new HashMap<>();
         String payload = null;
@@ -208,30 +212,26 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         int id = item.getItemId();
         switch (id) {
             case R.id.nav_my_health:
-                callback = myHealthWorkflowCallback;
-                transition = transitionMyHealth;
+                startActivity(MyHealthActivity.class);
                 break;
             case R.id.nav_appointments:
                 startActivity(AppointmentsActivity.class);
-                return false;
+                break;
             case R.id.nav_payments:
                 startActivity(ViewPaymentBalanceHistoryActivity.class);
-                return false;
+                break;
             case R.id.nav_messages:
-                displayMessagesScreen();
-                transition = null;
-                callback = null;
+                startActivity(MessagesActivity.class);
                 break;
             case R.id.nav_forms:
                 startActivity(ConsentFormsActivity.class);
-                return false;
+                break;
             case R.id.nav_purchase:
                 transition = transitionRetail;
                 callback = purchaseWorkflowCallback;
                 break;
             case R.id.nav_notification:
-                transition = transitionNotifications;
-                callback = notificationsWorkflowCallback;
+                startActivity(NotificationActivity.class);
                 break;
             case R.id.nav_settings:
                 callback = demographicsSettingsCallBack;
@@ -258,7 +258,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         }
 
         if (transition == null || transition.getUrl() == null) {
-            drawer.closeDrawer(GravityCompat.START);
+//            drawer.closeDrawer(GravityCompat.START);
             return false;
         }
 
@@ -272,7 +272,6 @@ public abstract class MenuPatientActivity extends BasePatientActivity
             //do transition with headers since no query params are required we can ignore them
             getWorkflowServiceHelper().execute(transition, callback, queryMap, headersMap);
         }
-
 
         drawer.closeDrawer(GravityCompat.START);
         return false;
