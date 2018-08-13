@@ -46,10 +46,10 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View paymentHistoryListItemView;
 
-        if(viewType == VIEW_TYPE_BALANCE) {
+        if (viewType == VIEW_TYPE_BALANCE) {
             paymentHistoryListItemView = LayoutInflater.from(context).inflate(
                     R.layout.balances_list_item, parent, false);
-        }else{
+        } else {
             paymentHistoryListItemView = LayoutInflater.from(context).inflate(
                     R.layout.item_payment_plan, parent, false);
         }
@@ -58,7 +58,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        if(getItemViewType(position)==VIEW_TYPE_BALANCE) {
+        if (getItemViewType(position) == VIEW_TYPE_BALANCE) {
             final PaymentsBalancesItem pendingBalance = (PaymentsBalancesItem) listItems.get(position);
 
             String locationName = pendingBalance.getMetadata().getPracticeName();
@@ -75,7 +75,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
 
             boolean canPay = paymentsModel.getPaymentPayload().canMakePayments(pendingBalance.getMetadata().getPracticeId());
             holder.payLabel.setVisibility(canPay ? View.VISIBLE : View.GONE);
-        }else{
+        } else {
             final PaymentPlanDTO paymentPlanItem = (PaymentPlanDTO) listItems.get(position);
 
             String locationName = paymentPlanItem.getMetadata().getPracticeName();
@@ -87,7 +87,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
             holder.amount.setText(currencyFormatter.format(totalAmount - amountPaid));
 
             String planDetails = currencyFormatter.format(
-                    paymentPlanItem.getPayload().getPaymentPlanDetails().getAmount()) + "/" +
+                    paymentPlanItem.getPayload().getPaymentPlanDetails().getAmount()) +
                     paymentPlanItem.getPayload().getPaymentPlanDetails().getFrequencyString();
             holder.planDetail.setText(planDetails);
 
@@ -103,8 +103,8 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
     }
 
     @Override
-    public int getItemViewType(int position){
-        if(listItems.get(position) instanceof PaymentsBalancesItem){
+    public int getItemViewType(int position) {
+        if (listItems.get(position) instanceof PaymentsBalancesItem) {
             return VIEW_TYPE_BALANCE;
         }
         return VIEW_TYPE_PLAN;

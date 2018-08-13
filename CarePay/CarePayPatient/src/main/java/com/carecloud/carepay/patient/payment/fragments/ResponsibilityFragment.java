@@ -22,6 +22,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -115,7 +116,11 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         total = 0;
         fillDetailAdapter(view, selectedBalance.getPayload());
         for (PendingBalancePayloadDTO payment : selectedBalance.getPayload()) {
-            total += payment.getAmount();
+            total = SystemUtil.safeAdd(total, payment.getAmount());
+            if(!payment.getType().equals(PendingBalancePayloadDTO.PATIENT_BALANCE)){
+                //not an amount that can be added to a plan
+                nonBalanceTotal = SystemUtil.safeAdd(nonBalanceTotal, payment.getAmount());
+            }
         }
         currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
         TextView responseTotal = (TextView) view.findViewById(R.id.respons_total);

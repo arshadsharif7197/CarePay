@@ -22,6 +22,7 @@ import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
@@ -88,7 +89,8 @@ public class PracticePaymentPlanDetailsDialogFragment extends BaseDialogFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_practice_payment_plan_detail, container, false);
+        return inflater.inflate(R.layout.fragment_practice_payment_plan_detail, container,
+                false);
     }
 
     @Override
@@ -156,7 +158,7 @@ public class PracticePaymentPlanDetailsDialogFragment extends BaseDialogFragment
         balanceTextView.setText(currencyFormatter.format(totalAmount - amountPaid));
 
         final ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload().findScheduledPayment(paymentPlan);
-        if(scheduledPayment != null){
+        if (scheduledPayment != null) {
             ScheduledPaymentPayload scheduledPayload = scheduledPayment.getPayload();
 
             View scheduledPaymentLayout = view.findViewById(R.id.scheduledPaymentLayout);
@@ -212,13 +214,25 @@ public class PracticePaymentPlanDetailsDialogFragment extends BaseDialogFragment
     }
 
     private String getNextDate(PaymentPlanPayloadDTO planPayload) {
-        int drawDay = planPayload.getPaymentPlanDetails().getDayOfMonth();
+        int drawDay;
         Calendar calendar = Calendar.getInstance();
-        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
-        if (currentDay > drawDay) {
-            calendar.add(Calendar.MONTH, 1);
+        if (planPayload.getPaymentPlanDetails().getFrequencyCode()
+                .equals(PaymentPlanDetailsDTO.FREQUENCY_MONTHLY)) {
+            drawDay = planPayload.getPaymentPlanDetails().getDayOfMonth();
+            int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+            if (currentDay > drawDay) {
+                calendar.add(Calendar.MONTH, 1);
+            }
+            calendar.set(Calendar.DAY_OF_MONTH, drawDay);
+        } else {
+            int dayOfWeek = planPayload.getPaymentPlanDetails().getDayOfWeek() + 1; //Monday ==2
+            if (calendar.get(Calendar.DAY_OF_WEEK) > dayOfWeek) {
+                calendar.add(Calendar.DAY_OF_WEEK, dayOfWeek + 1);
+            } else {
+                calendar.add(Calendar.DAY_OF_WEEK, dayOfWeek - calendar.get(Calendar.DAY_OF_WEEK));
+            }
+            drawDay = calendar.get(Calendar.DAY_OF_MONTH);
         }
-        calendar.set(Calendar.DAY_OF_MONTH, drawDay);
 
         ApplicationPreferences preferences = ((ISession) getActivity()).getApplicationPreferences();
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMM ", new Locale(preferences.getUserLanguage()));

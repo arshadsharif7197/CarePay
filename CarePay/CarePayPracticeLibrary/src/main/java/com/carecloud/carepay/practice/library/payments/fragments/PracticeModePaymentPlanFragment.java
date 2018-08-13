@@ -68,6 +68,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
     protected double totalBalance;
     protected double minAmount = 0.1;
     private CreditCardsListAdapter creditCardsListAdapter;
+    private Button addNewCardButton;
 
     public static PracticeModePaymentPlanFragment newInstance(PaymentsModel paymentsModel,
                                                               PendingBalanceDTO selectedBalance) {
@@ -82,6 +83,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
 
     @Override
     public void onCreate(Bundle icicle) {
+        applyRangeRules = false;
         super.onCreate(icicle);
         paymentPlanAmount = 0.00;
     }
@@ -97,8 +99,8 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         setUpAmounts(view);
         balanceItems = filterItems();
         setUpItems(view, balanceItems);
-        setupFields(view);
         setupButtons(view);
+        setupFields(view);
         setUpCreditCards(view);
     }
 
@@ -161,13 +163,16 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
                 }
             }
         });
-        Button addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
+        addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
         addNewCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 callback.onAddPaymentPlanCard(paymentsModel, null, true);
             }
         });
+        if (paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            addNewCardButton.setText(Label.getLabel("payment_new_credit_card"));
+        }
     }
 
     protected void mainButtonAction() {
@@ -283,21 +288,21 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
 
         if (StringUtil.isNullOrEmpty(numberPaymentsEditText.getText().toString())) {
             if (isUserInteraction) {
-                setError(R.id.paymentMonthCountInputLayout, Label.getLabel("validation_required_field")
+                setError(numberPaymentsInputLayout, Label.getLabel("validation_required_field")
                         , isUserInteraction);
                 return false;
             } else {
-                clearError(R.id.paymentMonthCountInputLayout);
+                clearError(numberPaymentsInputLayout);
             }
-        } else if (monthlyPaymentCount < 2) {
-            setError(R.id.paymentMonthCountInputLayout,
+        } else if (installments < 2) {
+            setError(numberPaymentsInputLayout,
                     String.format(Label.getLabel("payment_plan_min_months_error"),
                             String.valueOf(2))
                     , isUserInteraction);
             clearError(R.id.paymentAmountInputLayout);
             return false;
         } else {
-            clearError(R.id.paymentMonthCountInputLayout);
+            clearError(numberPaymentsInputLayout);
         }
 
         if (StringUtil.isNullOrEmpty(monthlyPaymentEditText.getText().toString())) {
@@ -392,6 +397,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
                 paymentPlanAmount = SystemUtil.safeAdd(paymentPlanAmount, itemDTO.getAmountSelected());
                 paymentValueTextView.setText(currencyFormatter.format(paymentPlanAmount));
                 adapter.notifyDataSetChanged();
+                refreshNumberOfPayments(String.valueOf(installments));
                 enableCreatePlanButton();
             }
         });
@@ -461,7 +467,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         return creditCardModel;
     }
 
-    private void authorizeCreditCard() {
+    protected void authorizeCreditCard() {
         String currency = "USD";
         String cvv = selectedCreditCard.getCvv();
         String expiryDate = selectedCreditCard.getExpireDt();
@@ -589,5 +595,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         creditCardsListAdapter.setSelectedCreditCard(creditCardPayload);
         creditCardsListAdapter.notifyDataSetChanged();
         selectedCreditCard = creditCardPayload;
+        enableCreatePlanButton();
+        addNewCardButton.setText(Label.getLabel("payment_add_new_credit_card_button"));
     }
 }
