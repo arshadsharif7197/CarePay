@@ -35,6 +35,7 @@ import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.base.models.UserAuthPermissions;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
@@ -46,6 +47,7 @@ import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanLineItem;
+import com.carecloud.carepaylibray.retail.models.RetailBillingPerson;
 import com.carecloud.carepaylibray.retail.models.RetailItemDto;
 import com.carecloud.carepaylibray.retail.models.RetailItemOptionChoiceDto;
 import com.carecloud.carepaylibray.retail.models.RetailItemPayload;
@@ -123,6 +125,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
     private boolean hasPaymentError = false;
     private UserAuthPermissions authPermissions;
+
+    private DemographicPayloadDTO patientDemographics;
 
     @Override
     public void onAttach(Context context) {
@@ -329,8 +333,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             }
 
             if (patientBalanceDTO != null) {
-                String patientNameString = patientBalanceDTO.getDemographics().getPayload()
-                        .getPersonalDetails().getFullName();
+                patientDemographics = patientBalanceDTO.getDemographics().getPayload();
+                String patientNameString = patientDemographics.getPersonalDetails().getFullName();
 
                 patientNameString = StringUtil.capitalize(patientNameString);
                 setupToolbar(view, StringUtil.getLabelForView(patientNameString));
@@ -1035,6 +1039,22 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         retailPaymentLineItem.setProviderID(retailItems.get(0).getProvider().getGuid());
         retailPaymentLineItem.getRetailMetadata().getOrder().setSubTotal(subtotal);
         retailPaymentLineItem.getRetailMetadata().getOrder().setTotal(total);
+
+        if(patientDemographics != null){
+            RetailBillingPerson billingPerson = retailPaymentLineItem.getRetailMetadata()
+                    .getOrder().getBillingPerson();
+            billingPerson.setName(patientDemographics.getPersonalDetails().getFullName());
+            billingPerson.setStreet(patientDemographics.getAddress().getAddress1());
+            if(!StringUtil.isNullOrEmpty(patientDemographics.getAddress().getAddress2())){
+                billingPerson.setStreet(billingPerson.getStreet() + " " +
+                        patientDemographics.getAddress().getAddress2());
+            }
+            billingPerson.setCity(patientDemographics.getAddress().getCity());
+            billingPerson.setStateCode(patientDemographics.getAddress().getState());
+            billingPerson.setPostalCode(patientDemographics.getAddress().getZipcode());
+            billingPerson.setPhone(patientDemographics.getAddress().getPhone());
+        }
+
         postModel.addLineItem(retailPaymentLineItem);
     }
 

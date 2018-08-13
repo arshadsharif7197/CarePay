@@ -29,6 +29,9 @@ public class RetailLineItemMetadata {
         @SerializedName("subtotal")
         private double subTotal;
 
+        @SerializedName("billing_person")
+        private RetailBillingPerson billingPerson = new RetailBillingPerson();
+
         public List<RetailLineItemOrderItem> getItems() {
             return items;
         }
@@ -51,6 +54,14 @@ public class RetailLineItemMetadata {
 
         public void setSubTotal(double subTotal) {
             this.subTotal = subTotal;
+        }
+
+        public RetailBillingPerson getBillingPerson() {
+            return billingPerson;
+        }
+
+        public void setBillingPerson(RetailBillingPerson billingPerson) {
+            this.billingPerson = billingPerson;
         }
     }
 }
