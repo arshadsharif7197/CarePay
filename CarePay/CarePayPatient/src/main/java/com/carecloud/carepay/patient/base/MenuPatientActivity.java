@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
+import com.carecloud.carepay.patient.consentforms.ConsentFormsActivity;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
@@ -210,25 +211,20 @@ public abstract class MenuPatientActivity extends BasePatientActivity
                 callback = myHealthWorkflowCallback;
                 transition = transitionMyHealth;
                 break;
-            case R.id.nav_messages:
-                displayMessagesScreen();
-                transition = null;
-                callback = null;
-                break;
-            case R.id.nav_forms:
-                callback = appointmentsWorkflowCallback;
-                transition = transitionForms;
-                break;
             case R.id.nav_appointments:
                 startActivity(AppointmentsActivity.class);
                 return false;
             case R.id.nav_payments:
                 startActivity(ViewPaymentBalanceHistoryActivity.class);
                 return false;
-            case R.id.nav_settings:
-                callback = demographicsSettingsCallBack;
-                transition = transitionProfile;
+            case R.id.nav_messages:
+                displayMessagesScreen();
+                transition = null;
+                callback = null;
                 break;
+            case R.id.nav_forms:
+                startActivity(ConsentFormsActivity.class);
+                return false;
             case R.id.nav_purchase:
                 transition = transitionRetail;
                 callback = purchaseWorkflowCallback;
@@ -236,6 +232,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity
             case R.id.nav_notification:
                 transition = transitionNotifications;
                 callback = notificationsWorkflowCallback;
+                break;
+            case R.id.nav_settings:
+                callback = demographicsSettingsCallBack;
+                transition = transitionProfile;
                 break;
             case R.id.nav_logout:
                 transition = transitionLogout;
@@ -283,27 +283,6 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         Intent intent = new Intent(this, clazz);
         startActivity(intent);
     }
-
-    private WorkflowServiceCallback paymentsCallBack = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            PatientNavigationHelper.setAccessPaymentsBalances(true);
-            navigateToWorkflow(workflowDTO);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            showErrorNotification(exceptionMessage);
-            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
 
     private WorkflowServiceCallback demographicsSettingsCallBack = new WorkflowServiceCallback() {
         @Override
