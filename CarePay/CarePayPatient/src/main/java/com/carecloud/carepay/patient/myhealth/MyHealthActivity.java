@@ -74,7 +74,7 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
 
     private void callMyHealthService(final Bundle icicle) {
         Map<String, String> queryMap = new HashMap<>();
-        getWorkflowServiceHelper().execute(getTransitionAppointments(), new WorkflowServiceCallback() {
+        getWorkflowServiceHelper().execute(getTransitionMyHealth(), new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
                 ShimmerFragment fragment = ShimmerFragment.newInstance(R.layout.shimmer_my_health_item);

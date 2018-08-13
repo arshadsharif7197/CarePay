@@ -21,16 +21,16 @@
 
     <View
         android:layout_width="@dimen/dimen_300dp"
-        android:layout_height="@dimen/dimmerTextHeight"
+        android:layout_height="@dimen/shimmerTextHeight"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/dimen_20dp"
-        android:background="#eceff1" />
+        android:background="@color/light_gray_dialog" />
 
     <View
         android:layout_width="@dimen/dimen_100dp"
-        android:layout_height="@dimen/dimmerTextHeight"
+        android:layout_height="@dimen/shimmerTextHeight"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/dimen_10dp"
-        android:background="#eceff1" />
+        android:background="@color/light_gray_dialog" />
 
 </LinearLayout>
