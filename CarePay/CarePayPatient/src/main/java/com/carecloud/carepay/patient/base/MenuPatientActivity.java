@@ -27,6 +27,7 @@ import com.carecloud.carepay.patient.myhealth.MyHealthActivity;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.notifications.activities.NotificationActivity;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
+import com.carecloud.carepay.patient.retail.activities.RetailActivity;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -40,7 +41,6 @@ import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
-import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -202,7 +202,6 @@ public abstract class MenuPatientActivity extends BasePatientActivity
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        drawer.closeDrawer(GravityCompat.START);
         WorkflowServiceCallback callback = null;
         TransitionDTO transition = null;
         Map<String, String> headersMap = new HashMap<>();
@@ -227,8 +226,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
                 startActivity(ConsentFormsActivity.class);
                 break;
             case R.id.nav_purchase:
-                transition = transitionRetail;
-                callback = purchaseWorkflowCallback;
+                startActivity(RetailActivity.class);
                 break;
             case R.id.nav_notification:
                 startActivity(NotificationActivity.class);
@@ -258,7 +256,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         }
 
         if (transition == null || transition.getUrl() == null) {
-//            drawer.closeDrawer(GravityCompat.START);
+            drawer.closeDrawer(GravityCompat.START);
             return false;
         }
 
@@ -304,48 +302,6 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         }
     };
 
-    private WorkflowServiceCallback myHealthWorkflowCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            PatientNavigationHelper.setAccessPaymentsBalances(false);
-            navigateToWorkflow(workflowDTO);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            showErrorNotification(exceptionMessage);
-            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
-
-    private WorkflowServiceCallback appointmentsWorkflowCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            PatientNavigationHelper.setAccessPaymentsBalances(false);
-            navigateToWorkflow(workflowDTO);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            showErrorNotification(exceptionMessage);
-            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
-
     private WorkflowServiceCallback logoutWorkflowCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -356,27 +312,6 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             getAppAuthorizationHelper().setAccessToken(null);
-            navigateToWorkflow(workflowDTO);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            showErrorNotification(exceptionMessage);
-            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
-
-    private WorkflowServiceCallback purchaseWorkflowCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            PatientNavigationHelper.setAccessPaymentsBalances(false);
             navigateToWorkflow(workflowDTO);
         }
 
@@ -462,10 +397,12 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         return transitionBalance;
     }
 
-    private void displayMessagesScreen() {
-        WorkflowDTO workflowDTO = new WorkflowDTO();
-        workflowDTO.setState(NavigationStateConstants.MESSAGES);
-        PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+    public static TransitionDTO getTransitionRetail() {
+        return transitionRetail;
+    }
+
+    public static TransitionDTO getTransitionMyHealth() {
+        return transitionMyHealth;
     }
 
     /**
