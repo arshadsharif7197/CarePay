@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
+import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -58,7 +59,8 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         getWorkflowServiceHelper().execute(getTransitionAppointments(), new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
-                showProgressDialog();
+                replaceFragment(ShimmerFragment.newInstance(R.layout.appointment_list_header,
+                        R.layout.item_appointment), false);
             }
 
             @Override
@@ -107,13 +109,12 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     }
 
     private void gotoAppointmentListFragment() {
-        AppointmentsListFragment appointmentsListFragment = AppointmentsListFragment
-                .newInstance(appointmentsResultModel);
-        replaceFragment(R.id.container_main, appointmentsListFragment, false);
+        AppointmentsListFragment fragment = AppointmentsListFragment.newInstance(appointmentsResultModel);
+        replaceFragment(fragment, false);
     }
 
     private void initPresenter() {
-        this.presenter = new PatientAppointmentPresenter(this, appointmentsResultModel, paymentsModel);
+        presenter = new PatientAppointmentPresenter(this, appointmentsResultModel, paymentsModel);
     }
 
     @Override
@@ -140,7 +141,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
     @Override
     public void navigateToFragment(Fragment fragment, boolean addToBackStack) {
-        replaceFragment(R.id.container_main, fragment, addToBackStack);
+        replaceFragment(fragment, addToBackStack);
         displayToolbar(false, null);
         toolbarHidden = true;
     }
@@ -177,6 +178,10 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                 "appointment_schedule_success_message_HTML" :
                 "appointment_request_success_message_HTML");
         SystemUtil.showSuccessToast(getContext(), appointmentRequestSuccessMessage);
+    }
+
+    private void replaceFragment(Fragment fragment, boolean addToStack) {
+        replaceFragment(R.id.container_main, fragment, addToStack);
     }
 
 }

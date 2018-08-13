@@ -41,7 +41,6 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
 
     private AppointmentsResultModel appointmentsResultModel;
     private SwipeRefreshLayout refreshLayout;
-    private View appointmentView;
     private View noAppointmentView;
 
     private List<AppointmentDTO> appointmentsItems;
@@ -49,7 +48,6 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
 
     private PatientAppointmentNavigationCallback callback;
     private FloatingActionButton floatingActionButton;
-
 
     public static AppointmentsListFragment newInstance(AppointmentsResultModel appointmentsResultModel) {
         Bundle args = new Bundle();
@@ -116,7 +114,6 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         setRefreshAction();
 
-        appointmentView = view.findViewById(R.id.appointment_section_linear_layout);
         noAppointmentView = view.findViewById(R.id.no_appointment_layout);
         ((TextView) view.findViewById(R.id.no_apt_message_title)).setText(noAptMessageTitle);
         ((TextView) view.findViewById(R.id.no_apt_message_desc)).setText(noAptMessageText);
@@ -143,7 +140,7 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
             appointmentsItems = appointmentsResultModel.getPayload().getAppointments();
             noAppointmentView.setVisibility(View.GONE);
             floatingActionButton.setVisibility(View.VISIBLE);
-            appointmentView.setVisibility(View.VISIBLE);
+            appointmentRecyclerView.setVisibility(View.VISIBLE);
             setAdapter(appointmentsItems);
         } else {
             showNoAppointmentScreen();
@@ -172,7 +169,7 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
 
     private void showNoAppointmentScreen() {
         noAppointmentView.setVisibility(View.VISIBLE);
-        appointmentView.setVisibility(View.GONE);
+        appointmentRecyclerView.setVisibility(View.GONE);
         floatingActionButton.setVisibility(View.GONE);
     }
 

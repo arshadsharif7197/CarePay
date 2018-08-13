@@ -51,7 +51,7 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
 
     private Context context;
     private SelectAppointmentCallback callback;
-    private List<AppointmentDTO> appointmentItems = new ArrayList<>();
+    private List<AppointmentDTO> appointmentItems;
 
     private List<AppointmentDTO> sortedAppointments = new ArrayList<>();
 
@@ -93,7 +93,7 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
         if (viewType == VIEW_TYPE_HEADER) {
             view = inflater.inflate(R.layout.appointment_list_header, parent, false);
         } else {
-            view = inflater.inflate(R.layout.appointment_list_item, parent, false);
+            view = inflater.inflate(R.layout.item_appointment, parent, false);
         }
         return new ViewHolder(view);
     }
