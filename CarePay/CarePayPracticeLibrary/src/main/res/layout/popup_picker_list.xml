@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/popup_container"
-    android:orientation="vertical"
     android:layout_width="@dimen/popup_picker_width"
     android:layout_height="@dimen/popup_picker_height"
-    android:background="@drawable/popup_picker_bg">
+    android:background="@drawable/popup_picker_bg"
+    android:orientation="vertical">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/pick_list_recycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
 </LinearLayout>

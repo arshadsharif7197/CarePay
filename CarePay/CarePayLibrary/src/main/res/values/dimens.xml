@@ -5,6 +5,7 @@
     <dimen name="errorTextSize">10sp</dimen>
     <dimen name="hint_floating_size">10sp</dimen>
     <dimen name="textview_default_textsize">17sp</dimen>
+    <dimen name="dialog_profile_pic_size">88dp</dimen>
 
     <!-- Default dimens which will be use for any default styling  -->
     <dimen name="dimen_1dp">1dp</dimen>
@@ -130,7 +131,6 @@
     <dimen name="respons_toolbar_elevation">7dp</dimen>
     <dimen name="respons_button_margin_left_right">17dp</dimen>
     <dimen name="dialog_header_height">205dp</dimen>
-    <dimen name="dialog_profile_pic_size">88dp</dimen>
     <dimen name="dialog_width">300dp</dimen>
     <dimen name="dialog_height">672dp</dimen>
 
@@ -468,5 +468,10 @@
     <dimen name="fragmentDialogPaddingTop">0dp</dimen>
     <dimen name="closeIconSize">19dp</dimen>
     <dimen name="calendarSelectedDimen">10dp</dimen>
+    <dimen name="lineItemTextSize">17sp</dimen>
+    <dimen name="roundBorderBottonVerticalPadding">10dp</dimen>
+    <dimen name="paymentDetailLabelTextSize">16sp</dimen>
+    <dimen name="paymentDetailAmountTextSize">15sp</dimen>
+    <dimen name="paymentDetailDateTextSize">12sp</dimen>
 
 </resources>
