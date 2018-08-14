@@ -72,10 +72,10 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.gms.wallet.MaskedWallet;
 
-import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_BALANCES;
-
 import java.util.Date;
 import java.util.List;
+
+import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_BALANCES;
 
 /**
  * Created by jorge on 29/12/16
@@ -391,9 +391,9 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     public void displayPaymentPlanHistoryDetails(final PaymentHistoryItem historyItem, PaymentPlanPayloadDTO paymentPlanPayloadDTO) {
         String taskId = paymentPlanPayloadDTO.getMetadata().getTaskId();
         PaymentPlanDTO selectedPaymentPlan = null;
-        for(PaymentPlanDTO paymentPlanDTO : paymentsDTO.getPaymentPayload().getPatientPaymentPlans()){
-            if(taskId.equals(paymentPlanDTO.getPayload().getMetadata().getTaskId())){
-                selectedPaymentPlan =paymentPlanDTO;
+        for (PaymentPlanDTO paymentPlanDTO : paymentsDTO.getPaymentPayload().getPatientPaymentPlans()) {
+            if (taskId.equals(paymentPlanDTO.getPayload().getMetadata().getTaskId())) {
+                selectedPaymentPlan = paymentPlanDTO;
                 break;
             }
         }
@@ -592,13 +592,13 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload()
                 .getScheduledPaymentModel();
-        if(scheduledPayment.getMetadata().getOneTimePaymentId() == null &&
-                !paymentsModel.getPaymentPayload().getScheduledOneTimePayments().isEmpty()){
+        if (scheduledPayment.getMetadata().getOneTimePaymentId() == null &&
+                !paymentsModel.getPaymentPayload().getScheduledOneTimePayments().isEmpty()) {
             scheduledPayment = paymentsModel.getPaymentPayload().getScheduledOneTimePayments().get(0);
         }
         List<ScheduledPaymentModel> scheduledPaymentModels = this.paymentsDTO.getPaymentPayload().getScheduledOneTimePayments();
-        for(ScheduledPaymentModel scheduledPaymentModel : scheduledPaymentModels){
-            if(scheduledPaymentModel.getMetadata().getOneTimePaymentId().equals(scheduledPayment.getMetadata().getOneTimePaymentId())){
+        for (ScheduledPaymentModel scheduledPaymentModel : scheduledPaymentModels) {
+            if (scheduledPaymentModel.getMetadata().getOneTimePaymentId().equals(scheduledPayment.getMetadata().getOneTimePaymentId())) {
                 scheduledPaymentModels.remove(scheduledPayment);
                 break;
             }
@@ -619,6 +619,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         SystemUtil.hideSoftKeyboard(this);
         showSuccessToast(String.format(
                 Label.getLabel("payment.oneTimePayment.scheduled.delete.success"),
+                StringUtil.getFormattedBalanceAmount(scheduledPaymentPayload.getAmount()),
                 DateUtil.getInstance()
                         .setDateRaw(scheduledPaymentPayload.getPaymentDate())
                         .toStringWithFormatMmSlashDdSlashYyyy()));
