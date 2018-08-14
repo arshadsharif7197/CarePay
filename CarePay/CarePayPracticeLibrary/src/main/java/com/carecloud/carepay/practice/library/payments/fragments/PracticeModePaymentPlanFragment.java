@@ -102,6 +102,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         setupButtons(view);
         setupFields(view);
         setUpCreditCards(view);
+        isCalculatingTime = false;
     }
 
     protected void setupToolbar(View view, String titleString) {
