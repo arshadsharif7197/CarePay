@@ -13,7 +13,6 @@
         android:gravity="center_vertical"
         android:paddingEnd="0dp"
         android:paddingStart="@dimen/list_apt_padding_right"
-        android:text="@string/shimmerToday"
         android:textColor="@color/lightSlateGray"
         android:textSize="@dimen/textview_textsize"
         app:customAssetFont="gotham_rounded_medium" />

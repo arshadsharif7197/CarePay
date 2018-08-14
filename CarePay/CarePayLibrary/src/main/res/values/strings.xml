@@ -430,6 +430,5 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="tag_demographics_error_scroll">demographics_error_scroll</string>
 
     <string name="dash"> &#8212; </string>
-    <string name="shimmerToday">TODAY</string>
 
 </resources>
