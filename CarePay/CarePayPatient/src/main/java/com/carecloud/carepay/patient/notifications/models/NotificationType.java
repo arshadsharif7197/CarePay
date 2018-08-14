@@ -6,7 +6,7 @@ package com.carecloud.carepay.patient.notifications.models;
 
 public enum NotificationType {
     appointment,
-    payment,
+    payments,
     pending_forms,
     credit_card
 }

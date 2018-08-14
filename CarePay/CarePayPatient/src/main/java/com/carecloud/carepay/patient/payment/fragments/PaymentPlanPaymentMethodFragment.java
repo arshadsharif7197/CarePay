@@ -41,7 +41,7 @@ public class PaymentPlanPaymentMethodFragment extends PaymentMethodFragment {
 
     /**
      * @param paymentsModel        the payments DTO
-     * @param paymentPlanPostModel post model for payment plan to execute
+     * @param paymentPlanPostModel post model for payments plan to execute
      * @return an instance of PaymentPlanPaymentMethodFragment
      */
     public static PaymentPlanPaymentMethodFragment newInstance(PaymentsModel paymentsModel,
@@ -57,9 +57,9 @@ public class PaymentPlanPaymentMethodFragment extends PaymentMethodFragment {
 
     /**
      * @param paymentsModel  the payments DTO
-     * @param paymentPlanDTO existing payment plan to make payment for
+     * @param paymentPlanDTO existing payments plan to make payments for
      * @param onlySelectMode onlySelectMode
-     * @param paymentDate    payment Date
+     * @param paymentDate    payments Date
      * @return an instance of PaymentPlanPaymentMethodFragment
      */
     public static PaymentPlanPaymentMethodFragment newInstance(PaymentsModel paymentsModel,
@@ -81,7 +81,7 @@ public class PaymentPlanPaymentMethodFragment extends PaymentMethodFragment {
 
     /**
      * @param paymentsModel  the payments DTO
-     * @param paymentPlanDTO existing payment plan to make payment for
+     * @param paymentPlanDTO existing payments plan to make payments for
      * @param onlySelectMode onlySelectMode
      * @return an instance of PaymentPlanPaymentMethodFragment
      */

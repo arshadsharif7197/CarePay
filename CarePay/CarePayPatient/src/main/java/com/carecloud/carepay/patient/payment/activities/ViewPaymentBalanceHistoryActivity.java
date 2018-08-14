@@ -607,7 +607,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         completePaymentProcess(workflowDTO);
 
         DateUtil.getInstance().setDateRaw(scheduledPayment.getPayload().getPaymentDate());
-        String message = String.format(Label.getLabel("payment.oneTimePayment.schedule.success"),
+        String message = String.format(Label.getLabel("payments.oneTimePayment.schedule.success"),
                 StringUtil.getFormattedBalanceAmount(scheduledPayment.getPayload().getAmount()),
                 DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal());
         showSuccessToast(message);
@@ -618,7 +618,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     public void showDeleteScheduledPaymentConfirmation(WorkflowDTO workflowDTO, ScheduledPaymentPayload scheduledPaymentPayload) {
         SystemUtil.hideSoftKeyboard(this);
         showSuccessToast(String.format(
-                Label.getLabel("payment.oneTimePayment.scheduled.delete.success"),
+                Label.getLabel("payments.oneTimePayment.scheduled.delete.success"),
                 DateUtil.getInstance()
                         .setDateRaw(scheduledPaymentPayload.getPaymentDate())
                         .toStringWithFormatMmSlashDdSlashYyyy()));
@@ -747,8 +747,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void showCancelPaymentPlanConfirmDialog(ConfirmationCallback confirmationCallback) {
         ConfirmDialogFragment fragment = ConfirmDialogFragment
-                .newInstance(Label.getLabel("payment.cancelPaymentPlan.confirmDialog.title.cancelPaymentPlanTitle"),
-                        Label.getLabel("payment.cancelPaymentPlan.confirmDialog.message.cancelPaymentPlanMessage"),
+                .newInstance(Label.getLabel("payments.cancelPaymentPlan.confirmDialog.title.cancelPaymentPlanTitle"),
+                        Label.getLabel("payments.cancelPaymentPlan.confirmDialog.message.cancelPaymentPlanMessage"),
                         Label.getLabel("no"),
                         Label.getLabel("yes"));
         fragment.setCallback(confirmationCallback);
@@ -773,7 +773,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
             }
         }
 
-        //payment plan not found for modification
+        //payments plan not found for modification
         paymentPlanList.addAll(paymentsModel.getPaymentPayload().getPatientPaymentPlans());
         completePaymentProcess(workflowDTO);
 

@@ -44,11 +44,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     }
 
     private Context context;
-    private List<NotificationItem> notificationItems = new ArrayList<>();
+    private List<NotificationItem> notificationItems;
     private SelectNotificationCallback callback;
     private List<NotificationItem> removeItems = new ArrayList<>();
-
-    private boolean displayUndo = false;
 
     /**
      * Constructor
@@ -98,7 +96,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         resetViews(holder);
         if (notificationType != null) {
             switch (notificationType) {
-                case payment:
+                case payments:
                     displayPaymentNotification(holder, notificationItem);
                     break;
                 case credit_card:
@@ -162,7 +160,52 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     }
 
     private void displayPaymentNotification(NotificationViewHolder holder, NotificationItem notificationItem) {
+        int headerTextColor;
+        String headerText;
+        String messageText;
+        int imageBackground;
+        int imageIcon;
+        if (notificationItem.getMetadata().getEvent().getPayload().isPaymentSuccessful()) {
+            headerTextColor = R.color.emerald;
+            imageBackground = R.drawable.round_list_tv_green;
+            imageIcon = R.drawable.icn_payment_confirm_check;
+            if (notificationItem.getMetadata().getEvent().getPayload().getScheduledPaymentExecution() == null) {
+                headerText = Label.getLabel("consentForms.notification.regularPayment.header.successfulPaymentNotification");
+                messageText = Label.getLabel("consentForms.notification.regularPayment.message.successfulPaymentNotification");
+            } else {
+                headerText = Label.getLabel("consentForms.notification.scheduledPayment.header.successfulPaymentNotification");
+                messageText = Label.getLabel("consentForms.notification.scheduledPayment.message.successfulPaymentNotification");
+            }
 
+        } else {
+            headerTextColor = R.color.remove_red;
+            imageBackground = R.drawable.round_list_tv_red;
+            imageIcon = R.drawable.icn_close;
+            if (notificationItem.getMetadata().getEvent().getPayload().getScheduledPaymentExecution() == null) {
+                headerText = Label.getLabel("consentForms.notification.regularPayment.header.successfulPaymentNotification");
+                messageText = Label.getLabel("consentForms.notification.regularPayment.message.successfulPaymentNotification");
+            } else {
+                headerText = Label.getLabel("consentForms.notification.scheduledPayment.header.failedPaymentNotification");
+                messageText = Label.getLabel("consentForms.notification.scheduledPayment.message.failedPaymentNotification");
+            }
+        }
+        holder.image.setVisibility(View.VISIBLE);
+        holder.initials.setBackgroundResource(imageBackground);
+        holder.initials.setText(" ");
+        holder.image.setImageDrawable(ContextCompat.getDrawable(context, imageIcon));
+
+
+        holder.header.setText(headerText);
+        holder.header.setTextColor(ContextCompat.getColor(context, headerTextColor));
+
+        String practiceName = "";//notificationItem.getPayload().getPracticeName();
+        holder.message.setTextColor(ContextCompat.getColor(context, R.color.charcoal));
+        SpannableStringBuilder stringBuilder = new SpannableStringBuilder(String
+                .format(messageText, practiceName));
+        stringBuilder.setSpan(new CarePayCustomSpan(context, CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD),
+                stringBuilder.length() - practiceName.length(), stringBuilder.length(),
+                Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        holder.message.setText(stringBuilder);
     }
 
     private void displayCreditCardNotification(NotificationViewHolder holder, NotificationItem notificationItem) {
