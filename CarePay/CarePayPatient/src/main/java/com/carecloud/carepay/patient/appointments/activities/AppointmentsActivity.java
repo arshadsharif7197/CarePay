@@ -8,6 +8,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 
+import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
@@ -17,7 +18,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibrary.R;
+
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
@@ -59,8 +60,8 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         getWorkflowServiceHelper().execute(getTransitionAppointments(), new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
-                replaceFragment(ShimmerFragment.newInstance(R.layout.appointment_list_header,
-                        R.layout.item_appointment), false);
+                replaceFragment(ShimmerFragment.newInstance(R.layout.shimmer_default_header,
+                        R.layout.shimmer_default_item), false);
             }
 
             @Override

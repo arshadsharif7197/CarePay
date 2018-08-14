@@ -32,6 +32,9 @@
         android:id="@+id/shimmerContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:shimmer_base_alpha="0.6"
+        app:shimmer_base_color="@color/black"
+        app:shimmer_shape="linear"
         android:orientation="vertical">
 
         <android.support.v7.widget.LinearLayoutCompat

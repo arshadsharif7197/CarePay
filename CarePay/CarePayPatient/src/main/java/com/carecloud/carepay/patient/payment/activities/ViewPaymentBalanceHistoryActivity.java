@@ -117,8 +117,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         getWorkflowServiceHelper().execute(transitionDTO, new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
-                ShimmerFragment fragment = ShimmerFragment
-                        .newInstance(R.layout.item_appointment);
+                ShimmerFragment fragment = ShimmerFragment.newInstance(R.layout.shimmer_default_item);
                 fragment.setTabbed(true, Label.getLabel("payment_patient_balance_tab"),
                         Label.getLabel("payment_patient_history_tab"));
                 replaceFragment(fragment, false);

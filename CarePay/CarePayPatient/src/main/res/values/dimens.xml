@@ -4,5 +4,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="menuItemBadgeSize">25dp</dimen>
     <dimen name="menuItemBadeTextSize">13sp</dimen>
-    <dimen name="shimmerTextHeight">30dp</dimen>
+    <dimen name="shimmerTextHeight">20dp</dimen>
+    <dimen name="shimmerSubTextHeight">15dp</dimen>
 </resources>

@@ -74,7 +74,8 @@ public class RetailActivity extends MenuPatientActivity implements RetailPatient
         getWorkflowServiceHelper().execute(getTransitionRetail(), new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
-                replaceFragment(ShimmerFragment.newInstance(R.layout.item_appointment), false);
+                replaceFragment(ShimmerFragment.newInstance(R.layout.shimmer_retail_item, false),
+                        false);
             }
 
             @Override

@@ -198,7 +198,7 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
             @Override
             public void onPreExecute() {
                 if (showShimmerEffect) {
-                    replaceFragment(ShimmerFragment.newInstance(R.layout.item_appointment), true);
+                    replaceFragment(ShimmerFragment.newInstance(R.layout.shimmer_default_item), true);
                 } else {
                     showProgressDialog();
                 }

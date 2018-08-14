@@ -48,7 +48,7 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Consent
         getWorkflowServiceHelper().execute(getTransitionForms(), new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
-                replaceFragment(ShimmerFragment.newInstance(R.layout.item_appointment), false);
+                replaceFragment(ShimmerFragment.newInstance(R.layout.shimmer_default_item), false);
             }
 
             @Override
