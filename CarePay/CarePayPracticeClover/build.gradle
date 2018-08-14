@@ -97,7 +97,7 @@ android {
             buildConfigField 'String', 'ENVIRONMENT', '"Staging"'
         }
         demo {
-            applicationId "com.carecloud.carepay.practice.clover"
+            applicationId "com.carecloud.carepay.practice.demo"
             buildConfigField 'String', 'API_BASE_URL', '"https://breeze-entry.careclouddemo.com"'
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.careclouddemo.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
             buildConfigField 'String', 'X_API_KEY', '"Z6WciAK2WiauCKTdc5daYbteUrnwFio83zPfb39a"'
