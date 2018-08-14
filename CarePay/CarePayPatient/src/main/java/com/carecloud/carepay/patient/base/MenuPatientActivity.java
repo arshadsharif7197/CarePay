@@ -110,6 +110,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity
 
         ApplicationPreferences.getInstance().setPracticesWithBreezeEnabled(myHealthDto.getPayload()
                 .getPracticeInformation());
+        ApplicationPreferences.getInstance().setUserPractices(myHealthDto.getPayload()
+                .getPracticeInformation());
 
         ApplicationPreferences.getInstance().setUserFullName(StringUtil
                 .getCapitalizedUserName(myHealthDto.getPayload().getDemographicDTO().getPersonalDetails().getFirstName(),

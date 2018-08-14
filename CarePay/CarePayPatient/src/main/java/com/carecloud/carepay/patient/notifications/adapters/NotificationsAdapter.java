@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.notifications.models.NotificationItem;
 import com.carecloud.carepay.patient.notifications.models.NotificationType;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayUtil;
@@ -198,7 +200,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.header.setText(headerText);
         holder.header.setTextColor(ContextCompat.getColor(context, headerTextColor));
 
-        String practiceName = "";//notificationItem.getPayload().getPracticeName();
+        UserPracticeDTO practice = ApplicationPreferences.getInstance()
+                .getUserPractice(notificationItem.getMetadata().getPracticeId());
+        String practiceName = practice.getPracticeName();
         holder.message.setTextColor(ContextCompat.getColor(context, R.color.charcoal));
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder(String
                 .format(messageText, practiceName));
