@@ -27,6 +27,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPo
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,7 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
     protected String paymentsTitleString;
     protected String payLaterString;
     protected double total;
+    protected double nonBalanceTotal;
     protected boolean mustAddToExisting = false;
 
 
@@ -216,6 +218,9 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
     }
 
     protected boolean isPaymentPlanAvailable(String practiceId, double balance) {
+        if(SystemUtil.safeSubtract(balance, nonBalanceTotal) <= 0){
+            return false;
+        }
         if (practiceId != null) {
             for (PaymentsPayloadSettingsDTO payloadSettingsDTO : paymentDTO.getPaymentPayload().getPaymentSettings()) {
                 if (practiceId.equals(payloadSettingsDTO.getMetadata().getPracticeId())) {

@@ -25,17 +25,18 @@ import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 
-import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_BALANCES;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_BALANCES;
+
 /**
  * Created by jorge on 02/01/17
  */
-public class PatientPendingPaymentFragment extends BaseFragment implements PaymentBalancesAdapter.OnBalanceListItemClickListener {
+public class PatientPendingPaymentFragment extends BaseFragment
+        implements PaymentBalancesAdapter.OnBalanceListItemClickListener {
     private PaymentsModel paymentsDTO;
     private View noPaymentsLayout;
     private SwipeRefreshLayout refreshLayout;
@@ -89,7 +90,8 @@ public class PatientPendingPaymentFragment extends BaseFragment implements Payme
 
         if (hasPayments() || hasPaymentPlans()) {
             PaymentBalancesAdapter paymentBalancesAdapter = new PaymentBalancesAdapter(
-                    getActivity(), getPendingBalancesList(paymentsDTO), PatientPendingPaymentFragment.this, paymentsDTO);
+                    getActivity(), getPendingBalancesList(paymentsDTO),
+                    PatientPendingPaymentFragment.this, paymentsDTO);
             historyRecyclerView.setAdapter(paymentBalancesAdapter);
         } else {
             showNoPaymentsLayout();
@@ -104,14 +106,14 @@ public class PatientPendingPaymentFragment extends BaseFragment implements Payme
 
     @Override
     public void onBalanceListItemClickListener(PaymentsBalancesItem pendingBalance) {
-        if(!refreshLayout.isRefreshing()) {
+        if (!refreshLayout.isRefreshing()) {
             callback.loadPaymentAmountScreen(pendingBalance, paymentsDTO);
         }
     }
 
     @Override
     public void onPaymentPlanItemClickListener(PaymentPlanDTO paymentPlan) {
-        if(!refreshLayout.isRefreshing()) {
+        if (!refreshLayout.isRefreshing()) {
             callback.loadPaymentPlanScreen(paymentsDTO, paymentPlan);
         }
     }
@@ -131,15 +133,17 @@ public class PatientPendingPaymentFragment extends BaseFragment implements Payme
             }
         }
         //add payment plans
-        if(!paymentModel.getPaymentPayload().getActivePlans(null).isEmpty()) {
+        if (!paymentModel.getPaymentPayload().getActivePlans(null).isEmpty()) {
             Map<String, UserPracticeDTO> practiceMap = new HashMap<>();
-            for(UserPracticeDTO userPracticeDTO : paymentModel.getPaymentPayload().getUserPractices()){
+            for (UserPracticeDTO userPracticeDTO : paymentModel.getPaymentPayload().getUserPractices()) {
                 practiceMap.put(userPracticeDTO.getPracticeId(), userPracticeDTO);
             }
 
             for (PaymentPlanDTO paymentPlanDTO : paymentModel.getPaymentPayload().getActivePlans(null)) {
-                if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanStatus().equals(PaymentPlanDetailsDTO.STATUS_PROCESSING)) {
-                    paymentPlanDTO.getMetadata().setPracticeName(practiceMap.get(paymentPlanDTO.getMetadata().getPracticeId()).getPracticeName());
+                if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanStatus()
+                        .equals(PaymentPlanDetailsDTO.STATUS_PROCESSING)) {
+                    paymentPlanDTO.getMetadata().setPracticeName(practiceMap.get(paymentPlanDTO
+                            .getMetadata().getPracticeId()).getPracticeName());
                     list.add(paymentPlanDTO);
                 }
             }
@@ -148,11 +152,11 @@ public class PatientPendingPaymentFragment extends BaseFragment implements Payme
     }
 
     private boolean hasPayments() {
-        if(!paymentsDTO.getPaymentPayload().getPatientBalances().isEmpty()){
-            for(PatientBalanceDTO patientBalanceDTO : paymentsDTO.getPaymentPayload().getPatientBalances()){
-                if(!patientBalanceDTO.getBalances().isEmpty()){
-                    for(PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()){
-                        if(!pendingBalanceDTO.getPayload().isEmpty()){
+        if (!paymentsDTO.getPaymentPayload().getPatientBalances().isEmpty()) {
+            for (PatientBalanceDTO patientBalanceDTO : paymentsDTO.getPaymentPayload().getPatientBalances()) {
+                if (!patientBalanceDTO.getBalances().isEmpty()) {
+                    for (PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()) {
+                        if (!pendingBalanceDTO.getPayload().isEmpty()) {
                             return true;
                         }
                     }
@@ -163,10 +167,11 @@ public class PatientPendingPaymentFragment extends BaseFragment implements Payme
         return false;
     }
 
-    private boolean hasPaymentPlans(){
-        if(!paymentsDTO.getPaymentPayload().getActivePlans(null).isEmpty()){
-            for(PaymentPlanDTO paymentPlanDTO : paymentsDTO.getPaymentPayload().getActivePlans(null)){
-                if(paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanStatus().equals(PaymentPlanDetailsDTO.STATUS_PROCESSING)){
+    private boolean hasPaymentPlans() {
+        if (!paymentsDTO.getPaymentPayload().getActivePlans(null).isEmpty()) {
+            for (PaymentPlanDTO paymentPlanDTO : paymentsDTO.getPaymentPayload().getActivePlans(null)) {
+                if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanStatus()
+                        .equals(PaymentPlanDetailsDTO.STATUS_PROCESSING)) {
                     return true;
                 }
             }

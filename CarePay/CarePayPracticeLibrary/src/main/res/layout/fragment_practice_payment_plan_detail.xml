@@ -213,6 +213,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/footer"
+
             android:layout_below="@id/amountsContainer"
             android:background="@color/white">
 
@@ -250,7 +251,6 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/dimen_15dp"
                         android:paddingEnd="@dimen/dimen_15dp"
@@ -263,10 +263,10 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:gravity="start"
-                            android:textSize="@dimen/text_size_24sp"
                             android:textColor="@color/textview_default_textcolor"
+                            android:textSize="@dimen/text_size_24sp"
                             app:customAssetFont="gotham_rounded_book"
-                            tools:text="$20.00 scheduled for 04/20/2018"/>
+                            tools:text="$20.00 scheduled for 04/20/2018" />
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                             android:id="@+id/editScheduledPaymentButton"
@@ -275,8 +275,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/dimen_15dp"
                             android:background="@drawable/blue_border_rounded_button_selector"
-                            android:paddingTop="@dimen/dimen_8dp"
                             android:paddingBottom="@dimen/dimen_8dp"
+                            android:paddingTop="@dimen/dimen_8dp"
                             android:textColor="@color/colorPrimary"
                             android:textSize="@dimen/text_size_15"
                             app:customAssetFont="gotham_rounded_medium"

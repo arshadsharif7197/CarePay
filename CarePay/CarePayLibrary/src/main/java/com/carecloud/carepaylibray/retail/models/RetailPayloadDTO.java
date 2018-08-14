@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.retail;
+package com.carecloud.carepaylibray.retail.models;
 
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;

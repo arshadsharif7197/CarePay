@@ -100,7 +100,11 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
                 total = 0;
                 if (paymentList != null && paymentList.size() > 0) {
                     for (PendingBalancePayloadDTO payment : paymentList.get(0).getPayload()) {
-                        total += payment.getAmount();
+                        total = SystemUtil.safeAdd(total, payment.getAmount());
+                        if(!payment.getType().equals(PendingBalancePayloadDTO.PATIENT_BALANCE)){
+                            //not an amount that can be added to a plan
+                            nonBalanceTotal = SystemUtil.safeAdd(nonBalanceTotal, payment.getAmount());
+                        }
                     }
 
                     fillDetailAdapter(view, getAllPendingBalancePayloads(paymentList));

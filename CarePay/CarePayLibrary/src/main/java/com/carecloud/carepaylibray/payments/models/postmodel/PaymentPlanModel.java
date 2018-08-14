@@ -15,10 +15,21 @@ import java.lang.annotation.RetentionPolicy;
 public class PaymentPlanModel {
     public static final String FREQUENCY_MONTHLY = "monthly";
     public static final String FREQUENCY_WEEKLY = "weekly";
+    public static final String MONDAY = "1";
+    public static final String TUESDAY = "2";
+    public static final String WEDNESDAY = "3";
+    public static final String THURSDAY = "4";
+    public static final String FRIDAY = "5";
+
 
     @Retention(RetentionPolicy.SOURCE)
     @StringDef({FREQUENCY_MONTHLY, FREQUENCY_WEEKLY})
     public @interface FrequencyDef {
+    }
+
+    @Retention(RetentionPolicy.SOURCE)
+    @StringDef({MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY})
+    public @interface daysDef {
     }
 
     @SerializedName("start_dt")
@@ -29,7 +40,10 @@ public class PaymentPlanModel {
     private String frequencyCode;
 
     @SerializedName("day_of_month")
-    private int dayOfMonth;
+    private Integer dayOfMonth;
+
+    @SerializedName("day_of_week")
+    private Integer dayOfWeek;
 
     @SerializedName("installments")
     private int installments;
@@ -60,12 +74,20 @@ public class PaymentPlanModel {
         this.frequencyCode = frequencyCode;
     }
 
-    public int getDayOfMonth() {
+    public Integer getDayOfMonth() {
         return dayOfMonth;
     }
 
     public void setDayOfMonth(int dayOfMonth) {
         this.dayOfMonth = dayOfMonth;
+    }
+
+    public Integer getDayOfWeek() {
+        return dayOfWeek;
+    }
+
+    public void setDayOfWeek(int dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
     }
 
     public int getInstallments() {
@@ -102,6 +124,8 @@ public class PaymentPlanModel {
 
     public String getFrequencyString() {
         switch (frequencyCode) {
+            case PaymentPlanModel.FREQUENCY_WEEKLY:
+                return Label.getLabel("payment_plan_frequency_week");
             case PaymentPlanModel.FREQUENCY_MONTHLY:
             default:
                 return Label.getLabel("payment_plan_frequency_month");
