@@ -13,12 +13,17 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.retail.models.RetailItemDto;
+import com.carecloud.carepaylibray.retail.models.RetailItemOptionChoiceDto;
+import com.carecloud.carepaylibray.retail.models.RetailItemOptionDto;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lmenendez on 3/16/17.
@@ -71,7 +76,15 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
         holder.productName.setText(retailItem.getName());
         SpannableString spannableString = new SpannableString(Html.fromHtml(retailItem.getDescription()));
         holder.subTitle.setText(spannableString);
-        holder.price.setText(StringUtil.getFormattedBalanceAmount(retailItem.getPrice()));
+        Map<Integer, RetailItemOptionChoiceDto> defaultOptions = new HashMap<>();
+        for(int i=0; i<retailItem.getOptions().size(); i++){
+            RetailItemOptionDto optionDto = retailItem.getOptions().get(i);
+            defaultOptions.put(i, optionDto.getChoices().get(optionDto.getDefaultChoice()));
+        }
+
+        double priceModification = retailItem.getPriceModification(defaultOptions);
+        holder.price.setText(StringUtil.getFormattedBalanceAmount(SystemUtil
+                .safeAdd(retailItem.getPrice(), priceModification)));
         holder.productPlaceholder.setText(StringUtil.getShortName(retailItem.getName()));
 
         int size = context.getResources().getDimensionPixelSize(R.dimen.dimen_60dp);
