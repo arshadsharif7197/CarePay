@@ -74,9 +74,9 @@ public class PopupPickerWindow extends PopupWindow {
      */
     public void flipPopup(boolean showOnTop){
         if(showOnTop){
-            popupBackgroundView.setBackgroundResource(R.drawable.popup_picker_bg_top);
+            popupBackgroundView.setBackgroundResource(R.drawable.popup_picker_bg_top_new);
         }else{
-            popupBackgroundView.setBackgroundResource(R.drawable.popup_picker_bg);
+            popupBackgroundView.setBackgroundResource(R.drawable.popup_picker_bg_new);
         }
     }
 }

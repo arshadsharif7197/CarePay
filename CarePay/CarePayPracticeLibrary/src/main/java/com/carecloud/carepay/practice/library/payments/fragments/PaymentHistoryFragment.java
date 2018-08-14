@@ -135,7 +135,9 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
             plansLabel = String.format(Label.getLabel("payment_plan_count"), plans);
         }
         TextView viewPlans = (TextView) view.findViewById(R.id.viewPaymentPlans);
-        viewPlans.setVisibility(plans > 0 ? View.VISIBLE : View.GONE);
+//        hiding this button but leaving the old code just in case...
+//        viewPlans.setVisibility(plans > 0 ? View.VISIBLE : View.GONE);
+        viewPlans.setVisibility(View.GONE);
         viewPlans.setText(plansLabel);
         viewPlans.setOnClickListener(new View.OnClickListener() {
             @Override
