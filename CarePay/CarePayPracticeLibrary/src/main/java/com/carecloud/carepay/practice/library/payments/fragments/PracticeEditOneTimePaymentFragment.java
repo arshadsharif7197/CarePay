@@ -114,7 +114,7 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
                         Label.getLabel("payment.oneTimePayment.scheduled.delete.subtitle"),
                         StringUtil.getFormattedBalanceAmount(scheduledPaymentModel.getPayload().getAmount()),
                         DateUtil.getInstance()
-                                .setDateRaw(scheduledPaymentModel.getPayload().getPaymentDate())
+                                .setDateRaw(this.scheduledPaymentModel.getPayload().getPaymentDate())
                                 .toStringWithFormatMmSlashDdSlashYyyy()),
                 Label.getLabel("button_no"),
                 Label.getLabel("button_yes"));

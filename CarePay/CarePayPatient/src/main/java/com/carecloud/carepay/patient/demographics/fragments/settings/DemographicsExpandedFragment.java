@@ -241,10 +241,12 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                 R.id.maritalStatusEditText, R.id.maritalStatusOptional, selectedMaritalStatus,
                 Label.getLabel("demographics_marital_status"));
 
+/*
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getReferralSource(),
                 personalInfoSection.getProperties().getReferralSource(), R.id.referralSourceDemographicsLayout,
                 R.id.referralSourceInputLayout, R.id.referralSourceEditText,
                 R.id.referralSourceOptional, selectedReferralSource, Label.getLabel("demographics_referral_source"));
+*/
 
         setUpPrimaryCarePhysician(view, demographicPayload.getPrimaryPhysician(), demogarphic.getPrimaryPhysician());
         setUpReferringPhysician(view, demographicPayload.getReferringPhysician(), demogarphic.getReferringPhysician());

@@ -49,6 +49,9 @@ public class PaymentsLinksDTO {
     @SerializedName("shop")
     @Expose
     private TransitionDTO shop = new TransitionDTO();
+    @SerializedName("products")
+    @Expose
+    private TransitionDTO products = new TransitionDTO();
 
     /**
      * @return The paymentsSelfRefresh
@@ -208,5 +211,13 @@ public class PaymentsLinksDTO {
 
     public void setShop(TransitionDTO shop) {
         this.shop = shop;
+    }
+
+    public TransitionDTO getProducts() {
+        return products;
+    }
+
+    public void setProducts(TransitionDTO products) {
+        this.products = products;
     }
 }
