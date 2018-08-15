@@ -23,6 +23,7 @@ import com.carecloud.carepay.mini.models.queue.QueuePaymentRecord;
 import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
 import com.carecloud.carepay.mini.services.QueueUploadService;
 import com.carecloud.carepay.mini.services.carepay.RestCallServiceCallback;
+import com.carecloud.carepay.mini.utils.ChipInterceptorUtil;
 import com.carecloud.carepay.mini.utils.Defs;
 import com.carecloud.carepay.mini.utils.JsonHelper;
 import com.carecloud.carepay.mini.utils.StringUtil;
@@ -118,7 +119,8 @@ public class WelcomeActivity extends FullScreenActivity {
                 wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL, TAG);
             }
             wifiLock.acquire();
-
+            ChipInterceptorUtil.getInstance().startIntercept(this,
+                    ChipInterceptorUtil.CLOVER_CARD_INTERCEPT_ACTION);
         }
 
     }
@@ -136,6 +138,7 @@ public class WelcomeActivity extends FullScreenActivity {
             if(wifiLock != null){
                 wifiLock.release();
             }
+            ChipInterceptorUtil.getInstance().stopIntercept(this);
         }
         super.onStop();
     }
