@@ -22,6 +22,7 @@ import com.carecloud.carepaylibray.payments.models.ScheduledPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
 import java.util.Calendar;
@@ -95,27 +96,28 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                deletePayment();
+                deletePayment(scheduledPaymentModel);
             }
         });
 
         updateLayout();
     }
 
-    private void deletePayment(){
+    private void deletePayment(ScheduledPaymentModel scheduledPaymentModel){
         ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(
                 Label.getLabel("payment.oneTimePayment.scheduled.delete.title"),
                 String.format(
                         Label.getLabel("payment.oneTimePayment.scheduled.delete.subtitle"),
+                        StringUtil.getFormattedBalanceAmount(scheduledPaymentModel.getPayload().getAmount()),
                         DateUtil.getInstance()
-                                .setDateRaw(scheduledPaymentModel.getPayload().getPaymentDate())
+                                .setDateRaw(this.scheduledPaymentModel.getPayload().getPaymentDate())
                                 .toStringWithFormatMmSlashDdSlashYyyy()),
                 Label.getLabel("button_no"),
                 Label.getLabel("button_yes"));
         confirmDialogFragment.setCallback(confirmDeleteCallback);
-        confirmDialogFragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+        confirmDialogFragment.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
-            public void onCancel(DialogInterface dialog) {
+            public void onDismiss(DialogInterface dialog) {
                 showDialog();
             }
         });

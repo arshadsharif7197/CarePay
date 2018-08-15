@@ -15,8 +15,8 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
-import com.carecloud.carepaylibray.retail.RetailModel;
-import com.carecloud.carepaylibray.retail.RetailPracticeDTO;
+import com.carecloud.carepaylibray.retail.models.RetailModel;
+import com.carecloud.carepaylibray.retail.models.RetailPracticeDTO;
 import com.carecloud.carepaylibray.retail.interfaces.RetailInterface;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 

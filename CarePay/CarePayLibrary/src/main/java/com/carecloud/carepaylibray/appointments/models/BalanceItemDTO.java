@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.appointments.models;
 
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
+import com.carecloud.carepaylibray.retail.models.RetailItemPayload;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -65,6 +66,12 @@ public class BalanceItemDTO {
     @SerializedName("max_amount")
     @Expose(serialize = false)
     private double maxAmount;
+    @SerializedName("retail_item")
+    @Expose
+    private boolean retailItem;
+    @SerializedName("retail_payload")
+    @Expose
+    private RetailItemPayload retailPayload;
 
     private transient double amountInPaymentPlan = 0.0;
     private transient double amountSelected = 0.0;
@@ -247,5 +254,21 @@ public class BalanceItemDTO {
 
     public boolean isSelected() {
         return selected;
+    }
+
+    public boolean isRetailItem() {
+        return retailItem;
+    }
+
+    public void setRetailItem(boolean retailItem) {
+        this.retailItem = retailItem;
+    }
+
+    public RetailItemPayload getRetailPayload() {
+        return retailPayload;
+    }
+
+    public void setRetailPayload(RetailItemPayload retailPayload) {
+        this.retailPayload = retailPayload;
     }
 }

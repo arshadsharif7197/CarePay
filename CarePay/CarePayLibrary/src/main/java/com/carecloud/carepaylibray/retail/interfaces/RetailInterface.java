@@ -8,8 +8,8 @@ import com.carecloud.carepaylibray.payments.interfaces.ChooseCreditCardInterface
 import com.carecloud.carepaylibray.payments.interfaces.PaymentInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.retail.RetailModel;
-import com.carecloud.carepaylibray.retail.RetailPracticeDTO;
+import com.carecloud.carepaylibray.retail.models.RetailModel;
+import com.carecloud.carepaylibray.retail.models.RetailPracticeDTO;
 
 /**
  * Created by lmenendez on 11/20/17

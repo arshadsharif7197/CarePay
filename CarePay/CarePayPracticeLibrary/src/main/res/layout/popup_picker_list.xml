@@ -3,7 +3,7 @@
     android:id="@+id/popup_container"
     android:layout_width="@dimen/popup_picker_width"
     android:layout_height="@dimen/popup_picker_height"
-    android:background="@drawable/popup_picker_bg"
+    android:background="@drawable/popup_picker_bg_new"
     android:orientation="vertical">
 
     <android.support.v7.widget.RecyclerView

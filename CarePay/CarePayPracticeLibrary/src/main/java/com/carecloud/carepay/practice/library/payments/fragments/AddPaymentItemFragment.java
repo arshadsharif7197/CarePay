@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.adapter.AddPaymentItemAdapter;
+import com.carecloud.carepay.practice.library.payments.interfaces.AddPaymentItemCallback;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
@@ -28,19 +29,14 @@ import java.util.List;
  * Created by lmenendez on 3/16/17
  */
 
-public class AddPaymentItemFragment extends BaseDialogFragment implements AddPaymentItemAdapter.AddPaymentItemCallback {
-    public interface AddItemCallback{
-        void addChargeItem(SimpleChargeItem chargeItem);
-
-        void onDismissAddItemFragment();
-    }
+public class AddPaymentItemFragment extends BaseDialogFragment implements AddPaymentItemAdapter.PaymentItemSelectedCallback {
 
     private SearchView searchView;
     private RecyclerView searchRecycler;
     private List<SimpleChargeItem> templateItems = new ArrayList<>();
     private List<SimpleChargeItem> simpleChargeItems = new ArrayList<>();
 
-    private AddItemCallback callback;
+    private AddPaymentItemCallback callback;
 
     @Override
     public void onCreate(Bundle icicle){
@@ -159,7 +155,7 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
 
     }
 
-    public void setCallback(AddItemCallback callback) {
+    public void setCallback(AddPaymentItemCallback callback) {
         this.callback = callback;
     }
 

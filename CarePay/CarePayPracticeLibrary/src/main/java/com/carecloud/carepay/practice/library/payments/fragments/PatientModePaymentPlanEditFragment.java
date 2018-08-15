@@ -9,6 +9,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanEditFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
@@ -33,6 +34,16 @@ public class PatientModePaymentPlanEditFragment extends PaymentPlanEditFragment 
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         getPaymentPlanSettings(ApplicationPreferences.getInstance().getPracticeId());
+        if (frequencyOptions.size() > 1) {
+            if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode()
+                    .equals(PaymentPlanDetailsDTO.FREQUENCY_MONTHLY)) {
+                frequencyOption = frequencyOptions.get(0);
+            } else {
+                frequencyOption = frequencyOptions.get(1);
+            }
+        } else {
+            frequencyOption = frequencyOptions.get(0);
+        }
     }
 
     @Override
@@ -60,7 +71,9 @@ public class PatientModePaymentPlanEditFragment extends PaymentPlanEditFragment 
     @Override
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
-        view.findViewById(R.id.bottomContainer).setVisibility(View.GONE);
+        if (view.findViewById(R.id.bottomContainer) != null) {
+            view.findViewById(R.id.bottomContainer).setVisibility(View.GONE);
+        }
     }
 
     @Override
