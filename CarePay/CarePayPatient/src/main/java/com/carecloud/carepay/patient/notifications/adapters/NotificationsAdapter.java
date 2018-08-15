@@ -172,11 +172,11 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             imageBackground = R.drawable.round_list_tv_green;
             imageIcon = R.drawable.icn_payment_confirm_check;
             if (notificationItem.getMetadata().getEvent().getPayload().getScheduledPaymentExecution() == null) {
-                headerText = Label.getLabel("consentForms.notification.regularPayment.header.successfulPaymentNotification");
-                messageText = Label.getLabel("consentForms.notification.regularPayment.message.successfulPaymentNotification");
+                headerText = Label.getLabel("notifications.notificationList.regularPayment.header.successfulPaymentNotification");
+                messageText = Label.getLabel("notifications.notificationList.regularPayment.message.successfulPaymentNotification");
             } else {
-                headerText = Label.getLabel("consentForms.notification.scheduledPayment.header.successfulPaymentNotification");
-                messageText = Label.getLabel("consentForms.notification.scheduledPayment.message.successfulPaymentNotification");
+                headerText = Label.getLabel("notifications.notificationList.scheduledPayment.header.successfulPaymentNotification");
+                messageText = Label.getLabel("notifications.notificationList.scheduledPayment.message.successfulPaymentNotification");
             }
 
         } else {
@@ -184,11 +184,11 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             imageBackground = R.drawable.round_list_tv_red;
             imageIcon = R.drawable.icn_close;
             if (notificationItem.getMetadata().getEvent().getPayload().getScheduledPaymentExecution() == null) {
-                headerText = Label.getLabel("consentForms.notification.regularPayment.header.successfulPaymentNotification");
-                messageText = Label.getLabel("consentForms.notification.regularPayment.message.successfulPaymentNotification");
+                headerText = Label.getLabel("notifications.notificationList.regularPayment.header.failedPaymentNotification");
+                messageText = Label.getLabel("notifications.notificationList.regularPayment.message.failedPaymentNotification");
             } else {
-                headerText = Label.getLabel("consentForms.notification.scheduledPayment.header.failedPaymentNotification");
-                messageText = Label.getLabel("consentForms.notification.scheduledPayment.message.failedPaymentNotification");
+                headerText = Label.getLabel("notifications.notificationList.scheduledPayment.header.failedPaymentNotification");
+                messageText = Label.getLabel("notifications.notificationList.scheduledPayment.message.failedPaymentNotification");
             }
         }
         holder.image.setVisibility(View.VISIBLE);
