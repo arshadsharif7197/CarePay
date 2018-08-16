@@ -107,15 +107,12 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
+                cancel();
                 if (paymentPlanPostModel != null) {
                     callback.onStartPaymentPlan(paymentsModel, paymentPlanPostModel);
                 }
             }
         });
-        saveCardOnFileCheckBox.setChecked(false);
-        saveCardOnFileCheckBox.setEnabled(true);
-
     }
 
     @Override

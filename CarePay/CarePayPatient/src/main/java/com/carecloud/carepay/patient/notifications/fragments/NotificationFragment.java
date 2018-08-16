@@ -17,7 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.demographics.fragments.ConfirmDialogFragment;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepay.patient.notifications.adapters.NotificationsAdapter;
 import com.carecloud.carepay.patient.notifications.models.NotificationItem;
 import com.carecloud.carepay.patient.notifications.models.NotificationType;
@@ -27,6 +27,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.SwipeViewHolder;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SwipeHelper;
@@ -94,6 +95,7 @@ public class NotificationFragment extends BaseFragment
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         supportedNotificationTypes.add(NotificationType.appointment);
+        supportedNotificationTypes.add(NotificationType.pending_forms);
         setHasOptionsMenu(true);
         Bundle args = getArguments();
         if (args != null) {
@@ -173,7 +175,7 @@ public class NotificationFragment extends BaseFragment
                         Label.getLabel("notification.notificationList.button.label.deleteAllMessage"),
                         Label.getLabel("cancel"),
                         Label.getLabel("confirm"));
-        fragment.setCallback(new ConfirmDialogFragment.ConfirmationCallback() {
+        fragment.setCallback(new ConfirmationCallback() {
             @Override
             public void onConfirm() {
                 deleteAllNotifications();
@@ -352,8 +354,13 @@ public class NotificationFragment extends BaseFragment
                                                        @NonNull Set<NotificationType> notificationTypes) {
         List<NotificationItem> filteredList = new ArrayList<>();
         for (NotificationItem notificationItem : notificationItems) {
-            NotificationType notificationType = notificationItem.getPayload().getNotificationType();
+            NotificationType notificationType = notificationItem.getMetadata().getNotificationType();
             if (notificationType != null && notificationTypes.contains(notificationType)) {
+                if (notificationType.equals(NotificationType.pending_forms)
+                        && notificationItem.getPayload().getPracticeName() == null) {
+                    //Prevent showing old notifications without pending form data
+                    continue;
+                }
                 filteredList.add(notificationItem);
             }
         }

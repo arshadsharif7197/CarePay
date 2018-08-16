@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--Common-->
+    <dimen name="errorTextSize">10sp</dimen>
+    <dimen name="hint_floating_size">10sp</dimen>
+    <dimen name="textview_default_textsize">17sp</dimen>
+    <dimen name="dialog_profile_pic_size">88dp</dimen>
+
     <!-- Default dimens which will be use for any default styling  -->
     <dimen name="dimen_1dp">1dp</dimen>
+    <dimen name="dimen_2dp">2dp</dimen>
     <dimen name="dimen_3dp">3dp</dimen>
     <dimen name="dimen_4dp">4dp</dimen>
     <dimen name="dimen_5dp">5dp</dimen>
@@ -76,7 +83,7 @@
     <dimen name="text_size_38">38sp</dimen>
     <dimen name="text_size_60">60sp</dimen>
 
-    <dimen name="textview_default_textsize">17sp</dimen>
+
     <dimen name="button_textsize_medium">15sp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
@@ -125,7 +132,6 @@
     <dimen name="respons_toolbar_elevation">7dp</dimen>
     <dimen name="respons_button_margin_left_right">17dp</dimen>
     <dimen name="dialog_header_height">205dp</dimen>
-    <dimen name="dialog_profile_pic_size">88dp</dimen>
     <dimen name="dialog_width">300dp</dimen>
     <dimen name="dialog_height">672dp</dimen>
 
@@ -227,7 +233,7 @@
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
-    <dimen name="nav_header_height">160dp</dimen>
+    <dimen name="nav_header_height">170dp</dimen>
     <dimen name="nav_image_padding">6dp</dimen>
 
     <dimen name="marginleftright">17dp</dimen>
@@ -360,7 +366,6 @@
     <dimen name="payment_method_layout_label_drawable_padding">8dp</dimen>
     <dimen name="payment_method_layout_label_margin_top">26dp</dimen>
     <dimen name="payment_method_layout_checkbox_margin">13dp</dimen>
-    <dimen name="hint_floating_size">10dp</dimen>
 
     <dimen name="input_text_layout_end_margin">14dp</dimen>
     <dimen name="input_text_layout_start_margin">14dp</dimen>
@@ -462,5 +467,12 @@
     <dimen name="dimen_38dp">38dp</dimen>
     <dimen name="fragmentDialogPaddingBottom">20dp</dimen>
     <dimen name="fragmentDialogPaddingTop">0dp</dimen>
+    <dimen name="closeIconSize">19dp</dimen>
+    <dimen name="calendarSelectedDimen">10dp</dimen>
+    <dimen name="lineItemTextSize">17sp</dimen>
+    <dimen name="roundBorderBottonVerticalPadding">10dp</dimen>
+    <dimen name="paymentDetailLabelTextSize">16sp</dimen>
+    <dimen name="paymentDetailAmountTextSize">15sp</dimen>
+    <dimen name="paymentDetailDateTextSize">12sp</dimen>
 
 </resources>

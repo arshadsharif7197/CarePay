@@ -13,6 +13,10 @@ public class PracticeForm implements Serializable {
     @Expose
     private JsonObject payload;
 
+    @SerializedName("metadata")
+    @Expose
+    private PracticeFormMetadata metadata = new PracticeFormMetadata();
+
     private transient String lastModifiedDate;
 
     private boolean selected;
@@ -23,6 +27,14 @@ public class PracticeForm implements Serializable {
 
     public void setPayload(JsonObject payload) {
         this.payload = payload;
+    }
+
+    public PracticeFormMetadata getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(PracticeFormMetadata metadata) {
+        this.metadata = metadata;
     }
 
     public String getLastModifiedDate() {

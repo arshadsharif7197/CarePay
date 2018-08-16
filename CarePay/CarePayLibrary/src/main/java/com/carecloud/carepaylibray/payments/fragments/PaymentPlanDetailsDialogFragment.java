@@ -15,6 +15,7 @@ import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customdialogs.BasePaymentDetailsFragmentDialog;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
@@ -34,7 +35,7 @@ import java.util.Locale;
 public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragmentDialog {
 
     private PaymentsModel paymentsModel;
-    private PaymentPlanDTO paymentPlanDTO;
+    protected PaymentPlanDTO paymentPlanDTO;
     private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 
     private PaymentPlanEditInterface callback;
@@ -140,7 +141,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
             }
         });
 
-        ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload().
+        final ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload().
                 findScheduledPayment(paymentPlanDTO);
         if(scheduledPayment != null){
             View scheduledPaymentLayout = view.findViewById(R.id.scheduledPaymentLayout);
@@ -150,6 +151,13 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
                     StringUtil.getFormattedBalanceAmount(scheduledPayment.getPayload().getAmount()),
                     DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal());
             scheduledPaymentMessage.setText(message);
+            scheduledPaymentLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callback.onStartEditScheduledPayment(paymentsModel, paymentPlanDTO, scheduledPayment);
+                    dismiss();
+                }
+            });
         }
     }
 
@@ -164,13 +172,25 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
     }
 
     private String getNextDate(PaymentPlanPayloadDTO planPayload) {
-        int drawDay = planPayload.getPaymentPlanDetails().getDayOfMonth();
+        int drawDay;
         Calendar calendar = Calendar.getInstance();
-        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
-        if (currentDay > drawDay) {
-            calendar.add(Calendar.MONTH, 1);
+        if (planPayload.getPaymentPlanDetails().getFrequencyCode()
+                .equals(PaymentPlanDetailsDTO.FREQUENCY_MONTHLY)) {
+            drawDay = planPayload.getPaymentPlanDetails().getDayOfMonth();
+            int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+            if (currentDay > drawDay) {
+                calendar.add(Calendar.MONTH, 1);
+            }
+            calendar.set(Calendar.DAY_OF_MONTH, drawDay);
+        } else {
+            int dayOfWeek = planPayload.getPaymentPlanDetails().getDayOfWeek() + 1; //Monday ==2
+            if (calendar.get(Calendar.DAY_OF_WEEK) > dayOfWeek) {
+                calendar.add(Calendar.DAY_OF_WEEK, dayOfWeek + 1);
+            } else {
+                calendar.add(Calendar.DAY_OF_WEEK, dayOfWeek - calendar.get(Calendar.DAY_OF_WEEK));
+            }
+            drawDay = calendar.get(Calendar.DAY_OF_MONTH);
         }
-        calendar.set(Calendar.DAY_OF_MONTH, drawDay);
 
         ApplicationPreferences preferences = ((ISession) getActivity()).getApplicationPreferences();
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMM ", new Locale(preferences.getUserLanguage()));

@@ -14,10 +14,12 @@ import java.lang.annotation.RetentionPolicy;
 
 public class PaymentSettingsBalanceRangeRule {
     public static final String INTERVAL_MONTHS = "months";
+    public static final String INTERVAL_WEEKS = "weeks";
 
     @Retention(RetentionPolicy.SOURCE)
-    @StringDef({INTERVAL_MONTHS})
-    public @interface IntervalRange {}
+    @StringDef({INTERVAL_MONTHS, INTERVAL_WEEKS})
+    public @interface IntervalRange {
+    }
 
     @SerializedName("min_balance")
     @Expose

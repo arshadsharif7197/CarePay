@@ -33,6 +33,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
@@ -121,7 +122,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
         void goOneStepBack();
 
-        void showRemovePrimaryInsuranceDialog(HomeAlertDialogFragment.HomeAlertInterface callback);
+        void showRemovePrimaryInsuranceDialog(ConfirmationCallback callback);
     }
 
     /**
@@ -590,9 +591,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             DemographicInsurancePayloadDTO insurance = demographicDTO.getPayload().getDemographics()
                     .getPayload().getInsurances().get(editedIndex);
             if (insurance.getInsuranceType().toLowerCase().equals("primary")) {
-                callback.showRemovePrimaryInsuranceDialog(new HomeAlertDialogFragment.HomeAlertInterface() {
+                callback.showRemovePrimaryInsuranceDialog(new ConfirmationCallback() {
                     @Override
-                    public void onAcceptExit() {
+                    public void onConfirm() {
                         removeInsurance();
                     }
                 });

@@ -42,6 +42,6 @@
         android:paddingBottom="@dimen/drawable_padding"
         android:paddingTop="@dimen/drawable_padding"
         android:textColor="@color/checkbox_text_color_selector"
-        android:textSize="@dimen/custom_filter_text_size"
+        android:textSize="@dimen/cutomFilterItemTextSize"
         app:customAssetFont="proxima_nova_semi_bold" />
 </LinearLayout>

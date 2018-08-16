@@ -18,7 +18,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
@@ -28,7 +27,6 @@ import java.util.regex.Matcher;
 public class FormsFragment extends BaseWebFormFragment {
 
     private ConsentFormDTO consentFormDTO;
-    private List<PracticeForm> consentFormList;
 
     public static FormsFragment newInstance(WorkflowDTO workflowDTO) {
         Bundle args = new Bundle();
@@ -45,8 +43,8 @@ public class FormsFragment extends BaseWebFormFragment {
         Gson gson = new Gson();
         String jsonString = bundle.getString(CarePayConstants.INTAKE_BUNDLE);
         consentFormDTO = gson.fromJson(jsonString, ConsentFormDTO.class);
-        consentFormList = consentFormDTO.getMetadata().getDataModels().getPracticeForms();
-        setTotalForms(consentFormList.size());
+        formsList = consentFormDTO.getMetadata().getDataModels().getPracticeForms();
+        setTotalForms(formsList.size());
     }
 
     @Override
@@ -60,13 +58,13 @@ public class FormsFragment extends BaseWebFormFragment {
     protected void displayNextForm() {
         int displayedFormsIndex = getDisplayedFormsIndex();
         if (getDisplayedFormsIndex() < getTotalForms()) {
-            PracticeForm practiceForm = consentFormList.get(displayedFormsIndex);
+            PracticeForm practiceForm = formsList.get(displayedFormsIndex);
             JsonObject payload = practiceForm.getPayload();
             JsonObject userResponse = null;
             if (!jsonFormSaveResponseArray.isEmpty() && jsonFormSaveResponseArray.size() > displayedFormsIndex) {
                 userResponse = jsonFormSaveResponseArray.get(displayedFormsIndex);
             } else {
-                String uuid = payload.get("uuid").toString().replace("\"", "");
+                String uuid = payload.get("uuid").getAsString();
                 for (ConsentFormUserResponseDTO response : consentFormDTO.getPayload().getResponses()) {
                     if (uuid.equals(response.getFormId())) {
                         JsonObject json = new JsonObject();

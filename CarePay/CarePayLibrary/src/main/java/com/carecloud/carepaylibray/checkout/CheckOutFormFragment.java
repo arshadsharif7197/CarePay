@@ -38,7 +38,6 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
 
     private AppointmentsResultModel appointmentsResultModel;
     private List<JsonObject> jsonFormSaveResponseArray = new ArrayList<>();
-    private List<PracticeForm> formsList;
     private CheckOutInterface callback;
 
     /**

@@ -20,15 +20,22 @@ import com.carecloud.carepay.practice.library.payments.adapter.PaymentDistributi
 import com.carecloud.carepay.practice.library.payments.adapter.PopupPickLocationAdapter;
 import com.carecloud.carepay.practice.library.payments.adapter.PopupPickProviderAdapter;
 import com.carecloud.carepay.practice.library.payments.adapter.PopupPickerAdapter;
+import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerPayments;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerWindow;
+import com.carecloud.carepay.practice.library.payments.interfaces.AddPaymentItemCallback;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentNavigationCallback;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.base.models.UserAuthPermissions;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
@@ -40,15 +47,26 @@ import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanLineItem;
+import com.carecloud.carepaylibray.retail.models.RetailBillingPerson;
+import com.carecloud.carepaylibray.retail.models.RetailItemDto;
+import com.carecloud.carepaylibray.retail.models.RetailItemOptionChoiceDto;
+import com.carecloud.carepaylibray.retail.models.RetailItemPayload;
+import com.carecloud.carepaylibray.retail.models.RetailLineItemMetadata;
+import com.carecloud.carepaylibray.retail.models.RetailLineItemOrderItem;
+import com.carecloud.carepaylibray.retail.models.RetailLineItemSelectedOption;
+import com.carecloud.carepaylibray.retail.models.RetailProductsModel;
 import com.carecloud.carepaylibray.utils.BounceHelper;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Created by lmenendez on 3/14/17
@@ -56,8 +74,8 @@ import java.util.Locale;
 
 public class PaymentDistributionFragment extends BaseDialogFragment
         implements PaymentDistributionAdapter.PaymentDistributionCallback, PopupPickerAdapter.PopupPickCallback,
-        AddPaymentItemFragment.AddItemCallback, PaymentDistributionEntryFragment.PaymentDistributionAmountCallback,
-        BounceHelper.BounceHelperListener {
+        AddPaymentItemCallback, PaymentDistributionEntryFragment.PaymentDistributionAmountCallback,
+        BounceHelper.BounceHelperListener, PopupPickerPayments.PaymentPopupListener {
 
     private TextView balanceTextView;
     private TextView paymentTotalTextView;
@@ -71,22 +89,29 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     private Button payButton;
     private Button paymentPlanButton;
     private View emptyBalanceLayout;
+    private View actionButton;
+    private View retailChargesLayout;
+    private RecyclerView retailChargesRecycler;
 
     private BounceHelper balanceViewSwipeHelper;
     private BounceHelper chargeViewSwipeHelper;
+    private BounceHelper retailViewSwipeHelper;
 
     private PopupPickerWindow locationPickerWindow;
     private PopupPickerWindow providerPickerWindow;
+    private PopupPickerPayments paymentsPickerWindow;
 
     private PaymentsModel paymentsModel;
     private List<BalanceItemDTO> balanceItems = new ArrayList<>();
     private List<BalanceItemDTO> chargeItems = new ArrayList<>();
+    private List<BalanceItemDTO> retailItems = new ArrayList<>();
 
     private PracticePaymentNavigationCallback callback;
 
     private double paymentAmount;
     private double balanceAmount;
     private double chargesAmount;
+    private double retailAmount;
     private double overPaymentAmount;
     private double unappliedCredit = 0D;
     private double originalUnapplied = 0D;
@@ -100,6 +125,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
     private boolean hasPaymentError = false;
     private UserAuthPermissions authPermissions;
+
+    private DemographicPayloadDTO patientDemographics;
 
     @Override
     public void onAttach(Context context) {
@@ -164,24 +191,38 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         ItemTouchHelper chargesTouchHelper = new ItemTouchHelper(chargeViewSwipeHelper);
         chargesTouchHelper.attachToRecyclerView(newChargesRecycler);
 
+        retailChargesLayout = view.findViewById(R.id.retail_charges_layout);
+        RecyclerView.LayoutManager retailLayoutManager = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.VERTICAL, false);
+        retailChargesRecycler = (RecyclerView) view.findViewById(R.id.retail_charges_recycler);
+        retailChargesRecycler.setLayoutManager(retailLayoutManager);
+        retailChargesRecycler.addOnScrollListener(scrollListener);
+
+        retailViewSwipeHelper = new BounceHelper(this);
+        ItemTouchHelper retailTouchHelper = new ItemTouchHelper(retailViewSwipeHelper);
+        retailTouchHelper.attachToRecyclerView(retailChargesRecycler);
+
         emptyBalanceLayout = view.findViewById(R.id.empty_balance_layout);
         TextView emptyMessage = (TextView) view.findViewById(R.id.no_payment_message);
         emptyMessage.setText(Label.getLabel("payment_balance_empty_payment_screen"));
+        emptyMessage.setVisibility(View.GONE);
 
         setInitialValues(view);
         setAdapter();
         setupPickerWindows();
         setDefaultProviderLocation();
 
-        View container = view.findViewById(R.id.container_main);
-        container.setSoundEffectsEnabled(false);
-        container.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener clearViews = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 clearPickers();
                 clearLastSwipeView();
             }
-        });
+        };
+        View container = view.findViewById(R.id.container_main);
+        container.setSoundEffectsEnabled(false);
+        container.setOnClickListener(clearViews);
+        emptyBalanceLayout.setOnClickListener(clearViews);
     }
 
     private void setupToolbar(View view, String titleString) {
@@ -232,7 +273,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
                     generatePaymentsModel();
                     if (!hasPaymentError) {
-                        callback.onPayButtonClicked(round(paymentAmount + chargesAmount), paymentsModel);
+                        callback.onPayButtonClicked(round(paymentAmount + chargesAmount + retailAmount), paymentsModel);
                         hideDialog();
                     }
                 }
@@ -254,12 +295,22 @@ public class PaymentDistributionFragment extends BaseDialogFragment
                 .getTransactionHistory().getPaymentHistoryList().isEmpty();
         boolean hasPlans = !paymentsModel.getPaymentPayload()
                 .getFilteredPlans(getApplicationMode().getUserPracticeDTO().getPracticeId()).isEmpty();
-        historyButton.setVisibility(hasHistory || hasPlans ? View.VISIBLE : View.INVISIBLE);
+//        historyButton.setVisibility(hasHistory || hasPlans ? View.VISIBLE : View.INVISIBLE);
         historyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 callback.showPaymentHistory(paymentsModel);
                 hideDialog();
+            }
+        });
+
+        actionButton = view.findViewById(R.id.action_button);
+        actionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int offset = view.getWidth() / 2 - paymentsPickerWindow.getWidth() / 2;
+                paymentsPickerWindow.showAsDropDown(view, offset, 3);
+                view.setSelected(true);
             }
         });
 
@@ -282,8 +333,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             }
 
             if (patientBalanceDTO != null) {
-                String patientNameString = patientBalanceDTO.getDemographics().getPayload()
-                        .getPersonalDetails().getFullName();
+                patientDemographics = patientBalanceDTO.getDemographics().getPayload();
+                String patientNameString = patientDemographics.getPersonalDetails().getFullName();
 
                 patientNameString = StringUtil.capitalize(patientNameString);
                 setupToolbar(view, StringUtil.getLabelForView(patientNameString));
@@ -350,7 +401,17 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             adapter.notifyDataSetChanged();
         }
 
-        if (balanceItems.isEmpty() && chargeItems.isEmpty()) {
+        if (retailChargesRecycler.getAdapter() == null) {
+            PaymentDistributionAdapter adapter = new PaymentDistributionAdapter(getContext(), retailItems,
+                    this, PaymentDistributionAdapter.PaymentRowType.RETAIL);
+            retailChargesRecycler.setAdapter(adapter);
+        } else {
+            PaymentDistributionAdapter adapter = (PaymentDistributionAdapter) retailChargesRecycler.getAdapter();
+            adapter.setBalanceItems(retailItems);
+            adapter.notifyDataSetChanged();
+        }
+
+        if (balanceItems.isEmpty() && chargeItems.isEmpty() && retailItems.isEmpty()) {
             emptyBalanceLayout.setVisibility(View.VISIBLE);
             paymentTotalTextView.setClickable(false);
         } else {
@@ -367,19 +428,28 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
     private void scrollAdapterToItem(BalanceItemDTO balanceItemDTO) {
         int position;
-        int locationY;
+        int locationY = -1;
         position = balanceItems.indexOf(balanceItemDTO);
         if (position > 0) {
             locationY = (int) balanceDetailsRecycler.getChildAt(position).getY();
-        } else {
-            //check the charges adapter
-            position = chargeItems.indexOf(balanceItemDTO);
-            if (position < 0) {
-                //not found
-                return;
-            }
-            locationY = (int) newChargesRecycler.getChildAt(position).getY();
         }
+        if(locationY < 0){
+            position = chargeItems.indexOf(balanceItemDTO);
+            if (position > 0) {
+                locationY = (int) newChargesRecycler.getChildAt(position).getY();
+            }
+        }
+        if(locationY < 0){
+            position = retailItems.indexOf(balanceItemDTO);
+            if (position > 0) {
+                locationY = (int) retailChargesRecycler.getChildAt(position).getY();
+            }
+        }
+        if(locationY < 0){
+            //not found
+            return;
+        }
+
         Log.d("RecyclerView", "Scroll to Position: " + position + " at: " + locationY);
         scrollView.smoothScrollTo(0, locationY + 10);
 
@@ -395,6 +465,13 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         providers = paymentsModel.getPaymentPayload().getProviders();
         PopupPickProviderAdapter providerAdapter = new PopupPickProviderAdapter(getContext(), providers, this);
         providerPickerWindow.setAdapter(providerAdapter);
+
+        boolean hasHistory = !paymentsModel.getPaymentPayload()
+                .getTransactionHistory().getPaymentHistoryList().isEmpty();
+        paymentsPickerWindow = new PopupPickerPayments(getContext(),
+                callback.getPracticeInfo(paymentsModel),
+                this,
+                hasHistory);
     }
 
     private double calculateTotalBalance() {
@@ -525,13 +602,17 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         int index = balanceItems.indexOf(balanceItem);
         if (index >= 0) {
             balanceDetailsRecycler.getAdapter().notifyItemChanged(index);
-        } else {
-            index = chargeItems.indexOf(balanceItem);
-            if (index >= 0) {
-                newChargesRecycler.getAdapter().notifyItemChanged(index);
-            }
+            return;
         }
-
+        index = chargeItems.indexOf(balanceItem);
+        if (index >= 0) {
+            newChargesRecycler.getAdapter().notifyItemChanged(index);
+            return;
+        }
+        index = retailItems.indexOf(balanceItem);
+        if (index >= 0) {
+            retailChargesRecycler.getAdapter().notifyItemChanged(index);
+        }
     }
 
 
@@ -544,7 +625,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             paymentTotalTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.lightning_yellow));
         }
 
-        double totalAmount = round(paymentAmount + chargesAmount);
+        double totalAmount = round(paymentAmount + chargesAmount + retailAmount);
         payButton.setEnabled(totalAmount > 0 && authPermissions.canMakePayment);
 
         setCurrency(paymentTotalTextView, totalAmount);
@@ -556,6 +637,10 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
     private void setChargeLayoutVisibility() {
         newChargesLayout.setVisibility(chargeItems.isEmpty() ? View.GONE : View.VISIBLE);
+    }
+
+    private void setRetailLayoutVisibility() {
+        retailChargesLayout.setVisibility(retailItems.isEmpty() ? View.GONE : View.VISIBLE);
     }
 
     private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
@@ -628,6 +713,15 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     }
 
     @Override
+    public void removeRetailItem(BalanceItemDTO retailItem) {
+        retailItems.remove(retailItem);
+        retailAmount = round(retailAmount - retailItem.getBalance());
+        updatePaymentAmount();
+        setAdapter();
+        setRetailLayoutVisibility();
+    }
+
+    @Override
     public void addNewCharge(double amount, SimpleChargeItem chargeItem) {
         showDialog();
         BalanceItemDTO balanceItemDTO = new BalanceItemDTO();
@@ -663,6 +757,45 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     }
 
     @Override
+    public void addRetailItem(RetailItemDto retailItem) {
+        callback.showRetailItemOptions(retailItem, this);
+        hideDialog();
+    }
+
+    @Override
+    public void addRetailItemWithOptions(RetailItemDto retailItemDto, int quantity, Map<Integer, RetailItemOptionChoiceDto> selectedOptions) {
+        double basePrice = retailItemDto.getPrice();
+        double priceModification = retailItemDto.getPriceModification(selectedOptions);
+
+        double amount = round(quantity * (basePrice + priceModification));
+        BalanceItemDTO retailItem = new BalanceItemDTO();
+        retailItem.setAmount(amount);
+        retailItem.setBalance(amount);
+        retailItem.setMaxAmount(amount);
+        retailItem.setDescription(retailItemDto.getName());
+        retailItem.setRetailItem(true);
+
+        RetailItemPayload retailPayload = new RetailItemPayload();
+        retailPayload.setQuantity(quantity);
+        retailPayload.setRetailItemDto(retailItemDto);
+        retailPayload.setSelectedOptions(selectedOptions);
+        retailItem.setRetailPayload(retailPayload);
+
+        if (defaultProvider != null) {
+            retailItem.setProvider(defaultProvider);
+        }
+        if (defaultLocation != null) {
+            retailItem.setLocation(defaultLocation);
+        }
+        retailItems.add(retailItem);
+        retailAmount = round(retailAmount + amount);
+        updatePaymentAmount();
+        setAdapter();
+        setRetailLayoutVisibility();
+        showDialog();
+    }
+
+    @Override
     public void onDismissAddItemFragment() {
         showDialog();
     }
@@ -672,17 +805,20 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         showDialog();
         paymentAmount = amount;
         chargesAmount = 0D;
+        retailAmount = 0D;
         updatePaymentAmount();
 
         resetInitialAmounts();
         balanceItems.clear();
         chargeItems.clear();
+        retailItems.clear();
         calculateTotalBalance();
 
         distributeAmountOverBalanceItems(amount);
 
         setAdapter();
         setChargeLayoutVisibility();
+        setRetailLayoutVisibility();
     }
 
     @Override
@@ -696,11 +832,14 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     private void clearPickers() {
         providerPickerWindow.dismiss();
         locationPickerWindow.dismiss();
+        paymentsPickerWindow.dismiss();
+        actionButton.setSelected(false);
     }
 
     private void clearLastSwipeView() {
         balanceViewSwipeHelper.clearLastSwipeView();
         chargeViewSwipeHelper.clearLastSwipeView();
+        retailViewSwipeHelper.clearLastSwipeView();
     }
 
 
@@ -749,6 +888,15 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             }
         }
 
+        for (BalanceItemDTO retailItem : retailItems) {
+            if (!isValidItem(retailItem)) {
+                isValid = false;
+                if (firstInvalidItem == null) {
+                    firstInvalidItem = retailItem;
+                }
+            }
+        }
+
         if (!isValid) {
             setAdapter();
         }
@@ -781,12 +929,16 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     private void generatePaymentsModel() {
         hasPaymentError = false;
         IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
-        postModel.setAmount(round(paymentAmount + chargesAmount));
+        postModel.setAmount(round(paymentAmount + chargesAmount + retailAmount));
         for (BalanceItemDTO balanceItemDTO : balanceItems) {
             addPaymentObject(balanceItemDTO, postModel);
         }
         for (BalanceItemDTO balanceItemDTO : chargeItems) {
             addPaymentObject(balanceItemDTO, postModel);
+        }
+
+        if(!retailItems.isEmpty()) {
+            generateRetailOrder(postModel);
         }
 
         if (overPaymentAmount > 0) {
@@ -846,6 +998,66 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         }
     }
 
+    private void generateRetailOrder(IntegratedPaymentPostModel postModel){
+        IntegratedPaymentLineItem retailPaymentLineItem = new IntegratedPaymentLineItem();
+        retailPaymentLineItem.setRetailMetadata(new RetailLineItemMetadata());
+        double subtotal = 0D;
+        double total = 0D;
+        for(BalanceItemDTO balanceItemDTO : retailItems){
+            RetailItemDto retailItemDto = balanceItemDTO.getRetailPayload().getRetailItemDto();
+
+            RetailLineItemOrderItem orderItem = new RetailLineItemOrderItem();
+            orderItem.setName(retailItemDto.getName());
+            orderItem.setSku(retailItemDto.getSku());
+
+            double amount = round(retailItemDto.getPrice() +
+                    retailItemDto.getPriceModification(balanceItemDTO.
+                            getRetailPayload().getSelectedOptions()));
+            int quantity = balanceItemDTO.getRetailPayload().getQuantity();
+            subtotal = round(subtotal + (quantity * amount));
+            total = round(total + (quantity * amount));//todo add tax amount & maybe shipping
+
+            orderItem.setPrice(amount);
+            orderItem.setQuantity(quantity);
+
+            Map<Integer, RetailItemOptionChoiceDto> selectedOptions = balanceItemDTO.getRetailPayload().getSelectedOptions();
+            for (int i=0; i<retailItemDto.getOptions().size(); i++) {
+                RetailLineItemSelectedOption selectedOption = new RetailLineItemSelectedOption();
+                selectedOption.setName(retailItemDto.getOptions().get(i).getName());
+                selectedOption.setValue(selectedOptions.get(i).getName());
+
+                orderItem.getSelectedOptions().add(selectedOption);
+            }
+
+            retailPaymentLineItem.getRetailMetadata().getOrder().getItems().add(orderItem);
+        }
+
+        retailPaymentLineItem.setAmount(total);
+        retailPaymentLineItem.setDescription("Retail Order");
+        retailPaymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_RETAIL);
+        retailPaymentLineItem.setLocationID(retailItems.get(0).getLocation().getGuid());
+        retailPaymentLineItem.setProviderID(retailItems.get(0).getProvider().getGuid());
+        retailPaymentLineItem.getRetailMetadata().getOrder().setSubTotal(subtotal);
+        retailPaymentLineItem.getRetailMetadata().getOrder().setTotal(total);
+
+        if(patientDemographics != null){
+            RetailBillingPerson billingPerson = retailPaymentLineItem.getRetailMetadata()
+                    .getOrder().getBillingPerson();
+            billingPerson.setName(patientDemographics.getPersonalDetails().getFullName());
+            billingPerson.setStreet(patientDemographics.getAddress().getAddress1());
+            if(!StringUtil.isNullOrEmpty(patientDemographics.getAddress().getAddress2())){
+                billingPerson.setStreet(billingPerson.getStreet() + " " +
+                        patientDemographics.getAddress().getAddress2());
+            }
+            billingPerson.setCity(patientDemographics.getAddress().getCity());
+            billingPerson.setStateCode(patientDemographics.getAddress().getState());
+            billingPerson.setPostalCode(patientDemographics.getAddress().getZipcode());
+            billingPerson.setPhone(patientDemographics.getAddress().getPhone());
+        }
+
+        postModel.addLineItem(retailPaymentLineItem);
+    }
+
     private static double round(double amount) {
         return (double) Math.round(amount * 100) / 100;
     }
@@ -855,4 +1067,60 @@ public class PaymentDistributionFragment extends BaseDialogFragment
                 && paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().size() > 0
                 && paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload().size() > 0;
     }
+
+    @Override
+    public void onHistoryAction() {
+        callback.showPaymentHistory(paymentsModel);
+        actionButton.setSelected(false);
+        hideDialog();
+    }
+
+    @Override
+    public void onAddChargeAction() {
+        callback.lookupChargeItem(paymentsModel.getPaymentPayload().getSimpleChargeItems(),
+                PaymentDistributionFragment.this);
+        actionButton.setSelected(false);
+        hideDialog();
+    }
+
+    @Override
+    public void onAddRetailAction() {
+        actionButton.setSelected(false);
+        hideDialog();
+        if(paymentsModel.getPaymentPayload().getRetailProducts().getProducts().getItems().isEmpty()) {
+            UserPracticeDTO practiceDTO = callback.getPracticeInfo(paymentsModel);
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("practice_id", practiceDTO.getPracticeId());
+            queryMap.put("practice_mgmt", practiceDTO.getPracticeMgmt());
+
+            TransitionDTO getProducts = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getProducts();
+            getWorkflowServiceHelper().execute(getProducts, getRetailProductsCallback, queryMap);
+        }else{
+            callback.showRetailItems(paymentsModel, PaymentDistributionFragment.this);
+        }
+    }
+
+
+    private WorkflowServiceCallback getRetailProductsCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            PaymentsModel retailPaymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+            RetailProductsModel retailProductsModel = retailPaymentsModel.getPaymentPayload().getRetailProducts();
+            paymentsModel.getPaymentPayload().setRetailProducts(retailProductsModel);
+            callback.showRetailItems(paymentsModel, PaymentDistributionFragment.this);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
+        }
+    };
+
 }

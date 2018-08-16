@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <group android:checkableBehavior="single">
         <item
@@ -19,11 +19,13 @@
         <item
             android:id="@+id/nav_messages"
             android:icon="@drawable/icn_messages"
-            android:title="Messages" />
+            android:title="Messages"
+            app:actionLayout="@layout/layout_badge_item" />
         <item
             android:id="@+id/nav_forms"
             android:icon="@drawable/ic_forms"
-            android:title="Forms" />
+            android:title="Forms"
+            app:actionLayout="@layout/layout_badge_item" />
         <item
             android:id="@+id/nav_purchase"
             android:icon="@drawable/icn_drawer_purchase_default"
@@ -38,10 +40,10 @@
             <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/nav_settings"
-                    android:title="Settings" />  <!--android:icon="@drawable/ic_settings_white_24dp"-->
+                    android:title="Settings" />
                 <item
                     android:id="@+id/nav_logout"
-                    android:title="Logout" />  <!--android:icon="@drawable/ic_power_settings_new_white_24dp"-->
+                    android:title="Logout" />
             </group>
         </menu>
     </item>

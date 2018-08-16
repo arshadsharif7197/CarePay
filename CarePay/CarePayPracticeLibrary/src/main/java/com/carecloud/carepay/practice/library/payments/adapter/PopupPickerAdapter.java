@@ -22,7 +22,7 @@ public abstract class PopupPickerAdapter extends RecyclerView.Adapter<PopupPicke
 
     protected BalanceItemDTO selectedBalanceItem;
 
-    public PopupPickerAdapter(Context context){
+    public PopupPickerAdapter(Context context) {
         this.context = context;
     }
 
@@ -30,7 +30,7 @@ public abstract class PopupPickerAdapter extends RecyclerView.Adapter<PopupPicke
         this.selectedBalanceItem = selectedBalanceItem;
     }
 
-    public interface PopupPickCallback{
+    public interface PopupPickCallback {
         void pickLocation(LocationDTO location, BalanceItemDTO balanceItem);
 
         void pickProvider(ProviderDTO provider, BalanceItemDTO balanceItem);
@@ -44,7 +44,7 @@ public abstract class PopupPickerAdapter extends RecyclerView.Adapter<PopupPicke
     }
 
 
-    public class PopupListViewHolder extends RecyclerView.ViewHolder{
+    public class PopupListViewHolder extends RecyclerView.ViewHolder {
 
         private TextView name;
 

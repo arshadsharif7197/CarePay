@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/icn_close" />
+            android:src="@drawable/icn_arrow_left" />
     </FrameLayout>
 
     <RelativeLayout
@@ -111,7 +111,7 @@
                     android:textAllCaps="true"
                     android:textColor="@color/textview_default_textcolor"
                     android:textSize="@dimen/text_size_18sp"
-                    app:customAssetFont="proxima_nova_extra_bold"
+                    app:customAssetFont="proxima_nova_semi_bold"
                     breeze:textKey="payment.paymentPlanDashboard.section.title.completed"
                     tools:text="Completed"/>
 
