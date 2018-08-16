@@ -131,4 +131,30 @@
     <dimen name="paymentDetailAmountTextSize">12sp</dimen>
     <dimen name="paymentDetailDateTextSize">10sp</dimen>
 
+    <!--Payments Activity-->
+    <dimen name="findPatientButtonRightMargin">35dp</dimen>
+    <dimen name="mainScreensTitleTextSize">17sp</dimen>
+    <dimen name="paymentContainerBottomMargin">5dp</dimen>
+    <dimen name="paymentContainerHorizontalMargin">70dp</dimen>
+    <dimen name="changeDateHorizontalPadding">10dp</dimen>
+    <dimen name="changeDateVerticalPadding">5dp</dimen>
+    <dimen name="listPatientsMarginTop">10dp</dimen>
+    <dimen name="patientItemHorizontalMargin">5dp</dimen>
+    <dimen name="paymentContainerTopMargin">15dp</dimen>
+
+    <!--Find patient Dialog-->
+    <dimen name="findPatientDialogTitleTextSize">30sp</dimen>
+    <dimen name="findPatientDialogTitleBottomMargin">20dp</dimen>
+    <dimen name="findPatientSearchBoxWidth">400dp</dimen>
+    <dimen name="findPatientSearchBoxHeight">45dp</dimen>
+    <dimen name="findPatientSearchBoxHorizontalMargin">20dp</dimen>
+    <dimen name="findPatientSearchBoxVerticalPadding">12dp</dimen>
+    <dimen name="findPatientSearchBoxHorizontalPadding">20dp</dimen>
+    <dimen name="findPatientSearchBoxTextSize">18sp</dimen>
+    <dimen name="findPatientDialogResultsTopMargin">5dp</dimen>
+    <dimen name="findPatientDialogResultsHorizontalPadding">5dp</dimen>
+    <dimen name="patientNotFoundTextSize">14sp</dimen>
+    <dimen name="patientDOBTextSize">13sp</dimen>
+    <dimen name="findPatientItemVerticalPadding">7dp</dimen>
+
 </resources>

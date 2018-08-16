@@ -82,7 +82,7 @@ public class TwoColumnPatientListView extends RecyclerView {
     }
 
     public void applyFilter(FilterModel filterModel) {
-         listAdapter.applyFilter(new MapFilterModel(filterModel));
+        listAdapter.applyFilter(new MapFilterModel(filterModel));
     }
 
     /**

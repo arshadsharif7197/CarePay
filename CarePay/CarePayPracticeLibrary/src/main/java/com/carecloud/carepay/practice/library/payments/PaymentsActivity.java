@@ -28,7 +28,6 @@ import com.carecloud.carepay.practice.library.payments.dialogs.PracticeModePayme
 import com.carecloud.carepay.practice.library.payments.dialogs.PracticePaymentPlanDetailsDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.AddPaymentItemFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.AddRetailItemFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PatientModePaymentPlanEditFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionEntryFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentHistoryFragment;
@@ -179,8 +178,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         }
 
         findViewById(R.id.practice_payment_find_patient).setOnClickListener(onFindPatientClick());
-        findViewById(R.id.practice_payment_filter_label).setOnClickListener(onFilterIconClick());
-        findViewById(R.id.practice_payment_go_back).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.filterTextView).setOnClickListener(onFilterIconClick());
+        findViewById(R.id.goBackTextview).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();
@@ -309,11 +308,10 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
             @Override
             public void onClick(View view) {
-                TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getFindPatient();
-
+                TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata()
+                        .getPaymentsLinks().getFindPatient();
                 FindPatientDialog findPatientDialog = new FindPatientDialog(PaymentsActivity.this,
-                        transitionDTO,
-                        Label.getLabel("practice_payments_filter_find_patient_by_name"));
+                        transitionDTO, Label.getLabel("practice_payments_filter_find_patient_by_name"));
                 setFindPatientOnItemClickedListener(findPatientDialog);
                 findPatientDialog.show();
             }
@@ -951,7 +949,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void onScheduleOneTimePayment(final PaymentsModel paymentsModel, final PaymentPlanDTO paymentPlanDTO, Date paymentDate) {
+    public void onScheduleOneTimePayment(final PaymentsModel paymentsModel,
+                                         final PaymentPlanDTO paymentPlanDTO, Date paymentDate) {
         PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
                 .newInstance(paymentsModel, paymentPlanDTO, false, paymentDate);
         fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -975,9 +974,11 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             scheduledPayment = paymentsModel.getPaymentPayload().getScheduledOneTimePayments().get(0);
         }
 
-        List<ScheduledPaymentModel> scheduledPaymentModels = this.paymentsModel.getPaymentPayload().getScheduledOneTimePayments();
+        List<ScheduledPaymentModel> scheduledPaymentModels = this.paymentsModel.getPaymentPayload()
+                .getScheduledOneTimePayments();
         for (ScheduledPaymentModel scheduledPaymentModel : scheduledPaymentModels) {
-            if (scheduledPaymentModel.getMetadata().getOneTimePaymentId().equals(scheduledPayment.getMetadata().getOneTimePaymentId())) {
+            if (scheduledPaymentModel.getMetadata().getOneTimePaymentId().equals(scheduledPayment
+                    .getMetadata().getOneTimePaymentId())) {
                 scheduledPaymentModels.remove(scheduledPayment);
                 break;
             }
@@ -994,7 +995,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void showDeleteScheduledPaymentConfirmation(WorkflowDTO workflowDTO, ScheduledPaymentPayload scheduledPaymentPayload) {
+    public void showDeleteScheduledPaymentConfirmation(WorkflowDTO workflowDTO,
+                                                       ScheduledPaymentPayload scheduledPaymentPayload) {
         showSuccessToast(String.format(
                 Label.getLabel("payment.oneTimePayment.scheduled.delete.success"),
                 StringUtil.getFormattedBalanceAmount(scheduledPaymentPayload.getAmount()),
@@ -1176,8 +1178,11 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void onStartEditScheduledPayment(final PaymentsModel paymentsModel, final PaymentPlanDTO paymentPlanDTO, ScheduledPaymentModel scheduledPaymentModel) {
-        PracticeEditOneTimePaymentFragment fragment = PracticeEditOneTimePaymentFragment.newInstance(paymentsModel, 0, paymentPlanDTO, scheduledPaymentModel);
+    public void onStartEditScheduledPayment(final PaymentsModel paymentsModel,
+                                            final PaymentPlanDTO paymentPlanDTO,
+                                            ScheduledPaymentModel scheduledPaymentModel) {
+        PracticeEditOneTimePaymentFragment fragment = PracticeEditOneTimePaymentFragment
+                .newInstance(paymentsModel, 0, paymentPlanDTO, scheduledPaymentModel);
         fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {

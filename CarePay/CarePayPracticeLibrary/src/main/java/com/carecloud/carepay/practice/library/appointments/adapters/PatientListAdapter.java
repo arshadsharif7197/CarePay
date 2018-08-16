@@ -108,7 +108,6 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.patient_list_header_layout, parent, false);
             return new HeaderViewHolder(view);
         }
-
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.patient_list_item_layout, parent, false);
         return new CardViewHolder(view);
     }
@@ -116,10 +115,8 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         final CardViewPatient patient = filteredPatients.get(position);
-
         if (null == patient.raw) {
             bindHeaderViewHolder((HeaderViewHolder) holder, patient);
-
         } else {
             bindCardViewHolder((CardViewHolder) holder, patient);
         }
@@ -164,7 +161,6 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if (filteredPatients != null) {
             return filteredPatients.size();
         }
-
         return 0;
     }
 
@@ -216,7 +212,6 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             if (null != patient.appointmentStartTime && !DateUtil.isSameDay(dateTime, patient.appointmentStartTime)) {
                 dateTime = patient.appointmentStartTime;
-
                 if (countByDay % 2 == 1) {
                     filteredPatients.add(new CardViewPatient());
                 }
