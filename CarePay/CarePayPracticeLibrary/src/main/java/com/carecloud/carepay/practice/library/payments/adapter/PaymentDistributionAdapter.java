@@ -189,9 +189,9 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
                 @Override
                 public void onClick(View view) {
                     resetSwipedLayoutView(holder);
-                    if(rowType == PaymentRowType.NEW_CHARGE) {
+                    if (rowType == PaymentRowType.NEW_CHARGE) {
                         callback.removeCharge(balanceItem);
-                    }else if(rowType == PaymentRowType.RETAIL){
+                    } else if (rowType == PaymentRowType.RETAIL) {
                         callback.removeRetailItem(balanceItem);
                     }
                 }

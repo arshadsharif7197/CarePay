@@ -9,6 +9,8 @@
     <dimen name="dialog_width">510dp</dimen>
     <dimen name="profile_pic_size">60dp</dimen>
     <dimen name="dialog_profile_pic_size">88dp</dimen>
+    <dimen name="commonButtonHeight">50dp</dimen>
+    <dimen name="buttonStrokeWidth">2dp</dimen>
 
     <!--Language-->
     <dimen name="langSpinnerTextSize">20sp</dimen>
@@ -150,5 +152,32 @@
     <dimen name="patientNotFoundTextSize">15sp</dimen>
     <dimen name="patientDOBTextSize">15sp</dimen>
     <dimen name="findPatientItemVerticalPadding">11dp</dimen>
+
+    <!--Dots Menu-->
+    <dimen name="dotSize">3dp</dimen>
+    <dimen name="dotHorizontalMargin">12dp</dimen>
+    <dimen name="dotSemiHorizontalMargin">6dp</dimen>
+
+    <!--Distribution Fragment-->
+    <dimen name="payment_distibution_dialog_height">600dp</dimen>
+    <dimen name="payment_distribution_dialog_width">860dp</dimen>
+    <dimen name="toolbarTitleTextSize">26sp</dimen>
+    <dimen name="toolbarLayoutHeight">64dp</dimen>
+    <dimen name="amountsContainerPadding">8dp</dimen>
+    <dimen name="actionButtonWidth">88dp</dimen>
+    <dimen name="actionButtonHeight">38dp</dimen>
+    <dimen name="actionButtonMargin">8dp</dimen>
+    <dimen name="actionButtonPadding">12dp</dimen>
+    <dimen name="amountLabelTextSize">16sp</dimen>
+    <dimen name="roundedValueVerticalPadding">8dp</dimen>
+    <dimen name="roundedValueHorizontalPadding">16dp</dimen>
+    <dimen name="distributionButtonContainersPadding">8dp</dimen>
+    <dimen name="distributionItemHeight">81dp</dimen>
+    <dimen name="distributionItemTextSize">16sp</dimen>
+    <dimen name="distributionItemShortNameSize">50dp</dimen>
+    <dimen name="distributionPlanInfoTextSize">13sp</dimen>
+    <dimen name="distributionCellPadding">8dp</dimen>
+    <dimen name="distributionItemAmountTextSize">20sp</dimen>
+    <dimen name="popUpRecyclerMargin">5dp</dimen>
 
 </resources>

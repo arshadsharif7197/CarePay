@@ -12,6 +12,8 @@
     <dimen name="textview_default_textsize">13sp</dimen>
     <dimen name="hint_floating_size">9dp</dimen>
     <dimen name="dialog_profile_pic_size">60dp</dimen>
+    <dimen name="commonButtonHeight">35dp</dimen>
+    <dimen name="buttonStrokeWidth">1dp</dimen>
 
     <!--Language-->
     <dimen name="langSpinnerTextSize">15sp</dimen>
@@ -156,5 +158,33 @@
     <dimen name="patientNotFoundTextSize">14sp</dimen>
     <dimen name="patientDOBTextSize">13sp</dimen>
     <dimen name="findPatientItemVerticalPadding">7dp</dimen>
+
+    <!--Dots menu-->
+    <dimen name="dotSize">2dp</dimen>
+    <dimen name="dotHorizontalMargin">8dp</dimen>
+    <dimen name="dotSemiHorizontalMargin">4dp</dimen>
+
+    <!--Distribution Fragment-->
+    <dimen name="payment_distribution_dialog_width">560dp</dimen>
+    <dimen name="payment_distibution_dialog_height">420dp</dimen>
+    <dimen name="toolbarTitleTextSize">20sp</dimen>
+    <dimen name="toolbarLayoutHeight">44dp</dimen>
+    <dimen name="amountsContainerPadding">4dp</dimen>
+    <dimen name="actionButtonWidth">50dp</dimen>
+    <dimen name="actionButtonHeight">30dp</dimen>
+    <dimen name="actionButtonMargin">4dp</dimen>
+    <dimen name="actionButtonPadding">10dp</dimen>
+    <dimen name="amountLabelTextSize">11sp</dimen>
+    <dimen name="roundedValueVerticalPadding">4dp</dimen>
+    <dimen name="roundedValueHorizontalPadding">10dp</dimen>
+    <dimen name="distributionButtonContainersPadding">4dp</dimen>
+    <dimen name="distributionItemHeight">58dp</dimen>
+    <dimen name="distributionItemTextSize">11sp</dimen>
+    <dimen name="distributionItemShortNameSize">40dp</dimen>
+    <dimen name="distributionPlanInfoTextSize">10sp</dimen>
+    <dimen name="distributionCellPadding">4dp</dimen>
+    <dimen name="distributionItemAmountTextSize">15sp</dimen>
+    <dimen name="popUpRecyclerMargin">5dp</dimen>
+
 
 </resources>
