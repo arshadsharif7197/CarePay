@@ -771,6 +771,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
 
     @Override
     public void onPaymentPlanCanceled(WorkflowDTO workflowDTO) {
+        showSuccessToast(Label.getLabel("payment.cancelPaymentPlan.success.banner.text"));
         getSupportFragmentManager().popBackStackImmediate(PatientModePaymentPlanDetailsDialogFragment.class.getName(),
                 FragmentManager.POP_BACK_STACK_INCLUSIVE);
         refreshBalance();
