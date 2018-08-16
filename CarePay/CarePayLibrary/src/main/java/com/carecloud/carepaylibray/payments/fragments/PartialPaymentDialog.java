@@ -103,7 +103,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         initViews();
     }
 
-    private void initViews() {
+    protected void initViews() {
         amountText = (EditText) findViewById(R.id.enterPartialAmountEditText);
         partialPaymentTotalAmountTitle = (TextView) findViewById(R.id.partialPaymentTotalAmountTitle);
         payPartialButton = (Button) findViewById(R.id.payPartialButton);

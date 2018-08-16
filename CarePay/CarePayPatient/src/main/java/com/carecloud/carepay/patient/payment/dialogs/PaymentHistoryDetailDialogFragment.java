@@ -88,17 +88,7 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
             TextView paymentPlanNameTextView = (TextView) view.findViewById(R.id.paymentPlanNameTextView);
             paymentPlanNameTextView.setText(historyItem.getPayload().getMetadata()
                     .getPaymentPlan().getDescription());
-            view.findViewById(R.id.receiptNumberLabel).setVisibility(View.GONE);
-            transactionNumber.setVisibility(View.GONE);
             paymentPlanNameTextView.setVisibility(View.VISIBLE);
-            view.findViewById(R.id.installmentsContainer).setVisibility(View.VISIBLE);
-            ((TextView) view.findViewById(R.id.installmentsTextView)).setText(String
-                    .valueOf(historyItem.getPayload().getMetadata().getPaymentPlan()
-                            .getPaymentPlanDetails().getInstallments()));
-            view.findViewById(R.id.completedOnContainer).setVisibility(View.VISIBLE);
-            DateUtil dateUtil = DateUtil.getInstance().setDateRaw(historyItem.getPayload().getDate());
-            ((TextView) view.findViewById(R.id.completedOnTextView)).setText(dateUtil
-                    .getDateAsMonthAbbrDayOrdinalYear());
         }
         TextView transactionType = (TextView) view.findViewById(R.id.transaction_type);
         transactionType.setText(paymentMethod);

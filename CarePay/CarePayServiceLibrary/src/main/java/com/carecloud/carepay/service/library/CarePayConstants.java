@@ -10,7 +10,7 @@ public class CarePayConstants {
 
     // Default data
 
-    public static final String DEFAULT_LANGUAGE = "English";
+    public static final String DEFAULT_LANGUAGE = "en";
 
     // Generic Constants
     public static final int HOME_PRESSED = 999;

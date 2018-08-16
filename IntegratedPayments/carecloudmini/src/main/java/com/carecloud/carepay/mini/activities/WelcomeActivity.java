@@ -20,7 +20,6 @@ import com.carecloud.carepay.mini.HttpConstants;
 import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
 import com.carecloud.carepay.mini.models.queue.QueuePaymentRecord;
-import com.carecloud.carepay.mini.models.queue.QueueUnprocessedPaymentRecord;
 import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
 import com.carecloud.carepay.mini.services.QueueUploadService;
 import com.carecloud.carepay.mini.services.carepay.RestCallServiceCallback;
@@ -40,8 +39,6 @@ import com.carecloud.shamrocksdk.payment.interfaces.PaymentRequestCallback;
 import com.carecloud.shamrocksdk.payment.interfaces.RefundRequestCallback;
 import com.carecloud.shamrocksdk.payment.models.PaymentRequest;
 import com.carecloud.shamrocksdk.payment.models.RefundRequest;
-import com.carecloud.shamrocksdk.payment.models.StreamRecord;
-import com.carecloud.shamrocksdk.payment.models.defs.StateDef;
 import com.carecloud.shamrocksdk.utils.AuthorizationUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -61,10 +58,11 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 public class WelcomeActivity extends FullScreenActivity {
     private static final String TAG = WelcomeActivity.class.getName();
     private static final int MAX_RETRIES = 2;
-    private static final int CONNECTION_RETRY_DELAY = 1000 * 3;
+    private static final int CONNECTION_RETRY_DELAY = 1000;
     private static final int PAYMENT_COMPLETE_RESET = 1000 * 3;
     private static final int POST_RETRY_DELAY = 1000 * 10;
     private static final int DEVICE_KEEP_ALIVE_PERIOD = 1000 * 30;
+    private static final int MAX_FAIL_COUNT = 60;
 
     private ApplicationHelper applicationHelper;
     private TextView message;
@@ -79,6 +77,8 @@ public class WelcomeActivity extends FullScreenActivity {
 
     private PowerManager.WakeLock wakeLock;
     private WifiManager.WifiLock wifiLock;
+
+    private int failCount = 0;
 
     @Override
     protected void onCreate(Bundle icicle){
@@ -352,6 +352,7 @@ public class WelcomeActivity extends FullScreenActivity {
         public void onDeviceConnected(Device device) {
             updateMessage(getString(R.string.welcome_waiting));
             connectedDevice = device;
+            failCount = 0;
         }
 
         @Override
@@ -359,15 +360,24 @@ public class WelcomeActivity extends FullScreenActivity {
             Log.d(TAG, "Connection Failure: " + errorMessage);
 
             if(!hasNetworkFailed && isResumed) {
-                handler.postDelayed(new Runnable() {
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        connectDevice();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                connectDevice();
+                            }
+                        }, CONNECTION_RETRY_DELAY * failCount);
                     }
-                }, CONNECTION_RETRY_DELAY);
+                });
             }else{
                 Looper.getMainLooper().getThread().interrupt();
                 updateMessage(getString(R.string.welcome_connect_error));
+            }
+
+            if(failCount < MAX_FAIL_COUNT) {
+                failCount++;
             }
         }
 
@@ -502,6 +512,13 @@ public class WelcomeActivity extends FullScreenActivity {
         public void onPaymentCompleteWithError(String paymentRequestId, JsonElement paymentPayload, String errorMessage) {
             logNewRelicPaymentError(errorMessage, paymentPayload.toString());
 
+            if(connectedDevice.isRefunding()){
+                postRefundRequest(paymentRequestId, paymentPayload);
+            }else {
+                postPaymentRequest(paymentRequestId, paymentPayload);
+            }
+
+/*
             Gson gson = new Gson();
             QueueUnprocessedPaymentRecord unprocessedPaymentRecord = new QueueUnprocessedPaymentRecord();
             unprocessedPaymentRecord.setPaymentRequestId(paymentRequestId);
@@ -522,7 +539,7 @@ public class WelcomeActivity extends FullScreenActivity {
                     updateMessage(getString(R.string.welcome_waiting));
                 }
             }, PAYMENT_COMPLETE_RESET);
-
+*/
         }
 
         @Override
@@ -539,6 +556,11 @@ public class WelcomeActivity extends FullScreenActivity {
             Log.d(TAG, message);
             showErrorToast(message);
             releasePaymentRequest(paymentRequestId);
+        }
+
+        @Override
+        public void onConnectionFailed(String message) {
+            connectionCallback.onConnectionFailure(message);
         }
 
     };
@@ -625,12 +647,9 @@ public class WelcomeActivity extends FullScreenActivity {
     }
 
     private void postRefundRequest(String paymentRequestId, JsonElement requestObject){
-        StreamRecord streamRecord = new StreamRecord();
-        streamRecord.setDeepstreamRecordId(paymentRequestId);
-
         Gson gson = new Gson();
         String token = AuthorizationUtil.getAuthorizationToken(this).replace("\n", "");
-        getRestHelper().executePostRefund(getPostPaymentCallback(paymentRequestId, true, requestObject), token, gson.toJson(streamRecord));
+        getRestHelper().executePostRefund(getPostPaymentCallback(paymentRequestId, true, requestObject), token, gson.toJson(requestObject));
     }
 
 
@@ -666,7 +685,7 @@ public class WelcomeActivity extends FullScreenActivity {
                 if(shouldRetry(errorMessage)) {
                     CustomErrorToast.showWithMessage(WelcomeActivity.this, errorMessage);
                     updateMessage(String.format(getString(R.string.welcome_retrying), paymentAttempt + 1));
-                    if(verifyPersisted(errorMessage, paymentRequestId, isRefund, requestObject)){
+//                    if(verifyPersisted(errorMessage, paymentRequestId, isRefund, requestObject)){
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -677,22 +696,23 @@ public class WelcomeActivity extends FullScreenActivity {
                                 }
                             }
                         }, paymentAttempt * POST_RETRY_DELAY);
-                    }
+//                    }
                 }else{
                     if(paymentAttempt >= MAX_RETRIES){
-                        if(!verifyPersisted(errorMessage, paymentRequestId, isRefund, requestObject)) {
-                            Gson gson = new Gson();
-                            QueueUnprocessedPaymentRecord unprocessedPaymentRecord = new QueueUnprocessedPaymentRecord();
-                            unprocessedPaymentRecord.setPaymentRequestId(paymentRequestId);
-                            unprocessedPaymentRecord.setRefund(connectedDevice.isRefunding());
-                            unprocessedPaymentRecord.setPayload(gson.toJson(requestObject));
-                            unprocessedPaymentRecord.save();
-                        }else{
+//                        if(!verifyPersisted(errorMessage, paymentRequestId, isRefund, requestObject)) {
+//                            Gson gson = new Gson();
+//                            QueueUnprocessedPaymentRecord unprocessedPaymentRecord = new QueueUnprocessedPaymentRecord();
+//                            unprocessedPaymentRecord.setPaymentRequestId(paymentRequestId);
+//                            unprocessedPaymentRecord.setRefund(connectedDevice.isRefunding());
+//                            unprocessedPaymentRecord.setPayload(gson.toJson(requestObject));
+//                            unprocessedPaymentRecord.save();
+//                        }else{
                             QueuePaymentRecord queuePaymentRecord = new QueuePaymentRecord();
                             queuePaymentRecord.setPaymentRequestId(paymentRequestId);
                             queuePaymentRecord.setRefund(isRefund);
+                            queuePaymentRecord.setRequestObject(requestObject);
                             queuePaymentRecord.save();
-                        }
+//                        }
                         launchQueueService();
                     }
                     resetDevice(paymentRequestId);
@@ -711,7 +731,7 @@ public class WelcomeActivity extends FullScreenActivity {
         return !errorMessage.contains("payment request has already been completed") && paymentAttempt <= MAX_RETRIES;
     }
 
-    private boolean verifyPersisted(String errorMessage, final String requestId, boolean isRefunding, final JsonElement requestObject){
+/*    private boolean verifyPersisted(String errorMessage, final String requestId, boolean isRefunding, final JsonElement requestObject){
         if(errorMessage != null && errorMessage.contains("transaction response needed")){
             final Gson gson = new Gson();
             if(!isRefunding){
@@ -748,7 +768,7 @@ public class WelcomeActivity extends FullScreenActivity {
             return false;
         }
         return true;
-    }
+    }*/
 
     private void resetDevice(String paymentRequestId){
         releasePaymentRequest(paymentRequestId);
@@ -784,6 +804,8 @@ public class WelcomeActivity extends FullScreenActivity {
         public void run() {
             if(!hasNetworkFailed && (connectedDevice == null || !connectedDevice.getState().equals(DeviceDef.STATE_IN_USE))){
                 connectDevice();
+            }else if(hasNetworkFailed){
+                updateMessage(getString(R.string.welcome_connect_error));
             }
             scheduleDeviceRefresh();
         }

@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.payment.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,6 +25,8 @@ import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 
+import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_BALANCES;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +38,7 @@ import java.util.Map;
 public class PatientPendingPaymentFragment extends BaseFragment implements PaymentBalancesAdapter.OnBalanceListItemClickListener {
     private PaymentsModel paymentsDTO;
     private View noPaymentsLayout;
+    private SwipeRefreshLayout refreshLayout;
     private PaymentFragmentActivityInterface callback;
 
     @Override
@@ -70,6 +74,13 @@ public class PatientPendingPaymentFragment extends BaseFragment implements Payme
         super.onViewCreated(view, savedInstanceState);
         noPaymentsLayout = view.findViewById(R.id.no_payment_layout);
         setUpRecyclerView(view);
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                callback.onRequestRefresh(PAGE_BALANCES);
+            }
+        });
     }
 
     private void setUpRecyclerView(View view) {
@@ -93,12 +104,16 @@ public class PatientPendingPaymentFragment extends BaseFragment implements Payme
 
     @Override
     public void onBalanceListItemClickListener(PaymentsBalancesItem pendingBalance) {
-        callback.loadPaymentAmountScreen(pendingBalance, paymentsDTO);
+        if(!refreshLayout.isRefreshing()) {
+            callback.loadPaymentAmountScreen(pendingBalance, paymentsDTO);
+        }
     }
 
     @Override
     public void onPaymentPlanItemClickListener(PaymentPlanDTO paymentPlan) {
-        callback.loadPaymentPlanScreen(paymentsDTO, paymentPlan);
+        if(!refreshLayout.isRefreshing()) {
+            callback.loadPaymentPlanScreen(paymentsDTO, paymentPlan);
+        }
     }
 
     private List<PaymentListItem> getPendingBalancesList(PaymentsModel paymentModel) {

@@ -87,7 +87,8 @@
             android:layout_height="match_parent"
             android:layout_above="@id/divider"
             android:layout_below="@id/toolbarLayout"
-            android:background="@color/white">
+            android:background="@color/white"
+            android:fillViewport="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -98,7 +99,7 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/currentPaymentPlansRecycler"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/completedLabel"
@@ -112,16 +113,79 @@
                     android:textSize="@dimen/text_size_18sp"
                     app:customAssetFont="proxima_nova_extra_bold"
                     breeze:textKey="payment.paymentPlanDashboard.section.title.completed"
-                    tools:text="Completed" />
+                    tools:text="Completed"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/completedPaymentPlansRecycler"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
 
         </android.support.v4.widget.NestedScrollView>
+
+        <LinearLayout
+            android:id="@+id/empty_plans_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbarLayout"
+            android:background="@drawable/patient_mode_dialog_body_bg"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingStart="@dimen/dimen_40dp"
+            android:paddingEnd="@dimen/dimen_40dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/icn_empty_state_plans" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/no_payment_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/no_apt_message_title_margin_top"
+                android:gravity="center"
+                android:textColor="@color/Feldgrau"
+                android:textSize="@dimen/text_size_26sp"
+                tools:text="No active or past payment plans"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="payment.paymentPlanDashboard.nopaymentplans.label.title" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/no_payment_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/no_apt_message_desc_margin_top"
+                android:gravity="center"
+                android:textColor="@color/pastel_blue"
+                android:textSize="@dimen/text_size_19sp"
+                tools:text="Use the button below to create a payment plan."
+                breeze:textKey="payment.paymentPlanDashboard.nopaymentplans.label.subtitle"
+                app:customAssetFont="gotham_rounded_book"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/createNewPlanButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_60dp"
+                android:paddingStart="@dimen/dimen_60dp"
+                android:paddingEnd="@dimen/dimen_60dp"
+                android:background="@drawable/bg_yellow_overlay"
+                android:gravity="center"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/respons_button_text_size"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="payment.paymentPlanDashboard.nopaymentplans.button.title"
+                tools:text="Create Payment Plan" />
+
+        </LinearLayout>
+
+
+
 
     </RelativeLayout>
 

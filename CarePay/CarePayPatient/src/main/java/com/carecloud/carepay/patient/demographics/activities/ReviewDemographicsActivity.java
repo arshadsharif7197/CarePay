@@ -161,6 +161,11 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     }
 
     @Override
+    public void navigateToThirdParty(WorkflowDTO workflowDTO) {
+        demographicsPresenter.navigateToThirdParty(workflowDTO);
+    }
+
+    @Override
     public void navigateToMedicationsAllergy(WorkflowDTO workflowDTO) {
         demographicsPresenter.navigateToMedicationsAllergy(workflowDTO);
     }

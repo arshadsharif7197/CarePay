@@ -146,7 +146,8 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
 
     private void showPinDialog() {
         ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(getContext(),
-                adhocFormsModel.getMetadata().getLinks().getPinpad(), false);
+                adhocFormsModel.getMetadata().getLinks().getPinpad(), false,
+                adhocFormsModel.getMetadata().getLinks().getLanguage());
         confirmationPinDialog.show();
     }
 
@@ -193,7 +194,6 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
                 adhocFormsModel.getPayload().getAdhocFormsPatientModeInfo().getMetadata().getPatientId(),
                 forms.size()};
         MixPanelUtil.logEvent(getString(R.string.event_adhoc_forms_completed), params, values);
-
     }
 
     @Override
