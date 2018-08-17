@@ -142,11 +142,13 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
             paymentDateEditText.setText(StringUtil
                     .getDayOfTheWeek(paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfWeek()));
         }
-        numberPaymentsEditText.setText(String.valueOf(paymentPlanDTO.getPayload()
-                .getPaymentPlanDetails().getInstallments()));
+
+        installments = paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments();
+        numberPaymentsEditText.setText(String.valueOf(installments));
         numberPaymentsEditText.getOnFocusChangeListener().onFocusChange(numberPaymentsEditText, true);
-        monthlyPaymentEditText.setText(currencyFormatter
-                .format(paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount()));
+
+        monthlyPaymentAmount = paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount();
+        monthlyPaymentEditText.setText(currencyFormatter.format(monthlyPaymentAmount));
 
     }
 

@@ -85,7 +85,11 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
 
         numberStr = String.valueOf(scheduledPaymentModel.getPayload().getAmount());
         char last = numberStr.charAt(numberStr.length()-1);
+        int decimal = numberStr.indexOf('.');
         while(last == '0' || last == '.'){
+            if(numberStr.length() <= decimal){
+                break;
+            }
             numberStr = numberStr.substring(0, numberStr.length()-1);
             last = numberStr.charAt(numberStr.length()-1);
         }

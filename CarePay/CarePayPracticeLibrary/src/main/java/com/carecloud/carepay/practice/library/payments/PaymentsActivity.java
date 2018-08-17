@@ -1194,6 +1194,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void onPaymentPlanCanceled(WorkflowDTO workflowDTO) {
+        showSuccessToast(Label.getLabel("payment.cancelPaymentPlan.success.banner.text"));
         getSupportFragmentManager().popBackStackImmediate(PaymentDistributionFragment.class.getName(),
                 FragmentManager.POP_BACK_STACK_INCLUSIVE);
         getPatientBalanceDetails(patientId);
