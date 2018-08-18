@@ -21,12 +21,10 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
@@ -125,8 +123,10 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
         paymentPlanValueTextView.setText(currencyFormatter.format(paymentPlanDTO.getPayload().getAmount()));
 
         TextView paymentAmountTextView = (TextView) view.findViewById(R.id.paymentAmountTextView);
-        paymentAmountTextView.setText(currencyFormatter.format(paymentPlanDTO.getPayload()
-                .getPaymentPlanDetails().getAmount()));
+        String paymentAmount = currencyFormatter.format(paymentPlanDTO.getPayload()
+                .getPaymentPlanDetails().getAmount()) +
+                paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyString();
+        paymentAmountTextView.setText(paymentAmount);
     }
 
     @Override
@@ -142,11 +142,13 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
             paymentDateEditText.setText(StringUtil
                     .getDayOfTheWeek(paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfWeek()));
         }
-        numberPaymentsEditText.setText(String.valueOf(paymentPlanDTO.getPayload()
-                .getPaymentPlanDetails().getInstallments()));
+
+        installments = paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments();
+        numberPaymentsEditText.setText(String.valueOf(installments));
         numberPaymentsEditText.getOnFocusChangeListener().onFocusChange(numberPaymentsEditText, true);
-        monthlyPaymentEditText.setText(currencyFormatter
-                .format(paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount()));
+
+        monthlyPaymentAmount = paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount();
+        monthlyPaymentEditText.setText(currencyFormatter.format(monthlyPaymentAmount));
 
     }
 
