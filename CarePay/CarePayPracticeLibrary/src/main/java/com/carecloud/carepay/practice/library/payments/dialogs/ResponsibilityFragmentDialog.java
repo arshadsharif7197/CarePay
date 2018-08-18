@@ -374,6 +374,9 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
 
         String practiceId = settingsDTO.getMetadata().getPracticeId();
         double maxAllowablePayment = paymentsModel.getPaymentPayload().getMaximumAllowablePlanAmount(practiceId);
+        if(maxAllowablePayment > balance){
+            maxAllowablePayment = balance;
+        }
         for (PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()) {
             if (maxAllowablePayment >= rule.getMinBalance().getValue() &&
                     maxAllowablePayment <= rule.getMaxBalance().getValue()) {
