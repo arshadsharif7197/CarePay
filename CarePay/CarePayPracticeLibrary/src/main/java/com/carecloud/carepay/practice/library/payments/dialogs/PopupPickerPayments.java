@@ -77,7 +77,6 @@ public class PopupPickerPayments extends PopupWindow {
             }
         });
 
-        //TODO enable this once retail is ready to release
         boolean isRetailEnabled = practiceDTO.isRetailEnabled();
         View addRetailItem = view.findViewById(R.id.add_retail_action_item);
         if(isRetailEnabled){
