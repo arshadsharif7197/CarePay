@@ -27,10 +27,12 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.updatebalance.PaymentUpdateBalanceDTO;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -153,8 +155,14 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
         if (appointmentsResultModel != null && !appointmentsItems.isEmpty()) {
 
             if (appointmentNavigationType == Defs.NAVIGATE_CHECKOUT && appointmentsItems.size() == 1) {
-                onStartCheckOut(appointmentsItems.get(0));
-                return;
+                AppointmentDTO appointmentDTO = appointmentsItems.get(0);
+                Date startTime = DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime()).getDate();
+                Date now = new Date();
+                boolean appointmentHasStarted = startTime.before(now);
+                if (appointmentHasStarted) {
+                    onStartCheckOut(appointmentsItems.get(0));
+                    return;
+                }
             }
 
             findViewById(R.id.no_appointment_layout).setVisibility(View.GONE);

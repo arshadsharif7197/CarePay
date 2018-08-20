@@ -26,6 +26,7 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -48,7 +49,8 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
      * @param appointmentsArrayList appointmentsArrayList
      */
     public AppointmentsListAdapter(Context context, List<AppointmentDTO> appointmentsArrayList,
-                                   AppointmentsResultModel appointmentInfo, @Defs.AppointmentNavigationTypeDef int appointmentNavigationType) {
+                                   AppointmentsResultModel appointmentInfo,
+                                   @Defs.AppointmentNavigationTypeDef int appointmentNavigationType) {
         this.context = context;
         this.appointmentsArrayList = appointmentsArrayList;
         this.appointmentsResultModel = appointmentInfo;
@@ -71,7 +73,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         holder.setDateTime(dateUtil);
         holder.setLocation(payload.getLocation());
         holder.setStatus(payload, dateUtil.isToday());
-        holder.setCheckInButton(position);
+        holder.setCheckInButton(appointmentsArrayList.get(position), position);
         holder.appointmentVisitTypeTextView.setText(payload.getVisitType().getDescription());
         holder.appointmentVisitTypeTextView.setText(StringUtil.
                 capitalize(payload.getVisitType().getName()));
@@ -238,7 +240,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
                     .resize(58, 58).into(profileImage, callback);
         }
 
-        private void setCheckInButton(int position) {
+        private void setCheckInButton(AppointmentDTO appointmentDTO, int position) {
             startCheckIn.setTag(position);
             startCheckIn.setOnClickListener(new View.OnClickListener() {
 
@@ -255,6 +257,10 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
                     }
                 }
             });
+            Date startTime = DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime()).getDate();
+            Date now = new Date();
+            boolean appointmentHasStarted = startTime.before(now);
+            startCheckIn.setVisibility(appointmentHasStarted ? View.VISIBLE : View.GONE);
         }
 
         private void setDateTime(DateUtil dateUtil) {
