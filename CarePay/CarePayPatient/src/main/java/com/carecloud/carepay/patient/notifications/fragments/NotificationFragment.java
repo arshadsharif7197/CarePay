@@ -26,6 +26,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.models.Paging;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.SwipeViewHolder;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
@@ -46,13 +47,9 @@ import java.util.Set;
 public class NotificationFragment extends BaseFragment
         implements NotificationsAdapter.SelectNotificationCallback, SwipeHelper.SwipeHelperListener {
 
-
-    public interface NotificationCallback {
-        void displayNotification(NotificationItem notificationItem);
-    }
-
     private static final long NOTIFICATION_DELETE_DELAY = 1000 * 5;
     private static final String TAG = NotificationFragment.class.getName();
+    private static final int BOTTOM_ROW_OFFSET = 2;
 
     private NotificationsDTO notificationsDTO;
     private List<NotificationItem> notificationItems = new ArrayList<>();
@@ -65,6 +62,13 @@ public class NotificationFragment extends BaseFragment
     private Set<NotificationType> supportedNotificationTypes = new HashSet<>();
 
     private Handler handler;
+    private boolean isPaging;
+    private Paging paging;
+    private NotificationsAdapter adapter;
+
+    public interface NotificationCallback {
+        void displayNotification(NotificationItem notificationItem);
+    }
 
     /**
      * Instantiate Notification Fragment with Notification data
@@ -75,7 +79,6 @@ public class NotificationFragment extends BaseFragment
     public static NotificationFragment newInstance(NotificationsDTO notificationsDTO) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, notificationsDTO);
-
         NotificationFragment fragment = new NotificationFragment();
         fragment.setArguments(args);
         return fragment;
@@ -99,13 +102,11 @@ public class NotificationFragment extends BaseFragment
         supportedNotificationTypes.add(NotificationType.payments);
         setHasOptionsMenu(true);
         Bundle args = getArguments();
-        if (args != null) {
-            notificationsDTO = DtoHelper.getConvertedDTO(NotificationsDTO.class, args);
-            if (notificationsDTO != null) {
-                notificationItems = filterNotifications(notificationsDTO.getPayload().getNotifications(),
-                        supportedNotificationTypes);
-            }
-        }
+        notificationsDTO = DtoHelper.getConvertedDTO(NotificationsDTO.class, args);
+        notificationItems = filterNotifications(notificationsDTO.getPayload().getNotifications(),
+                supportedNotificationTypes);
+        paging = notificationsDTO.getPayload().getPaging();
+
 
         handler = new Handler();
     }
@@ -123,7 +124,7 @@ public class NotificationFragment extends BaseFragment
             @Override
             public void onRefresh() {
                 refreshLayout.setRefreshing(true);
-                refreshNotifications();
+                loadNextPage(true);
             }
         });
 
@@ -145,10 +146,21 @@ public class NotificationFragment extends BaseFragment
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                int last = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+                if (last > recyclerView.getAdapter().getItemCount() - BOTTOM_ROW_OFFSET && !isPaging) {
+                    if (hasMorePages()) {
+                        loadNextPage(false);
+                        isPaging = true;
+                    }
+                }
             }
         });
 
         setAdapter();
+    }
+
+    private boolean hasMorePages() {
+        return paging.getCurrentPage() < paging.getTotalPages();
     }
 
     @Override
@@ -213,7 +225,7 @@ public class NotificationFragment extends BaseFragment
     @Override
     public void onResume() {
         super.onResume();
-        refreshNotifications();
+//        loadNextPage();
     }
 
     private void setAdapter() {
@@ -251,34 +263,61 @@ public class NotificationFragment extends BaseFragment
 
     }
 
-    private void refreshNotifications() {
+    private void loadNextPage(boolean refresh) {
+        long currentPage;
+        if (refresh) {
+            currentPage = 0;
+        } else {
+            currentPage = paging.getCurrentPage();
+        }
+
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("page", String.valueOf(currentPage + 1));
+//        queryMap.put("limit", String.valueOf(paging.getResultsPerPage()));
+
         TransitionDTO refreshTransition = notificationsDTO.getMetadata().getLinks().getNotifications();
-        getWorkflowServiceHelper().execute(refreshTransition, refreshCallback);
+        getWorkflowServiceHelper().execute(refreshTransition, getRefreshCallback(refresh), queryMap);
     }
 
-    private WorkflowServiceCallback refreshCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            refreshLayout.setRefreshing(false);
-            NotificationsDTO notificationsDTO = DtoHelper.getConvertedDTO(NotificationsDTO.class, workflowDTO);
-            if (notificationsDTO != null) {
-                notificationItems = filterNotifications(notificationsDTO.getPayload().getNotifications(),
-                        supportedNotificationTypes);
+    private WorkflowServiceCallback getRefreshCallback(final boolean refresh) {
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                if (!refresh) {
+                    adapter = (NotificationsAdapter) notificationsRecycler.getAdapter();
+                    adapter.setLoading(true);
+                }
             }
-            setAdapter();
-        }
 
-        @Override
-        public void onFailure(String exceptionMessage) {
-            refreshLayout.setRefreshing(false);
-            showErrorNotification(exceptionMessage);
-        }
-    };
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                refreshLayout.setRefreshing(false);
+                NotificationsDTO notificationsDTO = DtoHelper.getConvertedDTO(NotificationsDTO.class, workflowDTO);
+                paging = notificationsDTO.getPayload().getPaging();
+                if (refresh) {
+                    notificationItems = filterNotifications(notificationsDTO.getPayload().getNotifications(),
+                            supportedNotificationTypes);
+                } else {
+                    notificationItems.addAll(filterNotifications(notificationsDTO.getPayload().getNotifications(),
+                            supportedNotificationTypes));
+                }
+                adapter.setLoading(false);
+                isPaging = false;
+                setAdapter();
+            }
+
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                refreshLayout.setRefreshing(false);
+                adapter.setLoading(false);
+                isPaging = false;
+                showErrorNotification(exceptionMessage);
+            }
+        };
+    }
+
+    ;
 
 
     @Override

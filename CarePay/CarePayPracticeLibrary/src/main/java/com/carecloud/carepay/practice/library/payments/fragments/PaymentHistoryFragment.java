@@ -44,10 +44,10 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
 
     private PracticePaymentHistoryCallback callback;
     private PaymentsModel paymentsModel;
-    private Paging paging;
     private List<PaymentHistoryItem> paymentHistory = new ArrayList<>();
 
     private RecyclerView historyRecycler;
+    private Paging paging;
     private boolean isPaging = false;
 
     /**

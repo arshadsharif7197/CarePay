@@ -49,6 +49,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     private List<NotificationItem> notificationItems;
     private SelectNotificationCallback callback;
     private List<NotificationItem> removeItems = new ArrayList<>();
+    private boolean isLoading;
+    private static final int VIEW_TYPE_LOADING = 100;
 
     /**
      * Constructor
@@ -79,22 +81,41 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     }
 
     @Override
+    public int getItemViewType(int position) {
+        if (position >= notificationItems.size()) {
+            return VIEW_TYPE_LOADING;
+        }
+        return 0;
+    }
+
+    @Override
     public NotificationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.notification_list_item, parent, false);
+        View view;
+        if (viewType == VIEW_TYPE_LOADING) {
+            view = inflater.inflate(R.layout.item_loading, parent, false);
+        } else {
+            view = inflater.inflate(R.layout.notification_list_item, parent, false);
+        }
         return new NotificationViewHolder(view);
     }
 
     @Override
     public int getItemCount() {
+        if (isLoading && !notificationItems.isEmpty()) {
+            return notificationItems.size() + 1;
+        }
         return notificationItems.size();
     }
 
     @Override
     public void onBindViewHolder(final NotificationViewHolder holder, int position) {
+        if (position >= notificationItems.size()) {
+            return;
+        }
+
         final NotificationItem notificationItem = notificationItems.get(position);
         NotificationType notificationType = notificationItem.getMetadata().getNotificationType();
-
         resetViews(holder);
         if (notificationType != null) {
             switch (notificationType) {
@@ -395,5 +416,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             undoButton.setVisibility(View.VISIBLE);
             deleteButton.setVisibility(View.GONE);
         }
+    }
+
+    public void setLoading(boolean loading) {
+        this.isLoading = loading;
+        notifyDataSetChanged();
     }
 }
