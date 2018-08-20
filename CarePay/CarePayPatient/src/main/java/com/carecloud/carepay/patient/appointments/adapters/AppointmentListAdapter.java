@@ -302,7 +302,10 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
                 }
             }
         }
-        return isBreezePractice && isTheLocationWithBreezeEnabled;
+        Date startTime = DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime()).getDate();
+        Date now = new Date();
+        boolean appointmentHasStarted = startTime.before(now);
+        return isBreezePractice && isTheLocationWithBreezeEnabled && appointmentHasStarted;
     }
 
     private void sortAppointments() {

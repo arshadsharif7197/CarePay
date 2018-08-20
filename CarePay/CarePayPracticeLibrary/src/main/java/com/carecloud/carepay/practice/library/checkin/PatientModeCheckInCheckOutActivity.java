@@ -46,7 +46,8 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
     private TextView subHeader;
     private ProgressBar appointmentProgressBar;
 
-    private @Defs.AppointmentNavigationTypeDef int appointmentNavigationType;
+    private @Defs.AppointmentNavigationTypeDef
+    int appointmentNavigationType;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +58,7 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
         subHeader = (TextView) findViewById(R.id.titleSelectappointmentsubheader);
         TextView noApptHeader = (TextView) findViewById(R.id.no_apt_message_title);
 
-        if(appointmentNavigationType == Defs.NAVIGATE_CHECKOUT){
+        if (appointmentNavigationType == Defs.NAVIGATE_CHECKOUT) {
             header.setText(Label.getLabel("practice_app_appointment_checkout_heading"));
             noApptHeader.setText(Label.getLabel("no_appointments_checkout_title"));
         }
@@ -151,7 +152,7 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
         getAppointmentItems();
         if (appointmentsResultModel != null && !appointmentsItems.isEmpty()) {
 
-            if(appointmentNavigationType == Defs.NAVIGATE_CHECKOUT && appointmentsItems.size() == 1){
+            if (appointmentNavigationType == Defs.NAVIGATE_CHECKOUT && appointmentsItems.size() == 1) {
                 onStartCheckOut(appointmentsItems.get(0));
                 return;
             }
@@ -159,7 +160,8 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
             findViewById(R.id.no_appointment_layout).setVisibility(View.GONE);
 
             AppointmentsListAdapter appointmentsListAdapter = new AppointmentsListAdapter(
-                    PatientModeCheckInCheckOutActivity.this, appointmentsItems, appointmentsResultModel, appointmentNavigationType);
+                    PatientModeCheckInCheckOutActivity.this, appointmentsItems, appointmentsResultModel,
+                    appointmentNavigationType);
             appointmentsRecyclerView.setAdapter(appointmentsListAdapter);
             appointmentsListAdapter.setListener(this);
 
@@ -188,16 +190,16 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
         }
     }
 
-    private List<AppointmentDTO> getAppointmentItems(){
-        if(appointmentsResultModel != null){
-            if(appointmentNavigationType == Defs.NAVIGATE_CHECKOUT){
+    private List<AppointmentDTO> getAppointmentItems() {
+        if (appointmentsResultModel != null) {
+            if (appointmentNavigationType == Defs.NAVIGATE_CHECKOUT) {
                 //need to get just those appointments that are ready for checkout
-                for(AppointmentDTO appointmentDTO : appointmentsResultModel.getPayload().getAppointments()){
-                    if(appointmentDTO.getPayload().canCheckOut()){
+                for (AppointmentDTO appointmentDTO : appointmentsResultModel.getPayload().getAppointments()) {
+                    if (appointmentDTO.getPayload().canCheckOut()) {
                         appointmentsItems.add(appointmentDTO);
                     }
                 }
-            }else{
+            } else {
                 appointmentsItems = appointmentsResultModel.getPayload().getAppointments();
             }
         }
@@ -225,7 +227,7 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
 
     @Override
     protected void processExternalPaymentFailure(PaymentExecution paymentExecution, int resultCode) {
-        if(resultCode == CarePayConstants.PAYMENT_RETRY_PENDING_RESULT_CODE){
+        if (resultCode == CarePayConstants.PAYMENT_RETRY_PENDING_RESULT_CODE) {
             //Display a success notification and do some cleanup
             PaymentQueuedDialogFragment dialogFragment = new PaymentQueuedDialogFragment();
             DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener() {
@@ -285,7 +287,8 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
                 hideProgressDialog();
                 Bundle info = new Bundle();
                 info.putString(CarePayConstants.APPOINTMENT_ID, selectedAppointment.getPayload().getId());
-                PracticeNavigationHelper.navigateToWorkflow(PatientModeCheckInCheckOutActivity.this, workflowDTO, true, CarePayConstants.CLOVER_PAYMENT_INTENT_REQUEST_CODE, info);
+                PracticeNavigationHelper.navigateToWorkflow(PatientModeCheckInCheckOutActivity.this,
+                        workflowDTO, true, CarePayConstants.CLOVER_PAYMENT_INTENT_REQUEST_CODE, info);
             }
 
             @Override

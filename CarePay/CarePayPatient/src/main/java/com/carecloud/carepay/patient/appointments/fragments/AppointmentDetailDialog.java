@@ -34,6 +34,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -349,7 +350,10 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                 }
             }
         }
-        return isBreezePractice && isTheLocationWithBreezeEnabled;
+        Date startTime = DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime()).getDate();
+        Date now = new Date();
+        boolean appointmentHasStarted = startTime.before(now);
+        return isBreezePractice && isTheLocationWithBreezeEnabled && appointmentHasStarted;
     }
 
     private void cleanupViews() {
