@@ -1150,6 +1150,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     public void showDeleteScheduledPaymentConfirmation(WorkflowDTO workflowDTO, ScheduledPaymentPayload scheduledPaymentPayload) {
         showSuccessToast(String.format(
                 Label.getLabel("payment.oneTimePayment.scheduled.delete.success"),
+                StringUtil.getFormattedBalanceAmount(scheduledPaymentPayload.getAmount()),
                 DateUtil.getInstance()
                         .setDateRaw(scheduledPaymentPayload.getPaymentDate())
                         .toStringWithFormatMmSlashDdSlashYyyy()));
@@ -1314,6 +1315,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void onPaymentPlanCanceled(WorkflowDTO workflowDTO) {
+        showSuccessToast(Label.getLabel("payment.cancelPaymentPlan.success.banner.text"));
         getSupportFragmentManager().popBackStackImmediate(PaymentDistributionFragment.class.getName(),
                 FragmentManager.POP_BACK_STACK_INCLUSIVE);
         Map<String, String> queryMap = new HashMap<>();
