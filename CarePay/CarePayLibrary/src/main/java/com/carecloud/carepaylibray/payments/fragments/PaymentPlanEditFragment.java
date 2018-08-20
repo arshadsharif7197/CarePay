@@ -190,6 +190,8 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
                 showCancelPaymentPlanConfirmDialog();
             }
         });
+        cancelPaymentPlanButton.setVisibility(canCancelPlan() ? View.VISIBLE : View.GONE);
+
     }
 
     protected void showCancelPaymentPlanConfirmDialog() {
@@ -516,6 +518,12 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
                 && paymentPlanSettings.getFrequencyCode().getMonthly().isAllowed())
                 || (frequencyCode.equals(PaymentPlanModel.FREQUENCY_WEEKLY)
                 && paymentPlanSettings.getFrequencyCode().getWeekly().isAllowed());
+    }
+
+    private boolean canCancelPlan() {
+        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = paymentsModel.getPaymentPayload()
+                .getPaymentSettings().get(0).getPayload().getPaymentPlans();
+        return paymentPlanSettings.isCanCancelPlan();
     }
 
     private void disableFields() {
