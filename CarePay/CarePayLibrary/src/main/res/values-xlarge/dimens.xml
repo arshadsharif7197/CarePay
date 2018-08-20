@@ -6,4 +6,6 @@
     <dimen name="closeIconSize">19dp</dimen>
     <dimen name="lineItemTextSize">18sp</dimen>
     <dimen name="roundBorderBottonVerticalPadding">8dp</dimen>
+    <dimen name="optionalLabelRightMargin">38dp</dimen>
+    <dimen name="optionalLabelTextSize">9sp</dimen>
 </resources>

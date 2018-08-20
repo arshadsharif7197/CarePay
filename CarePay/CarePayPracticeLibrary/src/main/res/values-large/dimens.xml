@@ -10,10 +10,17 @@
     <dimen name="profile_pic_size">50dp</dimen>
     <dimen name="errorTextSize">8sp</dimen>
     <dimen name="textview_default_textsize">13sp</dimen>
-    <dimen name="hint_floating_size">9dp</dimen>
+    <dimen name="hint_floating_size">9sp</dimen>
     <dimen name="dialog_profile_pic_size">60dp</dimen>
     <dimen name="commonButtonHeight">35dp</dimen>
     <dimen name="buttonStrokeWidth">1dp</dimen>
+    <dimen name="formEditTextTextSize">18sp</dimen>
+    <dimen name="optionalLabelRightMargin">20dp</dimen>
+    <dimen name="optionalLabelTextSize">8sp</dimen>
+    <dimen name="radioButtonSize">30dp</dimen>
+    <dimen name="radioButtonPadding">6dp</dimen>
+    <dimen name="checkboxSize">@dimen/radioButtonSize</dimen>
+    <dimen name="checkboxPadding">@dimen/radioButtonPadding</dimen>
 
     <!--Language-->
     <dimen name="langSpinnerTextSize">15sp</dimen>
@@ -177,7 +184,7 @@
     <dimen name="amountLabelTextSize">11sp</dimen>
     <dimen name="roundedValueVerticalPadding">4dp</dimen>
     <dimen name="roundedValueHorizontalPadding">10dp</dimen>
-    <dimen name="distributionButtonContainersPadding">4dp</dimen>
+    <dimen name="distributionButtonContainersPadding">5dp</dimen>
     <dimen name="distributionItemHeight">58dp</dimen>
     <dimen name="distributionItemTextSize">11sp</dimen>
     <dimen name="distributionItemShortNameSize">40dp</dimen>
@@ -185,6 +192,34 @@
     <dimen name="distributionCellPadding">4dp</dimen>
     <dimen name="distributionItemAmountTextSize">15sp</dimen>
     <dimen name="popUpRecyclerMargin">5dp</dimen>
+
+    <!--Dashboard Fragment-->
+    <dimen name="itemDashboardProgressBarSize">50dp</dimen>
+    <dimen name="itemDashboardProgressBarRightMargin">5dp</dimen>
+    <dimen name="itemDashboardBarHeight">45dp</dimen>
+    <dimen name="itemDashboardBarVerticalMargin">5dp</dimen>
+    <dimen name="itemDashboardTotalAmountTextSize">15sp</dimen>
+    <dimen name="itemDashboardNameTextSize">11sp</dimen>
+    <dimen name="itemDashboardFieldMargin">5dp</dimen>
+    <dimen name="itemDashboardButtonWidth">85dp</dimen>
+    <dimen name="itemDashboardButtonVerticalPadding">4dp</dimen>
+    <dimen name="itemDashboardButtonTextSize">11sp</dimen>
+    <dimen name="dashboardLabelTopMargin">15dp</dimen>
+    <dimen name="dashboardLabelStartMargin">8dp</dimen>
+    <dimen name="dashboardLabelTextSize">13sp</dimen>
+    <dimen name="itemDashboardScheduledPaymentIndicatorSize">20dp</dimen>
+
+    <!--Credit Card-->
+    <dimen name="itemCreditCardImageSize">24dp</dimen>
+    <dimen name="itemCreditCardVerticalMargin">8dp</dimen>
+    <dimen name="itemCreditCardNameTextSize">16sp</dimen>
+
+    <!--Create Payment Plan Fragment-->
+    <dimen name="itemPaymentPlanTextSize">11sp</dimen>
+    <dimen name="itemPaymentPlanColumnNameTextSize">9sp</dimen>
+    <dimen name="itemPaymentPlanValuesTextSize">12sp</dimen>
+    <dimen name="lastPaymentTextSize">12sp</dimen>
+    <dimen name="payment_method_parent_layout_padding">@dimen/dashboardLabelStartMargin</dimen>
 
 
 </resources>

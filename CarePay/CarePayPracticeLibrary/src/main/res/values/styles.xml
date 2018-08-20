@@ -100,7 +100,7 @@
 
     <style name="DemographicsReviewEditTextStyle" parent="SigninSignupEditStyle">
         <item name="android:paddingStart">@dimen/dimen_5dp</item>
-        <item name="android:textSize">@dimen/text_size_24sp</item>
+        <item name="android:textSize">@dimen/formEditTextTextSize</item>
         <item name="android:textColorHint">@color/pastel_blue</item>
     </style>
 

@@ -2,13 +2,17 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!--Common-->
+    <dimen name="dialog_profile_pic_size">88dp</dimen>
     <dimen name="languageSpinnerWidth">100dp</dimen>
     <dimen name="languageSpinnerHeight">40dp</dimen>
     <dimen name="commonButtonHeight">50dp</dimen>
     <dimen name="buttonStrokeWidth">2dp</dimen>
-
-    <!--Common-->
-    <dimen name="dialog_profile_pic_size">88dp</dimen>
+    <dimen name="radioButtonSize">40dp</dimen>
+    <dimen name="radioButtonPadding">8dp</dimen>
+    <dimen name="checkboxSize">@dimen/radioButtonSize</dimen>
+    <dimen name="checkboxPadding">@dimen/radioButtonPadding</dimen>
 
     <!-- Default dimens which will be use for any default styling  -->
     <dimen name="dimen_1dp">1dp</dimen>
@@ -302,6 +306,8 @@
     <dimen name="patientNotFoundTextSize">15sp</dimen>
     <dimen name="patientDOBTextSize">15sp</dimen>
     <dimen name="findPatientItemVerticalPadding">11dp</dimen>
+
+    <!--Distribution Fragment-->
     <dimen name="toolbarTitleTextSize">20sp</dimen>
     <dimen name="toolbarLayoutHeight">80dp</dimen>
     <dimen name="amountsContainerPadding">8dp</dimen>
@@ -320,5 +326,33 @@
     <dimen name="distributionCellPadding">8dp</dimen>
     <dimen name="distributionItemAmountTextSize">20sp</dimen>
     <dimen name="popUpRecyclerMargin">5dp</dimen>
+
+    <!--Dashboard Fragment-->
+    <dimen name="itemDashboardProgressBarSize">60dp</dimen>
+    <dimen name="itemDashboardProgressBarRightMargin">10dp</dimen>
+    <dimen name="itemDashboardBarHeight">60dp</dimen>
+    <dimen name="itemDashboardBarVerticalMargin">10dp</dimen>
+    <dimen name="itemDashboardTotalAmountTextSize">20sp</dimen>
+    <dimen name="itemDashboardNameTextSize">15sp</dimen>
+    <dimen name="itemDashboardFieldMargin">10dp</dimen>
+    <dimen name="itemDashboardButtonWidth">130dp</dimen>
+    <dimen name="itemDashboardButtonVerticalPadding">8dp</dimen>
+    <dimen name="itemDashboardButtonTextSize">15sp</dimen>
+    <dimen name="dashboardLabelTopMargin">25dp</dimen>
+    <dimen name="dashboardLabelStartMargin">15dp</dimen>
+    <dimen name="dashboardLabelTextSize">18sp</dimen>
+    <dimen name="itemDashboardScheduledPaymentIndicatorSize">30dp</dimen>
+
+    <!--Credit Card-->
+    <dimen name="itemCreditCardVerticalMargin">13dp</dimen>
+    <dimen name="itemCreditCardNameTextSize">22sp</dimen>
+
+    <!--Create Payment Plan Fragment-->
+    <dimen name="itemPaymentPlanTextSize">15sp</dimen>
+    <dimen name="itemPaymentPlanColumnNameTextSize">12sp</dimen>
+    <dimen name="itemPaymentPlanValuesTextSize">16sp</dimen>
+    <dimen name="lastPaymentTextSize">17sp</dimen>
+    <dimen name="formEditTextTextSize">24sp</dimen>
+
 
 </resources>

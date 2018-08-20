@@ -474,5 +474,8 @@
     <dimen name="paymentDetailLabelTextSize">16sp</dimen>
     <dimen name="paymentDetailAmountTextSize">15sp</dimen>
     <dimen name="paymentDetailDateTextSize">12sp</dimen>
+    <dimen name="optionalLabelRightMargin">38dp</dimen>
+    <dimen name="optionalLabelTextSize">9sp</dimen>
+    <dimen name="itemCreditCardImageSize">36dp</dimen>
 
 </resources>
