@@ -4,4 +4,5 @@
     <dimen name="icon_check_size">100dp</dimen>
     <dimen name="confirmationPracticeNameMargin">10dp</dimen>
     <dimen name="calendarSelectedDimen">10dp</dimen>
+    <dimen name="roundBorderBottonVerticalPadding">8dp</dimen>
 </resources>

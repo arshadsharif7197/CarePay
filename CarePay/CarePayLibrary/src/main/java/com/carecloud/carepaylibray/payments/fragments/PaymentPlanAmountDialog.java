@@ -92,7 +92,9 @@ public class PaymentPlanAmountDialog extends PartialPaymentDialog {
     protected double calculateFullAmount() {
         double amount = 0D;
         for (PendingBalancePayloadDTO pendingBalancePayloadDTO : selectedBalance.getPayload()) {
-            amount = SystemUtil.safeAdd(amount, pendingBalancePayloadDTO.getAmount());
+            if(pendingBalancePayloadDTO.getType().equals(PendingBalancePayloadDTO.PATIENT_BALANCE)) {
+                amount = SystemUtil.safeAdd(amount, pendingBalancePayloadDTO.getAmount());
+            }
         }
         return amount;
     }

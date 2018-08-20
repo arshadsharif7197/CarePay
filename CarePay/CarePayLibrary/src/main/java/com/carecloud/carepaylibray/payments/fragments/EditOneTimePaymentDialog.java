@@ -25,6 +25,7 @@ import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -95,6 +96,7 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
                 Label.getLabel("payment.oneTimePayment.scheduled.delete.title"),
                 String.format(
                         Label.getLabel("payment.oneTimePayment.scheduled.delete.subtitle"),
+                        StringUtil.getFormattedBalanceAmount(scheduledPaymentModel.getPayload().getAmount()),
                         DateUtil.getInstance()
                                 .setDateRaw(scheduledPaymentModel.getPayload().getPaymentDate())
                                 .toStringWithFormatMmSlashDdSlashYyyy()),
@@ -212,6 +214,7 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
     @Override
     protected void setSelectedDate(Date selectedDate) {
         super.setSelectedDate(selectedDate);
+        paymentButton.setText(Label.getLabel("payment_plan_reschedule_payment_short"));
         validatePaymentRescheduled();
     }
 

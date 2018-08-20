@@ -11,6 +11,7 @@
     <dimen name="errorTextSize">8sp</dimen>
     <dimen name="textview_default_textsize">13sp</dimen>
     <dimen name="hint_floating_size">9dp</dimen>
+    <dimen name="dialog_profile_pic_size">60dp</dimen>
 
     <!--Language-->
     <dimen name="langSpinnerTextSize">15sp</dimen>
@@ -94,5 +95,40 @@
     <dimen name="searchEditTextTextSize">13sp</dimen>
     <dimen name="clearFiltersButtonTextSize">12sp</dimen>
     <dimen name="custom_filter_patient_image_size">26dp</dimen>
+
+
+    <!-- Custom Appointment details dialog -->
+    <dimen name="appointment_detail_dialog_width">460dp</dimen>
+    <dimen name="appointment_detail_dialog_height">390dp</dimen>
+    <dimen name="dialog_header_height">140dp</dimen>
+    <dimen name="custom_appointment_dialog_view_margin">9dp</dimen>
+    <dimen name="custom_appointment_dialog_view_padding">3dp</dimen>
+    <dimen name="custom_appointment_dialog_view_textsize_small">10sp</dimen>
+    <dimen name="custom_appointment_dialog_checkbox_margin">10dp</dimen>
+    <dimen name="appointment_detail_dialog_checkbox_divider_height">3dp</dimen>
+    <dimen name="appointment_detail_dialog_checkbox_divider_margin">-50dp</dimen>
+    <dimen name="appointment_detail_dialog_checkbox_divider_margin_top">20dp</dimen>
+    <dimen name="custom_appointment_dialog_checkbox_textsize">12sp</dimen>
+    <dimen name="custom_appointment_dialog_button_textsize">17sp</dimen>
+    <dimen name="custom_appointment_dialog_background_shape_radius">7dp</dimen>
+    <dimen name="custom_appointment_dialog_checkbox_normal_size">12dp</dimen>
+
+    <dimen name="profilePicMarginTop">10dp</dimen>
+    <dimen name="checkinPatientNameTextSize">20sp</dimen>
+    <dimen name="doctorNameTextSize">14sp</dimen>
+    <dimen name="checkin_info_label_width">100dp</dimen>
+    <dimen name="balanceTextPadding">12dp</dimen>
+    <dimen name="balanceTextSize">18sp</dimen>
+    <dimen name="queueTextSize">24sp</dimen>
+    <dimen name="demographicsCheckBoxWidth">90dp</dimen>
+    <dimen name="popup_picker_width">200dp</dimen>
+    <dimen name="popup_picker_height">140dp</dimen>
+    <dimen name="pickItemTextSize">11sp</dimen>
+    <dimen name="pickItemVerticalPadding">5dp</dimen>
+    <dimen name="lineItemTextSize">14sp</dimen>
+    <dimen name="lineItemDetailButtonTextSize">11sp</dimen>
+    <dimen name="paymentDetailLabelTextSize">13sp</dimen>
+    <dimen name="paymentDetailAmountTextSize">12sp</dimen>
+    <dimen name="paymentDetailDateTextSize">10sp</dimen>
 
 </resources>

@@ -153,33 +153,6 @@
 
                     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
-                    <!--<com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_alignParentStart="true"-->
-                    <!--android:layout_centerVertical="true"-->
-                    <!--android:layout_marginBottom="@dimen/dimen_15dp"-->
-                    <!--android:layout_marginTop="@dimen/dimen_15dp"-->
-                    <!--android:textColor="@color/charcoal"-->
-                    <!--android:textSize="@dimen/text_size_20sp"-->
-                    <!--app:customAssetFont="gotham_rounded_medium"-->
-                    <!--breeze:hintKey="payment_method_title"-->
-                    <!--tools:text="Payment Method" />-->
-
-                    <!--<com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
-                    <!--android:id="@+id/creditCardNumberTextView"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_alignParentEnd="true"-->
-                    <!--android:layout_centerVertical="true"-->
-                    <!--android:layout_marginBottom="@dimen/dimen_15dp"-->
-                    <!--android:layout_marginEnd="@dimen/dimen_12dp"-->
-                    <!--android:layout_marginTop="@dimen/dimen_15dp"-->
-                    <!--android:textColor="@color/colorPrimary"-->
-                    <!--android:textSize="@dimen/text_size_20sp"-->
-                    <!--app:customAssetFont="gotham_rounded_medium"-->
-                    <!--tools:text="MASTERCARD ***2345" />-->
-
                 </FrameLayout>
 
                 <LinearLayout
@@ -219,13 +192,48 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <FrameLayout
+                            android:id="@+id/frequencyCodeLayout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
+
+                            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                                android:id="@+id/frequencyCodeInputLayout"
+                                style="@style/SigninSignupTextInputStyle"
+                                android:tag="@string/tag_demographics_error_scroll"
+                                app:customAssetFont="proxima_nova_semi_bold"
+                                app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                                    android:id="@+id/frequencyCodeEditText"
+                                    style="@style/DemographicsReviewEditTextStyle"
+                                    android:clickable="false"
+                                    android:cursorVisible="false"
+                                    android:drawableEnd="@drawable/icon_drop_down"
+                                    android:editable="false"
+                                    android:focusableInTouchMode="false"
+                                    android:imeOptions="actionNext"
+                                    app:customAssetFont="proxima_nova_regular"
+                                    app:hintTextAppearance="@style/FloatingLabelStyle"
+                                    breeze:hintKey="payment.paymentPlan.frequency.field.hint"
+                                    tools:hint="Frequency" />
+
+                            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+                            <include
+                                android:id="@+id/paymentMonthCountOptional"
+                                layout="@layout/layout_optional_text_view" />
+
+                        </FrameLayout>
 
                         <FrameLayout
                             android:id="@+id/paymentDrawDayLayout"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
                             android:layout_weight="1">
 
                             <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
@@ -247,7 +255,7 @@
                                     android:imeOptions="actionNext"
                                     app:customAssetFont="proxima_nova_regular"
                                     app:hintTextAppearance="@style/FloatingLabelStyle"
-                                    breeze:hintKey="payment_day_of_the_month"
+                                    breeze:hintKey="payment.paymentPlan.frequency.monthly.hint"
                                     tools:hint="Day of the month" />
 
                             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
@@ -258,11 +266,18 @@
 
                         </FrameLayout>
 
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
                         <FrameLayout
                             android:id="@+id/paymentMonthCountLayout"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/dimen_5dp"
                             android:layout_weight="1">
 
                             <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
@@ -291,38 +306,39 @@
 
                         </FrameLayout>
 
+                        <FrameLayout
+                            android:id="@+id/paymentAmountLayout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
+
+                            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                                android:id="@+id/paymentAmountInputLayout"
+                                style="@style/SigninSignupTextInputStyle"
+                                android:tag="@string/tag_demographics_error_scroll"
+                                app:customAssetFont="proxima_nova_semi_bold"
+                                app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                                    android:id="@+id/paymentAmount"
+                                    style="@style/DemographicsReviewEditTextStyle"
+                                    android:imeOptions="actionNext"
+                                    android:inputType="numberDecimal"
+                                    android:textColor="@color/primary_color_enabled_selector"
+                                    app:customAssetFont="proxima_nova_regular"
+                                    app:hintTextAppearance="@style/FloatingLabelStyle"
+                                    breeze:hintKey="payment_monthly_payment"
+                                    tools:hint="Monthly Payment" />
+
+                            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+                            <include
+                                android:id="@+id/paymentAmountOptional"
+                                layout="@layout/layout_optional_text_view" />
+
+                        </FrameLayout>
+
                     </LinearLayout>
-
-                    <FrameLayout
-                        android:id="@+id/paymentAmountLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
-                            android:id="@+id/paymentAmountInputLayout"
-                            style="@style/SigninSignupTextInputStyle"
-                            android:tag="@string/tag_demographics_error_scroll"
-                            app:customAssetFont="proxima_nova_semi_bold"
-                            app:hintTextAppearance="@style/FloatingLabelStyle">
-
-                            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
-                                android:id="@+id/paymentAmount"
-                                style="@style/DemographicsReviewEditTextStyle"
-                                android:imeOptions="actionNext"
-                                android:inputType="numberDecimal"
-                                android:textColor="@color/primary_color_enabled_selector"
-                                app:customAssetFont="proxima_nova_regular"
-                                app:hintTextAppearance="@style/FloatingLabelStyle"
-                                breeze:hintKey="payment_monthly_payment"
-                                tools:hint="Monthly Payment" />
-
-                        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
-
-                        <include
-                            android:id="@+id/paymentAmountOptional"
-                            layout="@layout/layout_optional_text_view" />
-
-                    </FrameLayout>
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/lastPaymentMessage"
@@ -336,7 +352,6 @@
                         android:visibility="invisible"
                         app:customAssetFont="gotham_rounded_book"
                         tools:text="Your last payment will be adjusted to $108.00" />
-
 
                 </LinearLayout>
 

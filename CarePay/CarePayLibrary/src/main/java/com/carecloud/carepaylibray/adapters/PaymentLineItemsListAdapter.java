@@ -48,7 +48,7 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final PendingBalancePayloadDTO paymentLineItem = detailsList.get(position);;
+        final PendingBalancePayloadDTO paymentLineItem = detailsList.get(position);
         holder.paymentDetailLabel.setText(paymentLineItem.getType());
         holder.paymentDetailAmount.setText(StringUtil.getFormattedBalanceAmount(paymentLineItem.getAmount()));
         if (paymentLineItem.getDetails().size() > 1 && callback != null) {
@@ -60,7 +60,7 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
                     callback.onDetailItemClick(paymentLineItem);
                 }
             });
-        }else if (holder.lineItemNameLabelDetails.getVisibility() == View.VISIBLE) {
+        } else if (holder.lineItemNameLabelDetails.getVisibility() == View.VISIBLE) {
             holder.lineItemNameLabelDetails.setVisibility(View.INVISIBLE);
         }
     }
@@ -77,7 +77,6 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
             paymentDetailLabel = (CarePayTextView) itemView.findViewById(R.id.lineItemNameLabel);
             paymentDetailAmount = (CarePayTextView) itemView.findViewById(R.id.lineItemAmountLabel);
             lineItemNameLabelDetails = (CarePayTextView) itemView.findViewById(R.id.lineItemNameLabelDetails);
-            lineItemNameLabelDetails.setGravity(Gravity.CENTER_HORIZONTAL);
         }
     }
 

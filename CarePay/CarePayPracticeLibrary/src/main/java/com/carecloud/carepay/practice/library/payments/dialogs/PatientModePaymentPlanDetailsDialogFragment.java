@@ -93,6 +93,8 @@ public class PatientModePaymentPlanDetailsDialogFragment extends PaymentPlanDeta
                     .getUserAuthPermissions().canMakePayment
                     && getArguments().getBoolean("enablePayNowButton", true));
         }
+        TextView paymentPlanNameTextView = (TextView) view.findViewById(R.id.paymentPlanNameTextView);
+        paymentPlanNameTextView.setText(paymentPlanDTO.getPayload().getDescription());
     }
 
     @Override
