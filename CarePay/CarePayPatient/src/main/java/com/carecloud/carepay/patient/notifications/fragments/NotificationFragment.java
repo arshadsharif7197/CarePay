@@ -64,7 +64,6 @@ public class NotificationFragment extends BaseFragment
     private Handler handler;
     private boolean isPaging;
     private Paging paging;
-    private NotificationsAdapter adapter;
 
     public interface NotificationCallback {
         void displayNotification(NotificationItem notificationItem);
@@ -147,7 +146,7 @@ public class NotificationFragment extends BaseFragment
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 int last = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-                if (last > recyclerView.getAdapter().getItemCount() - BOTTOM_ROW_OFFSET && !isPaging) {
+                if (last > notificationsAdapter.getItemCount() - BOTTOM_ROW_OFFSET && !isPaging) {
                     if (hasMorePages()) {
                         loadNextPage(false);
                         isPaging = true;
@@ -230,11 +229,10 @@ public class NotificationFragment extends BaseFragment
 
     private void setAdapter() {
         if (!notificationItems.isEmpty()) {
-            if (notificationsRecycler.getAdapter() == null) {
+            if (notificationsAdapter == null) {
                 notificationsAdapter = new NotificationsAdapter(getContext(), notificationItems, this);
                 notificationsRecycler.setAdapter(notificationsAdapter);
             } else {
-                notificationsAdapter = (NotificationsAdapter) notificationsRecycler.getAdapter();
                 notificationsAdapter.setNotificationItems(notificationItems);
             }
 
@@ -259,7 +257,7 @@ public class NotificationFragment extends BaseFragment
         notificationsAdapter.clearRemovedNotification(notificationItem);
         deleteNotificationRunnable.setNotificationItem(null);
         handler.removeCallbacks(deleteNotificationRunnable);
-        notificationsRecycler.getAdapter().notifyItemChanged(holder.getAdapterPosition());
+        notificationsAdapter.notifyItemChanged(holder.getAdapterPosition());
 
     }
 
@@ -273,7 +271,7 @@ public class NotificationFragment extends BaseFragment
 
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("page", String.valueOf(currentPage + 1));
-//        queryMap.put("limit", String.valueOf(paging.getResultsPerPage()));
+        queryMap.put("limit", String.valueOf(paging.getResultsPerPage()));
 
         TransitionDTO refreshTransition = notificationsDTO.getMetadata().getLinks().getNotifications();
         getWorkflowServiceHelper().execute(refreshTransition, getRefreshCallback(refresh), queryMap);
@@ -284,8 +282,7 @@ public class NotificationFragment extends BaseFragment
             @Override
             public void onPreExecute() {
                 if (!refresh) {
-                    adapter = (NotificationsAdapter) notificationsRecycler.getAdapter();
-                    adapter.setLoading(true);
+                    notificationsAdapter.setLoading(true);
                 }
             }
 
@@ -301,7 +298,7 @@ public class NotificationFragment extends BaseFragment
                     notificationItems.addAll(filterNotifications(notificationsDTO.getPayload().getNotifications(),
                             supportedNotificationTypes));
                 }
-                adapter.setLoading(false);
+                notificationsAdapter.setLoading(false);
                 isPaging = false;
                 setAdapter();
             }
@@ -310,15 +307,14 @@ public class NotificationFragment extends BaseFragment
             @Override
             public void onFailure(String exceptionMessage) {
                 refreshLayout.setRefreshing(false);
-                adapter.setLoading(false);
+                if (!refresh) {
+                    notificationsAdapter.setLoading(false);
+                }
                 isPaging = false;
                 showErrorNotification(exceptionMessage);
             }
         };
     }
-
-    ;
-
 
     @Override
     public void startNewSwipe() {
@@ -329,7 +325,7 @@ public class NotificationFragment extends BaseFragment
     public void viewSwipeCompleted(SwipeViewHolder holder) {
         NotificationItem notificationItem = notificationItems.get(holder.getAdapterPosition());
         notificationsAdapter.scheduleNotificationRemoval(notificationItem);
-        notificationsRecycler.getAdapter().notifyItemChanged(holder.getAdapterPosition());
+        notificationsAdapter.notifyItemChanged(holder.getAdapterPosition());
         deleteNotificationRunnable.setNotificationItem(notificationItem);
         handler.postDelayed(deleteNotificationRunnable, NOTIFICATION_DELETE_DELAY);
     }
@@ -352,7 +348,7 @@ public class NotificationFragment extends BaseFragment
                 int index = notificationItems.indexOf(notificationItem);
                 notificationsAdapter.clearRemovedNotification(notificationItem);
                 notificationItems.remove(notificationItem);
-                notificationsRecycler.getAdapter().notifyItemRemoved(index);
+                notificationsAdapter.notifyItemRemoved(index);
                 deleteNotification(notificationItem);
                 notificationItem = null;
                 if (notificationItems.size() == 0) {
