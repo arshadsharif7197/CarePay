@@ -658,4 +658,13 @@ public class PaymentsPayloadDTO implements Serializable {
         return null;
     }
 
+    public PaymentsPayloadSettingsDTO getPaymentSettings(String practiceId) {
+        for (PaymentsPayloadSettingsDTO paymentSettings : getPaymentSettings()) {
+            if (paymentSettings.getMetadata().getPracticeId().equals(practiceId)) {
+                return paymentSettings;
+            }
+        }
+        return null;
+    }
+
 }
