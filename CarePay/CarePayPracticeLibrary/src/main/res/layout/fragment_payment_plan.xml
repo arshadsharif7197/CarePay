@@ -453,7 +453,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/patient_mode_dialog_body_bg"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/cancelPaymentPlanButton"
