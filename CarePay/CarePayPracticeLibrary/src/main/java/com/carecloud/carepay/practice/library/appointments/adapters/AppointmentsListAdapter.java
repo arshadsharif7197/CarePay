@@ -257,10 +257,9 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
                     }
                 }
             });
-            Date startTime = DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime()).getDate();
-            Date now = new Date();
-            boolean appointmentHasStarted = startTime.before(now);
-            startCheckIn.setVisibility(appointmentHasStarted ? View.VISIBLE : View.GONE);
+            if (appointmentNavigationType == Defs.NAVIGATE_CHECKOUT) {
+                startCheckIn.setVisibility(appointmentDTO.getPayload().canCheckOut() ? View.VISIBLE : View.GONE);
+            }
         }
 
         private void setDateTime(DateUtil dateUtil) {

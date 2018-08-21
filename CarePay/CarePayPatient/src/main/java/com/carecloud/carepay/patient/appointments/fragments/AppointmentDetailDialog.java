@@ -350,10 +350,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                 }
             }
         }
-        Date startTime = DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime()).getDate();
-        Date now = new Date();
-        boolean appointmentHasStarted = startTime.before(now);
-        return isBreezePractice && isTheLocationWithBreezeEnabled && appointmentHasStarted;
+        return isBreezePractice && isTheLocationWithBreezeEnabled && appointmentDTO.getPayload().canCheckOut();
     }
 
     private void cleanupViews() {

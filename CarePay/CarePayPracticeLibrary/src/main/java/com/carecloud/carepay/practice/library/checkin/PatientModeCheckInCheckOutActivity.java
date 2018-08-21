@@ -156,10 +156,7 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
 
             if (appointmentNavigationType == Defs.NAVIGATE_CHECKOUT && appointmentsItems.size() == 1) {
                 AppointmentDTO appointmentDTO = appointmentsItems.get(0);
-                Date startTime = DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime()).getDate();
-                Date now = new Date();
-                boolean appointmentHasStarted = startTime.before(now);
-                if (appointmentHasStarted) {
+                if (appointmentDTO.getPayload().canCheckOut()) {
                     onStartCheckOut(appointmentsItems.get(0));
                     return;
                 }
