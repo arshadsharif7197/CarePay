@@ -88,10 +88,15 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
                 ContextCompat.getDrawable(getContext(), R.drawable.icon_drop_down), null);
 
         numberStr = String.valueOf(scheduledPaymentModel.getPayload().getAmount());
-        char last = numberStr.charAt(numberStr.length() - 1);
-        while (last == '0' || last == '.') {
-            numberStr = numberStr.substring(0, numberStr.length() - 1);
-            last = numberStr.charAt(numberStr.length() - 1);
+        char last = numberStr.charAt(numberStr.length()-1);
+        int decimal = numberStr.indexOf('.');
+        while(last == '0' || last == '.'){
+            if(numberStr.length() <= decimal){
+                break;
+            }
+            numberStr = numberStr.substring(0, numberStr.length()-1);
+            last = numberStr.charAt(numberStr.length()-1);
+
         }
         amountTextView = (EditText) findViewById(R.id.enter_amount_text);
         amountTextView.setText(currencyFormat.format(scheduledPaymentModel.getPayload().getAmount()));

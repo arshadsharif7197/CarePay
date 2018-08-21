@@ -223,6 +223,7 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
     @Override
     protected void setSelectedDate(Date selectedDate) {
         super.setSelectedDate(selectedDate);
+        paymentButton.setText(Label.getLabel("payment_plan_reschedule_payment_short"));
         validatePaymentRescheduled();
     }
 
