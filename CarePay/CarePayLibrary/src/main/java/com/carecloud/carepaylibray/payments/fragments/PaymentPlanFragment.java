@@ -270,7 +270,9 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         numberPaymentsEditText.addTextChangedListener(getRequiredTextWatcher(numberPaymentsInputLayout, new ValueInputCallback() {
             @Override
             public void onValueInput(String input) {
-                refreshNumberOfPayments(input);
+                if (!input.equals("0")) {
+                    refreshNumberOfPayments(input);
+                }
             }
         }));
 
@@ -291,16 +293,19 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
                         isCalculatingTime = true;
                         try {
                             monthlyPaymentAmount = Double.parseDouble(input);
-                            //make sure we don't consider eztra decimals here.. these will get formatted out
+                            //make sure we don't consider extra decimals here.. these will get formatted out
                             monthlyPaymentAmount = Math.round(monthlyPaymentAmount * 100) / 100D;
                             installments = calculatePaymentCount(monthlyPaymentAmount);
-                            if (numberPaymentsEditText.getOnFocusChangeListener() != null) {
-                                numberPaymentsEditText.getOnFocusChangeListener().onFocusChange(numberPaymentsEditText, true);
+                            if (installments > 0) {
+                                if (numberPaymentsEditText.getOnFocusChangeListener() != null) {
+                                    numberPaymentsEditText.getOnFocusChangeListener().onFocusChange(numberPaymentsEditText, true);
+                                }
+                                numberPaymentsEditText.setText(String.valueOf(installments));
+                                setLastPaymentMessage(monthlyPaymentAmount);
                             }
-                            numberPaymentsEditText.setText(String.valueOf(installments));
-                            setLastPaymentMessage(monthlyPaymentAmount);
                         } catch (NumberFormatException nfe) {
                             nfe.printStackTrace();
+                            isCalculatingTime = false;
                         }
                     }
                 }));
@@ -386,6 +391,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
             setLastPaymentMessage(monthlyPaymentAmount);
         } catch (NumberFormatException nfe) {
             nfe.printStackTrace();
+            isCalculatingAmount = false;
         }
     }
 
