@@ -547,8 +547,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
             dateOptions = generateDateOptions();
             paymentDateOption = dateOptions.get(0);
         }
-        //TODO: (#WeeklyPaymentPlans) uncomment the last part of the line
-        if (paymentPlansRules.getFrequencyCode().getWeekly().isAllowed()) {// || !applyRangeRules) {
+
+        if (paymentPlansRules.getFrequencyCode().getWeekly().isAllowed() || !applyRangeRules) {
             DemographicsOption weekly = new DemographicsOption();
             weekly.setName(PaymentPlanModel.FREQUENCY_WEEKLY);
             weekly.setLabel(Label.getLabel("payment.paymentPlan.frequency.option.weekly"));
