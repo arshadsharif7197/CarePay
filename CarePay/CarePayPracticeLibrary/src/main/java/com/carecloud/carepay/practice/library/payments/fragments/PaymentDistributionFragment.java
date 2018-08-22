@@ -309,9 +309,13 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int offset = view.getWidth() / 2 - paymentsPickerWindow.getWidth() / 2;
-                paymentsPickerWindow.showAsDropDown(view, offset, 3);
-                view.setSelected(true);
+                if(paymentsPickerWindow.isShowing()){
+                    paymentsPickerWindow.dismiss();
+                }else {
+                    int offset = view.getWidth() / 2 - paymentsPickerWindow.getWidth() / 2;
+                    paymentsPickerWindow.showAsDropDown(view, offset, 0);
+                    view.setSelected(true);
+                }
             }
         });
 
