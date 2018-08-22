@@ -37,6 +37,7 @@ import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.interfaces.DTO;
@@ -60,48 +61,18 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     public static final String PREVENT_NAV_BACK = "prevent_nav_back";
 
     protected DemographicDTO demographicDTO;
+    protected DemographicDataModel dataModel;
     StepProgressBar stepProgressBar;
     boolean preventNavBack = false;
     private boolean userAction = false;
     private ScrollView scrollView;
     protected CheckinFlowCallback checkinFlowCallback;
 
-    private WorkflowServiceCallback consentformcallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            if (checkinFlowCallback.getCurrentStep() >= checkinFlowCallback.getTotalSteps()) {
-                if(NavigationStateConstants.PATIENT_HOME.equals(workflowDTO.getState())){
-                    onUpdate(checkinFlowCallback, workflowDTO);
-                }else {
-                    checkinFlowCallback.setCurrentStep(checkinFlowCallback.getCurrentStep() + 1);
-                    checkinFlowCallback.navigateToWorkflow(workflowDTO);
-                }
-            } else {
-                DemographicDTO demographicDTO = new Gson().fromJson(workflowDTO.toString(), DemographicDTO.class);
-                checkinFlowCallback.applyChangesAndNavTo(demographicDTO, checkinFlowCallback.getCurrentStep() + 1);
-            }
-
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            showErrorNotification(exceptionMessage);
-            if(getActivity() != null) {
-                Log.e(getActivity().getString(R.string.alert_title_server_error), exceptionMessage);
-            }
-        }
-    };
-
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+        demographicDTO = checkinFlowCallback.getDemographicDTO();
+        dataModel = demographicDTO.getMetadata().getNewDataModel();
     }
 
     @Override
@@ -144,11 +115,6 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                 }
             });
         }
-    }
-
-    protected boolean checkTextEmptyValue(int textEditableId, View view) {
-        EditText editText = (EditText) view.findViewById(textEditableId);
-        return StringUtil.isNullOrEmpty(editText.getText().toString());
     }
 
     private void inflateContent(LayoutInflater inflater, View view) {
@@ -227,18 +193,39 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         }
     }
 
-    protected void initSelectableInput(TextView textView, DemographicsOption storeOption, String value, View optional) {
-        storeOption.setName(value);
-        storeOption.setLabel(value);
-
-        if (StringUtil.isNullOrEmpty(value)) {
-            value = Label.getLabel("demographics_choose");
+    protected void initSelectableInput(TextView textView, DemographicsOption storeOption,
+                                       String storedName, View optional, List<DemographicsOption> options) {
+        String key = storeOption.getName();
+        if (StringUtil.isNullOrEmpty(key)){
+            key = storedName;
+        }
+        storeOption = getOptionByKey(options, key, storeOption);
+        if (StringUtil.isNullOrEmpty(storedName)) {
+            String chooseLabel = Label.getLabel("demographics_choose");
             if (optional != null) {
                 optional.setVisibility(View.VISIBLE);
             }
-        }
-        textView.setText(value);
 
+            textView.setText(chooseLabel);
+        }else{
+            textView.setText(storeOption.getLabel());
+        }
+
+    }
+
+    private DemographicsOption getOptionByKey(List<DemographicsOption> options,
+                                              String name,
+                                              DemographicsOption storeOption) {
+        for (DemographicsOption option : options) {
+            if (option.getName().equals(name)) {
+                storeOption.setName(option.getName());
+                storeOption.setLabel(option.getLabel());
+                return storeOption;
+            }
+        }
+        storeOption.setName(name);
+        storeOption.setLabel(name);
+        return storeOption;
     }
 
     protected abstract boolean passConstraints(View view);
@@ -263,8 +250,41 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         TransitionDTO transitionDTO = demographicDTO.getMetadata().getTransitions().getUpdateDemographics();
         getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants.DEMOGRAPHICS_ADDRESS_BUNDLE,
                 demographicDTO.getPayload().getDemographics().getPayload().getAddress());
-        getWorkflowServiceHelper().execute(transitionDTO, consentformcallback, demogrPayloadString, queries, header);
+        getWorkflowServiceHelper().execute(transitionDTO, consentFormCallback, demogrPayloadString, queries, header);
     }
+
+    private WorkflowServiceCallback consentFormCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            if (checkinFlowCallback.getCurrentStep() >= checkinFlowCallback.getTotalSteps()) {
+                if (NavigationStateConstants.PATIENT_HOME.equals(workflowDTO.getState())) {
+                    onUpdate(checkinFlowCallback, workflowDTO);
+                } else {
+                    checkinFlowCallback.setCurrentStep(checkinFlowCallback.getCurrentStep() + 1);
+                    checkinFlowCallback.navigateToWorkflow(workflowDTO);
+                }
+            } else {
+                DemographicDTO demographicDTO = new Gson().fromJson(workflowDTO.toString(), DemographicDTO.class);
+                checkinFlowCallback.applyChangesAndNavTo(demographicDTO, checkinFlowCallback.getCurrentStep() + 1);
+            }
+
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
+            if (getActivity() != null) {
+                Log.e(getActivity().getString(R.string.alert_title_server_error), exceptionMessage);
+            }
+        }
+    };
 
 
     protected void setVisibility(View view, boolean isDisplayed) {
@@ -673,4 +693,11 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     public DTO getDto() {
         return demographicDTO;
     }
+
+    public void afterLanguageChanged(DemographicDTO demographicDTO) {
+        dataModel = demographicDTO.getMetadata().getNewDataModel();
+        replaceTranslatedOptionsValues();
+    }
+
+    protected abstract void replaceTranslatedOptionsValues();
 }

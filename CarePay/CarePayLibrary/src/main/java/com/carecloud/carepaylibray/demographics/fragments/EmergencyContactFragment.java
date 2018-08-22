@@ -73,7 +73,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
     private EditText emailEditText;
     private EditText addressEditText2;
     private EditText zipCodeEditText;
-    private EditText emergencyContactRelationshipEditText;
+    private EditText ecRelationshipEditText;
     private Button saveButton;
     private TextInputLayout emailInputLayout;
     private TextInputLayout zipCodeTextInputLayout;
@@ -84,9 +84,11 @@ public class EmergencyContactFragment extends BaseDialogFragment {
     private TextInputLayout primaryPhoneTextInputLayout;
     private TextInputLayout dateBirthTextInputLayout;
     private TextInputLayout secondaryPhoneTextInputLayout;
-    private TextInputLayout emergencyContactRelationshipInputLayout;
+    private TextInputLayout ecRelationshipInputLayout;
     private TextInputLayout address1TextInputLayout;
     private View parentScrollView;
+    private DemographicsOption selectedGender = new DemographicsOption();
+    private DemographicsOption selectedRelationship = new DemographicsOption();
 
     public EmergencyContactFragment() {
 
@@ -339,32 +341,35 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                             }
                         },
                         Label.getLabel("demographics_review_gender")));
-        genderEditText.setText(emergencyContact.getGender());
+        initSelectableInput(genderEditText, selectedGender, emergencyContact.getGender(), null,
+                dataModel.getDemographic().getPersonalDetails().getProperties().getGender().getOptions());
         genderEditText.getOnFocusChangeListener().onFocusChange(genderEditText,
                 !StringUtil.isNullOrEmpty(emergencyContact.getGender()));
 
-        emergencyContactRelationshipInputLayout = (TextInputLayout) view
+        ecRelationshipInputLayout = (TextInputLayout) view
                 .findViewById(R.id.emergencyContactRelationshipInputLayout);
-        emergencyContactRelationshipEditText = (EditText) view.findViewById(R.id.emergencyContactRelationshipEditText);
-        emergencyContactRelationshipEditText.setOnFocusChangeListener(SystemUtil
-                .getHintFocusChangeListener(emergencyContactRelationshipInputLayout, null));
-        emergencyContactRelationshipEditText.setOnClickListener(
+        ecRelationshipEditText = (EditText) view.findViewById(R.id.emergencyContactRelationshipEditText);
+        ecRelationshipEditText.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(ecRelationshipInputLayout, null));
+        ecRelationshipEditText.setOnClickListener(
                 getOptionsListener(dataModel.getDemographic()
                                 .getEmergencyContact().getProperties().getRelationshipType().getOptions(),
                         new CheckInDemographicsBaseFragment.OnOptionSelectedListener() {
                             @Override
                             public void onOptionSelected(DemographicsOption option) {
-                                emergencyContactRelationshipEditText.setText(option.getLabel());
-                                emergencyContactRelationshipEditText.getOnFocusChangeListener()
-                                        .onFocusChange(emergencyContactRelationshipEditText,
-                                                !StringUtil.isNullOrEmpty(emergencyContactRelationshipEditText
+                                ecRelationshipEditText.setText(option.getLabel());
+                                ecRelationshipEditText.getOnFocusChangeListener()
+                                        .onFocusChange(ecRelationshipEditText,
+                                                !StringUtil.isNullOrEmpty(ecRelationshipEditText
                                                         .getText().toString()));
                                 checkIfEnableButton(false);
                             }
                         },
                         Label.getLabel("demographics_emergency_contact_relationship")));
-        emergencyContactRelationshipEditText.setText(emergencyContact.getEmergencyContactRelationship());
-        emergencyContactRelationshipEditText.getOnFocusChangeListener().onFocusChange(emergencyContactRelationshipEditText,
+        initSelectableInput(ecRelationshipEditText, selectedRelationship, emergencyContact
+                .getEmergencyContactRelationship(), null, dataModel.getDemographic().getEmergencyContact()
+                .getProperties().getRelationshipType().getOptions());
+        ecRelationshipEditText.getOnFocusChangeListener().onFocusChange(ecRelationshipEditText,
                 !StringUtil.isNullOrEmpty(emergencyContact.getEmergencyContactRelationship()));
 
         address1TextInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
@@ -408,6 +413,35 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         view.findViewById(R.id.addressInfoOptionalTextView).setVisibility(View.VISIBLE);
 
         checkIfEnableButton(false);
+    }
+
+    protected void initSelectableInput(TextView textView, DemographicsOption storeOption,
+                                       String storedName, View optional, List<DemographicsOption> options) {
+        String key = storeOption.getName();
+        if (StringUtil.isNullOrEmpty(key)) {
+            key = storedName;
+        }
+        storeOption = getOptionByKey(options, key, storeOption);
+        if (StringUtil.isNullOrEmpty(storedName)) {
+            String chooseLabel = Label.getLabel("demographics_choose");
+            if (optional != null) {
+                optional.setVisibility(View.VISIBLE);
+            }
+
+            textView.setText(chooseLabel);
+        } else {
+            textView.setText(storeOption.getLabel());
+        }
+
+    }
+
+    private DemographicsOption getOptionByKey(List<DemographicsOption> options, String name, DemographicsOption selectedRelationship) {
+        for (DemographicsOption option : options) {
+            if (option.getName().equals(name)) {
+                return option;
+            }
+        }
+        return null;
     }
 
     private boolean isEmptyEC(PatientModel emergencyContact) {
@@ -471,13 +505,13 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                 dataModel.getProperties().getSecondaryPhoneNumber().isRequired()))
             return false;
 
-        if (StringUtil.isNullOrEmpty(emergencyContactRelationshipEditText.getText().toString())) {
+        if (StringUtil.isNullOrEmpty(ecRelationshipEditText.getText().toString())) {
             if (userInteraction) {
-                setError(emergencyContactRelationshipInputLayout);
+                setError(ecRelationshipInputLayout);
             }
             return false;
         } else {
-            unsetFieldError(emergencyContactRelationshipInputLayout);
+            unsetFieldError(ecRelationshipInputLayout);
         }
 
         if (!StringUtil.isNullOrEmpty(addressEditText.getText().toString())
@@ -658,11 +692,11 @@ public class EmergencyContactFragment extends BaseDialogFragment {
             emergencyContact.setDateOfBirth(DateUtil.getInstance().setDateRaw(dateOfBirth, true)
                     .toStringWithFormatYyyyDashMmDashDd());
         }
-        String gender = genderEditText.getText().toString().trim();
+        String gender = selectedGender.getName();
         if (!StringUtil.isNullOrEmpty(gender)) {
             emergencyContact.setGender(gender);
         }
-        String relationShip = emergencyContactRelationshipEditText.getText().toString().trim();
+        String relationShip = selectedRelationship.getName();
         if (!StringUtil.isNullOrEmpty(relationShip)) {
             emergencyContact.setEmergencyContactRelationship(relationShip);
         }
