@@ -270,7 +270,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         installmentsEditText.addTextChangedListener(getRequiredTextWatcher(installmentsInputLayout, new ValueInputCallback() {
             @Override
             public void onValueInput(String input) {
-                if (!input.equals("0")) {
+                if (!input.startsWith("0")) {
                     refreshNumberOfPayments(input);
                 }
             }
@@ -862,6 +862,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
                 String input = editable.toString();
                 if (StringUtil.isNullOrEmpty(input)) {
                     setError(inputLayout, Label.getLabel("demographics_required_validation_msg"), false);
+                } else if (input.startsWith("0")) {
+                    editable.clear();
                 } else {
                     valueInputCallback.onValueInput(input);
                     enableCreatePlanButton();
