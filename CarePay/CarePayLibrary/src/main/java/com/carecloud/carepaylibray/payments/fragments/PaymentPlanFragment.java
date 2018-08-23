@@ -245,7 +245,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
             frequencyCodeEditText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showChooseDialog(getContext(), frequencyOptions, Label.getLabel("payment_day_of_the_month"),
+                    showChooseDialog(getContext(), frequencyOptions, Label.getLabel("payment.paymentPlan.frequency.dialog.title"),
                             new ValueOptionCallback() {
                                 @Override
                                 public void onValueOption(DemographicsOption option) {
