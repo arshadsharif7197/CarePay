@@ -21,6 +21,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
      */
     public AddRetailItemAdapter(Context context, @NonNull List<RetailItemDto> retailItems, AddRetailItemCallback callback){
         this.context = context;
-        this.retailItems = retailItems;
+        this.retailItems = filterActiveItems(retailItems);
         this.callback = callback;
     }
 
@@ -79,7 +80,9 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
         Map<Integer, RetailItemOptionChoiceDto> defaultOptions = new HashMap<>();
         for(int i=0; i<retailItem.getOptions().size(); i++){
             RetailItemOptionDto optionDto = retailItem.getOptions().get(i);
-            defaultOptions.put(i, optionDto.getChoices().get(optionDto.getDefaultChoice()));
+            if(!optionDto.getChoices().isEmpty()) {
+                defaultOptions.put(i, optionDto.getChoices().get(optionDto.getDefaultChoice()));
+            }
         }
 
         double priceModification = retailItem.getPriceModification(defaultOptions);
@@ -139,7 +142,7 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
      * @param retailItems retail items
      */
     public void addRetailItems(List<RetailItemDto> retailItems) {
-        this.retailItems.addAll(retailItems);
+        this.retailItems.addAll(filterActiveItems(retailItems));
         notifyDataSetChanged();
     }
 
@@ -148,8 +151,18 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
      * @param retailItems retail items
      */
     public void setRetailItems(List<RetailItemDto> retailItems) {
-        this.retailItems = retailItems;
+        this.retailItems = filterActiveItems(retailItems);
         notifyDataSetChanged();
+    }
+
+    private List<RetailItemDto> filterActiveItems(List<RetailItemDto> retailItems){
+        List<RetailItemDto> filteredItems = new ArrayList<>();
+        for(RetailItemDto item : retailItems){
+            if(item.isEnabled()){
+                filteredItems.add(item);
+            }
+        }
+        return filteredItems;
     }
 
 
