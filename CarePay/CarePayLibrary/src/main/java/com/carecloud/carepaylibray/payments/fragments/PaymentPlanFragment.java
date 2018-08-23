@@ -199,7 +199,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         String monthlyOrWeekly = interval == PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS
                 ? Label.getLabel("payment.paymentPlan.frequency.option.monthly").toLowerCase()
                 : Label.getLabel("payment.paymentPlan.frequency.option.weekly").toLowerCase();
-        parametersTextView.setText(String.format(Locale.US, Label.getLabel("payment_plan_parameters"),
+        parametersTextView.setText(String.format(Locale.US, Label.getLabel("payment_plan_parameters_temporal"),
                 paymentPlanBalanceRules.getMaxDuration().getValue(),
                 monthOrWeek,
                 monthlyOrWeekly,
@@ -593,7 +593,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
             }
         } else if (installments < 2) {
             setError(numberPaymentsInputLayout,
-                    String.format(Label.getLabel("payment_plan_min_months_error"),
+                    String.format(Label.getLabel("payment_plan_min_months_error_temporal"),
                             monthOrWeek,
                             String.valueOf(2))
                     , isUserInteraction);
@@ -602,7 +602,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         } else if (installments > paymentPlanBalanceRules.getMaxDuration().getValue()) {
 
             setError(numberPaymentsInputLayout,
-                    String.format(Label.getLabel("payment_plan_max_months_error"),
+                    String.format(Label.getLabel("payment_plan_max_months_error_temporal"),
                             monthOrWeek,
                             String.valueOf(paymentPlanBalanceRules.getMaxDuration().getValue()))
                     , isUserInteraction);

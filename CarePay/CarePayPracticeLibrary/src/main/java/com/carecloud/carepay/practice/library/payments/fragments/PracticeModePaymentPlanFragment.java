@@ -203,7 +203,8 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
                     }
                 }
             }
-            if (balanceItem.getBalance() != balanceItem.getAmountInPaymentPlan()) {
+            if ((balanceItem.getBalance() > 0)
+                    && (balanceItem.getBalance() != balanceItem.getAmountInPaymentPlan())) {
                 filteredList.add(balanceItem);
             }
         }
@@ -297,7 +298,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
             }
         } else if (installments < 2) {
             setError(numberPaymentsInputLayout,
-                    String.format(Label.getLabel("payment_plan_min_months_error"),
+                    String.format(Label.getLabel("payment_plan_min_months_error_temporal"),
                             String.valueOf(2))
                     , isUserInteraction);
             clearError(R.id.paymentAmountInputLayout);
