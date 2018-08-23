@@ -145,11 +145,11 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
         }
 
         installments = paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments();
-        numberPaymentsEditText.setText(String.valueOf(installments));
-        numberPaymentsEditText.getOnFocusChangeListener().onFocusChange(numberPaymentsEditText, true);
+        installmentsEditText.setText(String.valueOf(installments));
+        installmentsEditText.getOnFocusChangeListener().onFocusChange(installmentsEditText, true);
 
-        monthlyPaymentAmount = paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount();
-        monthlyPaymentEditText.setText(currencyFormatter.format(monthlyPaymentAmount));
+        amounthPayment = paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount();
+        amountPaymentEditText.setText(currencyFormatter.format(amounthPayment));
 
     }
 
@@ -257,7 +257,7 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
         }
 
         PaymentPlanModel paymentPlanModel = new PaymentPlanModel();
-        paymentPlanModel.setAmount(monthlyPaymentAmount);
+        paymentPlanModel.setAmount(amounthPayment);
         paymentPlanModel.setFrequencyCode(frequencyOption.getName());
         paymentPlanModel.setInstallments(installments);
         paymentPlanModel.setEnabled(true);

@@ -128,11 +128,11 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
                     .getDayOfTheWeek(paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfWeek()));
         }
 
-        numberPaymentsEditText.setText(String.valueOf(paymentPlanDTO.getPayload().getPaymentPlanDetails()
+        installmentsEditText.setText(String.valueOf(paymentPlanDTO.getPayload().getPaymentPlanDetails()
                 .getInstallments()));
-        numberPaymentsEditText.getOnFocusChangeListener().onFocusChange(numberPaymentsEditText, true);
+        installmentsEditText.getOnFocusChangeListener().onFocusChange(installmentsEditText, true);
 
-        monthlyPaymentEditText.setText(currencyFormatter.format(paymentPlanDTO.getPayload()
+        amountPaymentEditText.setText(currencyFormatter.format(paymentPlanDTO.getPayload()
                 .getPaymentPlanDetails().getAmount()));
 
         TextView headerMessage = (TextView) view.findViewById(R.id.headerMessage);
@@ -301,7 +301,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         }
 
         PaymentPlanModel paymentPlanModel = new PaymentPlanModel();
-        paymentPlanModel.setAmount(monthlyPaymentAmount);
+        paymentPlanModel.setAmount(amounthPayment);
         paymentPlanModel.setFrequencyCode(frequencyOption.getName());
         paymentPlanModel.setInstallments(installments);
         paymentPlanModel.setEnabled(true);
@@ -519,13 +519,13 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     }
 
     private void disableFields() {
-        numberPaymentsEditText.setEnabled(false);
-        numberPaymentsEditText.setFocusable(false);
-        numberPaymentsEditText.setFocusableInTouchMode(false);
+        installmentsEditText.setEnabled(false);
+        installmentsEditText.setFocusable(false);
+        installmentsEditText.setFocusableInTouchMode(false);
 
-        monthlyPaymentEditText.setEnabled(false);
-        monthlyPaymentEditText.setFocusable(false);
-        monthlyPaymentEditText.setFocusableInTouchMode(false);
+        amountPaymentEditText.setEnabled(false);
+        amountPaymentEditText.setFocusable(false);
+        amountPaymentEditText.setFocusableInTouchMode(false);
     }
 
     private void setValidationRules() {
