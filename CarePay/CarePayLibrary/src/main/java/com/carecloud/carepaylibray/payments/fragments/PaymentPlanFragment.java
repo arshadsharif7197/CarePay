@@ -94,7 +94,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
     private String dialogTitle;
     private TextView parametersTextView;
     @PaymentSettingsBalanceRangeRule.IntervalRange
-    private String interval = PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS;
+    protected String interval = PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS;
     protected String practiceId;
 
     /**
@@ -135,22 +135,14 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
         selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
         //calculateTotalAmount(selectedBalance);
-        paymentPlanAmount = calculateTotalAmount(args.getDouble(KEY_PLAN_AMOUNT));
+        paymentPlanAmount = calculateTotalAmount(args.getDouble(KEY_PLAN_AMOUNT, paymentPlanAmount));
         frequencyOptions = generateFrequencyOptions(paymentsModel.getPaymentPayload()
                 .getPaymentSettings().get(0).getPayload().getPaymentPlans());
         if (selectedBalance != null) {
             practiceId = selectedBalance.getMetadata().getPracticeId();
-            getPaymentPlanSettings(practiceId);
+            paymentPlanBalanceRules = getPaymentPlanSettings(interval);
         }
         currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (callback == null) {
-            attachCallback(getContext());
-        }
     }
 
     @Override
@@ -165,6 +157,14 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         setupFields(view);
         setupButtons(view);
         setAdapter(view);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (callback == null) {
+            attachCallback(getContext());
+        }
     }
 
     protected void setupToolBar(View view) {
@@ -250,7 +250,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
                                 @Override
                                 public void onValueOption(DemographicsOption option) {
                                     if (!frequencyOption.getName().equals(option.getName())) {
-                                        manageFrequencyChange(option);
+                                        manageFrequencyChange(option, true);
                                     }
 
                                 }
@@ -330,7 +330,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         updateHints();
     }
 
-    protected void manageFrequencyChange(DemographicsOption option) {
+    protected void manageFrequencyChange(DemographicsOption option, boolean refresh) {
         frequencyOption = option;
         frequencyCodeEditText.setText(option.getLabel());
         if (option.getName().equals(PaymentPlanModel.FREQUENCY_MONTHLY)) {
@@ -354,7 +354,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         }
         updateHints();
         if (applyRangeRules) {
-            getPaymentPlanSettings(practiceId);
+            paymentPlanBalanceRules = getPaymentPlanSettings(interval);
         }
         if (parametersTextView != null) {
             updatePaymentPlanParameters();
@@ -481,23 +481,26 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         }
     }
 
-    protected void getPaymentPlanSettings(String practiceId) {
+    protected PaymentSettingsBalanceRangeRule getPaymentPlanSettings(String interval) {
         for (PaymentsPayloadSettingsDTO settingsDTO : paymentsModel.getPaymentPayload().getPaymentSettings()) {
             if (practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())) {
+                PaymentSettingsBalanceRangeRule temp = null;
                 for (PaymentSettingsBalanceRangeRule balanceRangeRule : settingsDTO.getPayload()
                         .getPaymentPlans().getBalanceRangeRules()) {
                     if (interval.equals(balanceRangeRule.getMaxDuration().getInterval())) {
                         double minAmount = balanceRangeRule.getMinBalance().getValue();
                         double maxAmount = balanceRangeRule.getMaxBalance().getValue();
+                        double minTempValue = temp == null ? 0 : temp.getMinBalance().getValue();
                         if (paymentPlanAmount >= minAmount && paymentPlanAmount <= maxAmount &&
-                                minAmount > paymentPlanBalanceRules.getMinBalance().getValue()) {
-                            paymentPlanBalanceRules = balanceRangeRule;
+                                minAmount > minTempValue) {
+                            temp = balanceRangeRule;
                         }
                     }
                 }
-                return;
+                return temp;
             }
         }
+        return null;
     }
 
     protected List<DemographicsOption> generateDateOptions() {
@@ -539,7 +542,13 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
 
     protected List<DemographicsOption> generateFrequencyOptions(PaymentsSettingsPaymentPlansDTO paymentPlansRules) {
         List<DemographicsOption> optionList = new ArrayList<>();
-        if (paymentPlansRules.getFrequencyCode().getMonthly().isAllowed() || !applyRangeRules) {
+        if (selectedBalance != null) {
+            practiceId = selectedBalance.getMetadata().getPracticeId();
+        }
+        PaymentSettingsBalanceRangeRule paymentSettings = getPaymentPlanSettings(PaymentSettingsBalanceRangeRule
+                .INTERVAL_MONTHS);
+        if ((paymentPlansRules.getFrequencyCode().getMonthly().isAllowed() && (paymentSettings != null))
+                || !applyRangeRules) {
             DemographicsOption monthly = new DemographicsOption();
             monthly.setName(PaymentPlanModel.FREQUENCY_MONTHLY);
             monthly.setLabel(Label.getLabel("payment.paymentPlan.frequency.option.monthly"));
@@ -548,7 +557,10 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
             paymentDateOption = dateOptions.get(0);
         }
 
-        if (paymentPlansRules.getFrequencyCode().getWeekly().isAllowed() || !applyRangeRules) {
+        paymentSettings = getPaymentPlanSettings(PaymentSettingsBalanceRangeRule
+                .INTERVAL_WEEKS);
+        if ((paymentPlansRules.getFrequencyCode().getWeekly().isAllowed() && (paymentSettings != null))
+                || !applyRangeRules) {
             DemographicsOption weekly = new DemographicsOption();
             weekly.setName(PaymentPlanModel.FREQUENCY_WEEKLY);
             weekly.setLabel(Label.getLabel("payment.paymentPlan.frequency.option.weekly"));

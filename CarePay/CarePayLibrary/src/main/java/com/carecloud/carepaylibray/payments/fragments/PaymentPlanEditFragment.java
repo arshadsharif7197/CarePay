@@ -97,10 +97,10 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     public void onCreate(Bundle icicle) {
         Bundle args = getArguments();
         paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
-        super.onCreate(icicle);
-        paymentPlanAmount = paymentPlanDTO.getPayload().getAmount();
         practiceId = paymentPlanDTO.getMetadata().getPracticeId();
-        getPaymentPlanSettings(practiceId);
+        paymentPlanAmount = paymentPlanDTO.getPayload().getAmount();
+        super.onCreate(icicle);
+        paymentPlanBalanceRules = getPaymentPlanSettings(interval);
         currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
         canEditPaymentPlan = checkCanEditPaymentPlan(paymentPlanDTO.getMetadata().getPracticeId());
         if (!canEditPaymentPlan) {
@@ -545,19 +545,13 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     @Override
     protected List<DemographicsOption> generateFrequencyOptions(PaymentsSettingsPaymentPlansDTO paymentPlansRules) {
         List<DemographicsOption> options = super.generateFrequencyOptions(paymentPlansRules);
-        String name;
-        String label;
-        if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode()
-                .equals(PaymentPlanModel.FREQUENCY_MONTHLY)) {
-            name = PaymentPlanModel.FREQUENCY_MONTHLY;
-            label = Label.getLabel("payment.paymentPlan.frequency.option.monthly");
-        } else {
-            name = PaymentPlanModel.FREQUENCY_WEEKLY;
-            label = Label.getLabel("payment.paymentPlan.frequency.option.weekly");
+        for (DemographicsOption frequencyOption : options) {
+            if (frequencyOption.getName()
+                    .equals(paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode())) {
+                this.frequencyOption = frequencyOption;
+            }
         }
 
-        frequencyOption.setName(name);
-        frequencyOption.setLabel(label);
         return options;
     }
 }
