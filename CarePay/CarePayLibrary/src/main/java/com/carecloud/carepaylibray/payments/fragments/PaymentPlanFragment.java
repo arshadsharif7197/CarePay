@@ -531,6 +531,9 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
 
     private List<DemographicsOption> generateDayOptions() {
         List<DemographicsOption> optionList = new ArrayList<>();
+        DemographicsOption sunday = new DemographicsOption();
+        sunday.setName(PaymentPlanModel.SUNDAY);
+        sunday.setLabel(Label.getLabel("sunday"));
         DemographicsOption monday = new DemographicsOption();
         monday.setName(PaymentPlanModel.MONDAY);
         monday.setLabel(Label.getLabel("monday"));
@@ -546,11 +549,16 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         DemographicsOption friday = new DemographicsOption();
         friday.setName(PaymentPlanModel.FRIDAY);
         friday.setLabel(Label.getLabel("friday"));
+        DemographicsOption saturday = new DemographicsOption();
+        saturday.setName(PaymentPlanModel.SATURDAY);
+        saturday.setLabel(Label.getLabel("saturday"));
+        optionList.add(sunday);
         optionList.add(monday);
         optionList.add(tuesday);
         optionList.add(wednesday);
         optionList.add(thursday);
         optionList.add(friday);
+        optionList.add(saturday);
         return optionList;
     }
 

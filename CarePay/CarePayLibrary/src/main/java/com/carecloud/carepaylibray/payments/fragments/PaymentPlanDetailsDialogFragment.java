@@ -183,7 +183,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
             }
             calendar.set(Calendar.DAY_OF_MONTH, drawDay);
         } else {
-            int dayOfWeek = planPayload.getPaymentPlanDetails().getDayOfWeek() + 1; //Monday ==2
+            int dayOfWeek = planPayload.getPaymentPlanDetails().getDayOfWeek();
             if (calendar.get(Calendar.DAY_OF_WEEK) > dayOfWeek) {
                 calendar.add(Calendar.DAY_OF_WEEK, dayOfWeek + 1);
             } else {
