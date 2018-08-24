@@ -217,6 +217,7 @@
                                     android:editable="false"
                                     android:focusableInTouchMode="false"
                                     android:imeOptions="actionNext"
+                                    android:textColor="@color/primary_color_enabled_selector"
                                     app:customAssetFont="proxima_nova_regular"
                                     app:hintTextAppearance="@style/FloatingLabelStyle"
                                     breeze:hintKey="payment.paymentPlan.frequency.field.hint"

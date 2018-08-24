@@ -143,7 +143,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
 
         final ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload().
                 findScheduledPayment(paymentPlanDTO);
-        if(scheduledPayment != null){
+        if (scheduledPayment != null) {
             View scheduledPaymentLayout = view.findViewById(R.id.scheduledPaymentLayout);
             scheduledPaymentLayout.setVisibility(View.VISIBLE);
             TextView scheduledPaymentMessage = (TextView) view.findViewById(R.id.scheduledPaymentMessage);
@@ -183,7 +183,8 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
             }
             calendar.set(Calendar.DAY_OF_MONTH, drawDay);
         } else {
-            int dayOfWeek = planPayload.getPaymentPlanDetails().getDayOfWeek();
+            int dayOfWeek = planPayload.getPaymentPlanDetails().getDayOfWeek() + 1; //Monday ==2
+
             if (calendar.get(Calendar.DAY_OF_WEEK) > dayOfWeek) {
                 calendar.add(Calendar.DAY_OF_WEEK, dayOfWeek + 1);
             } else {

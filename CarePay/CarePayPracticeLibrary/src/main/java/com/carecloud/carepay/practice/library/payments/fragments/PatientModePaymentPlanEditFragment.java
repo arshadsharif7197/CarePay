@@ -33,16 +33,6 @@ public class PatientModePaymentPlanEditFragment extends PaymentPlanEditFragment 
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         paymentPlanBalanceRules = getPaymentPlanSettings(interval);
-        if (frequencyOptions.size() > 1) {
-            if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode()
-                    .equals(PaymentPlanDetailsDTO.FREQUENCY_MONTHLY)) {
-                frequencyOption = frequencyOptions.get(0);
-            } else {
-                frequencyOption = frequencyOptions.get(1);
-            }
-        } else {
-            frequencyOption = frequencyOptions.get(0);
-        }
     }
 
     @Override

@@ -100,11 +100,21 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         practiceId = paymentPlanDTO.getMetadata().getPracticeId();
         paymentPlanAmount = paymentPlanDTO.getPayload().getAmount();
         super.onCreate(icicle);
+        setInterval();
         paymentPlanBalanceRules = getPaymentPlanSettings(interval);
         currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
-        canEditPaymentPlan = checkCanEditPaymentPlan(paymentPlanDTO.getMetadata().getPracticeId());
+        canEditPaymentPlan = checkCanEditPaymentPlan();
         if (!canEditPaymentPlan) {
             setValidationRules();
+        }
+    }
+
+    private void setInterval() {
+        if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode()
+                .equals(PaymentPlanModel.FREQUENCY_MONTHLY)) {
+            interval = PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS;
+        } else {
+            interval = PaymentSettingsBalanceRangeRule.INTERVAL_WEEKS;
         }
     }
 
@@ -493,14 +503,19 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         }
     };
 
-    private boolean checkCanEditPaymentPlan(String practiceId) {
+    private boolean checkCanEditPaymentPlan() {
         for (PaymentsPayloadSettingsDTO settings : paymentsModel.getPaymentPayload().getPaymentSettings()) {
             if (settings.getMetadata().getPracticeId().equals(practiceId)) {
-                for (PaymentSettingsBalanceRangeRule rules : settings.getPayload()
+                for (PaymentSettingsBalanceRangeRule rule : settings.getPayload()
                         .getPaymentPlans().getBalanceRangeRules()) {
-                    if (rules.getMaxBalance().getValue() >= paymentPlanDTO.getPayload().getAmount()
-                            && rules.getMinBalance().getValue() <= paymentPlanDTO.getPayload().getAmount()) {
-                        return true;
+                    if (interval.equals(rule.getMaxDuration().getInterval())) {
+                        double minAmount = rule.getMinBalance().getValue();
+                        double maxAmount = rule.getMaxBalance().getValue();
+                        if (maxAmount >= paymentPlanDTO.getPayload().getAmount()
+                                && minAmount <= paymentPlanDTO.getPayload().getAmount()) {
+                            return true;
+                        }
+
                     }
                 }
             }
@@ -526,9 +541,16 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         amountPaymentEditText.setEnabled(false);
         amountPaymentEditText.setFocusable(false);
         amountPaymentEditText.setFocusableInTouchMode(false);
+
+        frequencyCodeEditText.setEnabled(false);
+        frequencyCodeEditText.setFocusable(false);
+        frequencyCodeEditText.setFocusableInTouchMode(false);
     }
 
     private void setValidationRules() {
+        if (paymentPlanBalanceRules == null) {
+            paymentPlanBalanceRules = new PaymentSettingsBalanceRangeRule();
+        }
         paymentPlanBalanceRules.getMaxBalance().setValue(paymentPlanAmount);
         paymentPlanBalanceRules.getMinBalance().setValue(paymentPlanAmount);
         paymentPlanBalanceRules.getMaxDuration().setValue(paymentPlanDTO.getPayload()
@@ -545,13 +567,52 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     @Override
     protected List<DemographicsOption> generateFrequencyOptions(PaymentsSettingsPaymentPlansDTO paymentPlansRules) {
         List<DemographicsOption> options = super.generateFrequencyOptions(paymentPlansRules);
-        for (DemographicsOption frequencyOption : options) {
-            if (frequencyOption.getName()
-                    .equals(paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode())) {
-                this.frequencyOption = frequencyOption;
+        if (!frequencyOptionsContainsPaymentPlanFrequency(options)) {
+            options.clear();
+        }
+        if (options.isEmpty()) {
+            frequencyOption = new DemographicsOption();
+            frequencyOption.setLabel(StringUtil.capitalize(paymentPlanDTO.getPayload()
+                    .getPaymentPlanDetails().getFrequencyCode()));
+            frequencyOption.setName(paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode());
+            if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode()
+                    .equals(PaymentPlanDetailsDTO.FREQUENCY_MONTHLY)) {
+                dateOptions = generateDateOptions();
+                paymentDateOption = dateOptions.get(paymentPlanDTO.getPayload()
+                        .getPaymentPlanDetails().getDayOfMonth() - 1);
+                selectedDateOptions = dateOptions;
+            } else {
+                dayOfWeekOptions = generateDayOptions();
+                if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfWeek() > dayOfWeekOptions.size()) {
+                    paymentDateOption = dayOfWeekOptions.get(0);
+                } else {
+                    paymentDateOption = dayOfWeekOptions.get(paymentPlanDTO.getPayload()
+                            .getPaymentPlanDetails().getDayOfWeek());
+                }
+
+                selectedDateOptions = dayOfWeekOptions;
             }
+        } else {
+            for (DemographicsOption frequencyOption : options) {
+                if (frequencyOption.getName()
+                        .equals(paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode())) {
+                    this.frequencyOption = frequencyOption;
+                }
+            }
+
         }
 
+
         return options;
+    }
+
+    private boolean frequencyOptionsContainsPaymentPlanFrequency(List<DemographicsOption> frequencyOptions) {
+        for (DemographicsOption frequency : frequencyOptions) {
+            if (frequency.getName().equals(paymentPlanDTO.getPayload()
+                    .getPaymentPlanDetails().getFrequencyCode())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
