@@ -3,7 +3,9 @@ package com.carecloud.carepay.patient.myhealth.dtos;
 import com.carecloud.carepay.patient.patientsplash.dtos.OptionsDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -23,7 +25,7 @@ public class MyHealthPayloadDto {
     private MyHealthDataDto myHealthData = new MyHealthDataDto();
     @SerializedName("demographics")
     @Expose
-    private DemographicPayloadDTO demographicDTO = new DemographicPayloadDTO();
+    private DemographicPayloadInfoDTO demographicDTO = new DemographicPayloadInfoDTO();
     @SerializedName("education_material")
     @Expose
     private EducationMaterial educationMaterial = new EducationMaterial();
@@ -50,11 +52,11 @@ public class MyHealthPayloadDto {
         this.myHealthData = myHealthData;
     }
 
-    public DemographicPayloadDTO getDemographicDTO() {
+    public DemographicPayloadInfoDTO getDemographicDTO() {
         return demographicDTO;
     }
 
-    public void setDemographicDTO(DemographicPayloadDTO demographicDTO) {
+    public void setDemographicDTO(DemographicPayloadInfoDTO demographicDTO) {
         this.demographicDTO = demographicDTO;
     }
 

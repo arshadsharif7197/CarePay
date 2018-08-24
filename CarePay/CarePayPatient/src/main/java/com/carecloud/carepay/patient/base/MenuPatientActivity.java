@@ -106,7 +106,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         setTransitionForms(myHealthDto.getMetadata().getLinks().getFormsHistory());
 
         ApplicationPreferences.getInstance().writeObjectToSharedPreference(CarePayConstants
-                .DEMOGRAPHICS_ADDRESS_BUNDLE, myHealthDto.getPayload().getDemographicDTO().getAddress());
+                .DEMOGRAPHICS_ADDRESS_BUNDLE, myHealthDto.getPayload().getDemographicDTO().getPayload().getAddress());
 
         ApplicationPreferences.getInstance().setPracticesWithBreezeEnabled(myHealthDto.getPayload()
                 .getPracticeInformation());
@@ -114,10 +114,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity
                 .getPracticeInformation());
 
         ApplicationPreferences.getInstance().setUserFullName(StringUtil
-                .getCapitalizedUserName(myHealthDto.getPayload().getDemographicDTO().getPersonalDetails().getFirstName(),
-                        myHealthDto.getPayload().getDemographicDTO().getPersonalDetails().getLastName()));
+                .getCapitalizedUserName(myHealthDto.getPayload().getDemographicDTO().getPayload().getPersonalDetails().getFirstName(),
+                        myHealthDto.getPayload().getDemographicDTO().getPayload().getPersonalDetails().getLastName()));
 
-        String userImageUrl = myHealthDto.getPayload().getDemographicDTO()
+        String userImageUrl = myHealthDto.getPayload().getDemographicDTO().getPayload()
                 .getPersonalDetails().getProfilePhoto();
         if (userImageUrl != null) {
             getApplicationPreferences().setUserPhotoUrl(userImageUrl);
