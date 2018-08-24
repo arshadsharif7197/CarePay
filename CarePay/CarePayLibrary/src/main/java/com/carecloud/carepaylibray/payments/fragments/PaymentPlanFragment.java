@@ -585,8 +585,9 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         }
 
         paymentSettings = getPaymentPlanSettings(PaymentSettingsBalanceRangeRule.INTERVAL_WEEKS);
+        //TODO: (#WeeklyPaymentPlans) uncomment the last part of the line
         if ((paymentPlansRules.getFrequencyCode().getWeekly().isAllowed() && (paymentSettings != null))
-                || !applyRangeRules) {
+                ) {//|| !applyRangeRules) {
             DemographicsOption weekly = new DemographicsOption();
             weekly.setName(PaymentPlanModel.FREQUENCY_WEEKLY);
             weekly.setLabel(Label.getLabel("payment.paymentPlan.frequency.option.weekly"));
