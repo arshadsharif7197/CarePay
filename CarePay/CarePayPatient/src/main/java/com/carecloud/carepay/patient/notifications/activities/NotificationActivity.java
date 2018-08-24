@@ -15,23 +15,19 @@ import com.carecloud.carepay.patient.notifications.models.NotificationStatus;
 import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
-import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,30 +44,6 @@ public class NotificationActivity extends MenuPatientActivity
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         notificationsDTO = getConvertedDTO(NotificationsDTO.class);
-
-        boolean isLandingPage = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO)
-                .getBoolean(CarePayConstants.OPEN_NOTIFICATIONS, false);
-
-        if (isLandingPage) {
-            List<PracticePatientIdsDTO> practicePatientIds = notificationsDTO.getPayload()
-                    .getPracticePatientIds();
-            if (!practicePatientIds.isEmpty()) {
-                getApplicationPreferences().writeObjectToSharedPreference(
-                        CarePayConstants.KEY_PRACTICE_PATIENT_IDS, practicePatientIds);
-            }
-            setTransitionBalance(notificationsDTO.getMetadata().getLinks().getPatientBalances());
-            setTransitionLogout(notificationsDTO.getMetadata().getTransitions().getLogout());
-            setTransitionProfile(notificationsDTO.getMetadata().getLinks().getProfileUpdate());
-            setTransitionAppointments(notificationsDTO.getMetadata().getLinks().getAppointments());
-            setTransitionNotifications(notificationsDTO.getMetadata().getLinks().getNotifications());
-            setTransitionMyHealth(notificationsDTO.getMetadata().getLinks().getMyHealth());
-
-            String userImageUrl = notificationsDTO.getPayload().getDemographicDTO()
-                    .getPersonalDetails().getProfilePhoto();
-            if (userImageUrl != null) {
-                getApplicationPreferences().setUserPhotoUrl(userImageUrl);
-            }
-        }
 
         if (icicle == null) {
             NotificationFragment notificationFragment = NotificationFragment.newInstance(notificationsDTO);

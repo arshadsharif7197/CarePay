@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -32,6 +33,7 @@ import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
+import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -40,6 +42,7 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -81,7 +84,45 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         inflateDrawer();
         LocalBroadcastManager.getInstance(this).registerReceiver(badgeReceiver,
                 new IntentFilter(CarePayConstants.UPDATE_BADGES_BROADCAST));
+        if(getApplicationPreferences().isLandingScreen()){
+            setInitialData();
+        }
     }
+
+    private void setInitialData() {
+        MyHealthDto myHealthDto = getConvertedDTO(MyHealthDto.class);
+        List<PracticePatientIdsDTO> practicePatientIds = myHealthDto.getPayload().getPracticePatientIds();
+        if (!practicePatientIds.isEmpty()) {
+            getApplicationPreferences().writeObjectToSharedPreference(
+                    CarePayConstants.KEY_PRACTICE_PATIENT_IDS, practicePatientIds);
+        }
+        setTransitionBalance(myHealthDto.getMetadata().getLinks().getPatientBalances());
+        setTransitionLogout(myHealthDto.getMetadata().getTransitions().getLogout());
+        setTransitionProfile(myHealthDto.getMetadata().getLinks().getProfileUpdate());
+        setTransitionAppointments(myHealthDto.getMetadata().getLinks().getAppointments());
+        setTransitionNotifications(myHealthDto.getMetadata().getLinks().getNotifications());
+        setTransitionMyHealth(myHealthDto.getMetadata().getLinks().getMyHealth());
+        setTransitionRetail(myHealthDto.getMetadata().getLinks().getRetail());
+        setTransitionForms(myHealthDto.getMetadata().getLinks().getFormsHistory());
+
+        ApplicationPreferences.getInstance().writeObjectToSharedPreference(CarePayConstants
+                .DEMOGRAPHICS_ADDRESS_BUNDLE, myHealthDto.getPayload().getDemographicDTO().getPayload().getAddress());
+
+        ApplicationPreferences.getInstance().setPracticesWithBreezeEnabled(myHealthDto.getPayload()
+                .getPracticeInformation());
+
+        ApplicationPreferences.getInstance().setUserFullName(StringUtil
+                .getCapitalizedUserName(myHealthDto.getPayload().getDemographicDTO().getPayload().getPersonalDetails().getFirstName(),
+                        myHealthDto.getPayload().getDemographicDTO().getPayload().getPersonalDetails().getLastName()));
+
+        String userImageUrl = myHealthDto.getPayload().getDemographicDTO().getPayload()
+                .getPersonalDetails().getProfilePhoto();
+        if (userImageUrl != null) {
+            getApplicationPreferences().setUserPhotoUrl(userImageUrl);
+        }
+        getApplicationPreferences().setLandingScreen(false);
+    }
+
 
     protected void inflateDrawer() {
         setSupportActionBar(toolbar);

@@ -99,7 +99,7 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
             PaymentPlanModel paymentPlanModel = new PaymentPlanModel();
             paymentPlanModel.setAmount(monthlyPaymentAmount);
             paymentPlanModel.setFrequencyCode(PaymentPlanModel.FREQUENCY_MONTHLY);
-            paymentPlanModel.setInstallments(monthlyPaymentCount +
+            paymentPlanModel.setInstallments(installments +
                     existingPlan.getPayload().getPaymentPlanDetails().getFilteredHistory().size());
             paymentPlanModel.setEnabled(true);
 

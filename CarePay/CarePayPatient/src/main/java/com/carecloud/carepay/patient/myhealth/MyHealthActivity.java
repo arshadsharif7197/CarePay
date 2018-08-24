@@ -27,19 +27,13 @@ import com.carecloud.carepay.patient.myhealth.fragments.MedicationDetailFragment
 import com.carecloud.carepay.patient.myhealth.fragments.MyHealthListFragment;
 import com.carecloud.carepay.patient.myhealth.fragments.MyHealthMainFragment;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.PdfUtil;
-import com.carecloud.carepaylibray.utils.StringUtil;
-
-import java.util.List;
 
 /**
  * @author pjohnson on 17/07/17.
@@ -57,44 +51,10 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         myHealthDto = getConvertedDTO(MyHealthDto.class);
-        setInitialData();
         if (icicle == null) {
             replaceFragment(MyHealthMainFragment.newInstance(), false);
         }
     }
-
-    private void setInitialData() {
-        List<PracticePatientIdsDTO> practicePatientIds = myHealthDto.getPayload().getPracticePatientIds();
-        if (!practicePatientIds.isEmpty()) {
-            getApplicationPreferences().writeObjectToSharedPreference(
-                    CarePayConstants.KEY_PRACTICE_PATIENT_IDS, practicePatientIds);
-        }
-        setTransitionBalance(myHealthDto.getMetadata().getLinks().getPatientBalances());
-        setTransitionLogout(myHealthDto.getMetadata().getTransitions().getLogout());
-        setTransitionProfile(myHealthDto.getMetadata().getLinks().getProfileUpdate());
-        setTransitionAppointments(myHealthDto.getMetadata().getLinks().getAppointments());
-        setTransitionNotifications(myHealthDto.getMetadata().getLinks().getNotifications());
-        setTransitionMyHealth(myHealthDto.getMetadata().getLinks().getMyHealth());
-        setTransitionRetail(myHealthDto.getMetadata().getLinks().getRetail());
-        setTransitionForms(myHealthDto.getMetadata().getLinks().getUserForms());
-
-        ApplicationPreferences.getInstance().writeObjectToSharedPreference(CarePayConstants
-                .DEMOGRAPHICS_ADDRESS_BUNDLE, myHealthDto.getPayload().getDemographicDTO().getAddress());
-
-        ApplicationPreferences.getInstance().setPracticesWithBreezeEnabled(myHealthDto.getPayload()
-                .getPracticeInformation());
-
-        ApplicationPreferences.getInstance().setUserFullName(StringUtil
-                .getCapitalizedUserName(myHealthDto.getPayload().getDemographicDTO().getPersonalDetails().getFirstName(),
-                        myHealthDto.getPayload().getDemographicDTO().getPersonalDetails().getLastName()));
-
-        String userImageUrl = myHealthDto.getPayload().getDemographicDTO()
-                .getPersonalDetails().getProfilePhoto();
-        if (userImageUrl != null) {
-            getApplicationPreferences().setUserPhotoUrl(userImageUrl);
-        }
-    }
-
 
     @Override
     protected void onResume() {

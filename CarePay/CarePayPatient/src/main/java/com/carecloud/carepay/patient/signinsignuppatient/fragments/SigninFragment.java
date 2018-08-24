@@ -58,7 +58,6 @@ import com.newrelic.agent.android.NewRelic;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
@@ -326,6 +325,7 @@ public class SigninFragment extends BaseFragment {
                 getApplicationPreferences().setUserPhotoUrl(null);
                 getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants
                         .DEMOGRAPHICS_ADDRESS_BUNDLE, null);
+                getApplicationPreferences().setLandingScreen(true);
                 if (shouldShowNotificationScreen) {
                     manageNotificationAsLandingScreen(workflowDTO.toString());
                 } else {
@@ -337,7 +337,7 @@ public class SigninFragment extends BaseFragment {
 
                 MyHealthDto myHealthDto = DtoHelper.getConvertedDTO(MyHealthDto.class, workflowDTO);
                 String userId = myHealthDto.getPayload().getPracticePatientIds().get(0).getUserId();
-                MixPanelUtil.setUser(getContext(), userId, myHealthDto.getPayload().getDemographicDTO());
+                MixPanelUtil.setUser(getContext(), userId, myHealthDto.getPayload().getDemographicDTO().getPayload());
 
                 MixPanelUtil.logEvent(getString(R.string.event_signin_loginSuccess),
                         getString(R.string.param_login_type),

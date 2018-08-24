@@ -33,13 +33,14 @@ public class ApplicationPreferences {
     private static final String PREFERENCE_PATIENT_PHOTO_URL = "patient_photo_url";
     private static final String PREFERENCE_IS_TUTORIAL_SHOWN = "is_tutorial_shown";
     private static final String PREFERENCE_APPOINTMENT_NAVIGATION_OPTION = "appointment_navigation_option";
-    public static final String PREFERENCE_FILTERED_PROVIDERS = "filteredDoctors";
-    public static final String PREFERENCE_FILTERED_LOCATIONS = "filteredLocations";
-    public static final String PATIENT_USER_LANGUAGE = "practiceUserLanguage";
-    public static final String PRACTICE_USER_LANGUAGE = "user_selected_language";
+    private static final String PREFERENCE_FILTERED_PROVIDERS = "filteredDoctors";
+    private static final String PREFERENCE_FILTERED_LOCATIONS = "filteredLocations";
+    private static final String PATIENT_USER_LANGUAGE = "practiceUserLanguage";
+    private static final String PRACTICE_USER_LANGUAGE = "user_selected_language";
     private static final String PREFERENCE_LOCATION_ID = "locationId";
     private static final String PREFERENCE_LOCATION = "locations";
     private static final String BAD_COUNTER_TRANSITION = "badgeCounterTransition";
+    private static final String PREFERENCE_LANDING_SCREEN = "landing_screen";
 
     private String patientId;
     private String practiceId;
@@ -435,5 +436,13 @@ public class ApplicationPreferences {
 
     public int getFormsBadgeCounter() {
         return formsBadgeCounter;
+    }
+
+    public boolean isLandingScreen(){
+        return readBooleanFromSharedPref(PREFERENCE_LANDING_SCREEN, false);
+    }
+
+    public void setLandingScreen(boolean isLandingScreen){
+        writeBooleanToSharedPref(PREFERENCE_LANDING_SCREEN, isLandingScreen);
     }
 }

@@ -660,6 +660,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
     public void showDeleteScheduledPaymentConfirmation(WorkflowDTO workflowDTO, ScheduledPaymentPayload scheduledPaymentPayload) {
         showSuccessToast(String.format(
                 Label.getLabel("payment.oneTimePayment.scheduled.delete.success"),
+                StringUtil.getFormattedBalanceAmount(scheduledPaymentPayload.getAmount()),
                 DateUtil.getInstance()
                         .setDateRaw(scheduledPaymentPayload.getPaymentDate())
                         .toStringWithFormatMmSlashDdSlashYyyy()));
@@ -770,6 +771,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
 
     @Override
     public void onPaymentPlanCanceled(WorkflowDTO workflowDTO) {
+        showSuccessToast(Label.getLabel("payment.cancelPaymentPlan.success.banner.text"));
         getSupportFragmentManager().popBackStackImmediate(PatientModePaymentPlanDetailsDialogFragment.class.getName(),
                 FragmentManager.POP_BACK_STACK_INCLUSIVE);
         refreshBalance();

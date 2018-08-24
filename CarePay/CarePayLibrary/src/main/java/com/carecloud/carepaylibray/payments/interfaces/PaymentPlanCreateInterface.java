@@ -9,7 +9,9 @@ import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 
 public interface PaymentPlanCreateInterface extends ChooseCreditCardInterface, PaymentMethodInterface {
-    void onStartPaymentPlan(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel);
+
+    void onStartPaymentPlan(PaymentsModel paymentsModel,
+                            PaymentPlanPostModel paymentPlanPostModel);
 
     void onDismissPaymentPlan(PaymentsModel paymentsModel);
 

@@ -57,12 +57,17 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
     public BalanceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view;
-        if (rowType == PaymentRowType.NEW_CHARGE) {
-            view = inflater.inflate(R.layout.item_payment_distribution_charge, parent, false);
-        } else {
-            view = inflater.inflate(R.layout.item_payment_distribution_balance, parent, false);
+        switch (rowType) {
+            case NEW_CHARGE:
+                view = inflater.inflate(R.layout.item_payment_distribution_charge, parent, false);
+                break;
+            case RETAIL:
+                view = inflater.inflate(R.layout.item_payment_distribution_retail, parent, false);
+                break;
+            case BALANCE:
+            default:
+                view = inflater.inflate(R.layout.item_payment_distribution_balance, parent, false);
         }
-
         return new BalanceViewHolder(view);
     }
 
@@ -184,7 +189,11 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
                 @Override
                 public void onClick(View view) {
                     resetSwipedLayoutView(holder);
-                    callback.removeCharge(balanceItem);
+                    if(rowType == PaymentRowType.NEW_CHARGE) {
+                        callback.removeCharge(balanceItem);
+                    }else if(rowType == PaymentRowType.RETAIL){
+                        callback.removeRetailItem(balanceItem);
+                    }
                 }
             });
         }
@@ -361,10 +370,12 @@ public class PaymentDistributionAdapter extends RecyclerView.Adapter<PaymentDist
         void pickAmount(BalanceItemDTO balanceItem);
 
         void removeCharge(BalanceItemDTO chargeItem);
+
+        void removeRetailItem(BalanceItemDTO retailItem);
     }
 
     public enum PaymentRowType {
-        BALANCE, NEW_CHARGE;
+        BALANCE, NEW_CHARGE, RETAIL;
     }
 
 }
