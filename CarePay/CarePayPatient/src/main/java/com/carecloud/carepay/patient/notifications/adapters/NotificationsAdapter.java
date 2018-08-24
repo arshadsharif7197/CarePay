@@ -128,6 +128,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 case pending_forms:
                     displayPendingFormNotification(holder, notificationItem);
                     break;
+                case secure_message:
+                    displaySecureMessageNotification(holder, notificationItem);
+                    break;
                 default:
                 case appointment:
                     displayAppointmentNotification(holder, notificationItem);
@@ -155,6 +158,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 callback.notificationSelected(notificationItem);
             }
         });
+
+    }
+
+    private void displaySecureMessageNotification(NotificationViewHolder holder,
+                                                  NotificationItem notificationItem) {
+
 
     }
 
