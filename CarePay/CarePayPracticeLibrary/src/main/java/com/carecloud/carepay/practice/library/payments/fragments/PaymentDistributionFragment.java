@@ -1026,11 +1026,13 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
             Map<Integer, RetailItemOptionChoiceDto> selectedOptions = balanceItemDTO.getRetailPayload().getSelectedOptions();
             for (int i=0; i<retailItemDto.getOptions().size(); i++) {
-                RetailSelectedOption selectedOption = new RetailSelectedOption();
-                selectedOption.setName(retailItemDto.getOptions().get(i).getName());
-                selectedOption.setValue(selectedOptions.get(i).getName());
+                if(selectedOptions.containsKey(i)) {
+                    RetailSelectedOption selectedOption = new RetailSelectedOption();
+                    selectedOption.setName(retailItemDto.getOptions().get(i).getName());
+                    selectedOption.setValue(selectedOptions.get(i).getName());
 
-                orderItem.getSelectedOptions().add(selectedOption);
+                    orderItem.getSelectedOptions().add(selectedOption);
+                }
             }
 
             retailOrder.getItems().add(orderItem);
