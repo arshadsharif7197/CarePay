@@ -525,7 +525,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
 
     private boolean canEditDate(PaymentPlanDTO paymentPlan) {
         PaymentsSettingsPaymentPlansDTO paymentPlanSettings = paymentsModel.getPaymentPayload()
-                .getPaymentSettings().get(0).getPayload().getPaymentPlans();
+                .getPaymentSetting(practiceId).getPayload().getPaymentPlans();
         String frequencyCode = paymentPlan.getPayload().getPaymentPlanDetails().getFrequencyCode();
         return (frequencyCode.equals(PaymentPlanModel.FREQUENCY_MONTHLY)
                 && paymentPlanSettings.getFrequencyCode().getMonthly().isAllowed())

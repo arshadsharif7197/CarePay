@@ -136,10 +136,12 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
         //calculateTotalAmount(selectedBalance);
         paymentPlanAmount = calculateTotalAmount(args.getDouble(KEY_PLAN_AMOUNT, paymentPlanAmount));
-        frequencyOptions = generateFrequencyOptions(paymentsModel.getPaymentPayload()
-                .getPaymentSettings().get(0).getPayload().getPaymentPlans());
         if (selectedBalance != null) {
             practiceId = selectedBalance.getMetadata().getPracticeId();
+        }
+        PaymentsPayloadSettingsDTO paymentSettings = paymentsModel.getPaymentPayload().getPaymentSetting(practiceId);
+        frequencyOptions = generateFrequencyOptions(paymentSettings.getPayload().getPaymentPlans());
+        if (selectedBalance != null) {
             paymentPlanBalanceRules = getPaymentPlanSettings(null);
         }
         currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);

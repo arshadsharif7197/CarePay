@@ -18,7 +18,6 @@ import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterfac
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -65,12 +64,12 @@ public class PaymentPlanPaymentMethodFragment extends PaymentMethodFragment {
     public static PaymentPlanPaymentMethodFragment newInstance(PaymentsModel paymentsModel,
                                                                PaymentPlanDTO paymentPlanDTO,
                                                                boolean onlySelectMode,
-                                                               Date paymentDate){
+                                                               Date paymentDate) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanDTO);
         args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
-        if(paymentDate != null) {
+        if (paymentDate != null) {
             DateUtil.getInstance().setDate(paymentDate);
             args.putString(KEY_DATE, DateUtil.getInstance().toStringWithFormatYyyyDashMmDashDd());
         }
@@ -117,7 +116,7 @@ public class PaymentPlanPaymentMethodFragment extends PaymentMethodFragment {
         paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
 
         String dateString = args.getString(KEY_DATE);
-        if(dateString != null){
+        if (dateString != null) {
             DateUtil.getInstance().setDateRaw(dateString);
             paymentDate = DateUtil.getInstance().getDate();
         }
@@ -165,13 +164,8 @@ public class PaymentPlanPaymentMethodFragment extends PaymentMethodFragment {
     @Override
     protected List<PaymentsMethodsDTO> getPaymentMethodList() {
         UserPracticeDTO userPracticeDTO = callback.getPracticeInfo(paymentsModel);
-        for (PaymentsPayloadSettingsDTO paymentSetting : paymentsModel.getPaymentPayload().getPaymentSettings()) {
-            if (paymentSetting.getMetadata().getPracticeId().equals(userPracticeDTO.getPracticeId()) &&
-                    paymentSetting.getMetadata().getPracticeMgmt().equals(userPracticeDTO.getPracticeMgmt())) {
-                return paymentSetting.getPayload().getPaymentPlans().getPaymentMethods();
-            }
-        }
-        return paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getPaymentPlans().getPaymentMethods();
+        return paymentsModel.getPaymentPayload().getPaymentSetting(userPracticeDTO.getPracticeId())
+                .getPayload().getPaymentPlans().getPaymentMethods();
     }
 
 }
