@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_blue_translucent_90">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icn_rotate"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_36sp"
+            breeze:textKey="practice_home_flip_title"
+            app:customAssetFont="gotham_rounded_medium"
+            tools:text="Flip Device"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_20sp"
+            breeze:textKey="practice_home_flip_description"
+            app:customAssetFont="gotham_rounded_book"
+            tools:text="Please flip screen towards the practice"/>
+
+    </LinearLayout>
+
+</FrameLayout>

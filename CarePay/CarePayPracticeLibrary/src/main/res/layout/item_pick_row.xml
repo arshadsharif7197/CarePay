@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/pick_list_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/dimen_8dp"
-        android:paddingBottom="@dimen/dimen_8dp"
-        android:textSize="@dimen/text_size_17"
-        android:gravity="start"
-        android:textColor="@color/slateGray"
-        android:maxLines="1"
         android:ellipsize="end"
-        app:customAssetFont="proxima_nova_regular"/>
+        android:gravity="start"
+        android:maxLines="1"
+        android:paddingBottom="@dimen/pickItemVerticalPadding"
+        android:paddingTop="@dimen/pickItemVerticalPadding"
+        android:textColor="@color/slateGray"
+        android:textSize="@dimen/pickItemTextSize"
+        app:customAssetFont="proxima_nova_regular"
+        tools:text="You are now ready to be seen" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_1dp"
-        android:background="@color/light_gray"/>
+        android:background="@color/light_gray" />
 
 </LinearLayout>

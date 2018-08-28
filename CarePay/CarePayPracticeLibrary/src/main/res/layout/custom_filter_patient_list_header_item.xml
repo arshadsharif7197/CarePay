@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
@@ -17,11 +18,12 @@
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:gravity="center_vertical"
-        android:paddingBottom="@dimen/view_padding"
-        android:paddingTop="@dimen/view_padding"
+        android:paddingBottom="@dimen/customFilterHeaderPadding"
+        android:paddingTop="@dimen/customFilterHeaderPadding"
         android:textColor="@android:color/white"
         android:textSize="@dimen/custom_filter_text_size"
-        app:customAssetFont="gotham_rounded_bold" />
+        app:customAssetFont="gotham_rounded_bold"
+        tools:text="Providers" />
 
     <View
         android:layout_width="match_parent"

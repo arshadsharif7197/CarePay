@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="?attr/actionButtonStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:focusable="true">
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/badgeCounter"
+        android:layout_width="@dimen/menuItemBadgeSize"
+        android:layout_height="@dimen/menuItemBadgeSize"
+        android:gravity="center"
+        android:textSize="@dimen/menuItemBadeTextSize"
+        android:textColor="@color/white"
+        app:customAssetFont="proxima_nova_semi_bold"
+        android:background="@drawable/badge_background"/>
+
+</RelativeLayout>

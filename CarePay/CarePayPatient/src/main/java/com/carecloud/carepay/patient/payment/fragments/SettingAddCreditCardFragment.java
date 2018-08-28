@@ -19,6 +19,8 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.payments.fragments.BaseAddCreditCardFragment;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -47,6 +49,7 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         demographicsSettingsDTO = (DemographicDTO) callback.getDto();
+        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, DtoHelper.getStringDTO(demographicsSettingsDTO));
         merchantServicesList = demographicsSettingsDTO.getPayload().getMerchantServices();
     }
 
@@ -65,6 +68,11 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
         saveCardOnFileCheckBox.setEnabled(false);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
         toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);
+
+        if(demographicsSettingsDTO.getPayload().getPatientCreditCards().isEmpty()){
+            setAsDefaultCheckBox.setChecked(true);
+            setAsDefaultCheckBox.setEnabled(false);
+        }
     }
 
     private WorkflowServiceCallback addNewCreditCardCallback = new WorkflowServiceCallback() {

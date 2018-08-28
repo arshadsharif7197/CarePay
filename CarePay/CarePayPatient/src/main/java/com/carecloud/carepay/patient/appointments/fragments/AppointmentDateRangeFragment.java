@@ -51,6 +51,25 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
 
     private DateRangeInterface callback;
 
+    public static AppointmentDateRangeFragment newInstance(AppointmentsResultModel appointmentsResultModel,
+                                                           Date startDate,
+                                                           Date endDate,
+                                                           AppointmentResourcesItemDTO appointmentResource,
+                                                           VisitTypeDTO visitTypeDTO) {
+        Bundle args = new Bundle();
+        Gson gson = new Gson();
+        args.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, startDate);
+        args.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
+        args.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(appointmentResource));
+        args.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(visitTypeDTO));
+        args.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE,
+                gson.toJson(appointmentsResultModel));
+
+        AppointmentDateRangeFragment fragment = new  AppointmentDateRangeFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -97,10 +116,9 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
             appointmentInfoString = bundle.getString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE);
             selectedResourcesDTO = gson.fromJson(appointmentInfoString, AppointmentResourcesItemDTO.class);
 
-            appointmentInfoString = bundle.getString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE);
+            appointmentInfoString = bundle
+                    .getString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE);
             resourcesToScheduleDTO = gson.fromJson(appointmentInfoString, AppointmentsResultModel.class);
-
-//            addAppointmentPatientId = bundle.getString(CarePayConstants.ADD_APPOINTMENT_PATIENT_ID);
         }
     }
 
@@ -192,7 +210,8 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
     View.OnClickListener navigationOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            callback.onDateRangeSelected(previousStartDate, previousEndDate, selectedVisitTypeDTO, selectedResourcesDTO, resourcesToScheduleDTO);
+            callback.onDateRangeSelected(previousStartDate, previousEndDate, selectedVisitTypeDTO,
+                    selectedResourcesDTO, resourcesToScheduleDTO);
         }
     };
 
@@ -221,7 +240,8 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
                         long diff = newEndDate.getTime() - newStartDate.getTime();
                         long numOfDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
                         if (numOfDays >= 93) {
-                            Toast.makeText(getActivity(), Label.getLabel("add_appointment_max_date_range_message"),
+                            Toast.makeText(getActivity(), Label
+                                            .getLabel("add_appointment_max_date_range_message"),
                                     Toast.LENGTH_LONG).show();
                             acceptableRange = false;
                         }
@@ -266,7 +286,8 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
             if (newEndDate == null) {
                 newEndDate = newStartDate;
             }
-            callback.onDateRangeSelected(newStartDate, newEndDate, selectedVisitTypeDTO, selectedResourcesDTO, resourcesToScheduleDTO);
+            callback.onDateRangeSelected(newStartDate, newEndDate, selectedVisitTypeDTO,
+                    selectedResourcesDTO, resourcesToScheduleDTO);
         }
     };
 
@@ -278,5 +299,4 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
         newStartDate = null;
         newEndDate = null;
     }
-
 }

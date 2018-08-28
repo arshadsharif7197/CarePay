@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_81dp"
+        android:background="@color/light_gray">
+
+        <ImageView
+            android:id="@+id/removeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="@dimen/dimen_16dp"
+            android:layout_gravity="end"
+            android:gravity="center"
+            android:src="@drawable/icn_close"
+            android:visibility="visible"/>
+
+
+        <LinearLayout
+            android:id="@+id/payment_info_row"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/payment_detail_description"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:padding="@dimen/dimen_8dp"
+                android:background="@color/white"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:gravity="start|center_vertical"
+                android:textSize="@dimen/text_size_16sp"
+                android:textColor="@color/Feldgrau"
+                android:text="Co-pay"
+                app:customAssetFont="proxima_nova_regular"/>
+
+            <View
+                android:layout_width="@dimen/dimen_1dp"
+                android:layout_height="match_parent"
+                android:background="@color/light_gray"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:layout_weight="2"
+                android:padding="@dimen/dimen_8dp">
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/provider_short_name"
+                        android:layout_width="@dimen/dimen_50dp"
+                        android:layout_height="@dimen/dimen_50dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/round_list_tv_dark"
+                        android:src="@drawable/icn_placeholder_user_profile_png"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_15"
+                        app:customAssetFont="gotham_rounded_medium"/>
+
+                    <ImageView
+                        android:id="@+id/provider_image"
+                        android:layout_width="@dimen/dimen_50dp"
+                        android:layout_height="@dimen/dimen_50dp"
+                        android:layout_gravity="center"
+                        android:visibility="gone"/>
+
+                </FrameLayout>
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/provider_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:layout_gravity="center_vertical"
+                    android:paddingStart="@dimen/dimen_8dp"
+                    android:paddingEnd="@dimen/dimen_8dp"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:gravity="start|center_vertical"
+                    android:textSize="@dimen/text_size_16sp"
+                    android:textColor="@color/colorPrimary"
+                    android:text="Dr. Nina Simone"
+                    app:customAssetFont="proxima_nova_regular"/>
+
+                <ImageView
+                    android:id="@+id/pick_provider_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icn_triangle"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="@dimen/dimen_1dp"
+                android:layout_height="match_parent"
+                android:background="@color/light_gray"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:layout_weight="2"
+                android:padding="@dimen/dimen_8dp">
+
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icn_location_payment"
+                    android:visibility="visible"/>
+
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/location_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:layout_gravity="center_vertical"
+                    android:paddingStart="@dimen/dimen_8dp"
+                    android:paddingEnd="@dimen/dimen_8dp"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:gravity="start|center_vertical"
+                    android:textSize="@dimen/text_size_16sp"
+                    android:textColor="@color/colorPrimary"
+                    android:text="Miami, FL"
+                    app:customAssetFont="proxima_nova_regular"/>
+
+                <ImageView
+                    android:id="@+id/pick_location_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icn_triangle"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="@dimen/dimen_1dp"
+                android:layout_height="match_parent"
+                android:background="@color/light_gray"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                android:id="@+id/payment_amount"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:layout_weight="1"
+                android:padding="@dimen/dimen_8dp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:inputType="numberDecimal"
+                android:gravity="center"
+                android:textSize="@dimen/text_size_20"
+                android:textColor="@color/colorPrimary"
+                android:text="$55.00"
+                app:customAssetFont="proxima_nova_semi_bold"/>
+
+
+        </LinearLayout>
+
+
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:background="@color/light_gray"/>
+
+</LinearLayout>

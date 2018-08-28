@@ -134,6 +134,10 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
         if (paymentPlanPostModel != null || onlySelectMode) {
             nextButton.setText(Label.getLabel("payment_plan_continue"));
         }
+        if(paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()){
+            setAsDefaultCheckBox.setChecked(true);
+            setAsDefaultCheckBox.setEnabled(false);
+        }
     }
 
     @Override

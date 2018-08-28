@@ -63,7 +63,7 @@ public class PracticeModeAddExistingPaymentPlanFragment extends PatientModeAddEx
             } else {
                 clearError(R.id.paymentMonthCountInputLayout);
             }
-        } else if (monthlyPaymentCount < 2) {
+        } else if (installments < 2) {
             setError(R.id.paymentMonthCountInputLayout,
                     String.format(Label.getLabel("payment_plan_min_months_error"),
                             String.valueOf(2))

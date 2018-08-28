@@ -18,6 +18,7 @@ import com.carecloud.carepay.practice.library.payments.interfaces.PaymentPlanDas
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -34,8 +35,6 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
         implements PaymentPlanDashboardAdapter.PaymentPlanDashboardItemInterface {
 
     private PaymentsModel paymentsModel;
-    public static final String PAYMENT_PLAN_COMPLETED = "completed";
-    public static final String PAYMENT_PLAN_UNCOMPLETED = "processing";
     private PaymentPlanDashboardInterface callback;
     private boolean hasBalanceForPaymentPlan;
 
@@ -119,7 +118,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
         currentPaymentPlansRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         PaymentPlanDashboardAdapter adapter = new PaymentPlanDashboardAdapter(
                 getPaymentPlansFiltered(paymentsModel.getPaymentPayload().getPatientPaymentPlans(),
-                        false), false, hasBalanceForPaymentPlan);
+                        false), paymentsModel, false, hasBalanceForPaymentPlan);
         adapter.setCallback(this);
         currentPaymentPlansRecycler.setAdapter(adapter);
     }
@@ -129,7 +128,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
         completedPaymentPlansRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         PaymentPlanDashboardAdapter adapter = new PaymentPlanDashboardAdapter(
                 getPaymentPlansFiltered(paymentsModel.getPaymentPayload().getPatientPaymentPlans(),
-                        true), true, false);
+                        true), paymentsModel, true, false);
         adapter.setCallback(this);
         completedPaymentPlansRecycler.setAdapter(adapter);
 
@@ -141,9 +140,9 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
     private List<PaymentPlanDTO> getPaymentPlansFiltered(List<PaymentPlanDTO> patientPaymentPlans,
                                                          boolean completed) {
         List<PaymentPlanDTO> filteredPayments = new ArrayList<>();
-        String type = PAYMENT_PLAN_UNCOMPLETED;
+        String type = PaymentPlanDetailsDTO.STATUS_PROCESSING;
         if (completed) {
-            type = PAYMENT_PLAN_COMPLETED;
+            type = PaymentPlanDetailsDTO.STATUS_COMPLETED;
         }
         for (PaymentPlanDTO paymentPlan : patientPaymentPlans) {
             if (paymentPlan.getPayload().getPaymentPlanDetails().getPaymentPlanStatus().equals(type)) {
@@ -161,6 +160,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
             @Override
             public void onClick(View v) {
                 callback.onPaymentPlanAction(paymentsModel);
+                dismiss();
             }
         };
 
@@ -196,10 +196,12 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
     @Override
     public void onAddBalanceClicked(PaymentPlanDTO paymentPlan) {
         callback.onAddBalanceToExistingPlan(paymentsModel, paymentPlan);
+        dismiss();
     }
 
     @Override
     public void onDetailClicked(PaymentPlanDTO paymentPlan, boolean completed) {
         callback.showPaymentPlanDetail(paymentsModel, paymentPlan, completed);
+        dismiss();
     }
 }

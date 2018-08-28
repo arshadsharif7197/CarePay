@@ -48,6 +48,7 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
+import com.squareup.timessquare.CalendarPickerView;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -274,8 +275,8 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
                 endDate,
                 dateUtil.getDate(),
                 dateUtil.addDays(92).getDate(),
-                this
-        );
+                this,
+                CalendarPickerView.SelectionMode.RANGE.name());
 
         displayDialogFragment(dialog, false);
     }

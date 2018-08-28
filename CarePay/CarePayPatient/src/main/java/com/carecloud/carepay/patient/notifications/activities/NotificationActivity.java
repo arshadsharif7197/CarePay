@@ -15,23 +15,19 @@ import com.carecloud.carepay.patient.notifications.models.NotificationStatus;
 import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
-import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,30 +44,6 @@ public class NotificationActivity extends MenuPatientActivity
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         notificationsDTO = getConvertedDTO(NotificationsDTO.class);
-
-        boolean isLandingPage = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO)
-                .getBoolean(CarePayConstants.OPEN_NOTIFICATIONS, false);
-
-        if (isLandingPage) {
-            List<PracticePatientIdsDTO> practicePatientIds = notificationsDTO.getPayload()
-                    .getPracticePatientIds();
-            if (!practicePatientIds.isEmpty()) {
-                getApplicationPreferences().writeObjectToSharedPreference(
-                        CarePayConstants.KEY_PRACTICE_PATIENT_IDS, practicePatientIds);
-            }
-            setTransitionBalance(notificationsDTO.getMetadata().getLinks().getPatientBalances());
-            setTransitionLogout(notificationsDTO.getMetadata().getTransitions().getLogout());
-            setTransitionProfile(notificationsDTO.getMetadata().getLinks().getProfileUpdate());
-            setTransitionAppointments(notificationsDTO.getMetadata().getLinks().getAppointments());
-            setTransitionNotifications(notificationsDTO.getMetadata().getLinks().getNotifications());
-            setTransitionMyHealth(notificationsDTO.getMetadata().getLinks().getMyHealth());
-
-            String userImageUrl = notificationsDTO.getPayload().getDemographicDTO()
-                    .getPersonalDetails().getProfilePhoto();
-            if (userImageUrl != null) {
-                getApplicationPreferences().setUserPhotoUrl(userImageUrl);
-            }
-        }
 
         if (icicle == null) {
             NotificationFragment notificationFragment = NotificationFragment.newInstance(notificationsDTO);
@@ -108,7 +80,7 @@ public class NotificationActivity extends MenuPatientActivity
 
     @Override
     public void displayNotification(NotificationItem notificationItem) {
-        switch (notificationItem.getPayload().getNotificationType()) {
+        switch (notificationItem.getMetadata().getNotificationType()) {
             case appointment:
                 AppointmentDTO appointment = notificationItem.getPayload().getAppointment();
                 if (appointmentPresenter != null) {
@@ -120,10 +92,41 @@ public class NotificationActivity extends MenuPatientActivity
                     initPresenter(appointment);
                 }
                 break;
+            case pending_forms:
+                if (notificationItem.getPayload().getReadStatus() == NotificationStatus.unread) {
+                    markNotificationRead(notificationItem);
+                    callFormsScreen(notificationItem);
+                }
+                break;
             default:
                 //todo handle other notification types
                 break;
         }
+    }
+
+    private void callFormsScreen(final NotificationItem notificationItem) {
+        Map<String, String> queryMap = new HashMap<>();
+        getWorkflowServiceHelper().execute(getTransitionForms(), new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                Bundle bundle = new Bundle();
+                bundle.putString("practiceId", notificationItem.getMetadata().getPracticeId());
+                navigateToWorkflow(workflowDTO, bundle);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+                Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+            }
+        }, queryMap);
     }
 
     @Override
@@ -134,7 +137,7 @@ public class NotificationActivity extends MenuPatientActivity
     @Override
     public void navigateToFragment(Fragment fragment, boolean addToBackStack) {
         replaceFragment(R.id.container_main, fragment, addToBackStack);
-        if (fragment instanceof PaymentMethodPrepaymentFragment){
+        if (fragment instanceof PaymentMethodPrepaymentFragment) {
             displayToolbar(false, null);
         }
     }
@@ -219,7 +222,7 @@ public class NotificationActivity extends MenuPatientActivity
         properties.put("notification_id", notificationItem.getPayload().getNotificationId());
         JSONObject payload = new JSONObject(properties);
 
-        getWorkflowServiceHelper().execute(readNotifications, readNotificationsCallback, payload.toString());
+        getWorkflowServiceHelper().execute(readNotifications, readNotificationsCallback, payload.toString(), properties);
 
     }
 

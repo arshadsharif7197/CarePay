@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:weightSum="5">
+
+    <include layout="@layout/custom_calendar_toolbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/date_range_header"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/add_apt_calendar_day_title_padding_top"
+        android:paddingTop="@dimen/add_apt_calendar_day_title_padding_top"
+        android:weightSum="7">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/sundayTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/sunday_text_view_label"
+            android:textColor="@color/white"
+            android:textSize="@dimen/add_apt_calendar_day_title_text_size"
+            app:customAssetFont="proxima_nova_semi_bold" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/mondayTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/monday_text_view_label"
+            android:textColor="@color/white"
+            android:textSize="@dimen/add_apt_calendar_day_title_text_size"
+            app:customAssetFont="proxima_nova_semi_bold" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/tuesdayTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.1"
+            android:text="@string/tuesday_text_view_label"
+            android:textColor="@color/white"
+            android:textSize="@dimen/add_apt_calendar_day_title_text_size"
+            app:customAssetFont="proxima_nova_semi_bold" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/wednesdayTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/wednesday_text_view_label"
+            android:textColor="@color/white"
+            android:textSize="@dimen/add_apt_calendar_day_title_text_size"
+            app:customAssetFont="proxima_nova_semi_bold" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/thursdayTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/thursday_text_view_label"
+            android:textColor="@color/white"
+            android:textSize="@dimen/add_apt_calendar_day_title_text_size"
+            app:customAssetFont="proxima_nova_semi_bold" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/fridayTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/friday_text_view_label"
+            android:textColor="@color/white"
+            android:textSize="@dimen/add_apt_calendar_day_title_text_size"
+            app:customAssetFont="proxima_nova_semi_bold" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/saturdayTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/saturday_text_view_label"
+            android:textColor="@color/white"
+            android:textSize="@dimen/add_apt_calendar_day_title_text_size"
+            app:customAssetFont="proxima_nova_semi_bold" />
+
+    </LinearLayout>
+
+    <com.carecloud.carepaylibray.customcomponents.CustomCalendarPickerView
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="5"
+        android:background="@color/white"
+        app:tsquare_dayBackground="@drawable/dialog_date_range_picker_bg_selector"
+        app:tsquare_dayTextColor="@color/dialog_date_range_picker_text_selector"
+        app:tsquare_dividerColor="@color/transparent_apt"
+        app:tsquare_headerTextColor="@color/transparent_apt"
+        app:tsquare_titleTextColor="@color/textview_default_textcolor" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+        android:id="@+id/applyDateRangeButton"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/add_apt_apply_date_range_height"
+        android:layout_weight="1"
+        android:background="@drawable/button_green_selector"
+        android:textColor="@color/white"
+        android:textSize="@dimen/apt_popup_button_text"
+        app:customAssetFont="gotham_rounded_bold"
+        breeze:textKey="datepicker_apply_option" />
+
+</LinearLayout>

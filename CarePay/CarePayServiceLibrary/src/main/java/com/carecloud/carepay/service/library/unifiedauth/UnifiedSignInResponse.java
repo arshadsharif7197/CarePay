@@ -13,6 +13,10 @@ public class UnifiedSignInResponse {
     @Expose
     private UnifiedSignInPayload payload = new UnifiedSignInPayload();
 
+    @SerializedName("metadata")
+    @Expose
+    private UnifiedSignInResponseMetadata metadata = new UnifiedSignInResponseMetadata();
+
     public UnifiedSignInPayload getPayload() {
         return payload;
     }
@@ -21,4 +25,11 @@ public class UnifiedSignInResponse {
         this.payload = payload;
     }
 
+    public UnifiedSignInResponseMetadata getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(UnifiedSignInResponseMetadata metadata) {
+        this.metadata = metadata;
+    }
 }

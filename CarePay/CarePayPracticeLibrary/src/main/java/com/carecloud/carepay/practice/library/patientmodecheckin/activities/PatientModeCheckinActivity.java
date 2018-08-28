@@ -48,15 +48,16 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.FormsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
-import com.carecloud.carepaylibray.demographics.fragments.HomeAlertDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.IntakeFormsFragment;
@@ -278,25 +279,27 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             public void onClick(View view) {
                 if (!presenter.handleHomeButtonClick()) {
                     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    HomeAlertDialogFragment homeAlertDialogFragment = HomeAlertDialogFragment.newInstance(null, null);
-                    homeAlertDialogFragment.setCallback(new HomeAlertDialogFragment.HomeAlertInterface() {
+                    ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(null, null);
+                    confirmDialogFragment.setCallback(new ConfirmationCallback() {
                         @Override
-                        public void onAcceptExit() {
+                        public void onConfirm() {
                             setResult(CarePayConstants.HOME_PRESSED);
                             finish();
                             logCheckinCancelled();
                         }
                     });
-                    String tag = homeAlertDialogFragment.getClass().getName();
-                    homeAlertDialogFragment.show(ft, tag);
+                    String tag = confirmDialogFragment.getClass().getName();
+                    confirmDialogFragment.show(ft, tag);
                 }
             }
         });
     }
 
     private void initializeLeftNavigation() {
-        ((TextView) findViewById(R.id.checkInLeftNavigationTitle))
-                .setText(Label.getLabel("practice_checkin_header_label"));
+        TextView title = (TextView) findViewById(R.id.checkInLeftNavigationTitle);
+        if(title != null) {
+            title.setText(Label.getLabel("practice_checkin_header_label"));
+        }
         checkInFlowViews = new View[]{
                 findViewById(R.id.checkin_flow_demographics),
                 findViewById(R.id.checkin_flow_consent),
@@ -366,8 +369,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel) {
-        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+    public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod,
+                                      double amount,
+                                      PaymentsModel paymentsModel) {
+        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
+                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             DialogFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel,
                     selectedPaymentMethod.getLabel(), amount);
             displayDialogFragment(fragment, false);
@@ -496,15 +502,19 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void onPaymentPlanAction(PaymentsModel paymentsModel) {
-        PendingBalanceDTO selectedBalancesItem = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);//this should be a safe assumption for checkin
-        PendingBalanceDTO reducedBalancesItem = paymentsModel.getPaymentPayload().reduceBalanceItems(selectedBalancesItem, false);
-        PracticePaymentPlanAmountFragment fragment = PracticePaymentPlanAmountFragment.newInstance(paymentsModel, reducedBalancesItem);
+        PendingBalanceDTO selectedBalancesItem = paymentsModel.getPaymentPayload()
+                .getPatientBalances().get(0).getBalances().get(0);//this should be a safe assumption for checkin
+        PendingBalanceDTO reducedBalancesItem = paymentsModel.getPaymentPayload()
+                .reduceBalanceItems(selectedBalancesItem, false);
+        PracticePaymentPlanAmountFragment fragment = PracticePaymentPlanAmountFragment
+                .newInstance(paymentsModel, reducedBalancesItem);
         displayDialogFragment(fragment, false);
     }
 
     @Override
     public void onStartPaymentPlan(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
-        PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment.newInstance(paymentsModel, paymentPlanPostModel);
+        PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
+                .newInstance(paymentsModel, paymentPlanPostModel);
         displayDialogFragment(fragment, false);
     }
 
@@ -514,7 +524,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onSelectPaymentPlanMethod(PaymentsMethodsDTO selectedPaymentMethod, PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel, boolean onlySelectMode) {
+    public void onSelectPaymentPlanMethod(PaymentsMethodsDTO selectedPaymentMethod,
+                                          PaymentsModel paymentsModel,
+                                          PaymentPlanPostModel paymentPlanPostModel,
+                                          boolean onlySelectMode) {
         if ((paymentsModel.getPaymentPayload().getPatientCreditCards() != null)
                 && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             PracticePaymentPlanChooseCreditCardFragment fragment = PracticePaymentPlanChooseCreditCardFragment
@@ -526,7 +539,9 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onAddPaymentPlanCard(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel, boolean onlySelectMode) {
+    public void onAddPaymentPlanCard(PaymentsModel paymentsModel,
+                                     PaymentPlanPostModel paymentPlanPostModel,
+                                     boolean onlySelectMode) {
         PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
                 .newInstance(paymentsModel, paymentPlanPostModel);
         displayDialogFragment(fragment, true);
@@ -550,7 +565,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         queryMap.put("payment_plan", "true");
 
         TransitionDTO transition = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getContinueTransition();
-        getWorkflowServiceHelper().execute(transition, getCompletePlanAction(workflowDTO, PaymentPlanConfirmationFragment.MODE_CREATE, false), queryMap);
+        getWorkflowServiceHelper().execute(transition, getCompletePlanAction(workflowDTO,
+                PaymentPlanConfirmationFragment.MODE_CREATE, false), queryMap);
     }
 
     @Override
@@ -560,13 +576,19 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onSelectedPlanToAdd(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO selectedPlan, double amount) {
-        PatientModeAddExistingPaymentPlanFullFragment fragment = PatientModeAddExistingPaymentPlanFullFragment.newInstance(paymentsModel, selectedBalance, selectedPlan, amount);
+    public void onSelectedPlanToAdd(PaymentsModel paymentsModel,
+                                    PendingBalanceDTO selectedBalance,
+                                    PaymentPlanDTO selectedPlan,
+                                    double amount) {
+        PatientModeAddExistingPaymentPlanFullFragment fragment = PatientModeAddExistingPaymentPlanFullFragment
+                .newInstance(paymentsModel, selectedBalance, selectedPlan, amount);
         presenter.navigateToFragment(fragment, true);
     }
 
     @Override
-    public void displayBalanceDetails(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem, PendingBalanceDTO selectedBalance) {
+    public void displayBalanceDetails(PaymentsModel paymentsModel,
+                                      PendingBalancePayloadDTO paymentLineItem,
+                                      PendingBalanceDTO selectedBalance) {
         PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
                 .newInstance(paymentDTO, paymentLineItem, false);
         displayDialogFragment(dialog, false);
@@ -584,17 +606,19 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         queryMap.put("payment_plan", "true");
 
         TransitionDTO transition = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getContinueTransition();
-        getWorkflowServiceHelper().execute(transition, getCompletePlanAction(workflowDTO, PaymentPlanConfirmationFragment.MODE_ADD, false), queryMap);
+        getWorkflowServiceHelper().execute(transition, getCompletePlanAction(workflowDTO,
+                PaymentPlanConfirmationFragment.MODE_ADD, false), queryMap);
     }
 
     @Override
     public void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
         boolean addExisting = false;
-        if(paymentsModel.getPaymentPayload().mustAddToExisting(amount, selectedBalance)){
+        if (paymentsModel.getPaymentPayload().mustAddToExisting(amount, selectedBalance)) {
             onAddBalanceToExistingPlan(paymentsModel, selectedBalance, amount);
             addExisting = true;
         } else {
-            PatientModePaymentPlanFullFragment fragment = PatientModePaymentPlanFullFragment.newInstance(paymentsModel, selectedBalance, amount);
+            PatientModePaymentPlanFullFragment fragment = PatientModePaymentPlanFullFragment
+                    .newInstance(paymentsModel, selectedBalance, amount);
             presenter.navigateToFragment(fragment, true);
         }
 
@@ -640,7 +664,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 }
                 section.setSelected(true);
                 section.setEnabled(true);
-                if(totalPages > 0) {
+                if (totalPages > 0) {
                     String progressLabel = currentPage + " " + Label.getLabel("of") + " " + totalPages;
                     progress.setVisibility(View.VISIBLE);
                     progress.setText(progressLabel);
@@ -820,7 +844,9 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         }
     }
 
-    private WorkflowServiceCallback getCompletePlanAction(final WorkflowDTO paymentPlanWorkflowDTO, final int mode, final boolean hasDisplayedConfirm) {
+    private WorkflowServiceCallback getCompletePlanAction(final WorkflowDTO paymentPlanWorkflowDTO,
+                                                          final int mode,
+                                                          final boolean hasDisplayedConfirm) {
         return new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
@@ -836,7 +862,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                         //hold the workflow response so that we can navigate to is after they click ok in confirm
                         continuePaymentsDTO = workflowDTO;
                         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, paymentPlanWorkflowDTO);
-                        PracticePaymentPlanConfirmationFragment confirmationFragment = PracticePaymentPlanConfirmationFragment.newInstance(paymentPlanWorkflowDTO, getPracticeInfo(paymentsModel), mode);
+                        PracticePaymentPlanConfirmationFragment confirmationFragment = PracticePaymentPlanConfirmationFragment
+                                .newInstance(paymentPlanWorkflowDTO, getPracticeInfo(paymentsModel), mode);
                         displayDialogFragment(confirmationFragment, false);
                     } else {
                         PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
@@ -871,7 +898,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 hideProgressDialog();
                 //could not continue for some reason so lets show the confirmation dialog anyway
                 PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, paymentPlanWorkflowDTO);
-                PracticePaymentPlanConfirmationFragment confirmationFragment = PracticePaymentPlanConfirmationFragment.newInstance(paymentPlanWorkflowDTO, getPracticeInfo(paymentsModel), mode);
+                PracticePaymentPlanConfirmationFragment confirmationFragment = PracticePaymentPlanConfirmationFragment
+                        .newInstance(paymentPlanWorkflowDTO, getPracticeInfo(paymentsModel), mode);
                 displayDialogFragment(confirmationFragment, false);
             }
         };

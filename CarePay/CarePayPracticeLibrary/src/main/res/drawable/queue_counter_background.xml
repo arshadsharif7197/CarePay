@@ -6,5 +6,5 @@
     <size
         android:width="@dimen/home_alert_checkin_number_wrapper_width"
         android:height="@dimen/home_alert_checkin_number_wrapper_height" />
-    <stroke android:color="@color/white" android:width="3dp"/>
+    <stroke android:color="@color/white" android:width="@dimen/queueCounterStrokeWidth"/>
 </shape>

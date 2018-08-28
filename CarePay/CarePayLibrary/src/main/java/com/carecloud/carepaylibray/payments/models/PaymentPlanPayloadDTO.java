@@ -44,6 +44,10 @@ public class PaymentPlanPayloadDTO {
     @Expose
     private double amountPaid;
 
+    @SerializedName("metadata")
+    @Expose
+    private PaymentPlanPaylodMetadata metadata = new PaymentPlanPaylodMetadata();
+
     public double getAmount() {
         return amount;
     }
@@ -109,4 +113,25 @@ public class PaymentPlanPayloadDTO {
         return (int) (getAmountPaid()/getAmount() *100);
     }
 
+    public PaymentPlanPaylodMetadata getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(PaymentPlanPaylodMetadata metadata) {
+        this.metadata = metadata;
+    }
+
+    public class PaymentPlanPaylodMetadata {
+        @SerializedName("scheduledtask_id")
+        @Expose
+        private String taskId;
+
+        public String getTaskId() {
+            return taskId;
+        }
+
+        public void setTaskId(String taskId) {
+            this.taskId = taskId;
+        }
+    }
 }

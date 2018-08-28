@@ -57,7 +57,7 @@ import com.google.gson.Gson;
 import com.newrelic.agent.android.NewRelic;
 
 import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
+import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
@@ -65,6 +65,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
+import java.security.ProviderException;
 import java.security.Signature;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
@@ -267,6 +268,12 @@ public class SigninFragment extends BaseFragment {
                 String signInResponseString = gson.toJson(workflowDTO);
                 UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString,
                         UnifiedSignInResponse.class);
+                ApplicationPreferences.getInstance().setBadgeCounterTransition(signInResponse
+                        .getMetadata().getTransitions().getBadgeCounter());
+                ApplicationPreferences.getInstance()
+                        .setMessagesBadgeCounter(signInResponse.getPayload().getBadgeCounter().getMessages());
+                ApplicationPreferences.getInstance()
+                        .setFormsBadgeCounter(signInResponse.getPayload().getBadgeCounter().getPendingForms());
                 authenticate(signInResponse, signInDTO.getMetadata().getTransitions().getRefresh(),
                         signInDTO.getMetadata().getTransitions().getAuthenticate(), user, password);
             }
@@ -318,6 +325,7 @@ public class SigninFragment extends BaseFragment {
                 getApplicationPreferences().setUserPhotoUrl(null);
                 getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants
                         .DEMOGRAPHICS_ADDRESS_BUNDLE, null);
+                getApplicationPreferences().setLandingScreen(true);
                 if (shouldShowNotificationScreen) {
                     manageNotificationAsLandingScreen(workflowDTO.toString());
                 } else {
@@ -329,7 +337,7 @@ public class SigninFragment extends BaseFragment {
 
                 MyHealthDto myHealthDto = DtoHelper.getConvertedDTO(MyHealthDto.class, workflowDTO);
                 String userId = myHealthDto.getPayload().getPracticePatientIds().get(0).getUserId();
-                MixPanelUtil.setUser(getContext(), userId, myHealthDto.getPayload().getDemographicDTO());
+                MixPanelUtil.setUser(getContext(), userId, myHealthDto.getPayload().getDemographicDTO().getPayload());
 
                 MixPanelUtil.logEvent(getString(R.string.event_signin_loginSuccess),
                         getString(R.string.param_login_type),
@@ -585,7 +593,7 @@ public class SigninFragment extends BaseFragment {
                             .setUserAuthenticationRequired(true)
                             .build());
             mKeyPairGenerator.generateKeyPair();
-        } catch (InvalidAlgorithmParameterException e) {
+        } catch (GeneralSecurityException | ProviderException e) {
             Log.e("Breeze", e.getLocalizedMessage());
         }
     }

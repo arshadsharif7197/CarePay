@@ -6,6 +6,7 @@ import com.carecloud.carepay.service.library.base.IApplicationSession;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.Defs;
 import com.carecloud.carepay.service.library.dtos.AvailableLocationDTO;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
@@ -32,12 +33,14 @@ public class ApplicationPreferences {
     private static final String PREFERENCE_PATIENT_PHOTO_URL = "patient_photo_url";
     private static final String PREFERENCE_IS_TUTORIAL_SHOWN = "is_tutorial_shown";
     private static final String PREFERENCE_APPOINTMENT_NAVIGATION_OPTION = "appointment_navigation_option";
-    public static final String PREFERENCE_FILTERED_PROVIDERS = "filteredDoctors";
-    public static final String PREFERENCE_FILTERED_LOCATIONS = "filteredLocations";
-    public static final String PATIENT_USER_LANGUAGE = "practiceUserLanguage";
-    public static final String PRACTICE_USER_LANGUAGE = "user_selected_language";
+    private static final String PREFERENCE_FILTERED_PROVIDERS = "filteredDoctors";
+    private static final String PREFERENCE_FILTERED_LOCATIONS = "filteredLocations";
+    private static final String PATIENT_USER_LANGUAGE = "practiceUserLanguage";
+    private static final String PRACTICE_USER_LANGUAGE = "user_selected_language";
     private static final String PREFERENCE_LOCATION_ID = "locationId";
     private static final String PREFERENCE_LOCATION = "locations";
+    private static final String BAD_COUNTER_TRANSITION = "badgeCounterTransition";
+    private static final String PREFERENCE_LANDING_SCREEN = "landing_screen";
 
     private String patientId;
     private String practiceId;
@@ -55,6 +58,10 @@ public class ApplicationPreferences {
 
     private static ApplicationPreferences instance;
     private String userPassword;
+    private String fullName;
+    private TransitionDTO badgeCounterTransition;
+    private int messagesBadgeCounter;
+    private int formsBadgeCounter;
 
 
     public static ApplicationPreferences getInstance() {
@@ -83,7 +90,8 @@ public class ApplicationPreferences {
     @Defs.AppointmentNavigationTypeDef
     int getAppointmentNavigationOption() {
         if (navigationOption == null) {
-            @Defs.AppointmentNavigationTypeDef int savedNavigationOption = readIntFromSharedPref(PREFERENCE_APPOINTMENT_NAVIGATION_OPTION);
+            @Defs.AppointmentNavigationTypeDef
+            int savedNavigationOption = readIntFromSharedPref(PREFERENCE_APPOINTMENT_NAVIGATION_OPTION);
             this.navigationOption = savedNavigationOption;
         }
         return navigationOption;
@@ -111,13 +119,13 @@ public class ApplicationPreferences {
                 .equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)) {
             if (patientUserLanguage == null) {
                 patientUserLanguage = readStringFromSharedPref(PATIENT_USER_LANGUAGE,
-                        CarePayConstants.DEFAULT_LANGUAGE);//Resources.getSystem().getConfiguration().locale.getLanguage());
+                        CarePayConstants.DEFAULT_LANGUAGE);
             }
             return patientUserLanguage;
         }
         if (userLanguage == null) {
             userLanguage = readStringFromSharedPref(PRACTICE_USER_LANGUAGE,
-                    CarePayConstants.DEFAULT_LANGUAGE);//Resources.getSystem().getConfiguration().locale.getLanguage());
+                    CarePayConstants.DEFAULT_LANGUAGE);
         }
         return userLanguage;
     }
@@ -390,5 +398,51 @@ public class ApplicationPreferences {
     public void setUserPassword(String userPassword) {
         writeStringToSharedPref(PREFERENCE_PASSWORD, userPassword);
         this.userPassword = userPassword;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setUserFullName(String fullName) {
+        if (!fullName.isEmpty()) {
+            this.fullName = fullName;
+        }
+    }
+
+    public void setBadgeCounterTransition(TransitionDTO badgeCounterTransition) {
+        writeObjectToSharedPreference(BAD_COUNTER_TRANSITION, badgeCounterTransition);
+        this.badgeCounterTransition = badgeCounterTransition;
+    }
+
+    public TransitionDTO getBadgeCounterTransition() {
+        if (badgeCounterTransition == null) {
+            badgeCounterTransition = getObjectFromSharedPreferences(BAD_COUNTER_TRANSITION, TransitionDTO.class);
+        }
+        return badgeCounterTransition;
+    }
+
+    public void setMessagesBadgeCounter(int messagesBadgeCounter) {
+        this.messagesBadgeCounter = messagesBadgeCounter;
+    }
+
+    public int getMessagesBadgeCounter() {
+        return messagesBadgeCounter;
+    }
+
+    public void setFormsBadgeCounter(int formsBadgeCounter) {
+        this.formsBadgeCounter = formsBadgeCounter;
+    }
+
+    public int getFormsBadgeCounter() {
+        return formsBadgeCounter;
+    }
+
+    public boolean isLandingScreen(){
+        return readBooleanFromSharedPref(PREFERENCE_LANDING_SCREEN, false);
+    }
+
+    public void setLandingScreen(boolean isLandingScreen){
+        writeBooleanToSharedPref(PREFERENCE_LANDING_SCREEN, isLandingScreen);
     }
 }

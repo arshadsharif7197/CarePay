@@ -32,6 +32,7 @@ import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.utils.KeyboardWatcher;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -60,6 +61,7 @@ public abstract class BaseWebFormFragment extends BaseFragment {
     private int totalForms;
     private int displayedFormsIndex;
     protected String lastFormButtonLabel;
+    protected List<PracticeForm> formsList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -259,11 +261,10 @@ public abstract class BaseWebFormFragment extends BaseFragment {
                 @Override
                 public void run() {
                     JsonObject jsonResponse = new JsonParser().parse(response).getAsJsonObject();
-
+                    jsonResponse.addProperty("version",
+                            formsList.get(getDisplayedFormsIndex()).getMetadata().getVersion());
                     saveForm(jsonResponse);
-
                     getNextStep();
-
                 }
             });
 

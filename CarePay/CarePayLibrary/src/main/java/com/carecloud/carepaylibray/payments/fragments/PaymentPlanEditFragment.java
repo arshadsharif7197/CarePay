@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -13,15 +14,19 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.MerchantServiceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentCardData;
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
@@ -38,6 +43,7 @@ import com.payeezy.sdk.payeezytokenised.TransactionDataProvider;
 
 import java.text.NumberFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -52,9 +58,10 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         BaseAddCreditCardFragment.IAuthoriseCreditCardResponse {
 
     protected PaymentPlanDTO paymentPlanDTO;
-    private PaymentCreditCardsPayloadDTO creditCard;
+    protected PaymentCreditCardsPayloadDTO creditCard;
     private boolean canEditPaymentPlan;
     protected PaymentPlanEditInterface callback;
+    protected Button editPaymentPlanButton;
 
     /**
      * @param paymentsModel  the payment model
@@ -88,17 +95,15 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
 
     @Override
     public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
         Bundle args = getArguments();
-        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
         paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
+        super.onCreate(icicle);
         paymentPlanAmount = paymentPlanDTO.getPayload().getAmount();
-        dateOptions = generateDateOptions();
-        paymentDateOption = dateOptions.get(0);
-        getPaymentPlanSettings(paymentPlanDTO.getMetadata().getPracticeId());
+        practiceId = paymentPlanDTO.getMetadata().getPracticeId();
+        getPaymentPlanSettings(practiceId);
         currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
         canEditPaymentPlan = checkCanEditPaymentPlan(paymentPlanDTO.getMetadata().getPracticeId());
-        if(!canEditPaymentPlan){
+        if (!canEditPaymentPlan) {
             setValidationRules();
         }
     }
@@ -114,30 +119,25 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         planNameEditText.setText(paymentPlanDTO.getPayload().getDescription());
         planNameEditText.getOnFocusChangeListener().onFocusChange(planNameEditText, true);
 
-        paymentDateEditText.setText(StringUtil.getOrdinal(getApplicationPreferences().getUserLanguage(),
-                paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfMonth()));
+        if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode()
+                .equals(PaymentPlanDetailsDTO.FREQUENCY_MONTHLY)) {
+            paymentDateEditText.setText(StringUtil.getOrdinal(getApplicationPreferences().getUserLanguage(),
+                    paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfMonth()));
+        } else {
+            paymentDateEditText.setText(StringUtil
+                    .getDayOfTheWeek(paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfWeek()));
+        }
 
-        numberPaymentsEditText.setText(String.valueOf(paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments()));
+        numberPaymentsEditText.setText(String.valueOf(paymentPlanDTO.getPayload().getPaymentPlanDetails()
+                .getInstallments()));
         numberPaymentsEditText.getOnFocusChangeListener().onFocusChange(numberPaymentsEditText, true);
 
-        monthlyPaymentEditText.setText(currencyFormatter.format(paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount()));
-        createPlanButton.setText(Label.getLabel("save_button_label"));
-        createPlanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (validateFields(true)) {
-                    SystemUtil.hideSoftKeyboard(getContext(), view);
-                    if (creditCard!=null && creditCard.getCreditCardsId() == null) {
-                        authorizeCreditCard();
-                    } else {
-                        updatePaymentPlan();
-                    }
-                }
-            }
-        });
+        monthlyPaymentEditText.setText(currencyFormatter.format(paymentPlanDTO.getPayload()
+                .getPaymentPlanDetails().getAmount()));
+
         TextView headerMessage = (TextView) view.findViewById(R.id.headerMessage);
         if (headerMessage != null) {
-                headerMessage.setVisibility(View.GONE);
+            headerMessage.setVisibility(View.GONE);
         }
         View addExistingPlan = view.findViewById(R.id.payment_plan_add_existing);
         if (addExistingPlan != null) {
@@ -146,14 +146,93 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         setUpPaymentMethodLabel(view);
         isCalculatingTime = false;
         isCalculatingAmount = false;
-        if(!canEditPaymentPlan){
+        if (!canEditPaymentPlan) {
             TextView parameters = (TextView) view.findViewById(R.id.paymentPlanParametersTextView);
             parameters.setText(Label.getLabel("payment_plan_edit_fields_disabled"));
             disableFields();
         }
+
+        boolean canEditDates = canEditDate(paymentPlanDTO);
+        if (!canEditDates) {
+            frequencyCodeEditText.setEnabled(false);
+            frequencyCodeEditText.setFocusable(false);
+            frequencyCodeEditText.setFocusableInTouchMode(false);
+
+            paymentDateEditText.setEnabled(false);
+            paymentDateEditText.setFocusable(false);
+            paymentDateEditText.setFocusableInTouchMode(false);
+        }
     }
 
-    private void setUpPaymentMethodLabel(View view) {
+    @Override
+    protected void setupButtons(final View view) {
+        editPaymentPlanButton = (Button) view.findViewById(R.id.editPaymentPlanButton);
+        super.setupButtons(view);
+        createPlanButton.setVisibility(View.GONE);
+        view.findViewById(R.id.editButtonsLayout).setVisibility(View.VISIBLE);
+        editPaymentPlanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (validateFields(true)) {
+                    SystemUtil.hideSoftKeyboard(getContext(), view);
+                    if (creditCard != null && creditCard.getCreditCardsId() == null) {
+                        authorizeCreditCard();
+                    } else {
+                        updatePaymentPlan();
+                    }
+                }
+            }
+        });
+        Button cancelPaymentPlanButton = (Button) view.findViewById(R.id.cancelPaymentPlanButton);
+        cancelPaymentPlanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCancelPaymentPlanConfirmDialog();
+            }
+        });
+    }
+
+    protected void showCancelPaymentPlanConfirmDialog() {
+        callback.showCancelPaymentPlanConfirmDialog(new ConfirmationCallback() {
+            @Override
+            public void onConfirm() {
+                cancelPaymentPlan();
+            }
+        });
+    }
+
+    private void cancelPaymentPlan() {
+        TransitionDTO updatePaymentTransition = paymentsModel.getPaymentsMetadata()
+                .getPaymentsTransitions().getDeletePaymentPlan();
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", paymentPlanDTO.getMetadata().getPracticeMgmt());
+        queryMap.put("practice_id", paymentPlanDTO.getMetadata().getPracticeId());
+        queryMap.put("patient_id", paymentPlanDTO.getMetadata().getPatientId());
+        queryMap.put("payment_plan_id", paymentPlanDTO.getMetadata().getPaymentPlanId());
+
+        getWorkflowServiceHelper().execute(updatePaymentTransition, new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                dismiss();
+                callback.onPaymentPlanCanceled(workflowDTO);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                SystemUtil.showErrorToast(getContext(), exceptionMessage);
+
+            }
+        }, queryMap);
+    }
+
+    protected void setUpPaymentMethodLabel(View view) {
         PaymentCreditCardsPayloadDTO creditCard = null;
         for (PaymentsPatientsCreditCardsPayloadListDTO creditCardModel :
                 paymentsModel.getPaymentPayload().getPatientCreditCards()) {
@@ -167,14 +246,16 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         paymentMethodContainer.setVisibility(View.VISIBLE);
         TextInputLayout paymentMethodInputLayout = (TextInputLayout) view.findViewById(R.id.paymentMethodInputLayout);
         EditText paymentMethodEditText = (EditText) view.findViewById(R.id.creditCardNumberTextView);
-        paymentMethodEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(paymentMethodInputLayout, null));
+        paymentMethodEditText.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(paymentMethodInputLayout, null));
         if (creditCard != null) {
             setCreditCardInfo(creditCard, paymentMethodEditText);
         }
         paymentMethodEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onEditPaymentPlanPaymentMethod(paymentsModel);
+                callback.onEditPaymentPlanPaymentMethod(paymentsModel, paymentPlanDTO);
+                dismiss();
             }
         });
     }
@@ -182,7 +263,8 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     private void setCreditCardInfo(PaymentCreditCardsPayloadDTO creditCard,
                                    EditText paymentMethodEditText) {
 
-        String paymentMethodMessage = creditCard.getToken() != null ? CreditCardUtil.getCreditCardType(creditCard.getToken()) : null;
+        String paymentMethodMessage = creditCard.getToken() != null ? CreditCardUtil
+                .getCreditCardType(creditCard.getToken()) : null;
         if (paymentMethodMessage == null) {
             paymentMethodMessage = creditCard.getCardType();
         }
@@ -197,7 +279,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         this.creditCard = creditCard;
     }
 
-    private void updatePaymentPlan() {
+    protected void updatePaymentPlan() {
         PaymentPlanPostModel postModel = new PaymentPlanPostModel();
         postModel.setAmount(paymentPlanAmount);
         postModel.setExecution(paymentPlanDTO.getPayload().getExecution());
@@ -220,14 +302,22 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
 
         PaymentPlanModel paymentPlanModel = new PaymentPlanModel();
         paymentPlanModel.setAmount(monthlyPaymentAmount);
-        paymentPlanModel.setFrequencyCode(PaymentPlanModel.FREQUENCY_MONTHLY);
-        paymentPlanModel.setInstallments(monthlyPaymentCount);
+        paymentPlanModel.setFrequencyCode(frequencyOption.getName());
+        paymentPlanModel.setInstallments(installments);
         paymentPlanModel.setEnabled(true);
 
-        try {
-            paymentPlanModel.setDayOfMonth(Integer.parseInt(paymentDateOption.getName()));
-        } catch (NumberFormatException nfe) {
-            nfe.printStackTrace();
+        if (frequencyOption.getName().equals(PaymentPlanModel.FREQUENCY_MONTHLY)) {
+            try {
+                paymentPlanModel.setDayOfMonth(Integer.parseInt(paymentDateOption.getName()));
+            } catch (NumberFormatException nfe) {
+                nfe.printStackTrace();
+            }
+        } else {
+            try {
+                paymentPlanModel.setDayOfWeek(Integer.parseInt(paymentDateOption.getName()));
+            } catch (NumberFormatException nfe) {
+                nfe.printStackTrace();
+            }
         }
 
         postModel.setPaymentPlanModel(paymentPlanModel);
@@ -277,13 +367,14 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         creditCardModel.setSaveCard(creditCardsPayloadDTO.isSaveCardOnFile());
         creditCardModel.setDefault(creditCardsPayloadDTO.isDefaultCardChecked());
 
-        @IntegratedPaymentCardData.TokenizationService String tokenizationService = creditCardsPayloadDTO.getTokenizationService().toString();
+        @IntegratedPaymentCardData.TokenizationService String tokenizationService = creditCardsPayloadDTO
+                .getTokenizationService().toString();
         creditCardModel.setTokenizationService(tokenizationService);
 
         return creditCardModel;
     }
 
-    private void authorizeCreditCard() {
+    protected void authorizeCreditCard() {
         String currency = "USD";
         String cvv = creditCard.getCvv();
         String expiryDate = creditCard.getExpireDt();
@@ -372,7 +463,8 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         Gson gson = new Gson();
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getAddCreditCard();
         String body = gson.toJson(creditCard);
-        getWorkflowServiceHelper().execute(transitionDTO, addNewCreditCardCallback, body, getWorkflowServiceHelper().getPreferredLanguageHeader());
+        getWorkflowServiceHelper().execute(transitionDTO, addNewCreditCardCallback, body,
+                getWorkflowServiceHelper().getPreferredLanguageHeader());
     }
 
     private WorkflowServiceCallback addNewCreditCardCallback = new WorkflowServiceCallback() {
@@ -386,7 +478,8 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
             hideProgressDialog();
             PaymentsModel paymentsDto = new Gson().fromJson(workflowDTO.toString(), PaymentsModel.class);
             if (callback.getDto() instanceof PaymentsModel) {
-                ((PaymentsModel) callback.getDto()).getPaymentPayload().setPatientCreditCards(paymentsDto.getPaymentPayload().getPatientCreditCards());
+                ((PaymentsModel) callback.getDto()).getPaymentPayload().setPatientCreditCards(paymentsDto
+                        .getPaymentPayload().getPatientCreditCards());
             }
             updatePaymentPlan();
             MixPanelUtil.logEvent(getString(R.string.event_updated_credit_cards));
@@ -403,7 +496,8 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     private boolean checkCanEditPaymentPlan(String practiceId) {
         for (PaymentsPayloadSettingsDTO settings : paymentsModel.getPaymentPayload().getPaymentSettings()) {
             if (settings.getMetadata().getPracticeId().equals(practiceId)) {
-                for (PaymentSettingsBalanceRangeRule rules : settings.getPayload().getPaymentPlans().getBalanceRangeRules()) {
+                for (PaymentSettingsBalanceRangeRule rules : settings.getPayload()
+                        .getPaymentPlans().getBalanceRangeRules()) {
                     if (rules.getMaxBalance().getValue() >= paymentPlanDTO.getPayload().getAmount()
                             && rules.getMinBalance().getValue() <= paymentPlanDTO.getPayload().getAmount()) {
                         return true;
@@ -414,7 +508,17 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         return false;
     }
 
-    private void disableFields(){
+    private boolean canEditDate(PaymentPlanDTO paymentPlan) {
+        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = paymentsModel.getPaymentPayload()
+                .getPaymentSettings().get(0).getPayload().getPaymentPlans();
+        String frequencyCode = paymentPlan.getPayload().getPaymentPlanDetails().getFrequencyCode();
+        return (frequencyCode.equals(PaymentPlanModel.FREQUENCY_MONTHLY)
+                && paymentPlanSettings.getFrequencyCode().getMonthly().isAllowed())
+                || (frequencyCode.equals(PaymentPlanModel.FREQUENCY_WEEKLY)
+                && paymentPlanSettings.getFrequencyCode().getWeekly().isAllowed());
+    }
+
+    private void disableFields() {
         numberPaymentsEditText.setEnabled(false);
         numberPaymentsEditText.setFocusable(false);
         numberPaymentsEditText.setFocusableInTouchMode(false);
@@ -424,11 +528,36 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         monthlyPaymentEditText.setFocusableInTouchMode(false);
     }
 
-    private void setValidationRules(){
+    private void setValidationRules() {
         paymentPlanBalanceRules.getMaxBalance().setValue(paymentPlanAmount);
         paymentPlanBalanceRules.getMinBalance().setValue(paymentPlanAmount);
-        paymentPlanBalanceRules.getMaxDuration().setValue(paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments());
-        paymentPlanBalanceRules.getMinPaymentRequired().setValue(paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount());
+        paymentPlanBalanceRules.getMaxDuration().setValue(paymentPlanDTO.getPayload()
+                .getPaymentPlanDetails().getInstallments());
+        paymentPlanBalanceRules.getMinPaymentRequired().setValue(paymentPlanDTO.getPayload()
+                .getPaymentPlanDetails().getAmount());
     }
 
+    @Override
+    protected Button getActionButton() {
+        return editPaymentPlanButton;
+    }
+
+    @Override
+    protected List<DemographicsOption> generateFrequencyOptions(PaymentsSettingsPaymentPlansDTO paymentPlansRules) {
+        List<DemographicsOption> options = super.generateFrequencyOptions(paymentPlansRules);
+        String name;
+        String label;
+        if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode()
+                .equals(PaymentPlanModel.FREQUENCY_MONTHLY)) {
+            name = PaymentPlanModel.FREQUENCY_MONTHLY;
+            label = Label.getLabel("payment.paymentPlan.frequency.option.monthly");
+        } else {
+            name = PaymentPlanModel.FREQUENCY_WEEKLY;
+            label = Label.getLabel("payment.paymentPlan.frequency.option.weekly");
+        }
+
+        frequencyOption.setName(name);
+        frequencyOption.setLabel(label);
+        return options;
+    }
 }

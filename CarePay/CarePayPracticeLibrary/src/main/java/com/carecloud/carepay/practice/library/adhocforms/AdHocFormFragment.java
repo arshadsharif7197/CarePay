@@ -36,7 +36,6 @@ public class AdHocFormFragment extends BaseWebFormFragment {
 
     private AdHocFormsModel adhocFormsModel;
     private List<JsonObject> jsonFormSaveResponseArray = new ArrayList<>();
-    private List<PracticeForm> formsList;
     private AdHocFormsInterface callback;
 
     /**

@@ -27,18 +27,13 @@ import com.carecloud.carepay.patient.myhealth.fragments.MedicationDetailFragment
 import com.carecloud.carepay.patient.myhealth.fragments.MyHealthListFragment;
 import com.carecloud.carepay.patient.myhealth.fragments.MyHealthMainFragment;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.PdfUtil;
-
-import java.util.List;
 
 /**
  * @author pjohnson on 17/07/17.
@@ -56,31 +51,6 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         myHealthDto = getConvertedDTO(MyHealthDto.class);
-
-        List<PracticePatientIdsDTO> practicePatientIds = myHealthDto.getPayload().getPracticePatientIds();
-        if (!practicePatientIds.isEmpty()) {
-            getApplicationPreferences().writeObjectToSharedPreference(
-                    CarePayConstants.KEY_PRACTICE_PATIENT_IDS, practicePatientIds);
-        }
-        setTransitionBalance(myHealthDto.getMetadata().getLinks().getPatientBalances());
-        setTransitionLogout(myHealthDto.getMetadata().getTransitions().getLogout());
-        setTransitionProfile(myHealthDto.getMetadata().getLinks().getProfileUpdate());
-        setTransitionAppointments(myHealthDto.getMetadata().getLinks().getAppointments());
-        setTransitionNotifications(myHealthDto.getMetadata().getLinks().getNotifications());
-        setTransitionMyHealth(myHealthDto.getMetadata().getLinks().getMyHealth());
-        setTransitionRetail(myHealthDto.getMetadata().getLinks().getRetail());
-        setTransitionForms(myHealthDto.getMetadata().getLinks().getFormsHistory());
-
-        ApplicationPreferences.getInstance().writeObjectToSharedPreference(CarePayConstants
-                .DEMOGRAPHICS_ADDRESS_BUNDLE, myHealthDto.getPayload().getDemographicDTO().getAddress());
-
-        ApplicationPreferences.getInstance().setPracticesWithBreezeEnabled(myHealthDto.getPayload().getPracticeInformation());
-
-        String userImageUrl = myHealthDto.getPayload().getDemographicDTO()
-                .getPersonalDetails().getProfilePhoto();
-        if (userImageUrl != null) {
-            getApplicationPreferences().setUserPhotoUrl(userImageUrl);
-        }
         if (icicle == null) {
             replaceFragment(MyHealthMainFragment.newInstance(), false);
         }
@@ -179,7 +149,8 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
                             public void onClick(DialogInterface dialog, int id) {
                                 selectedLab = lab;
                                 MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewLabResult));
-                                if (ContextCompat.checkSelfPermission(MyHealthActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                if (ContextCompat.checkSelfPermission(MyHealthActivity.this,
+                                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
                                         != PermissionChecker.PERMISSION_GRANTED
                                         && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
                                     requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
@@ -218,7 +189,8 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
             String url = String.format("%s?%s=%s", transitionDTO.getUrl(), "patient_id",
                     String.valueOf(patientDto.getId()));
 
-            PdfUtil.downloadPdf(getContext(), url, patientDto.getFullName(), ".pdf", "Medical Record");
+            PdfUtil.downloadPdf(getContext(), url, patientDto.getFullName(),
+                    ".pdf", "Medical Record");
             MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewMedicalRecord));
         } else {
             showErrorNotification("Unable to find Patient Record");
