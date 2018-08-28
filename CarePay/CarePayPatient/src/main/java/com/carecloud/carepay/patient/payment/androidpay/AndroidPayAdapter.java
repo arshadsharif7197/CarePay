@@ -383,6 +383,7 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
                 .build();
     }
 
+    @Deprecated
     private PaymentMethodTokenizationParameters getTokenizationParameters(){
         return PaymentMethodTokenizationParameters.newBuilder()
                 .setPaymentMethodTokenizationType(WalletConstants.PAYMENT_METHOD_TOKENIZATION_TYPE_DIRECT)
@@ -390,13 +391,30 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
                 .build();
     }
 
+    private PaymentMethodTokenizationParameters getTokenizationParameters(PapiAccountsDTO papiAccount){
+        return PaymentMethodTokenizationParameters.newBuilder()
+                .setPaymentMethodTokenizationType(WalletConstants.PAYMENT_METHOD_TOKENIZATION_TYPE_PAYMENT_GATEWAY)
+                .addParameter("gateway", PaymentConstants.MERCHANT_GATEWAY)
+                .addParameter("gatewayMerchantId", "8192620122")
+                .build();
+    }
 
+    @Deprecated
     private PaymentDataRequest createPaymentDataRequest(double amount){
         return PaymentDataRequest.newBuilder()
                 .setTransactionInfo(getTransactionInfo(amount))
                 .addAllowedPaymentMethod(WalletConstants.PAYMENT_METHOD_TOKENIZED_CARD)
                 .setCardRequirements(getCardRequirements())
                 .setPaymentMethodTokenizationParameters(getTokenizationParameters())
+                .build();
+    }
+
+    private PaymentDataRequest createPaymentDataRequest(double amount, PapiAccountsDTO papiAccount){
+        return PaymentDataRequest.newBuilder()
+                .setTransactionInfo(getTransactionInfo(amount))
+                .addAllowedPaymentMethod(WalletConstants.PAYMENT_METHOD_TOKENIZATION_TYPE_PAYMENT_GATEWAY)
+                .setCardRequirements(getCardRequirements())
+                .setPaymentMethodTokenizationParameters(getTokenizationParameters(papiAccount))
                 .build();
     }
 
@@ -412,6 +430,19 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
             AutoResolveHelper.resolveTask(paymentsClient.loadPaymentData(paymentDataRequest), activity, PaymentConstants.REQUEST_CODE_GOOGLE_PAYMENT);
         }
     }
+
+    /**
+     * Initialize Google Payment Request
+     * @param amount amount to pay
+     */
+    public void createAndroidPayRequest(double amount, PapiAccountsDTO papiAccount){
+        setGoogleApiClient();
+        PaymentDataRequest paymentDataRequest = createPaymentDataRequest(amount, papiAccount);
+        if(paymentDataRequest != null){
+            AutoResolveHelper.resolveTask(paymentsClient.loadPaymentData(paymentDataRequest), activity, PaymentConstants.REQUEST_CODE_GOOGLE_PAYMENT);
+        }
+    }
+
 
     /**
      * Handle Google Payment result

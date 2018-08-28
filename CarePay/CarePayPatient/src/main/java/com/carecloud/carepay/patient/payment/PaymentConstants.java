@@ -13,6 +13,7 @@ public class PaymentConstants {
     public static final String ANDROID_PAY = "Android Pay";
     public static final String ANDROID_PAY_PAYMENT_TYPE = "android_pay";
     public static final String MERCHANT_NAME = "First data Corporation";
+    public static final String MERCHANT_GATEWAY = "firstdata";
 
     public static final String ANDROID_PAY_MERCHANT_SERVICE = "PZY";
     public static final String ANDROID_PAY_PAPI_ACCOUNT_TYPE = "payeezy";

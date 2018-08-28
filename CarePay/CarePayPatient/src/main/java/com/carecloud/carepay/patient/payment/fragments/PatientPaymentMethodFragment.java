@@ -273,7 +273,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
             androidPayButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    androidPayAdapter.createAndroidPayRequest(amountToMakePayment);
+                    androidPayAdapter.createAndroidPayRequest(amountToMakePayment, papiAccount);
                 }
             });
         }
