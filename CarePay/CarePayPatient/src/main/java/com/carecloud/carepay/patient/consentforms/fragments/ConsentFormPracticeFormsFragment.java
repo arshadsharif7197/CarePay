@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.consentforms.adapters.ConsentFormsAdapter;
@@ -17,6 +18,7 @@ import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormsFormsIn
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.models.Paging;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
@@ -112,6 +114,14 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
                 .findViewById(R.id.providerConsentFormsRecyclerView);
         practiceConsentFormsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         List<PracticeForm> practiceForms = getPracticeForms(userFormDto);
+        if(practiceForms.isEmpty()){
+            view.findViewById(R.id.emptyStateScreen).setVisibility(View.VISIBLE);
+            TextView title = (TextView) view.findViewById(R.id.emptyStateTitleTextView);
+            title.setText(Label.getLabel(mode == ConsentFormViewPagerFragment.HISTORIC_MODE ?
+                    "adhoc.historyforms.empty.label.title" : "adhoc.pendingforms.empty.label.title"));
+            practiceConsentFormsRecyclerView.setVisibility(View.GONE);
+            return;
+        }
         adapter = new ConsentFormsAdapter(practiceForms, mode);
         adapter.setCallback(this);
         practiceConsentFormsRecyclerView.setAdapter(adapter);

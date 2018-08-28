@@ -6,11 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/consentFormsRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <RelativeLayout
         android:id="@+id/emptyStateScreen"
         android:layout_width="match_parent"
@@ -36,7 +31,7 @@
             android:layout_centerHorizontal="true"
             android:layout_margin="@dimen/dimen_10dp"
             android:layout_marginBottom="@dimen/dimen_10dp"
-            android:src="@drawable/icon_no_forms" />
+            android:src="@drawable/icn_empty_state_forms" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/emptyStateSubTitleTextView"
@@ -51,5 +46,12 @@
             breeze:textKey="adhoc.forms.empty.label.description" />
 
     </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/consentFormsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"/>
 
 </RelativeLayout>
