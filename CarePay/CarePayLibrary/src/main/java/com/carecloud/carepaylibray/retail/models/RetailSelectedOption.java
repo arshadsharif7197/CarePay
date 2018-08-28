@@ -2,7 +2,7 @@ package com.carecloud.carepaylibray.retail.models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class RetailLineItemSelectedOption {
+public class RetailSelectedOption {
     private static final String DEFAULT_OPTION_TYPE = "CHOICES";
 
     @SerializedName("name")

@@ -102,8 +102,10 @@ public class RetailItemOptionsFragment extends BaseDialogFragment implements Ret
     private void loadDefaultOptions(){
         for(int i=0; i<retailItemDto.getOptions().size(); i++){
             RetailItemOptionDto option = retailItemDto.getOptions().get(i);
-            RetailItemOptionChoiceDto choice = option.getChoices().get(option.getDefaultChoice());
-            priceModificationMap.put(i, choice);
+            if(!option.getChoices().isEmpty()) {
+                RetailItemOptionChoiceDto choice = option.getChoices().get(option.getDefaultChoice());
+                priceModificationMap.put(i, choice);
+            }
         }
     }
 

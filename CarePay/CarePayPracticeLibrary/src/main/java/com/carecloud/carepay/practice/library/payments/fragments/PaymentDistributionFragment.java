@@ -52,8 +52,9 @@ import com.carecloud.carepaylibray.retail.models.RetailItemDto;
 import com.carecloud.carepaylibray.retail.models.RetailItemOptionChoiceDto;
 import com.carecloud.carepaylibray.retail.models.RetailItemPayload;
 import com.carecloud.carepaylibray.retail.models.RetailLineItemMetadata;
-import com.carecloud.carepaylibray.retail.models.RetailLineItemOrderItem;
-import com.carecloud.carepaylibray.retail.models.RetailLineItemSelectedOption;
+import com.carecloud.carepaylibray.retail.models.RetailOrderItem;
+import com.carecloud.carepaylibray.retail.models.RetailPostModelOrder;
+import com.carecloud.carepaylibray.retail.models.RetailSelectedOption;
 import com.carecloud.carepaylibray.retail.models.RetailProductsModel;
 import com.carecloud.carepaylibray.utils.BounceHelper;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -991,15 +992,14 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         }
     }
 
-    private void generateRetailOrder(IntegratedPaymentPostModel postModel) {
-        IntegratedPaymentLineItem retailPaymentLineItem = new IntegratedPaymentLineItem();
-        retailPaymentLineItem.setRetailMetadata(new RetailLineItemMetadata());
+    private void generateRetailOrder(IntegratedPaymentPostModel postModel){
+        RetailPostModelOrder retailOrder = new RetailPostModelOrder();
         double subtotal = 0D;
         double total = 0D;
         for (BalanceItemDTO balanceItemDTO : retailItems) {
             RetailItemDto retailItemDto = balanceItemDTO.getRetailPayload().getRetailItemDto();
 
-            RetailLineItemOrderItem orderItem = new RetailLineItemOrderItem();
+            RetailOrderItem orderItem = new RetailOrderItem();
             orderItem.setName(retailItemDto.getName());
             orderItem.setSku(retailItemDto.getSku());
 
@@ -1014,28 +1014,56 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             orderItem.setQuantity(quantity);
 
             Map<Integer, RetailItemOptionChoiceDto> selectedOptions = balanceItemDTO.getRetailPayload().getSelectedOptions();
-            for (int i = 0; i < retailItemDto.getOptions().size(); i++) {
-                RetailLineItemSelectedOption selectedOption = new RetailLineItemSelectedOption();
-                selectedOption.setName(retailItemDto.getOptions().get(i).getName());
-                selectedOption.setValue(selectedOptions.get(i).getName());
+            for (int i=0; i<retailItemDto.getOptions().size(); i++) {
+                if(selectedOptions.containsKey(i)) {
+                    RetailSelectedOption selectedOption = new RetailSelectedOption();
+                    selectedOption.setName(retailItemDto.getOptions().get(i).getName());
+                    selectedOption.setValue(selectedOptions.get(i).getName());
 
-                orderItem.getSelectedOptions().add(selectedOption);
+                    orderItem.getSelectedOptions().add(selectedOption);
+                }
             }
 
-            retailPaymentLineItem.getRetailMetadata().getOrder().getItems().add(orderItem);
+            retailOrder.getItems().add(orderItem);
+
+            IntegratedPaymentLineItem retailPaymentLineItem = new IntegratedPaymentLineItem();
+            retailPaymentLineItem.setAmount(round(amount * quantity));
+            retailPaymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_RETAIL);
+            retailPaymentLineItem.setLocationID(balanceItemDTO.getLocation().getGuid());
+            retailPaymentLineItem.setProviderID(balanceItemDTO.getProvider().getGuid());
+            retailPaymentLineItem.setRetailMetadata(new RetailLineItemMetadata());
+
+            StringBuilder descriptionBuilder = new StringBuilder(retailItemDto.getName());
+            if(!orderItem.getSelectedOptions().isEmpty()){
+                descriptionBuilder.append(" -");
+                for(RetailSelectedOption option : orderItem.getSelectedOptions()){
+                    descriptionBuilder.append(" ")
+                            .append(option.getName())
+                            .append(": ")
+                            .append(option.getValue())
+                            .append(",");
+                }
+                descriptionBuilder.deleteCharAt(descriptionBuilder.length()-1);
+            }
+            if(quantity > 1){
+                if(orderItem.getSelectedOptions().isEmpty()){
+                    descriptionBuilder.append(" - ");
+                }else{
+                    descriptionBuilder.append(", ");
+                }
+                descriptionBuilder.append("Qty: ").append(quantity);
+            }
+
+            retailPaymentLineItem.setDescription(descriptionBuilder.toString());
+            postModel.addLineItem(retailPaymentLineItem);
         }
 
-        retailPaymentLineItem.setAmount(total);
-        retailPaymentLineItem.setDescription("Retail Order");
-        retailPaymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_RETAIL);
-        retailPaymentLineItem.setLocationID(retailItems.get(0).getLocation().getGuid());
-        retailPaymentLineItem.setProviderID(retailItems.get(0).getProvider().getGuid());
-        retailPaymentLineItem.getRetailMetadata().getOrder().setSubTotal(subtotal);
-        retailPaymentLineItem.getRetailMetadata().getOrder().setTotal(total);
 
-        if (patientDemographics != null) {
-            RetailBillingPerson billingPerson = retailPaymentLineItem.getRetailMetadata()
-                    .getOrder().getBillingPerson();
+        retailOrder.setSubTotal(subtotal);
+        retailOrder.setTotal(total);
+
+        if(patientDemographics != null){
+            RetailBillingPerson billingPerson = retailOrder.getBillingPerson();
             billingPerson.setName(patientDemographics.getPersonalDetails().getFullName());
             billingPerson.setStreet(patientDemographics.getAddress().getAddress1());
             if (!StringUtil.isNullOrEmpty(patientDemographics.getAddress().getAddress2())) {
@@ -1048,7 +1076,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             billingPerson.setPhone(patientDemographics.getAddress().getPhone());
         }
 
-        postModel.addLineItem(retailPaymentLineItem);
+        postModel.getMetadata().setOrder(retailOrder);
     }
 
     private static double round(double amount) {
