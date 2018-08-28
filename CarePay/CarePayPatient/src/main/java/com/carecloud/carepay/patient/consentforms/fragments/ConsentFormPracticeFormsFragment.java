@@ -94,8 +94,8 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         selectedForms = new ArrayList<>();
+        signSelectedFormsButton = (Button) view.findViewById(R.id.signSelectedFormsButton);
         if (mode == ConsentFormViewPagerFragment.PENDING_MODE) {
-            signSelectedFormsButton = (Button) view.findViewById(R.id.signSelectedFormsButton);
             signSelectedFormsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -120,6 +120,7 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
             title.setText(Label.getLabel(mode == ConsentFormViewPagerFragment.HISTORIC_MODE ?
                     "adhoc.historyforms.empty.label.title" : "adhoc.pendingforms.empty.label.title"));
             practiceConsentFormsRecyclerView.setVisibility(View.GONE);
+            signSelectedFormsButton.setVisibility(View.GONE);
             return;
         }
         adapter = new ConsentFormsAdapter(practiceForms, mode);
@@ -141,7 +142,7 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
             }
         } else {
             for (PendingFormDTO pendingForm : userFormDTO.getHistoryForms().getForms()) {
-                pendingForm.getForm().setLastModifiedDate(pendingForm.getForm().getMetadata().getUpdatedDate());
+                pendingForm.getForm().setLastModifiedDate(pendingForm.getPayload().getUpdatedDate());
                 practiceForms.add(pendingForm.getForm());
             }
         }
