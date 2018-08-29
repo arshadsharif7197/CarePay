@@ -1,6 +1,5 @@
 package com.carecloud.carepaylibray.utils;
 
-import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -45,6 +44,14 @@ public class ProgressDialogUtil extends Dialog {
             setNavigationBarVisibility();
         }
         setContentView(R.layout.dialog_progress);
+    }
+
+
+    @Override
+    public void show(){
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+        super.show();
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
     }
 
     /**

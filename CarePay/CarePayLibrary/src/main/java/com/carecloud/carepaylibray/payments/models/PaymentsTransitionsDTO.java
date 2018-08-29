@@ -52,6 +52,9 @@ public class PaymentsTransitionsDTO {
     @SerializedName("update_one_time_payment")
     @Expose
     private TransitionDTO updateScheduledPayment = new TransitionDTO();
+    @SerializedName("initialize_payment")
+    @Expose
+    private TransitionDTO initializePaymentRequest = new TransitionDTO();
 
     /**
      * @return The makePayment
@@ -198,5 +201,13 @@ public class PaymentsTransitionsDTO {
 
     public void setUpdateScheduledPayment(TransitionDTO updateScheduledPayment) {
         this.updateScheduledPayment = updateScheduledPayment;
+    }
+
+    public TransitionDTO getInitializePaymentRequest() {
+        return initializePaymentRequest;
+    }
+
+    public void setInitializePaymentRequest(TransitionDTO initializePaymentRequest) {
+        this.initializePaymentRequest = initializePaymentRequest;
     }
 }
