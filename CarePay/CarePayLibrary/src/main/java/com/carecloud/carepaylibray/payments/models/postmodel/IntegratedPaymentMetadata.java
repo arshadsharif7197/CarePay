@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.payments.models.postmodel;
 
 import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
+import com.carecloud.carepaylibray.retail.models.RetailPostModelOrder;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -17,6 +18,10 @@ public class IntegratedPaymentMetadata {
 
     @SerializedName("cancellation_reason_id")
     private String cancellationReasonId;
+
+    @SerializedName("ecwid_order")
+    private RetailPostModelOrder order;
+
 
     public String getAppointmentId() {
         return appointmentId;
@@ -40,5 +45,13 @@ public class IntegratedPaymentMetadata {
 
     public String getCancellationReasonId() {
         return cancellationReasonId;
+    }
+
+    public RetailPostModelOrder getOrder() {
+        return order;
+    }
+
+    public void setOrder(RetailPostModelOrder order) {
+        this.order = order;
     }
 }
