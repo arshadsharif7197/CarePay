@@ -85,7 +85,8 @@ public class PaymentPlanModel {
     }
 
     public Integer getDayOfWeek() {
-        return dayOfWeek;
+        //adjust for possible values for sunday
+        return dayOfWeek == 7 ? 0 : dayOfWeek;
     }
 
     public void setDayOfWeek(int dayOfWeek) {
