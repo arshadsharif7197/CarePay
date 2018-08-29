@@ -15,6 +15,7 @@ import com.carecloud.carepaylibray.common.DatePickerFragment;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
@@ -146,17 +147,37 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
     private void showDatePickerFragment() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(minDate);
-        int paymentDueDay = paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfMonth();
         Calendar dueCal = Calendar.getInstance();
-        dueCal.set(Calendar.DAY_OF_MONTH, paymentDueDay);
-        int monthsRemaining = paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments() -
-                paymentPlanDTO.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
         int offset = 0;
-        if (paymentDueDay >= calendar.get(Calendar.DAY_OF_MONTH)) {
-            offset = 1;
+        int paymentHistoryCount = paymentPlanDTO.getPayload().getPaymentPlanDetails()
+                .getFilteredHistory().size();
+        if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode()
+                .equals(PaymentPlanDetailsDTO.FREQUENCY_MONTHLY)) {
+            int paymentDueDay = paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfMonth();
+            dueCal.set(Calendar.DAY_OF_MONTH, paymentDueDay);
+            if (paymentHistoryCount > 0 && paymentDueDay >= calendar.get(Calendar.DAY_OF_MONTH)) {
+                offset = 1;
+            }
+            int monthsRemaining = paymentPlanDTO.getPayload().getPaymentPlanDetails()
+                    .getInstallments() - paymentHistoryCount;
+            dueCal.add(Calendar.MONTH, monthsRemaining - offset);
+        } else {
+            //must be weekly
+            int weeklyDueDay = paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfWeek();
+            if (weeklyDueDay == 7) {
+                //sunday fix
+                weeklyDueDay = 1;
+            } else {
+                weeklyDueDay += 1;
+            }
+            dueCal.set(Calendar.DAY_OF_WEEK, weeklyDueDay);
+            if (paymentHistoryCount > 0 && weeklyDueDay >= calendar.get(Calendar.DAY_OF_WEEK)) {
+                offset = 1;
+            }
+            int weeksRemaining = paymentPlanDTO.getPayload().getPaymentPlanDetails()
+                    .getInstallments() - paymentHistoryCount;
+            dueCal.add(Calendar.DAY_OF_YEAR, (weeksRemaining - offset) * 7);
         }
-        dueCal.add(Calendar.MONTH, monthsRemaining - offset);
-        dueCal.add(Calendar.DAY_OF_MONTH, 1);
 
         DatePickerFragment fragment = DatePickerFragment
                 .newInstance(Label.getLabel("payment.oneTimePayment.input.label.date"),
