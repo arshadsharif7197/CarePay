@@ -374,6 +374,9 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
 
         String practiceId = settingsDTO.getMetadata().getPracticeId();
         double maxAllowablePayment = paymentsModel.getPaymentPayload().getMaximumAllowablePlanAmount(practiceId);
+        if (maxAllowablePayment > balance) {
+            maxAllowablePayment = balance;
+        }
         for (PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()) {
             if (maxAllowablePayment >= rule.getMinBalance().getValue() &&
                     maxAllowablePayment <= rule.getMaxBalance().getValue()) {
@@ -391,6 +394,9 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
 
         //check if balance can be added to existing
         double minAllowablePayment = paymentsModel.getPaymentPayload().getMinimumAllowablePlanAmount(practiceId);
+        if (minAllowablePayment > balance) {
+            minAllowablePayment = balance;
+        }
         if(paymentPlanSettings.isAddBalanceToExisting() &&
                 !paymentsModel.getPaymentPayload().getValidPlans(practiceId, minAllowablePayment).isEmpty()) {
             mustAddToExisting = true;
