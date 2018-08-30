@@ -43,6 +43,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         void notificationSelected(NotificationItem notificationItem);
 
         void undoDeleteNotification(SwipeViewHolder viewHolder);
+
+        UserPracticeDTO getUserPracticeById(String practiceId);
     }
 
     private Context context;
@@ -163,8 +165,26 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     private void displaySecureMessageNotification(NotificationViewHolder holder,
                                                   NotificationItem notificationItem) {
+        UserPracticeDTO practiceDTO = callback.getUserPracticeById(notificationItem.getMetadata().getPracticeId());
+        String practiceName = practiceDTO.getPracticeName();
+        holder.initials.setText(StringUtil.getShortName(practiceName));
+        holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
+        holder.initials.setBackgroundResource(R.drawable.round_list_tv_dark_gray);
 
+        holder.header.setText(Label.getLabel("notifications.notificationList.secureMessages.header"));
+        holder.header.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
 
+        holder.message.setTextColor(ContextCompat.getColor(context, R.color.charcoal));
+
+        String messageString = Label.getLabel("notifications.notificationList.secureMessages.message");
+        SpannableStringBuilder stringBuilder = new SpannableStringBuilder(String.format(messageString, practiceName));
+        stringBuilder.setSpan(new CarePayCustomSpan(context,
+                        CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD), messageString.length(), stringBuilder.length(),
+                Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        holder.message.setText(stringBuilder);
+
+        holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_messages);
+        holder.cellAvatar.setVisibility(View.VISIBLE);
     }
 
     private void displayPendingFormNotification(NotificationViewHolder holder, NotificationItem notificationItem) {

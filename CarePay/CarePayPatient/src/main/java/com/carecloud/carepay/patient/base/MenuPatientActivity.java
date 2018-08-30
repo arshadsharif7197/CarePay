@@ -477,7 +477,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         return transitionLogout;
     }
 
-    private void displayMessagesScreen() {
+    protected void displayMessagesScreen() {
         WorkflowDTO workflowDTO = new WorkflowDTO();
         workflowDTO.setState(NavigationStateConstants.MESSAGES);
         PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);

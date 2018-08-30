@@ -23,6 +23,7 @@ import com.carecloud.carepay.patient.notifications.models.NotificationType;
 import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
@@ -262,6 +263,11 @@ public class NotificationFragment extends BaseFragment
 
     }
 
+    @Override
+    public UserPracticeDTO getUserPracticeById(String practiceId) {
+        return getApplicationPreferences().getUserPractice(practiceId);
+    }
+
     private void loadNextPage(boolean refresh) {
         long currentPage;
         if (refresh) {
@@ -397,6 +403,8 @@ public class NotificationFragment extends BaseFragment
                     continue;
                 }
                 filteredList.add(notificationItem);
+            }else{
+                Log.d("test", "test");
             }
         }
         return filteredList;
