@@ -63,10 +63,10 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
         super.onViewCreated(view, icicle);
         View addToExisting = view.findViewById(R.id.payment_plan_add_existing);
         addToExisting.setVisibility(View.GONE);
-        if (numberPaymentsEditText.getOnFocusChangeListener() != null) {
-            numberPaymentsEditText.getOnFocusChangeListener().onFocusChange(numberPaymentsEditText, true);
+        if (installmentsEditText.getOnFocusChangeListener() != null) {
+            installmentsEditText.getOnFocusChangeListener().onFocusChange(installmentsEditText, true);
         }
-        numberPaymentsEditText.setText(String.valueOf(getRemainingPayments()));
+        installmentsEditText.setText(String.valueOf(getRemainingPayments()));
         planNameEditText.setText(existingPlan.getPayload().getDescription());
 
         createPlanButton.setText(Label.getLabel("demographics_save_changes_button"));
@@ -97,7 +97,7 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
             postModel.setLineItems(getPaymentPlanLineItems());
 
             PaymentPlanModel paymentPlanModel = new PaymentPlanModel();
-            paymentPlanModel.setAmount(monthlyPaymentAmount);
+            paymentPlanModel.setAmount(amounthPayment);
             paymentPlanModel.setFrequencyCode(PaymentPlanModel.FREQUENCY_MONTHLY);
             paymentPlanModel.setInstallments(installments +
                     existingPlan.getPayload().getPaymentPlanDetails().getFilteredHistory().size());

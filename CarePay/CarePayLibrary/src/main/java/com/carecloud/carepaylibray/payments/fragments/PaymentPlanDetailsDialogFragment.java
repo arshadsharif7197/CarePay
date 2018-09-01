@@ -143,13 +143,13 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
 
         final ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload().
                 findScheduledPayment(paymentPlanDTO);
-        if(scheduledPayment != null){
+        if (scheduledPayment != null) {
             View scheduledPaymentLayout = view.findViewById(R.id.scheduledPaymentLayout);
             scheduledPaymentLayout.setVisibility(View.VISIBLE);
             TextView scheduledPaymentMessage = (TextView) view.findViewById(R.id.scheduledPaymentMessage);
-            String message = String.format(Label.getLabel("payment.oneTimePayment.schedule.success"),
+            String message = String.format(Label.getLabel("payment.oneTimePayment.scheduled.details"),
                     StringUtil.getFormattedBalanceAmount(scheduledPayment.getPayload().getAmount()),
-                    DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal());
+                    DateUtil.getInstance().toStringWithFormatDdSlashMmSlashYyyy());
             scheduledPaymentMessage.setText(message);
             scheduledPaymentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -184,6 +184,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
             calendar.set(Calendar.DAY_OF_MONTH, drawDay);
         } else {
             int dayOfWeek = planPayload.getPaymentPlanDetails().getDayOfWeek() + 1; //Monday ==2
+
             if (calendar.get(Calendar.DAY_OF_WEEK) > dayOfWeek) {
                 calendar.add(Calendar.DAY_OF_WEEK, dayOfWeek + 1);
             } else {

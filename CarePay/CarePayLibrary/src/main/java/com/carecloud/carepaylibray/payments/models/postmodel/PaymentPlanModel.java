@@ -20,6 +20,8 @@ public class PaymentPlanModel {
     public static final String WEDNESDAY = "3";
     public static final String THURSDAY = "4";
     public static final String FRIDAY = "5";
+    public static final String SATURDAY = "6";
+    public static final String SUNDAY = "7";
 
 
     @Retention(RetentionPolicy.SOURCE)
@@ -28,7 +30,7 @@ public class PaymentPlanModel {
     }
 
     @Retention(RetentionPolicy.SOURCE)
-    @StringDef({MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY})
+    @StringDef({MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY})
     public @interface daysDef {
     }
 
@@ -83,7 +85,8 @@ public class PaymentPlanModel {
     }
 
     public Integer getDayOfWeek() {
-        return dayOfWeek;
+        //adjust for possible values for sunday
+        return dayOfWeek == 7 ? 0 : dayOfWeek;
     }
 
     public void setDayOfWeek(int dayOfWeek) {

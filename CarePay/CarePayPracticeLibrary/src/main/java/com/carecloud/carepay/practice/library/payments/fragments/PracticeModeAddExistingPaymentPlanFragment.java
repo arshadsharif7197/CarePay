@@ -55,7 +55,7 @@ public class PracticeModeAddExistingPaymentPlanFragment extends PatientModeAddEx
             clearError(R.id.paymentDrawDayInputLayout);
         }
 
-        if (StringUtil.isNullOrEmpty(numberPaymentsEditText.getText().toString())) {
+        if (StringUtil.isNullOrEmpty(installmentsEditText.getText().toString())) {
             if (isUserInteraction) {
                 setError(R.id.paymentMonthCountInputLayout, Label.getLabel("validation_required_field")
                         , isUserInteraction);
@@ -65,7 +65,7 @@ public class PracticeModeAddExistingPaymentPlanFragment extends PatientModeAddEx
             }
         } else if (installments < 2) {
             setError(R.id.paymentMonthCountInputLayout,
-                    String.format(Label.getLabel("payment_plan_min_months_error"),
+                    String.format(Label.getLabel("payment_plan_min_months_error_temporal"),
                             String.valueOf(2))
                     , isUserInteraction);
             clearError(R.id.paymentAmountInputLayout);
@@ -74,7 +74,7 @@ public class PracticeModeAddExistingPaymentPlanFragment extends PatientModeAddEx
             clearError(R.id.paymentMonthCountInputLayout);
         }
 
-        if (StringUtil.isNullOrEmpty(monthlyPaymentEditText.getText().toString())) {
+        if (StringUtil.isNullOrEmpty(amountPaymentEditText.getText().toString())) {
             if (isUserInteraction) {
                 setError(R.id.paymentAmountInputLayout, Label.getLabel("validation_required_field")
                         , isUserInteraction);

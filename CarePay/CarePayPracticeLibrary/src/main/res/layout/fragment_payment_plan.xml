@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:breeze="http://schemas.carecloud.com/breeze"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/dialog_height"
-    android:orientation="horizontal">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:breeze="http://schemas.carecloud.com/breeze"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/dialog_height"
+              android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/closeViewLayout"
@@ -217,6 +217,7 @@
                                     android:editable="false"
                                     android:focusableInTouchMode="false"
                                     android:imeOptions="actionNext"
+                                    android:textColor="@color/primary_color_enabled_selector"
                                     app:customAssetFont="proxima_nova_regular"
                                     app:hintTextAppearance="@style/FloatingLabelStyle"
                                     breeze:hintKey="payment.paymentPlan.frequency.field.hint"
@@ -268,77 +269,68 @@
 
                     </LinearLayout>
 
-                    <LinearLayout
+                    <FrameLayout
+                        android:id="@+id/paymentMonthCountLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="2">
+                        android:layout_height="wrap_content">
 
-                        <FrameLayout
-                            android:id="@+id/paymentMonthCountLayout"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1">
+                        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                            android:id="@+id/paymentMonthCountInputLayout"
+                            style="@style/SigninSignupTextInputStyle"
+                            android:tag="@string/tag_demographics_error_scroll"
+                            app:customAssetFont="proxima_nova_semi_bold"
+                            app:hintTextAppearance="@style/FloatingLabelStyle">
 
-                            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
-                                android:id="@+id/paymentMonthCountInputLayout"
-                                style="@style/SigninSignupTextInputStyle"
-                                android:tag="@string/tag_demographics_error_scroll"
-                                app:customAssetFont="proxima_nova_semi_bold"
-                                app:hintTextAppearance="@style/FloatingLabelStyle">
+                            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                                android:id="@+id/paymentMonthCount"
+                                style="@style/DemographicsReviewEditTextStyle"
+                                android:imeOptions="actionNext"
+                                android:inputType="number"
+                                android:textColor="@color/primary_color_enabled_selector"
+                                app:customAssetFont="proxima_nova_regular"
+                                app:hintTextAppearance="@style/FloatingLabelStyle"
+                                breeze:hintKey="payment_number_of_months"
+                                tools:hint="Number of months" />
 
-                                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
-                                    android:id="@+id/paymentMonthCount"
-                                    style="@style/DemographicsReviewEditTextStyle"
-                                    android:imeOptions="actionNext"
-                                    android:inputType="number"
-                                    android:textColor="@color/primary_color_enabled_selector"
-                                    app:customAssetFont="proxima_nova_regular"
-                                    app:hintTextAppearance="@style/FloatingLabelStyle"
-                                    breeze:hintKey="payment_number_of_months"
-                                    tools:hint="Number of months" />
+                        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
-                            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+                        <include
+                            android:id="@+id/paymentMonthCountOptional"
+                            layout="@layout/layout_optional_text_view" />
 
-                            <include
-                                android:id="@+id/paymentMonthCountOptional"
-                                layout="@layout/layout_optional_text_view" />
+                    </FrameLayout>
 
-                        </FrameLayout>
+                    <FrameLayout
+                        android:id="@+id/paymentAmountLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                        <FrameLayout
-                            android:id="@+id/paymentAmountLayout"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1">
+                        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                            android:id="@+id/paymentAmountInputLayout"
+                            style="@style/SigninSignupTextInputStyle"
+                            android:tag="@string/tag_demographics_error_scroll"
+                            app:customAssetFont="proxima_nova_semi_bold"
+                            app:hintTextAppearance="@style/FloatingLabelStyle">
 
-                            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
-                                android:id="@+id/paymentAmountInputLayout"
-                                style="@style/SigninSignupTextInputStyle"
-                                android:tag="@string/tag_demographics_error_scroll"
-                                app:customAssetFont="proxima_nova_semi_bold"
-                                app:hintTextAppearance="@style/FloatingLabelStyle">
+                            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                                android:id="@+id/paymentAmount"
+                                style="@style/DemographicsReviewEditTextStyle"
+                                android:imeOptions="actionNext"
+                                android:inputType="numberDecimal"
+                                android:textColor="@color/primary_color_enabled_selector"
+                                app:customAssetFont="proxima_nova_regular"
+                                app:hintTextAppearance="@style/FloatingLabelStyle"
+                                breeze:hintKey="payment_monthly_payment"
+                                tools:hint="Monthly Payment" />
 
-                                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
-                                    android:id="@+id/paymentAmount"
-                                    style="@style/DemographicsReviewEditTextStyle"
-                                    android:imeOptions="actionNext"
-                                    android:inputType="numberDecimal"
-                                    android:textColor="@color/primary_color_enabled_selector"
-                                    app:customAssetFont="proxima_nova_regular"
-                                    app:hintTextAppearance="@style/FloatingLabelStyle"
-                                    breeze:hintKey="payment_monthly_payment"
-                                    tools:hint="Monthly Payment" />
+                        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
-                            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+                        <include
+                            android:id="@+id/paymentAmountOptional"
+                            layout="@layout/layout_optional_text_view" />
 
-                            <include
-                                android:id="@+id/paymentAmountOptional"
-                                layout="@layout/layout_optional_text_view" />
+                    </FrameLayout>
 
-                        </FrameLayout>
-
-                    </LinearLayout>
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/lastPaymentMessage"

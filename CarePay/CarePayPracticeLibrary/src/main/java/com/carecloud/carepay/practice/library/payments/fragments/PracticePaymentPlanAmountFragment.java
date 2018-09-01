@@ -136,7 +136,7 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
     private double calculateFullAmount() {
         double amount = 0D;
         for (PendingBalancePayloadDTO pendingBalancePayloadDTO : selectedBalance.getPayload()) {
-            if(pendingBalancePayloadDTO.getType().equals(PendingBalancePayloadDTO.PATIENT_BALANCE)) {
+            if (pendingBalancePayloadDTO.getType().equals(PendingBalancePayloadDTO.PATIENT_BALANCE)) {
                 amount = SystemUtil.safeAdd(amount, pendingBalancePayloadDTO.getAmount());
             }
         }
@@ -148,10 +148,11 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
     }
 
     private boolean hasApplicableRule(String practiceId, double amount) {
-        for (PaymentsPayloadSettingsDTO settingsDTO : paymentsModel.getPaymentPayload().getPaymentSettings()) {
-            if (practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())) {
-                for (PaymentSettingsBalanceRangeRule balanceRangeRule : settingsDTO.getPayload()
-                        .getPaymentPlans().getBalanceRangeRules()) {
+        PaymentsPayloadSettingsDTO settingsDTO = paymentsModel.getPaymentPayload().getPaymentSetting(practiceId);
+        if (practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())) {
+            for (PaymentSettingsBalanceRangeRule balanceRangeRule : settingsDTO.getPayload()
+                    .getPaymentPlans().getBalanceRangeRules()) {
+                if (isFrequencyEnabled(settingsDTO, balanceRangeRule)) {
                     double minAmount = balanceRangeRule.getMinBalance().getValue();
                     double maxAmount = balanceRangeRule.getMaxBalance().getValue();
                     if (amount >= minAmount && amount <= maxAmount) {
@@ -161,6 +162,15 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
             }
         }
         return false;
+    }
+
+    private boolean isFrequencyEnabled(PaymentsPayloadSettingsDTO settingsDTO,
+                                       PaymentSettingsBalanceRangeRule balanceRangeRule) {
+        if (balanceRangeRule.getMaxDuration().getInterval().equals(PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS)) {
+            return settingsDTO.getPayload().getPaymentPlans().getFrequencyCode().getMonthly().isAllowed();
+        } else {
+            return settingsDTO.getPayload().getPaymentPlans().getFrequencyCode().getWeekly().isAllowed();
+        }
     }
 
     private void determineParameters() {
