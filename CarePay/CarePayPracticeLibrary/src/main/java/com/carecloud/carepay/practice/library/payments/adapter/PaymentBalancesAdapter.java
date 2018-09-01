@@ -17,6 +17,8 @@ import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentListItem;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Callback;
@@ -35,20 +37,26 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
     private final UserPracticeDTO userPractice;
     private PaymentRecyclerViewCallback callback;
     private Context context;
+    private PaymentsModel paymentsModel;
 
     /**
      * Constructor
      *
      * @param context         context
+     * @param paymentsModel   payments model
      * @param patientBalances listItems
      * @param userPracticeDTO dto
+     * @param callback        callback
      */
-    public PaymentBalancesAdapter(Context context, List<? extends PaymentListItem> patientBalances,
-                                  UserPracticeDTO userPracticeDTO, PaymentRecyclerViewCallback callback) {
+    public PaymentBalancesAdapter(Context context, PaymentsModel paymentsModel,
+                                  List<? extends PaymentListItem> patientBalances,
+                                  UserPracticeDTO userPracticeDTO,
+                                  PaymentRecyclerViewCallback callback) {
         this.context = context;
         this.listItems = patientBalances;
         this.userPractice = userPracticeDTO;
         this.callback = callback;
+        this.paymentsModel = paymentsModel;
     }
 
     @Override
@@ -89,6 +97,10 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
             holder.planInstallmentFrequency.setText(detailsDTO.getFrequencyString());
 
             holder.paymentPlanProgress.setProgress(paymentPlanDTO.getPayload().getPaymentPlanProgress());
+
+            ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload()
+                    .findScheduledPayment(paymentPlanDTO);
+            holder.scheduledIcon.setVisibility(scheduledPayment != null ? View.VISIBLE : View.GONE);
 
             holder.payButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -150,6 +162,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
 
         TextView planInstallmentFrequency;
         ProgressBar paymentPlanProgress;
+        View scheduledIcon;
 
         /**
          * View holder constructor
@@ -165,6 +178,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
             providerImageView = (ImageView) itemView.findViewById(R.id.providerImageView);
             planInstallmentFrequency = (TextView) itemView.findViewById(R.id.planInstallmentFrequency);
             paymentPlanProgress = (ProgressBar) itemView.findViewById(R.id.paymentPlanProgress);
+            scheduledIcon = itemView.findViewById(com.carecloud.carepaylibrary.R.id.scheduledPaymentIcon);
         }
     }
 
