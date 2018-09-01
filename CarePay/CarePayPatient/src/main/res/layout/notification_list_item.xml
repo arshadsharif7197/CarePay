@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
@@ -17,16 +16,16 @@
             android:id="@+id/delete_notification"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:layout_gravity="end"
             android:gravity="center"
-            android:paddingStart="@dimen/dimen_25dp"
-            android:paddingEnd="@dimen/dimen_25dp">
+            android:orientation="vertical"
+            android:paddingEnd="@dimen/dimen_25dp"
+            android:paddingStart="@dimen/dimen_25dp">
 
             <ImageView
                 android:layout_width="@dimen/dimen_14dp"
                 android:layout_height="@dimen/dimen_14dp"
-                android:src="@drawable/icn_delete_notification"/>
+                android:src="@drawable/icn_delete_notification" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:layout_width="wrap_content"
@@ -34,9 +33,9 @@
                 android:layout_marginTop="@dimen/dimen_5dp"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_11"
-                tools:text="Clear"
+                app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="notification_clear"
-                app:customAssetFont="proxima_nova_regular"/>
+                tools:text="Clear" />
         </LinearLayout>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -44,13 +43,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|center_vertical"
+            android:padding="@dimen/dimen_20dp"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_18sp"
-            android:padding="@dimen/dimen_20dp"
-            tools:text="Undo"
-            breeze:textKey="notification_undo"
+            android:visibility="gone"
             app:customAssetFont="proxima_nova_semi_bold"
-            android:visibility="gone"/>
+            breeze:textKey="notification_undo"
+            tools:text="Undo" />
 
         <FrameLayout
             android:id="@+id/notification_item_layout"
@@ -60,12 +59,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
                 android:background="@color/white"
-                android:paddingTop="@dimen/dimen_12dp"
+                android:orientation="horizontal"
                 android:paddingBottom="@dimen/dimen_12dp"
-                android:paddingStart="@dimen/list_apt_padding_right"
                 android:paddingEnd="@dimen/list_apt_padding_right"
+                android:paddingStart="@dimen/list_apt_padding_right"
+                android:paddingTop="@dimen/dimen_12dp"
                 android:visibility="visible">
 
                 <RelativeLayout
@@ -78,17 +77,11 @@
                         android:layout_width="@dimen/dimen_22dp"
                         android:layout_height="@dimen/dimen_22dp"
                         android:layout_alignParentTop="true"
-                        android:elevation="@dimen/apt_lst_img_elevation"/>
+                        android:elevation="@dimen/apt_lst_img_elevation" />
 
-                    <FrameLayout
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-
-                        <ImageView
-                            android:id="@+id/providerPicImageView"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:visibility="gone"/>
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                             android:id="@+id/avatarTextView"
@@ -100,8 +93,16 @@
                             android:src="@drawable/icn_placeholder_user_profile_png"
                             android:textColor="@color/lightSlateGray"
                             android:textSize="@dimen/apt_dl_text_big"
-                            app:customAssetFont="gotham_rounded_medium"/>
-                    </FrameLayout>
+                            app:customAssetFont="gotham_rounded_medium" />
+
+                        <ImageView
+                            android:id="@+id/providerPicImageView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
                 </RelativeLayout>
 
                 <LinearLayout
@@ -117,25 +118,25 @@
                         android:id="@+id/notification_header"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:ellipsize="end"
                         android:gravity="start"
                         android:maxLines="1"
-                        android:ellipsize="end"
                         android:textColor="@color/textview_default_textcolor"
                         android:textSize="@dimen/text_size_15"
                         android:textStyle="bold"
-                        tools:text="Confirmed"
-                        app:customAssetFont="gotham_rounded_bold"/>
+                        app:customAssetFont="gotham_rounded_bold"
+                        tools:text="Confirmed" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/notification_message"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="start|center_vertical"
                         android:ellipsize="end"
+                        android:gravity="start|center_vertical"
                         android:maxLines="3"
                         android:textColor="@color/textview_default_textcolor"
                         android:textSize="@dimen/text_size_12sp"
-                        app:customAssetFont="proxima_nova_regular"/>
+                        app:customAssetFont="proxima_nova_regular" />
                 </LinearLayout>
 
 
@@ -146,8 +147,8 @@
                     android:layout_gravity="top"
                     android:textColor="@color/optional_gray"
                     android:textSize="@dimen/text_size_13"
-                    tools:text="2hr ago"
-                    app:customAssetFont="proxima_nova_regular"/>
+                    app:customAssetFont="proxima_nova_regular"
+                    tools:text="2hr ago" />
 
             </LinearLayout>
 
@@ -159,8 +160,8 @@
         android:id="@+id/appointment_list_item_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/gray"
+        android:layout_marginEnd="@dimen/list_apt_padding_right"
         android:layout_marginStart="@dimen/list_apt_padding_right"
-        android:layout_marginEnd="@dimen/list_apt_padding_right"/>
+        android:background="@color/gray" />
 
 </LinearLayout>

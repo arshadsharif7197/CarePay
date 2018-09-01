@@ -77,8 +77,8 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
     /**
      * get new instance of AndroidPayDialogFragment
      * @param maskedWallet masked wallet
-     * @param paymentsModel payment model
-     * @param amount payment amount
+     * @param paymentsModel payments model
+     * @param amount payments amount
      * @return new instance of AndroidPayDialogFragment
      */
     public static AndroidPayDialogFragment newInstance(MaskedWallet maskedWallet, PaymentsModel paymentsModel, Double amount){
@@ -411,7 +411,7 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
             public void onFailure(String exceptionMessage) {
                 hideProgressDialog();
                 System.out.print(exceptionMessage);
-                logPaymentFail("Failed to reach make payment endpoint", true, rawResponse, exceptionMessage);
+                logPaymentFail("Failed to reach make payments endpoint", true, rawResponse, exceptionMessage);
 
             }
         };
