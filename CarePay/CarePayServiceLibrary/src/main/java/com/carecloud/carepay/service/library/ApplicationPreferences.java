@@ -11,9 +11,14 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -41,6 +46,7 @@ public class ApplicationPreferences {
     private static final String PREFERENCE_LOCATION = "locations";
     private static final String BAD_COUNTER_TRANSITION = "badgeCounterTransition";
     private static final String PREFERENCE_LANDING_SCREEN = "landing_screen";
+    private static final String USER_PRACTICES = "userPractices";
 
     private String patientId;
     private String practiceId;
@@ -388,6 +394,27 @@ public class ApplicationPreferences {
         editor.apply();
     }
 
+    public void setUserPractices(List<UserPracticeDTO> practiceInformation) {
+        Map<String, UserPracticeDTO> userPracticesMap = new HashMap<>();
+        for (UserPracticeDTO userPracticeDTO : practiceInformation) {
+            userPracticesMap.put(userPracticeDTO.getPracticeId(), userPracticeDTO);
+        }
+        Gson gson = new GsonBuilder().create();
+        String jsonMap = gson.toJson(userPracticesMap);
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putString(USER_PRACTICES, jsonMap);
+        editor.apply();
+    }
+
+    public UserPracticeDTO getUserPractice(String practiceId) {
+        Gson gson = new GsonBuilder().create();
+        String json = getSharedPreferences().getString(USER_PRACTICES, "");
+        Type typeOfHashMap = new TypeToken<Map<String, UserPracticeDTO>>() {
+        }.getType();
+        Map<String, UserPracticeDTO> userPracticeMap = gson.fromJson(json, typeOfHashMap);
+        return userPracticeMap.get(practiceId);
+    }
+
     public String getUserPassword() {
         if (userPassword == null) {
             userPassword = readStringFromSharedPref(PREFERENCE_PASSWORD);
@@ -438,11 +465,11 @@ public class ApplicationPreferences {
         return formsBadgeCounter;
     }
 
-    public boolean isLandingScreen(){
+    public boolean isLandingScreen() {
         return readBooleanFromSharedPref(PREFERENCE_LANDING_SCREEN, false);
     }
 
-    public void setLandingScreen(boolean isLandingScreen){
+    public void setLandingScreen(boolean isLandingScreen) {
         writeBooleanToSharedPref(PREFERENCE_LANDING_SCREEN, isLandingScreen);
     }
 }
