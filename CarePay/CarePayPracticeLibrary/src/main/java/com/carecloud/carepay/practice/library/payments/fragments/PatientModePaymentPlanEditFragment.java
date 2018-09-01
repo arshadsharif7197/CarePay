@@ -6,7 +6,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanEditFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
@@ -33,17 +32,7 @@ public class PatientModePaymentPlanEditFragment extends PaymentPlanEditFragment 
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        getPaymentPlanSettings(ApplicationPreferences.getInstance().getPracticeId());
-        if (frequencyOptions.size() > 1) {
-            if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode()
-                    .equals(PaymentPlanDetailsDTO.FREQUENCY_MONTHLY)) {
-                frequencyOption = frequencyOptions.get(0);
-            } else {
-                frequencyOption = frequencyOptions.get(1);
-            }
-        } else {
-            frequencyOption = frequencyOptions.get(0);
-        }
+        paymentPlanBalanceRules = getPaymentPlanSettings(interval);
     }
 
     @Override
