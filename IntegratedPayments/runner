@@ -1,0 +1,105 @@
+#!/bin/bash
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+red=$(tput setaf 1)
+reset=$(tput sgr0)
+
+COMMIT_RANGE=$(echo $TRAVIS_COMMIT_RANGE | sed 's/\.\.\./\.\./g')
+COMMIT_MESSAGES=$(echo $(git log $COMMIT_RANGE --pretty=format:%s))
+
+DEPLOY_SCRIPT=$1
+
+shopt -s nocasematch
+#####################################################################################
+########## CHECKS TO SEE IF BUILD IS TRIGGERED FROM PULL REQUEST ####################
+##########  IF IT IS NOT IT CHECKS BRANCH TO BUILD SPECIFIC APK  ####################
+#####################################################################################
+if [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "development" ]]; then
+    echo "${green}*** BUILDING DEVELOPMENT PAYMENTS APK ***${reset}"
+    ./gradlew :carecloudmini:assembleDevelopment --profile --configure-on-demand
+
+    echo "${green}*** DELETING DEVELOPMENT APKS FROM AWS ***${reset}"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 rm s3://automation-zeus --recursive --exclude "*" --include "*carecloudmini*development*.apk"
+
+    echo "${green}*** DEPLOYING DEVELOPMENT PAYMENTS APK TO AWS ***${reset}"
+    mkdir $TRAVIS_BUILD_DIR/IntegratedPayments/carecloudmini/build/outputs/temp/
+    find $TRAVIS_BUILD_DIR/IntegratedPayments/carecloudmini/build/outputs/apk/ -name "*development*.apk" -exec cp {}  $TRAVIS_BUILD_DIR/IntegratedPayments/carecloudmini/build/outputs/temp/ \;
+
+    PAYMENTS_APP=$(echo $TRAVIS_BUILD_DIR/IntegratedPayments/carecloudmini/build/outputs/temp/$(ls $TRAVIS_BUILD_DIR/IntegratedPayments/carecloudmini/build/outputs/temp/ | grep -i '.*carecloudmini.*release.*\.apk') )
+
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/IntegratedPayments/carecloudmini/build/outputs/temp s3://automation-zeus/ --recursive
+
+elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "QA" ]]; then
+
+    echo "${green}*** BUILDING QA PAYMENTS APK ***${reset}"
+    ./gradlew :carecloudmini:assembleQa --profile --configure-on-demand
+
+    echo "${green}*** DELETING QA APKS FROM AWS ***${reset}"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 rm s3://automation-zeus --recursive --exclude "*" --include "*carecloudmini*qa*.apk"
+
+    echo "${green}*** DEPLOYING QA PAYMENTS APK TO AWS ***${reset}"
+    mkdir $TRAVIS_BUILD_DIR/IntegratedPayments/carecloudmini/build/outputs/temp/
+    find $TRAVIS_BUILD_DIR/IntegratedPayments/carecloudmini/build/outputs/apk/ -name "*qa*.apk" -exec cp {}  $TRAVIS_BUILD_DIR/IntegratedPayments/carecloudmini/build/outputs/temp/ \;
+
+    PAYMENTS_APP=$(echo $TRAVIS_BUILD_DIR/IntegratedPayments/carecloudmini/build/outputs/temp/$(ls $TRAVIS_BUILD_DIR/IntegratedPayments/carecloudmini/build/outputs/temp/ | grep -i '.*carecloudmini.*release.*\.apk') )
+
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/IntegratedPayments/carecloudmini/build/outputs/temp s3://automation-zeus/ --recursive
+
+elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "Staging" ]]; then
+
+    echo "${green}*** BUILDING STAGING PAYMENTS APK ***${reset}"
+    ./gradlew :carecloudmini:assembleStaging --profile --configure-on-demand
+
+    echo "${green}*** DELETING STAGING APKS FROM AWS ***${reset}"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 rm s3://automation-zeus --recursive --exclude "*" --include "*carecloudmini*staging*.apk"
+
+    echo "${green}*** DEPLOYING STAGING PAYMENTS APK TO AWS ***${reset}"
+    mkdir $TRAVIS_BUILD_DIR/IntegratedPayments/carecloudmini/build/outputs/temp/
+    find $TRAVIS_BUILD_DIR/IntegratedPayments/carecloudmini/build/outputs/apk/ -name "*staging*.apk" -exec cp {}  $TRAVIS_BUILD_DIR/IntegratedPayments/carecloudmini/build/outputs/temp/ \;
+
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/IntegratedPayments/carecloudmini/build/outputs/temp s3://automation-zeus/ --recursive
+
+elif [ "$TRAVIS_PULL_REQUEST" == "false" ] && [[ "$TRAVIS_BRANCH" == "master" ]]; then
+
+    echo "${green}*** BUILDING PRODUCTION PAYMENTS APK ***${reset}"
+    ./gradlew :carecloudmini:assembleProduction --profile --configure-on-demand
+
+    echo "${green}*** DELETING PRODUCTION APKS FROM AWS ***${reset}"
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 rm s3://automation-zeus --recursive --exclude "*" --include "*carecloudmini*production*.apk"
+
+    echo "${green}*** DEPLOYING PRODUCTION PAYMENTS APK TO AWS ***${reset}"
+    mkdir $TRAVIS_BUILD_DIR/IntegratedPayments/carecloudmini/build/outputs/temp/
+    find $TRAVIS_BUILD_DIR/IntegratedPayments/carecloudmini/build/outputs/apk/ -name "*staging*.apk" -exec cp {}  $TRAVIS_BUILD_DIR/IntegratedPayments/carecloudmini/build/outputs/temp/ \;
+
+    AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp $TRAVIS_BUILD_DIR/IntegratedPayments/carecloudmini/build/outputs/temp s3://automation-zeus/ --recursive
+
+fi
+
+#####################################################################################
+##########              CHECKS COMMIT MESSAGE FOR VERSION OF APP             ########
+##########  EXAMPLE "PRACTICEAPP" OR "PATIENTAPP" AND COMPILES THAT PROJECT  ########
+#####################################################################################
+if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [[ "$COMMIT_MESSAGES" =~ carepay ]]; then
+    echo "${yellow}*** Skipping APK Build ***${reset}"
+    echo "${yellow}*** CareCloud Payments Compile Check ***${reset}"
+    ./gradlew :carecloudmini:compileProductionReleaseSources --profile --configure-on-demand
+elif [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
+    echo "${yellow}*** Skipping APK Build ***${reset}"
+    echo "${green}*** Skipping Compile Check ***${reset}"
+fi
+
+
+########### TEST FAIRY DEPLOY ###########
+if [[ $DEPLOY_SCRIPT == "testfairy" ]]; then
+    echo "${green}*** Deploying via TestFairy ***${reset}"
+
+    if [[ $PAYMENTS_APP ]]; then
+        echo "${green}*** Deploy Payments App Build ***${reset}"
+        chmod +x ./$DEPLOY_SCRIPT
+        ./$DEPLOY_SCRIPT $PAYMENTS_APP
+    else
+        echo
+        echo "${red}*** No Payments App Build to Deploy ***${reset}"
+    fi
+fi
+#########################################

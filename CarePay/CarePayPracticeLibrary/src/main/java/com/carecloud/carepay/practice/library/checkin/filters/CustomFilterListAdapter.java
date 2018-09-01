@@ -52,7 +52,6 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
      */
     public CustomFilterListAdapter(FilterModel filterModel,
                                    CustomFilterListAdapterListener callback) {
-        this.context = context;
         this.filterModel = filterModel;
         this.callback = callback;
 
@@ -145,18 +144,19 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 filterDataDTO.setChecked(isChecked);
-                //underlying filter model not always being updated.. need to add this to ensure the filter model object is updated
+                //underlying filter model not always being updated..
+                // need to add this to ensure the filter model object is updated
                 int index = -1;
-                switch (filterDataDTO.getFilterDataType()){
+                switch (filterDataDTO.getFilterDataType()) {
                     case LOCATION:
                         index = filterModel.getLocations().indexOf(filterDataDTO);
-                        if(index > -1) {
+                        if (index > -1) {
                             filterModel.getLocations().get(index).setChecked(isChecked);
                         }
                         break;
                     case PROVIDER:
                         index = filterModel.getDoctors().indexOf(filterDataDTO);
-                        if(index > -1) {
+                        if (index > -1) {
                             filterModel.getDoctors().get(index).setChecked(isChecked);
                         }
                         break;
@@ -168,7 +168,7 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
                 } else {
                     selectedItemImageView.setVisibility(View.GONE);
                 }
-                if(!skipCallback) {
+                if (!skipCallback) {
                     callback.onFilterChanged(filterDataDTO);
                 }
                 skipCallback = false;
@@ -178,7 +178,8 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
         void setFilterDataDTO(FilterDataDTO filterDataDTO) {
             this.filterDataDTO = filterDataDTO;
             checkBox.setText(filterDataDTO.getDisplayText());
-            skipCallback = (!checkBox.isChecked() && filterDataDTO.isChecked()) || (checkBox.isChecked() && !filterDataDTO.isChecked());//non user interaction check changes
+            skipCallback = (!checkBox.isChecked() && filterDataDTO.isChecked())
+                    || (checkBox.isChecked() && !filterDataDTO.isChecked());//non user interaction check changes
             checkBox.setChecked(filterDataDTO.isChecked());
             if (filterDataDTO.isChecked()) {
                 selectedItemImageView.setVisibility(View.VISIBLE);

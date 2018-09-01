@@ -30,6 +30,9 @@ public class NotificationItemMetadata {
     @SerializedName("updated_dt")
     @Expose
     private String updatedDt;
+    @SerializedName("notification_type")
+    @Expose
+    private NotificationType notificationType;
 
     public String getPracticeMgmt() {
         return practiceMgmt;
@@ -85,5 +88,13 @@ public class NotificationItemMetadata {
 
     public void setUpdatedDt(String updatedDt) {
         this.updatedDt = updatedDt;
+    }
+
+    public NotificationType getNotificationType() {
+        return notificationType;
+    }
+
+    public void setNotificationType(NotificationType notificationType) {
+        this.notificationType = notificationType;
     }
 }

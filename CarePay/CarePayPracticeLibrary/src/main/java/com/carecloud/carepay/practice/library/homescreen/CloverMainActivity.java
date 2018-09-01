@@ -688,20 +688,20 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
                     PracticeHomeScreenPayloadDTO.class);
             List<HomeScreenOfficeNewsDTO> officeNews = practiceHomePayloadDTO.getOfficeNews();
             if (!officeNews.isEmpty()) {
-                RecyclerView newsList = (RecyclerView) findViewById(R.id.office_news_list);
-                if (newsList != null) {
-                    newsList.setVisibility(View.VISIBLE);
+                RecyclerView newsListRecyclerView = (RecyclerView) findViewById(R.id.office_news_list);
+                if (newsListRecyclerView != null) {
+                    newsListRecyclerView.setVisibility(View.VISIBLE);
                     findViewById(R.id.office_news_header).setVisibility(View.VISIBLE);
                     LinearLayoutManager layoutManager = new LinearLayoutManager(CloverMainActivity.this,
                             LinearLayoutManager.HORIZONTAL, false);
-                    DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(newsList.getContext(),
+                    DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(newsListRecyclerView.getContext(),
                             layoutManager.getOrientation());
-                    newsList.setLayoutManager(layoutManager);
-                    newsList.addItemDecoration(dividerItemDecoration);
+                    newsListRecyclerView.setLayoutManager(layoutManager);
+                    newsListRecyclerView.addItemDecoration(dividerItemDecoration);
 
                     OfficeNewsListAdapter adapter = new OfficeNewsListAdapter(CloverMainActivity.this,
                             officeNews, officeNewsClickedListener);
-                    newsList.setAdapter(adapter);
+                    newsListRecyclerView.setAdapter(adapter);
                 }
             } else {
                 DisplayMetrics metrics = getResources().getDisplayMetrics();

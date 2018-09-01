@@ -2,6 +2,11 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="languageSpinnerWidth">100dp</dimen>
+    <dimen name="languageSpinnerHeight">40dp</dimen>
+
+    <!--Common-->
+    <dimen name="dialog_profile_pic_size">88dp</dimen>
 
     <!-- Default dimens which will be use for any default styling  -->
     <dimen name="dimen_1dp">1dp</dimen>
@@ -74,11 +79,14 @@
     <dimen name="drawable_padding">5dp</dimen>
     <dimen name="view_padding">10dp</dimen>
     <dimen name="view_margin">10dp</dimen>
+    <dimen name="filterTitleTextSize">20sp</dimen>
     <dimen name="search_edittext_padding_right">50dp</dimen>
     <dimen name="clear_search_button_margin">-40dp</dimen>
     <dimen name="custom_filter_text_size">18sp</dimen>
     <dimen name="custom_filter_view_margin">5dp</dimen>
     <dimen name="custom_filter_patient_image_size">32dp</dimen>
+    <dimen name="customFilterHeaderPadding">10dp</dimen>
+    <dimen name="searchEditTextTextSize">17sp</dimen>
 
     <!--pin confirmation dialog-->
     <dimen name="button_height">77dp</dimen>
@@ -109,9 +117,10 @@
     <dimen name="appointment_detail_dialog_checkbox_divider_margin_top">20dp</dimen>
     <dimen name="custom_appointment_dialog_checkbox_textsize">15sp</dimen>
     <dimen name="custom_appointment_dialog_button_textsize">22sp</dimen>
-
     <dimen name="custom_appointment_dialog_background_shape_radius">7dp</dimen>
     <dimen name="custom_appointment_dialog_checkbox_normal_size">16dp</dimen>
+    <dimen name="checkin_info_label_width">150dp</dimen>
+    <dimen name="checked_in_card_status_top_margin">36dp</dimen>
 
     <!-- Home Screen -->
 
@@ -136,7 +145,6 @@
     <dimen name="home_button_height">250dp</dimen>
 
     <dimen name="home_shadow_width">800dp</dimen>
-
     <dimen name="home_shadow_margin_top">-7dp</dimen>
 
     <dimen name="home_settings_icon_width">30dp</dimen>
@@ -145,14 +153,18 @@
     <dimen name="home_spinner_width">100dp</dimen>
     <dimen name="home_spinner_height">40dp</dimen>
     <dimen name="home_spinner_padding_righ_left">8dp</dimen>
-    <dimen name="patient_splash_button_width">150dp</dimen>
+    <dimen name="patient_splash_button_width">250dp</dimen>
     <dimen name="patient_splash_button_height">51dp</dimen>
+    <dimen name="mainTitleHeaderMarginTop">40dp</dimen>
+    <dimen name="mainLayoutContainerHorizontalMargin">50dp</dimen>
+    <dimen name="mainLayoutContainerTopMargin">200dp</dimen>
+    <dimen name="homeItemVerticalPadding">40dp</dimen>
+    <dimen name="officeNewsHeaderTopMargin">60dp</dimen>
+    <dimen name="officeNewsItemWidth">300dp</dimen>
+    <dimen name="officeNewListItemTextSize">20sp</dimen>
+    <dimen name="officeNewsHeaderTextSize">26sp</dimen>
 
     <!--Signature view dialog-->
-
-    <!-- Check-in -->
-    <dimen name="checkin_info_label_width">150dp</dimen>
-    <dimen name="checked_in_card_status_top_margin">36dp</dimen>
 
     <!--Provider lists-->
     <dimen name="provider_list_title_margin">34dp</dimen>
@@ -180,9 +192,6 @@
     <dimen name="payment_distibution_dialog_height">600dp</dimen>
     <dimen name="payment_distribution_dialog_width">860dp</dimen>
 
-    <dimen name="popup_picker_width">300dp</dimen>
-    <dimen name="popup_picker_height">200dp</dimen>
-
     <dimen name="keypad_width">600dp</dimen>
     <dimen name="keypad_height">700dp</dimen>
     <dimen name="calculator_entry_text">80sp</dimen>
@@ -196,5 +205,69 @@
 
     <dimen name="dialog_amount_width">420dp</dimen>
     <dimen name="dialog_amount_height">600dp</dimen>
+    <dimen name="list_dialog_min_height">400dp</dimen>
+    <dimen name="toolbar_vertical_padding">10dp</dimen>
+    <dimen name="search_container_padding">30dp</dimen>
+    <dimen name="bottom_button_container_padding">10dp</dimen>
+    <dimen name="list_padding">16dp</dimen>
+    <dimen name="practice_item_margin">13dp</dimen>
+    <dimen name="practice_item_text_size">17sp</dimen>
+    <dimen name="sigin_main_container_margin_top">60dp</dimen>
+    <dimen name="signin_main_width">500dp</dimen>
+
+    <!--CheckIn Practice Mode-->
+    <dimen name="checkInPanelWidth">1600dp</dimen>
+    <dimen name="patientImageNameMargin">16dp</dimen>
+    <dimen name="patientShortNameTextSize">24sp</dimen>
+    <dimen name="patientNameTextSize">22sp</dimen>
+    <dimen name="providerNameTextSize">17sp</dimen>
+    <dimen name="timeTextSize">19sp</dimen>
+    <dimen name="timeElapsedTextSize">11sp</dimen>
+    <dimen name="infoTextSize">14sp</dimen>
+    <dimen name="checkinColumnTitleTextSize">20sp</dimen>
+    <dimen name="checkInTitleCounterTextSize">16sp</dimen>
+    <dimen name="checkInColumnTopMargin">15dp</dimen>
+    <dimen name="cardQueueMinHeight">90dp</dimen>
+    <dimen name="goBackTextSize">20sp</dimen>
+    <dimen name="filterLabelTextSize">20sp</dimen>
+    <dimen name="goBackHeight">53dp</dimen>
+    <dimen name="checkInMainPanelTopPadding">15dp</dimen>
+    <dimen name="queueTimeMarginTop">5dp</dimen>
+    <dimen name="queueCounterNoBorderWidth">34dp</dimen>
+    <dimen name="queueCounterNoBorderHeight">34dp</dimen>
+    <dimen name="queueCounterStrokeWidth">3dp</dimen>
+    <dimen name="signInMainLayoutPadding">20dp</dimen>
+    <dimen name="signInButtonHeight">48dp</dimen>
+    <dimen name="signInButtonMarginTop">30dp</dimen>
+    <dimen name="signInButtonTextSize">22sp</dimen>
+    <dimen name="langSpinnerTextSize">20sp</dimen>
+    <dimen name="languageContainerWidth">140dp</dimen>
+    <dimen name="languageContainerMarginTop">15dp</dimen>
+    <dimen name="languageIndicatorSize">25dp</dimen>
+    <dimen name="languageItemStartMargin">20dp</dimen>
+    <dimen name="languageItemEndMargin">10dp</dimen>
+    <dimen name="languageItemTextSize">19sp</dimen>
+    <dimen name="nextButtonTextSize">22sp</dimen>
+    <dimen name="searchViewHeight">35dp</dimen>
+    <dimen name="clearFiltersButtonHeight">45dp</dimen>
+    <dimen name="cutomFilterItemTextSize">18sp</dimen>
+    <dimen name="clearFiltersButtonTextSize">17sp</dimen>
+
+    <dimen name="popup_picker_width">300dp</dimen>
+    <dimen name="popup_picker_height">200dp</dimen>
+
+    <!--&#45;&#45;-->
+    <dimen name="dialog_header_height">205dp</dimen>
+
+    <dimen name="profilePicMarginTop">26dp</dimen>
+    <dimen name="checkinPatientNameTextSize">34sp</dimen>
+    <dimen name="doctorNameTextSize">18sp</dimen>
+    <dimen name="balanceTextPadding">19dp</dimen>
+    <dimen name="balanceTextSize">24sp</dimen>
+    <dimen name="queueTextSize">30sp</dimen>
+    <dimen name="demographicsCheckBoxWidth">120dp</dimen>
+    <dimen name="pickItemTextSize">17sp</dimen>
+    <dimen name="pickItemVerticalPadding">8dp</dimen>
+    <dimen name="lineItemDetailButtonTextSize">13sp</dimen>
 
 </resources>

@@ -52,15 +52,15 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                              Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         View closeView = view.findViewById(R.id.closeViewLayout);
-        if(closeView != null) {
+        if (closeView != null) {
             closeView.setOnClickListener(this);
         }
         TextView closeText = (TextView) view.findViewById(R.id.closeTextView);
-        if(closeText != null) {
+        if (closeText != null) {
             closeText.setText(getCancelString());
         }
         ImageView cancelImage = (ImageView) view.findViewById(R.id.cancel_img);
-        if(cancelImage != null) {
+        if (cancelImage != null) {
             cancelImage.setImageResource(getCancelImageResource());
         }
 

@@ -10,9 +10,10 @@ import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.ISession;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenterImpl;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
-import com.carecloud.carepaylibray.demographics.fragments.HomeAlertDialogFragment;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 
@@ -96,15 +97,15 @@ public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl 
 
     private void showHomeAlertDialog() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        HomeAlertDialogFragment homeAlertDialogFragment = HomeAlertDialogFragment.newInstance(null, null);
-        homeAlertDialogFragment.setCallback(new HomeAlertDialogFragment.HomeAlertInterface() {
+        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(null, null);
+        confirmDialogFragment.setCallback(new ConfirmationCallback() {
             @Override
-            public void onAcceptExit() {
+            public void onConfirm() {
                 exitToPatientHome();
             }
         });
-        String tag = homeAlertDialogFragment.getClass().getName();
-        homeAlertDialogFragment.show(ft, tag);
+        String tag = confirmDialogFragment.getClass().getName();
+        confirmDialogFragment.show(ft, tag);
     }
 
     @Override

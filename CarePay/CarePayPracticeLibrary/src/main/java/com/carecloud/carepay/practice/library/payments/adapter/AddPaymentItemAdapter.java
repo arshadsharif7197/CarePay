@@ -22,7 +22,7 @@ import java.util.Locale;
 
 public class AddPaymentItemAdapter extends RecyclerView.Adapter<AddPaymentItemAdapter.AddPaymentItemViewHolder> {
 
-    public interface AddPaymentItemCallback{
+    public interface PaymentItemSelectedCallback {
         void paymentItemSelected(SimpleChargeItem chargeItem);
     }
 
@@ -32,7 +32,7 @@ public class AddPaymentItemAdapter extends RecyclerView.Adapter<AddPaymentItemAd
     private Context context;
     private List<SimpleChargeItem> templateItems = new ArrayList<>();
     private List<SimpleChargeItem> simpleChargeItems = new ArrayList<>();
-    private AddPaymentItemCallback callback;
+    private PaymentItemSelectedCallback callback;
 
     private NumberFormat currencyFormatter;
 
@@ -43,7 +43,7 @@ public class AddPaymentItemAdapter extends RecyclerView.Adapter<AddPaymentItemAd
      * @param simpleChargeItems list of simple charge items
      * @param callback callback
      */
-    public AddPaymentItemAdapter(Context context, List<SimpleChargeItem> templateItems, List<SimpleChargeItem> simpleChargeItems, AddPaymentItemCallback callback){
+    public AddPaymentItemAdapter(Context context, List<SimpleChargeItem> templateItems, List<SimpleChargeItem> simpleChargeItems, PaymentItemSelectedCallback callback){
         this.context = context;
         this.templateItems = templateItems;
         this.simpleChargeItems = simpleChargeItems;

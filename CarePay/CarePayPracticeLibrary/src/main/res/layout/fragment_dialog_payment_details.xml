@@ -74,10 +74,10 @@
         android:layout_below="@id/profile_image_layout"
         android:background="@color/cardview_header_bg"
         android:gravity="center"
-        android:paddingBottom="@dimen/dimen_19dp"
-        android:paddingTop="@dimen/dimen_19dp"
+        android:paddingBottom="@dimen/balanceTextPadding"
+        android:paddingTop="@dimen/balanceTextPadding"
         android:textColor="@color/white"
-        android:textSize="@dimen/text_size_24sp"
+        android:textSize="@dimen/balanceTextSize"
         app:customAssetFont="proxima_nova_semi_bold" />
 
     <FrameLayout

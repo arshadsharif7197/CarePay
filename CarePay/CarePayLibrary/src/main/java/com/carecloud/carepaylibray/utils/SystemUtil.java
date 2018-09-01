@@ -418,4 +418,14 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler {
         return Math.round((addend1 + addend2)*100)/100D;
     }
 
+    /**
+     * Convenience method to safely multiply two numbers and avoid floating point errors
+     * @param base number to multiply
+     * @param factor number to multiply by
+     * @return product
+     */
+    public static double safeMultiply(double base, double factor){
+        return Math.round((base * factor)*100)/100D;
+    }
+
 }

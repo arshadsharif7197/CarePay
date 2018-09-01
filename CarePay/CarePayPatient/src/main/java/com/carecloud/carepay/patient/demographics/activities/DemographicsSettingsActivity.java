@@ -36,10 +36,11 @@ import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.PhysicianDto;
 import com.carecloud.carepaylibray.demographics.fragments.EmergencyContactFragment;
-import com.carecloud.carepaylibray.demographics.fragments.HomeAlertDialogFragment;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.SearchPhysicianFragment;
 import com.carecloud.carepaylibray.demographics.interfaces.DemographicExtendedInterface;
@@ -247,14 +248,14 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     }
 
     @Override
-    public void showRemovePrimaryInsuranceDialog(HomeAlertDialogFragment.HomeAlertInterface callback) {
+    public void showRemovePrimaryInsuranceDialog(ConfirmationCallback callback) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        HomeAlertDialogFragment homeAlertDialogFragment = HomeAlertDialogFragment
+        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment
                 .newInstance(Label.getLabel("demographics_insurance_primary_alert_title"),
                         Label.getLabel("demographics_insurance_primary_alert_message_patient"));
-        homeAlertDialogFragment.setCallback(callback);
-        String tag = homeAlertDialogFragment.getClass().getName();
-        homeAlertDialogFragment.show(ft, tag);
+        confirmDialogFragment.setCallback(callback);
+        String tag = confirmDialogFragment.getClass().getName();
+        confirmDialogFragment.show(ft, tag);
     }
 
     public void addFragment(Fragment fragment, boolean addToBackStack) {

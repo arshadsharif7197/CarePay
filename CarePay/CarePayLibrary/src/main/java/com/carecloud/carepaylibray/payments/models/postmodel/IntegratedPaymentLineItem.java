@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.payments.models.postmodel;
 
 import android.support.annotation.StringDef;
 
+import com.carecloud.carepaylibray.retail.models.RetailLineItemMetadata;
 import com.google.gson.annotations.SerializedName;
 
 import java.lang.annotation.Retention;
@@ -21,8 +22,9 @@ public class IntegratedPaymentLineItem {
     public static final String TYPE_APPLICATION = "debit_application";
     public static final String TYPE_UNAPPLIED = "unapplied";
     public static final String TYPE_OTHER = "other";
+    public static final String TYPE_RETAIL = "retail";
 
-    @StringDef({TYPE_COPAY, TYPE_COINSURANCE, TYPE_DEDUCTABLE, TYPE_PREPAYMENT, TYPE_CANCELLATION, TYPE_NEWCHARGE, TYPE_APPLICATION, TYPE_UNAPPLIED, TYPE_OTHER})
+    @StringDef({TYPE_COPAY, TYPE_COINSURANCE, TYPE_DEDUCTABLE, TYPE_PREPAYMENT, TYPE_CANCELLATION, TYPE_NEWCHARGE, TYPE_APPLICATION, TYPE_UNAPPLIED, TYPE_OTHER, TYPE_RETAIL})
     @Retention(RetentionPolicy.SOURCE)
     public @interface LineItemType{}
 
@@ -43,6 +45,9 @@ public class IntegratedPaymentLineItem {
 
     @SerializedName("description")
     private String description;
+
+    @SerializedName("metadata")
+    private RetailLineItemMetadata retailMetadata;
 
     public double getAmount() {
         return amount;
@@ -91,5 +96,14 @@ public class IntegratedPaymentLineItem {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public RetailLineItemMetadata getRetailMetadata() {
+        return retailMetadata;
+    }
+
+    public void setRetailMetadata(RetailLineItemMetadata retailMetadata) {
+        this.retailMetadata = retailMetadata;
+    }
+
 
 }

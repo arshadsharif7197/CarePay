@@ -475,4 +475,31 @@ public class StringUtil {
         }
 
     }
+
+    public static String getCapitalizedUserName(String firstName, String lastName) {
+        if (firstName == null) {
+            firstName = "";
+        }
+        if (lastName == null) {
+            lastName = "";
+        }
+        return (StringUtil.capitalize(firstName + " " + lastName)).trim();
+    }
+
+    public static String getDayOfTheWeek(int dayOfTheWeek) {
+        switch (dayOfTheWeek) {
+            case 1:
+                return Label.getLabel("monday");
+            case 2:
+                return Label.getLabel("tuesday");
+            case 3:
+                return Label.getLabel("wednesday");
+            case 4:
+                return Label.getLabel("thursday");
+            case 5:
+                return Label.getLabel("friday");
+            default:
+                return "";
+        }
+    }
 }

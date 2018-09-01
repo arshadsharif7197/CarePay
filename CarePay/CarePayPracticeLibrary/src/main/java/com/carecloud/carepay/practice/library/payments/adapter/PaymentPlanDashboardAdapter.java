@@ -1,19 +1,17 @@
 package com.carecloud.carepay.practice.library.payments.adapter;
 
-import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
@@ -31,12 +29,14 @@ public class PaymentPlanDashboardAdapter extends RecyclerView.Adapter<PaymentPla
     private final NumberFormat currencyFormat;
     private final boolean hasBalanceForPaymentPlan;
     private PaymentPlanDashboardItemInterface callback;
+    private PaymentsModel paymentsModel;
 
-    public PaymentPlanDashboardAdapter(List<PaymentPlanDTO> paymentPlans, boolean completed, boolean hasBalanceForPaymentPlan) {
+    public PaymentPlanDashboardAdapter(List<PaymentPlanDTO> paymentPlans, PaymentsModel paymentsModel, boolean completed, boolean hasBalanceForPaymentPlan) {
         this.paymentPlans = paymentPlans;
         this.completed = completed;
         this.currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
         this.hasBalanceForPaymentPlan = hasBalanceForPaymentPlan;
+        this.paymentsModel = paymentsModel;
     }
 
     @Override
@@ -63,18 +63,12 @@ public class PaymentPlanDashboardAdapter extends RecyclerView.Adapter<PaymentPla
         if (completed) {
             holder.paymentPlanProgressBar.setVisibility(View.GONE);
             holder.addBalanceButton.setVisibility(View.GONE);
-            RelativeLayout.LayoutParams lp = new RelativeLayout
-                    .LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-            lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            lp.addRule(RelativeLayout.CENTER_VERTICAL);
-            Resources r = holder.detailsButton.getContext().getResources();
-            float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, r.getDisplayMetrics());
-            lp.setMarginStart((int) px);
-            holder.detailsButton.setLayoutParams(lp);
             holder.paymentPlanNameTextView.setText(String
                     .format(Label.getLabel("payment.paymentPlanDashboard.item.label.completedOn"),
                             getLastPaymentDate(paymentPlan)));
+        } else {
+            ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload().findScheduledPayment(paymentPlan);
+            holder.scheduledPaymentIndicator.setVisibility(scheduledPayment != null ? View.VISIBLE : View.GONE);
         }
         holder.detailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,8 +111,9 @@ public class PaymentPlanDashboardAdapter extends RecyclerView.Adapter<PaymentPla
         TextView paymentPlanAmountTextView;
         TextView paymentPlanNameTextView;
         TextView paymentPlanPeriodicPaymentTextView;
-        Button detailsButton;
-        Button addBalanceButton;
+        View detailsButton;
+        View addBalanceButton;
+        View scheduledPaymentIndicator;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -126,8 +121,9 @@ public class PaymentPlanDashboardAdapter extends RecyclerView.Adapter<PaymentPla
             paymentPlanAmountTextView = (TextView) itemView.findViewById(R.id.totalAmountTextView);
             paymentPlanNameTextView = (TextView) itemView.findViewById(R.id.nameTextView);
             paymentPlanPeriodicPaymentTextView = (TextView) itemView.findViewById(R.id.periodicAmountTextView);
-            detailsButton = (Button) itemView.findViewById(R.id.detailsButton);
-            addBalanceButton = (Button) itemView.findViewById(R.id.addBalanceButton);
+            detailsButton = itemView.findViewById(R.id.detailsButton);
+            addBalanceButton = itemView.findViewById(R.id.addBalanceButton);
+            scheduledPaymentIndicator = itemView.findViewById(R.id.scheduledPaymentIndicator);
         }
     }
 }

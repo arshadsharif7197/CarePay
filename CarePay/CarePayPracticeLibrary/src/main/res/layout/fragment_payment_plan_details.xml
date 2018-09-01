@@ -85,6 +85,17 @@
                 app:customAssetFont="proxima_nova_semi_bold"
                 tools:text="CareCloud Clinic" />
 
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/paymentPlanNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="4dp"
+                android:textColor="@color/pastel_blue"
+                android:textSize="@dimen/text_size_18sp"
+                app:customAssetFont="proxima_nova_regular"
+                tools:text="Payment Plan Name" />
+
         </LinearLayout>
     </RelativeLayout>
 
