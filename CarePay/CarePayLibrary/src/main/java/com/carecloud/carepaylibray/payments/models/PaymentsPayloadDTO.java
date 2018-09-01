@@ -411,11 +411,13 @@ public class PaymentsPayloadDTO implements Serializable {
         for (PaymentsPayloadSettingsDTO settingsDTO : getPaymentSettings()) {
             if ((practiceId != null) && practiceId.equals(settingsDTO.getMetadata().getPracticeId())
                     && settingsDTO.getPayload().getPaymentPlans().isAddBalanceToExisting()) {
-                for (PaymentSettingsBalanceRangeRule balanceRangeRule : settingsDTO.getPayload().getPaymentPlans().getBalanceRangeRules()) {
+                for (PaymentSettingsBalanceRangeRule balanceRangeRule : settingsDTO.getPayload()
+                        .getPaymentPlans().getBalanceRangeRules()) {
                     double minAmount = balanceRangeRule.getMinBalance().getValue();
                     double maxAmount = balanceRangeRule.getMaxBalance().getValue();
                     for (PaymentPlanDTO paymentPlanDTO : baseList) {
-                        double pendingAmount = SystemUtil.safeSubtract(paymentPlanDTO.getPayload().getAmount(), paymentPlanDTO.getPayload().getAmountPaid());
+                        double pendingAmount = SystemUtil.safeSubtract(paymentPlanDTO.getPayload()
+                                .getAmount(), paymentPlanDTO.getPayload().getAmountPaid());
                         double sumAmount = SystemUtil.safeAdd(pendingAmount, amountToAdd);
                         if (sumAmount >= minAmount && sumAmount <= maxAmount) {
                             outputList.add(paymentPlanDTO);
@@ -491,8 +493,11 @@ public class PaymentsPayloadDTO implements Serializable {
         for(PaymentPlanDTO paymentPlanDTO : currentPaymentPlans){
             for(PaymentPlanLineItem lineItem : paymentPlanDTO.getPayload().getLineItems()){
                 Double amount = SystemUtil.safeSubtract(lineItem.getAmount(), lineItem.getAmountPaid());
-                if(paymentPlanItems.containsKey(lineItem.getTypeId())){//we may have the line item split on more than one plan potentially
-                    amount = SystemUtil.safeAdd(paymentPlanItems.get(lineItem.getTypeId()), lineItem.getAmount());//sum both items
+                if(paymentPlanItems.containsKey(lineItem.getTypeId())){
+                    //we may have the line item split on more than one plan potentially
+
+                    //sum both items
+                    amount = SystemUtil.safeAdd(paymentPlanItems.get(lineItem.getTypeId()), lineItem.getAmount());
                 }
                 paymentPlanItems.put(lineItem.getTypeId(), amount);
             }
@@ -507,13 +512,16 @@ public class PaymentsPayloadDTO implements Serializable {
             for(BalanceItemDTO balanceItemDTO : pendingBalancePayloadDTO.getDetails()){
                 if(paymentPlanItems.containsKey(balanceItemDTO.getId().toString())){
                     Double paymentPlanLineItemAmount = paymentPlanItems.get(balanceItemDTO.getId().toString());
-                    if(paymentPlanLineItemAmount < balanceItemDTO.getBalance()){//reduce the balance item by the payment plan item amount
+                    if(paymentPlanLineItemAmount < balanceItemDTO.getBalance()){
+                        //reduce the balance item by the payment plan item amount
                         double originalBalanceItemBalance = balanceItemDTO.getBalance();
-                        balanceItemDTO.setBalance(SystemUtil.safeSubtract(originalBalanceItemBalance, paymentPlanLineItemAmount));
+                        balanceItemDTO.setBalance(SystemUtil
+                                .safeSubtract(originalBalanceItemBalance, paymentPlanLineItemAmount));
                         reducedBalances.add(balanceItemDTO);
                     }//else the entire balance item will be dropped
                 } else {
-                    reducedBalances.add(balanceItemDTO); //since this item was not already on PP we need to leave it
+                    //since this item was not already on PP we need to leave it
+                    reducedBalances.add(balanceItemDTO);
                 }
             }
             pendingBalancePayloadDTO.setDetails(reducedBalances);
@@ -566,7 +574,8 @@ public class PaymentsPayloadDTO implements Serializable {
         for (PaymentsPayloadSettingsDTO settingsDTO : getPaymentSettings()) {
             if (practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())) {
                 double minPaymentPlanAmount = Double.MAX_VALUE;
-                for(PaymentSettingsBalanceRangeRule rangeRule : settingsDTO.getPayload().getPaymentPlans().getBalanceRangeRules()){
+                for(PaymentSettingsBalanceRangeRule rangeRule : settingsDTO.getPayload()
+                        .getPaymentPlans().getBalanceRangeRules()){
                     double minBalance = rangeRule.getMinBalance().getValue();
                     if(minBalance < minPaymentPlanAmount){
                         minPaymentPlanAmount = minBalance;
@@ -609,7 +618,8 @@ public class PaymentsPayloadDTO implements Serializable {
         for (PaymentsPayloadSettingsDTO settingsDTO : getPaymentSettings()) {
             if (practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())) {
                 double maxPaymentPlanAmount = 0D;
-                for(PaymentSettingsBalanceRangeRule rangeRule : settingsDTO.getPayload().getPaymentPlans().getBalanceRangeRules()){
+                for(PaymentSettingsBalanceRangeRule rangeRule : settingsDTO.getPayload()
+                        .getPaymentPlans().getBalanceRangeRules()){
                     double maxBalance = rangeRule.getMaxBalance().getValue();
                     if(maxBalance > maxPaymentPlanAmount){
                         maxPaymentPlanAmount = maxBalance;

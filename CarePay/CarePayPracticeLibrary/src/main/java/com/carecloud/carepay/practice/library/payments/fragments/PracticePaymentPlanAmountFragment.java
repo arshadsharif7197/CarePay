@@ -36,7 +36,8 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
      * @param selectedBalance selected balance
      * @return an instance of PracticePaymentPlanAmountFragment
      */
-    public static PracticePaymentPlanAmountFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance) {
+    public static PracticePaymentPlanAmountFragment newInstance(PaymentsModel paymentsModel,
+                                                                PendingBalanceDTO selectedBalance) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
@@ -110,7 +111,8 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
             return;
         }
 
-        boolean canCreatePlan = ((!hasExistingPlans || canCreateMultiple) && hasApplicableRule(practiceId, planAmount));
+        boolean canCreatePlan = ((!hasExistingPlans || canCreateMultiple)
+                && hasApplicableRule(practiceId, planAmount));
         if ((canCreatePlan || (hasExistingPlans && canAddToExisting && canAddToExisting(planAmount)))
                 && planAmount > 0.0) {
             applyButton.setEnabled(true);
@@ -148,7 +150,8 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
     private boolean hasApplicableRule(String practiceId, double amount) {
         for (PaymentsPayloadSettingsDTO settingsDTO : paymentsModel.getPaymentPayload().getPaymentSettings()) {
             if (practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())) {
-                for (PaymentSettingsBalanceRangeRule balanceRangeRule : settingsDTO.getPayload().getPaymentPlans().getBalanceRangeRules()) {
+                for (PaymentSettingsBalanceRangeRule balanceRangeRule : settingsDTO.getPayload()
+                        .getPaymentPlans().getBalanceRangeRules()) {
                     double minAmount = balanceRangeRule.getMinBalance().getValue();
                     double maxAmount = balanceRangeRule.getMaxBalance().getValue();
                     if (amount >= minAmount && amount <= maxAmount) {
