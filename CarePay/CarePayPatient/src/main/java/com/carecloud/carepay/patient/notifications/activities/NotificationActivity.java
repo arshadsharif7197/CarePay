@@ -96,7 +96,10 @@ public class NotificationActivity extends MenuPatientActivity
                 if (notificationItem.getPayload().getReadStatus() == NotificationStatus.unread) {
                     markNotificationRead(notificationItem);
                 }
-                callFormsScreen(notificationItem);
+                callConsentFormsScreen(notificationItem);
+                break;
+            case payments:
+
                 break;
             default:
                 //todo handle other notification types
@@ -104,7 +107,7 @@ public class NotificationActivity extends MenuPatientActivity
         }
     }
 
-    private void callFormsScreen(final NotificationItem notificationItem) {
+    private void callConsentFormsScreen(final NotificationItem notificationItem) {
         Map<String, String> queryMap = new HashMap<>();
         getWorkflowServiceHelper().execute(getTransitionForms(), new WorkflowServiceCallback() {
             @Override

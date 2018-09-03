@@ -411,11 +411,13 @@ public class PaymentsPayloadDTO implements Serializable {
         for (PaymentsPayloadSettingsDTO settingsDTO : getPaymentSettings()) {
             if ((practiceId != null) && practiceId.equals(settingsDTO.getMetadata().getPracticeId())
                     && settingsDTO.getPayload().getPaymentPlans().isAddBalanceToExisting()) {
-                for (PaymentSettingsBalanceRangeRule balanceRangeRule : settingsDTO.getPayload().getPaymentPlans().getBalanceRangeRules()) {
+                for (PaymentSettingsBalanceRangeRule balanceRangeRule : settingsDTO.getPayload()
+                        .getPaymentPlans().getBalanceRangeRules()) {
                     double minAmount = balanceRangeRule.getMinBalance().getValue();
                     double maxAmount = balanceRangeRule.getMaxBalance().getValue();
                     for (PaymentPlanDTO paymentPlanDTO : baseList) {
-                        double pendingAmount = SystemUtil.safeSubtract(paymentPlanDTO.getPayload().getAmount(), paymentPlanDTO.getPayload().getAmountPaid());
+                        double pendingAmount = SystemUtil.safeSubtract(paymentPlanDTO.getPayload()
+                                .getAmount(), paymentPlanDTO.getPayload().getAmountPaid());
                         double sumAmount = SystemUtil.safeAdd(pendingAmount, amountToAdd);
                         if (sumAmount >= minAmount && sumAmount <= maxAmount) {
                             outputList.add(paymentPlanDTO);
@@ -481,18 +483,22 @@ public class PaymentsPayloadDTO implements Serializable {
 
     /**
      * Reduce the list of balance items to remove all items currently on a Payment Plan
+     *
      * @param selectedBalance selected balance to put on plan
-     * @param updateAmount true if amount should be updated by subtracting plans amount
+     * @param updateAmount    true if amount should be updated by subtracting plans amount
      * @return PendingBalanceDTO with reduced details
      */
-    public PendingBalanceDTO reduceBalanceItems(PendingBalanceDTO selectedBalance, boolean updateAmount){
+    public PendingBalanceDTO reduceBalanceItems(PendingBalanceDTO selectedBalance, boolean updateAmount) {
         List<PaymentPlanDTO> currentPaymentPlans = getActivePlans(selectedBalance.getMetadata().getPracticeId());
         Map<String, Double> paymentPlanItems = new HashMap<>();
-        for(PaymentPlanDTO paymentPlanDTO : currentPaymentPlans){
-            for(PaymentPlanLineItem lineItem : paymentPlanDTO.getPayload().getLineItems()){
+        for (PaymentPlanDTO paymentPlanDTO : currentPaymentPlans) {
+            for (PaymentPlanLineItem lineItem : paymentPlanDTO.getPayload().getLineItems()) {
                 Double amount = SystemUtil.safeSubtract(lineItem.getAmount(), lineItem.getAmountPaid());
-                if(paymentPlanItems.containsKey(lineItem.getTypeId())){//we may have the line item split on more than one plan potentially
-                    amount = SystemUtil.safeAdd(paymentPlanItems.get(lineItem.getTypeId()), lineItem.getAmount());//sum both items
+                if (paymentPlanItems.containsKey(lineItem.getTypeId())) {
+                    //we may have the line item split on more than one plan potentially
+
+                    //sum both items
+                    amount = SystemUtil.safeAdd(paymentPlanItems.get(lineItem.getTypeId()), lineItem.getAmount());
                 }
                 paymentPlanItems.put(lineItem.getTypeId(), amount);
             }
@@ -502,22 +508,25 @@ public class PaymentsPayloadDTO implements Serializable {
         PendingBalanceDTO copyPendingBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, balanceHolder);
 
         List<BalanceItemDTO> reducedBalances;
-        for(PendingBalancePayloadDTO pendingBalancePayloadDTO : copyPendingBalance.getPayload()){
+        for (PendingBalancePayloadDTO pendingBalancePayloadDTO : copyPendingBalance.getPayload()) {
             reducedBalances = new ArrayList<>();
-            for(BalanceItemDTO balanceItemDTO : pendingBalancePayloadDTO.getDetails()){
-                if(paymentPlanItems.containsKey(balanceItemDTO.getId().toString())){
+            for (BalanceItemDTO balanceItemDTO : pendingBalancePayloadDTO.getDetails()) {
+                if (paymentPlanItems.containsKey(balanceItemDTO.getId().toString())) {
                     Double paymentPlanLineItemAmount = paymentPlanItems.get(balanceItemDTO.getId().toString());
-                    if(paymentPlanLineItemAmount < balanceItemDTO.getBalance()){//reduce the balance item by the payment plan item amount
+                    if (paymentPlanLineItemAmount < balanceItemDTO.getBalance()) {
+                        //reduce the balance item by the payment plan item amount
                         double originalBalanceItemBalance = balanceItemDTO.getBalance();
-                        balanceItemDTO.setBalance(SystemUtil.safeSubtract(originalBalanceItemBalance, paymentPlanLineItemAmount));
+                        balanceItemDTO.setBalance(SystemUtil
+                                .safeSubtract(originalBalanceItemBalance, paymentPlanLineItemAmount));
                         reducedBalances.add(balanceItemDTO);
                     }//else the entire balance item will be dropped
                 } else {
-                    reducedBalances.add(balanceItemDTO); //since this item was not already on PP we need to leave it
+                    //since this item was not already on PP we need to leave it
+                    reducedBalances.add(balanceItemDTO);
                 }
             }
             pendingBalancePayloadDTO.setDetails(reducedBalances);
-            if(updateAmount){
+            if (updateAmount) {
                 pendingBalancePayloadDTO.setAmount(SystemUtil.safeSubtract(
                         pendingBalancePayloadDTO.getAmount(),
                         pendingBalancePayloadDTO.getPaymentPlansAmount()));
@@ -528,37 +537,50 @@ public class PaymentsPayloadDTO implements Serializable {
 
     /**
      * Check if balance must be added to existing plan
-     * @param amount amount to add
+     *
+     * @param amount          amount to add
      * @param selectedBalance selected balance
      * @return true if only option is to add to existing
      */
     public boolean mustAddToExisting(double amount, PendingBalanceDTO selectedBalance) {
         String practiceId = selectedBalance.getMetadata().getPracticeId();
-        for (PaymentsPayloadSettingsDTO settingsDTO : getPaymentSettings()) {
-            if (practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())) {
-                PaymentsSettingsPaymentPlansDTO paymentPlanSettings = settingsDTO.getPayload().getPaymentPlans();
-                return (!hasApplicableRule(paymentPlanSettings, amount) ||
-                        !paymentPlanSettings.isCanHaveMultiple()) &&
-                        !getValidPlans(practiceId, amount).isEmpty() &&
-                        paymentPlanSettings.isAddBalanceToExisting();
-            }
+        PaymentsPayloadSettingsDTO settingsDTO = getPaymentSetting(practiceId);
+        if (practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())) {
+            PaymentsSettingsPaymentPlansDTO paymentPlanSettings = settingsDTO.getPayload().getPaymentPlans();
+            return (!hasApplicableRule(paymentPlanSettings, amount) ||
+                    !paymentPlanSettings.isCanHaveMultiple()) &&
+                    !getValidPlans(practiceId, amount).isEmpty() &&
+                    paymentPlanSettings.isAddBalanceToExisting();
         }
+
         return false;
     }
 
     private boolean hasApplicableRule(PaymentsSettingsPaymentPlansDTO paymentPlanSettings, double amount) {
         for (PaymentSettingsBalanceRangeRule balanceRangeRule : paymentPlanSettings.getBalanceRangeRules()) {
-            double minAmount = balanceRangeRule.getMinBalance().getValue();
-            double maxAmount = balanceRangeRule.getMaxBalance().getValue();
-            if (amount >= minAmount && amount <= maxAmount) {
-                return true;
+            if (isFrequencyEnabled(paymentPlanSettings, balanceRangeRule)) {
+                double minAmount = balanceRangeRule.getMinBalance().getValue();
+                double maxAmount = balanceRangeRule.getMaxBalance().getValue();
+                if (amount >= minAmount && amount <= maxAmount) {
+                    return true;
+                }
             }
         }
         return false;
     }
 
+    private boolean isFrequencyEnabled(PaymentsSettingsPaymentPlansDTO settingsDTO,
+                                       PaymentSettingsBalanceRangeRule balanceRangeRule) {
+        if (balanceRangeRule.getMaxDuration().getInterval().equals(PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS)) {
+            return settingsDTO.getFrequencyCode().getMonthly().isAllowed();
+        } else {
+            return settingsDTO.getFrequencyCode().getWeekly().isAllowed();
+        }
+    }
+
     /**
      * Calculate the minimum amount that can be placed on a plan
+     *
      * @param practiceId practice id for the plan
      * @return minimum amount that can be placed on a new plan or added to an existing plan
      */
@@ -566,27 +588,28 @@ public class PaymentsPayloadDTO implements Serializable {
         for (PaymentsPayloadSettingsDTO settingsDTO : getPaymentSettings()) {
             if (practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())) {
                 double minPaymentPlanAmount = Double.MAX_VALUE;
-                for(PaymentSettingsBalanceRangeRule rangeRule : settingsDTO.getPayload().getPaymentPlans().getBalanceRangeRules()){
+                for (PaymentSettingsBalanceRangeRule rangeRule : settingsDTO.getPayload()
+                        .getPaymentPlans().getBalanceRangeRules()) {
                     double minBalance = rangeRule.getMinBalance().getValue();
-                    if(minBalance < minPaymentPlanAmount){
+                    if (minBalance < minPaymentPlanAmount) {
                         minPaymentPlanAmount = minBalance;
                     }
                 }
 
                 //checkif minimum amount can be added to an existing
                 List<PaymentPlanDTO> activePlans = getActivePlans(practiceId);
-                if(!activePlans.isEmpty()) {
+                if (!activePlans.isEmpty()) {
                     if (getValidPlans(practiceId, 0.01).isEmpty()) {
                         double maxPlanAmount = 0D;
-                        for(PaymentPlanDTO paymentPlan : activePlans){
+                        for (PaymentPlanDTO paymentPlan : activePlans) {
                             double pendingAmount = paymentPlan.getPayload().getAmount();
-                            if(pendingAmount > maxPlanAmount){
+                            if (pendingAmount > maxPlanAmount) {
                                 maxPlanAmount = pendingAmount;
                             }
                         }
-                        if(minPaymentPlanAmount > maxPlanAmount) {
+                        if (minPaymentPlanAmount > maxPlanAmount) {
                             return SystemUtil.safeSubtract(minPaymentPlanAmount, maxPlanAmount);
-                        }else{
+                        } else {
                             return minPaymentPlanAmount;
                         }
                     } else {
@@ -602,16 +625,18 @@ public class PaymentsPayloadDTO implements Serializable {
 
     /**
      * Calculate the maximum amount that can be placed on a payment plan
+     *
      * @param practiceId practice id for the plan
      * @return maximum amount that can be placed on a new plan or added to an existing plan if a new one cannot be created
      */
-    public double getMaximumAllowablePlanAmount(String practiceId){
+    public double getMaximumAllowablePlanAmount(String practiceId) {
         for (PaymentsPayloadSettingsDTO settingsDTO : getPaymentSettings()) {
             if (practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())) {
                 double maxPaymentPlanAmount = 0D;
-                for(PaymentSettingsBalanceRangeRule rangeRule : settingsDTO.getPayload().getPaymentPlans().getBalanceRangeRules()){
+                for (PaymentSettingsBalanceRangeRule rangeRule : settingsDTO.getPayload()
+                        .getPaymentPlans().getBalanceRangeRules()) {
                     double maxBalance = rangeRule.getMaxBalance().getValue();
-                    if(maxBalance > maxPaymentPlanAmount){
+                    if (maxBalance > maxPaymentPlanAmount) {
                         maxPaymentPlanAmount = maxBalance;
                     }
                 }
@@ -622,13 +647,13 @@ public class PaymentsPayloadDTO implements Serializable {
                     return maxPaymentPlanAmount;
                 } else if (settingsDTO.getPayload().getPaymentPlans().isAddBalanceToExisting()) {
                     double minPlanAmount = Double.MAX_VALUE;
-                    for(PaymentPlanDTO paymentPlan : activePlans){
+                    for (PaymentPlanDTO paymentPlan : activePlans) {
                         double pendingAmount = paymentPlan.getPayload().getAmount();
-                        if(pendingAmount < minPlanAmount){
+                        if (pendingAmount < minPlanAmount) {
                             minPlanAmount = pendingAmount;
                         }
                     }
-                    if(minPlanAmount > maxPaymentPlanAmount){
+                    if (minPlanAmount > maxPaymentPlanAmount) {
                         return 0D;
                     }
                     return SystemUtil.safeSubtract(maxPaymentPlanAmount, minPlanAmount);
@@ -641,16 +666,17 @@ public class PaymentsPayloadDTO implements Serializable {
 
     /**
      * Find a scheduled payment for a specific plan that is scheduled for a future date
+     *
      * @param paymentPlanDTO payment plan
      * @return future scheduled payment or null if none
      */
-    public ScheduledPaymentModel findScheduledPayment(PaymentPlanDTO paymentPlanDTO){
+    public ScheduledPaymentModel findScheduledPayment(PaymentPlanDTO paymentPlanDTO) {
         String planId = paymentPlanDTO.getMetadata().getPaymentPlanId();
-        for(ScheduledPaymentModel scheduledPaymentModel : getScheduledOneTimePayments()){
-            if(scheduledPaymentModel.getMetadata().getPaymentPlanId().equals(planId)){
+        for (ScheduledPaymentModel scheduledPaymentModel : getScheduledOneTimePayments()) {
+            if (scheduledPaymentModel.getMetadata().getPaymentPlanId().equals(planId)) {
                 Date scheduledDate = DateUtil.getInstance()
                         .setDateRaw(scheduledPaymentModel.getPayload().getPaymentDate()).getDate();
-                if(scheduledDate.after(new Date())) {
+                if (scheduledDate.after(new Date())) {
                     return scheduledPaymentModel;
                 }
             }
@@ -658,4 +684,12 @@ public class PaymentsPayloadDTO implements Serializable {
         return null;
     }
 
+    public PaymentsPayloadSettingsDTO getPaymentSetting(String practiceId) {
+        for (PaymentsPayloadSettingsDTO paymentSettings : getPaymentSettings()) {
+            if (paymentSettings.getMetadata().getPracticeId().equals(practiceId)) {
+                return paymentSettings;
+            }
+        }
+        return null;
+    }
 }

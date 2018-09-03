@@ -96,6 +96,7 @@ public class NotificationFragment extends BaseFragment
         super.onCreate(icicle);
         supportedNotificationTypes.add(NotificationType.appointment);
         supportedNotificationTypes.add(NotificationType.pending_forms);
+        supportedNotificationTypes.add(NotificationType.payments);
         setHasOptionsMenu(true);
         Bundle args = getArguments();
         if (args != null) {
@@ -127,7 +128,6 @@ public class NotificationFragment extends BaseFragment
         });
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setStackFromEnd(true);
         notificationsRecycler = (RecyclerView) view.findViewById(R.id.notifications_recycler);
         notificationsRecycler.setLayoutManager(linearLayoutManager);
 
