@@ -103,7 +103,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         setTransitionNotifications(myHealthDto.getMetadata().getLinks().getNotifications());
         setTransitionMyHealth(myHealthDto.getMetadata().getLinks().getMyHealth());
         setTransitionRetail(myHealthDto.getMetadata().getLinks().getRetail());
-        setTransitionForms(myHealthDto.getMetadata().getLinks().getFormsHistory());
+        setTransitionForms(myHealthDto.getMetadata().getLinks().getUserForms());
 
         ApplicationPreferences.getInstance().writeObjectToSharedPreference(CarePayConstants
                 .DEMOGRAPHICS_ADDRESS_BUNDLE, myHealthDto.getPayload().getDemographicDTO().getPayload().getAddress());

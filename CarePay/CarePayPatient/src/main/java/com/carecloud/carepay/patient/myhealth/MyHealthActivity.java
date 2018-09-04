@@ -56,7 +56,6 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
         }
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
