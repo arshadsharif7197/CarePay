@@ -19,6 +19,7 @@ import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.UserFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
+import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
 
 import java.util.List;
@@ -87,10 +88,12 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Consent
     }
 
     @Override
-    public void showForms(List<PracticeForm> selectedForms, int selectedProviderIndex, boolean showSignButton) {
+    public void showForms(List<PracticeForm> selectedForms,
+                          List<ConsentFormUserResponseDTO> responses,
+                          int selectedProviderIndex, boolean showSignButton) {
         this.selectedForms = selectedForms;
         addFragment(FilledFormFragment
-                .newInstance(selectedProviderIndex, showSignButton), true);
+                .newInstance(selectedProviderIndex, showSignButton, responses), true);
     }
 
     @Override

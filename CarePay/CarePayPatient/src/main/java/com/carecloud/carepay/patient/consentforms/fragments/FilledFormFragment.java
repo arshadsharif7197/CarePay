@@ -16,10 +16,11 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.checkout.BaseWebFormFragment;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
-import com.carecloud.carepaylibray.consentforms.models.PendingFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.UserFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
+import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -38,16 +39,23 @@ public class FilledFormFragment extends BaseWebFormFragment {
     private ConsentFormInterface callback;
     private List<JsonObject> jsonFormSaveResponseArray = new ArrayList<>();
     private UserFormDTO formDto;
+    private boolean showSignButton;
 
     /**
      * @param selectedProviderIndex the provider index
      * @param showSignButton        to show or hide the bottom button
      * @return a new instance of FilledFormFragment
      */
-    public static FilledFormFragment newInstance(int selectedProviderIndex, boolean showSignButton) {
+    public static FilledFormFragment newInstance(int selectedProviderIndex, boolean showSignButton,
+                                                 List<ConsentFormUserResponseDTO> formsResponses) {
         Bundle args = new Bundle();
         args.putInt("selectedProviderIndex", selectedProviderIndex);
         args.putBoolean("showSignButton", showSignButton);
+
+        ConsentFormPayloadDTO responsePayload = new ConsentFormPayloadDTO();
+        responsePayload.setResponses(formsResponses);
+        DtoHelper.bundleDto(args, responsePayload);
+
         FilledFormFragment fragment = new FilledFormFragment();
         fragment.setArguments(args);
         return fragment;
@@ -67,24 +75,19 @@ public class FilledFormFragment extends BaseWebFormFragment {
         consentFormDto = (ConsentFormDTO) callback.getDto();
         formDto = consentFormDto.getPayload().getUserForms()
                 .get(getArguments().getInt("selectedProviderIndex"));
-        filledForms = getPatientFormsResponses(formDto);
+        ConsentFormPayloadDTO responsePayload = DtoHelper
+                .getConvertedDTO(ConsentFormPayloadDTO.class, getArguments());
+        filledForms = responsePayload.getResponses();
         formsList = callback.getAllFormsToShow();
         setTotalForms(formsList.size());
     }
 
-    private List<ConsentFormUserResponseDTO> getPatientFormsResponses(UserFormDTO formDto) {
-        List<ConsentFormUserResponseDTO> patientFormResponses = new ArrayList<>();
-        for (PendingFormDTO pendingFormDTO : formDto.getHistoryForms().getForms()) {
-            patientFormResponses.add(pendingFormDTO.getPayload());
-        }
-        return patientFormResponses;
-    }
 
     @Override
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         lastFormButtonLabel = Label.getLabel("adhoc_sign_form_button_label");
-        boolean showSignButton = getArguments().getBoolean("showSignButton", false);
+        showSignButton = getArguments().getBoolean("showSignButton", false);
         nextButton.setVisibility(showSignButton ? View.VISIBLE : View.GONE);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
@@ -115,6 +118,9 @@ public class FilledFormFragment extends BaseWebFormFragment {
                         JsonObject json = new JsonObject();
                         json.addProperty("uuid", response.getFormId());
                         json.add("response", response.getResponse());
+                        if(!showSignButton) {
+                            json.addProperty("updated_dt", practiceForm.getLastModifiedDate());
+                        }
                         userResponse = json;
                         break;
                     }
