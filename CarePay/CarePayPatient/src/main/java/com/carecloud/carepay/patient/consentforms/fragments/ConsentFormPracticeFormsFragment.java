@@ -25,6 +25,7 @@ import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.PendingFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.UserFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
+import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
@@ -99,7 +100,11 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
             signSelectedFormsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    callback.showForms(selectedForms, selectedPracticeIndex, true);
+                    List<ConsentFormUserResponseDTO> localSelectedFormResponse = new ArrayList<>();
+                    for(PracticeForm form : selectedForms) {
+                        localSelectedFormResponse.add(form.getFormUserResponseDTO());
+                    }
+                    callback.showForms(selectedForms, localSelectedFormResponse, selectedPracticeIndex, true);
                 }
             });
             signSelectedFormsButton.setVisibility(View.VISIBLE);
@@ -138,11 +143,13 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
         if (mode == ConsentFormViewPagerFragment.PENDING_MODE) {
             for (PendingFormDTO pendingForm : userFormDTO.getPendingForms().getForms()) {
                 pendingForm.getForm().setLastModifiedDate(pendingForm.getPayload().getUpdatedDate());
+                pendingForm.getForm().setFormUserResponseDTO(pendingForm.getPayload());
                 practiceForms.add(pendingForm.getForm());
             }
         } else {
             for (PendingFormDTO pendingForm : userFormDTO.getHistoryForms().getForms()) {
                 pendingForm.getForm().setLastModifiedDate(pendingForm.getPayload().getUpdatedDate());
+                pendingForm.getForm().setFormUserResponseDTO(pendingForm.getPayload());
                 practiceForms.add(pendingForm.getForm());
             }
         }
@@ -167,8 +174,11 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
         Gson gson = new Gson();
         localPracticeForm.setPayload(gson.fromJson(gson.toJson(form.getPayload()), JsonObject.class));
         localPracticeForm.getPayload().getAsJsonObject("fields").addProperty("readonly", true);
+        localPracticeForm.setLastModifiedDate(form.getLastModifiedDate());
         localSelectedForm.add(localPracticeForm);
-        callback.showForms(localSelectedForm, selectedPracticeIndex, false);
+        List<ConsentFormUserResponseDTO> localSelectedFormResponse = new ArrayList<>();
+        localSelectedFormResponse.add(form.getFormUserResponseDTO());
+        callback.showForms(localSelectedForm, localSelectedFormResponse, selectedPracticeIndex, false);
     }
 
     private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
