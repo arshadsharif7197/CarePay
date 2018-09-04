@@ -183,7 +183,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         holder.message.setText(stringBuilder);
 
-        holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_messages);
+        holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_msg);
         holder.cellAvatar.setVisibility(View.VISIBLE);
     }
 
