@@ -612,7 +612,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         completePaymentProcess(workflowDTO);
 
         DateUtil.getInstance().setDateRaw(scheduledPayment.getPayload().getPaymentDate());
-        String message = String.format(Label.getLabel("payments.oneTimePayment.schedule.success"),
+        String message = String.format(Label.getLabel("payment.oneTimePayment.schedule.success"),
                 StringUtil.getFormattedBalanceAmount(scheduledPayment.getPayload().getAmount()),
                 DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
         showSuccessToast(message);
