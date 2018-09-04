@@ -695,7 +695,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         Gson gson = new Gson();
         PaymentsModel paymentsModel = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
         UpdatePatientBalancesDTO updatePatientBalance = null;
-        if(!paymentsModel.getPaymentPayload().getPatientBalances().isEmpty()) {
+        if (!paymentsModel.getPaymentPayload().getPatientBalances().isEmpty()) {
             PatientBalanceDTO balance = paymentsModel.getPaymentPayload().getPatientBalances().get(0);
             String patientBalance = gson.toJson(balance);
             updatePatientBalance = gson.fromJson(patientBalance,
@@ -1127,6 +1127,10 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload()
                 .getScheduledPaymentModel();
+        if (scheduledPayment.getMetadata().getOneTimePaymentId() == null
+                && paymentsModel.getPaymentPayload().getScheduledOneTimePayments().size() > 0) {
+            scheduledPayment = paymentsModel.getPaymentPayload().getScheduledOneTimePayments().get(0);
+        }
         List<ScheduledPaymentModel> scheduledPaymentModels = this.selectedPaymentModel
                 .getPaymentPayload().getScheduledOneTimePayments();
         for (ScheduledPaymentModel scheduledPaymentModel : scheduledPaymentModels) {
@@ -1142,7 +1146,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         DateUtil.getInstance().setDateRaw(scheduledPayment.getPayload().getPaymentDate());
         String message = String.format(Label.getLabel("payment.oneTimePayment.schedule.success"),
                 StringUtil.getFormattedBalanceAmount(scheduledPayment.getPayload().getAmount()),
-                DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal());
+                DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
         showSuccessToast(message);
 
     }
