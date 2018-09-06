@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepay.patient.notifications.adapters.NotificationsAdapter;
 import com.carecloud.carepay.patient.notifications.models.NotificationItem;
 import com.carecloud.carepay.patient.notifications.models.NotificationType;
@@ -29,6 +28,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.SwipeViewHolder;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SwipeHelper;
 
@@ -96,6 +96,7 @@ public class NotificationFragment extends BaseFragment
         super.onCreate(icicle);
         supportedNotificationTypes.add(NotificationType.appointment);
         supportedNotificationTypes.add(NotificationType.pending_forms);
+        supportedNotificationTypes.add(NotificationType.payments);
         setHasOptionsMenu(true);
         Bundle args = getArguments();
         if (args != null) {
@@ -126,9 +127,7 @@ public class NotificationFragment extends BaseFragment
             }
         });
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),
-                LinearLayoutManager.VERTICAL, true);
-        linearLayoutManager.setStackFromEnd(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         notificationsRecycler = (RecyclerView) view.findViewById(R.id.notifications_recycler);
         notificationsRecycler.setLayoutManager(linearLayoutManager);
 

@@ -26,11 +26,14 @@ public class ConsentFormsLinksDTO {
     @SerializedName("patient_balances")
     private TransitionDTO patientBalances = new TransitionDTO();
     @Expose
-    @SerializedName("update_forms")
+    @SerializedName(value = "update_forms", alternate = "update_pending_forms")
     private TransitionDTO updateForms;
     @Expose
     @SerializedName("self")
     private TransitionDTO self;
+    @Expose
+    @SerializedName("history_forms")
+    private TransitionDTO historyForms;
 
     public TransitionDTO getAppointments() {
         return appointments;
@@ -86,5 +89,13 @@ public class ConsentFormsLinksDTO {
 
     public void setSelf(TransitionDTO self) {
         this.self = self;
+    }
+
+    public TransitionDTO getHistoryForms() {
+        return historyForms;
+    }
+
+    public void setHistoryForms(TransitionDTO historyForms) {
+        this.historyForms = historyForms;
     }
 }

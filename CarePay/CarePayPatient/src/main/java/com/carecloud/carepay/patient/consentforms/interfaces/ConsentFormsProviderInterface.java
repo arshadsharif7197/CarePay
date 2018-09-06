@@ -1,11 +1,11 @@
 package com.carecloud.carepay.patient.consentforms.interfaces;
 
-import com.carecloud.carepaylibray.consentforms.models.payload.FormDTO;
+import com.carecloud.carepaylibray.consentforms.models.UserFormDTO;
 
 /**
  * @author pjohnson on 6/04/18.
  */
 public interface ConsentFormsProviderInterface {
 
-    void onProviderSelected(FormDTO practiceForm, int position);
+    void onProviderSelected(UserFormDTO practiceForm, int position);
 }

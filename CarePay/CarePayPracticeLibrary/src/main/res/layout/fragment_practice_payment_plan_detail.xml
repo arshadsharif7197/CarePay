@@ -280,7 +280,7 @@
                             android:textColor="@color/colorPrimary"
                             android:textSize="@dimen/text_size_15"
                             app:customAssetFont="gotham_rounded_medium"
-                            breeze:textKey="payment.paymentPlanDashboard.item.button.detail"
+                            breeze:textKey="payment.paymentPlanDetail.scheduledPayment.button.edit"
                             tools:text="Details" />
 
                     </LinearLayout>

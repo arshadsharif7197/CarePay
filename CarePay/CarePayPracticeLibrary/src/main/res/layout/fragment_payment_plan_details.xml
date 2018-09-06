@@ -187,21 +187,21 @@
                 android:id="@+id/scheduledPaymentLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@drawable/round_border"
-                android:layout_marginStart="@dimen/dimen_20dp"
-                android:layout_marginEnd="@dimen/dimen_20dp"
-                android:layout_marginTop="@dimen/dimen_20dp"
                 android:layout_marginBottom="@dimen/dimen_4dp"
-                android:padding="@dimen/dimen_15dp"
+                android:layout_marginEnd="@dimen/dimen_20dp"
+                android:layout_marginStart="@dimen/dimen_20dp"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:background="@drawable/round_border"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/dimen_15dp"
                 android:visibility="gone">
 
                 <ImageView
                     android:layout_width="@dimen/dimen_22dp"
                     android:layout_height="@dimen/dimen_22dp"
                     android:layout_marginEnd="@dimen/dimen_10dp"
-                    android:src="@drawable/icn_pending"/>
+                    android:src="@drawable/icn_pending" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/scheduledPaymentMessage"
@@ -214,6 +214,12 @@
                     android:textSize="@dimen/text_size_16sp"
                     app:customAssetFont="proxima_nova_regular"
                     tools:text="$20.00 scheduled for 12/10/2018" />
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_22dp"
+                    android:layout_height="@dimen/dimen_22dp"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:src="@drawable/icon_pencil" />
 
             </LinearLayout>
 
@@ -375,7 +381,7 @@
         android:layout_height="1dp"
         android:layout_above="@+id/payment_responsibility_footer"
         android:background="@color/divider_color" />
-    
+
     <LinearLayout
         android:id="@+id/payment_responsibility_footer"
         android:layout_width="match_parent"
