@@ -34,7 +34,6 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -230,7 +229,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                         if (appointmentDTO.getPayload().getAppointmentStatus().getOriginalName() == null) {
                             callback.getQueueStatus(appointmentDTO, queueStatusCallback);
                         }
-                        if (shouldShowCheckInButton(enabledLocations)) {
+                        if (isLocationWithBreezeEnabled(enabledLocations)
+                                && appointmentDTO.getPayload().canCheckOut()) {
                             actionsLayout.setVisibility(View.VISIBLE);
                             leftButton.setVisibility(View.VISIBLE);
                             leftButton.setText(Label.getLabel("appointment_request_checkout_now"));
@@ -249,7 +249,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                         if (shouldShowCancelButton(enabledLocations)) {
                             cancelAppointment.setVisibility(View.VISIBLE);
                         }
-                        if (shouldShowCheckInButton(enabledLocations)) {
+                        if (isLocationWithBreezeEnabled(enabledLocations)) {
                             leftButton.setVisibility(View.VISIBLE);
                             leftButton.setText(Label.getLabel("appointments_check_in_at_office"));
                             leftButton.setOnClickListener(scanClick);
@@ -309,7 +309,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                         if (shouldShowCancelButton(enabledLocations)) {
                             cancelAppointment.setVisibility(View.VISIBLE);
                         }
-                        if (shouldShowCheckInButton(enabledLocations)) {
+                        if (isLocationWithBreezeEnabled(enabledLocations)) {
                             actionsLayout.setVisibility(View.VISIBLE);
                             rightButton.setVisibility(View.VISIBLE);
                             rightButton.setText(Label.getLabel("appointments_check_in_early"));
@@ -337,10 +337,10 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
 
     private boolean shouldShowCancelButton(Set<String> enabledLocations) {
         return appointmentDTO.getPayload().isAppointmentCancellable(callback.getPracticeSettings())
-                && shouldShowCheckInButton(enabledLocations);
+                && isLocationWithBreezeEnabled(enabledLocations);
     }
 
-    private boolean shouldShowCheckInButton(Set<String> enabledLocations) {
+    private boolean isLocationWithBreezeEnabled(Set<String> enabledLocations) {
         boolean isTheLocationWithBreezeEnabled = enabledLocations == null;
         if (enabledLocations != null) {
             for (String locationId : enabledLocations) {
@@ -350,7 +350,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                 }
             }
         }
-        return isBreezePractice && isTheLocationWithBreezeEnabled && appointmentDTO.getPayload().canCheckOut();
+        return isBreezePractice && isTheLocationWithBreezeEnabled;
     }
 
     private void cleanupViews() {
