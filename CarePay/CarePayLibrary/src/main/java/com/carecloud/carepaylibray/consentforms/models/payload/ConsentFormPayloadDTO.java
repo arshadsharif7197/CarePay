@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.consentforms.models.payload;
 
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepaylibray.consentforms.models.UserFormDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -23,8 +24,8 @@ public class ConsentFormPayloadDTO {
     private List<ConsentFormUserResponseDTO> responses = new ArrayList<>();
 
     @Expose
-    @SerializedName("forms")
-    private List<FormDTO> forms = new ArrayList<>();
+    @SerializedName("user_forms")
+    private List<UserFormDTO> userForms = new ArrayList<>();
 
     @Expose
     @SerializedName("practice_information")
@@ -46,19 +47,19 @@ public class ConsentFormPayloadDTO {
         this.responses = responses;
     }
 
-    public List<FormDTO> getForms() {
-        return forms;
-    }
-
-    public void setForms(List<FormDTO> forms) {
-        this.forms = forms;
-    }
-
     public List<UserPracticeDTO> getPracticesInformation() {
         return practicesInformation;
     }
 
     public void setPracticesInformation(List<UserPracticeDTO> practicesInformation) {
         this.practicesInformation = practicesInformation;
+    }
+
+    public List<UserFormDTO> getUserForms() {
+        return userForms;
+    }
+
+    public void setUserForms(List<UserFormDTO> userForms) {
+        this.userForms = userForms;
     }
 }

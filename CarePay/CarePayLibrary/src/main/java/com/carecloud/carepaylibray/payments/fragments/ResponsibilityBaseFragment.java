@@ -218,7 +218,8 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
     }
 
     protected boolean isPaymentPlanAvailable(String practiceId, double balance) {
-        if(SystemUtil.safeSubtract(balance, nonBalanceTotal) <= 0){
+        double adjustedBalance = SystemUtil.safeSubtract(balance, nonBalanceTotal);
+        if(adjustedBalance <= 0){
             return false;
         }
         if (practiceId != null) {
@@ -230,6 +231,9 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
                     }
 
                     double maxAllowablePayment = paymentDTO.getPaymentPayload().getMaximumAllowablePlanAmount(practiceId);
+                    if (maxAllowablePayment > adjustedBalance) {
+                        maxAllowablePayment = adjustedBalance;
+                    }
                     for (PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()) {
                         if (maxAllowablePayment >= rule.getMinBalance().getValue() &&
                                 maxAllowablePayment <= rule.getMaxBalance().getValue()) {
@@ -247,6 +251,9 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
 
                     //check if balance can be added to existing
                     double minAllowablePayment = paymentDTO.getPaymentPayload().getMinimumAllowablePlanAmount(practiceId);
+                    if (minAllowablePayment > adjustedBalance) {
+                        minAllowablePayment = adjustedBalance;
+                    }
                     if(paymentPlanSettings.isAddBalanceToExisting() &&
                             !paymentDTO.getPaymentPayload().getValidPlans(practiceId, minAllowablePayment).isEmpty()) {
                         mustAddToExisting = true;
