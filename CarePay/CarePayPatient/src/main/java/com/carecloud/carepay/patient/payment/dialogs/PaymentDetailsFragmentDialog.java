@@ -271,42 +271,40 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
     protected boolean isPaymentPlanAvailable(String practiceId, double balance) {
         if (practiceId != null) {
             PaymentsPayloadSettingsDTO payloadSettingsDTO = paymentReceiptModel.getPaymentPayload().getPaymentSetting(practiceId);
-            if (practiceId.equals(payloadSettingsDTO.getMetadata().getPracticeId())) {
-                PaymentsSettingsPaymentPlansDTO paymentPlanSettings = payloadSettingsDTO.getPayload().getPaymentPlans();
-                if (!paymentPlanSettings.isPaymentPlansEnabled()) {
-                    return false;
-                }
+            PaymentsSettingsPaymentPlansDTO paymentPlanSettings = payloadSettingsDTO.getPayload().getPaymentPlans();
+            if (!paymentPlanSettings.isPaymentPlansEnabled()) {
+                return false;
+            }
 
-                double maxAllowablePayment = paymentReceiptModel.getPaymentPayload().getMaximumAllowablePlanAmount(practiceId);
-                if (maxAllowablePayment > balance) {
-                    maxAllowablePayment = balance;
-                }
-                for (PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()) {
-                    if (maxAllowablePayment >= rule.getMinBalance().getValue() &&
-                            maxAllowablePayment <= rule.getMaxBalance().getValue()) {
-                        //found a valid rule that covers this balance
-                        if (paymentReceiptModel.getPaymentPayload().getActivePlans(practiceId).isEmpty()) {
-                            //don't already have an existing plan so this is the first plan
-                            return true;
-                        } else if (paymentPlanSettings.isCanHaveMultiple()) {
-                            // already have a plan so need to see if I can create a new one
-                            return true;
-                        }
-                        break;//don't need to continue going through these rules
+            double maxAllowablePayment = paymentReceiptModel.getPaymentPayload().getMaximumAllowablePlanAmount(practiceId);
+            if (maxAllowablePayment > balance) {
+                maxAllowablePayment = balance;
+            }
+            for (PaymentSettingsBalanceRangeRule rule : paymentPlanSettings.getBalanceRangeRules()) {
+                if (maxAllowablePayment >= rule.getMinBalance().getValue() &&
+                        maxAllowablePayment <= rule.getMaxBalance().getValue()) {
+                    //found a valid rule that covers this balance
+                    if (paymentReceiptModel.getPaymentPayload().getActivePlans(practiceId).isEmpty()) {
+                        //don't already have an existing plan so this is the first plan
+                        return true;
+                    } else if (paymentPlanSettings.isCanHaveMultiple()) {
+                        // already have a plan so need to see if I can create a new one
+                        return true;
                     }
                     break;//don't need to continue going through these rules
                 }
+//                    break;//don't need to continue going through these rules
+            }
 
-                //check if balance can be added to existing
-                double minAllowablePayment = paymentReceiptModel.getPaymentPayload().getMinimumAllowablePlanAmount(practiceId);
-                if (minAllowablePayment > balance) {
-                    minAllowablePayment = balance;
-                }
-                if (paymentPlanSettings.isAddBalanceToExisting() &&
-                        !paymentReceiptModel.getPaymentPayload().getValidPlans(practiceId, minAllowablePayment).isEmpty()) {
-                    mustAddToExisting = true;
-                    return true;
-                }
+            //check if balance can be added to existing
+            double minAllowablePayment = paymentReceiptModel.getPaymentPayload().getMinimumAllowablePlanAmount(practiceId);
+            if (minAllowablePayment > balance) {
+                minAllowablePayment = balance;
+            }
+            if (paymentPlanSettings.isAddBalanceToExisting() &&
+                    !paymentReceiptModel.getPaymentPayload().getValidPlans(practiceId, minAllowablePayment).isEmpty()) {
+                mustAddToExisting = true;
+                return true;
             }
         }
         return false;
