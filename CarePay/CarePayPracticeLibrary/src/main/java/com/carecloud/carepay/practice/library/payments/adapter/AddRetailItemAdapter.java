@@ -79,6 +79,8 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
         if (retailItem.getDescription() != null) {
             SpannableString spannableString = new SpannableString(Html.fromHtml(retailItem.getDescription()));
             holder.subTitle.setText(spannableString);
+        } else {
+            holder.subTitle.setText(null);
         }
         Map<Integer, RetailItemOptionChoiceDto> defaultOptions = new HashMap<>();
         for (int i = 0; i < retailItem.getOptions().size(); i++) {
