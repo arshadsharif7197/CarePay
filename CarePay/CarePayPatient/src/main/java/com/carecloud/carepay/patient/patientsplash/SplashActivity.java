@@ -37,7 +37,6 @@ import java.util.Map;
  */
 
 public class SplashActivity extends BasePatientActivity {
-    private int pendingRequests = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,22 +96,17 @@ public class SplashActivity extends BasePatientActivity {
     WorkflowServiceCallback signInCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            pendingRequests++;
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            pendingRequests--;
             navigateToWorkflow(workflowDTO, getIntent().getExtras());
             // end-splash activity and transition
-            if (pendingRequests == 0) {
                 SplashActivity.this.finish();
-            }
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            pendingRequests--;
             showErrorNotification(exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
 
@@ -125,7 +119,7 @@ public class SplashActivity extends BasePatientActivity {
                     .getPackageInfo(getContext().getPackageName(), 0);
             DeviceVersionModel versionModel = new DeviceVersionModel();
             versionModel.setApplicationName(packageInfo.packageName);
-            versionModel.setApplicationName(packageInfo.versionName);
+            versionModel.setVersionName(packageInfo.versionName);
             versionModel.setVersionNumber(packageInfo.versionCode);
             versionModel.setDeviceType(HttpConstants.getDeviceInformation().getDeviceType());
 
@@ -141,27 +135,20 @@ public class SplashActivity extends BasePatientActivity {
         return new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
-                pendingRequests++;
-
             }
 
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
-                pendingRequests--;
                 LatestVersionDTO latestVersionDTO = DtoHelper.getConvertedDTO(LatestVersionDTO.class, workflowDTO);
                 LatestVersionModel latestVersionModel = latestVersionDTO.getPayload().getVersionModel();
                 getApplicationPreferences().setLatestVersion(deviceVersionModel.getVersionNumber() >= latestVersionModel.getVersionNumber());
-                if (pendingRequests == 0) {
-                    SplashActivity.this.finish();
+                if(getApplicationPreferences().getLastVersionNum() != latestVersionModel.getVersionNumber()){
+                    getApplicationPreferences().setLastVersionNum(latestVersionModel.getVersionNumber());
                 }
             }
 
             @Override
             public void onFailure(String exceptionMessage) {
-                pendingRequests--;
-                if (pendingRequests == 0) {
-                    SplashActivity.this.finish();
-                }
             }
         };
     }
