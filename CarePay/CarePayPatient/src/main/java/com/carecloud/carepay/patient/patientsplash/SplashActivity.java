@@ -1,6 +1,8 @@
 package com.carecloud.carepay.patient.patientsplash;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -10,9 +12,15 @@ import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.patientsplash.dtos.SelectLanguageDTO;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayQueueUploadService;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
+import com.carecloud.carepaylibray.base.models.DeviceVersionModel;
+import com.carecloud.carepaylibray.base.models.LatestVersionDTO;
+import com.carecloud.carepaylibray.base.models.LatestVersionModel;
 import com.carecloud.carepaylibray.fcm.RegistrationIntentService;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 import com.newrelic.agent.android.NewRelic;
 
@@ -29,6 +37,7 @@ import java.util.Map;
  */
 
 public class SplashActivity extends BasePatientActivity {
+    private int pendingRequests = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +78,7 @@ public class SplashActivity extends BasePatientActivity {
 
             Gson gson = new Gson();
             SelectLanguageDTO selectLanguageDTO = gson.fromJson(workflowDTO.toString(), SelectLanguageDTO.class);
+            checkLatestVersion(selectLanguageDTO.getMetadata().getLinks().getCheckLatestVersion());
             Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
             header.put("Accept-Language", getApplicationPreferences().getUserLanguage());
             Map<String, String> query = new HashMap<>();
@@ -87,20 +97,72 @@ public class SplashActivity extends BasePatientActivity {
     WorkflowServiceCallback signInCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
+            pendingRequests++;
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            pendingRequests--;
             navigateToWorkflow(workflowDTO, getIntent().getExtras());
             // end-splash activity and transition
-            SplashActivity.this.finish();
+            if (pendingRequests == 0) {
+                SplashActivity.this.finish();
+            }
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
+            pendingRequests--;
             showErrorNotification(exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
 
         }
     };
+
+    private void checkLatestVersion(TransitionDTO versionCheckLink) {
+        try {
+            PackageInfo packageInfo = getContext().getPackageManager()
+                    .getPackageInfo(getContext().getPackageName(), 0);
+            DeviceVersionModel versionModel = new DeviceVersionModel();
+            versionModel.setApplicationName(packageInfo.packageName);
+            versionModel.setApplicationName(packageInfo.versionName);
+            versionModel.setVersionNumber(packageInfo.versionCode);
+            versionModel.setDeviceType(HttpConstants.getDeviceInformation().getDeviceType());
+
+            Gson gson = new Gson();
+            String payload = gson.toJson(versionModel);
+            getWorkflowServiceHelper().execute(versionCheckLink, getVersionCheckCallback(versionModel), payload);
+        } catch (PackageManager.NameNotFoundException nfe) {
+            nfe.printStackTrace();
+        }
+    }
+
+    private WorkflowServiceCallback getVersionCheckCallback(final DeviceVersionModel deviceVersionModel) {
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                pendingRequests++;
+
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                pendingRequests--;
+                LatestVersionDTO latestVersionDTO = DtoHelper.getConvertedDTO(LatestVersionDTO.class, workflowDTO);
+                LatestVersionModel latestVersionModel = latestVersionDTO.getPayload().getVersionModel();
+                getApplicationPreferences().setLatestVersion(deviceVersionModel.getVersionNumber() >= latestVersionModel.getVersionNumber());
+                if (pendingRequests == 0) {
+                    SplashActivity.this.finish();
+                }
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                pendingRequests--;
+                if (pendingRequests == 0) {
+                    SplashActivity.this.finish();
+                }
+            }
+        };
+    }
 }

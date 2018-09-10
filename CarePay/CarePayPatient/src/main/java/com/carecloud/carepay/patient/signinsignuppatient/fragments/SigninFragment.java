@@ -2,6 +2,8 @@ package com.carecloud.carepay.patient.signinsignuppatient.fragments;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.security.keystore.KeyGenParameterSpec;
@@ -29,12 +31,14 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
+import com.carecloud.carepay.patient.patientsplash.dtos.SelectLanguageDTO;
 import com.carecloud.carepay.patient.selectlanguage.fragments.SelectLanguageFragment;
 import com.carecloud.carepay.patient.utils.FingerprintUiHelper;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
@@ -44,6 +48,9 @@ import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.models.DeviceVersionModel;
+import com.carecloud.carepaylibray.base.models.LatestVersionDTO;
+import com.carecloud.carepaylibray.base.models.LatestVersionModel;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.signinsignup.fragments.ResetPasswordFragment;
@@ -343,6 +350,10 @@ public class SigninFragment extends BaseFragment {
                         getString(R.string.param_login_type),
                         getString(R.string.login_password));
 
+                Gson gson = new Gson();
+                SelectLanguageDTO selectLanguageDTO = gson.fromJson(workflowDTO.toString(), SelectLanguageDTO.class);
+                checkLatestVersion(selectLanguageDTO.getMetadata().getLinks().getCheckLatestVersion());
+
             }
 
             @Override
@@ -620,4 +631,45 @@ public class SigninFragment extends BaseFragment {
             throw new RuntimeException("Failed to init Cipher", e);
         }
     }
+
+    private void checkLatestVersion(TransitionDTO versionCheckLink) {
+        try {
+            PackageInfo packageInfo = getContext().getPackageManager()
+                    .getPackageInfo(getContext().getPackageName(), 0);
+            DeviceVersionModel versionModel = new DeviceVersionModel();
+            versionModel.setApplicationName(packageInfo.packageName);
+            versionModel.setVersionName(packageInfo.versionName);
+            versionModel.setVersionNumber(packageInfo.versionCode);
+            versionModel.setDeviceType(HttpConstants.getDeviceInformation().getDeviceType());
+
+            Gson gson = new Gson();
+            String payload = gson.toJson(versionModel);
+            getWorkflowServiceHelper().execute(versionCheckLink, getVersionCheckCallback(versionModel), payload);
+        } catch (PackageManager.NameNotFoundException nfe) {
+            nfe.printStackTrace();
+        }
+    }
+
+    private WorkflowServiceCallback getVersionCheckCallback(final DeviceVersionModel deviceVersionModel) {
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                LatestVersionDTO latestVersionDTO = DtoHelper.getConvertedDTO(LatestVersionDTO.class, workflowDTO);
+                LatestVersionModel latestVersionModel = latestVersionDTO.getPayload().getVersionModel();
+                getApplicationPreferences().setLatestVersion(deviceVersionModel.getVersionNumber() >= latestVersionModel.getVersionNumber());
+                if(getApplicationPreferences().getLastVersionNum() != latestVersionModel.getVersionNumber()){
+                    getApplicationPreferences().setLastVersionNum(latestVersionModel.getVersionNumber());
+                }
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+            }
+        };
+    }
+
 }
