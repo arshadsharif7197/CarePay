@@ -225,11 +225,6 @@ public class NotificationFragment extends BaseFragment
         }
     };
 
-    @Override
-    public void onResume() {
-        super.onResume();
-//        loadNextPage();
-    }
 
     private void setAdapter() {
         if (!notificationItems.isEmpty()) {
@@ -303,6 +298,7 @@ public class NotificationFragment extends BaseFragment
                 if (refresh) {
                     notificationItems = filterNotifications(notificationsDTO.getPayload().getNotifications(),
                             supportedNotificationTypes);
+                    addAppStatusNotification();
                 } else {
                     notificationItems.addAll(filterNotifications(notificationsDTO.getPayload().getNotifications(),
                             supportedNotificationTypes));
@@ -335,9 +331,6 @@ public class NotificationFragment extends BaseFragment
         NotificationItem notificationItem = notificationItems.get(holder.getAdapterPosition());
         if (notificationItem instanceof CustomNotificationItem) {
             getApplicationPreferences().setRemindLatest(false);
-//            notificationsAdapter.scheduleNotificationRemoval(notificationItem);
-//            notificationsRecycler.getAdapter().notifyItemChanged(holder.getAdapterPosition());
-//            notificationsAdapter.clearRemovedNotification(notificationItem);
             notificationItems.remove(notificationItem);
             notificationsAdapter.notifyItemRemoved(holder.getAdapterPosition());
 
@@ -415,7 +408,7 @@ public class NotificationFragment extends BaseFragment
                     continue;
                 }
                 filteredList.add(notificationItem);
-            }else{
+            } else {
                 Log.d("test", "test");
             }
         }
