@@ -193,7 +193,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getEmailAddress(),
                 personalInfoSection.getProperties().getEmailAddress(), R.id.emailContainer, R.id.emailInputLayout,
                 R.id.email, R.id.emailOptional, null, null);
-        view.findViewById(R.id.email).setEnabled(false);
+        view.findViewById(R.id.email).setVisibility(View.GONE);
 
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getPreferredLanguage(),
                 personalInfoSection.getProperties().getPreferredLanguage(),
