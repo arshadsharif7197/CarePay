@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
@@ -10,61 +11,62 @@
     android:paddingEnd="@dimen/dimen_13dp"
     android:paddingStart="@dimen/dimen_13dp">
 
-    <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
-        android:id="@+id/formCheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:background="@null"
-        android:button="@null"
-        android:drawableRight="@drawable/cell_checkbox" />
-
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_marginBottom="@dimen/dimen_15dp"
-        android:layout_marginTop="@dimen/dimen_15dp"
-        android:layout_toStartOf="@id/formCheckBox"
-        android:orientation="vertical"
-        android:paddingEnd="@dimen/dimen_5dp"
-        android:paddingStart="@dimen/dimen_5dp">
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/dimen_20dp"
+        android:paddingTop="@dimen/dimen_20dp">
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/formNameTextView"
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingEnd="@dimen/dimen_5dp"
+            android:paddingStart="@dimen/dimen_5dp">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/formNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_5dp"
+                android:ellipsize="marquee"
+                android:gravity="start"
+                android:singleLine="true"
+                android:textColor="@color/myHealthTextColor"
+                android:textSize="@dimen/text_size_17"
+                app:customAssetFont="proxima_nova_regular"
+                tools:text="Authorization form" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/formDateTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:gravity="start"
+                android:singleLine="true"
+                android:textColor="@color/cadet_gray"
+                android:textSize="@dimen/text_size_13"
+                app:customAssetFont="proxima_nova_regular"
+                tools:text="Last signed: 05/04/17" />
+
+        </LinearLayout>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
+            android:id="@+id/formCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dimen_5dp"
-            android:ellipsize="marquee"
-            android:gravity="start"
-            android:singleLine="true"
-            android:textColor="@color/myHealthTextColor"
-            android:textSize="@dimen/text_size_17"
-            app:customAssetFont="proxima_nova_semi_bold"
-            tools:text="Authorization form" />
-
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/formDateTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:gravity="start"
-            android:singleLine="true"
-            android:textColor="@color/cadet_gray"
-            android:textSize="@dimen/text_size_13"
-            app:customAssetFont="proxima_nova_regular"
-            tools:text="Last signed: 05/04/17" />
+            android:layout_gravity="center"
+            android:background="@null"
+            android:button="@null"
+            android:drawableEnd="@drawable/cell_checkbox" />
 
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_1dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/dimen_10dp"
-        android:layout_marginTop="@dimen/dimen_10dp"
         android:background="@color/light_gray" />
 
-</RelativeLayout>
+</LinearLayout>

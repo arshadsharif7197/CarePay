@@ -33,7 +33,7 @@ import java.util.Map;
 public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdapter.ViewHolder> {
     private static final int VIEW_TYPE_LOADING = 1;
 
-    public interface AddRetailItemCallback{
+    public interface AddRetailItemCallback {
         void retailItemSelected(RetailItemDto retailItem);
     }
 
@@ -44,11 +44,12 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
 
     /**
      * Constructor
-     * @param context context
+     *
+     * @param context     context
      * @param retailItems list of retail items
-     * @param callback callback
+     * @param callback    callback
      */
-    public AddRetailItemAdapter(Context context, @NonNull List<RetailItemDto> retailItems, AddRetailItemCallback callback){
+    public AddRetailItemAdapter(Context context, @NonNull List<RetailItemDto> retailItems, AddRetailItemCallback callback) {
         this.context = context;
         this.retailItems = filterActiveItems(retailItems);
         this.callback = callback;
@@ -58,9 +59,9 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view;
-        if(viewType == VIEW_TYPE_LOADING) {
+        if (viewType == VIEW_TYPE_LOADING) {
             view = inflater.inflate(R.layout.item_loading, parent, false);
-        }else {
+        } else {
             view = inflater.inflate(R.layout.item_add_retail_row, parent, false);
         }
         return new ViewHolder(view);
@@ -68,19 +69,23 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        if(position >= retailItems.size()){
+        if (position >= retailItems.size()) {
             return;
         }
 
         final RetailItemDto retailItem = retailItems.get(position);
 
         holder.productName.setText(retailItem.getName());
-        SpannableString spannableString = new SpannableString(Html.fromHtml(retailItem.getDescription()));
-        holder.subTitle.setText(spannableString);
+        if (retailItem.getDescription() != null) {
+            SpannableString spannableString = new SpannableString(Html.fromHtml(retailItem.getDescription()));
+            holder.subTitle.setText(spannableString);
+        } else {
+            holder.subTitle.setText(null);
+        }
         Map<Integer, RetailItemOptionChoiceDto> defaultOptions = new HashMap<>();
-        for(int i=0; i<retailItem.getOptions().size(); i++){
+        for (int i = 0; i < retailItem.getOptions().size(); i++) {
             RetailItemOptionDto optionDto = retailItem.getOptions().get(i);
-            if(!optionDto.getChoices().isEmpty()) {
+            if (!optionDto.getChoices().isEmpty()) {
                 defaultOptions.put(i, optionDto.getChoices().get(optionDto.getDefaultChoice()));
             }
         }
@@ -118,8 +123,8 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
     }
 
     @Override
-    public int getItemViewType(int position){
-        if(position >= retailItems.size()){
+    public int getItemViewType(int position) {
+        if (position >= retailItems.size()) {
             return VIEW_TYPE_LOADING;
         }
         return 0;
@@ -127,18 +132,19 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
 
     @Override
     public int getItemCount() {
-        if(isLoading){
-            return retailItems.size()+1;
+        if (isLoading) {
+            return retailItems.size() + 1;
         }
         return retailItems.size();
     }
 
-    public void setLoading(boolean isLoading){
+    public void setLoading(boolean isLoading) {
         this.isLoading = isLoading;
     }
 
     /**
      * add more retail items
+     *
      * @param retailItems retail items
      */
     public void addRetailItems(List<RetailItemDto> retailItems) {
@@ -148,6 +154,7 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
 
     /**
      * Set the retail items
+     *
      * @param retailItems retail items
      */
     public void setRetailItems(List<RetailItemDto> retailItems) {
@@ -155,10 +162,10 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
         notifyDataSetChanged();
     }
 
-    private List<RetailItemDto> filterActiveItems(List<RetailItemDto> retailItems){
+    private List<RetailItemDto> filterActiveItems(List<RetailItemDto> retailItems) {
         List<RetailItemDto> filteredItems = new ArrayList<>();
-        for(RetailItemDto item : retailItems){
-            if(item.isEnabled()){
+        for (RetailItemDto item : retailItems) {
+            if (item.isEnabled()) {
                 filteredItems.add(item);
             }
         }
@@ -166,7 +173,7 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
     }
 
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
         TextView productName;
         TextView subTitle;
         TextView productPlaceholder;

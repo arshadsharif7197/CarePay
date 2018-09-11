@@ -12,11 +12,23 @@ public class PracticeFormMetadata {
     @SerializedName("version")
     private String version;
 
+    @Expose
+    @SerializedName("updated_dt")
+    private String updatedDate;
+
     public String getVersion() {
         return version;
     }
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public String getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(String updatedDate) {
+        this.updatedDate = updatedDate;
     }
 }
