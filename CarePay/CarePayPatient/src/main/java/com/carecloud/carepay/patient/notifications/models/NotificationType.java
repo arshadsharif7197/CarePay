@@ -8,5 +8,6 @@ public enum NotificationType {
     appointment,
     payments,
     pending_forms,
-    credit_card
+    credit_card,
+    pending_survey
 }

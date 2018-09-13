@@ -98,6 +98,9 @@ public class NotificationActivity extends MenuPatientActivity
                 }
                 callConsentFormsScreen(notificationItem);
                 break;
+            case pending_survey:
+                
+                break;
             case payments:
 
                 break;

@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.notifications.adapters;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.view.LayoutInflater;
@@ -107,6 +108,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 case pending_forms:
                     displayPendingFormNotification(holder, notificationItem);
                     break;
+                case pending_survey:
+                    displayPendingSurvey(holder, notificationItem);
+                    break;
                 default:
                 case appointment:
                     displayAppointmentNotification(holder, notificationItem);
@@ -134,6 +138,26 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 callback.notificationSelected(notificationItem);
             }
         });
+
+    }
+
+    private void displayPendingSurvey(NotificationViewHolder holder, NotificationItem notificationItem) {
+        holder.image.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_survey));
+        holder.image.setVisibility(View.VISIBLE);
+        holder.initials.setVisibility(View.GONE);
+        holder.header.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        holder.header.setText(Label.getLabel("survey.notificationList.item.title.newSurvey"));
+        String pivotString = "from ";
+        String message = notificationItem.getPayload().getAlertMessage();
+        holder.message.setText(message);
+        int pivot = message.lastIndexOf(pivotString);
+        if (pivot > -1) {
+            pivot += pivotString.length();
+            SpannableString spannableString = new SpannableString(message);
+            spannableString.setSpan(new CarePayCustomSpan(context, CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD),
+                    pivot, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            holder.message.setText(spannableString);
+        }
 
     }
 

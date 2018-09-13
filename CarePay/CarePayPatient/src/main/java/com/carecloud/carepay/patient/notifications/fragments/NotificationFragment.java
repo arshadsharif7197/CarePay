@@ -97,6 +97,7 @@ public class NotificationFragment extends BaseFragment
         supportedNotificationTypes.add(NotificationType.appointment);
         supportedNotificationTypes.add(NotificationType.pending_forms);
         supportedNotificationTypes.add(NotificationType.payments);
+        supportedNotificationTypes.add(NotificationType.pending_survey);
         setHasOptionsMenu(true);
         Bundle args = getArguments();
         if (args != null) {
