@@ -52,6 +52,7 @@ public class PaymentPlanListAdapter extends RecyclerView.Adapter<PaymentPlanList
         String practiceName = getPracticeName(paymentPlanItem.getMetadata().getPracticeId());
         holder.shortName.setText(StringUtil.getShortName(practiceName));
         holder.locationName.setText(practiceName);
+        holder.planName.setText(paymentPlanItem.getPayload().getDescription());
 
         double totalAmount = paymentPlanItem.getPayload().getAmount();
         double amountPaid = paymentPlanItem.getPayload().getAmountPaid();
@@ -84,6 +85,7 @@ public class PaymentPlanListAdapter extends RecyclerView.Adapter<PaymentPlanList
         private TextView amount;
         private TextView planDetail;
         private ProgressBar planProgress;
+        private TextView planName;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -92,6 +94,7 @@ public class PaymentPlanListAdapter extends RecyclerView.Adapter<PaymentPlanList
             shortName = (TextView) itemView.findViewById(R.id.balancesAvatarTextView);
             planDetail = (TextView) itemView.findViewById(R.id.planInstallmentDetail);
             planProgress = (ProgressBar) itemView.findViewById(R.id.paymentPlanProgress);
+            planName = (TextView) itemView.findViewById(R.id.planName);
         }
     }
 
