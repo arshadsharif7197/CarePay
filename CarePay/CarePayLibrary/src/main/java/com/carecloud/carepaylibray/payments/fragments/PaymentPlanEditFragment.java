@@ -528,7 +528,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
 
     private boolean canEditDate(PaymentPlanDTO paymentPlan) {
         PaymentsPayloadSettingsDTO paymentSettings = paymentsModel.getPaymentPayload()
-                .getPaymentSettings(paymentPlan.getMetadata().getPracticeId());
+                .getPaymentSetting(paymentPlan.getMetadata().getPracticeId());
         if (paymentSettings == null) {
             return false;
         }
@@ -542,7 +542,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
 
     private boolean canCancelPlan(String practiceId) {
         PaymentsPayloadSettingsDTO paymentSettings = paymentsModel.getPaymentPayload()
-                .getPaymentSettings(practiceId);
+                .getPaymentSetting(practiceId);
         if (paymentSettings == null) {
             return false;
         }
