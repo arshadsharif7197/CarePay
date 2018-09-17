@@ -302,7 +302,8 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
                 }
             }
         }
-        return isBreezePractice && isTheLocationWithBreezeEnabled;
+
+        return isBreezePractice && isTheLocationWithBreezeEnabled && appointmentDTO.getPayload().canCheckOut();
     }
 
     private void sortAppointments() {
