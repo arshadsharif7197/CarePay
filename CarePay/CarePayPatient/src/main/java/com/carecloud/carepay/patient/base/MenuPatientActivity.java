@@ -34,7 +34,6 @@ import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
-import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -60,6 +59,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
     private static TransitionDTO transitionNotifications;
     private static TransitionDTO transitionMyHealth;
     private static TransitionDTO transitionRetail;
+    private static TransitionDTO transitionMessaging;
 
     protected ActionBarDrawerToggle toggle;
     protected TextView appointmentsDrawerUserIdTextView;
@@ -104,6 +104,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         setTransitionMyHealth(myHealthDto.getMetadata().getLinks().getMyHealth());
         setTransitionRetail(myHealthDto.getMetadata().getLinks().getRetail());
         setTransitionForms(myHealthDto.getMetadata().getLinks().getUserForms());
+        setTransitionMessaging(myHealthDto.getMetadata().getLinks().getMessaging());
 
         ApplicationPreferences.getInstance().writeObjectToSharedPreference(CarePayConstants
                 .DEMOGRAPHICS_ADDRESS_BUNDLE, myHealthDto.getPayload().getDemographicDTO().getPayload().getAddress());
@@ -211,9 +212,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity
                 transition = transitionMyHealth;
                 break;
             case R.id.nav_messages:
-                displayMessagesScreen();
-                transition = null;
-                callback = null;
+                callback = messagingWorkflowCallback;
+                transition = transitionMessaging;
                 break;
             case R.id.nav_forms:
                 callback = appointmentsWorkflowCallback;
@@ -428,6 +428,27 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         }
     };
 
+    private WorkflowServiceCallback messagingWorkflowCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            PatientNavigationHelper.setAccessPaymentsBalances(false);
+            navigateToWorkflow(workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
 
     public static void setTransitionBalance(TransitionDTO transitionBalance) {
         MenuPatientActivity.transitionBalance = transitionBalance;
@@ -461,6 +482,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         MenuPatientActivity.transitionRetail = transitionRetail;
     }
 
+    public static void setTransitionMessaging(TransitionDTO transitionMessaging) {
+        MenuPatientActivity.transitionMessaging = transitionMessaging;
+    }
+
     public static TransitionDTO getTransitionAppointments() {
         return transitionAppointments;
     }
@@ -475,12 +500,6 @@ public abstract class MenuPatientActivity extends BasePatientActivity
 
     public static TransitionDTO getTransitionLogout() {
         return transitionLogout;
-    }
-
-    private void displayMessagesScreen() {
-        WorkflowDTO workflowDTO = new WorkflowDTO();
-        workflowDTO.setState(NavigationStateConstants.MESSAGES);
-        PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
     }
 
     /**

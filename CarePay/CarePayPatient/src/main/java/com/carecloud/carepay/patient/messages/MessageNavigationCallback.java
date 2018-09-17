@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.messages;
 import android.support.v4.app.Fragment;
 
 import com.carecloud.carepay.patient.messages.models.Messages;
+import com.carecloud.carepay.patient.messages.models.MessagingModel;
 import com.carecloud.carepay.patient.messages.models.ProviderContact;
 
 import java.util.List;
@@ -17,22 +18,16 @@ public interface MessageNavigationCallback {
 
     void displayThreadMessages(Messages.Reply thread);
 
-    void getMessageThreads(long page, long size);
-
-    void getThreadMessages(Messages.Reply thread);
-
     String getUserId();
-
-    void postMessage(Messages.Reply thread, String message);
-
-    void postNewMessage(ProviderContact providerContact, String subject, String message);
 
     void startNewThread();
 
     List<ProviderContact> getProvidersList();
 
-    void deleteMessageThread(Messages.Reply thread);
-
     void displayToolbar(boolean display, String title);
+
+    MessagingModel getDto();
+
+    String lookupName(Messages.Reply thread, String userId);
 
 }
