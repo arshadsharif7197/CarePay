@@ -200,6 +200,9 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
                 showCancelPaymentPlanConfirmDialog();
             }
         });
+        cancelPaymentPlanButton.setVisibility(canCancelPlan(paymentPlanDTO.getMetadata().getPracticeId())
+                ? View.VISIBLE : View.GONE);
+
     }
 
     protected void showCancelPaymentPlanConfirmDialog() {
@@ -524,13 +527,27 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     }
 
     private boolean canEditDate(PaymentPlanDTO paymentPlan) {
-        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = paymentsModel.getPaymentPayload()
-                .getPaymentSetting(practiceId).getPayload().getPaymentPlans();
+        PaymentsPayloadSettingsDTO paymentSettings = paymentsModel.getPaymentPayload()
+                .getPaymentSettings(paymentPlan.getMetadata().getPracticeId());
+        if (paymentSettings == null) {
+            return false;
+        }
+        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = paymentSettings.getPayload().getPaymentPlans();
         String frequencyCode = paymentPlan.getPayload().getPaymentPlanDetails().getFrequencyCode();
         return (frequencyCode.equals(PaymentPlanModel.FREQUENCY_MONTHLY)
                 && paymentPlanSettings.getFrequencyCode().getMonthly().isAllowed())
                 || (frequencyCode.equals(PaymentPlanModel.FREQUENCY_WEEKLY)
                 && paymentPlanSettings.getFrequencyCode().getWeekly().isAllowed());
+    }
+
+    private boolean canCancelPlan(String practiceId) {
+        PaymentsPayloadSettingsDTO paymentSettings = paymentsModel.getPaymentPayload()
+                .getPaymentSettings(practiceId);
+        if (paymentSettings == null) {
+            return false;
+        }
+        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = paymentSettings.getPayload().getPaymentPlans();
+        return paymentPlanSettings.isCanCancelPlan();
     }
 
     private void disableFields() {
