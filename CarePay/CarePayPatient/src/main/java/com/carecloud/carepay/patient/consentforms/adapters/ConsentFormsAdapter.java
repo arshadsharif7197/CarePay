@@ -18,7 +18,6 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
 import java.util.List;
@@ -73,12 +72,6 @@ public class ConsentFormsAdapter extends RecyclerView.Adapter<ConsentFormsAdapte
             sb.append(String.format(Label.getLabel("adhoc_form_date_placeholder"),
                     DateUtil.getInstance().setDateRaw(form.getLastModifiedDate())
                             .toStringWithFormatMmSlashDdSlashYyyy()));
-            holder.container.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    callback.onFilledFormSelected(form);
-                }
-            });
         } else {
             sb.append(Label.getLabel("consentForms.providersFormList.item.status.neverReviewedStatus"));
         }
@@ -95,6 +88,20 @@ public class ConsentFormsAdapter extends RecyclerView.Adapter<ConsentFormsAdapte
                             .getResources().getColor(R.color.cadet_gray)), 0, sb.length(),
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             sb.insert(0, Label.getLabel("consentForms.providersFormList.item.status.pendingStatus"));
+
+            holder.container.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.formCheckBox.setChecked(!form.isSelected());
+                }
+            });
+        } else {
+            holder.container.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callback.onFilledFormSelected(form);
+                }
+            });
         }
 
         holder.formDateTextView.setText(sb);
@@ -103,19 +110,23 @@ public class ConsentFormsAdapter extends RecyclerView.Adapter<ConsentFormsAdapte
         holder.formCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                form.setSelected(!form.isSelected());
-                callback.onPendingFormSelected(form, isChecked);
-                if (form.isSelected()) {
-                    holder.formNameTextView.setTextColor(holder.formNameTextView.getContext()
-                            .getResources().getColor(R.color.colorPrimary));
-                    holder.formNameTextView.setFontAttribute(CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD);
-                } else {
-                    holder.formNameTextView.setTextColor(holder.formNameTextView.getContext()
-                            .getResources().getColor(R.color.myHealthTextColor));
-                    holder.formNameTextView.setFontAttribute(CustomAssetStyleable.PROXIMA_NOVA_REGULAR);
-                }
+                onFormSelected(isChecked, form, holder);
             }
         });
+    }
+
+    protected void onFormSelected(boolean isChecked, PracticeForm form, ViewHolder holder) {
+        form.setSelected(!form.isSelected());
+        callback.onPendingFormSelected(form, isChecked);
+        if (form.isSelected()) {
+            holder.formNameTextView.setTextColor(holder.formNameTextView.getContext()
+                    .getResources().getColor(R.color.colorPrimary));
+            holder.formNameTextView.setFontAttribute(CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD);
+        } else {
+            holder.formNameTextView.setTextColor(holder.formNameTextView.getContext()
+                    .getResources().getColor(R.color.myHealthTextColor));
+            holder.formNameTextView.setFontAttribute(CustomAssetStyleable.PROXIMA_NOVA_REGULAR);
+        }
     }
 
     @Override
