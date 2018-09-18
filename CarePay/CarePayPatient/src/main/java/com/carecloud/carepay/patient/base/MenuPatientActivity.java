@@ -417,6 +417,11 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         return transitionMessaging;
     }
 
+    protected void displayMessagesScreen(){
+        //backward compat for pending notification merge
+        startActivity(MessagesActivity.class);
+    }
+
     /**
      * Display toolbar.
      *
