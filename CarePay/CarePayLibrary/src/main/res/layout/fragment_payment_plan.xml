@@ -63,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/dimen_10dp"
                     android:textColor="@color/light_gray"
-                    android:textSize="@dimen/text_size_13"
+                    android:textSize="@dimen/text_size_12sp"
                     app:customAssetFont="proxima_nova_regular"
                     tools:text="This balance must be paid over a maximum of 6 months and requires a downpayment of $20." />
 

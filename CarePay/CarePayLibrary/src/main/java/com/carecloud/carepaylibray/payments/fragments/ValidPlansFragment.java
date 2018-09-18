@@ -104,7 +104,7 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
 
     protected void setAdapter(View view) {
         RecyclerView plansRecycler = (RecyclerView) view.findViewById(R.id.plans_recycler);
-        plansRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        plansRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         PaymentPlanListAdapter adapter = new PaymentPlanListAdapter(
                 getActivity(), getPaymentPlansList(), this, paymentsModel);
         plansRecycler.setAdapter(adapter);

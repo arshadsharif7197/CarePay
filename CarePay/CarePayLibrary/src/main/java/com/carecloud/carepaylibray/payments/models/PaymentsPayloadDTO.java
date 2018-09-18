@@ -406,22 +406,23 @@ public class PaymentsPayloadDTO implements Serializable {
      * @param practiceId - optional, if provided will first filter plans by practice
      * @return active plans
      */
-    public List<PaymentPlanDTO> getValidPlans(@NonNull String practiceId, double amountToAdd) {
+    public List<PaymentPlanDTO> getValidPlans(String practiceId, double amountToAdd) {
         List<PaymentPlanDTO> baseList = practiceId != null ?
                 getActivePlans(practiceId) : getPatientPaymentPlans();
         List<PaymentPlanDTO> outputList = new ArrayList<>();
         PaymentsPayloadSettingsDTO settingsDTO = getPaymentSetting(practiceId);
         if (settingsDTO.getPayload().getPaymentPlans().isAddBalanceToExisting()) {
-            for (PaymentSettingsBalanceRangeRule balanceRangeRule : settingsDTO.getPayload()
-                    .getPaymentPlans().getBalanceRangeRules()) {
-                double minAmount = balanceRangeRule.getMinBalance().getValue();
-                double maxAmount = balanceRangeRule.getMaxBalance().getValue();
-                for (PaymentPlanDTO paymentPlanDTO : baseList) {
-                    double pendingAmount = SystemUtil.safeSubtract(paymentPlanDTO.getPayload()
-                            .getAmount(), paymentPlanDTO.getPayload().getAmountPaid());
-                    double sumAmount = SystemUtil.safeAdd(pendingAmount, amountToAdd);
+            for (PaymentPlanDTO paymentPlanDTO : baseList) {
+                double pendingAmount = SystemUtil.safeSubtract(paymentPlanDTO.getPayload()
+                        .getAmount(), paymentPlanDTO.getPayload().getAmountPaid());
+                double sumAmount = SystemUtil.safeAdd(pendingAmount, amountToAdd);
+                for (PaymentSettingsBalanceRangeRule balanceRangeRule : settingsDTO.getPayload()
+                        .getPaymentPlans().getBalanceRangeRules()) {
+                    double minAmount = balanceRangeRule.getMinBalance().getValue();
+                    double maxAmount = balanceRangeRule.getMaxBalance().getValue();
                     if (sumAmount >= minAmount && sumAmount <= maxAmount) {
                         outputList.add(paymentPlanDTO);
+                        break;
                     }
                 }
             }
@@ -455,7 +456,7 @@ public class PaymentsPayloadDTO implements Serializable {
      * @param practiceId practice id
      * @return filtered list of plans for the specified practice
      */
-    public List<PaymentPlanDTO> getFilteredPlans(String practiceId) {
+    public List<PaymentPlanDTO> getFilteredPlans(@NonNull String practiceId) {
         List<PaymentPlanDTO> filteredList = new ArrayList<>();
         for (PaymentPlanDTO paymentPlanDTO : getPatientPaymentPlans()) {
             if (paymentPlanDTO.getMetadata().getPracticeId() != null &&
