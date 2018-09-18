@@ -66,6 +66,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
     private static TransitionDTO transitionNotifications;
     private static TransitionDTO transitionMyHealth;
     private static TransitionDTO transitionRetail;
+    private static TransitionDTO transitionMessaging;
 
     protected ActionBarDrawerToggle toggle;
     protected TextView appointmentsDrawerUserIdTextView;
@@ -110,6 +111,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         setTransitionMyHealth(myHealthDto.getMetadata().getLinks().getMyHealth());
         setTransitionRetail(myHealthDto.getMetadata().getLinks().getRetail());
         setTransitionForms(myHealthDto.getMetadata().getLinks().getUserForms());
+        setTransitionMessaging(myHealthDto.getMetadata().getLinks().getMessaging());
 
         ApplicationPreferences.getInstance().writeObjectToSharedPreference(CarePayConstants
                 .DEMOGRAPHICS_ADDRESS_BUNDLE, myHealthDto.getPayload().getDemographicDTO().getPayload().getAddress());
@@ -377,6 +379,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity
 
     public static void setTransitionRetail(TransitionDTO transitionRetail) {
         MenuPatientActivity.transitionRetail = transitionRetail;
+    }
+
+    public static void setTransitionMessaging(TransitionDTO transitionMessaging) {
+        MenuPatientActivity.transitionMessaging = transitionMessaging;
     }
 
     public static TransitionDTO getTransitionAppointments() {
