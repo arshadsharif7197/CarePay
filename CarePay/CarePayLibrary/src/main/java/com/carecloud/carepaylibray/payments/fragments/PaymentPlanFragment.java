@@ -818,7 +818,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
     protected boolean enableAddToExisting() {
         return hasExistingPlans() && canAddToExisting()
                 && !paymentsModel.getPaymentPayload().getValidPlans(practiceId,
-                selectedBalance.getPayload().get(0).getAmount()).isEmpty();
+                paymentPlanAmount).isEmpty();
     }
 
     @Override
