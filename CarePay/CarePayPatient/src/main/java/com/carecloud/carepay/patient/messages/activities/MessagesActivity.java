@@ -15,6 +15,9 @@ import com.carecloud.carepay.patient.messages.models.Messages;
 import com.carecloud.carepay.patient.messages.models.MessagingModel;
 import com.carecloud.carepay.patient.messages.models.ProviderContact;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,11 +35,41 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
 
     @Override
     public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);//todo implement shimmer here
+        super.onCreate(icicle);
         messagingModel = getConvertedDTO(MessagingModel.class);
+        if (messagingModel == null) {
+            callMessagingService();
+        } else {
+            resumeOnCreate();
+        }
+    }
+
+    private void resumeOnCreate() {
         userId = messagingModel.getPayload().getInbox().getUserId();
         providerContacts = messagingModel.getPayload().getProviderContacts();
         replaceFragment(new MessagesListFragment(), false);
+    }
+
+    private void callMessagingService() {
+        getWorkflowServiceHelper().execute(getTransitionMessaging(), new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                replaceFragment(ShimmerFragment.newInstance(R.layout.shimmer_default_item), false);
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                messagingModel = DtoHelper.getConvertedDTO(MessagingModel.class, workflowDTO);
+                resumeOnCreate();
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+            }
+        });
     }
 
     @Override

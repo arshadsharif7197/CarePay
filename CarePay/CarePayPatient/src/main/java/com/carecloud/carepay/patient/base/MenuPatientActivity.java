@@ -413,6 +413,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         return transitionMyHealth;
     }
 
+    public static TransitionDTO getTransitionMessaging() {
+        return transitionMessaging;
+    }
+
     /**
      * Display toolbar.
      *
