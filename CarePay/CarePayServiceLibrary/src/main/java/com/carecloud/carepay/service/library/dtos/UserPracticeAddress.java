@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by lmenendez on 11/20/17
  */
 
-public class UserPracticeAddressDTO {
+public class UserPracticeAddress {
 
     @SerializedName("line1")
     private String addressLine1;

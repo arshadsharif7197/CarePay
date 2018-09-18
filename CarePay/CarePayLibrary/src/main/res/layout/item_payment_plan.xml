@@ -75,14 +75,29 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/balancesLocation"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="start"
+                android:textColor="@color/lightSlateGray"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="@dimen/textview_textsize"
+                app:customAssetFont="proxima_nova_semi_bold"
+                tools:text="CareCloud Clinic" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/planName"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:gravity="start"
                 android:textColor="@color/lightSlateGray"
                 android:textSize="@dimen/textview_textsize"
-                app:customAssetFont="proxima_nova_regular"
-                tools:text="CareCloud Clinic" />
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:customAssetFont="proxima_nova_light"
+                tools:text="Best Plan Ever"/>
         </LinearLayout>
 
         <FrameLayout
@@ -99,6 +114,14 @@
                 android:max="100"
                 android:progress="25"
                 android:progressDrawable="@drawable/payment_plan_progress" />
+
+            <ImageView
+                android:id="@+id/scheduledPaymentIcon"
+                android:layout_width="@dimen/dimen_22dp"
+                android:layout_height="@dimen/dimen_22dp"
+                android:layout_gravity="center"
+                android:src="@drawable/icn_pending"
+                android:visibility="gone"/>
 
         </FrameLayout>
 

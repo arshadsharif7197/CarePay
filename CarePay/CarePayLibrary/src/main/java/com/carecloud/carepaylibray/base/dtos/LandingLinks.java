@@ -34,6 +34,9 @@ public class LandingLinks extends BaseLinks {
     @SerializedName("forms_history")
     @Expose
     private TransitionDTO formsHistory = new TransitionDTO();
+    @SerializedName("user_forms")
+    @Expose
+    private TransitionDTO userForms = new TransitionDTO();
 
     public TransitionDTO getPatientBalances() {
         return patientBalances;
@@ -97,5 +100,13 @@ public class LandingLinks extends BaseLinks {
 
     public void setFormsHistory(TransitionDTO formsHistory) {
         this.formsHistory = formsHistory;
+    }
+
+    public TransitionDTO getUserForms() {
+        return userForms;
+    }
+
+    public void setUserForms(TransitionDTO userForms) {
+        this.userForms = userForms;
     }
 }

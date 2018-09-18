@@ -151,7 +151,8 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
         findViewById(R.id.emptyPaymentsImageView).setVisibility(View.GONE);
         recyclerView.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.HORIZONTAL, false));
-        paymentBalancesAdapter = new PaymentBalancesAdapter(this, getBalances(paymentsModel),
+        paymentBalancesAdapter = new PaymentBalancesAdapter(this,
+                paymentsModel, getBalances(paymentsModel),
                 paymentsModel.getPaymentPayload().getUserPractices().get(0), this);
         recyclerView.setAdapter(paymentBalancesAdapter);
 
@@ -283,7 +284,8 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
 
     @Override
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
-        PracticeAddNewCreditCardFragment fragment = PracticeAddNewCreditCardFragment.newInstance(paymentsModel, amount);
+        PracticeAddNewCreditCardFragment fragment = PracticeAddNewCreditCardFragment
+                .newInstance(paymentsModel, amount);
         displayDialogFragment(fragment, false);
     }
 
@@ -493,7 +495,8 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
                 fragment.setOnCancelListener(new Dialog.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialogg) {
-                        ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newClinicHeader(paymentsModel);
+                        ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel
+                                .newClinicHeader(paymentsModel);
                         ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
                                 .newInstance(paymentsModel, headerModel, selectedBalance);
                         displayDialogFragment(dialog, false);
@@ -613,7 +616,9 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
     }
 
     @Override
-    public void onScheduleOneTimePayment(PaymentsModel paymentsModel, final PaymentPlanDTO paymentPlanDTO, Date paymentDate) {
+    public void onScheduleOneTimePayment(PaymentsModel paymentsModel,
+                                         final PaymentPlanDTO paymentPlanDTO,
+                                         Date paymentDate) {
         PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
                 .newInstance(paymentsModel, paymentPlanDTO, false, paymentDate);
         fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -651,15 +656,17 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
         DateUtil.getInstance().setDateRaw(scheduledPayment.getPayload().getPaymentDate());
         String message = String.format(Label.getLabel("payment.oneTimePayment.schedule.success"),
                 StringUtil.getFormattedBalanceAmount(scheduledPayment.getPayload().getAmount()),
-                DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal());
+                DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
         showSuccessToast(message);
 
     }
 
     @Override
-    public void showDeleteScheduledPaymentConfirmation(WorkflowDTO workflowDTO, ScheduledPaymentPayload scheduledPaymentPayload) {
+    public void showDeleteScheduledPaymentConfirmation(WorkflowDTO workflowDTO,
+                                                       ScheduledPaymentPayload scheduledPaymentPayload) {
         showSuccessToast(String.format(
                 Label.getLabel("payment.oneTimePayment.scheduled.delete.success"),
+                StringUtil.getFormattedBalanceAmount(scheduledPaymentPayload.getAmount()),
                 DateUtil.getInstance()
                         .setDateRaw(scheduledPaymentPayload.getPaymentDate())
                         .toStringWithFormatMmSlashDdSlashYyyy()));
@@ -680,7 +687,8 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
             builder.replace(last, builder.length(), "");
             showErrorNotification(builder.toString());
         } else {
-            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment.newInstance(workflowDTO, isOneTimePayment);
+            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
+                    .newInstance(workflowDTO, isOneTimePayment);
             displayDialogFragment(confirmationFragment, false);
         }
     }
@@ -763,13 +771,17 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
     }
 
     @Override
-    public void onStartEditScheduledPayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO, ScheduledPaymentModel scheduledPaymentModel) {
-        PracticeEditOneTimePaymentFragment fragment = PracticeEditOneTimePaymentFragment.newInstance(paymentsModel, 0, paymentPlanDTO, scheduledPaymentModel);
+    public void onStartEditScheduledPayment(PaymentsModel paymentsModel,
+                                            PaymentPlanDTO paymentPlanDTO,
+                                            ScheduledPaymentModel scheduledPaymentModel) {
+        PracticeEditOneTimePaymentFragment fragment = PracticeEditOneTimePaymentFragment
+                .newInstance(paymentsModel, 0, paymentPlanDTO, scheduledPaymentModel);
         displayDialogFragment(fragment, false);
     }
 
     @Override
     public void onPaymentPlanCanceled(WorkflowDTO workflowDTO) {
+        showSuccessToast(Label.getLabel("payment.cancelPaymentPlan.success.banner.text"));
         getSupportFragmentManager().popBackStackImmediate(PatientModePaymentPlanDetailsDialogFragment.class.getName(),
                 FragmentManager.POP_BACK_STACK_INCLUSIVE);
         refreshBalance();

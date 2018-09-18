@@ -23,6 +23,7 @@ import com.carecloud.carepay.mini.models.queue.QueuePaymentRecord;
 import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
 import com.carecloud.carepay.mini.services.QueueUploadService;
 import com.carecloud.carepay.mini.services.carepay.RestCallServiceCallback;
+import com.carecloud.carepay.mini.utils.ChipInterceptorUtil;
 import com.carecloud.carepay.mini.utils.Defs;
 import com.carecloud.carepay.mini.utils.JsonHelper;
 import com.carecloud.carepay.mini.utils.StringUtil;
@@ -62,7 +63,7 @@ public class WelcomeActivity extends FullScreenActivity {
     private static final int PAYMENT_COMPLETE_RESET = 1000 * 3;
     private static final int POST_RETRY_DELAY = 1000 * 10;
     private static final int DEVICE_KEEP_ALIVE_PERIOD = 1000 * 30;
-    private static final int MAX_FAIL_COUNT = 60;
+    private static final int MAX_FAIL_COUNT = 15;
 
     private ApplicationHelper applicationHelper;
     private TextView message;
@@ -118,7 +119,8 @@ public class WelcomeActivity extends FullScreenActivity {
                 wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL, TAG);
             }
             wifiLock.acquire();
-
+            ChipInterceptorUtil.getInstance().startIntercept(this,
+                    ChipInterceptorUtil.CLOVER_CARD_INTERCEPT_ACTION);
         }
 
     }
@@ -136,6 +138,7 @@ public class WelcomeActivity extends FullScreenActivity {
             if(wifiLock != null){
                 wifiLock.release();
             }
+            ChipInterceptorUtil.getInstance().stopIntercept(this);
         }
         super.onStop();
     }

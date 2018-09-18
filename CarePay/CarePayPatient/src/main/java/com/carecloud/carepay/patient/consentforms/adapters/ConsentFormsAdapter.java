@@ -12,11 +12,13 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormViewPagerFragment;
 import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormsFormsInterface;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
 import java.util.List;
@@ -24,26 +26,44 @@ import java.util.List;
 /**
  * @author pjohnson on 6/04/18.
  */
-public class PracticeConsentPracticeFormsAdapter
-        extends RecyclerView.Adapter<PracticeConsentPracticeFormsAdapter.ViewHolder> {
+public class ConsentFormsAdapter extends RecyclerView.Adapter<ConsentFormsAdapter.ViewHolder> {
 
+    private static final int VIEW_TYPE_LOADING = 1;
     private final List<PracticeForm> forms;
-    private final List<String> pendingForms;
     private ConsentFormsFormsInterface callback;
+    private final int mode;
+    private boolean isLoading;
 
-    public PracticeConsentPracticeFormsAdapter(List<PracticeForm> forms, List<String> pendingForms) {
-        this.forms = forms;
-        this.pendingForms = pendingForms;
+    public ConsentFormsAdapter(List<PracticeForm> pendingForms, int mode) {
+        this.forms = pendingForms;
+        this.mode = mode;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        int layout;
+        if (viewType == VIEW_TYPE_LOADING) {
+            layout = R.layout.item_loading;
+        } else {
+            layout = R.layout.item_provider_forms;
+        }
         return new ViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_provider_forms, parent, false));
+                .inflate(layout, parent, false));
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position >= forms.size()) {
+            return VIEW_TYPE_LOADING;
+        }
+        return 0;
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        if (position >= forms.size()) {
+            return;
+        }
         final PracticeForm form = forms.get(position);
         holder.container.setOnClickListener(null);
         holder.formNameTextView.setText(form.getPayload().get("title").getAsString());
@@ -59,22 +79,24 @@ public class PracticeConsentPracticeFormsAdapter
                     callback.onFilledFormSelected(form);
                 }
             });
+        } else {
+            sb.append(Label.getLabel("consentForms.providersFormList.item.status.neverReviewedStatus"));
         }
-        holder.formDateTextView.setTextColor(holder.formDateTextView.getContext().getResources()
-                .getColor(R.color.cadet_gray));
-        if (pendingForms.contains(form.getPayload().get("uuid").getAsString())) {
+
+        if (mode == ConsentFormViewPagerFragment.PENDING_MODE) {
+            holder.formDateTextView.setTextColor(holder.formDateTextView.getContext().getResources()
+                    .getColor(R.color.cadet_gray));
             holder.formCheckBox.setVisibility(View.VISIBLE);
             holder.formDateTextView.setTextColor(holder.formDateTextView.getContext().getResources()
                     .getColor(R.color.lightning_yellow));
-            if (sb.length() > 0) {
-                sb.insert(0, " - ");
-                sb.setSpan(new ForegroundColorSpan(holder.formDateTextView.getContext()
-                                .getResources().getColor(R.color.cadet_gray)), 0, sb.length(),
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-            sb.insert(0, Label.getLabel("consentForms.providersFormList.item.status.pendingStatus"));
 
+            sb.insert(0, " - ");
+            sb.setSpan(new ForegroundColorSpan(holder.formDateTextView.getContext()
+                            .getResources().getColor(R.color.cadet_gray)), 0, sb.length(),
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            sb.insert(0, Label.getLabel("consentForms.providersFormList.item.status.pendingStatus"));
         }
+
         holder.formDateTextView.setText(sb);
         holder.formCheckBox.setOnCheckedChangeListener(null);
         holder.formCheckBox.setChecked(form.isSelected());
@@ -98,7 +120,20 @@ public class PracticeConsentPracticeFormsAdapter
 
     @Override
     public int getItemCount() {
+        if (isLoading && !forms.isEmpty()) {
+            return forms.size() + 1;
+        }
         return forms.size();
+    }
+
+    public void addHistoryList(List<PracticeForm> newItems) {
+        this.forms.addAll(newItems);
+        notifyDataSetChanged();
+    }
+
+    public void setLoading(boolean isLoading) {
+        this.isLoading = isLoading;
+        notifyDataSetChanged();
     }
 
     public void setCallback(ConsentFormsFormsInterface callback) {
