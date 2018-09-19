@@ -176,4 +176,6 @@ public class CarePayConstants {
     public static final String PATIENT_MODE_LABELS_PREFIX = "P-";
     public static final String UPDATE_BADGES_BROADCAST = "updateBadges";
 
+    public static final String GET_STARTED_URL = "/get_started";
+
 }

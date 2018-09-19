@@ -82,6 +82,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
             String locationName = paymentPlanItem.getMetadata().getPracticeName();
             holder.shortName.setText(StringUtil.getShortName(locationName));
             holder.locationName.setText(locationName);
+            holder.planName.setText(paymentPlanItem.getPayload().getDescription());
 
             double totalAmount = paymentPlanItem.getPayload().getAmount();
             double amountPaid = paymentPlanItem.getPayload().getAmountPaid();
@@ -129,6 +130,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
         private TextView planDetail;
         private ProgressBar planProgress;
         private View scheduledIcon;
+        private TextView planName;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -138,7 +140,8 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
             payLabel = itemView.findViewById(R.id.balancesPayNowTextView);
             planDetail = (TextView) itemView.findViewById(R.id.planInstallmentDetail);
             planProgress = (ProgressBar) itemView.findViewById(R.id.paymentPlanProgress);
-            scheduledIcon = itemView.findViewById(com.carecloud.carepaylibrary.R.id.scheduledPaymentIcon);
+            scheduledIcon = itemView.findViewById(R.id.scheduledPaymentIcon);
+            planName = (TextView) itemView.findViewById(R.id.planName);
         }
     }
 
