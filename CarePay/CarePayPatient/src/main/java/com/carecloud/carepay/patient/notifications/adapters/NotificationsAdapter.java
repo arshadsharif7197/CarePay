@@ -389,7 +389,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     private String getTimeStamp(NotificationItem notificationItem) {
         DateUtil dateUtil = DateUtil.getInstance().setDateRaw(notificationItem.getMetadata().getCreatedDt());
-
+        if (dateUtil.isToday()) {
+            return Label.getLabel("today_label");
+        }
         return dateUtil.toStringWithFormatMmSlashDdSlashYyyy();
     }
 
