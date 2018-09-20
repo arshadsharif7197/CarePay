@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.notifications.models;
 
+import com.carecloud.carepay.patient.survey.model.PendingSurveyDto;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -37,6 +38,10 @@ public class NotificationItemPayload {
     @SerializedName("appointment")
     @Expose
     private AppointmentDTO appointment = new AppointmentDTO();
+
+    @SerializedName("pending_survey")
+    @Expose
+    private PendingSurveyDto pendingSurvey = new PendingSurveyDto();
 
     public String getNotificationId() {
         return notificationId;
@@ -92,5 +97,13 @@ public class NotificationItemPayload {
 
     public void setPendingForms(int pendingForms) {
         this.pendingForms = pendingForms;
+    }
+
+    public PendingSurveyDto getPendingSurvey() {
+        return pendingSurvey;
+    }
+
+    public void setPendingSurvey(PendingSurveyDto pendingSurvey) {
+        this.pendingSurvey = pendingSurvey;
     }
 }

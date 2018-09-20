@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lemonGreen">
+
+    <ImageView
+        android:id="@+id/checkImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/dimen_15dp"
+        android:src="@drawable/icn_check_white" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/checkImage"
+        android:paddingEnd="@dimen/dimen_30dp"
+        android:paddingStart="@dimen/dimen_30dp"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        app:customAssetFont="gotham_rounded_medium"
+        breeze:textKey="surveys_thank_you_feedback"
+        tools:text="Thank you for your feedback" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/subtitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:paddingEnd="@dimen/dimen_30dp"
+        android:paddingStart="@dimen/dimen_30dp"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:customAssetFont="proxima_nova_regular"
+        breeze:textKey="surveys_let_us_know"
+        tools:text="Please let us know why you weren't as satisfied as possible" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+        android:id="@+id/noThanksButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/dimen_10dp"
+        android:background="@drawable/round_white_border"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        breeze:textKey="surveys_no_thank_you"
+        tools:text="No, thank you" />
+
+    <LinearLayout
+        android:id="@+id/socialNetworksLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/noThanksButton"
+        android:layout_below="@id/subtitleTextView"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/firstRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:layout_marginEnd="@dimen/dimen_20dp"
+            android:layout_marginStart="@dimen/dimen_20dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:orientation="horizontal">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/secondRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dimen_20dp"
+            android:layout_marginStart="@dimen/dimen_20dp"
+            android:layout_marginTop="@dimen/dimen_5dp"
+            android:orientation="horizontal">
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/negativeFeedbackLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/noThanksButton"
+        android:layout_below="@id/subtitleTextView"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/feedbackEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dimen_30dp"
+            android:layout_marginStart="@dimen/dimen_30dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:background="@drawable/round_white_background"
+            android:gravity="start|top"
+            android:lines="7"
+            android:padding="@dimen/dimen_10dp"
+            android:textColor="@color/lightSlateGray"
+            android:textSize="16sp"
+            tools:text="Hello, the only thing that i didnt like was that everyone seemed really distracted." />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/submitButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:layout_marginStart="@dimen/dimen_10dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:background="@drawable/round_white_background"
+            android:textColor="@color/lemonGreen"
+            android:textSize="16sp"
+            breeze:textKey="survey.form.button.title.submit"
+            tools:text="Submit" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/toolbar_layout"
+        layout="@layout/toolbar_responsibility" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/practiceNameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar_layout"
+        android:padding="@dimen/dimen_10dp"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/text_size_20sp"
+        tools:text="Hill Valley Heart Clinic" />
+
+    <com.marcok.stepprogressbar.StepProgressBar
+        android:id="@+id/surveyProgressBarIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimen_1dp"
+        android:layout_below="@id/practiceNameTextView"
+        app:activeDotColor="@color/colorPrimary"
+        app:activeDotIcon="@drawable/circle_indicator_blue"
+        app:activeDotIndex="-1"
+        app:dotSize="10dp"
+        app:inactiveDotColor="@color/colorPrimary"
+        app:inactiveDotIcon="@drawable/circle_indicator_gray"
+        app:numberDots="5"
+        app:spacing="12dp" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+        android:id="@+id/submitButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
+    <com.carecloud.carepaylibray.common.NonSwipeableViewPager
+        android:id="@+id/surveyViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/submitButton"
+        android:layout_below="@id/surveyProgressBarIndicator"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true" />
+
+</RelativeLayout>

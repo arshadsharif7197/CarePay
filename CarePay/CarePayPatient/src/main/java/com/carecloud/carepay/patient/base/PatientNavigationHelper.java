@@ -19,6 +19,7 @@ import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistor
 import com.carecloud.carepay.patient.retail.activities.RetailActivity;
 import com.carecloud.carepay.patient.selectlanguage.SelectLanguageActivity;
 import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
+import com.carecloud.carepay.patient.survey.SurveyActivity;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
@@ -188,6 +189,10 @@ public class PatientNavigationHelper {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 context.startActivity(intent);
                 return;
+            case NavigationStateConstants.SURVEYS:
+                intent = new Intent(context, SurveyActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                break;
 
             case NavigationStateConstants.PATIENT_MY_HEALTH:
                 intent = new Intent(context, MyHealthActivity.class);
