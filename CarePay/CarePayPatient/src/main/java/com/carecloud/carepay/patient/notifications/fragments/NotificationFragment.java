@@ -100,11 +100,8 @@ public class NotificationFragment extends BaseFragment
         supportedNotificationTypes.add(NotificationType.appointment);
         supportedNotificationTypes.add(NotificationType.pending_forms);
         supportedNotificationTypes.add(NotificationType.payments);
-<<<<<<< HEAD
         supportedNotificationTypes.add(NotificationType.pending_survey);
-=======
         supportedNotificationTypes.add(NotificationType.secure_message);
->>>>>>> QA
         setHasOptionsMenu(true);
         Bundle args = getArguments();
         notificationsDTO = DtoHelper.getConvertedDTO(NotificationsDTO.class, args);
