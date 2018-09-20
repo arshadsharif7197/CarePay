@@ -99,7 +99,10 @@ public class NotificationActivity extends MenuPatientActivity
                 callConsentFormsScreen(notificationItem);
                 break;
             case pending_survey:
-                
+                if (notificationItem.getPayload().getReadStatus() == NotificationStatus.unread) {
+                    markNotificationRead(notificationItem);
+                }
+                callSurveyService(notificationItem);
                 break;
             case payments:
 
@@ -108,6 +111,33 @@ public class NotificationActivity extends MenuPatientActivity
                 //todo handle other notification types
                 break;
         }
+    }
+
+    private void callSurveyService(final NotificationItem notificationItem) {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", notificationItem.getMetadata().getPracticeMgmt());
+        queryMap.put("practice_id", notificationItem.getMetadata().getPracticeId());
+        queryMap.put("appointment_id", notificationItem.getPayload().getPendingSurvey().getMetadata().getAppointmentId());
+        getWorkflowServiceHelper().execute(notificationsDTO.getMetadata().getLinks().getPendingSurvey(),
+                new WorkflowServiceCallback() {
+                    @Override
+                    public void onPreExecute() {
+                        showProgressDialog();
+                    }
+
+                    @Override
+                    public void onPostExecute(WorkflowDTO workflowDTO) {
+                        hideProgressDialog();
+                        navigateToWorkflow(workflowDTO);
+                    }
+
+                    @Override
+                    public void onFailure(String exceptionMessage) {
+                        hideProgressDialog();
+                        showErrorNotification(exceptionMessage);
+                        Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+                    }
+                }, queryMap);
     }
 
     private void callConsentFormsScreen(final NotificationItem notificationItem) {

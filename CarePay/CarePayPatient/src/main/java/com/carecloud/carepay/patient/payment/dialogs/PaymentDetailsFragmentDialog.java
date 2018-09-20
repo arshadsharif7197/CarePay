@@ -271,7 +271,6 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
     protected boolean isPaymentPlanAvailable(String practiceId, double balance) {
         if (practiceId != null) {
             PaymentsPayloadSettingsDTO payloadSettingsDTO = paymentReceiptModel.getPaymentPayload().getPaymentSetting(practiceId);
-            if (practiceId.equals(payloadSettingsDTO.getMetadata().getPracticeId())) {
                 PaymentsSettingsPaymentPlansDTO paymentPlanSettings = payloadSettingsDTO.getPayload().getPaymentPlans();
                 if (!paymentPlanSettings.isPaymentPlansEnabled()) {
                     return false;
@@ -294,7 +293,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                         }
                         break;//don't need to continue going through these rules
                     }
-                    break;//don't need to continue going through these rules
+//                    break;//don't need to continue going through these rules
                 }
 
                 //check if balance can be added to existing
@@ -307,7 +306,6 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                     mustAddToExisting = true;
                     return true;
                 }
-            }
         }
         return false;
     }
