@@ -44,12 +44,16 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         void notificationSelected(NotificationItem notificationItem);
 
         void undoDeleteNotification(SwipeViewHolder viewHolder);
+
+        UserPracticeDTO getUserPracticeById(String practiceId);
     }
 
     private Context context;
     private List<NotificationItem> notificationItems;
     private SelectNotificationCallback callback;
     private List<NotificationItem> removeItems = new ArrayList<>();
+    private boolean isLoading;
+    private static final int VIEW_TYPE_LOADING = 100;
 
     /**
      * Constructor
@@ -80,22 +84,41 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     }
 
     @Override
+    public int getItemViewType(int position) {
+        if (position >= notificationItems.size()) {
+            return VIEW_TYPE_LOADING;
+        }
+        return 0;
+    }
+
+    @Override
     public NotificationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.notification_list_item, parent, false);
+        View view;
+        if (viewType == VIEW_TYPE_LOADING) {
+            view = inflater.inflate(R.layout.item_loading, parent, false);
+        } else {
+            view = inflater.inflate(R.layout.notification_list_item, parent, false);
+        }
         return new NotificationViewHolder(view);
     }
 
     @Override
     public int getItemCount() {
+        if (isLoading && !notificationItems.isEmpty()) {
+            return notificationItems.size() + 1;
+        }
         return notificationItems.size();
     }
 
     @Override
     public void onBindViewHolder(final NotificationViewHolder holder, int position) {
+        if (position >= notificationItems.size()) {
+            return;
+        }
+
         final NotificationItem notificationItem = notificationItems.get(position);
         NotificationType notificationType = notificationItem.getMetadata().getNotificationType();
-
         resetViews(holder);
         if (notificationType != null) {
             switch (notificationType) {
@@ -110,6 +133,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                     break;
                 case pending_survey:
                     displayPendingSurvey(holder, notificationItem);
+                    break;
+                case secure_message:
+                    displaySecureMessageNotification(holder, notificationItem);
+
                     break;
                 default:
                 case appointment:
@@ -158,10 +185,34 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                     pivot, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             holder.message.setText(spannableString);
         }
-
     }
 
-    private void displayPendingFormNotification(NotificationViewHolder holder, NotificationItem notificationItem) {
+    private void displaySecureMessageNotification(NotificationViewHolder holder,
+                                                  NotificationItem notificationItem) {
+        UserPracticeDTO practiceDTO = callback.getUserPracticeById(notificationItem.getMetadata().getPracticeId());
+        String practiceName = practiceDTO.getPracticeName();
+        holder.initials.setText(StringUtil.getShortName(practiceName));
+        holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
+        holder.initials.setBackgroundResource(R.drawable.round_list_tv_dark_gray);
+
+        holder.header.setText(Label.getLabel("notifications.notificationList.secureMessages.header"));
+        holder.header.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+
+        holder.message.setTextColor(ContextCompat.getColor(context, R.color.charcoal));
+
+        String messageString = Label.getLabel("notifications.notificationList.secureMessages.message");
+        SpannableStringBuilder stringBuilder = new SpannableStringBuilder(String.format(messageString, practiceName));
+        stringBuilder.setSpan(new CarePayCustomSpan(context,
+                        CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD), messageString.length(), stringBuilder.length(),
+                Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        holder.message.setText(stringBuilder);
+
+        holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_msg);
+        holder.cellAvatar.setVisibility(View.VISIBLE);
+    }
+
+    private void displayPendingFormNotification(NotificationViewHolder holder, NotificationItem
+            notificationItem) {
         holder.initials.setText(StringUtil.getShortName(notificationItem.getPayload().getPracticeName()));
         holder.initials.setTextColor(ContextCompat.getColor(context, R.color.lightning_yellow));
         holder.initials.setBackgroundResource(R.drawable.round_list_tv_yellow_border);
@@ -185,7 +236,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.message.setText(stringBuilder);
     }
 
-    private void displayPaymentNotification(NotificationViewHolder holder, NotificationItem notificationItem) {
+    private void displayPaymentNotification(NotificationViewHolder holder, NotificationItem
+            notificationItem) {
         int headerTextColor;
         String headerText;
         String messageText;
@@ -236,7 +288,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.message.setText(stringBuilder);
     }
 
-    private void displayCreditCardNotification(NotificationViewHolder holder, NotificationItem notificationItem) {
+    private void displayCreditCardNotification(NotificationViewHolder holder, NotificationItem
+            notificationItem) {
 
     }
 
@@ -419,5 +472,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             undoButton.setVisibility(View.VISIBLE);
             deleteButton.setVisibility(View.GONE);
         }
+    }
+
+    public void setLoading(boolean loading) {
+        this.isLoading = loading;
+        notifyDataSetChanged();
     }
 }

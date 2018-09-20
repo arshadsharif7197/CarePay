@@ -9,5 +9,6 @@ public enum NotificationType {
     payments,
     pending_forms,
     credit_card,
-    pending_survey
+    pending_survey,
+    secure_message
 }

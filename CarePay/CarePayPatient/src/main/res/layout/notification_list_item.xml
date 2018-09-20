@@ -131,6 +131,7 @@
                         android:id="@+id/notification_message"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_5dp"
                         android:ellipsize="end"
                         android:gravity="start|center_vertical"
                         android:maxLines="3"

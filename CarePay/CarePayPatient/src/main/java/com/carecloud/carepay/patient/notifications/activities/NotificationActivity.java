@@ -107,6 +107,12 @@ public class NotificationActivity extends MenuPatientActivity
             case payments:
 
                 break;
+            case secure_message:
+                if (notificationItem.getPayload().getReadStatus() == NotificationStatus.unread) {
+                    markNotificationRead(notificationItem);
+                }
+                callMessagesScreen(notificationItem);
+                break;
             default:
                 //todo handle other notification types
                 break;
@@ -141,7 +147,6 @@ public class NotificationActivity extends MenuPatientActivity
     }
 
     private void callConsentFormsScreen(final NotificationItem notificationItem) {
-        Map<String, String> queryMap = new HashMap<>();
         getWorkflowServiceHelper().execute(getTransitionForms(), new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
@@ -162,7 +167,11 @@ public class NotificationActivity extends MenuPatientActivity
                 showErrorNotification(exceptionMessage);
                 Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
             }
-        }, queryMap);
+        });
+    }
+
+    private void callMessagesScreen(NotificationItem notificationItem){
+        displayMessagesScreen();
     }
 
     @Override

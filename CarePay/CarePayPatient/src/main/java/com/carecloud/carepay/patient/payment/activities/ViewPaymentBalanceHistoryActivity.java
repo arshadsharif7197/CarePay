@@ -757,8 +757,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void showCancelPaymentPlanConfirmDialog(ConfirmationCallback confirmationCallback) {
         ConfirmDialogFragment fragment = ConfirmDialogFragment
-                .newInstance(Label.getLabel("payments.cancelPaymentPlan.confirmDialog.title.cancelPaymentPlanTitle"),
-                        Label.getLabel("payments.cancelPaymentPlan.confirmDialog.message.cancelPaymentPlanMessage"),
+                .newInstance(Label.getLabel("payment.cancelPaymentPlan.confirmDialog.title.cancelPaymentPlanTitle"),
+                        Label.getLabel("payment.cancelPaymentPlan.confirmDialog.message.cancelPaymentPlanMessage"),
                         Label.getLabel("no"),
                         Label.getLabel("yes"));
         fragment.setCallback(confirmationCallback);

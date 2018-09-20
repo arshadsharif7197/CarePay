@@ -19,7 +19,8 @@
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/balancesAvatarTextView"
@@ -56,8 +57,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="start"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/textview_default_textsize"
-                    app:customAssetFont="proxima_nova_semi_bold"
+                    android:textSize="@dimen/text_size_22"
+                    app:customAssetFont="gotham_rounded_medium"
                     tools:text="$108.00"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -83,7 +84,8 @@
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:textSize="@dimen/textview_textsize"
-                app:customAssetFont="proxima_nova_semi_bold"
+                android:visibility="gone"
+                app:customAssetFont="proxima_nova_extra_bold"
                 tools:text="CareCloud Clinic"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -93,7 +95,7 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="start"
                 android:textColor="@color/lightSlateGray"
-                android:textSize="@dimen/textview_textsize"
+                android:textSize="@dimen/text_size_16"
                 android:maxLines="1"
                 android:ellipsize="end"
                 app:customAssetFont="proxima_nova_light"
