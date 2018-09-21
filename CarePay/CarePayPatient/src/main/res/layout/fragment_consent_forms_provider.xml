@@ -10,6 +10,7 @@
         android:id="@+id/emptyStateScreen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="@dimen/dimen_20dp"
         android:visibility="gone">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
