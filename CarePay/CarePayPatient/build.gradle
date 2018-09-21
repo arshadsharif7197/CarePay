@@ -136,8 +136,8 @@ dependencies {
     implementation project(':CarePayLibrary')
     implementation 'com.newrelic.agent.android:android-agent:5.12.3'
     // Android Pay
-    implementation 'com.google.android.gms:play-services-auth:10.2.1'
-    implementation 'com.google.android.gms:play-services-wallet:10.2.1'
+    implementation 'com.google.android.gms:play-services-auth:16.0.0'
+    implementation 'com.google.android.gms:play-services-wallet:16.0.0'
 
 
     // for testing
