@@ -76,6 +76,7 @@ public class WelcomeActivity extends FullScreenActivity {
 
     private int paymentAttempt = 0;
     private boolean isDisconnecting = false;
+    private boolean isConnecting = false;
     private boolean isResumed = false;
     private boolean hasNetworkFailed = false;
 
@@ -231,7 +232,10 @@ public class WelcomeActivity extends FullScreenActivity {
             public void run() {
                 isDisconnecting = false;
                 String id = applicationHelper.getApplicationPreferences().getDeviceId();
-                DeviceConnection.connect(WelcomeActivity.this, id, connectionCallback, connectionActionCallback);
+                if(!isConnecting) {
+                    isConnecting = true;
+                    DeviceConnection.connect(WelcomeActivity.this, id, connectionCallback, connectionActionCallback);
+                }
             }
         });
     }
@@ -357,6 +361,7 @@ public class WelcomeActivity extends FullScreenActivity {
 
         @Override
         public void onDeviceConnected(Device device) {
+            isConnecting = false;
             updateMessage(getString(R.string.welcome_waiting));
             connectedDevice = device;
             connectedDevice.setMetadata(new Gson().toJsonTree(deviceMetadata));
@@ -367,8 +372,9 @@ public class WelcomeActivity extends FullScreenActivity {
         @Override
         public void onConnectionFailure(String errorMessage) {
             Log.d(TAG, "Connection Failure: " + errorMessage);
-
+            isConnecting = false;
             if(!hasNetworkFailed && isResumed) {
+                logNewRelicConnectionError(errorMessage);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -387,6 +393,8 @@ public class WelcomeActivity extends FullScreenActivity {
 
             if(failCount < MAX_FAIL_COUNT) {
                 failCount++;
+            }else{
+                displayConnectionError();
             }
         }
 
@@ -838,9 +846,13 @@ public class WelcomeActivity extends FullScreenActivity {
     private void logNewRelicConnectionError(String errorMessage){
         Map<String, Object> eventMap = new HashMap<>();
         eventMap.put("Error Message", errorMessage);
-        eventMap.put("Device ID", connectedDevice.getDeviceId());
-        eventMap.put("Device Name", connectedDevice.getName());
-        eventMap.put("Device Record", connectedDevice);
+        if(connectedDevice != null) {
+            eventMap.put("Device ID", connectedDevice.getDeviceId());
+            eventMap.put("Device Name", connectedDevice.getName());
+            eventMap.put("Device Record", connectedDevice);
+        } else {
+            eventMap.put("Startup Error", true);
+        }
 
         String eventType = "Connection Error";
 
