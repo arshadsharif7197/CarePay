@@ -154,17 +154,9 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         resetPlanParameters();
 
         if (!canEditPaymentPlan) {
-            TextView parameters = (TextView) view.findViewById(R.id.paymentPlanParametersTextView);
-            parameters.setText(Label.getLabel("payment_plan_edit_fields_disabled"));
             disableFields();
         }
 
-//        boolean canEditDates = canEditDate(paymentPlanDTO);
-//        if (!canEditDates) {
-//            frequencyCodeEditText.setEnabled(false);
-//            frequencyCodeEditText.setFocusable(false);
-//            frequencyCodeEditText.setFocusableInTouchMode(false);
-//        }
     }
 
     private void resetPlanParameters(){
@@ -515,40 +507,6 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         }
     };
 
-//    private boolean checkCanEditPaymentPlan() {
-//        PaymentsPayloadSettingsDTO paymentSettings = paymentsModel.getPaymentPayload()
-//                .getPaymentSetting(practiceId);
-//        if (paymentSettings == null) {
-//            return false;
-//        }
-//        for (PaymentSettingsBalanceRangeRule rule : paymentSettings.getPayload()
-//                .getPaymentPlans().getBalanceRangeRules()) {
-//            if (interval.equals(rule.getMaxDuration().getInterval())) {
-//                double minAmount = rule.getMinBalance().getValue();
-//                double maxAmount = rule.getMaxBalance().getValue();
-//                if (maxAmount >= paymentPlanDTO.getPayload().getAmount()
-//                        && minAmount <= paymentPlanDTO.getPayload().getAmount()) {
-//                    return true;
-//                }
-//            }
-//        }
-//        return false;
-//    }
-
-//    private boolean canEditDate(PaymentPlanDTO paymentPlan) {
-//        PaymentsPayloadSettingsDTO paymentSettings = paymentsModel.getPaymentPayload()
-//                .getPaymentSetting(practiceId);
-//        if (paymentSettings == null) {
-//            return false;
-//        }
-//        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = paymentSettings.getPayload().getPaymentPlans();
-//        String frequencyCode = paymentPlan.getPayload().getPaymentPlanDetails().getFrequencyCode();
-//        return (frequencyCode.equals(PaymentPlanModel.FREQUENCY_MONTHLY)
-//                && paymentPlanSettings.getFrequencyCode().getMonthly().isAllowed())
-//                || (frequencyCode.equals(PaymentPlanModel.FREQUENCY_WEEKLY)
-//                && paymentPlanSettings.getFrequencyCode().getWeekly().isAllowed())
-//                && paymentsModel.getPaymentPayload().hasApplicableRule(paymentPlanSettings, paymentPlanAmount, frequencyCode);
-//    }
 
     private boolean canCancelPlan(String practiceId) {
         PaymentsPayloadSettingsDTO paymentSettings = paymentsModel.getPaymentPayload()
@@ -561,6 +519,8 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     }
 
     private void disableFields() {
+        parametersTextView.setText(Label.getLabel("payment_plan_edit_fields_disabled"));
+
         installmentsEditText.setEnabled(false);
         installmentsEditText.setFocusable(false);
         installmentsEditText.setFocusableInTouchMode(false);
@@ -569,9 +529,6 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         amountPaymentEditText.setFocusable(false);
         amountPaymentEditText.setFocusableInTouchMode(false);
 
-//        frequencyCodeEditText.setEnabled(false); //todo figure out why we may need this
-//        frequencyCodeEditText.setFocusable(false);
-//        frequencyCodeEditText.setFocusableInTouchMode(false);
     }
 
     private void stubRangeRules() {
@@ -645,13 +602,14 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         return false;
     }
 
+    @Override
     protected void manageFrequencyChange(DemographicsToggleOption option, boolean refresh) {
         super.manageFrequencyChange(option, refresh);
         if(!option.isEnabled()){
+            stubRangeRules();
             disableFields();
             resetPlanParameters();
         }
-        enableCreatePlanButton();
     }
 
 }

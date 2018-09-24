@@ -93,7 +93,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
     protected boolean isCalculatingAmount = false;
     protected boolean isCalculatingTime = false;
     private String dialogTitle;
-    private TextView parametersTextView;
+    protected TextView parametersTextView;
     @PaymentSettingsBalanceRangeRule.IntervalRange
     protected String interval = PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS;
     protected String practiceId;
@@ -367,7 +367,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         if (applyRangeRules) {
             paymentPlanBalanceRules = getPaymentPlanSettings(interval);
         }
-        if (parametersTextView != null) {
+        if (parametersTextView != null && paymentPlanBalanceRules != null) {
             updatePaymentPlanParameters();
         }
         paymentDateEditText.setText(paymentDateOption.getLabel());
@@ -381,6 +381,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         amounthPayment = 0;
         installmentsInputLayout.setErrorEnabled(false);
         amountPaymentInputLayout.setErrorEnabled(false);
+        lastPaymentMessage.setVisibility(View.INVISIBLE);
     }
 
     private void updateHints() {
