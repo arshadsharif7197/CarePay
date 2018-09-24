@@ -17,7 +17,7 @@ public interface MessageNavigationCallback {
 
     void displayThreadMessages(Messages.Reply thread);
 
-    void getMessageThreads(long page, long size);
+    void getMessageThreads(long page, long size, boolean showShimmerEffect);
 
     void getThreadMessages(Messages.Reply thread);
 

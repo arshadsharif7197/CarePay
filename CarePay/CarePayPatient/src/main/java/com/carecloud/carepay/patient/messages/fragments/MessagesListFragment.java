@@ -16,8 +16,8 @@ import com.carecloud.carepay.patient.messages.MessageNavigationCallback;
 import com.carecloud.carepay.patient.messages.adapters.MessagesListAdapter;
 import com.carecloud.carepay.patient.messages.models.Messages;
 import com.carecloud.carepay.patient.messages.models.MessagingDataModel;
-import com.carecloud.carepaylibray.base.models.Paging;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.models.Paging;
 import com.carecloud.carepaylibray.customcomponents.SwipeViewHolder;
 import com.carecloud.carepaylibray.utils.SwipeHelper;
 
@@ -45,6 +45,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
     private boolean isPaging = false;
 
     private Handler handler;
+    private boolean dontLoad = false;
 
     @Override
     public void onAttach(Context context) {
@@ -93,7 +94,13 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
     public void onResume() {
         super.onResume();
         refreshing = true;
-        refreshList();
+        if (!dontLoad) {
+            refreshList(true);
+            dontLoad = true;
+        } else {
+            dontLoad = false;
+        }
+
     }
 
     private void setAdapters() {
@@ -119,8 +126,8 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         }
     }
 
-    private void refreshList() {
-        callback.getMessageThreads(0, 0);
+    private void refreshList(boolean showShimmerEffect) {
+        callback.getMessageThreads(0, 0, showShimmerEffect);
     }
 
     /**
@@ -182,7 +189,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         public void onRefresh() {
             refreshing = true;
             refreshLayoutView.setRefreshing(refreshing);
-            refreshList();
+            refreshList(false);
         }
     };
 
@@ -200,7 +207,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
                 int last = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
                 if (last > recyclerView.getAdapter().getItemCount() - BOTTOM_ROW_OFFSET && !isPaging) {
                     Paging paging = messagingDataModel.getMessages().getPaging();
-                    callback.getMessageThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage());
+                    callback.getMessageThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage(), false);
                     isPaging = true;
                 }
             }
@@ -234,11 +241,11 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
                 //reset delete thread
                 deleteThread = null;
                 Paging paging = messagingDataModel.getMessages().getPaging();
-                if(messagesListAdapter.getItemCount() == 0){
+                if (messagesListAdapter.getItemCount() == 0) {
                     setAdapters();
-                }else if(paging.getResultsPerPage() % messagesListAdapter.getItemCount() < BOTTOM_ROW_OFFSET &&
-                        hasMorePages()){
-                    callback.getMessageThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage());
+                } else if (paging.getResultsPerPage() % messagesListAdapter.getItemCount() < BOTTOM_ROW_OFFSET &&
+                        hasMorePages()) {
+                    callback.getMessageThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage(), false);
                 }
             }
         }
