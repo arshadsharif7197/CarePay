@@ -16,6 +16,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsToggleOption;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.MerchantServiceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
@@ -41,10 +42,8 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.payeezy.sdk.payeezytokenised.TransactionDataProvider;
 
-import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -98,15 +97,19 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         Bundle args = getArguments();
         paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
         practiceId = paymentPlanDTO.getMetadata().getPracticeId();
-        paymentPlanAmount = paymentPlanDTO.getPayload().getAmount();
         super.onCreate(icicle);
         setInterval();
         paymentPlanBalanceRules = getPaymentPlanSettings(interval);
-        currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
-        canEditPaymentPlan = checkCanEditPaymentPlan();
+        canEditPaymentPlan = frequencyOption.isEnabled();
         if (!canEditPaymentPlan) {
-            setValidationRules();
+            stubRangeRules();
         }
+    }
+
+    @Override
+    protected double calculateTotalAmount(double amount) {
+        return SystemUtil.safeSubtract(paymentPlanDTO.getPayload().getAmount(),
+                paymentPlanDTO.getPayload().getAmountPaid());
     }
 
     private void setInterval() {
@@ -138,13 +141,6 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
                     .getDayOfTheWeek(paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfWeek()));
         }
 
-        installmentsEditText.setText(String.valueOf(paymentPlanDTO.getPayload().getPaymentPlanDetails()
-                .getInstallments()));
-        installmentsEditText.getOnFocusChangeListener().onFocusChange(installmentsEditText, true);
-
-        amountPaymentEditText.setText(currencyFormatter.format(paymentPlanDTO.getPayload()
-                .getPaymentPlanDetails().getAmount()));
-
         TextView headerMessage = (TextView) view.findViewById(R.id.headerMessage);
         if (headerMessage != null) {
             headerMessage.setVisibility(View.GONE);
@@ -154,24 +150,33 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
             addExistingPlan.setVisibility(View.GONE);
         }
         setUpPaymentMethodLabel(view);
-        isCalculatingTime = false;
-        isCalculatingAmount = false;
+
+        resetPlanParameters();
+
         if (!canEditPaymentPlan) {
             TextView parameters = (TextView) view.findViewById(R.id.paymentPlanParametersTextView);
             parameters.setText(Label.getLabel("payment_plan_edit_fields_disabled"));
             disableFields();
         }
 
-        boolean canEditDates = canEditDate(paymentPlanDTO);
-        if (!canEditDates) {
-            frequencyCodeEditText.setEnabled(false);
-            frequencyCodeEditText.setFocusable(false);
-            frequencyCodeEditText.setFocusableInTouchMode(false);
+//        boolean canEditDates = canEditDate(paymentPlanDTO);
+//        if (!canEditDates) {
+//            frequencyCodeEditText.setEnabled(false);
+//            frequencyCodeEditText.setFocusable(false);
+//            frequencyCodeEditText.setFocusableInTouchMode(false);
+//        }
+    }
 
-            paymentDateEditText.setEnabled(false);
-            paymentDateEditText.setFocusable(false);
-            paymentDateEditText.setFocusableInTouchMode(false);
-        }
+    private void resetPlanParameters(){
+        installments = paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments() -
+                paymentPlanDTO.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
+        installmentsEditText.setText(String.valueOf(installments));
+        installmentsEditText.getOnFocusChangeListener().onFocusChange(installmentsEditText, true);
+
+        amountPaymentEditText.setText(currencyFormatter.format(paymentPlanDTO.getPayload()
+                .getPaymentPlanDetails().getAmount()));
+        isCalculatingTime = false;
+        isCalculatingAmount = false;
     }
 
     @Override
@@ -182,7 +187,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         view.findViewById(R.id.editButtonsLayout).setVisibility(View.VISIBLE);
         editPaymentPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 if (validateFields(true)) {
                     SystemUtil.hideSoftKeyboard(getContext(), view);
                     if (creditCard != null && creditCard.getCreditCardsId() == null) {
@@ -193,6 +198,9 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
                 }
             }
         });
+        //enable edit button if frequency is disabled since these fields would be locked
+        editPaymentPlanButton.setEnabled(validateFields(false) ||
+                !frequencyOption.isEnabled());
         Button cancelPaymentPlanButton = (Button) view.findViewById(R.id.cancelPaymentPlanButton);
         cancelPaymentPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -245,7 +253,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         }, queryMap);
     }
 
-    protected void setUpPaymentMethodLabel(View view) {
+    private void setUpPaymentMethodLabel(View view) {
         PaymentCreditCardsPayloadDTO creditCard = null;
         for (PaymentsPatientsCreditCardsPayloadListDTO creditCardModel :
                 paymentsModel.getPaymentPayload().getPatientCreditCards()) {
@@ -294,7 +302,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
 
     protected void updatePaymentPlan() {
         PaymentPlanPostModel postModel = new PaymentPlanPostModel();
-        postModel.setAmount(paymentPlanAmount);
+        postModel.setAmount(paymentPlanDTO.getPayload().getAmount());
         postModel.setExecution(paymentPlanDTO.getPayload().getExecution());
         postModel.setLineItems(paymentPlanDTO.getPayload().getLineItems());
         postModel.setDescription(planNameEditText.getText().toString());
@@ -316,7 +324,8 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         PaymentPlanModel paymentPlanModel = new PaymentPlanModel();
         paymentPlanModel.setAmount(amounthPayment);
         paymentPlanModel.setFrequencyCode(frequencyOption.getName());
-        paymentPlanModel.setInstallments(installments);
+        paymentPlanModel.setInstallments((int) SystemUtil.safeAdd(installments,
+                paymentPlanDTO.getPayload().getPaymentPlanDetails().getFilteredHistory().size()));
         paymentPlanModel.setEnabled(true);
 
         if (frequencyOption.getName().equals(PaymentPlanModel.FREQUENCY_MONTHLY)) {
@@ -506,39 +515,40 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         }
     };
 
-    private boolean checkCanEditPaymentPlan() {
-        for (PaymentsPayloadSettingsDTO settings : paymentsModel.getPaymentPayload().getPaymentSettings()) {
-            if (settings.getMetadata().getPracticeId().equals(practiceId)) {
-                for (PaymentSettingsBalanceRangeRule rule : settings.getPayload()
-                        .getPaymentPlans().getBalanceRangeRules()) {
-                    if (interval.equals(rule.getMaxDuration().getInterval())) {
-                        double minAmount = rule.getMinBalance().getValue();
-                        double maxAmount = rule.getMaxBalance().getValue();
-                        if (maxAmount >= paymentPlanDTO.getPayload().getAmount()
-                                && minAmount <= paymentPlanDTO.getPayload().getAmount()) {
-                            return true;
-                        }
+//    private boolean checkCanEditPaymentPlan() {
+//        PaymentsPayloadSettingsDTO paymentSettings = paymentsModel.getPaymentPayload()
+//                .getPaymentSetting(practiceId);
+//        if (paymentSettings == null) {
+//            return false;
+//        }
+//        for (PaymentSettingsBalanceRangeRule rule : paymentSettings.getPayload()
+//                .getPaymentPlans().getBalanceRangeRules()) {
+//            if (interval.equals(rule.getMaxDuration().getInterval())) {
+//                double minAmount = rule.getMinBalance().getValue();
+//                double maxAmount = rule.getMaxBalance().getValue();
+//                if (maxAmount >= paymentPlanDTO.getPayload().getAmount()
+//                        && minAmount <= paymentPlanDTO.getPayload().getAmount()) {
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
+//    }
 
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean canEditDate(PaymentPlanDTO paymentPlan) {
-        PaymentsPayloadSettingsDTO paymentSettings = paymentsModel.getPaymentPayload()
-                .getPaymentSetting(paymentPlan.getMetadata().getPracticeId());
-        if (paymentSettings == null) {
-            return false;
-        }
-        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = paymentSettings.getPayload().getPaymentPlans();
-        String frequencyCode = paymentPlan.getPayload().getPaymentPlanDetails().getFrequencyCode();
-        return (frequencyCode.equals(PaymentPlanModel.FREQUENCY_MONTHLY)
-                && paymentPlanSettings.getFrequencyCode().getMonthly().isAllowed())
-                || (frequencyCode.equals(PaymentPlanModel.FREQUENCY_WEEKLY)
-                && paymentPlanSettings.getFrequencyCode().getWeekly().isAllowed());
-    }
+//    private boolean canEditDate(PaymentPlanDTO paymentPlan) {
+//        PaymentsPayloadSettingsDTO paymentSettings = paymentsModel.getPaymentPayload()
+//                .getPaymentSetting(practiceId);
+//        if (paymentSettings == null) {
+//            return false;
+//        }
+//        PaymentsSettingsPaymentPlansDTO paymentPlanSettings = paymentSettings.getPayload().getPaymentPlans();
+//        String frequencyCode = paymentPlan.getPayload().getPaymentPlanDetails().getFrequencyCode();
+//        return (frequencyCode.equals(PaymentPlanModel.FREQUENCY_MONTHLY)
+//                && paymentPlanSettings.getFrequencyCode().getMonthly().isAllowed())
+//                || (frequencyCode.equals(PaymentPlanModel.FREQUENCY_WEEKLY)
+//                && paymentPlanSettings.getFrequencyCode().getWeekly().isAllowed())
+//                && paymentsModel.getPaymentPayload().hasApplicableRule(paymentPlanSettings, paymentPlanAmount, frequencyCode);
+//    }
 
     private boolean canCancelPlan(String practiceId) {
         PaymentsPayloadSettingsDTO paymentSettings = paymentsModel.getPaymentPayload()
@@ -559,12 +569,13 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         amountPaymentEditText.setFocusable(false);
         amountPaymentEditText.setFocusableInTouchMode(false);
 
-        frequencyCodeEditText.setEnabled(false);
-        frequencyCodeEditText.setFocusable(false);
-        frequencyCodeEditText.setFocusableInTouchMode(false);
+//        frequencyCodeEditText.setEnabled(false); //todo figure out why we may need this
+//        frequencyCodeEditText.setFocusable(false);
+//        frequencyCodeEditText.setFocusableInTouchMode(false);
     }
 
-    private void setValidationRules() {
+    private void stubRangeRules() {
+        //stub rules when no active rule is found for editing
         if (paymentPlanBalanceRules == null) {
             paymentPlanBalanceRules = new PaymentSettingsBalanceRangeRule();
         }
@@ -582,13 +593,11 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     }
 
     @Override
-    protected List<DemographicsOption> generateFrequencyOptions(PaymentsSettingsPaymentPlansDTO paymentPlansRules) {
-        List<DemographicsOption> options = super.generateFrequencyOptions(paymentPlansRules);
+    protected List<DemographicsToggleOption> generateFrequencyOptions(PaymentsSettingsPaymentPlansDTO paymentPlansRules) {
+        List<DemographicsToggleOption> options = super.generateFrequencyOptions(paymentPlansRules);
         if (!frequencyOptionsContainsPaymentPlanFrequency(options)) {
-            options.clear();
-        }
-        if (options.isEmpty()) {
-            frequencyOption = new DemographicsOption();
+            //add it as a disabled option
+            frequencyOption = new DemographicsToggleOption();
             frequencyOption.setLabel(StringUtil.capitalize(paymentPlanDTO.getPayload()
                     .getPaymentPlanDetails().getFrequencyCode()));
             frequencyOption.setName(paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode());
@@ -606,11 +615,14 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
                     paymentDateOption = dayOfWeekOptions.get(paymentPlanDTO.getPayload()
                             .getPaymentPlanDetails().getDayOfWeek());
                 }
-
                 selectedDateOptions = dayOfWeekOptions;
             }
+            frequencyOption.setEnabled(paymentsModel.getPaymentPayload()
+                    .hasApplicableRule(paymentPlansRules, paymentPlanAmount,
+                            paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode()));
+            options.add(frequencyOption);
         } else {
-            for (DemographicsOption frequencyOption : options) {
+            for (DemographicsToggleOption frequencyOption : options) {
                 if (frequencyOption.getName()
                         .equals(paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode())) {
                     this.frequencyOption = frequencyOption;
@@ -623,7 +635,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         return options;
     }
 
-    private boolean frequencyOptionsContainsPaymentPlanFrequency(List<DemographicsOption> frequencyOptions) {
+    private boolean frequencyOptionsContainsPaymentPlanFrequency(List<DemographicsToggleOption> frequencyOptions) {
         for (DemographicsOption frequency : frequencyOptions) {
             if (frequency.getName().equals(paymentPlanDTO.getPayload()
                     .getPaymentPlanDetails().getFrequencyCode())) {
@@ -632,4 +644,14 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         }
         return false;
     }
+
+    protected void manageFrequencyChange(DemographicsToggleOption option, boolean refresh) {
+        super.manageFrequencyChange(option, refresh);
+        if(!option.isEnabled()){
+            disableFields();
+            resetPlanParameters();
+        }
+        enableCreatePlanButton();
+    }
+
 }
