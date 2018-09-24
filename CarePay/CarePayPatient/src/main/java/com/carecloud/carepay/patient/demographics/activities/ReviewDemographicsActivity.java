@@ -12,9 +12,9 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
-import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepay.patient.payment.PatientPaymentPresenter;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -24,6 +24,7 @@ import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenterImpl;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.FormsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
@@ -230,7 +231,9 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     public void completeCheckIn(WorkflowDTO workflowDTO) {
         SystemUtil.showSuccessToast(getContext(), Label.getLabel("confirm_appointment_checkin"));
         finish();
-        navigateToWorkflow(workflowDTO);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(CarePayConstants.REFRESH, true);
+        navigateToWorkflow(workflowDTO, bundle);
         checkinCompleted();
     }
 
