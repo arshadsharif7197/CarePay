@@ -58,7 +58,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     //demographics nav
     private int currentDemographicStep = 1;
 
-    private boolean startCheckin = false;
+    private boolean startCheckIn = false;
     public String appointmentId;
 
     private Fragment currentFragment;
@@ -122,7 +122,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     public void displayFragment(WorkflowDTO workflowDTO) {
-        startCheckin = true;
+        startCheckIn = true;
         boolean isResume = true;
         boolean isGuest = !ValidationHelper.isValidEmail(((ISession) demographicsView.getContext()).getAppAuthorizationHelper().getCurrUser());
         String[] params = {getString(R.string.param_practice_id), getString(R.string.param_appointment_id), getString(R.string.param_appointment_type), getString(R.string.param_is_guest)};
@@ -156,7 +156,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             MixPanelUtil.logEvent(getString(R.string.event_checkin_resumed), params, values);
         }
         MixPanelUtil.startTimer(getString(R.string.timer_checkin));
-        startCheckin = false;
+        startCheckIn = false;
     }
 
     /**
@@ -181,7 +181,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         }
 
         transaction.replace(R.id.root_layout, fragment, tag);
-        if (addToBackStack && !startCheckin) {
+        if (addToBackStack && !startCheckIn) {
             transaction.addToBackStack(tag);
         }
         transaction.commitAllowingStateLoss();

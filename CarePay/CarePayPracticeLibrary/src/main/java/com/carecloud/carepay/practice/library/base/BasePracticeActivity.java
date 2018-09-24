@@ -216,8 +216,8 @@ public abstract class BasePracticeActivity extends BaseActivity
                             .getAsJsonObject("language_metadata").get("code").getAsString());
                 }
                 if (callback != null) {
-                    callback.callback();
                     hideProgressDialog();
+                    callback.callback();
                 } else {
                     recreate();
                     hideProgressDialog();

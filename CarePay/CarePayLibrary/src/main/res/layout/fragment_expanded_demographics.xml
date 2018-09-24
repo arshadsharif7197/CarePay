@@ -444,8 +444,7 @@
     <FrameLayout
         android:id="@+id/referralSourceDemographicsLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:layout_height="wrap_content">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/referralSourceInputLayout"
