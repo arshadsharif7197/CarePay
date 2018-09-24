@@ -410,4 +410,9 @@ public class NotificationFragment extends BaseFragment
         return filteredList;
     }
 
+    @Override
+    public void onDestroy() {
+        handler.removeCallbacks(deleteNotificationRunnable);
+        super.onDestroy();
+    }
 }
