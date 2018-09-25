@@ -19,7 +19,7 @@ public class SurveyQuestionDTO {
     private String order;
     @Expose
     @SerializedName("rate")
-    private transient float rate;
+    private float rate;
 
     public String getUuid() {
         return uuid;

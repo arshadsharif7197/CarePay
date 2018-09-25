@@ -97,8 +97,8 @@
 
                         <ImageView
                             android:id="@+id/providerPicImageView"
-                            android:layout_width="@dimen/payment_details_dialog_icon_size"
-                            android:layout_height="@dimen/payment_details_dialog_icon_size"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
                             android:visibility="gone" />
 

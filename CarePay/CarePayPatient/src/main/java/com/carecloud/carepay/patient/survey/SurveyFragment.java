@@ -9,14 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BackPressedFragment;
 import com.carecloud.carepay.patient.survey.model.SurveyDTO;
 import com.carecloud.carepay.patient.survey.model.SurveyModel;
-import com.carecloud.carepay.patient.survey.model.SurveyQuestionDTO;
+import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.common.NonSwipeableViewPager;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
@@ -33,9 +33,15 @@ public class SurveyFragment extends BaseFragment implements BackPressedFragment 
     private int currentQuestion;
     private NonSwipeableViewPager viewPager;
     private Toolbar toolbar;
+    private Button submitButton;
+    private TextView progressIndicatorTextView;
 
-    public static SurveyFragment newInstance() {
-        return new SurveyFragment();
+    public static SurveyFragment newInstance(String patientId) {
+        Bundle args = new Bundle();
+        args.putString(CarePayConstants.PATIENT_ID, patientId);
+        SurveyFragment fragment = new SurveyFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -57,7 +63,9 @@ public class SurveyFragment extends BaseFragment implements BackPressedFragment 
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_survey, container, false);
     }
 
@@ -75,33 +83,26 @@ public class SurveyFragment extends BaseFragment implements BackPressedFragment 
 
         toolbar = setUpToolbar(view);
 
-        Button submitButton = (Button) view.findViewById(R.id.submitButton);
+        submitButton = (Button) view.findViewById(R.id.submitButton);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (currentQuestion < surveyModel.getQuestions().size() - 1) {
-                    saveRate(surveyModel);
                     changeToNextQuestion();
+                    if (currentQuestion == surveyModel.getQuestions().size() - 1) {
+                        submitButton.setText(Label.getLabel("survey.form.button.title.submit"));
+                    }
+                    updateProgressTextView();
                 } else {
-                    callback.addFragment(SurveyResultFragment.newInstance(), true);
+                    Bundle args = getArguments();
+                    callback.addFragment(SurveyResultFragment.newInstance(args.getString(CarePayConstants.PATIENT_ID))
+                            , true);
                 }
             }
         });
+        progressIndicatorTextView = (TextView) view.findViewById(R.id.progressIndicatorTextView);
+        updateProgressTextView();
 
-    }
-
-    protected void saveRate(SurveyModel surveyModel) {
-        SurveyQuestionDTO question = surveyModel.getQuestions().get(currentQuestion);
-        View view = viewPager.findViewWithTag(question.getUuid());
-        RatingBar ratingBar = (RatingBar) view.findViewById(R.id.surveyQuestionRatingBar);
-        question.setRate(ratingBar.getRating());
-    }
-
-    protected void changeToNextQuestion() {
-        currentQuestion++;
-        stepProgressBar.setCurrentProgressDot(currentQuestion);
-        toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-        viewPager.setCurrentItem(currentQuestion, true);
     }
 
     @NonNull
@@ -114,24 +115,38 @@ public class SurveyFragment extends BaseFragment implements BackPressedFragment 
             public void onClick(View view) {
                 if (currentQuestion > 0) {
                     changeToPreviousQuestion();
+                    updateProgressTextView();
                 } else {
                     getActivity().onBackPressed();
                 }
             }
         });
         TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
-        //TODO change this
-        title.setText("Survey");
+        title.setText(Label.getLabel("survey.form.screen.title.survey"));
         return toolbar;
     }
 
-    protected void changeToPreviousQuestion() {
+    private void changeToNextQuestion() {
+        currentQuestion++;
+        stepProgressBar.setCurrentProgressDot(currentQuestion);
+        toolbar.setNavigationIcon(R.drawable.icn_nav_back);
+        viewPager.setCurrentItem(currentQuestion, true);
+    }
+
+    private void changeToPreviousQuestion() {
         currentQuestion--;
         stepProgressBar.setCurrentProgressDot(currentQuestion);
         viewPager.setCurrentItem(currentQuestion, true);
         if (currentQuestion == 0) {
             toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);
         }
+        submitButton.setText(Label.getLabel("survey.form.button.title.nextQuestion"));
+    }
+
+    private void updateProgressTextView() {
+        progressIndicatorTextView.setText(String
+                .format(Label.getLabel("survey.form.pageIndicator.text.questionNumberOfNumber"),
+                        currentQuestion + 1, surveyDto.getPayload().getSurvey().getQuestions().size()));
     }
 
     @Override
@@ -144,6 +159,7 @@ public class SurveyFragment extends BaseFragment implements BackPressedFragment 
     public boolean onBackPressed() {
         if (currentQuestion > 0) {
             changeToPreviousQuestion();
+            updateProgressTextView();
             return true;
         }
         return false;

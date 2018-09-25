@@ -10,14 +10,14 @@ import com.google.gson.annotations.SerializedName;
 public class SurveyTransitions {
 
     @Expose
-    @SerializedName("sendSurvey")
-    private TransitionDTO sendSurvey = new TransitionDTO();
+    @SerializedName("save_survey_response")
+    private TransitionDTO saveSurvey = new TransitionDTO();
 
-    public TransitionDTO getSendSurvey() {
-        return sendSurvey;
+    public TransitionDTO getSaveSurvey() {
+        return saveSurvey;
     }
 
-    public void setSendSurvey(TransitionDTO sendSurvey) {
-        this.sendSurvey = sendSurvey;
+    public void setSaveSurvey(TransitionDTO saveSurvey) {
+        this.saveSurvey = saveSurvey;
     }
 }

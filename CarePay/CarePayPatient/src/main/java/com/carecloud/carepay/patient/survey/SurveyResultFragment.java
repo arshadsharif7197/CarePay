@@ -25,6 +25,7 @@ import com.carecloud.carepay.patient.survey.model.SurveyDTO;
 import com.carecloud.carepay.patient.survey.model.SurveyModel;
 import com.carecloud.carepay.patient.survey.model.SurveyQuestionDTO;
 import com.carecloud.carepay.patient.survey.model.SurveySettings;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -46,9 +47,12 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
     private FragmentActivityInterface callback;
     private SurveyDTO surveyDto;
     private boolean showFeedBackLayout;
+    private Button noThanksButton;
+    private TextView subtitleTextView;
 
-    public static SurveyResultFragment newInstance() {
+    public static SurveyResultFragment newInstance(String patientId) {
         Bundle args = new Bundle();
+        args.putString(CarePayConstants.PATIENT_ID, patientId);
         SurveyResultFragment fragment = new SurveyResultFragment();
         fragment.setArguments(args);
         return fragment;
@@ -69,10 +73,12 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         super.onCreate(icicle);
         surveyDto = (SurveyDTO) callback.getDto();
         float average = getRateAverage(surveyDto.getPayload().getSurvey());
-        if (average >= surveyDto.getPayload().getSurveySettings().getSatisfiedRate()) {
-            sendResponse(surveyDto.getPayload().getSurvey(), false);
-        } else {
-            showFeedBackLayout = true;
+        if (!surveyDto.getPayload().getSurvey().isAlreadyFilled()) {
+            if (average >= surveyDto.getPayload().getSurveySettings().getSatisfiedRate()) {
+                sendResponse(surveyDto.getPayload().getSurvey(), false, false);
+            } else {
+                showFeedBackLayout = true;
+            }
         }
     }
 
@@ -85,26 +91,50 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button noThanksButton = (Button) view.findViewById(R.id.noThanksButton);
-        if (showFeedBackLayout) {
-            view.findViewById(R.id.negativeFeedbackLayout).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.socialNetworksLayout).setVisibility(View.GONE);
-            noThanksButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    sendResponse(surveyDto.getPayload().getSurvey(), true);
-                }
-            });
-        } else {
-            displaySocialNetworksLinks(view);
-            TextView subtitleTextView = (TextView) view.findViewById(R.id.subtitleTextView);
-            subtitleTextView.setText(Label.getLabel("surveys_click_spread_word"));
-            noThanksButton.setOnClickListener(new View.OnClickListener() {
+        noThanksButton = (Button) view.findViewById(R.id.noThanksButton);
+        subtitleTextView = (TextView) view.findViewById(R.id.subtitleTextView);
+        if (surveyDto.getPayload().getSurvey().isAlreadyFilled()) {
+            Button okButton = (Button) view.findViewById(R.id.okButton);
+            okButton.setText(Label.getLabel("go_back_label"));
+            okButton.setBackgroundResource(R.drawable.round_white_border);
+            okButton.setTextColor(getResources().getColor(R.color.white));
+            okButton.setVisibility(View.VISIBLE);
+            okButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     getActivity().finish();
                 }
             });
+            noThanksButton.setVisibility(View.GONE);
+            view.findViewById(R.id.fakeView).setVisibility(View.VISIBLE);
+            subtitleTextView.setText(Label.getLabel("survey.successScreen.subtitle.message.alreadyFilled"));
+        } else {
+            if (showFeedBackLayout) {
+                view.findViewById(R.id.negativeFeedbackLayout).setVisibility(View.VISIBLE);
+                noThanksButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        sendResponse(surveyDto.getPayload().getSurvey(), false, true);
+                    }
+                });
+                Button submitButton = (Button) view.findViewById(R.id.submitButton);
+                submitButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        sendResponse(surveyDto.getPayload().getSurvey(), true, true);
+                    }
+                });
+            } else {
+                view.findViewById(R.id.socialNetworksLayout).setVisibility(View.VISIBLE);
+                displaySocialNetworksLinks(view);
+                subtitleTextView.setText(Label.getLabel("surveys_click_spread_word"));
+                noThanksButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getActivity().finish();
+                    }
+                });
+            }
         }
     }
 
@@ -113,7 +143,22 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         if (settings.getNetworkLinks().isEnable()
                 && !settings.getNetworkLinks().getLinks().isEmpty()) {
             createSocialLinkViews(view, settings);
+        } else {
+            showOkButton();
         }
+    }
+
+    private void showOkButton() {
+        noThanksButton.setVisibility(View.GONE);
+        subtitleTextView.setVisibility(View.GONE);
+        Button okButton = (Button) getView().findViewById(R.id.okButton);
+        okButton.setVisibility(View.VISIBLE);
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
     }
 
     private void createSocialLinkViews(View view, SurveySettings settings) {
@@ -124,7 +169,9 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
 
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
         LinearLayout firstRow = (LinearLayout) view.findViewById(R.id.firstRow);
+        firstRow.removeAllViews();
         LinearLayout secondRow = (LinearLayout) view.findViewById(R.id.secondRow);
+        secondRow.removeAllViews();
         LinearLayout row = firstRow;
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ActionBar.LayoutParams.WRAP_CONTENT);
         lp.weight = 1.0f;
@@ -146,6 +193,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
                     intent.setAction(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse(link.getUrl()));
                     startActivity(intent);
+                    noThanksButton.setText(Label.getLabel("survey.form.button.title.done"));
                 }
             });
             child.setLayoutParams(lp);
@@ -199,16 +247,15 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         return rate / dividend;
     }
 
-    private void sendResponse(SurveyModel survey, boolean attachFeedback) {
+    private void sendResponse(SurveyModel survey, boolean attachFeedback, final boolean showOkButton) {
         SurveyModel surveyResponse = createSurveyResponse(survey, attachFeedback);
         Gson gson = new Gson();
         String jsonResponse = gson.toJson(surveyResponse);
         Map<String, String> query = new HashMap<>();
         query.put("practice_id", survey.getMetadata().getPracticeId());
         query.put("practice_mgmt", survey.getMetadata().getPracticeMgmt());
-        query.put("appointment_id", survey.getMetadata().getAppointmentId());
-        query.put("survey_uuid", survey.getUuid());
-        TransitionDTO surveyTransition = surveyDto.getMetadata().getTransitions().getSendSurvey();
+        query.put("patient_id", getArguments().getString(CarePayConstants.PATIENT_ID));
+        TransitionDTO surveyTransition = surveyDto.getMetadata().getTransitions().getSaveSurvey();
         getWorkflowServiceHelper().execute(surveyTransition, new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
@@ -218,6 +265,11 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
+                if (showOkButton) {
+                    showOkButton();
+                } else {
+                    displaySocialNetworksLinks(getView());
+                }
             }
 
             @Override
@@ -233,17 +285,19 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
     private SurveyModel createSurveyResponse(@NonNull SurveyModel survey, boolean attachFeedback) {
         SurveyModel surveyResponse = new SurveyModel();
         surveyResponse.setUuid(survey.getUuid());
-        surveyResponse.setAppointmentId(survey.getMetadata().getAppointmentId());
         surveyResponse.setVersion(survey.getVersion());
+        surveyResponse.setAppointmentId(survey.getMetadata().getAppointmentId());
+        surveyResponse.setSurveyRating(survey.getSurveyRating());
         surveyResponse.setType(survey.getType());
+
         List<SurveyQuestionDTO> questions = new ArrayList<>();
         for (SurveyQuestionDTO question : survey.getQuestions()) {
             SurveyQuestionDTO questionResponse = new SurveyQuestionDTO();
-            questionResponse.setRate(question.getRate());
             questionResponse.setUuid(question.getUuid());
+            questionResponse.setRate(question.getRate());
             questions.add(questionResponse);
         }
-        surveyResponse.setQuestions(questions);
+        surveyResponse.setResponses(questions);
         if (attachFeedback) {
             EditText feedbackEditText = (EditText) getView().findViewById(R.id.feedbackEditText);
             surveyResponse.setFeedback(feedbackEditText.getText().toString());

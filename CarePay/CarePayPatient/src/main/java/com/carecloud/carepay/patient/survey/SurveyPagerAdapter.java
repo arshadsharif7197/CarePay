@@ -1,9 +1,11 @@
 package com.carecloud.carepay.patient.survey;
 
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
@@ -24,13 +26,34 @@ public class SurveyPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        SurveyQuestionDTO question = questions.get(position);
+        final SurveyQuestionDTO question = questions.get(position);
         LayoutInflater inflater = LayoutInflater.from(container.getContext());
         View view = inflater.inflate(R.layout.item_survey, container, false);
         TextView surveyQuestionTextView = (TextView) view.findViewById(R.id.surveyQuestionTextView);
         surveyQuestionTextView.setText(question.getTitle());
         container.addView(view);
         view.setTag(question.getUuid());
+        final RatingBar surveyQuestionRatingBar = (RatingBar) view.findViewById(R.id.surveyQuestionRatingBar);
+
+        surveyQuestionRatingBar.setNumStars(5);
+        surveyQuestionRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                if (fromUser) {
+                    question.setRate(rating);
+                }
+            }
+        });
+        surveyQuestionRatingBar.setStepSize((float) 0.5);
+        surveyQuestionRatingBar.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //Dont ask why i did this (SuperHack)
+                float num = question.getRate();
+                surveyQuestionRatingBar.setRating(Math.round(num));
+                surveyQuestionRatingBar.setRating(num);
+            }
+        }, 500);
         return view;
     }
 

@@ -29,14 +29,19 @@ public class SurveyModel {
     @SerializedName("feedback")
     private String feedback;
     @Expose
-    @SerializedName("survey_rating")
+    @SerializedName("survey_rate")
     private double surveyRating;
     @Expose
     @SerializedName("questions")
     private List<SurveyQuestionDTO> questions;
     @Expose
+    @SerializedName("responses")
+    private List<SurveyQuestionDTO> responses;
+    @Expose
     @SerializedName("metadata")
     private SurveyModelMetadata metadata;
+
+    private transient boolean alreadyFilled;
 
     public String getTitle() {
         return title;
@@ -108,5 +113,21 @@ public class SurveyModel {
 
     public void setSurveyRating(double surveyRating) {
         this.surveyRating = surveyRating;
+    }
+
+    public List<SurveyQuestionDTO> getResponses() {
+        return responses;
+    }
+
+    public void setResponses(List<SurveyQuestionDTO> responses) {
+        this.responses = responses;
+    }
+
+    public boolean isAlreadyFilled() {
+        return alreadyFilled;
+    }
+
+    public void setAlreadyFilled() {
+        alreadyFilled = true;
     }
 }
