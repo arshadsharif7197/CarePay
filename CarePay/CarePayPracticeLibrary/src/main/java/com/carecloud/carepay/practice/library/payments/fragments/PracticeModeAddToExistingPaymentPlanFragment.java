@@ -49,7 +49,6 @@ public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePa
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         paymentPlan = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, getArguments());
-        selectedBalance = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
         paymentPlanAmount = paymentPlan.getPayload().getAmount();
         minAmount = paymentPlan.getPayload().getAmount();
     }

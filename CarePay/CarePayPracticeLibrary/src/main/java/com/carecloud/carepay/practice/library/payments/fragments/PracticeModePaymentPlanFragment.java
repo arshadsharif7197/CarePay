@@ -85,6 +85,8 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
     @Override
     public void onCreate(Bundle icicle) {
         applyRangeRules = false;
+        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, getArguments());
+        selectedBalance = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
         super.onCreate(icicle);
     }
 
