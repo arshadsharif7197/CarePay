@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    android:orientation="vertical"
     android:paddingLeft="@dimen/list_apt_padding_right"
     android:paddingRight="@dimen/list_apt_padding_right">
 
@@ -33,7 +33,7 @@
                 android:src="@drawable/icn_placeholder_user_profile_png"
                 android:textColor="@color/lightSlateGray"
                 android:textSize="@dimen/apt_dl_text_big"
-                app:customAssetFont="gotham_rounded_medium"/>
+                app:customAssetFont="gotham_rounded_medium" />
         </RelativeLayout>
 
         <LinearLayout
@@ -58,7 +58,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/textview_default_textsize"
                     app:customAssetFont="proxima_nova_semi_bold"
-                    tools:text="$108.00"/>
+                    tools:text="$108.00" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/planInstallmentDetail"
@@ -69,20 +69,35 @@
                     android:textColor="@color/gray"
                     android:textSize="@dimen/text_size_13"
                     app:customAssetFont="proxima_nova_semi_bold"
-                    tools:text="$27.00/month"/>
+                    tools:text="$27.00/month" />
 
             </LinearLayout>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/balancesLocation"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="start"
+                android:textColor="@color/lightSlateGray"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="@dimen/textview_textsize"
+                app:customAssetFont="proxima_nova_semi_bold"
+                tools:text="CareCloud Clinic" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/planName"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:gravity="start"
                 android:textColor="@color/lightSlateGray"
                 android:textSize="@dimen/textview_textsize"
-                app:customAssetFont="proxima_nova_regular"
-                tools:text="CareCloud Clinic"/>
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:customAssetFont="proxima_nova_light"
+                tools:text="Best Plan Ever"/>
         </LinearLayout>
 
         <FrameLayout
@@ -92,13 +107,13 @@
 
             <ProgressBar
                 android:id="@+id/paymentPlanProgress"
+                style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                style="?android:attr/progressBarStyleHorizontal"
                 android:indeterminate="false"
                 android:max="100"
                 android:progress="25"
-                android:progressDrawable="@drawable/payment_plan_progress"/>
+                android:progressDrawable="@drawable/payment_plan_progress" />
 
             <ImageView
                 android:id="@+id/scheduledPaymentIcon"
@@ -115,7 +130,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_1dp"
-        android:layout_marginBottom="@dimen/dimen_3dp"
         android:background="@color/divider_color" />
 
 </LinearLayout>

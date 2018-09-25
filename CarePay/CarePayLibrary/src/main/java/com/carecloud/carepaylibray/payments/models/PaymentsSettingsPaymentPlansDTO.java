@@ -28,6 +28,10 @@ public class PaymentsSettingsPaymentPlansDTO {
     @Expose
     private boolean addBalanceToExisting = false;
 
+    @SerializedName("can_cancel_plan")
+    @Expose
+    private boolean canCancelPlan = false;
+
     @SerializedName("payment_methods")
     @Expose
     private List<PaymentsMethodsDTO> paymentMethods = new ArrayList<>();
@@ -106,5 +110,13 @@ public class PaymentsSettingsPaymentPlansDTO {
 
     public void setFrequencyCode(PaymentSettingFrequencyCode frequencyCode) {
         this.frequencyCode = frequencyCode;
+    }
+
+    public boolean isCanCancelPlan() {
+        return canCancelPlan;
+    }
+
+    public void setCanCancelPlan(boolean canCancelPlan) {
+        this.canCancelPlan = canCancelPlan;
     }
 }

@@ -33,4 +33,6 @@ public interface CheckinFlowCallback {
 
     AppointmentDTO getAppointment();
 
+    DemographicDTO getDemographicDTO();
+
 }

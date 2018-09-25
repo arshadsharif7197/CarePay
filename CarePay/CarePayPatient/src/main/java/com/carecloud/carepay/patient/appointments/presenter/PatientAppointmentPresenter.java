@@ -18,6 +18,7 @@ import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.appointment.DataDTO;
@@ -464,7 +465,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
 
     private void setPatientID(String practiceID) {
-        PracticePatientIdsDTO[] practicePatientIdArray = viewHandler.getApplicationPreferences()
+        PracticePatientIdsDTO[] practicePatientIdArray = ApplicationPreferences.getInstance()
                 .getObjectFromSharedPreferences(CarePayConstants.KEY_PRACTICE_PATIENT_IDS,
                         PracticePatientIdsDTO[].class);
         for (PracticePatientIdsDTO practicePatientId : practicePatientIdArray) {

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
     android:orientation="vertical"
     android:paddingLeft="@dimen/list_apt_padding_right"
     android:paddingRight="@dimen/list_apt_padding_right">
@@ -85,14 +85,13 @@
                 android:textColor="@color/emerald"
                 android:textSize="@dimen/textview_default_textsize"
                 app:customAssetFont="proxima_nova_semi_bold"
-                breeze:textKey="payment_details_pay_now"/>
+                breeze:textKey="payment_details_pay_now" />
         </LinearLayout>
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_1dp"
-        android:layout_marginBottom="@dimen/dimen_3dp"
         android:background="@color/divider_color" />
 
 </LinearLayout>
