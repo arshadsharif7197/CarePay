@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.base.BackPressedFragment;
+import com.carecloud.carepay.patient.base.BackPressedFragmentInterface;
 import com.carecloud.carepay.patient.survey.model.SurveyDTO;
 import com.carecloud.carepay.patient.survey.model.SurveyModel;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -25,7 +25,7 @@ import com.marcok.stepprogressbar.StepProgressBar;
 /**
  * @author pjohnson on 10/09/18.
  */
-public class SurveyFragment extends BaseFragment implements BackPressedFragment {
+public class SurveyFragment extends BaseFragment implements BackPressedFragmentInterface {
 
     private FragmentActivityInterface callback;
     private StepProgressBar stepProgressBar;

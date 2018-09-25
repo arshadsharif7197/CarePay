@@ -173,7 +173,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.initials.setBackgroundResource(R.drawable.round_list_tv_primary);
         holder.header.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
         holder.header.setText(Label.getLabel("survey.notificationList.item.title.newSurvey"));
-        String pivotString = "from ";
         String message = Label.getLabel("survey.notificationList.item.message.newSurvey");
         UserPracticeDTO practice = ApplicationPreferences.getInstance()
                 .getUserPractice(notificationItem.getMetadata().getPracticeId());

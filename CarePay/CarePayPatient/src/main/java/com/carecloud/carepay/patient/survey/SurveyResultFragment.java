@@ -19,7 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.base.BackPressedFragment;
+import com.carecloud.carepay.patient.base.BackPressedFragmentInterface;
 import com.carecloud.carepay.patient.survey.model.SocialNetworkLink;
 import com.carecloud.carepay.patient.survey.model.SurveyDTO;
 import com.carecloud.carepay.patient.survey.model.SurveyModel;
@@ -42,7 +42,7 @@ import java.util.Map;
 /**
  * @author pjohnson on 17/09/18.
  */
-public class SurveyResultFragment extends BaseFragment implements BackPressedFragment {
+public class SurveyResultFragment extends BaseFragment implements BackPressedFragmentInterface {
 
     private FragmentActivityInterface callback;
     private SurveyDTO surveyDto;

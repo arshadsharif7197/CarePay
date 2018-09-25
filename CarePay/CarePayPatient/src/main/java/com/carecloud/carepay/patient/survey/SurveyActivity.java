@@ -7,7 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.base.BackPressedFragment;
+import com.carecloud.carepay.patient.base.BackPressedFragmentInterface;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.survey.model.SurveyDTO;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -73,7 +73,7 @@ public class SurveyActivity extends BasePatientActivity implements FragmentActiv
     @Override
     public void onBackPressed() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
-        if (fragment instanceof BackPressedFragment && ((BackPressedFragment) fragment).onBackPressed()) {
+        if (fragment instanceof BackPressedFragmentInterface && ((BackPressedFragmentInterface) fragment).onBackPressed()) {
             return;
         }
         super.onBackPressed();
