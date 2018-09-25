@@ -15,6 +15,7 @@ import com.carecloud.carepay.patient.notifications.models.NotificationStatus;
 import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -124,6 +125,7 @@ public class NotificationActivity extends MenuPatientActivity
         queryMap.put("practice_mgmt", notificationItem.getMetadata().getPracticeMgmt());
         queryMap.put("practice_id", notificationItem.getMetadata().getPracticeId());
         queryMap.put("appointment_id", notificationItem.getPayload().getPendingSurvey().getMetadata().getAppointmentId());
+        queryMap.put("patient_id", notificationItem.getMetadata().getPatientId());
         getWorkflowServiceHelper().execute(notificationsDTO.getMetadata().getLinks().getPendingSurvey(),
                 new WorkflowServiceCallback() {
                     @Override
@@ -134,7 +136,9 @@ public class NotificationActivity extends MenuPatientActivity
                     @Override
                     public void onPostExecute(WorkflowDTO workflowDTO) {
                         hideProgressDialog();
-                        navigateToWorkflow(workflowDTO);
+                        Bundle bundle = new Bundle();
+                        bundle.putString(CarePayConstants.PATIENT_ID, notificationItem.getMetadata().getPatientId());
+                        navigateToWorkflow(workflowDTO, bundle);
                     }
 
                     @Override
@@ -170,7 +174,7 @@ public class NotificationActivity extends MenuPatientActivity
         });
     }
 
-    private void callMessagesScreen(NotificationItem notificationItem){
+    private void callMessagesScreen(NotificationItem notificationItem) {
         displayMessagesScreen();
     }
 

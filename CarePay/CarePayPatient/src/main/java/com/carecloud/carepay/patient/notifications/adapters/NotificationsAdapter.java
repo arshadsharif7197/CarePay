@@ -3,7 +3,6 @@ package com.carecloud.carepay.patient.notifications.adapters;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.view.LayoutInflater;
@@ -169,22 +168,23 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     }
 
     private void displayPendingSurvey(NotificationViewHolder holder, NotificationItem notificationItem) {
-        holder.image.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_survey));
+        holder.image.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icn_survey));
         holder.image.setVisibility(View.VISIBLE);
-        holder.initials.setVisibility(View.GONE);
+        holder.initials.setBackgroundResource(R.drawable.round_list_tv_primary);
         holder.header.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
         holder.header.setText(Label.getLabel("survey.notificationList.item.title.newSurvey"));
         String pivotString = "from ";
-        String message = notificationItem.getPayload().getAlertMessage();
-        holder.message.setText(message);
-        int pivot = message.lastIndexOf(pivotString);
-        if (pivot > -1) {
-            pivot += pivotString.length();
-            SpannableString spannableString = new SpannableString(message);
-            spannableString.setSpan(new CarePayCustomSpan(context, CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD),
-                    pivot, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            holder.message.setText(spannableString);
-        }
+        String message = Label.getLabel("survey.notificationList.item.message.newSurvey");
+        UserPracticeDTO practice = ApplicationPreferences.getInstance()
+                .getUserPractice(notificationItem.getMetadata().getPracticeId());
+        String practiceName = practice.getPracticeName();
+        holder.message.setTextColor(ContextCompat.getColor(context, R.color.charcoal));
+        SpannableStringBuilder stringBuilder = new SpannableStringBuilder(String
+                .format(message, practiceName));
+        stringBuilder.setSpan(new CarePayCustomSpan(context, CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD),
+                stringBuilder.length() - practiceName.length(), stringBuilder.length(),
+                Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        holder.message.setText(stringBuilder);
     }
 
     private void displaySecureMessageNotification(NotificationViewHolder holder,
