@@ -388,7 +388,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void displayPaymentPlanHistoryDetails(final PaymentHistoryItem historyItem, PaymentPlanPayloadDTO paymentPlanPayloadDTO) {
+    public void displayPaymentPlanHistoryDetails(final PaymentHistoryItem historyItem,
+                                                 PaymentPlanPayloadDTO paymentPlanPayloadDTO) {
         String taskId = paymentPlanPayloadDTO.getMetadata().getTaskId();
         PaymentPlanDTO selectedPaymentPlan = null;
         for (PaymentPlanDTO paymentPlanDTO : paymentsDTO.getPaymentPayload().getPatientPaymentPlans()) {
@@ -399,11 +400,13 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         }
 
         selectedUserPractice = getUserPracticeById(historyItem.getMetadata().getPracticeId());
-        PaymentPlanHistoryDetailDialogFragment planHistoryFragment = PaymentPlanHistoryDetailDialogFragment.newInstance(selectedPaymentPlan, selectedUserPractice);
+        PaymentPlanHistoryDetailDialogFragment planHistoryFragment = PaymentPlanHistoryDetailDialogFragment
+                .newInstance(selectedPaymentPlan, selectedUserPractice);
         planHistoryFragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                PaymentHistoryDetailDialogFragment historyFragment = PaymentHistoryDetailDialogFragment.newInstance(historyItem, selectedUserPractice);
+                PaymentHistoryDetailDialogFragment historyFragment = PaymentHistoryDetailDialogFragment
+                        .newInstance(historyItem, selectedUserPractice);
                 displayDialogFragment(historyFragment, false);
             }
         });
@@ -596,9 +599,11 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                 !paymentsModel.getPaymentPayload().getScheduledOneTimePayments().isEmpty()) {
             scheduledPayment = paymentsModel.getPaymentPayload().getScheduledOneTimePayments().get(0);
         }
-        List<ScheduledPaymentModel> scheduledPaymentModels = this.paymentsDTO.getPaymentPayload().getScheduledOneTimePayments();
+        List<ScheduledPaymentModel> scheduledPaymentModels = this.paymentsDTO.getPaymentPayload()
+                .getScheduledOneTimePayments();
         for (ScheduledPaymentModel scheduledPaymentModel : scheduledPaymentModels) {
-            if (scheduledPaymentModel.getMetadata().getOneTimePaymentId().equals(scheduledPayment.getMetadata().getOneTimePaymentId())) {
+            if (scheduledPaymentModel.getMetadata().getOneTimePaymentId().equals(scheduledPayment
+                    .getMetadata().getOneTimePaymentId())) {
                 scheduledPaymentModels.remove(scheduledPayment);
                 break;
             }
@@ -609,13 +614,14 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         DateUtil.getInstance().setDateRaw(scheduledPayment.getPayload().getPaymentDate());
         String message = String.format(Label.getLabel("payment.oneTimePayment.schedule.success"),
                 StringUtil.getFormattedBalanceAmount(scheduledPayment.getPayload().getAmount()),
-                DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal());
+                DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
         showSuccessToast(message);
 
     }
 
     @Override
-    public void showDeleteScheduledPaymentConfirmation(WorkflowDTO workflowDTO, ScheduledPaymentPayload scheduledPaymentPayload) {
+    public void showDeleteScheduledPaymentConfirmation(WorkflowDTO workflowDTO,
+                                                       ScheduledPaymentPayload scheduledPaymentPayload) {
         SystemUtil.hideSoftKeyboard(this);
         showSuccessToast(String.format(
                 Label.getLabel("payment.oneTimePayment.scheduled.delete.success"),
@@ -734,7 +740,9 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void onStartEditScheduledPayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO, ScheduledPaymentModel scheduledPaymentModel) {
+    public void onStartEditScheduledPayment(PaymentsModel paymentsModel,
+                                            PaymentPlanDTO paymentPlanDTO,
+                                            ScheduledPaymentModel scheduledPaymentModel) {
         new EditOneTimePaymentDialog(this, paymentsDTO, paymentPlanDTO,
                 scheduledPaymentModel, this).show();
     }
@@ -749,8 +757,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void showCancelPaymentPlanConfirmDialog(ConfirmationCallback confirmationCallback) {
         ConfirmDialogFragment fragment = ConfirmDialogFragment
-                .newInstance(Label.getLabel("payment.cancelPaymentPlan.confirmDialog.title.cancelPaymentPlanTitle"),
-                        Label.getLabel("payment.cancelPaymentPlan.confirmDialog.message.cancelPaymentPlanMessage"),
+                .newInstance(Label.getLabel("payments.cancelPaymentPlan.confirmDialog.title.cancelPaymentPlanTitle"),
+                        Label.getLabel("payments.cancelPaymentPlan.confirmDialog.message.cancelPaymentPlanMessage"),
                         Label.getLabel("no"),
                         Label.getLabel("yes"));
         fragment.setCallback(confirmationCallback);
@@ -775,7 +783,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
             }
         }
 
-        //payment plan not found for modification
+        //payments plan not found for modification
         paymentPlanList.addAll(paymentsModel.getPaymentPayload().getPatientPaymentPlans());
         completePaymentProcess(workflowDTO);
 

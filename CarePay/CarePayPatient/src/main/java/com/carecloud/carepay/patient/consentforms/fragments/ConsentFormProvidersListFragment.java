@@ -16,10 +16,8 @@ import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormsProvide
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
-import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
-import com.carecloud.carepaylibray.consentforms.models.payload.FormDTO;
+import com.carecloud.carepaylibray.consentforms.models.UserFormDTO;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,8 +69,7 @@ public class ConsentFormProvidersListFragment extends BaseFragment implements Co
     }
 
     protected void setUpList(View view) {
-        List<FormDTO> practiceList = filterList(consentFormDto.getPayload().getForms());
-        consentFormDto.getPayload().setForms(practiceList);
+        List<UserFormDTO> practiceList = consentFormDto.getPayload().getUserForms();
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.consentFormsRecyclerView);
         if (practiceList.size() > 0) {
             Map<String, UserPracticeDTO> practicesInformation = getPracticesInformation(consentFormDto.getPayload()
@@ -88,17 +85,6 @@ public class ConsentFormProvidersListFragment extends BaseFragment implements Co
         }
     }
 
-    private List<FormDTO> filterList(List<FormDTO> forms) {
-        List<FormDTO> filteredList = new ArrayList<>();
-        for (FormDTO practice : forms) {
-            if (practice.getPracticeForms().size() > 0) {
-                filteredList.add(practice);
-            }
-        }
-        return filteredList;
-    }
-
-
     private Map<String, UserPracticeDTO> getPracticesInformation(List<UserPracticeDTO> practicesInformation) {
         Map<String, UserPracticeDTO> practicesMap = new HashMap<>();
         for (UserPracticeDTO practice : practicesInformation) {
@@ -108,7 +94,7 @@ public class ConsentFormProvidersListFragment extends BaseFragment implements Co
     }
 
     @Override
-    public void onProviderSelected(FormDTO practiceForm, int position) {
+    public void onProviderSelected(UserFormDTO practiceForm, int position) {
         callback.onProviderSelected(practiceForm, position);
     }
 }

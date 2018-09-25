@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RetailLineItemOrderItem {
+public class RetailOrderItem {
 
     @SerializedName("sku")
     private String sku;
@@ -20,7 +20,7 @@ public class RetailLineItemOrderItem {
     private double price;
 
     @SerializedName("selected_options")
-    private List<RetailLineItemSelectedOption> selectedOptions = new ArrayList<>();
+    private List<RetailSelectedOption> selectedOptions = new ArrayList<>();
 
     public String getSku() {
         return sku;
@@ -54,11 +54,11 @@ public class RetailLineItemOrderItem {
         this.price = price;
     }
 
-    public List<RetailLineItemSelectedOption> getSelectedOptions() {
+    public List<RetailSelectedOption> getSelectedOptions() {
         return selectedOptions;
     }
 
-    public void setSelectedOptions(List<RetailLineItemSelectedOption> selectedOptions) {
+    public void setSelectedOptions(List<RetailSelectedOption> selectedOptions) {
         this.selectedOptions = selectedOptions;
     }
 }
