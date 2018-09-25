@@ -13,6 +13,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentListItem;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.text.NumberFormat;
@@ -81,6 +82,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
             String locationName = paymentPlanItem.getMetadata().getPracticeName();
             holder.shortName.setText(StringUtil.getShortName(locationName));
             holder.locationName.setText(locationName);
+            holder.planName.setText(paymentPlanItem.getPayload().getDescription());
 
             double totalAmount = paymentPlanItem.getPayload().getAmount();
             double amountPaid = paymentPlanItem.getPayload().getAmountPaid();
@@ -92,6 +94,10 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
             holder.planDetail.setText(planDetails);
 
             holder.planProgress.setProgress(paymentPlanItem.getPayload().getPaymentPlanProgress());
+
+            ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload()
+                    .findScheduledPayment(paymentPlanItem);
+            holder.scheduledIcon.setVisibility(scheduledPayment != null ? View.VISIBLE : View.GONE);
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -123,6 +129,8 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
         private View payLabel;
         private TextView planDetail;
         private ProgressBar planProgress;
+        private View scheduledIcon;
+        private TextView planName;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -132,6 +140,8 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
             payLabel = itemView.findViewById(R.id.balancesPayNowTextView);
             planDetail = (TextView) itemView.findViewById(R.id.planInstallmentDetail);
             planProgress = (ProgressBar) itemView.findViewById(R.id.paymentPlanProgress);
+            scheduledIcon = itemView.findViewById(R.id.scheduledPaymentIcon);
+            planName = (TextView) itemView.findViewById(R.id.planName);
         }
     }
 

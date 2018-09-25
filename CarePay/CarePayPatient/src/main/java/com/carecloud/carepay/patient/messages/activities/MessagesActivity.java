@@ -8,6 +8,7 @@ import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
+import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.patient.messages.MessageNavigationCallback;
 import com.carecloud.carepay.patient.messages.fragments.MessagesConversationFragment;
 import com.carecloud.carepay.patient.messages.fragments.MessagesListFragment;
@@ -75,16 +76,18 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
     }
 
     @Override
-    public void getMessageThreads(long page, long size) {
+    public void getMessageThreads(long page, long size, boolean showShimmerEffect) {
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put(getString(R.string.msg_query_page), String.valueOf(page < 1 ? 1 : page));//first page is 1
-        queryMap.put(getString(R.string.msg_query_size), String.valueOf(size < 15 ? 15 : size));//default size if 15, should not be less than that
+        //first page is 1
+        queryMap.put(getString(R.string.msg_query_page), String.valueOf(page < 1 ? 1 : page));
+        //default size if 15, should not be less than that
+        queryMap.put(getString(R.string.msg_query_size), String.valueOf(size < 15 ? 15 : size));
 
         String body = null;
 
         restCallServiceHelper.executeRequest(RestDef.GET,
                 HttpConstants.getMessagingBaseUrl(),
-                getMessageThreadsCallback,
+                getMessageThreadsCallback(showShimmerEffect),
                 true,
                 getString(R.string.msg_auth_token_key),
                 queryMap,
@@ -190,34 +193,47 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
         super.onBackPressed();
     }
 
-    private RestCallServiceCallback getMessageThreadsCallback = new RestCallServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(JsonElement jsonElement) {
-            hideProgressDialog();
-            Gson gson = new Gson();
-            MessagingDataModel messagingDataModel = gson.fromJson(jsonElement, MessagingDataModel.class);
-            userId = messagingDataModel.getInbox().getUserId();
-            providerContacts = messagingDataModel.getProviderContacts();
-            try {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                MessagesListFragment messagesListFragment = (MessagesListFragment) fragmentManager.findFragmentById(R.id.container_main);
-                messagesListFragment.updateDisplayDataModel(messagingDataModel);
-            } catch (ClassCastException cce) {
-                cce.printStackTrace();
+    private RestCallServiceCallback getMessageThreadsCallback(final boolean showShimmerEffect) {
+        return new RestCallServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                if (showShimmerEffect) {
+                    replaceFragment(ShimmerFragment.newInstance(R.layout.shimmer_default_item), true);
+                } else {
+                    showProgressDialog();
+                }
             }
-        }
 
-        @Override
-        public void onFailure(String errorMessage) {
-            hideProgressDialog();
-            showErrorNotification(errorMessage);
-        }
-    };
+            @Override
+            public void onPostExecute(JsonElement jsonElement) {
+                hideProgressDialog();
+                if (getSupportFragmentManager().findFragmentById(R.id.container_main) instanceof ShimmerFragment) {
+                    if(isVisible){
+                        getSupportFragmentManager().popBackStackImmediate();
+                    }
+                }
+                Gson gson = new Gson();
+                MessagingDataModel messagingDataModel = gson.fromJson(jsonElement, MessagingDataModel.class);
+                userId = messagingDataModel.getInbox().getUserId();
+                providerContacts = messagingDataModel.getProviderContacts();
+                try {
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    MessagesListFragment messagesListFragment = (MessagesListFragment) fragmentManager
+                            .findFragmentById(R.id.container_main);
+                    messagesListFragment.updateDisplayDataModel(messagingDataModel);
+                } catch (ClassCastException cce) {
+                    cce.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                hideProgressDialog();
+                showErrorNotification(errorMessage);
+            }
+        };
+
+    }
 
     private RestCallServiceCallback getMessagesCallback = new RestCallServiceCallback() {
         @Override
@@ -271,7 +287,8 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
                 hideProgressDialog();
                 Gson gson = new Gson();
                 Messages.Reply thread = gson.fromJson(jsonElement, Messages.Reply.class);
-                getSupportFragmentManager().popBackStackImmediate(MessagesProvidersFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getSupportFragmentManager().popBackStackImmediate(MessagesProvidersFragment.class.getName(),
+                        FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 replaceFragment(MessagesConversationFragment.newInstance(thread), true);
 
                 String[] params = {getString(R.string.param_provider_id), getString(R.string.param_provider_name)};
@@ -310,7 +327,8 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
 
         try {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            MessagesConversationFragment conversationFragment = (MessagesConversationFragment) fragmentManager.findFragmentById(R.id.container_main);
+            MessagesConversationFragment conversationFragment = (MessagesConversationFragment) fragmentManager
+                    .findFragmentById(R.id.container_main);
             conversationFragment.updateThreadMessages(thread);
         } catch (ClassCastException cce) {
             cce.printStackTrace();

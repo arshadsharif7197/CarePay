@@ -105,7 +105,6 @@ public class SearchPhysicianFragment extends BaseDialogFragment implements Physi
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         dto = (DemographicDTO) callback.getDto();
-//        physician = DtoHelper.getConvertedDTO(PhysicianDto.class, getArguments());
         physicianType = getArguments().getInt("physicianType");
     }
 
@@ -144,8 +143,8 @@ public class SearchPhysicianFragment extends BaseDialogFragment implements Physi
             view.findViewById(R.id.edit_insurance_close_button).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    SystemUtil.hideSoftKeyboard(getActivity());
                     dismiss();
+                    SystemUtil.hideSoftKeyboard(getActivity());
                 }
             });
         }

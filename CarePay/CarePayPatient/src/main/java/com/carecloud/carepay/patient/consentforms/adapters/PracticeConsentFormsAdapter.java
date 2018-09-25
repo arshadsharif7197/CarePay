@@ -11,7 +11,7 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormsProviderInterface;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.consentforms.models.payload.FormDTO;
+import com.carecloud.carepaylibray.consentforms.models.UserFormDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Callback;
@@ -26,11 +26,11 @@ import java.util.Map;
 
 public class PracticeConsentFormsAdapter extends RecyclerView.Adapter<PracticeConsentFormsAdapter.ViewHolder> {
 
-    private final List<FormDTO> practiceFormsList;
+    private final List<UserFormDTO> practiceFormsList;
     private final Map<String, UserPracticeDTO> practicesInformationMap;
     private ConsentFormsProviderInterface callback;
 
-    public PracticeConsentFormsAdapter(List<FormDTO> practiceFormsList,
+    public PracticeConsentFormsAdapter(List<UserFormDTO> practiceFormsList,
                                        Map<String, UserPracticeDTO> practicesInformation) {
         this.practiceFormsList = practiceFormsList;
         practicesInformationMap = practicesInformation;
@@ -44,7 +44,7 @@ public class PracticeConsentFormsAdapter extends RecyclerView.Adapter<PracticeCo
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final FormDTO formDto = practiceFormsList.get(position);
+        final UserFormDTO formDto = practiceFormsList.get(position);
         UserPracticeDTO practice = practicesInformationMap.get(formDto.getMetadata().getPracticeId());
         holder.practiceNameTextView.setText(practice.getPracticeName());
         holder.practiceAddressTextView.setText(practice.getAddressDTO().getFullAddress());
@@ -67,20 +67,20 @@ public class PracticeConsentFormsAdapter extends RecyclerView.Adapter<PracticeCo
                         holder.practiceShortNameTextView.setVisibility(View.VISIBLE);
                     }
                 });
-        if (formDto.getPendingForms().size() == 0) {
+        if (formDto.getPendingForms().getForms().size() == 0) {
             holder.formStatusTextView.setText(Label.getLabel("consentForms.providersList.item.label.formsFilledStatus"));
             holder.formStatusTextView.setTextColor(holder.formStatusTextView.getContext()
                     .getResources().getColor(R.color.cadet_gray));
-        } else if (formDto.getPendingForms().size() == 1) {
+        } else if (formDto.getPendingForms().getForms().size() == 1) {
             holder.formStatusTextView.setText(String.format(Label
                             .getLabel("consentForms.providersList.item.label.pendingFormCount"),
-                    formDto.getPendingForms().size()));
+                    formDto.getPendingForms().getForms().size()));
             holder.formStatusTextView.setTextColor(holder.formStatusTextView.getContext()
                     .getResources().getColor(R.color.lightning_yellow));
         } else {
             holder.formStatusTextView.setText(String.format(Label
                             .getLabel("consentForms.providersList.item.label.pendingFormsCount"),
-                    formDto.getPendingForms().size()));
+                    formDto.getPendingForms().getForms().size()));
             holder.formStatusTextView.setTextColor(holder.formStatusTextView.getContext()
                     .getResources().getColor(R.color.lightning_yellow));
         }

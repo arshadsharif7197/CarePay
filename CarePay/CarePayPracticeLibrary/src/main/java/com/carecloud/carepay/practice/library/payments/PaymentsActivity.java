@@ -977,8 +977,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         List<ScheduledPaymentModel> scheduledPaymentModels = this.paymentsModel.getPaymentPayload()
                 .getScheduledOneTimePayments();
         for (ScheduledPaymentModel scheduledPaymentModel : scheduledPaymentModels) {
-            if (scheduledPaymentModel.getMetadata().getOneTimePaymentId().equals(scheduledPayment
-                    .getMetadata().getOneTimePaymentId())) {
+            if (scheduledPaymentModel.getMetadata().getOneTimePaymentId()
+                    .equals(scheduledPayment.getMetadata().getOneTimePaymentId())) {
                 scheduledPaymentModels.remove(scheduledPayment);
                 break;
             }
@@ -989,7 +989,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         DateUtil.getInstance().setDateRaw(scheduledPayment.getPayload().getPaymentDate());
         String message = String.format(Label.getLabel("payment.oneTimePayment.schedule.success"),
                 StringUtil.getFormattedBalanceAmount(scheduledPayment.getPayload().getAmount()),
-                DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal());
+                DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
         showSuccessToast(message);
 
     }
@@ -1165,7 +1165,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void onEditPaymentPlanPaymentMethod(final PaymentsModel paymentsModel, final PaymentPlanDTO paymentPlanDTO) {
+    public void onEditPaymentPlanPaymentMethod(final PaymentsModel paymentsModel,
+                                               final PaymentPlanDTO paymentPlanDTO) {
         PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
                 .newInstance(paymentsModel, paymentPlanDTO, true);
         fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {

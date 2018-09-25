@@ -88,7 +88,7 @@ public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePa
         DemographicsOption dateOption = dateOptions.get(paymentPlan.getPayload()
                 .getPaymentPlanDetails().getDayOfMonth() - 1);
         paymentDateEditText.setText(dateOption.getLabel());
-        numberPaymentsEditText.setText(String.valueOf(paymentPlan.getPayload()
+        installmentsEditText.setText(String.valueOf(paymentPlan.getPayload()
                 .getPaymentPlanDetails().getInstallments()));
     }
 
@@ -111,7 +111,7 @@ public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePa
             paymentValueTextView.setText(currencyFormatter.format(paymentPlanAmount));
             item.setAmountSelected(0.00);
         }
-        refreshNumberOfPayments(numberPaymentsEditText.getText().toString());
+        refreshNumberOfPayments(installmentsEditText.getText().toString());
         return true;
     }
 
@@ -149,7 +149,7 @@ public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePa
         }
 
         PaymentPlanModel paymentPlanModel = new PaymentPlanModel();
-        paymentPlanModel.setAmount(monthlyPaymentAmount);
+        paymentPlanModel.setAmount(amounthPayment);
         paymentPlanModel.setFrequencyCode(PaymentPlanModel.FREQUENCY_MONTHLY);
         paymentPlanModel.setInstallments(installments);
         paymentPlanModel.setEnabled(true);

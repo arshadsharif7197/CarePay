@@ -22,12 +22,12 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
-import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
 
 /**
  * Created by lmenendez on 2/12/18
@@ -63,11 +63,14 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
         super.onViewCreated(view, icicle);
         View addToExisting = view.findViewById(R.id.payment_plan_add_existing);
         addToExisting.setVisibility(View.GONE);
-        if (numberPaymentsEditText.getOnFocusChangeListener() != null) {
-            numberPaymentsEditText.getOnFocusChangeListener().onFocusChange(numberPaymentsEditText, true);
+        if (installmentsEditText.getOnFocusChangeListener() != null) {
+            installmentsEditText.getOnFocusChangeListener().onFocusChange(installmentsEditText, true);
         }
-        numberPaymentsEditText.setText(String.valueOf(getRemainingPayments()));
+        installmentsEditText.setText(String.valueOf(getRemainingPayments()));
         planNameEditText.setText(existingPlan.getPayload().getDescription());
+        frequencyCodeEditText.setText(frequencyOption.getLabel());
+        paymentDateEditText.setText(String.valueOf(existingPlan.getPayload()
+                .getPaymentPlanDetails().getDayOfMonth()));
 
         createPlanButton.setText(Label.getLabel("demographics_save_changes_button"));
     }
@@ -81,8 +84,9 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
     }
 
     private int getRemainingPayments() {
-        return existingPlan.getPayload().getPaymentPlanDetails().getInstallments() -
+        int remaining = existingPlan.getPayload().getPaymentPlanDetails().getInstallments() -
                 existingPlan.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
+        return remaining < 2 ? 2 : remaining;
     }
 
 
@@ -97,8 +101,8 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
             postModel.setLineItems(getPaymentPlanLineItems());
 
             PaymentPlanModel paymentPlanModel = new PaymentPlanModel();
-            paymentPlanModel.setAmount(monthlyPaymentAmount);
-            paymentPlanModel.setFrequencyCode(PaymentPlanModel.FREQUENCY_MONTHLY);
+            paymentPlanModel.setAmount(amounthPayment);
+            paymentPlanModel.setFrequencyCode(frequencyOption.getName());
             paymentPlanModel.setInstallments(installments +
                     existingPlan.getPayload().getPaymentPlanDetails().getFilteredHistory().size());
             paymentPlanModel.setEnabled(true);
@@ -140,10 +144,10 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
                     lineItem.setType(IntegratedPaymentLineItem.TYPE_APPLICATION);
                     lineItem.setTypeId(balanceItem.getId().toString());
 
-                    if(amountHolder >= balanceItem.getBalance()){
+                    if (amountHolder >= balanceItem.getBalance()) {
                         lineItem.setAmount(balanceItem.getBalance());
                         amountHolder -= balanceItem.getBalance();
-                    }else{
+                    } else {
                         lineItem.setAmount(amountHolder);
                         amountHolder = 0;
                     }

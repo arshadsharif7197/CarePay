@@ -94,6 +94,15 @@
                         android:progress="25"
                         android:progressDrawable="@drawable/payment_plan_progress"/>
 
+                    <ImageView
+                        android:id="@+id/scheduledPaymentIcon"
+                        android:layout_width="@dimen/dimen_44dp"
+                        android:layout_height="@dimen/dimen_44dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/icn_pending"
+                        android:visibility="gone"/>
+
+
                 </FrameLayout>
 
             </LinearLayout>

@@ -6,9 +6,48 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar_title_only" />
+    <RelativeLayout
+        android:id="@+id/emptyStateScreen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/dimen_20dp"
+        android:visibility="gone">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/emptyStateTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:layout_marginStart="@dimen/dimen_10dp"
+            android:textColor="@color/charcoal"
+            android:textSize="@dimen/text_size_21"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="adhoc.forms.empty.label.title" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/emptyStateTitleTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/dimen_10dp"
+            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:src="@drawable/icn_empty_state_forms" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/emptyStateSubTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/emptyStateTitleTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/dimen_10dp"
+            android:textColor="@color/cadet_gray"
+            android:textSize="@dimen/text_size_13"
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textKey="adhoc.forms.empty.label.description" />
+
+    </RelativeLayout>
+
 
     <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:id="@+id/signSelectedFormsButton"
@@ -17,6 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:enabled="false"
+        android:visibility="gone"
         app:customAssetFont="gotham_rounded_medium"
         breeze:textKey="consentForms.providersFormList.button.label.signSelectedForms" />
 
@@ -24,7 +64,6 @@
         android:id="@+id/providerConsentFormsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/signSelectedFormsButton"
-        android:layout_below="@id/toolbar" />
+        android:layout_above="@id/signSelectedFormsButton" />
 
 </RelativeLayout>

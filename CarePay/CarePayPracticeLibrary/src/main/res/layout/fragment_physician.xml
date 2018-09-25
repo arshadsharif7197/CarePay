@@ -37,8 +37,7 @@
             android:layout_alignParentTop="true"
             android:background="@drawable/patient_mode_dialog_header_bg"
             android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:padding="@dimen/dimen_10dp">
+            android:focusableInTouchMode="true">
 
             <include
                 android:id="@+id/toolbarLayout"

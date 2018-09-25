@@ -72,10 +72,11 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
 
     @Override
     public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
         paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, getArguments());
-        selectedBalance = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
+        practiceId = paymentPlanDTO.getMetadata().getPracticeId();
         paymentPlanAmount = paymentPlanDTO.getPayload().getAmount();
+        super.onCreate(icicle);
+        selectedBalance = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
         if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode()
                 .equals(PaymentPlanDetailsDTO.FREQUENCY_MONTHLY)) {
             frequencyOption = frequencyOptions.get(0);
@@ -144,11 +145,11 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
         }
 
         installments = paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments();
-        numberPaymentsEditText.setText(String.valueOf(installments));
-        numberPaymentsEditText.getOnFocusChangeListener().onFocusChange(numberPaymentsEditText, true);
+        installmentsEditText.setText(String.valueOf(installments));
+        installmentsEditText.getOnFocusChangeListener().onFocusChange(installmentsEditText, true);
 
-        monthlyPaymentAmount = paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount();
-        monthlyPaymentEditText.setText(currencyFormatter.format(monthlyPaymentAmount));
+        amounthPayment = paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount();
+        amountPaymentEditText.setText(currencyFormatter.format(amounthPayment));
 
     }
 
@@ -256,7 +257,7 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
         }
 
         PaymentPlanModel paymentPlanModel = new PaymentPlanModel();
-        paymentPlanModel.setAmount(monthlyPaymentAmount);
+        paymentPlanModel.setAmount(amounthPayment);
         paymentPlanModel.setFrequencyCode(frequencyOption.getName());
         paymentPlanModel.setInstallments(installments);
         paymentPlanModel.setEnabled(true);

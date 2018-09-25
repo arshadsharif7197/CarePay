@@ -105,17 +105,19 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
      */
     public CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (CELL_HEADER == viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.patient_list_header_layout, parent, false);
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.patient_list_header_layout, parent, false);
             return new HeaderViewHolder(view);
         }
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.patient_list_item_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.patient_list_item_layout, parent, false);
         return new CardViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         final CardViewPatient patient = filteredPatients.get(position);
-        if (null == patient.raw) {
+        if (patient.raw == null) {
             bindHeaderViewHolder((HeaderViewHolder) holder, patient);
         } else {
             bindCardViewHolder((CardViewHolder) holder, patient);
@@ -210,7 +212,8 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 continue;
             }
 
-            if (null != patient.appointmentStartTime && !DateUtil.isSameDay(dateTime, patient.appointmentStartTime)) {
+            if (patient.appointmentStartTime != null
+                    && !DateUtil.isSameDay(dateTime, patient.appointmentStartTime)) {
                 dateTime = patient.appointmentStartTime;
                 if (countByDay % 2 == 1) {
                     filteredPatients.add(new CardViewPatient());
@@ -246,11 +249,15 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.allPatients = new ArrayList<>(appointments.size());
 
         for (AppointmentDTO appointmentDTO : appointments) {
-            // Set profile photo
-            PatientModel patientDTO = appointmentDTO.getPayload().getPatient();
-            patientDTO.setProfilePhoto(profilePhotoMap.get(patientDTO.getPatientId()));
+            if (!appointmentDTO.getPayload().getAppointmentStatus().getCode().equals("C")) {
 
-            this.allPatients.add(new CardViewPatient(appointmentDTO, appointmentDTO.getPayload(), totalBalanceMap.get(patientDTO.getPatientId())));
+                // Set profile photo
+                PatientModel patientDTO = appointmentDTO.getPayload().getPatient();
+                patientDTO.setProfilePhoto(profilePhotoMap.get(patientDTO.getPatientId()));
+
+                this.allPatients.add(new CardViewPatient(appointmentDTO, appointmentDTO.getPayload(),
+                        totalBalanceMap.get(patientDTO.getPatientId())));
+            }
         }
 
         sortListByDate(this.allPatients);
@@ -258,8 +265,10 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private void loadPatients(PaymentsModel paymentsModel) {
         List<PatientBalanceDTO> dtoList = paymentsModel.getPaymentPayload().getPatientBalances();
-        Map<String, ProviderIndexDTO> providerMap = getProviderMap(paymentsModel.getPaymentPayload().getProviderIndex());
-        Map<String, LocationIndexDTO> locationMap = getLocationMap(paymentsModel.getPaymentPayload().getLocationIndex());
+        Map<String, ProviderIndexDTO> providerMap = getProviderMap(paymentsModel.getPaymentPayload()
+                .getProviderIndex());
+        Map<String, LocationIndexDTO> locationMap = getLocationMap(paymentsModel.getPaymentPayload()
+                .getLocationIndex());
         this.allPatients = new ArrayList<>(dtoList.size());
 
         for (PatientBalanceDTO dto : dtoList) {
@@ -279,7 +288,9 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         });
     }
 
-    private void createPatient(Map<String, ProviderIndexDTO> providerMap, Map<String, LocationIndexDTO> locationMap, PatientBalanceDTO dto) {
+    private void createPatient(Map<String, ProviderIndexDTO> providerMap,
+                               Map<String, LocationIndexDTO> locationMap,
+                               PatientBalanceDTO dto) {
         List<PendingBalanceDTO> patientBalances = dto.getBalances();
         double balance = getBalance(patientBalances);
         String patientId = patientBalances.get(0).getMetadata().getPatientId();

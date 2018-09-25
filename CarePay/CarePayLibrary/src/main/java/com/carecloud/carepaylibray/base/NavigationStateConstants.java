@@ -5,7 +5,7 @@ public class NavigationStateConstants {
     public static final String LANGUAGE_SELECTION = "language_selection";
     public static final String DEMOGRAPHIC_VERIFY = "demographics_verify";
     public static final String CONSENT_FORMS = "consent_forms";
-    public static final String FORMS_HISTORY = "forms_history";
+    public static final String FORMS_HISTORY = "user_forms";
     public static final String DEMOGRAPHICS = "demographics";
     public static final String INTAKE_FORMS = "intake_forms";
     public static final String PAYMENTS = "payments";

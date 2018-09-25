@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
+import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
@@ -72,10 +73,12 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.gms.wallet.MaskedWallet;
 
-import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_BALANCES;
-
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_BALANCES;
 
 /**
  * Created by jorge on 29/12/16
@@ -97,12 +100,40 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        paymentsDTO = getConvertedDTO(PaymentsModel.class);
-
         toolBarTitle = Label.getLabel("payment_patient_balance_toolbar");
         displayToolbar(true, toolBarTitle);
+        paymentsDTO = getConvertedDTO(PaymentsModel.class);
         inflateDrawer();
-        initFragments();
+        if (paymentsDTO == null) {
+            callPaymentsService();
+        } else {
+            initFragments();
+        }
+    }
+
+    private void callPaymentsService() {
+        TransitionDTO transitionDTO = getTransitionBalance();
+        Map<String, String> queryMap = new HashMap<>();
+        getWorkflowServiceHelper().execute(transitionDTO, new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                ShimmerFragment fragment = ShimmerFragment.newInstance(R.layout.shimmer_default_item);
+                fragment.setTabbed(true, Label.getLabel("payment_patient_balance_tab"),
+                        Label.getLabel("payment_patient_history_tab"));
+                replaceFragment(fragment, false);
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                paymentsDTO = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+                initFragments();
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                showErrorNotification(exceptionMessage);
+            }
+        }, queryMap);
     }
 
     private void initFragments() {
@@ -388,7 +419,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void displayPaymentPlanHistoryDetails(final PaymentHistoryItem historyItem, PaymentPlanPayloadDTO paymentPlanPayloadDTO) {
+    public void displayPaymentPlanHistoryDetails(final PaymentHistoryItem historyItem,
+                                                 PaymentPlanPayloadDTO paymentPlanPayloadDTO) {
         String taskId = paymentPlanPayloadDTO.getMetadata().getTaskId();
         PaymentPlanDTO selectedPaymentPlan = null;
         for (PaymentPlanDTO paymentPlanDTO : paymentsDTO.getPaymentPayload().getPatientPaymentPlans()) {
@@ -399,11 +431,13 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         }
 
         selectedUserPractice = getUserPracticeById(historyItem.getMetadata().getPracticeId());
-        PaymentPlanHistoryDetailDialogFragment planHistoryFragment = PaymentPlanHistoryDetailDialogFragment.newInstance(selectedPaymentPlan, selectedUserPractice);
+        PaymentPlanHistoryDetailDialogFragment planHistoryFragment = PaymentPlanHistoryDetailDialogFragment
+                .newInstance(selectedPaymentPlan, selectedUserPractice);
         planHistoryFragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                PaymentHistoryDetailDialogFragment historyFragment = PaymentHistoryDetailDialogFragment.newInstance(historyItem, selectedUserPractice);
+                PaymentHistoryDetailDialogFragment historyFragment = PaymentHistoryDetailDialogFragment
+                        .newInstance(historyItem, selectedUserPractice);
                 displayDialogFragment(historyFragment, false);
             }
         });
@@ -524,9 +558,9 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         replaceFragment(fragment, true);
         displayToolbar(false, toolBarTitle);
 
-        String[] params = {getString(com.carecloud.carepaylibrary.R.string.param_practice_id),
-                getString(com.carecloud.carepaylibrary.R.string.param_payment_plan_id),
-                getString(com.carecloud.carepaylibrary.R.string.param_payment_plan_amount)};
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_payment_plan_id),
+                getString(R.string.param_payment_plan_amount)};
         Object[] values = {
                 paymentPlanDTO.getMetadata().getPracticeId(),
                 paymentPlanDTO.getMetadata().getPaymentPlanId(),
@@ -596,9 +630,11 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                 !paymentsModel.getPaymentPayload().getScheduledOneTimePayments().isEmpty()) {
             scheduledPayment = paymentsModel.getPaymentPayload().getScheduledOneTimePayments().get(0);
         }
-        List<ScheduledPaymentModel> scheduledPaymentModels = this.paymentsDTO.getPaymentPayload().getScheduledOneTimePayments();
+        List<ScheduledPaymentModel> scheduledPaymentModels = this.paymentsDTO.getPaymentPayload()
+                .getScheduledOneTimePayments();
         for (ScheduledPaymentModel scheduledPaymentModel : scheduledPaymentModels) {
-            if (scheduledPaymentModel.getMetadata().getOneTimePaymentId().equals(scheduledPayment.getMetadata().getOneTimePaymentId())) {
+            if (scheduledPaymentModel.getMetadata().getOneTimePaymentId().equals(scheduledPayment
+                    .getMetadata().getOneTimePaymentId())) {
                 scheduledPaymentModels.remove(scheduledPayment);
                 break;
             }
@@ -609,13 +645,14 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         DateUtil.getInstance().setDateRaw(scheduledPayment.getPayload().getPaymentDate());
         String message = String.format(Label.getLabel("payment.oneTimePayment.schedule.success"),
                 StringUtil.getFormattedBalanceAmount(scheduledPayment.getPayload().getAmount()),
-                DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal());
+                DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
         showSuccessToast(message);
 
     }
 
     @Override
-    public void showDeleteScheduledPaymentConfirmation(WorkflowDTO workflowDTO, ScheduledPaymentPayload scheduledPaymentPayload) {
+    public void showDeleteScheduledPaymentConfirmation(WorkflowDTO workflowDTO,
+                                                       ScheduledPaymentPayload scheduledPaymentPayload) {
         SystemUtil.hideSoftKeyboard(this);
         showSuccessToast(String.format(
                 Label.getLabel("payment.oneTimePayment.scheduled.delete.success"),
@@ -734,7 +771,9 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void onStartEditScheduledPayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO, ScheduledPaymentModel scheduledPaymentModel) {
+    public void onStartEditScheduledPayment(PaymentsModel paymentsModel,
+                                            PaymentPlanDTO paymentPlanDTO,
+                                            ScheduledPaymentModel scheduledPaymentModel) {
         new EditOneTimePaymentDialog(this, paymentsDTO, paymentPlanDTO,
                 scheduledPaymentModel, this).show();
     }
@@ -775,7 +814,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
             }
         }
 
-        //payment plan not found for modification
+        //payments plan not found for modification
         paymentPlanList.addAll(paymentsModel.getPaymentPayload().getPatientPaymentPlans());
         completePaymentProcess(workflowDTO);
 

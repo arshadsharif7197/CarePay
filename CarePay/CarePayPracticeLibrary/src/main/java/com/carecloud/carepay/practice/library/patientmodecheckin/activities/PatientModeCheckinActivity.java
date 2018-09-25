@@ -53,6 +53,7 @@ import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
@@ -174,13 +175,37 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                         new SimpleCallback() {
                             @Override
                             public void callback() {
-                                presenter.changeLanguage();
-                                changeMenuLanguage();
-                                languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
+                                callSelfService(languageSwitch);
                             }
                         });
             }
         });
+    }
+
+    private void callSelfService(final TextView languageSwitch) {
+        Map<String, String> query = new HashMap<>();
+        query.put("appointment_id", presenter.appointmentId);
+        getWorkflowServiceHelper().execute(presenter.getDemographicDTO().getMetadata().getLinks().getSelf(),
+                new WorkflowServiceCallback() {
+                    @Override
+                    public void onPreExecute() {
+                        showProgressDialog();
+                    }
+
+                    @Override
+                    public void onPostExecute(WorkflowDTO workflowDTO) {
+                        hideProgressDialog();
+                        presenter.changeLanguage(workflowDTO);
+                        changeMenuLanguage();
+                        languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
+                    }
+
+                    @Override
+                    public void onFailure(String exceptionMessage) {
+                        hideProgressDialog();
+                        showErrorToast(exceptionMessage);
+                    }
+                }, query);
     }
 
     private void changeMenuLanguage() {
@@ -297,7 +322,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     private void initializeLeftNavigation() {
         TextView title = (TextView) findViewById(R.id.checkInLeftNavigationTitle);
-        if(title != null) {
+        if (title != null) {
             title.setText(Label.getLabel("practice_checkin_header_label"));
         }
         checkInFlowViews = new View[]{

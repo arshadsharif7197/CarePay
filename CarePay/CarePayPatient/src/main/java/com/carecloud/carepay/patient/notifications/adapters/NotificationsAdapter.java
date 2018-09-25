@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.notifications.models.NotificationItem;
 import com.carecloud.carepay.patient.notifications.models.NotificationType;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayUtil;
@@ -41,14 +43,16 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         void notificationSelected(NotificationItem notificationItem);
 
         void undoDeleteNotification(SwipeViewHolder viewHolder);
+
+        UserPracticeDTO getUserPracticeById(String practiceId);
     }
 
     private Context context;
-    private List<NotificationItem> notificationItems = new ArrayList<>();
+    private List<NotificationItem> notificationItems;
     private SelectNotificationCallback callback;
     private List<NotificationItem> removeItems = new ArrayList<>();
-
-    private boolean displayUndo = false;
+    private boolean isLoading;
+    private static final int VIEW_TYPE_LOADING = 100;
 
     /**
      * Constructor
@@ -79,26 +83,45 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     }
 
     @Override
+    public int getItemViewType(int position) {
+        if (position >= notificationItems.size()) {
+            return VIEW_TYPE_LOADING;
+        }
+        return 0;
+    }
+
+    @Override
     public NotificationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.notification_list_item, parent, false);
+        View view;
+        if (viewType == VIEW_TYPE_LOADING) {
+            view = inflater.inflate(R.layout.item_loading, parent, false);
+        } else {
+            view = inflater.inflate(R.layout.notification_list_item, parent, false);
+        }
         return new NotificationViewHolder(view);
     }
 
     @Override
     public int getItemCount() {
+        if (isLoading && !notificationItems.isEmpty()) {
+            return notificationItems.size() + 1;
+        }
         return notificationItems.size();
     }
 
     @Override
     public void onBindViewHolder(final NotificationViewHolder holder, int position) {
+        if (position >= notificationItems.size()) {
+            return;
+        }
+
         final NotificationItem notificationItem = notificationItems.get(position);
         NotificationType notificationType = notificationItem.getMetadata().getNotificationType();
-
         resetViews(holder);
         if (notificationType != null) {
             switch (notificationType) {
-                case payment:
+                case payments:
                     displayPaymentNotification(holder, notificationItem);
                     break;
                 case credit_card:
@@ -106,6 +129,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                     break;
                 case pending_forms:
                     displayPendingFormNotification(holder, notificationItem);
+                    break;
+                case secure_message:
+                    displaySecureMessageNotification(holder, notificationItem);
                     break;
                 default:
                 case appointment:
@@ -137,6 +163,30 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     }
 
+    private void displaySecureMessageNotification(NotificationViewHolder holder,
+                                                  NotificationItem notificationItem) {
+        UserPracticeDTO practiceDTO = callback.getUserPracticeById(notificationItem.getMetadata().getPracticeId());
+        String practiceName = practiceDTO.getPracticeName();
+        holder.initials.setText(StringUtil.getShortName(practiceName));
+        holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
+        holder.initials.setBackgroundResource(R.drawable.round_list_tv_dark_gray);
+
+        holder.header.setText(Label.getLabel("notifications.notificationList.secureMessages.header"));
+        holder.header.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+
+        holder.message.setTextColor(ContextCompat.getColor(context, R.color.charcoal));
+
+        String messageString = Label.getLabel("notifications.notificationList.secureMessages.message");
+        SpannableStringBuilder stringBuilder = new SpannableStringBuilder(String.format(messageString, practiceName));
+        stringBuilder.setSpan(new CarePayCustomSpan(context,
+                        CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD), messageString.length(), stringBuilder.length(),
+                Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        holder.message.setText(stringBuilder);
+
+        holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_msg);
+        holder.cellAvatar.setVisibility(View.VISIBLE);
+    }
+
     private void displayPendingFormNotification(NotificationViewHolder holder, NotificationItem notificationItem) {
         holder.initials.setText(StringUtil.getShortName(notificationItem.getPayload().getPracticeName()));
         holder.initials.setTextColor(ContextCompat.getColor(context, R.color.lightning_yellow));
@@ -162,7 +212,54 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     }
 
     private void displayPaymentNotification(NotificationViewHolder holder, NotificationItem notificationItem) {
+        int headerTextColor;
+        String headerText;
+        String messageText;
+        int imageBackground;
+        int imageIcon;
+        if (notificationItem.getMetadata().getEvent().getPayload().isPaymentSuccessful()) {
+            headerTextColor = R.color.emerald;
+            imageBackground = R.drawable.round_list_tv_green;
+            imageIcon = R.drawable.icn_payment_confirm_check;
+            if (notificationItem.getMetadata().getEvent().getPayload().getScheduledPaymentExecution() == null) {
+                headerText = Label.getLabel("notifications.notificationList.regularPayment.header.successfulPaymentNotification");
+                messageText = Label.getLabel("notifications.notificationList.regularPayment.message.successfulPaymentNotification");
+            } else {
+                headerText = Label.getLabel("notifications.notificationList.scheduledPayment.header.successfulPaymentNotification");
+                messageText = Label.getLabel("notifications.notificationList.scheduledPayment.message.successfulPaymentNotification");
+            }
 
+        } else {
+            headerTextColor = R.color.remove_red;
+            imageBackground = R.drawable.round_list_tv_red;
+            imageIcon = R.drawable.icn_close;
+            if (notificationItem.getMetadata().getEvent().getPayload().getScheduledPaymentExecution() == null) {
+                headerText = Label.getLabel("notifications.notificationList.regularPayment.header.failedPaymentNotification");
+                messageText = Label.getLabel("notifications.notificationList.regularPayment.message.failedPaymentNotification");
+            } else {
+                headerText = Label.getLabel("notifications.notificationList.scheduledPayment.header.failedPaymentNotification");
+                messageText = Label.getLabel("notifications.notificationList.scheduledPayment.message.failedPaymentNotification");
+            }
+        }
+        holder.image.setVisibility(View.VISIBLE);
+        holder.initials.setBackgroundResource(imageBackground);
+        holder.initials.setText(" ");
+        holder.image.setImageDrawable(ContextCompat.getDrawable(context, imageIcon));
+
+
+        holder.header.setText(headerText);
+        holder.header.setTextColor(ContextCompat.getColor(context, headerTextColor));
+
+        UserPracticeDTO practice = ApplicationPreferences.getInstance()
+                .getUserPractice(notificationItem.getMetadata().getPracticeId());
+        String practiceName = practice.getPracticeName();
+        holder.message.setTextColor(ContextCompat.getColor(context, R.color.charcoal));
+        SpannableStringBuilder stringBuilder = new SpannableStringBuilder(String
+                .format(messageText, practiceName));
+        stringBuilder.setSpan(new CarePayCustomSpan(context, CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD),
+                stringBuilder.length() - practiceName.length(), stringBuilder.length(),
+                Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        holder.message.setText(stringBuilder);
     }
 
     private void displayCreditCardNotification(NotificationViewHolder holder, NotificationItem notificationItem) {
@@ -348,5 +445,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             undoButton.setVisibility(View.VISIBLE);
             deleteButton.setVisibility(View.GONE);
         }
+    }
+
+    public void setLoading(boolean loading) {
+        this.isLoading = loading;
+        notifyDataSetChanged();
     }
 }
