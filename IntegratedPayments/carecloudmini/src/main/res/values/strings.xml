@@ -55,6 +55,9 @@
     <string name="welcome_complete_refund">Transaction Completed.</string>
     <string name="welcome_retrying">Retrying&#8230; Attempt #%d</string>
     <string name="welcome_connect_error">Unable to connect!</string>
+    <string name="welcome_network_error">Unable to connect to local network!</string>
+    <string name="welcome_internet_error">Unable to connect to the internet!</string>
+    <string name="welcome_deepstream_error">Unable to connect to CareCloud!</string>
 
 
     <string name="content_logo">logo</string>
