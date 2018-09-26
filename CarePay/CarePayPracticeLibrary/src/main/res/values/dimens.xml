@@ -353,6 +353,14 @@
     <dimen name="itemPaymentPlanValuesTextSize">16sp</dimen>
     <dimen name="lastPaymentTextSize">17sp</dimen>
     <dimen name="formEditTextTextSize">24sp</dimen>
+    <dimen name="paymentPlanNameTextSize">16sp</dimen>
+
+    <!--Payment Plan Detail-->
+    <dimen name="paymentPlanDetailSectionHorizontalMargin">15dp</dimen>
+    <dimen name="paymentPlanDetailSectionVerticalPadding">24dp</dimen>
+    <dimen name="detailValueTextSize">17sp</dimen>
+    <dimen name="detailLabelTextSize">24sp</dimen>
+    <dimen name="paymentPlanDividerVerticalMargin">15dp</dimen>
 
 
 </resources>

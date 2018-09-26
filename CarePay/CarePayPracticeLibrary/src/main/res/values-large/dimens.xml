@@ -220,6 +220,14 @@
     <dimen name="itemPaymentPlanValuesTextSize">12sp</dimen>
     <dimen name="lastPaymentTextSize">12sp</dimen>
     <dimen name="payment_method_parent_layout_padding">@dimen/dashboardLabelStartMargin</dimen>
+    <dimen name="paymentPlanNameTextSize">12sp</dimen>
+
+    <!--Payment Plan Detail-->
+    <dimen name="paymentPlanDetailSectionHorizontalMargin">10dp</dimen>
+    <dimen name="paymentPlanDetailSectionVerticalPadding">15dp</dimen>
+    <dimen name="detailValueTextSize">14sp</dimen>
+    <dimen name="detailLabelTextSize">17sp</dimen>
+    <dimen name="paymentPlanDividerVerticalMargin">10dp</dimen>
 
 
 </resources>
