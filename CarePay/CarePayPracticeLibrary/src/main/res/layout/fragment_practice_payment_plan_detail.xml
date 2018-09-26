@@ -126,7 +126,7 @@
                 android:layout_toStartOf="@id/paymentPlanValueTextView"
                 android:text=":"
                 android:textColor="@color/light_gray"
-                android:textSize="@dimen/text_size_16sp"
+                android:textSize="@dimen/amountLabelTextSize"
                 app:customAssetFont="proxima_nova_regular"
                 tools:text=":" />
 
@@ -174,7 +174,7 @@
                 android:layout_toStartOf="@id/paymentAmountTextView"
                 android:text=":"
                 android:textColor="@color/light_gray"
-                android:textSize="@dimen/text_size_16sp"
+                android:textSize="@dimen/amountLabelTextSize"
                 app:customAssetFont="proxima_nova_regular"
                 tools:text=":" />
 
