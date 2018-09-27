@@ -80,7 +80,7 @@
                     android:focusableInTouchMode="false"
                     android:text="$"
                     android:textColor="@color/white_transparent"
-                    android:textSize="@dimen/calculator_entry_text"
+                    android:textSize="@dimen/amountCalculatorEntryTextSize"
                     android:visibility="gone"
                     app:customAssetFont="gotham_rounded_medium" />
 
@@ -96,7 +96,7 @@
                     android:inputType="numberDecimal"
                     android:textColor="@color/white"
                     android:textColorHint="@color/white_transparent"
-                    android:textSize="@dimen/calculator_entry_text"
+                    android:textSize="@dimen/amountCalculatorEntryTextSize"
                     app:customAssetFont="gotham_rounded_medium" />
             </LinearLayout>
 
@@ -185,13 +185,13 @@
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayButton
                         android:id="@+id/key_one"
-                        android:layout_width="@dimen/button_height"
-                        android:layout_height="@dimen/button_width"
+                        android:layout_width="@dimen/calculatorKeyButtonHeight"
+                        android:layout_height="@dimen/calculatorKeyButtonWidth"
                         android:background="@drawable/key_selector"
                         android:gravity="center"
                         android:text="@string/entry_1"
                         android:textColor="@color/charcoal"
-                        android:textSize="@dimen/button_pin_text_size"
+                        android:textSize="@dimen/calculatorKeyTextSize"
                         app:customAssetFont="gotham_rounded_medium" />
 
                     <View
@@ -201,13 +201,13 @@
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayButton
                         android:id="@+id/key_two"
-                        android:layout_width="@dimen/button_height"
-                        android:layout_height="@dimen/button_width"
+                        android:layout_width="@dimen/calculatorKeyButtonHeight"
+                        android:layout_height="@dimen/calculatorKeyButtonWidth"
                         android:background="@drawable/key_selector"
                         android:gravity="center"
                         android:text="@string/entry_2"
                         android:textColor="@color/charcoal"
-                        android:textSize="@dimen/button_pin_text_size"
+                        android:textSize="@dimen/calculatorKeyTextSize"
                         app:customAssetFont="gotham_rounded_medium" />
 
                     <View
@@ -217,13 +217,13 @@
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayButton
                         android:id="@+id/key_three"
-                        android:layout_width="@dimen/button_height"
-                        android:layout_height="@dimen/button_width"
+                        android:layout_width="@dimen/calculatorKeyButtonHeight"
+                        android:layout_height="@dimen/calculatorKeyButtonWidth"
                         android:background="@drawable/key_selector"
                         android:gravity="center"
                         android:text="@string/entry_3"
                         android:textColor="@color/charcoal"
-                        android:textSize="@dimen/button_pin_text_size"
+                        android:textSize="@dimen/calculatorKeyTextSize"
                         app:customAssetFont="gotham_rounded_medium" />
 
                 </LinearLayout>
@@ -240,13 +240,13 @@
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayButton
                         android:id="@+id/key_four"
-                        android:layout_width="@dimen/button_height"
-                        android:layout_height="@dimen/button_width"
+                        android:layout_width="@dimen/calculatorKeyButtonHeight"
+                        android:layout_height="@dimen/calculatorKeyButtonWidth"
                         android:background="@drawable/key_selector"
                         android:gravity="center"
                         android:text="@string/entry_4"
                         android:textColor="@color/charcoal"
-                        android:textSize="@dimen/button_pin_text_size"
+                        android:textSize="@dimen/calculatorKeyTextSize"
                         app:customAssetFont="gotham_rounded_medium" />
 
                     <View
@@ -256,13 +256,13 @@
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayButton
                         android:id="@+id/key_five"
-                        android:layout_width="@dimen/button_height"
-                        android:layout_height="@dimen/button_width"
+                        android:layout_width="@dimen/calculatorKeyButtonHeight"
+                        android:layout_height="@dimen/calculatorKeyButtonWidth"
                         android:background="@drawable/key_selector"
                         android:gravity="center"
                         android:text="@string/entry_5"
                         android:textColor="@color/charcoal"
-                        android:textSize="@dimen/button_pin_text_size"
+                        android:textSize="@dimen/calculatorKeyTextSize"
                         app:customAssetFont="gotham_rounded_medium" />
 
                     <View
@@ -272,13 +272,13 @@
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayButton
                         android:id="@+id/key_six"
-                        android:layout_width="@dimen/button_height"
-                        android:layout_height="@dimen/button_width"
+                        android:layout_width="@dimen/calculatorKeyButtonHeight"
+                        android:layout_height="@dimen/calculatorKeyButtonWidth"
                         android:background="@drawable/key_selector"
                         android:gravity="center"
                         android:text="@string/entry_6"
                         android:textColor="@color/charcoal"
-                        android:textSize="@dimen/button_pin_text_size"
+                        android:textSize="@dimen/calculatorKeyTextSize"
                         app:customAssetFont="gotham_rounded_medium" />
                 </LinearLayout>
 
@@ -294,13 +294,13 @@
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayButton
                         android:id="@+id/key_seven"
-                        android:layout_width="@dimen/button_height"
-                        android:layout_height="@dimen/button_width"
+                        android:layout_width="@dimen/calculatorKeyButtonHeight"
+                        android:layout_height="@dimen/calculatorKeyButtonWidth"
                         android:background="@drawable/key_selector"
                         android:gravity="center"
                         android:text="@string/entry_7"
                         android:textColor="@color/charcoal"
-                        android:textSize="@dimen/button_pin_text_size"
+                        android:textSize="@dimen/calculatorKeyTextSize"
                         app:customAssetFont="gotham_rounded_medium" />
 
                     <View
@@ -310,13 +310,13 @@
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayButton
                         android:id="@+id/key_eighth"
-                        android:layout_width="@dimen/button_height"
-                        android:layout_height="@dimen/button_width"
+                        android:layout_width="@dimen/calculatorKeyButtonHeight"
+                        android:layout_height="@dimen/calculatorKeyButtonWidth"
                         android:background="@drawable/key_selector"
                         android:gravity="center"
                         android:text="@string/entry_8"
                         android:textColor="@color/charcoal"
-                        android:textSize="@dimen/button_pin_text_size"
+                        android:textSize="@dimen/calculatorKeyTextSize"
                         app:customAssetFont="gotham_rounded_medium" />
 
                     <View
@@ -326,13 +326,13 @@
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayButton
                         android:id="@+id/key_nine"
-                        android:layout_width="@dimen/button_height"
-                        android:layout_height="@dimen/button_width"
+                        android:layout_width="@dimen/calculatorKeyButtonHeight"
+                        android:layout_height="@dimen/calculatorKeyButtonWidth"
                         android:background="@drawable/key_selector"
                         android:gravity="center"
                         android:text="@string/entry_9"
                         android:textColor="@color/charcoal"
-                        android:textSize="@dimen/button_pin_text_size"
+                        android:textSize="@dimen/calculatorKeyTextSize"
                         app:customAssetFont="gotham_rounded_medium" />
 
                 </LinearLayout>
@@ -349,13 +349,13 @@
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayButton
                         android:id="@+id/key_blank"
-                        android:layout_width="@dimen/button_height"
-                        android:layout_height="@dimen/button_width"
+                        android:layout_width="@dimen/calculatorKeyButtonHeight"
+                        android:layout_height="@dimen/calculatorKeyButtonWidth"
                         android:background="@drawable/key_selector"
                         android:gravity="center"
                         android:text="@string/entry_decimal"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/button_pin_text_size"
+                        android:textSize="@dimen/calculatorKeyTextSize"
                         app:customAssetFont="gotham_rounded_medium" />
 
                     <View
@@ -365,13 +365,13 @@
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayButton
                         android:id="@+id/key_zero"
-                        android:layout_width="@dimen/button_height"
-                        android:layout_height="@dimen/button_width"
+                        android:layout_width="@dimen/calculatorKeyButtonHeight"
+                        android:layout_height="@dimen/calculatorKeyButtonWidth"
                         android:background="@drawable/key_selector"
                         android:gravity="center"
                         android:text="@string/entry_0"
                         android:textColor="@color/charcoal"
-                        android:textSize="@dimen/button_pin_text_size"
+                        android:textSize="@dimen/calculatorKeyTextSize"
                         app:customAssetFont="gotham_rounded_medium" />
 
                     <View
@@ -381,8 +381,8 @@
 
                     <LinearLayout
                         android:id="@+id/key_clear"
-                        android:layout_width="@dimen/button_height"
-                        android:layout_height="@dimen/button_width"
+                        android:layout_width="@dimen/calculatorKeyButtonHeight"
+                        android:layout_height="@dimen/calculatorKeyButtonWidth"
                         android:layout_gravity="center"
                         android:background="@drawable/key_selector"
                         android:gravity="center">

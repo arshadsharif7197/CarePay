@@ -231,5 +231,30 @@
     <dimen name="confirmDialogButtonsPadding">5dp</dimen>
     <dimen name="confirmDialogButtonsHorizontalMargin">10dp</dimen>
     <dimen name="confirmDialogButtonsTextSize">22sp</dimen>
+    <dimen name="addNewCardButtonTextSize">14sp</dimen>
+
+    <!--Amount Screen-->
+    <dimen name="dialog_amount_width">420dp</dimen>
+    <dimen name="dialog_amount_height">600dp</dimen>
+    <dimen name="amountDialogHorizontalMargin">26dp</dimen>
+    <dimen name="partialPaymentHeaderHorizontalPadding">25dp</dimen>
+    <dimen name="partialPaymentHeaderTopPadding">25dp</dimen>
+    <dimen name="partialPaymentHeaderTextSize">18sp</dimen>
+    <dimen name="amountContainerHorizontalMargin">15dp</dimen>
+    <dimen name="enterAmountTextHeight">120dp</dimen>
+    <dimen name="partialPaymentHeaderBottomMargin">5dp</dimen>
+    <dimen name="partialPaymentHeaderBottomHorizontalPadding">25dp</dimen>
+    <dimen name="partialPaymentHeaderBottomTextSize">15sp</dimen>
+    <dimen name="schedulePaymentDateHorizontalPadding">13dp</dimen>
+    <dimen name="schedulePaymentDateTopMargin">8dp</dimen>
+    <dimen name="pendingAmountTextSize">18sp</dimen>
+    <dimen name="calculatorContainerBottomPadding">10dp</dimen>
+    <dimen name="pendingAmountVerticalMargin">10dp</dimen>
+    <dimen name="calculatorKeyButtonHeight">77dp</dimen>
+    <dimen name="calculatorKeyButtonWidth">66dp</dimen>
+    <dimen name="calculatorKeyTextSize">38sp</dimen>
+    <dimen name="amountCalculatorEntryTextSize">50sp</dimen>
+    <dimen name="amountCalculatorEntryTextSize65">40sp</dimen>
+    <dimen name="amountCalculatorEntryTextSize50">30sp</dimen>
 
 </resources>

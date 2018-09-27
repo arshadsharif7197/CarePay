@@ -490,7 +490,7 @@
                         android:paddingEnd="@dimen/dimen_10dp"
                         android:paddingStart="@dimen/dimen_10dp"
                         android:textColor="@color/optional_gray"
-                        android:textSize="@dimen/lastPaymentTextSize"
+                        android:textSize="@dimen/addNewCardButtonTextSize"
                         android:visibility="invisible"
                         app:customAssetFont="gotham_rounded_book"
                         tools:text="Your last payment will be adjusted to $108.00" />

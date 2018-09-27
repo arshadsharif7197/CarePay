@@ -435,7 +435,7 @@
                         android:paddingEnd="@dimen/dimen_10dp"
                         android:paddingStart="@dimen/dimen_10dp"
                         android:textColor="@color/optional_gray"
-                        android:textSize="@dimen/text_size_17"
+                        android:textSize="@dimen/lastPaymentTextSize"
                         android:visibility="invisible"
                         app:customAssetFont="gotham_rounded_book"
                         tools:text="Your last payment will be adjusted to $108.00" />
@@ -467,7 +467,7 @@
                     android:id="@+id/addNewCardButton"
                     style="@style/BreezeButtonStyleDark"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/commonButtonHeight"
                     android:layout_gravity="end"
                     android:layout_marginBottom="@dimen/dimen_10dp"
                     android:layout_marginEnd="@dimen/dimen_15dp"
@@ -475,7 +475,7 @@
                     android:paddingEnd="@dimen/dimen_20dp"
                     android:paddingStart="@dimen/dimen_20dp"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/text_size_13"
+                    android:textSize="@dimen/addNewCardButtonTextSize"
                     app:customAssetFont="gotham_rounded_medium"
                     breeze:textKey="payment_add_new_credit_card_button" />
 
