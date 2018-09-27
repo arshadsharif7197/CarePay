@@ -81,7 +81,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         if (!surveyModel.isAlreadyFilled()) {
             if (average >= surveyDto.getPayload().getSurveySettings().getSatisfiedRate()
                     || surveyModel.isZeroAnswers()) {
-                sendResponse(surveyModel, false, false);
+                sendResponse(surveyModel, true, false);
             } else {
                 showFeedBackLayout = true;
             }
@@ -293,8 +293,9 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         return rate / dividend;
     }
 
-    private void sendResponse(final SurveyModel survey, boolean attachFeedback, final boolean showOkButton) {
-        SurveyModel surveyResponse = createSurveyResponse(survey, attachFeedback);
+    private void sendResponse(final SurveyModel survey, final boolean submitFeedbackButtonPressed,
+                              final boolean showOkButton) {
+        SurveyModel surveyResponse = createSurveyResponse(survey, submitFeedbackButtonPressed);
         Gson gson = new Gson();
         String jsonResponse = gson.toJson(surveyResponse);
         Map<String, String> query = new HashMap<>();
@@ -313,6 +314,9 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
                 hideProgressDialog();
                 if (survey.isZeroAnswers()) {
                     manageGoBackButton(getView(), survey);
+
+                } else if (!submitFeedbackButtonPressed) {
+                    getActivity().finish();
                 } else if (showOkButton) {
                     showOkButton();
                 } else {
@@ -346,7 +350,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
             questions.add(questionResponse);
         }
         surveyResponse.setResponses(questions);
-        if (attachFeedback) {
+        if (attachFeedback && feedbackEditText != null) {
             surveyResponse.setFeedback(feedbackEditText.getText().toString());
         }
         return surveyResponse;
