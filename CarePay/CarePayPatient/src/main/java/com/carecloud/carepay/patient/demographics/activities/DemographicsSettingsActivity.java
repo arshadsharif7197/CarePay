@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.demographics.activities;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -248,12 +249,15 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     }
 
     @Override
-    public void showRemovePrimaryInsuranceDialog(ConfirmationCallback callback) {
+    public void showRemovePrimaryInsuranceDialog(ConfirmationCallback callback, DialogInterface.OnCancelListener cancelListener) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment
                 .newInstance(Label.getLabel("demographics_insurance_primary_alert_title"),
                         Label.getLabel("demographics_insurance_primary_alert_message_patient"));
         confirmDialogFragment.setCallback(callback);
+        if(cancelListener != null){
+            confirmDialogFragment.setOnCancelListener(cancelListener);
+        }
         String tag = confirmDialogFragment.getClass().getName();
         confirmDialogFragment.show(ft, tag);
     }

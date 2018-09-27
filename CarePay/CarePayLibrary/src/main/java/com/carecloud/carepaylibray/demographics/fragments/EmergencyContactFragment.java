@@ -335,6 +335,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                         new CheckInDemographicsBaseFragment.OnOptionSelectedListener() {
                             @Override
                             public void onOptionSelected(DemographicsOption option) {
+                                selectedGender = option;
                                 genderEditText.setText(option.getLabel());
                                 genderEditText.getOnFocusChangeListener().onFocusChange(genderEditText,
                                         !StringUtil.isNullOrEmpty(genderEditText.getText().toString()));
@@ -345,6 +346,10 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                 dataModel.getDemographic().getPersonalDetails().getProperties().getGender().getOptions());
         genderEditText.getOnFocusChangeListener().onFocusChange(genderEditText,
                 !StringUtil.isNullOrEmpty(emergencyContact.getGender()));
+//        if(StringUtil.isNullOrEmpty(selectedGender.getLabel())){
+//            String chooseLabel = Label.getLabel("demographics_choose");
+//            genderEditText.setText(chooseLabel);
+//        }
 
         ecRelationshipInputLayout = (TextInputLayout) view
                 .findViewById(R.id.emergencyContactRelationshipInputLayout);
@@ -357,6 +362,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                         new CheckInDemographicsBaseFragment.OnOptionSelectedListener() {
                             @Override
                             public void onOptionSelected(DemographicsOption option) {
+                                selectedRelationship = option;
                                 ecRelationshipEditText.setText(option.getLabel());
                                 ecRelationshipEditText.getOnFocusChangeListener()
                                         .onFocusChange(ecRelationshipEditText,
@@ -371,6 +377,10 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                 .getProperties().getRelationshipType().getOptions());
         ecRelationshipEditText.getOnFocusChangeListener().onFocusChange(ecRelationshipEditText,
                 !StringUtil.isNullOrEmpty(emergencyContact.getEmergencyContactRelationship()));
+//        if(StringUtil.isNullOrEmpty(selectedRelationship.getLabel())){
+//            String chooseLabel = Label.getLabel("demographics_choose");
+//            ecRelationshipEditText.setText(chooseLabel);
+//        }
 
         address1TextInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
         addressEditText = (EditText) view.findViewById(R.id.addressEditText);
@@ -422,26 +432,27 @@ public class EmergencyContactFragment extends BaseDialogFragment {
             key = storedName;
         }
         storeOption = getOptionByKey(options, key, storeOption);
-        if (StringUtil.isNullOrEmpty(storedName)) {
-            String chooseLabel = Label.getLabel("demographics_choose");
-            if (optional != null) {
-                optional.setVisibility(View.VISIBLE);
-            }
-
-            textView.setText(chooseLabel);
-        } else {
+        if (!StringUtil.isNullOrEmpty(storedName)) {
             textView.setText(storeOption.getLabel());
+        }else if (optional != null) {
+            optional.setVisibility(View.VISIBLE);
         }
 
     }
 
-    private DemographicsOption getOptionByKey(List<DemographicsOption> options, String name, DemographicsOption selectedRelationship) {
+    private DemographicsOption getOptionByKey(List<DemographicsOption> options,
+                                              String name,
+                                              DemographicsOption storeOption) {
         for (DemographicsOption option : options) {
             if (option.getName().equals(name)) {
-                return option;
+                storeOption.setName(option.getName());
+                storeOption.setLabel(option.getLabel());
+                return storeOption;
             }
         }
-        return null;
+        storeOption.setName(name);
+        storeOption.setLabel(name);
+        return storeOption;
     }
 
     private boolean isEmptyEC(PatientModel emergencyContact) {
