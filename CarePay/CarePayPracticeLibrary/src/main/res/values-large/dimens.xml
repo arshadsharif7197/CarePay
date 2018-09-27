@@ -229,5 +229,16 @@
     <dimen name="detailLabelTextSize">17sp</dimen>
     <dimen name="paymentPlanDividerVerticalMargin">10dp</dimen>
 
+    <!--Confirm Dialog-->
+    <dimen name="confirmDialogWidth">350dp</dimen>
+    <dimen name="confirmDialogHorizontalMargin">15dp</dimen>
+    <dimen name="confirmDialogTitleTextSize">25sp</dimen>
+    <dimen name="confirmDialogTitlePadding">18dp</dimen>
+    <dimen name="confirmDialogSubtitleTextSize">14sp</dimen>
+    <dimen name="confirmDialogButtonsContainerPadding">5dp</dimen>
+    <dimen name="confirmDialogButtonsPadding">5dp</dimen>
+    <dimen name="confirmDialogButtonsHorizontalMargin">5dp</dimen>
+    <dimen name="confirmDialogButtonsTextSize">16sp</dimen>
+
 
 </resources>
