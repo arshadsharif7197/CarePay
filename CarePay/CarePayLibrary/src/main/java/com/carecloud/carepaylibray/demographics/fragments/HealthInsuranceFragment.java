@@ -42,6 +42,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     private boolean noPrimaryInsuranceFound;
     private boolean insuranceTypeRepeated = false;
     private String insuranceTypeRepeatedErrorMessage;
+    private boolean shouldContinue = false;
 
     public interface InsuranceDocumentScannerListener {
         void editInsurance(DemographicDTO demographicDTO, Integer editedIndex, boolean showAsDialog);
@@ -80,6 +81,10 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
         super.onCreate(icicle);
         if (demographicDTO == null) {
 //            demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
+        }
+        if (shouldContinue){
+            openNextFragment(demographicDTO);
+            shouldContinue = false;
         }
     }
 
@@ -338,5 +343,9 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
                 }
             }
         }
+    }
+
+    public void setShouldContinue(boolean shouldContinue){
+        this.shouldContinue = shouldContinue;
     }
 }

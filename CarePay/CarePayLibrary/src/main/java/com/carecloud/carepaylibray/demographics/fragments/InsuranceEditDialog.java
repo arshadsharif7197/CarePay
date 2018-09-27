@@ -122,7 +122,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
         void goOneStepBack();
 
-        void showRemovePrimaryInsuranceDialog(ConfirmationCallback callback);
+        void showRemovePrimaryInsuranceDialog(ConfirmationCallback callback, DialogInterface.OnCancelListener cancelListener);
     }
 
     /**
@@ -591,12 +591,22 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             DemographicInsurancePayloadDTO insurance = demographicDTO.getPayload().getDemographics()
                     .getPayload().getInsurances().get(editedIndex);
             if (insurance.getInsuranceType().toLowerCase().equals("primary")) {
+                DialogInterface.OnCancelListener cancelListener = null;
+                if(getDialog() != null){
+                    cancelListener = new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            showDialog();
+                        }
+                    };
+                }
                 callback.showRemovePrimaryInsuranceDialog(new ConfirmationCallback() {
                     @Override
                     public void onConfirm() {
                         removeInsurance();
                     }
-                });
+                }, cancelListener);
+                hideDialog();
             } else {
                 removeInsurance();
             }
@@ -1057,15 +1067,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             key = storedName;
         }
         storeOption = getOptionByKey(options, key, storeOption);
-        if (StringUtil.isNullOrEmpty(storedName)) {
-            String chooseLabel = Label.getLabel("demographics_choose");
-            if (optional != null) {
-                optional.setVisibility(View.VISIBLE);
-            }
-
-            textView.setText(chooseLabel);
-        }else{
+        if (!StringUtil.isNullOrEmpty(storedName)) {
             textView.setText(storeOption.getLabel());
+        }else if (optional != null) {
+            optional.setVisibility(View.VISIBLE);
         }
 
     }
