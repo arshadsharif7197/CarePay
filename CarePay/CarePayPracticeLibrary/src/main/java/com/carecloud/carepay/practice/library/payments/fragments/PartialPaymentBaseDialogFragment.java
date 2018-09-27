@@ -119,7 +119,7 @@ public abstract class PartialPaymentBaseDialogFragment extends BaseDialogFragmen
                 }
             }
             if (numberStr.length() < 5) {
-                amountTextView.setTextSize(getResources().getDimension(R.dimen.amountCalculatorEntryTextSize));
+                amountTextView.setTextSize(getResources().getDimension(R.dimen.amountCalculatorEntryTextSizeBig));
             } else if (numberStr.length() < 7) {
                 amountTextView.setTextSize(getResources().getDimension(R.dimen.amountCalculatorEntryTextSize65));
             } else if (numberStr.length() < 10) {

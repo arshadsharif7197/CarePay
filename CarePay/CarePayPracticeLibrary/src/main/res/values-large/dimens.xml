@@ -261,7 +261,8 @@
     <dimen name="calculatorKeyButtonHeight">55dp</dimen>
     <dimen name="calculatorKeyButtonWidth">44dp</dimen>
     <dimen name="calculatorKeyTextSize">28sp</dimen>
-    <dimen name="amountCalculatorEntryTextSize">40sp</dimen>
+    <dimen name="amountCalculatorEntryTextSize">55sp</dimen>
+    <dimen name="amountCalculatorEntryTextSizeBig">40sp</dimen>
     <dimen name="amountCalculatorEntryTextSize65">30sp</dimen>
     <dimen name="amountCalculatorEntryTextSize50">20sp</dimen>
 
