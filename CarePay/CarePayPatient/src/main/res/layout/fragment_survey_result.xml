@@ -142,9 +142,9 @@
             android:layout_marginEnd="@dimen/dimen_10dp"
             android:layout_marginStart="@dimen/dimen_10dp"
             android:layout_marginTop="@dimen/dimen_10dp"
-            android:background="@drawable/round_white_background"
+            android:background="@drawable/selector_round_white_background"
             android:enabled="false"
-            android:textColor="@color/lemonGreen"
+            android:textColor="@drawable/selector_lemon_green"
             android:textSize="16sp"
             breeze:textKey="survey.form.button.title.submit"
             tools:text="Submit" />

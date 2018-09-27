@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +51,8 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
     private boolean showFeedBackLayout;
     private Button noThanksButton;
     private TextView subtitleTextView;
+    private EditText feedbackEditText;
+    private Button submitButton;
 
     public static SurveyResultFragment newInstance(String patientId) {
         Bundle args = new Bundle();
@@ -72,10 +76,12 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         surveyDto = (SurveyDTO) callback.getDto();
-        float average = getRateAverage(surveyDto.getPayload().getSurvey());
-        if (!surveyDto.getPayload().getSurvey().isAlreadyFilled()) {
-            if (average >= surveyDto.getPayload().getSurveySettings().getSatisfiedRate()) {
-                sendResponse(surveyDto.getPayload().getSurvey(), false, false);
+        SurveyModel surveyModel = surveyDto.getPayload().getSurvey();
+        float average = getRateAverage(surveyModel);
+        if (!surveyModel.isAlreadyFilled()) {
+            if (average >= surveyDto.getPayload().getSurveySettings().getSatisfiedRate()
+                    || surveyModel.isZeroAnswers()) {
+                sendResponse(surveyModel, false, false);
             } else {
                 showFeedBackLayout = true;
             }
@@ -93,37 +99,14 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         super.onViewCreated(view, savedInstanceState);
         noThanksButton = (Button) view.findViewById(R.id.noThanksButton);
         subtitleTextView = (TextView) view.findViewById(R.id.subtitleTextView);
-        if (surveyDto.getPayload().getSurvey().isAlreadyFilled()) {
-            Button okButton = (Button) view.findViewById(R.id.okButton);
-            okButton.setText(Label.getLabel("go_back_label"));
-            okButton.setBackgroundResource(R.drawable.round_white_border);
-            okButton.setTextColor(getResources().getColor(R.color.white));
-            okButton.setVisibility(View.VISIBLE);
-            okButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getActivity().finish();
-                }
-            });
-            noThanksButton.setVisibility(View.GONE);
-            view.findViewById(R.id.fakeView).setVisibility(View.VISIBLE);
-            subtitleTextView.setText(Label.getLabel("survey.successScreen.subtitle.message.alreadyFilled"));
+        submitButton = (Button) view.findViewById(R.id.submitButton);
+        feedbackEditText = (EditText) view.findViewById(R.id.feedbackEditText);
+        final SurveyModel surveyModel = surveyDto.getPayload().getSurvey();
+        if (surveyModel.isAlreadyFilled() || surveyModel.isZeroAnswers()) {
+            manageGoBackButton(view, surveyModel);
         } else {
             if (showFeedBackLayout) {
-                view.findViewById(R.id.negativeFeedbackLayout).setVisibility(View.VISIBLE);
-                noThanksButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        sendResponse(surveyDto.getPayload().getSurvey(), false, true);
-                    }
-                });
-                Button submitButton = (Button) view.findViewById(R.id.submitButton);
-                submitButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        sendResponse(surveyDto.getPayload().getSurvey(), true, true);
-                    }
-                });
+                showNegativeFeedbackLayout(view, surveyModel);
             } else {
                 view.findViewById(R.id.socialNetworksLayout).setVisibility(View.VISIBLE);
                 displaySocialNetworksLinks(view);
@@ -138,6 +121,65 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         }
     }
 
+    private void showNegativeFeedbackLayout(View view, final SurveyModel surveyModel) {
+        view.findViewById(R.id.negativeFeedbackLayout).setVisibility(View.VISIBLE);
+        noThanksButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendResponse(surveyModel, false, true);
+            }
+        });
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendResponse(surveyModel, true, true);
+            }
+        });
+
+        feedbackEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() == 0) {
+                    submitButton.setEnabled(false);
+                } else {
+                    submitButton.setEnabled(true);
+                }
+            }
+        });
+    }
+
+    private void manageGoBackButton(View view, SurveyModel surveyModel) {
+        Button goBackButton = (Button) view.findViewById(R.id.okButton);
+        goBackButton.setVisibility(View.VISIBLE);
+        goBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
+        noThanksButton.setVisibility(View.GONE);
+        view.findViewById(R.id.fakeView).setVisibility(View.VISIBLE);
+        if (surveyModel.isZeroAnswers() && !surveyModel.isAlreadyFilled()) {
+            subtitleTextView.setVisibility(View.GONE);
+            goBackButton.setText(Label.getLabel("survey.successScreen.button.title.back"));
+        } else {
+            goBackButton.setBackgroundResource(R.drawable.round_white_border);
+            goBackButton.setTextColor(getResources().getColor(R.color.white));
+            goBackButton.setText(Label.getLabel("go_back_label"));
+            subtitleTextView.setText(Label.getLabel("survey.successScreen.subtitle.message.alreadyFilled"));
+        }
+    }
+
     protected void displaySocialNetworksLinks(View view) {
         SurveySettings settings = surveyDto.getPayload().getSurveySettings();
         if (settings.getNetworkLinks().isEnable()
@@ -149,6 +191,9 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
     }
 
     private void showOkButton() {
+        getView().findViewById(R.id.fakeView).setVisibility(View.VISIBLE);
+        submitButton.setVisibility(View.GONE);
+        feedbackEditText.setVisibility(View.GONE);
         noThanksButton.setVisibility(View.GONE);
         subtitleTextView.setVisibility(View.GONE);
         Button okButton = (Button) getView().findViewById(R.id.okButton);
@@ -240,6 +285,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
             }
         }
         if (dividend == 0) {
+            survey.setZeroAnswers(true);
             survey.setSurveyRating(0.0f);
             return 0.0f;
         }
@@ -247,7 +293,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         return rate / dividend;
     }
 
-    private void sendResponse(SurveyModel survey, boolean attachFeedback, final boolean showOkButton) {
+    private void sendResponse(final SurveyModel survey, boolean attachFeedback, final boolean showOkButton) {
         SurveyModel surveyResponse = createSurveyResponse(survey, attachFeedback);
         Gson gson = new Gson();
         String jsonResponse = gson.toJson(surveyResponse);
@@ -265,7 +311,9 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
-                if (showOkButton) {
+                if (survey.isZeroAnswers()) {
+                    manageGoBackButton(getView(), survey);
+                } else if (showOkButton) {
                     showOkButton();
                 } else {
                     displaySocialNetworksLinks(getView());
@@ -299,7 +347,6 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         }
         surveyResponse.setResponses(questions);
         if (attachFeedback) {
-            EditText feedbackEditText = (EditText) getView().findViewById(R.id.feedbackEditText);
             surveyResponse.setFeedback(feedbackEditText.getText().toString());
         }
         return surveyResponse;

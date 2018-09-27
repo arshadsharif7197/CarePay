@@ -42,6 +42,7 @@ public class SurveyModel {
     private SurveyModelMetadata metadata;
 
     private transient boolean alreadyFilled;
+    private transient boolean zeroAnswers;
 
     public String getTitle() {
         return title;
@@ -129,5 +130,13 @@ public class SurveyModel {
 
     public void setAlreadyFilled() {
         alreadyFilled = true;
+    }
+
+    public void setZeroAnswers(boolean zeroAnswers) {
+        this.zeroAnswers = zeroAnswers;
+    }
+
+    public boolean isZeroAnswers() {
+        return zeroAnswers;
     }
 }
