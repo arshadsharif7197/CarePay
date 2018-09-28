@@ -426,5 +426,8 @@
     <dimen name="confirmationDataLabelTextSize">17sp</dimen>
     <dimen name="confirmationDataValueTextSize">14sp</dimen>
 
+    <!--Choose Credit Card-->
+    <dimen name="chooseCreditCardContentHeight">400dp</dimen>
+
 
 </resources>
