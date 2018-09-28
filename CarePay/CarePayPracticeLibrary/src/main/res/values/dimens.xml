@@ -411,5 +411,20 @@
     <dimen name="creditCardFieldTextSize">16sp</dimen>
     <dimen name="payment_pick_date_label_text_size">14sp</dimen>
 
+    <!--Payment Plan Confirmation-->
+    <dimen name="paymentPlanConfirmationHeaderHorizontalPadding">10dp</dimen>
+    <dimen name="paymentPlanConfirmationHeaderTopPadding">10dp</dimen>
+    <dimen name="paymentPlanConfirmationHeaderBottomPadding">20dp</dimen>
+    <dimen name="paymentConfirmNumberTextSize">12sp</dimen>
+    <dimen name="paymentConfirmValueStartMargin">10dp</dimen>
+    <dimen name="paymentPlanConfirmationCheckSize">130dp</dimen>
+    <dimen name="paymentPlanConfirmationCheckPadding">30dp</dimen>
+    <dimen name="paymentConfirmMessagePadding">20dp</dimen>
+    <dimen name="paymentConfirmMessageTextSize">24sp</dimen>
+    <dimen name="confirmationDataContainerPadding">20dp</dimen>
+    <dimen name="confirmationDataVerticalPadding">20dp</dimen>
+    <dimen name="confirmationDataLabelTextSize">17sp</dimen>
+    <dimen name="confirmationDataValueTextSize">14sp</dimen>
+
 
 </resources>
