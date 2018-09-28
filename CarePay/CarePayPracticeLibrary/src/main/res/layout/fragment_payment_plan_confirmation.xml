@@ -111,8 +111,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:paddingBottom="@dimen/dimen_20dp"
-                android:paddingTop="@dimen/dimen_20dp"
+                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
+                android:paddingTop="@dimen/confirmationDataVerticalPadding"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/confirmationDataValueTextSize"
                 app:customAssetFont="proxima_nova_semi_bold" />
@@ -121,7 +121,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_1dp"
+            android:layout_height="@dimen/separatorHeight"
             android:background="@color/light_gray" />
 
         <LinearLayout
