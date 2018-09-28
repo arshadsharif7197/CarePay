@@ -49,7 +49,7 @@
         <com.carecloud.carepaylibray.customcomponents.AutoResizeTextView
             android:id="@+id/patient_name_text_view"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/patientNameTextSize"
+            android:layout_height="@dimen/paymentPatientNameTextSize"
             android:gravity="start"
             android:maxLines="1"
             android:textColor="@color/charcoal"

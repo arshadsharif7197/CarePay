@@ -134,6 +134,7 @@
     <dimen name="paymentDetailDateTextSize">12sp</dimen>
 
     <!--Payments Activity-->
+    <dimen name="paymentPatientNameTextSize">24sp</dimen>
     <dimen name="findPatientButtonRightMargin">50dp</dimen>
     <dimen name="mainScreensTitleTextSize">22sp</dimen>
     <dimen name="paymentContainerBottomMargin">10dp</dimen>
