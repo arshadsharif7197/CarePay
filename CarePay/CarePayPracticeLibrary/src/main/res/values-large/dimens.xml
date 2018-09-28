@@ -21,6 +21,8 @@
     <dimen name="radioButtonPadding">6dp</dimen>
     <dimen name="checkboxSize">@dimen/radioButtonSize</dimen>
     <dimen name="checkboxPadding">@dimen/radioButtonPadding</dimen>
+    <dimen name="commonPracticeDialogHeight">450dp</dimen>
+    <dimen name="separatorHeight">0.5dp</dimen>
 
     <!--Language-->
     <dimen name="langSpinnerTextSize">15sp</dimen>
@@ -265,6 +267,19 @@
     <dimen name="amountCalculatorEntryTextSizeBig">40sp</dimen>
     <dimen name="amountCalculatorEntryTextSize65">30sp</dimen>
     <dimen name="amountCalculatorEntryTextSize50">20sp</dimen>
+
+    <!--Calendar Fragment-->
+    <dimen name="daysContainerVerticalPadding">5dp</dimen>
+    <dimen name="dayTextSize">15sp</dimen>
+
+    <!--Add New CreditCard Fragment-->
+    <dimen name="creditCardFieldHorizontalMargin">5dp</dimen>
+    <dimen name="creditCardFieldTopMargin">5dp</dimen>
+    <dimen name="addNewCreditCardMainSeparatorBottomMargin">15dp</dimen>
+    <dimen name="creditCardOptionMargin">5dp</dimen>
+    <dimen name="creditCardFieldPadding">5dp</dimen>
+    <dimen name="creditCardFieldTextSize">13sp</dimen>
+    <dimen name="payment_pick_date_label_text_size">10sp</dimen>
 
 
 </resources>

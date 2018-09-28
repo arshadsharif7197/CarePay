@@ -158,7 +158,7 @@ public class DateRangePickerDialog extends BasePracticeDialogFragment {
         Date today = new Date();
         Button todayButton = (Button) view.findViewById(R.id.dialog_date_range_picker_today_button);
         todayButton.setOnClickListener(todayButtonClickListener);
-        if(today.before(startDate)){
+        if (today.before(startDate)) {
             todayButton.setVisibility(View.GONE);
         }
     }
