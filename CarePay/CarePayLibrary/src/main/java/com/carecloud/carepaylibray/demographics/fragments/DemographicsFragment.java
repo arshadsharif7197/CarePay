@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.models.PatientModel;
@@ -203,6 +204,15 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getEmailAddress(),
                 personalInfoSection.getProperties().getEmailAddress(), R.id.emailContainer, R.id.emailInputLayout,
                 emailEditText, R.id.emailOptional, null, null);
+
+        ApplicationMode.ApplicationType applicationType = getApplicationMode().getApplicationType();
+        if(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE &&
+                callback.getAppointment().getMetadata().getPatientId()
+                        .equals(getAppAuthorizationHelper().getPatientUser())){
+            view.findViewById(R.id.email).setEnabled(true);
+        }else{
+            view.findViewById(R.id.email).setEnabled(false);
+        }
 
         preferredLanguageEditText = (EditText) view.findViewById(R.id.preferredLanguageEditText);
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getPreferredLanguage(),
