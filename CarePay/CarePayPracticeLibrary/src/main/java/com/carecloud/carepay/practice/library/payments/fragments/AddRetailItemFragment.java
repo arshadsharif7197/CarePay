@@ -97,8 +97,6 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
 
         setAdapter(retailProductsModel.getProducts().getItems());
 
-        View searchLayout = view.findViewById(R.id.search_edit_frame);
-        searchLayout.setVisibility(View.GONE);
     }
 
     private void setupToolbar(View view){
