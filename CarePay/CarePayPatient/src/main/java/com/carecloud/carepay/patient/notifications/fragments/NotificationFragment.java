@@ -333,7 +333,9 @@ public class NotificationFragment extends BaseFragment
             getApplicationPreferences().setRemindLatest(false);
             notificationItems.remove(notificationItem);
             notificationsAdapter.notifyItemRemoved(holder.getAdapterPosition());
-
+            if (notificationItems.size() == 0) {
+                setAdapter();
+            }
         } else {
             notificationsAdapter.scheduleNotificationRemoval(notificationItem);
             notificationsAdapter.notifyItemChanged(holder.getAdapterPosition());
