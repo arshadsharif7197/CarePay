@@ -47,6 +47,9 @@ public class ApplicationPreferences {
     private static final String BAD_COUNTER_TRANSITION = "badgeCounterTransition";
     private static final String PREFERENCE_LANDING_SCREEN = "landing_screen";
     private static final String USER_PRACTICES = "userPractices";
+    private static final String PREFERENCE_LATEST_APP_VERSION = "latest_app_version";
+    private static final String PREFERENCE_LAST_APP_VERSION_NUM = "last_app_version_num";
+    private static final String PREFERENCE_REMIND_LATEST = "remind_latest";
 
     private String patientId;
     private String practiceId;
@@ -471,5 +474,35 @@ public class ApplicationPreferences {
 
     public void setLandingScreen(boolean isLandingScreen) {
         writeBooleanToSharedPref(PREFERENCE_LANDING_SCREEN, isLandingScreen);
+    }
+
+    public boolean isLatestVersion() {
+        return readBooleanFromSharedPref(PREFERENCE_LATEST_APP_VERSION, true);
+    }
+
+    public void setLatestVersion(boolean isLatestVersion) {
+        writeBooleanToSharedPref(PREFERENCE_LATEST_APP_VERSION, isLatestVersion);
+        if (!isLatestVersion) {
+            //reset remind latest
+            setRemindLatest(true);
+        }
+    }
+
+    public int getLastVersionNum(){
+        return readIntFromSharedPref(PREFERENCE_LAST_APP_VERSION_NUM);
+    }
+
+    public void setLastVersionNum(int newVersionNum){
+        writeIntegerToSharedPref(PREFERENCE_LAST_APP_VERSION_NUM, newVersionNum);
+        //always reset remind latest for new updates
+        setRemindLatest(true);
+    }
+
+    public boolean shouldRemindLatest() {
+        return readBooleanFromSharedPref(PREFERENCE_REMIND_LATEST, true);
+    }
+
+    public void setRemindLatest(boolean shouldRemind) {
+        writeBooleanToSharedPref(PREFERENCE_REMIND_LATEST, shouldRemind);
     }
 }

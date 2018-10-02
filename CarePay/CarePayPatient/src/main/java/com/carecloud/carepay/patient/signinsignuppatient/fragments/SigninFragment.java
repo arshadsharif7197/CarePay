@@ -348,7 +348,6 @@ public class SigninFragment extends BaseFragment {
                 MixPanelUtil.logEvent(getString(R.string.event_signin_loginSuccess),
                         getString(R.string.param_login_type),
                         getString(R.string.login_password));
-
             }
 
             @Override
@@ -626,4 +625,6 @@ public class SigninFragment extends BaseFragment {
             throw new RuntimeException("Failed to init Cipher", e);
         }
     }
+
+
 }

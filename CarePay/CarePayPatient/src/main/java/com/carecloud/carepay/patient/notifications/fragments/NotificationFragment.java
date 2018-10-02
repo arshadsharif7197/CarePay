@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.notifications.adapters.NotificationsAdapter;
+import com.carecloud.carepay.patient.notifications.models.CustomNotificationItem;
 import com.carecloud.carepay.patient.notifications.models.NotificationItem;
 import com.carecloud.carepay.patient.notifications.models.NotificationType;
 import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
@@ -107,6 +108,7 @@ public class NotificationFragment extends BaseFragment
         notificationItems = filterNotifications(notificationsDTO.getPayload().getNotifications(),
                 supportedNotificationTypes);
         paging = notificationsDTO.getPayload().getPaging();
+        addAppStatusNotification();
 
 
         handler = new Handler();
@@ -223,11 +225,6 @@ public class NotificationFragment extends BaseFragment
         }
     };
 
-    @Override
-    public void onResume() {
-        super.onResume();
-//        loadNextPage();
-    }
 
     private void setAdapter() {
         if (!notificationItems.isEmpty()) {
@@ -301,6 +298,7 @@ public class NotificationFragment extends BaseFragment
                 if (refresh) {
                     notificationItems = filterNotifications(notificationsDTO.getPayload().getNotifications(),
                             supportedNotificationTypes);
+                    addAppStatusNotification();
                 } else {
                     notificationItems.addAll(filterNotifications(notificationsDTO.getPayload().getNotifications(),
                             supportedNotificationTypes));
@@ -331,10 +329,17 @@ public class NotificationFragment extends BaseFragment
     @Override
     public void viewSwipeCompleted(SwipeViewHolder holder) {
         NotificationItem notificationItem = notificationItems.get(holder.getAdapterPosition());
-        notificationsAdapter.scheduleNotificationRemoval(notificationItem);
-        notificationsAdapter.notifyItemChanged(holder.getAdapterPosition());
-        deleteNotificationRunnable.setNotificationItem(notificationItem);
-        handler.postDelayed(deleteNotificationRunnable, NOTIFICATION_DELETE_DELAY);
+        if (notificationItem instanceof CustomNotificationItem) {
+            getApplicationPreferences().setRemindLatest(false);
+            notificationItems.remove(notificationItem);
+            notificationsAdapter.notifyItemRemoved(holder.getAdapterPosition());
+
+        } else {
+            notificationsAdapter.scheduleNotificationRemoval(notificationItem);
+            notificationsAdapter.notifyItemChanged(holder.getAdapterPosition());
+            deleteNotificationRunnable.setNotificationItem(notificationItem);
+            handler.postDelayed(deleteNotificationRunnable, NOTIFICATION_DELETE_DELAY);
+        }
     }
 
     private DeleteNotificationRunnable deleteNotificationRunnable = new DeleteNotificationRunnable();
@@ -403,13 +408,25 @@ public class NotificationFragment extends BaseFragment
                     continue;
                 }
                 filteredList.add(notificationItem);
-            }else{
+            } else {
                 Log.d("test", "test");
             }
         }
         return filteredList;
     }
 
+    private void addAppStatusNotification() {
+        boolean shouldRemind = getApplicationPreferences().shouldRemindLatest();
+        if (shouldRemind) {
+            boolean isLatest = getApplicationPreferences().isLatestVersion();
+            CustomNotificationItem customNotificationItem = new CustomNotificationItem();
+            customNotificationItem.setNotificationType(isLatest ?
+                    CustomNotificationItem.TYPE_APP_UPDATED :
+                    CustomNotificationItem.TYPE_UPDATE_REQUIRED);
+
+            notificationItems.add(0, customNotificationItem);
+        }
+    }
     @Override
     public void onDestroy() {
         handler.removeCallbacks(deleteNotificationRunnable);
