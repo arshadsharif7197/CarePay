@@ -16,15 +16,17 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
-        android:background="@drawable/bg_signup_1_phone"
+        android:background="@drawable/splash_background"
         android:gravity="center"
-        android:orientation="vertical">
+        android:padding="@dimen/dimen_60dp">
 
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:adjustViewBounds="true"
             android:src="@drawable/breeze_logo" />
+
     </FrameLayout>
 
     <ProgressBar
