@@ -125,7 +125,7 @@ public class SplashActivity extends BasePatientActivity {
 
             Gson gson = new Gson();
             String payload = gson.toJson(versionModel);
-            getWorkflowServiceHelper().execute(versionCheckLink, getVersionCheckCallback(versionModel), payload);
+            getWorkflowServiceHelper().execute(versionCheckLink, getVersionCheckCallback(versionModel), payload, null, getWorkflowServiceHelper().getApplicationStartHeaders());
         } catch (PackageManager.NameNotFoundException nfe) {
             nfe.printStackTrace();
         }
@@ -149,6 +149,7 @@ public class SplashActivity extends BasePatientActivity {
 
             @Override
             public void onFailure(String exceptionMessage) {
+                Log.d(getClass().getName(), exceptionMessage);
             }
         };
     }
