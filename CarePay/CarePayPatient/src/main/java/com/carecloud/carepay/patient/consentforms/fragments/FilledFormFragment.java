@@ -40,6 +40,7 @@ public class FilledFormFragment extends BaseWebFormFragment {
     private List<JsonObject> jsonFormSaveResponseArray = new ArrayList<>();
     private UserFormDTO formDto;
     private boolean showSignButton;
+    private TextView title;
 
     /**
      * @param selectedProviderIndex the provider index
@@ -91,8 +92,8 @@ public class FilledFormFragment extends BaseWebFormFragment {
         nextButton.setVisibility(showSignButton ? View.VISIBLE : View.GONE);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
-        ((TextView) toolbar.findViewById(R.id.toolbar_title))
-                .setText(Label.getLabel("consentForms.consentForm.title.label.form"));
+        title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        title.setText(Label.getLabel("consentForms.consentForm.title.label.form"));
         callback.setToolbar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,6 +107,11 @@ public class FilledFormFragment extends BaseWebFormFragment {
     @Override
     protected void displayNextForm(List<ConsentFormUserResponseDTO> filledForms) {
         int displayedFormsIndex = getDisplayedFormsIndex();
+        if (showSignButton) {
+            title.setText(String.format(
+                    Label.getLabel("consentForms.consentForm.title.label.formCount"),
+                    getDisplayedFormsIndex() + 1, getTotalForms()));
+        }
         if (getDisplayedFormsIndex() < getTotalForms()) {
             PracticeForm practiceForm = formsList.get(displayedFormsIndex);
             JsonObject payload = practiceForm.getPayload();
@@ -119,7 +125,7 @@ public class FilledFormFragment extends BaseWebFormFragment {
                         JsonObject json = new JsonObject();
                         json.addProperty("uuid", response.getFormId());
                         json.add("response", response.getResponse());
-                        if(!showSignButton) {
+                        if (!showSignButton) {
                             json.addProperty("updated_dt", practiceForm.getLastModifiedDate());
                         }
                         userResponse = json;
