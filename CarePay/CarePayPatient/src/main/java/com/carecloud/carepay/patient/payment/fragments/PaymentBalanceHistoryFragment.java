@@ -73,8 +73,6 @@ public class PaymentBalanceHistoryFragment extends BaseFragment {
         PaymentsSectionsPagerAdapter adapter = new PaymentsSectionsPagerAdapter(getChildFragmentManager());
         PatientPendingPaymentFragment pendingPaymentsFragment = new PatientPendingPaymentFragment();
         PatientPaymentHistoryFragment paymentHistoryFragment = new PatientPaymentHistoryFragment();
-        pendingPaymentsFragment.setTargetFragment(this, 1);
-        paymentHistoryFragment.setTargetFragment(this, 1);
 
         String pendingTabTitle = Label.getLabel("payment_patient_balance_tab");
         String historyTabTitle = Label.getLabel("payment_patient_history_tab");
