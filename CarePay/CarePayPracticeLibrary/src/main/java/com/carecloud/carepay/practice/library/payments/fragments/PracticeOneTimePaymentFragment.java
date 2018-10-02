@@ -109,8 +109,8 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
 
         TextView paymentHeader = (TextView) findViewById(R.id.partialPaymentHeader);
         currencyFormat.setMinimumFractionDigits(2);
-        String maxAmount = Label.getLabel("payment_partial_maximum_amount") +
-                currencyFormat.format(fullAmount);
+        String maxAmount = String.format(Label.getLabel("payment.partial.amountSelector.maximum.amount"),
+                currencyFormat.format(fullAmount));
         currencyFormat.setMinimumFractionDigits(0);
         paymentHeader.setText(maxAmount);
     }
