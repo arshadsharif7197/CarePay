@@ -100,6 +100,7 @@ public class FilledFormFragment extends BaseWebFormFragment {
                 navigateBack();
             }
         });
+        nextButton.setBackgroundResource(R.drawable.button_green_selector);
     }
 
     @Override

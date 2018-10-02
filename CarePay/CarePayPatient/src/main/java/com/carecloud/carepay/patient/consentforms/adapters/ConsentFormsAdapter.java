@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.consentforms.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -18,7 +19,6 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
 import java.util.List;
@@ -31,10 +31,14 @@ public class ConsentFormsAdapter extends RecyclerView.Adapter<ConsentFormsAdapte
     private static final int VIEW_TYPE_LOADING = 1;
     private final List<PracticeForm> forms;
     private ConsentFormsFormsInterface callback;
+    private Context context;
     private final int mode;
     private boolean isLoading;
 
-    public ConsentFormsAdapter(List<PracticeForm> pendingForms, int mode) {
+    public ConsentFormsAdapter(Context context, ConsentFormsFormsInterface callback,
+                               List<PracticeForm> pendingForms, int mode) {
+        this.context = context;
+        this.callback = callback;
         this.forms = pendingForms;
         this.mode = mode;
     }
@@ -47,7 +51,7 @@ public class ConsentFormsAdapter extends RecyclerView.Adapter<ConsentFormsAdapte
         } else {
             layout = R.layout.item_provider_forms;
         }
-        return new ViewHolder(LayoutInflater.from(parent.getContext())
+        return new ViewHolder(LayoutInflater.from(context)
                 .inflate(layout, parent, false));
     }
 
@@ -84,14 +88,14 @@ public class ConsentFormsAdapter extends RecyclerView.Adapter<ConsentFormsAdapte
         }
 
         if (mode == ConsentFormViewPagerFragment.PENDING_MODE) {
-            holder.formDateTextView.setTextColor(holder.formDateTextView.getContext().getResources()
+            holder.formDateTextView.setTextColor(context.getResources()
                     .getColor(R.color.cadet_gray));
             holder.formCheckBox.setVisibility(View.VISIBLE);
-            holder.formDateTextView.setTextColor(holder.formDateTextView.getContext().getResources()
+            holder.formDateTextView.setTextColor(context.getResources()
                     .getColor(R.color.lightning_yellow));
 
-            sb.insert(0, " - ");
-            sb.setSpan(new ForegroundColorSpan(holder.formDateTextView.getContext()
+            sb.insert(0, context.getString(R.string.bullet_space));
+            sb.setSpan(new ForegroundColorSpan(context
                             .getResources().getColor(R.color.cadet_gray)), 0, sb.length(),
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             sb.insert(0, Label.getLabel("consentForms.providersFormList.item.status.pendingStatus"));
@@ -106,11 +110,11 @@ public class ConsentFormsAdapter extends RecyclerView.Adapter<ConsentFormsAdapte
                 form.setSelected(!form.isSelected());
                 callback.onPendingFormSelected(form, isChecked);
                 if (form.isSelected()) {
-                    holder.formNameTextView.setTextColor(holder.formNameTextView.getContext()
+                    holder.formNameTextView.setTextColor(context
                             .getResources().getColor(R.color.colorPrimary));
                     holder.formNameTextView.setFontAttribute(CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD);
                 } else {
-                    holder.formNameTextView.setTextColor(holder.formNameTextView.getContext()
+                    holder.formNameTextView.setTextColor(context
                             .getResources().getColor(R.color.myHealthTextColor));
                     holder.formNameTextView.setFontAttribute(CustomAssetStyleable.PROXIMA_NOVA_REGULAR);
                 }
@@ -134,10 +138,6 @@ public class ConsentFormsAdapter extends RecyclerView.Adapter<ConsentFormsAdapte
     public void setLoading(boolean isLoading) {
         this.isLoading = isLoading;
         notifyDataSetChanged();
-    }
-
-    public void setCallback(ConsentFormsFormsInterface callback) {
-        this.callback = callback;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
