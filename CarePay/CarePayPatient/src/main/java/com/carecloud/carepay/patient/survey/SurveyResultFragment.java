@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BackPressedFragmentInterface;
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.survey.model.SocialNetworkLink;
 import com.carecloud.carepay.patient.survey.model.SurveyDTO;
 import com.carecloud.carepay.patient.survey.model.SurveyModel;
@@ -53,10 +54,12 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
     private TextView subtitleTextView;
     private EditText feedbackEditText;
     private Button submitButton;
+    private boolean comesFromNotification;
 
-    public static SurveyResultFragment newInstance(String patientId) {
+    public static SurveyResultFragment newInstance(String patientId, boolean comesFromNotifications) {
         Bundle args = new Bundle();
         args.putString(CarePayConstants.PATIENT_ID, patientId);
+        args.putBoolean(CarePayConstants.NOTIFICATIONS_FLOW, comesFromNotifications);
         SurveyResultFragment fragment = new SurveyResultFragment();
         fragment.setArguments(args);
         return fragment;
@@ -75,6 +78,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+        comesFromNotification = getArguments().getBoolean(CarePayConstants.NOTIFICATIONS_FLOW);
         surveyDto = (SurveyDTO) callback.getDto();
         SurveyModel surveyModel = surveyDto.getPayload().getSurvey();
         float average = getRateAverage(surveyModel);
@@ -103,26 +107,40 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         feedbackEditText = (EditText) view.findViewById(R.id.feedbackEditText);
         final SurveyModel surveyModel = surveyDto.getPayload().getSurvey();
         if (surveyModel.isAlreadyFilled() || surveyModel.isZeroAnswers()) {
-            manageGoBackButton(view, surveyModel);
+            manageGoBackButton(view, surveyModel, null);
         } else {
             if (showFeedBackLayout) {
                 showNegativeFeedbackLayout(view, surveyModel);
             } else {
                 view.findViewById(R.id.socialNetworksLayout).setVisibility(View.VISIBLE);
-                displaySocialNetworksLinks(view);
                 subtitleTextView.setText(Label.getLabel("surveys_click_spread_word"));
                 noThanksButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        getActivity().finish();
+                        finishFlow();
                     }
                 });
             }
         }
     }
 
+    private void finishFlow(WorkflowDTO workflowDTO) {
+        if (workflowDTO == null || comesFromNotification) {
+            getActivity().finish();
+        } else {
+            Bundle bundle = new Bundle();
+            bundle.putBoolean(CarePayConstants.REFRESH, true);
+            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, bundle);
+        }
+    }
+
+    private void finishFlow() {
+        finishFlow(null);
+    }
+
     private void showNegativeFeedbackLayout(View view, final SurveyModel surveyModel) {
         view.findViewById(R.id.negativeFeedbackLayout).setVisibility(View.VISIBLE);
+        noThanksButton.setVisibility(View.VISIBLE);
         noThanksButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -158,50 +176,56 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         });
     }
 
-    private void manageGoBackButton(View view, SurveyModel surveyModel) {
+    private void manageGoBackButton(View view, SurveyModel surveyModel, final WorkflowDTO workflowDTO) {
         Button goBackButton = (Button) view.findViewById(R.id.okButton);
         goBackButton.setVisibility(View.VISIBLE);
         goBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().finish();
+                finishFlow(workflowDTO);
             }
         });
-        noThanksButton.setVisibility(View.GONE);
         view.findViewById(R.id.fakeView).setVisibility(View.VISIBLE);
         if (surveyModel.isZeroAnswers() && !surveyModel.isAlreadyFilled()) {
             subtitleTextView.setVisibility(View.GONE);
-            goBackButton.setText(Label.getLabel("survey.successScreen.button.title.back"));
+            if (comesFromNotification) {
+                goBackButton.setText(Label.getLabel("survey.successScreen.button.title.back"));
+            } else {
+                goBackButton.setText(Label.getLabel("add_appointment_back_to_appointments_button"));
+            }
         } else {
             goBackButton.setBackgroundResource(R.drawable.round_white_border);
             goBackButton.setTextColor(getResources().getColor(R.color.white));
             goBackButton.setText(Label.getLabel("go_back_label"));
             subtitleTextView.setText(Label.getLabel("survey.successScreen.subtitle.message.alreadyFilled"));
+            subtitleTextView.setVisibility(View.VISIBLE);
         }
     }
 
     protected void displaySocialNetworksLinks(View view) {
+        subtitleTextView.setVisibility(View.VISIBLE);
+        noThanksButton.setVisibility(View.VISIBLE);
         SurveySettings settings = surveyDto.getPayload().getSurveySettings();
         if (settings.getNetworkLinks().isEnable()
                 && !settings.getNetworkLinks().getLinks().isEmpty()) {
             createSocialLinkViews(view, settings);
         } else {
-            showOkButton();
+            showOkButton(null);
         }
     }
 
-    private void showOkButton() {
+    private void showOkButton(final WorkflowDTO workflowDTO) {
         getView().findViewById(R.id.fakeView).setVisibility(View.VISIBLE);
         submitButton.setVisibility(View.GONE);
         feedbackEditText.setVisibility(View.GONE);
-        noThanksButton.setVisibility(View.GONE);
         subtitleTextView.setVisibility(View.GONE);
+        noThanksButton.setVisibility(View.GONE);
         Button okButton = (Button) getView().findViewById(R.id.okButton);
         okButton.setVisibility(View.VISIBLE);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().finish();
+                finishFlow(workflowDTO);
             }
         });
     }
@@ -225,7 +249,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
                     .inflate(R.layout.layout_survey_social_network, null, false);
             TextView socialNetworkNameTextView = (TextView) child.findViewById(R.id.socialNetworkNameTextView);
             socialNetworkNameTextView.setText(Label
-                    .getLabel("survey.successScreen.socialLink.label" + link.getId()));
+                    .getLabel("survey.successScreen.socialLink.label." + link.getId()));
             int linkImageId = getLinkImageResource(link);
             if (linkImageId != -1) {
                 ImageView linkImageView = (ImageView) child.findViewById(R.id.socialNetworkImageView);
@@ -259,7 +283,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
             case "facebook":
                 linkImageId = R.drawable.icn_survey_facebook;
                 break;
-            case "net_provider_scope":
+            case "vitals":
                 linkImageId = R.drawable.icn_survey_vitals;
                 break;
             case "yelp":
@@ -301,8 +325,19 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         Map<String, String> query = new HashMap<>();
         query.put("practice_id", survey.getMetadata().getPracticeId());
         query.put("practice_mgmt", survey.getMetadata().getPracticeMgmt());
-        query.put("patient_id", getArguments().getString(CarePayConstants.PATIENT_ID));
+        String patientId = null;
+        String appointmentId = survey.getMetadata().getAppointmentId();
+        if (survey.getAppointment() != null) {
+            patientId = survey.getAppointment().getMetadata().getPatientId();
+            appointmentId = survey.getAppointment().getMetadata().getAppointmentId();
+        }
+        query.put("appointment_id", appointmentId);
+        query.put("patient_id", getArguments().getString(CarePayConstants.PATIENT_ID, patientId));
         TransitionDTO surveyTransition = surveyDto.getMetadata().getTransitions().getSaveSurvey();
+        Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
+        if (!comesFromNotification) {
+            header.put("transition", "true");
+        }
         getWorkflowServiceHelper().execute(surveyTransition, new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
@@ -313,14 +348,15 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
                 if (survey.isZeroAnswers()) {
-                    manageGoBackButton(getView(), survey);
-
+                    manageGoBackButton(getView(), survey, workflowDTO);
                 } else if (!submitFeedbackButtonPressed) {
-                    getActivity().finish();
+                    finishFlow(workflowDTO);
                 } else if (showOkButton) {
-                    showOkButton();
-                } else {
+                    showOkButton(workflowDTO);
+                } else if (comesFromNotification) {
                     displaySocialNetworksLinks(getView());
+                } else {
+                    finishCheckOutFlow(workflowDTO);
                 }
             }
 
@@ -330,7 +366,21 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
                 showErrorNotification(exceptionMessage);
                 Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
             }
-        }, jsonResponse, query);
+        }, jsonResponse, query, header);
+    }
+
+    private void finishCheckOutFlow(final WorkflowDTO workflowDTO) {
+        getView().findViewById(R.id.fakeView).setVisibility(View.VISIBLE);
+        Button goBackButton = (Button) getView().findViewById(R.id.okButton);
+        goBackButton.setVisibility(View.VISIBLE);
+        goBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(CarePayConstants.REFRESH, true);
+                PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, bundle);
+            }
+        });
     }
 
     @NonNull

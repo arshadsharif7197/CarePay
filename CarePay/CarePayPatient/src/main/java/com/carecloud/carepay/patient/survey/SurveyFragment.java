@@ -35,10 +35,12 @@ public class SurveyFragment extends BaseFragment implements BackPressedFragmentI
     private Toolbar toolbar;
     private Button submitButton;
     private TextView progressIndicatorTextView;
+    private boolean comesFromNotification;
 
-    public static SurveyFragment newInstance(String patientId) {
+    public static SurveyFragment newInstance(String patientId, boolean comesFromNotifications) {
         Bundle args = new Bundle();
         args.putString(CarePayConstants.PATIENT_ID, patientId);
+        args.putBoolean(CarePayConstants.NOTIFICATIONS_FLOW, comesFromNotifications);
         SurveyFragment fragment = new SurveyFragment();
         fragment.setArguments(args);
         return fragment;
@@ -58,6 +60,7 @@ public class SurveyFragment extends BaseFragment implements BackPressedFragmentI
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         surveyDto = (SurveyDTO) callback.getDto();
+        comesFromNotification = getArguments().getBoolean(CarePayConstants.NOTIFICATIONS_FLOW);
         currentQuestion = 0;
     }
 
@@ -95,7 +98,8 @@ public class SurveyFragment extends BaseFragment implements BackPressedFragmentI
                     updateProgressTextView();
                 } else {
                     Bundle args = getArguments();
-                    callback.addFragment(SurveyResultFragment.newInstance(args.getString(CarePayConstants.PATIENT_ID))
+                    callback.addFragment(SurveyResultFragment.newInstance(args
+                                    .getString(CarePayConstants.PATIENT_ID), comesFromNotification)
                             , true);
                 }
             }

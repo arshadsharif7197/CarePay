@@ -138,6 +138,7 @@ public class NotificationActivity extends MenuPatientActivity
                         hideProgressDialog();
                         Bundle bundle = new Bundle();
                         bundle.putString(CarePayConstants.PATIENT_ID, notificationItem.getMetadata().getPatientId());
+                        bundle.putBoolean(CarePayConstants.NOTIFICATIONS_FLOW, true);
                         navigateToWorkflow(workflowDTO, bundle);
                     }
 

@@ -177,5 +177,6 @@ public class CarePayConstants {
 
     public static final String GET_STARTED_URL = "/get_started";
     public static final String PATIENT_ID = "patientId";
+    public static final String NOTIFICATIONS_FLOW = "notifications";
 
 }

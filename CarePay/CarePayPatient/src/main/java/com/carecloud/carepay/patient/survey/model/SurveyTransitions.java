@@ -12,6 +12,9 @@ public class SurveyTransitions {
     @Expose
     @SerializedName("save_survey_response")
     private TransitionDTO saveSurvey = new TransitionDTO();
+    @Expose
+    @SerializedName("continue")
+    private TransitionDTO continueTransition = new TransitionDTO();
 
     public TransitionDTO getSaveSurvey() {
         return saveSurvey;
@@ -19,5 +22,13 @@ public class SurveyTransitions {
 
     public void setSaveSurvey(TransitionDTO saveSurvey) {
         this.saveSurvey = saveSurvey;
+    }
+
+    public TransitionDTO getContinueTransition() {
+        return continueTransition;
+    }
+
+    public void setContinueTransition(TransitionDTO continueTransition) {
+        this.continueTransition = continueTransition;
     }
 }

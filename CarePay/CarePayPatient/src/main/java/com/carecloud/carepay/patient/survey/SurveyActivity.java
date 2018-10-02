@@ -2,6 +2,7 @@ package com.carecloud.carepay.patient.survey;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -9,8 +10,12 @@ import android.view.MenuItem;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BackPressedFragmentInterface;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.survey.model.SurveyDTO;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
@@ -18,27 +23,33 @@ import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author pjohnson on 6/09/18.
  */
 public class SurveyActivity extends BasePatientActivity implements FragmentActivityInterface {
 
+    public static final int FLAG_SURVEY_FLOW = 110;
     private SurveyDTO surveyDto;
+    private boolean comesFromNotifications;
 
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.activity_survey);
         surveyDto = getConvertedDTO(SurveyDTO.class);
-        String patientId = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO)
-                .getString(CarePayConstants.PATIENT_ID, null);
+        Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
+        String patientId = extra.getString(CarePayConstants.PATIENT_ID, null);
+        comesFromNotifications = extra.getBoolean(CarePayConstants.NOTIFICATIONS_FLOW, false);
         if (icicle == null) {
             if (surveyDto.getPayload().getSurvey().getResponses() == null ||
                     surveyDto.getPayload().getSurvey().getResponses().isEmpty()) {
-                replaceFragment(SurveyFragment.newInstance(patientId), false);
+                replaceFragment(SurveyFragment.newInstance(patientId, comesFromNotifications), false);
             } else {
                 surveyDto.getPayload().getSurvey().setAlreadyFilled();
-                replaceFragment(SurveyResultFragment.newInstance(patientId), false);
+                replaceFragment(SurveyResultFragment.newInstance(patientId, comesFromNotifications), false);
             }
         }
     }
@@ -61,7 +72,11 @@ public class SurveyActivity extends BasePatientActivity implements FragmentActiv
             fragment.setCallback(new ConfirmationCallback() {
                 @Override
                 public void onConfirm() {
-                    finish();
+                    if (comesFromNotifications) {
+                        finish();
+                    } else {
+                        callContinueService();
+                    }
                 }
             });
             displayDialogFragment(fragment, false);
@@ -70,10 +85,41 @@ public class SurveyActivity extends BasePatientActivity implements FragmentActiv
         return super.onOptionsItemSelected(item);
     }
 
+    private void callContinueService() {
+        TransitionDTO continueTransition = surveyDto.getMetadata().getTransitions().getContinueTransition();
+        Map<String, String> query = new HashMap<>();
+        query.put("practice_mgmt", surveyDto.getPayload().getSurvey().getMetadata().getPracticeMgmt());
+        query.put("practice_id", surveyDto.getPayload().getSurvey().getMetadata().getPracticeId());
+        query.put("patient_id", surveyDto.getPayload().getSurvey().getAppointment().getMetadata().getPatientId());
+        query.put("appointment_id", surveyDto.getPayload().getSurvey().getAppointment().getMetadata().getAppointmentId());
+        getWorkflowServiceHelper().execute(continueTransition, new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(CarePayConstants.REFRESH, true);
+                PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, bundle);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+                Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
+            }
+        }, query);
+    }
+
     @Override
     public void onBackPressed() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
-        if (fragment instanceof BackPressedFragmentInterface && ((BackPressedFragmentInterface) fragment).onBackPressed()) {
+        if (fragment instanceof BackPressedFragmentInterface
+                && ((BackPressedFragmentInterface) fragment).onBackPressed()) {
             return;
         }
         super.onBackPressed();

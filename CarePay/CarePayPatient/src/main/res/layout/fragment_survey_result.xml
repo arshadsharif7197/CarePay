@@ -5,14 +5,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/lemonGreen">
+    android:background="@color/lemonGreen"
+    android:clickable="true"
+    android:focusable="true">
 
     <View
         android:id="@+id/fakeView"
         android:layout_width="match_parent"
-        android:layout_alignParentTop="true"
         android:layout_height="@dimen/dimen_80dp"
-        android:visibility="gone"/>
+        android:layout_alignParentTop="true"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/checkImage"
@@ -28,6 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/checkImage"
+        android:gravity="center"
         android:paddingEnd="@dimen/dimen_30dp"
         android:paddingStart="@dimen/dimen_30dp"
         android:textColor="@color/white"
@@ -46,6 +49,7 @@
         android:paddingStart="@dimen/dimen_30dp"
         android:textColor="@color/white"
         android:textSize="16sp"
+        android:visibility="gone"
         app:customAssetFont="proxima_nova_regular"
         breeze:textKey="surveys_let_us_know"
         tools:text="Please let us know why you weren't as satisfied as possible" />
@@ -74,6 +78,7 @@
         android:background="@drawable/round_white_border"
         android:textColor="@color/white"
         android:textSize="16sp"
+        android:visibility="gone"
         breeze:textKey="surveys_no_thank_you"
         tools:text="No, thank you" />
 

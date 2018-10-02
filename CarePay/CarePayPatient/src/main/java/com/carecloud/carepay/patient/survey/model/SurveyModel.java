@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.survey.model;
 
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -40,6 +41,9 @@ public class SurveyModel {
     @Expose
     @SerializedName("metadata")
     private SurveyModelMetadata metadata;
+    @Expose
+    @SerializedName("appointment")
+    private AppointmentDTO appointment;
 
     private transient boolean alreadyFilled;
     private transient boolean zeroAnswers;
@@ -138,5 +142,13 @@ public class SurveyModel {
 
     public boolean isZeroAnswers() {
         return zeroAnswers;
+    }
+
+    public AppointmentDTO getAppointment() {
+        return appointment;
+    }
+
+    public void setAppointment(AppointmentDTO appointment) {
+        this.appointment = appointment;
     }
 }
