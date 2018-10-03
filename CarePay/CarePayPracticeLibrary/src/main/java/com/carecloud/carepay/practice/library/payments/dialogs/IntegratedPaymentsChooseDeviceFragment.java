@@ -24,6 +24,7 @@ import com.carecloud.carepay.practice.library.payments.interfaces.ShamrockPaymen
 import com.carecloud.carepay.practice.library.payments.models.IntegratedPaymentDeviceGroup;
 import com.carecloud.carepay.practice.library.payments.models.IntegratedPaymentDeviceGroupPayload;
 import com.carecloud.carepay.practice.library.payments.models.IntegratedPaymentQueueRecord;
+import com.carecloud.carepay.practice.library.payments.models.ShamrockPaymentMetadata;
 import com.carecloud.carepay.practice.library.payments.models.ShamrockPaymentsPostModel;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.RestCallServiceCallback;
@@ -366,10 +367,21 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
 
     private void processIntegratedPayment(){
         IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
-        postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_CLOVER);
+
+        ShamrockPaymentsPostModel shamrockPaymentsPostModel = new ShamrockPaymentsPostModel().setIntegratedPaymentPostModel(postModel);
+        shamrockPaymentsPostModel.setOrganizationId(paymentsModel.getPaymentPayload().getOrganizationId());
+        shamrockPaymentsPostModel.setPaymentProfileId(paymentsModel.getPaymentPayload().getPaymentProfileId());
+        shamrockPaymentsPostModel.setExecution(IntegratedPaymentPostModel.EXECUTION_CLOVER);
+
+        ShamrockPaymentMetadata metadata = shamrockPaymentsPostModel.getMetadata();
+        metadata.setPracticeId(practiceInfo.getPracticeId());
+        metadata.setPracticeMgmt(practiceInfo.getPracticeMgmt());
+        metadata.setPatientId(practiceInfo.getPatientId());
+        metadata.setUserId(userId);
+        metadata.setBreezeUserId(getAppAuthorizationHelper().getPatientUser());
 
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getInitializePaymentRequest();
-        String payload = DtoHelper.getStringDTO(postModel);
+        String payload = DtoHelper.getStringDTO(shamrockPaymentsPostModel);
         getWorkflowServiceHelper().execute(transitionDTO, initPaymentRequestCallback, payload);
     }
 
