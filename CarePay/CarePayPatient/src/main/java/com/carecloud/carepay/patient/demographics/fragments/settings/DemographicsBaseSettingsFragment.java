@@ -53,13 +53,11 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
         storeOption.setName(value);
         storeOption.setLabel(value);
 
-        if (StringUtil.isNullOrEmpty(value)) {
-            value = Label.getLabel("demographics_choose");
-            if (optional != null) {
-                optional.setVisibility(View.VISIBLE);
-            }
+        if (!StringUtil.isNullOrEmpty(value)) {
+            textView.setText(storeOption.getLabel());
+        }else if (optional != null) {
+            optional.setVisibility(View.VISIBLE);
         }
-        textView.setText(value);
 
     }
 

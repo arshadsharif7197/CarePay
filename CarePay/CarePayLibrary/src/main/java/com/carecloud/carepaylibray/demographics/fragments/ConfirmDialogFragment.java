@@ -92,7 +92,7 @@ public class ConfirmDialogFragment extends BaseDialogFragment {
             noButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    dismiss();
+                    cancel();
                 }
             });
         }
@@ -101,7 +101,7 @@ public class ConfirmDialogFragment extends BaseDialogFragment {
             closeView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    dismiss();
+                    cancel();
                 }
             });
         }

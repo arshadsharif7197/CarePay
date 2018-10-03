@@ -132,13 +132,16 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
-        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
-        selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
-        //calculateTotalAmount(selectedBalance);
-        paymentPlanAmount = calculateTotalAmount(args.getDouble(KEY_PLAN_AMOUNT, paymentPlanAmount));
+        if (paymentsModel == null) {
+            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
+        }
+        if (selectedBalance == null) {
+            selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
+        }
         if (selectedBalance != null) {
             practiceId = selectedBalance.getMetadata().getPracticeId();
         }
+        paymentPlanAmount = calculateTotalAmount(args.getDouble(KEY_PLAN_AMOUNT, paymentPlanAmount));
         PaymentsPayloadSettingsDTO paymentSettings = paymentsModel.getPaymentPayload().getPaymentSetting(practiceId);
         frequencyOptions = generateFrequencyOptions(paymentSettings.getPayload().getPaymentPlans());
         if (selectedBalance != null) {
@@ -817,8 +820,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
 
     protected boolean enableAddToExisting() {
         return hasExistingPlans() && canAddToExisting()
-                && !paymentsModel.getPaymentPayload().getValidPlans(practiceId,
-                selectedBalance.getPayload().get(0).getAmount()).isEmpty();
+                && !paymentsModel.getPaymentPayload().getValidPlans(practiceId, paymentPlanAmount).isEmpty();
     }
 
     @Override

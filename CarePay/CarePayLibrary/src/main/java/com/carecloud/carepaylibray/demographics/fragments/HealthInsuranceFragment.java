@@ -42,6 +42,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     private boolean noPrimaryInsuranceFound;
     private boolean insuranceTypeRepeated = false;
     private String insuranceTypeRepeatedErrorMessage;
+    private boolean shouldContinue = false;
 
     public interface InsuranceDocumentScannerListener {
         void editInsurance(DemographicDTO demographicDTO, Integer editedIndex, boolean showAsDialog);
@@ -65,6 +66,11 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     }
 
     @Override
+    protected void replaceTranslatedOptionsValues() {
+
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         callback = null;
@@ -74,19 +80,20 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         if (demographicDTO == null) {
-            demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
+//            demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
+        }
+        if (shouldContinue){
+            openNextFragment(demographicDTO);
+            shouldContinue = false;
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-
         initActiveSection(view);
-
         checkIfEnableButton(view);
         SystemUtil.hideSoftKeyboard(getActivity());
-
         return view;
     }
 
@@ -103,7 +110,6 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.setAdapter(adapter);
         }
-
         initializeViews();
     }
 
@@ -150,7 +156,8 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
     private boolean checkIfHasDuplicateInsuranceType(Map<String, Integer> insurancesTypeMap) {
         insuranceTypeRepeated = true;
-        insuranceTypeRepeatedErrorMessage = Label.getLabel("insurance.insuranceList.alert.message.duplicatedInsuranceAlert");
+        insuranceTypeRepeatedErrorMessage = Label
+                .getLabel("insurance.insuranceList.alert.message.duplicatedInsuranceAlert");
         String insuranceType = "";
         if (insurancesTypeMap.containsKey("Primary") && insurancesTypeMap.get("Primary") > 1) {
             showAlert = true;
@@ -189,7 +196,9 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
                     noPrimaryInsuranceFound = false;
                 }
             } else {
-                getFragmentManager().popBackStack(HealthInsuranceFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE); //remove the health insurance fragment from the stack
+                //remove the health insurance fragment from the stack
+                getFragmentManager().popBackStack(HealthInsuranceFragment.class.getName(),
+                        FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 editInsurance(null, false);
             }
         }
@@ -325,12 +334,18 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     }
 
     private void inflateNewImages() {
-        for (DemographicInsurancePayloadDTO insurancePayloadDTO : demographicDTO.getPayload().getDemographics().getPayload().getInsurances()) {
+        for (DemographicInsurancePayloadDTO insurancePayloadDTO : demographicDTO.getPayload()
+                .getDemographics().getPayload().getInsurances()) {
             for (DemographicInsurancePhotoDTO photoDTO : insurancePayloadDTO.getInsurancePhotos()) {
                 if (!photoDTO.isDelete() && photoDTO.isNewPhoto()) {
-                    photoDTO.setInsurancePhoto(DocumentScannerAdapter.getBase64(getContext(), photoDTO.getInsurancePhoto()));
+                    photoDTO.setInsurancePhoto(DocumentScannerAdapter
+                            .getBase64(getContext(), photoDTO.getInsurancePhoto()));
                 }
             }
         }
+    }
+
+    public void setShouldContinue(boolean shouldContinue){
+        this.shouldContinue = shouldContinue;
     }
 }

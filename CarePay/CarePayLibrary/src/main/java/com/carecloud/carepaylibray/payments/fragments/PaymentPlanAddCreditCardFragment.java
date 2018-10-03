@@ -149,7 +149,7 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
         if (paymentPlanPostModel != null) {
             paymentPlanPostModel.setPapiPaymentMethod(papiPaymentMethod);
             paymentPlanPostModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
-
+            dismiss();
             callback.onDisplayPaymentPlanTerms(paymentsModel, paymentPlanPostModel);
         }
 

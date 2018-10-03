@@ -1,6 +1,7 @@
 package com.carecloud.carepay.patient.notifications.models;
 
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
+import com.carecloud.carepaylibray.base.models.Paging;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -23,6 +24,10 @@ public class NotificationsPayload {
     @SerializedName("demographics")
     @Expose
     private DemographicPayloadDTO demographicDTO = new DemographicPayloadDTO();
+
+    @SerializedName("page_details")
+    @Expose
+    private Paging paging;
 
     public List<NotificationItem> getNotifications() {
         return notifications;
@@ -48,7 +53,11 @@ public class NotificationsPayload {
         this.demographicDTO = demographicDTO;
     }
 
+    public Paging getPaging() {
+        return paging;
+    }
 
-
-
+    public void setPaging(Paging paging) {
+        this.paging = paging;
+    }
 }

@@ -15,6 +15,7 @@ import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
+import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.patient.myhealth.dtos.AllergyDto;
 import com.carecloud.carepay.patient.myhealth.dtos.LabDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MedicationDto;
@@ -27,13 +28,19 @@ import com.carecloud.carepay.patient.myhealth.fragments.MedicationDetailFragment
 import com.carecloud.carepay.patient.myhealth.fragments.MyHealthListFragment;
 import com.carecloud.carepay.patient.myhealth.fragments.MyHealthMainFragment;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.PdfUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author pjohnson on 17/07/17.
@@ -51,10 +58,45 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         myHealthDto = getConvertedDTO(MyHealthDto.class);
+        if (myHealthDto == null) {
+            callMyHealthService(icicle);
+        } else {
+            resumeOnCreate(icicle);
+        }
+
+    }
+
+    private void resumeOnCreate(Bundle icicle) {
         if (icicle == null) {
             replaceFragment(MyHealthMainFragment.newInstance(), false);
         }
     }
+
+    private void callMyHealthService(final Bundle icicle) {
+        Map<String, String> queryMap = new HashMap<>();
+        getWorkflowServiceHelper().execute(getTransitionMyHealth(), new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                ShimmerFragment fragment = ShimmerFragment.newInstance(R.layout.shimmer_my_health_item);
+                fragment.setRowsNumber(3);
+                replaceFragment(fragment, false);
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                myHealthDto = DtoHelper.getConvertedDTO(MyHealthDto.class, workflowDTO);
+                resumeOnCreate(icicle);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+            }
+        }, queryMap);
+    }
+
 
     @Override
     protected void onResume() {

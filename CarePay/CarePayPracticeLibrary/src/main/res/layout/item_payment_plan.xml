@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/list_apt_padding_right"
+    android:paddingRight="@dimen/list_apt_padding_right">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/apt_dl_image_elevation"
+        android:layout_marginTop="@dimen/apt_dl_image_elevation"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/balancesAvatarTextView"
+                android:layout_width="@dimen/dimen_60dp"
+                android:layout_height="@dimen/dimen_60dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="end"
+                android:background="@drawable/round_list_tv"
+                android:gravity="center_vertical|center_horizontal"
+                android:src="@drawable/icn_placeholder_user_profile_png"
+                android:textColor="@color/lightSlateGray"
+                android:textSize="@dimen/apt_dl_text_big"
+                app:customAssetFont="gotham_rounded_medium"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/textview_margin"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/balancesTotalAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_size_22"
+                    app:customAssetFont="gotham_rounded_medium"
+                    tools:text="$108.00"/>
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/planInstallmentDetail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:gravity="start"
+                    android:textColor="@color/gray"
+                    android:textSize="@dimen/text_size_13"
+                    app:customAssetFont="proxima_nova_semi_bold"
+                    tools:text="$27.00/month"/>
+
+            </LinearLayout>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/balancesLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="start"
+                android:textColor="@color/lightSlateGray"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="@dimen/textview_textsize"
+                android:visibility="gone"
+                app:customAssetFont="proxima_nova_extra_bold"
+                tools:text="CareCloud Clinic"/>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/planName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="start"
+                android:textColor="@color/lightSlateGray"
+                android:textSize="@dimen/text_size_16"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:customAssetFont="proxima_nova_light"
+                tools:text="Best Plan Ever"/>
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="@dimen/dimen_60dp"
+            android:layout_height="@dimen/dimen_60dp"
+            android:layout_gravity="center">
+
+            <ProgressBar
+                android:id="@+id/paymentPlanProgress"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="25"
+                android:progressDrawable="@drawable/payment_plan_progress"/>
+
+            <ImageView
+                android:id="@+id/scheduledPaymentIcon"
+                android:layout_width="@dimen/dimen_22dp"
+                android:layout_height="@dimen/dimen_22dp"
+                android:layout_gravity="center"
+                android:src="@drawable/icn_pending"
+                android:visibility="gone"/>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:layout_marginBottom="@dimen/dimen_3dp"
+        android:background="@color/divider_color" />
+
+</LinearLayout>
