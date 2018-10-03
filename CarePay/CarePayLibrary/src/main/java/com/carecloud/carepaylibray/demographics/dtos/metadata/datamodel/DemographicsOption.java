@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel;
 
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -33,7 +34,7 @@ public class DemographicsOption {
     }
 
     public String getLabel() {
-        return label;
+        return label.length() > 2 ? StringUtil.captialize(label) : label;
     }
 
     public void setLabel(String label) {
