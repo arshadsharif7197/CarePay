@@ -380,9 +380,12 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         metadata.setUserId(userId);
         metadata.setBreezeUserId(getAppAuthorizationHelper().getPatientUser());
 
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("patient_id", practiceInfo.getPatientId());
+
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getInitializePaymentRequest();
         String payload = DtoHelper.getStringDTO(shamrockPaymentsPostModel);
-        getWorkflowServiceHelper().execute(transitionDTO, initPaymentRequestCallback, payload);
+        getWorkflowServiceHelper().execute(transitionDTO, initPaymentRequestCallback, payload, queryMap);
     }
 
     private WorkflowServiceCallback initPaymentRequestCallback = new WorkflowServiceCallback() {
