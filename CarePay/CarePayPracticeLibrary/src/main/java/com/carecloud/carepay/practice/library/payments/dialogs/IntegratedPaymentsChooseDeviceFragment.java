@@ -310,61 +310,6 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         }
     }
 
-/*
-    private void processShamrockPayment(){
-        IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
-
-        ShamrockPaymentsPostModel shamrockPaymentsPostModel = new ShamrockPaymentsPostModel().setIntegratedPaymentPostModel(postModel);
-        shamrockPaymentsPostModel.setOrganizationId(paymentsModel.getPaymentPayload().getOrganizationId());
-        shamrockPaymentsPostModel.setPaymentProfileId(paymentsModel.getPaymentPayload().getPaymentProfileId());
-        shamrockPaymentsPostModel.setExecution(IntegratedPaymentPostModel.EXECUTION_CLOVER);
-
-        ShamrockPaymentMetadata metadata = shamrockPaymentsPostModel.getMetadata();
-        metadata.setPracticeId(practiceInfo.getPracticeId());
-        metadata.setPracticeMgmt(practiceInfo.getPracticeMgmt());
-        metadata.setPatientId(practiceInfo.getPatientId());
-        metadata.setUserId(userId);
-        metadata.setBreezeUserId(getAppAuthorizationHelper().getPatientUser());
-
-        String endpoint = getString(R.string.carepay_init_payment_request);
-        String url = HttpConstants.getPaymentsUrl();
-
-        Map<String, String> headers = new HashMap<>();
-        headers.put("x-api-key", HttpConstants.getPaymentsApiKey());
-
-        Gson gson = new Gson();
-        RestCallServiceHelper restCallServiceHelper = new RestCallServiceHelper(getAppAuthorizationHelper(), getApplicationMode());
-        restCallServiceHelper.executeRequest(RestDef.POST, url, initPaymentCallback, true, false, null, null, headers, gson.toJson(shamrockPaymentsPostModel), endpoint);
-    }
-*/
-
-/*
-    private RestCallServiceCallback initPaymentCallback = new RestCallServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(JsonElement jsonElement) {
-            hideProgressDialog();
-
-            Gson gson = new Gson();
-            ShamrockPaymentsPostModel postModel = gson.fromJson(jsonElement, ShamrockPaymentsPostModel.class);
-            selectedDevice.setPaymentRequestId(postModel.getDeepstreamId());
-            DeviceInfo.updateDevice(userId, authToken, selectedDevice.getDeviceId(), selectedDevice);
-            ClientPayment.trackPaymentRequest(userId, authToken, selectedDevice.getPaymentRequestId(), paymentRequestCallback);
-        }
-
-        @Override
-        public void onFailure(String errorMessage) {
-            hideProgressDialog();
-            toggleSelectDevice(false);
-            new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
-        }
-    };
-*/
-
     private void processIntegratedPayment(){
         IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
 
