@@ -25,6 +25,7 @@ import com.carecloud.carepay.practice.library.payments.models.IntegratedPaymentD
 import com.carecloud.carepay.practice.library.payments.models.IntegratedPaymentDeviceGroupPayload;
 import com.carecloud.carepay.practice.library.payments.models.IntegratedPaymentQueueRecord;
 import com.carecloud.carepay.practice.library.payments.models.ShamrockPaymentMetadata;
+import com.carecloud.carepay.practice.library.payments.models.ShamrockPaymentModel;
 import com.carecloud.carepay.practice.library.payments.models.ShamrockPaymentsPostModel;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.RestCallServiceCallback;
@@ -343,7 +344,8 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
 
-            ShamrockPaymentsPostModel postModel = DtoHelper.getConvertedDTO(ShamrockPaymentsPostModel.class, workflowDTO);
+            ShamrockPaymentModel shamrockPaymentModel = DtoHelper.getConvertedDTO(ShamrockPaymentModel.class, workflowDTO);
+            ShamrockPaymentsPostModel postModel = shamrockPaymentModel.getPayload().getPostModel();
             selectedDevice.setPaymentRequestId(postModel.getDeepstreamId());
             DeviceInfo.updateDevice(userId, authToken, selectedDevice.getDeviceId(), selectedDevice);
             ClientPayment.trackPaymentRequest(userId, authToken, selectedDevice.getPaymentRequestId(), paymentRequestCallback);
