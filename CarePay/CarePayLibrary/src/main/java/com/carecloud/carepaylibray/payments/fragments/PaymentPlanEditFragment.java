@@ -126,6 +126,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     public void onViewCreated(final View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         setUpUI(view);
+        enableCreatePlanButton();
     }
 
     private void setUpUI(final View view) {
@@ -188,9 +189,6 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
                 }
             }
         });
-        //enable edit button if frequency is disabled since these fields would be locked
-        editPaymentPlanButton.setEnabled(validateFields(false) ||
-                !frequencyOption.isEnabled());
         Button cancelPaymentPlanButton = (Button) view.findViewById(R.id.cancelPaymentPlanButton);
         cancelPaymentPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -200,7 +198,18 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         });
         cancelPaymentPlanButton.setVisibility(canCancelPlan(paymentPlanDTO.getMetadata().getPracticeId())
                 ? View.VISIBLE : View.GONE);
+        enableCreatePlanButton();
+    }
 
+    @Override
+    protected void enableCreatePlanButton(){
+        //enable edit button if frequency is disabled since these fields would be locked
+        boolean isEnabled = validateFields(false) || !frequencyOption.isEnabled();
+        getActionButton().setSelected(isEnabled);
+        getActionButton().setClickable(isEnabled);
+
+//        getActionButton().setEnabled(validateFields(false) ||
+//                !frequencyOption.isEnabled());
     }
 
     protected void showCancelPaymentPlanConfirmDialog() {
@@ -606,6 +615,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     protected void manageFrequencyChange(DemographicsToggleOption option, boolean refresh) {
         super.manageFrequencyChange(option, refresh);
         toggleFields(option.isEnabled());
+        enableCreatePlanButton();
         if(!option.isEnabled()){
             stubRangeRules();
             resetPlanParameters();

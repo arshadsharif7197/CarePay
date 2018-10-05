@@ -876,8 +876,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
                     editable.clear();
                 } else {
                     valueInputCallback.onValueInput(input);
-                    enableCreatePlanButton();
                 }
+                enableCreatePlanButton();
             }
         };
     }
