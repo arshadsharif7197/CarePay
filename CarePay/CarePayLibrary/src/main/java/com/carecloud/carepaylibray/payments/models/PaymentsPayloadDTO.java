@@ -13,6 +13,7 @@ import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItemPay
 import com.carecloud.carepaylibray.payments.models.history.PaymentsTransactionHistory;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanLineItem;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
 import com.carecloud.carepaylibray.retail.models.RetailProductsModel;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -558,9 +559,10 @@ public class PaymentsPayloadDTO implements Serializable {
         return false;
     }
 
-    private boolean hasApplicableRule(PaymentsSettingsPaymentPlansDTO paymentPlanSettings, double amount) {
+    public boolean hasApplicableRule(PaymentsSettingsPaymentPlansDTO paymentPlanSettings, double amount, @PaymentPlanModel.FrequencyDef String... frequencies) {
         for (PaymentSettingsBalanceRangeRule balanceRangeRule : paymentPlanSettings.getBalanceRangeRules()) {
-            if (isFrequencyEnabled(paymentPlanSettings, balanceRangeRule)) {
+            if (isFrequencyEnabled(paymentPlanSettings, balanceRangeRule) && (frequencies == null || frequencies.length == 0 ||
+                    SystemUtil.arrayContains(frequencies, balanceRangeRule.getMaxDuration().getInterval()))) {
                 double minAmount = balanceRangeRule.getMinBalance().getValue();
                 double maxAmount = balanceRangeRule.getMaxBalance().getValue();
                 if (amount >= minAmount && amount <= maxAmount) {
