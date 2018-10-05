@@ -153,9 +153,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
 
         resetPlanParameters();
 
-        if (!canEditPaymentPlan) {
-            disableFields();
-        }
+        toggleFields(canEditPaymentPlan);
 
     }
 
@@ -518,16 +516,18 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         return paymentPlanSettings.isCanCancelPlan();
     }
 
-    private void disableFields() {
-        parametersTextView.setText(Label.getLabel("payment_plan_edit_fields_disabled"));
+    private void toggleFields(boolean enabled) {
+        if(!enabled) {
+            parametersTextView.setText(Label.getLabel("payment_plan_edit_fields_disabled"));
+        }
 
-        installmentsEditText.setEnabled(false);
-        installmentsEditText.setFocusable(false);
-        installmentsEditText.setFocusableInTouchMode(false);
+        installmentsEditText.setEnabled(enabled);
+        installmentsEditText.setFocusable(enabled);
+        installmentsEditText.setFocusableInTouchMode(enabled);
 
-        amountPaymentEditText.setEnabled(false);
-        amountPaymentEditText.setFocusable(false);
-        amountPaymentEditText.setFocusableInTouchMode(false);
+        amountPaymentEditText.setEnabled(enabled);
+        amountPaymentEditText.setFocusable(enabled);
+        amountPaymentEditText.setFocusableInTouchMode(enabled);
 
     }
 
@@ -605,9 +605,9 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     @Override
     protected void manageFrequencyChange(DemographicsToggleOption option, boolean refresh) {
         super.manageFrequencyChange(option, refresh);
+        toggleFields(option.isEnabled());
         if(!option.isEnabled()){
             stubRangeRules();
-            disableFields();
             resetPlanParameters();
         }
     }
