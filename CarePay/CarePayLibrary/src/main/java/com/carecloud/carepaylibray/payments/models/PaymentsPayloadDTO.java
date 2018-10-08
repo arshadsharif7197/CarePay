@@ -411,17 +411,19 @@ public class PaymentsPayloadDTO implements Serializable {
         List<PaymentPlanDTO> baseList = practiceId != null ?
                 getActivePlans(practiceId) : getPatientPaymentPlans();
         List<PaymentPlanDTO> outputList = new ArrayList<>();
-        PaymentsPayloadSettingsDTO settingsDTO = getPaymentSetting(practiceId);
-        if (settingsDTO.getPayload().getPaymentPlans().isAddBalanceToExisting()) {
+        PaymentsSettingsPaymentPlansDTO settingsDTO = getPaymentSetting(practiceId)
+                .getPayload().getPaymentPlans();
+        if (settingsDTO.isAddBalanceToExisting()) {
             for (PaymentPlanDTO paymentPlanDTO : baseList) {
                 double pendingAmount = SystemUtil.safeSubtract(paymentPlanDTO.getPayload()
                         .getAmount(), paymentPlanDTO.getPayload().getAmountPaid());
                 double sumAmount = SystemUtil.safeAdd(pendingAmount, amountToAdd);
-                for (PaymentSettingsBalanceRangeRule balanceRangeRule : settingsDTO.getPayload()
-                        .getPaymentPlans().getBalanceRangeRules()) {
+                for (PaymentSettingsBalanceRangeRule balanceRangeRule : settingsDTO.getBalanceRangeRules()) {
                     double minAmount = balanceRangeRule.getMinBalance().getValue();
                     double maxAmount = balanceRangeRule.getMaxBalance().getValue();
-                    if (sumAmount >= minAmount && sumAmount <= maxAmount) {
+                    if (sumAmount >= minAmount && sumAmount <= maxAmount &&
+                            planFrequencyMatchesRuleInterval(paymentPlanDTO, balanceRangeRule) &&
+                            isFrequencyEnabled(settingsDTO, balanceRangeRule)) {
                         outputList.add(paymentPlanDTO);
                         break;
                     }
@@ -690,5 +692,19 @@ public class PaymentsPayloadDTO implements Serializable {
             }
         }
         return null;
+    }
+
+    public boolean planFrequencyMatchesRuleInterval(PaymentPlanDTO paymentPlanDTO,
+                                                    PaymentSettingsBalanceRangeRule balanceRangeRule) {
+        switch (paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode()) {
+            case PaymentPlanModel.FREQUENCY_MONTHLY:
+                return balanceRangeRule.getMaxDuration().getInterval()
+                        .equals(PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS);
+            case PaymentPlanModel.FREQUENCY_WEEKLY:
+                return balanceRangeRule.getMaxDuration().getInterval()
+                        .equals(PaymentSettingsBalanceRangeRule.INTERVAL_WEEKS);
+            default:
+                return false;
+        }
     }
 }
