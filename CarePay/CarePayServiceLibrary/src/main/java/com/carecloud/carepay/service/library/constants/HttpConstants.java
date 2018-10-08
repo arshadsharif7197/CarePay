@@ -25,8 +25,6 @@ public class HttpConstants {
 
     private static String pushNotificationWebclientUrl;
 
-    private static boolean useUnifiedAuth = false;
-
     private static MixpanelAPI mixpanelAPI;
 
     private static String environment;
@@ -81,15 +79,6 @@ public class HttpConstants {
 
     public static void setPushNotificationWebclientUrl(String pushNotificationWebclientUrl) {
         HttpConstants.pushNotificationWebclientUrl = pushNotificationWebclientUrl;
-    }
-
-
-    public static boolean isUseUnifiedAuth() {
-        return useUnifiedAuth;
-    }
-
-    public static void setUseUnifiedAuth(boolean useUnifiedAuth) {
-        HttpConstants.useUnifiedAuth = useUnifiedAuth;
     }
 
     public static MixpanelAPI getMixpanelAPI() {
