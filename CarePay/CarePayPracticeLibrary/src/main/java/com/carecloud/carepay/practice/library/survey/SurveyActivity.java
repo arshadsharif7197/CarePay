@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.library.survey;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,6 +17,8 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
@@ -40,6 +43,7 @@ public class SurveyActivity extends BasePracticeActivity implements FragmentActi
         setContentView(R.layout.activity_survey);
         surveyDTO = getConvertedDTO(SurveyDTO.class);
         initializeLanguageSpinner();
+        initializeHomeButton();
         replaceFragment(SurveyFragment.newInstance(), false);
     }
 
@@ -133,6 +137,56 @@ public class SurveyActivity extends BasePracticeActivity implements FragmentActi
                 .setText(Label.getLabel("survey.patientMode.form.label.leftMesssage"));
     }
 
+    private void initializeHomeButton() {
+        findViewById(R.id.btnHome).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ConfirmDialogFragment fragment = ConfirmDialogFragment
+                        .newInstance(Label.getLabel("survey.form.label.exitMenu.title"),
+                                Label.getLabel("survey.form.label.exitMenu.message"),
+                                Label.getLabel("button_no"),
+                                Label.getLabel("button_yes"));
+                fragment.setCallback(new ConfirmationCallback() {
+                    @Override
+                    public void onConfirm() {
+                        callContinueService();
+                    }
+                });
+                String tag = fragment.getClass().getName();
+                fragment.show(ft, tag);
+            }
+        });
+    }
+
+    private void callContinueService() {
+        TransitionDTO continueTransition = surveyDTO.getMetadata().getTransitions().getContinueTransition();
+        Map<String, String> query = new HashMap<>();
+        query.put("practice_mgmt", surveyDTO.getPayload().getSurvey().getMetadata().getPracticeMgmt());
+        query.put("practice_id", surveyDTO.getPayload().getSurvey().getMetadata().getPracticeId());
+        query.put("patient_id", surveyDTO.getPayload().getSurvey().getAppointment().getMetadata().getPatientId());
+        query.put("appointment_id", surveyDTO.getPayload().getSurvey().getAppointment().getMetadata().getAppointmentId());
+        getWorkflowServiceHelper().execute(continueTransition, new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                navigateToWorkflow(workflowDTO);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+                Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
+            }
+        }, query);
+    }
+
     @Override
     public void replaceFragment(Fragment fragment, boolean addToBackStack) {
         replaceFragment(R.id.root_layout, fragment, addToBackStack);
@@ -150,6 +204,6 @@ public class SurveyActivity extends BasePracticeActivity implements FragmentActi
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        //disable action
     }
 }

@@ -36,7 +36,7 @@
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_22"
         app:customAssetFont="gotham_rounded_medium"
-        breeze:textKey="demographics_review_next_button" />
+        breeze:textKey="survey.patientMode.form.button.submitButton" />
 
     <View
         android:id="@+id/bottomSeparator"

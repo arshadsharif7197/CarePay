@@ -65,7 +65,7 @@ public class SurveyFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         SurveyModel survey = surveyDto.getPayload().getSurvey();
         surveyTitle = view.findViewById(R.id.surveyTitle);
-        surveyTitle.setText(survey.getTitle());
+        surveyTitle.setText(Label.getLabel("survey.form.screen.title.survey"));
         RecyclerView surveyRecycler = view.findViewById(R.id.surveyRecycler);
         surveyRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new SurveyAdapter(survey.getQuestions());
@@ -89,8 +89,8 @@ public class SurveyFragment extends BaseFragment {
 
     public void refreshQuestionTitles() {
         adapter.notifyDataSetChanged();
-        nextButton.setText(Label.getLabel("demographics_review_next_button"));
-        surveyTitle.setText(surveyDto.getPayload().getSurvey().getTitle());
+        nextButton.setText(Label.getLabel("survey.patientMode.form.button.submitButton"));
+        surveyTitle.setText(Label.getLabel("survey.form.screen.title.survey"));
     }
 
     @Override

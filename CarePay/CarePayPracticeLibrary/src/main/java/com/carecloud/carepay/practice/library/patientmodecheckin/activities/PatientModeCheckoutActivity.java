@@ -1000,8 +1000,13 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             queryMap.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
             queryMap.put("payment_plan", "true");
 
-            TransitionDTO transition = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getContinueTransition();
-            getWorkflowServiceHelper().execute(transition, getCompletePlanAction(workflowDTO, 0, true), queryMap);
+            Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
+            header.put("transition", "true");
+
+            TransitionDTO transition = paymentsModel.getPaymentsMetadata().getPaymentsTransitions()
+                    .getContinueTransition();
+            getWorkflowServiceHelper().execute(transition,
+                    getCompletePlanAction(workflowDTO, 0, true), queryMap, header);
         }
     }
 
@@ -1015,7 +1020,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
-                if (NavigationStateConstants.PAYMENTS.equals(workflowDTO.getState())) {
+                if (NavigationStateConstants.PATIENT_PAY_CHECKOUT.equals(workflowDTO.getState())) {
                     if (!hasDisplayedConfirm) {
                         //need to display payments again, so we need to display this payment plan confirmation first
                         //hold the workflow response so that we can navigate to is after they click ok in confirm
@@ -1041,6 +1046,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
                     appointmentsResultModel.getMetadata().getLinks().setPinpad(practiceAppointmentDTO
                             .getMetadata().getLinks().getPinpad());
+                    appointmentsResultModel.getMetadata().getLinks().setShop(practiceAppointmentDTO
+                            .getMetadata().getLinks().getShop());
                     appointmentsResultModel.getMetadata().getTransitions()
                             .setPracticeMode(practiceAppointmentDTO.getMetadata().getTransitions().getPracticeMode());
                     extra.putString(CarePayConstants.EXTRA_APPOINTMENT_TRANSITIONS,
@@ -1048,8 +1055,14 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                     DtoHelper.bundleDto(extra, appointmentsResultModel.getPayload().getAppointments().get(0));
                     extra.putBoolean("isCheckOut", true);
 
+                    SurveyDTO surveyDTO = DtoHelper.getConvertedDTO(SurveyDTO.class, workflowDTO);
+                    if (surveyDTO.getPayload().getSurvey() != null) {
+                        WorkFlowRecord surveyWorkflowRecord = new WorkFlowRecord(workflowDTO);
+                        surveyWorkflowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
+                        extra.putLong(SurveyDTO.class.getSimpleName(), surveyWorkflowRecord.save());
+                    }
+
                     //get the appointment transitions from the Demo payload
-                    AppointmentsResultModel appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
                     extra.putString(CarePayConstants.EXTRA_APPOINTMENT_TRANSITIONS,
                             DtoHelper.getStringDTO(appointmentsResultModel));
                     Intent completeIntent = new Intent(getContext(), CompleteCheckActivity.class);

@@ -166,6 +166,7 @@ public class PaymentPlanTermsFragment extends BasePaymentDialogFragment {
 
     protected void onPaymentPlanSubmitted(WorkflowDTO workflowDTO) {
         callback.onSubmitPaymentPlan(workflowDTO);
+        dismiss();
     }
 
     private void submitPaymentPlan() {

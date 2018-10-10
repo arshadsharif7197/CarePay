@@ -13,13 +13,13 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BackPressedFragmentInterface;
-import com.carecloud.carepaylibray.survey.model.SurveyDTO;
-import com.carecloud.carepaylibray.survey.model.SurveyModel;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.common.NonSwipeableViewPager;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
+import com.carecloud.carepaylibray.survey.model.SurveyDTO;
+import com.carecloud.carepaylibray.survey.model.SurveyModel;
 import com.marcok.stepprogressbar.StepProgressBar;
 
 /**
@@ -76,24 +76,24 @@ public class SurveyFragment extends BaseFragment implements BackPressedFragmentI
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final SurveyModel surveyModel = surveyDto.getPayload().getSurvey();
-        TextView practiceNameTextView = (TextView) view.findViewById(R.id.practiceNameTextView);
-        practiceNameTextView.setText(surveyModel.getTitle());
-        stepProgressBar = (StepProgressBar) view.findViewById(R.id.surveyProgressBarIndicator);
+        TextView practiceNameTextView = view.findViewById(R.id.practiceNameTextView);
+        practiceNameTextView.setText(surveyDto.getPayload().getPracticeInformation().get(0).getPracticeName());
+        stepProgressBar = view.findViewById(R.id.surveyProgressBarIndicator);
         stepProgressBar.setNumDots(surveyModel.getQuestions().size());
         stepProgressBar.setCurrentProgressDot(0);
-        viewPager = (NonSwipeableViewPager) view.findViewById(R.id.surveyViewPager);
+        viewPager = view.findViewById(R.id.surveyViewPager);
         viewPager.setAdapter(new SurveyPagerAdapter(surveyDto.getPayload().getSurvey().getQuestions()));
 
         toolbar = setUpToolbar(view);
 
-        submitButton = (Button) view.findViewById(R.id.submitButton);
+        submitButton = view.findViewById(R.id.submitButton);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (currentQuestion < surveyModel.getQuestions().size() - 1) {
                     changeToNextQuestion();
                     if (currentQuestion == surveyModel.getQuestions().size() - 1) {
-                        submitButton.setText(Label.getLabel("survey.form.button.title.submit"));
+                        submitButton.setText(Label.getLabel("survey.patientMode.form.button.submitButton"));
                     }
                     updateProgressTextView();
                 } else {
@@ -104,14 +104,14 @@ public class SurveyFragment extends BaseFragment implements BackPressedFragmentI
                 }
             }
         });
-        progressIndicatorTextView = (TextView) view.findViewById(R.id.progressIndicatorTextView);
+        progressIndicatorTextView = view.findViewById(R.id.progressIndicatorTextView);
         updateProgressTextView();
 
     }
 
     @NonNull
     protected Toolbar setUpToolbar(View view) {
-        final Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        final Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         callback.setToolbar(toolbar);
         toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -125,7 +125,7 @@ public class SurveyFragment extends BaseFragment implements BackPressedFragmentI
                 }
             }
         });
-        TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
+        TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(Label.getLabel("survey.form.screen.title.survey"));
         return toolbar;
     }

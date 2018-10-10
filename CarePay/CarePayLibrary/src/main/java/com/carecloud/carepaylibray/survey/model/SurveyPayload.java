@@ -1,9 +1,11 @@
 package com.carecloud.carepaylibray.survey.model;
 
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,6 +24,10 @@ public class SurveyPayload {
     @Expose
     @SerializedName("languages")
     private List<OptionDTO> languages;
+
+    @SerializedName("practice_information")
+    @Expose
+    private List<UserPracticeDTO> practiceInformation = new ArrayList<>();
 
     public SurveyModel getSurvey() {
         return survey;
@@ -45,5 +51,13 @@ public class SurveyPayload {
 
     public void setLanguages(List<OptionDTO> languages) {
         this.languages = languages;
+    }
+
+    public List<UserPracticeDTO> getPracticeInformation() {
+        return practiceInformation;
+    }
+
+    public void setPracticeInformation(List<UserPracticeDTO> practiceInformation) {
+        this.practiceInformation = practiceInformation;
     }
 }
