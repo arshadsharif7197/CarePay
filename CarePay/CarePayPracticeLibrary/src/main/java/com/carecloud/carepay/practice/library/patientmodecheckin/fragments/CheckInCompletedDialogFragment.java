@@ -349,7 +349,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
     private void manageSurvey(View view) {
         Bundle extra = getArguments();
         long id = extra.getLong(SurveyDTO.class.getSimpleName(), -1);
-        if (id > 0) {
+        if (id > 0 && !isCash) {
             if (view.findViewById(R.id.browseOurShopTextView).getVisibility() == View.VISIBLE) {
                 view.findViewById(R.id.continueTextView).setVisibility(View.GONE);
             }
@@ -361,9 +361,6 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
                     callback.fillSurvey();
                 }
             });
-            if (isCash) {
-                surveyButton.setTextColor(ContextCompat.getColor(getContext(), R.color.lightning_yellow));
-            }
         }
     }
 
