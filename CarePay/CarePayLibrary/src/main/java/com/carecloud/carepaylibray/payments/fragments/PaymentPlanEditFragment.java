@@ -165,8 +165,8 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         installmentsEditText.setText(String.valueOf(installments));
         installmentsEditText.getOnFocusChangeListener().onFocusChange(installmentsEditText, true);
 
-        amountPaymentEditText.setText(currencyFormatter.format(paymentPlanDTO.getPayload()
-                .getPaymentPlanDetails().getAmount()));
+        amounthPayment = paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount();
+        amountPaymentEditText.setText(currencyFormatter.format(amounthPayment));
         isCalculatingTime = false;
         isCalculatingAmount = false;
     }
@@ -568,22 +568,6 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
             frequencyOption.setLabel(StringUtil.capitalize(paymentPlanDTO.getPayload()
                     .getPaymentPlanDetails().getFrequencyCode()));
             frequencyOption.setName(paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode());
-            if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode()
-                    .equals(PaymentPlanDetailsDTO.FREQUENCY_MONTHLY)) {
-                dateOptions = generateDateOptions();
-                paymentDateOption = dateOptions.get(paymentPlanDTO.getPayload()
-                        .getPaymentPlanDetails().getDayOfMonth() - 1);
-                selectedDateOptions = dateOptions;
-            } else {
-                dayOfWeekOptions = generateDayOptions();
-                if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfWeek() > dayOfWeekOptions.size()) {
-                    paymentDateOption = dayOfWeekOptions.get(0);
-                } else {
-                    paymentDateOption = dayOfWeekOptions.get(paymentPlanDTO.getPayload()
-                            .getPaymentPlanDetails().getDayOfWeek());
-                }
-                selectedDateOptions = dayOfWeekOptions;
-            }
             frequencyOption.setEnabled(paymentsModel.getPaymentPayload()
                     .hasApplicableRule(paymentPlansRules, paymentPlanAmount,
                             paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode()));
@@ -598,6 +582,22 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
 
         }
 
+        if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode()
+                .equals(PaymentPlanDetailsDTO.FREQUENCY_MONTHLY)) {
+            dateOptions = generateDateOptions();
+            paymentDateOption = dateOptions.get(paymentPlanDTO.getPayload()
+                    .getPaymentPlanDetails().getDayOfMonth() - 1);
+            selectedDateOptions = dateOptions;
+        } else {
+            dayOfWeekOptions = generateDayOptions();
+            if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfWeek() > dayOfWeekOptions.size()) {
+                paymentDateOption = dayOfWeekOptions.get(0);
+            } else {
+                paymentDateOption = dayOfWeekOptions.get(paymentPlanDTO.getPayload()
+                        .getPaymentPlanDetails().getDayOfWeek());
+            }
+            selectedDateOptions = dayOfWeekOptions;
+        }
 
         return options;
     }
@@ -628,15 +628,15 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         boolean passesStandardValidation = super.validateFields(isUserInteraction);
 
         boolean samePaymentDate;
-        if (paymentDateOption.getId() != null && frequencyOption.getName().equals(paymentPlanDTO
+        if (paymentDateOption.getName() != null && frequencyOption.getName().equals(paymentPlanDTO
                 .getPayload().getPaymentPlanDetails().getFrequencyCode())) {
             if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode()
                     .equals(PaymentPlanDetailsDTO.FREQUENCY_MONTHLY)) {
-                samePaymentDate = paymentDateOption.getId().equals(dateOptions.get(paymentPlanDTO
-                        .getPayload().getPaymentPlanDetails().getDayOfMonth() - 1).getId());
+                samePaymentDate = paymentDateOption.getName().equals(dateOptions.get(paymentPlanDTO
+                        .getPayload().getPaymentPlanDetails().getDayOfMonth() - 1).getName());
             } else {
-                samePaymentDate = paymentDateOption.getId().equals(dateOptions.get(paymentPlanDTO
-                        .getPayload().getPaymentPlanDetails().getDayOfWeek()).getId());
+                samePaymentDate = paymentDateOption.getName().equals(dayOfWeekOptions.get(paymentPlanDTO
+                        .getPayload().getPaymentPlanDetails().getDayOfWeek()).getName());
             }
         } else {
             samePaymentDate = true;
