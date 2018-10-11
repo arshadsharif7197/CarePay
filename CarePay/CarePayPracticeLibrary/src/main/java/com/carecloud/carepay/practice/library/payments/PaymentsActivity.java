@@ -1251,4 +1251,10 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         });
         displayDialogFragment(fragment, false);
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.clear();
+    }
 }
