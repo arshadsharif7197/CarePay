@@ -74,7 +74,8 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
     public void onCreate(Bundle icicle) {
         paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, getArguments());
         practiceId = paymentPlanDTO.getMetadata().getPracticeId();
-        paymentPlanAmount = paymentPlanDTO.getPayload().getAmount();
+        paymentPlanAmount = SystemUtil.safeSubtract(paymentPlanDTO.getPayload().getAmount(),
+                paymentPlanDTO.getPayload().getAmountPaid());
         super.onCreate(icicle);
         selectedBalance = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
         if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode()
@@ -121,7 +122,7 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
 
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
         TextView paymentPlanValueTextView = (TextView) view.findViewById(R.id.paymentPlanValueTextView);
-        paymentPlanValueTextView.setText(currencyFormatter.format(paymentPlanDTO.getPayload().getAmount()));
+        paymentPlanValueTextView.setText(currencyFormatter.format(paymentPlanAmount));
 
         TextView paymentAmountTextView = (TextView) view.findViewById(R.id.paymentAmountTextView);
         String paymentAmount = currencyFormatter.format(paymentPlanDTO.getPayload()
@@ -144,7 +145,8 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
                     .getDayOfTheWeek(paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfWeek()));
         }
 
-        installments = paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments();
+        installments = paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments() -
+                paymentPlanDTO.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
         installmentsEditText.setText(String.valueOf(installments));
         installmentsEditText.getOnFocusChangeListener().onFocusChange(installmentsEditText, true);
 
@@ -237,7 +239,7 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
 
     protected void updatePaymentPlan() {
         PaymentPlanPostModel postModel = new PaymentPlanPostModel();
-        postModel.setAmount(paymentPlanAmount);
+        postModel.setAmount(paymentPlanDTO.getPayload().getAmount());
         postModel.setExecution(paymentPlanDTO.getPayload().getExecution());
         postModel.setLineItems(paymentPlanDTO.getPayload().getLineItems());
         postModel.setDescription(planNameEditText.getText().toString());
