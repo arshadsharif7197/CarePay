@@ -61,6 +61,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     private boolean canEditPaymentPlan;
     protected PaymentPlanEditInterface callback;
     protected Button editPaymentPlanButton;
+    protected EditText paymentMethodEditText;
 
     /**
      * @param paymentsModel  the payment model
@@ -158,7 +159,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
 
     }
 
-    private void resetPlanParameters(){
+    private void resetPlanParameters() {
         installments = paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments() -
                 paymentPlanDTO.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
         installmentsEditText.setText(String.valueOf(installments));
@@ -202,7 +203,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     }
 
     @Override
-    protected void enableCreatePlanButton(){
+    protected void enableCreatePlanButton() {
         //enable edit button if frequency is disabled since these fields would be locked
         boolean isEnabled = validateFields(false) || !frequencyOption.isEnabled();
         getActionButton().setSelected(isEnabled);
@@ -265,7 +266,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         View paymentMethodContainer = view.findViewById(R.id.paymentMethodContainer);
         paymentMethodContainer.setVisibility(View.VISIBLE);
         TextInputLayout paymentMethodInputLayout = (TextInputLayout) view.findViewById(R.id.paymentMethodInputLayout);
-        EditText paymentMethodEditText = (EditText) view.findViewById(R.id.creditCardNumberTextView);
+        paymentMethodEditText = (EditText) view.findViewById(R.id.creditCardNumberTextView);
         paymentMethodEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(paymentMethodInputLayout, null));
         if (creditCard != null) {
@@ -275,7 +276,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
             @Override
             public void onClick(View v) {
                 callback.onEditPaymentPlanPaymentMethod(paymentsModel, paymentPlanDTO);
-                dismiss();
+                hideDialog();
             }
         });
     }
@@ -294,9 +295,9 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     }
 
     public void replacePaymentMethod(PaymentCreditCardsPayloadDTO creditCard) {
-        EditText paymentMethodTextView = (EditText) getView().findViewById(R.id.creditCardNumberTextView);
-        setCreditCardInfo(creditCard, paymentMethodTextView);
+        setCreditCardInfo(creditCard, paymentMethodEditText);
         this.creditCard = creditCard;
+        showDialog();
     }
 
     protected void updatePaymentPlan() {
@@ -526,7 +527,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     }
 
     private void toggleFields(boolean enabled) {
-        if(!enabled) {
+        if (!enabled) {
             parametersTextView.setText(Label.getLabel("payment_plan_edit_fields_disabled"));
         }
 
@@ -616,10 +617,40 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         super.manageFrequencyChange(option, refresh);
         toggleFields(option.isEnabled());
         enableCreatePlanButton();
-        if(!option.isEnabled()){
+        if (!option.isEnabled()) {
             stubRangeRules();
             resetPlanParameters();
         }
+    }
+
+    @Override
+    protected boolean validateFields(boolean isUserInteraction) {
+        boolean passesStandardValidation = super.validateFields(isUserInteraction);
+
+        boolean samePaymentDate;
+        if (paymentDateOption.getId() != null && frequencyOption.getName().equals(paymentPlanDTO
+                .getPayload().getPaymentPlanDetails().getFrequencyCode())) {
+            if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode()
+                    .equals(PaymentPlanDetailsDTO.FREQUENCY_MONTHLY)) {
+                samePaymentDate = paymentDateOption.getId().equals(dateOptions.get(paymentPlanDTO
+                        .getPayload().getPaymentPlanDetails().getDayOfMonth() - 1).getId());
+            } else {
+                samePaymentDate = paymentDateOption.getId().equals(dateOptions.get(paymentPlanDTO
+                        .getPayload().getPaymentPlanDetails().getDayOfWeek()).getId());
+            }
+        } else {
+            samePaymentDate = true;
+        }
+
+        boolean metadataUnModified = samePaymentDate && creditCard == null &&
+                (StringUtil.isNullOrEmpty(planNameEditText.getText().toString()) ||
+                        planNameEditText.getText().toString().equals(paymentPlanDTO.getPayload().getDescription()));
+
+        int completedInstallments = paymentPlanDTO.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
+        boolean parametersModified = installments + completedInstallments != paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments() ||
+                amounthPayment != paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount();
+
+        return passesStandardValidation && parametersModified || (!metadataUnModified && !parametersModified);
     }
 
 }
