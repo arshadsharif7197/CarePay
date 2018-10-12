@@ -352,5 +352,13 @@
     <dimen name="appointmentSeparatorTopMargin">20dp</dimen>
     <dimen name="appointmentDialogButtonTextSize">16sp</dimen>
 
+    <!--Cancel Appointment Dialog-->
+    <dimen name="cancelAppointmentHorizontalMargin">20dp</dimen>
+    <dimen name="cancelAppointmentHeaderPadding">10dp</dimen>
+    <dimen name="cancelAppointmentTitleVerticalMargin">5dp</dimen>
+    <dimen name="cancelAppointmentTitleTextSize">24sp</dimen>
+    <dimen name="cancelAppointmentBodyHeight">160dp</dimen>
+    <dimen name="cancelAppointmentMessageTextSize">16sp</dimen>
+
 
 </resources>
