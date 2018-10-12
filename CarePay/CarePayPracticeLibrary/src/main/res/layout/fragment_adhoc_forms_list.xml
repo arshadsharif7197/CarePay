@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/dimen_30dp"
-    android:layout_marginTop="@dimen/dimen_30dp"
     android:layout_gravity="center"
+    android:layout_marginTop="@dimen/dimen_30dp"
+    android:layout_marginBottom="@dimen/dimen_30dp"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/dimen_30dp"
-    android:paddingTop="@dimen/dimen_30dp">
+    android:paddingTop="@dimen/dimen_30dp"
+    android:paddingBottom="@dimen/dimen_30dp">
 
     <LinearLayout
         android:id="@+id/closeViewLayout"
@@ -42,14 +41,12 @@
     <RelativeLayout
         android:id="@+id/search_content"
         android:layout_width="@dimen/dialog_width"
-        android:layout_height="@dimen/dialog_height"
-        android:layout_marginEnd="@dimen/dimen_26dp"
+        android:layout_height="@dimen/commonPracticeDialogHeight"
         android:layout_marginStart="@dimen/dimen_26dp"
-        android:layout_toRightOf="@+id/closeViewLayout"
+        android:layout_marginEnd="@dimen/dimen_26dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:orientation="vertical">
-
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/header"
@@ -59,9 +56,9 @@
             android:layout_gravity="center"
             android:background="@drawable/patient_mode_dialog_header_bg"
             android:gravity="center"
-            android:padding="@dimen/dimen_10dp"
+            android:padding="@dimen/adHocFormsListHeaderPadding"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_30sp"
+            android:textSize="@dimen/adHocFormsListHeaderTextSize"
             app:customAssetFont="gotham_rounded_bold"
             breeze:textKey="adhoc_screen_title" />
 
@@ -72,17 +69,18 @@
             android:layout_alignParentBottom="true"
             android:background="@drawable/patient_mode_dialog_body_bg"
             android:orientation="horizontal"
-            android:padding="@dimen/dimen_10dp">
+            android:padding="@dimen/distributionButtonContainersPadding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/sendFormButton"
                 style="@style/BreezeButtonStyleDark"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_10dp"
+                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:layout_weight="1"
                 android:background="@drawable/bg_primary_overlay"
                 android:enabled="false"
+                android:textSize="@dimen/respons_button_text_size"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="adhoc_send_form_button_label" />
 
@@ -91,11 +89,12 @@
                 android:id="@+id/fillNowFormButton"
                 style="@style/BreezeButtonStyleDark"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_10dp"
+                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:layout_weight="2"
                 android:background="@drawable/bg_green_overlay"
                 android:enabled="false"
+                android:textSize="@dimen/respons_button_text_size"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="adhoc_fill_now_button_label" />
 
@@ -108,9 +107,9 @@
             android:layout_below="@id/header"
             android:background="@color/white"
             android:gravity="center"
-            android:paddingBottom="10dp"
-            android:paddingTop="@dimen/dimen_10dp"
-            android:textSize="@dimen/text_size_16sp"
+            android:paddingTop="@dimen/adHocFormsListSubtitleVerticalPadding"
+            android:paddingBottom="@dimen/adHocFormsListSubtitleVerticalPadding"
+            android:textSize="@dimen/adHocFormsListSubtitleTextSize"
             app:customAssetFont="proxima_nova_regular"
             breeze:textKey="adhoc_screen_message"
             tools:text="You can either give this device for the patient to fill out \n the forms now or push them to the patient's device" />
@@ -118,12 +117,12 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/formsRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_above="@id/footer"
             android:layout_below="@id/subTitle"
             android:background="@color/white"
-            android:paddingEnd="@dimen/dimen_16dp"
-            android:paddingStart="@dimen/dimen_16dp" />
+            android:paddingStart="@dimen/dimen_16dp"
+            android:paddingEnd="@dimen/adHocFormsListHorizontalPadding" />
 
         <RelativeLayout
             android:id="@+id/noFormsContainer"
@@ -139,21 +138,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_margin="@dimen/dimen_10dp"
+                android:layout_margin="@dimen/adHocFormsListNoFormsImageBottomMargin"
                 android:background="@color/white"
                 android:gravity="center"
                 android:textColor="@color/Feldgrau"
-                android:textSize="@dimen/text_size_22sp"
+                android:textSize="@dimen/adHocFormsListNoFormsTitleTextSize"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="adhoc_no_forms_title"
                 tools:text="No forms available" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/adHocFormsListNoFormsImageSize"
+                android:layout_height="@dimen/adHocFormsListNoFormsImageSize"
                 android:layout_above="@id/noFormsTitleTextView"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:layout_marginBottom="@dimen/adHocFormsListNoFormsImageBottomMargin"
                 android:src="@drawable/icon_no_forms" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -164,7 +163,7 @@
                 android:background="@color/white"
                 android:gravity="center"
                 android:textColor="@color/pastel_blue"
-                android:textSize="@dimen/text_size_18sp"
+                android:textSize="@dimen/adHocFormsListNoFormsSubTitleTextSize"
                 app:customAssetFont="gotham_rounded_light"
                 breeze:textKey="adhoc_no_forms_subtitle"
                 tools:text="No forms were added yet." />
@@ -179,7 +178,6 @@
         android:layout_toRightOf="@+id/search_content"
         android:orientation="vertical"
         android:visibility="invisible">
-
 
         <ImageView
             android:layout_width="wrap_content"

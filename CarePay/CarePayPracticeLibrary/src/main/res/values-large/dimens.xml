@@ -360,5 +360,20 @@
     <dimen name="cancelAppointmentBodyHeight">160dp</dimen>
     <dimen name="cancelAppointmentMessageTextSize">16sp</dimen>
 
+    <!--Ad Hoc Forms-->
+    <dimen name="adHocFormsListNoFormsTitleTextSize">20sp</dimen>
+    <dimen name="adHocFormsListNoFormsSubTitleTextSize">16sp</dimen>
+    <dimen name="adHocFormsListNoFormsImageSize">130dp</dimen>
+    <dimen name="adHocFormsListNoFormsImageBottomMargin">5dp</dimen>
+    <dimen name="adHocFormsListHorizontalPadding">10dp</dimen>
+    <dimen name="adHocFormsListSubtitleTextSize">12sp</dimen>
+    <dimen name="adHocFormsListSubtitleVerticalPadding">10dp</dimen>
+    <dimen name="adHocFormsListHeaderPadding">5dp</dimen>
+    <dimen name="adHocFormsListHeaderTextSize">22sp</dimen>
+    <dimen name="adHocFormsListHeight">350dp</dimen>
+    <dimen name="adHocFormsListItemHeight">45dp</dimen>
+    <dimen name="adHocFormsListItemDateTextSize">10sp</dimen>
+    <dimen name="adHocFormsListItemNameTextSize">13sp</dimen>
+
 
 </resources>
