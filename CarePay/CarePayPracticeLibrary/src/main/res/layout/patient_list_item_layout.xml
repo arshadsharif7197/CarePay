@@ -81,16 +81,20 @@
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/timeTextView"
-            android:layout_width="90dp"
-            android:layout_height="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="@dimen/appointmentCardTimeStartMargin"
             android:background="@drawable/bg_green_overlay"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="@dimen/appointment_cart_time_textsize"
-            android:visibility="gone"
+            android:paddingStart="@dimen/appointmentCardTimeHorizontalPadding"
+            android:paddingEnd="@dimen/appointmentCardTimeHorizontalPadding"
+            android:paddingTop="@dimen/appointmentCardTimeVerticalPadding"
+            android:paddingBottom="@dimen/appointmentCardTimeVerticalPadding"
+            android:textSize="@dimen/appointmentCartTimeTextSize"
+            tools:text="05:35 PM"
             card_view:customAssetFont="proxima_nova_semi_bold" />
 
     </RelativeLayout>

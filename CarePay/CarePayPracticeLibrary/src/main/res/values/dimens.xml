@@ -79,7 +79,6 @@
 
     <dimen name="appointment_cart_provider_textsize">17sp</dimen>
     <dimen name="appointment_cart_amount_textsize">17sp</dimen>
-    <dimen name="appointment_cart_time_textsize">16sp</dimen>
     <dimen name="forgotpassword_textsize">14.0sp</dimen>
 
     <!-- Custom Filter Popup -->
@@ -429,6 +428,16 @@
 
     <!--Choose Credit Card-->
     <dimen name="chooseCreditCardContentHeight">400dp</dimen>
+
+    <!--Appointment Screen-->
+    <dimen name="appointmentCartTimeTextSize">16sp</dimen>
+    <dimen name="appointmentCardTimeStartMargin">20dp</dimen>
+    <dimen name="appointmentCardTimeHorizontalPadding">10dp</dimen>
+    <dimen name="appointmentCardTimeVerticalPadding">5dp</dimen>
+    <dimen name="dateSeparatorTextSize">22sp</dimen>
+    <dimen name="dateSeparatorContainerVerticalPadding">15dp</dimen>
+    <dimen name="dateSeparatorContainerStartMargin">20dp</dimen>
+    <dimen name="dateSeparatorContainerBottomMargin">10dp</dimen>
 
 
 </resources>

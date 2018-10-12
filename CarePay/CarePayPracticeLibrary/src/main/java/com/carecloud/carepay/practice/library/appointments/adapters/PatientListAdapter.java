@@ -88,11 +88,9 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public int getItemViewType(int position) {
         final CardViewPatient patient = filteredPatients.get(position);
-
         if (null == patient.raw) {
             return CELL_HEADER;
         }
-
         return CELL_CARD;
     }
 

@@ -292,4 +292,13 @@
     <!--Choose Credit Card-->
     <dimen name="chooseCreditCardContentHeight">400dp</dimen>
 
+    <!--Appointment Screen-->
+    <dimen name="appointmentCartTimeTextSize">16sp</dimen>
+    <dimen name="appointmentCardTimeStartMargin">20dp</dimen>
+    <dimen name="appointmentCardTimeVerticalPadding">5dp</dimen>
+    <dimen name="dateSeparatorTextSize">22sp</dimen>
+    <dimen name="dateSeparatorContainerVerticalPadding">15dp</dimen>
+    <dimen name="dateSeparatorContainerStartMargin">20dp</dimen>
+    <dimen name="dateSeparatorContainerBottomMargin">10dp</dimen>
+
 </resources>
