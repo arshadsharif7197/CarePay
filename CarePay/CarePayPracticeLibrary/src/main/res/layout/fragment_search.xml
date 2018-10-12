@@ -84,6 +84,25 @@
                 android:layout_height="match_parent"
                 android:padding="@dimen/padding_xlarge"/>
 
+            <FrameLayout
+                android:id="@+id/emptyStateScreen"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingStart="@dimen/dimen_60dp"
+                android:paddingEnd="@dimen/dimen_60dp"
+                android:visibility="gone">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/no_results_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_18sp"
+                    android:gravity="center"
+                    android:textColor="@color/optional_gray"
+                    app:customAssetFont="gotham_rounded_medium"/>
+
+            </FrameLayout>
+
         </FrameLayout>
 
     </LinearLayout>

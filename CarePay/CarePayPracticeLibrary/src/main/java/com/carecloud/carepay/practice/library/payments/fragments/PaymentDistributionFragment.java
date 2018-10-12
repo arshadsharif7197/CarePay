@@ -248,6 +248,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         View.OnClickListener addItem = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                clearPickers();
+                clearLastSwipeView();
                 callback.lookupChargeItem(paymentsModel.getPaymentPayload().getSimpleChargeItems(),
                         PaymentDistributionFragment.this);
                 hideDialog();
@@ -260,6 +262,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         paymentPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                clearPickers();
+                clearLastSwipeView();
                 callback.showPaymentPlanDashboard(paymentsModel);
                 hideDialog();
             }
@@ -269,6 +273,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         payButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                clearPickers();
+                clearLastSwipeView();
                 if (validateBalanceItems()) {
                     distributeAmountOverBalanceItems(paymentAmount);
 
@@ -285,6 +291,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         paymentTotalTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                clearPickers();
+                clearLastSwipeView();
                 callback.showAmountEntry(PaymentDistributionFragment.this,
                         null, null);
                 hideDialog();
@@ -300,6 +308,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         historyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                clearPickers();
+                clearLastSwipeView();
                 callback.showPaymentHistory(paymentsModel);
                 hideDialog();
             }
@@ -699,11 +709,15 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
     @Override
     public void editAmount(double amount, BalanceItemDTO balanceItem) {
+        clearPickers();
+        clearLastSwipeView();
         modifyLineItem(balanceItem, null, null, amount);
     }
 
     @Override
     public void pickAmount(BalanceItemDTO balanceItem) {
+        clearPickers();
+        clearLastSwipeView();
         callback.showAmountEntry(this, balanceItem, null);
         hideDialog();
     }
