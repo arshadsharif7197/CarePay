@@ -140,6 +140,10 @@ public class NotificationItemMetadata {
         @SerializedName("scheduled_payment_execution")
         private ScheduledPaymentExecution scheduledPaymentExecution;
 
+        @Expose
+        @SerializedName("event_name")
+        private String eventName;
+
         public boolean isPaymentSuccessful() {
             return isPaymentSuccessful;
         }
@@ -162,6 +166,14 @@ public class NotificationItemMetadata {
 
         public void setScheduledPaymentExecution(ScheduledPaymentExecution scheduledPaymentExecution) {
             this.scheduledPaymentExecution = scheduledPaymentExecution;
+        }
+
+        public String getEventName() {
+            return eventName;
+        }
+
+        public void setEventName(String eventName) {
+            this.eventName = eventName;
         }
     }
 
