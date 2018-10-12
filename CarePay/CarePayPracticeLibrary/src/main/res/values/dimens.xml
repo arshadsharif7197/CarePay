@@ -439,5 +439,22 @@
     <dimen name="dateSeparatorContainerStartMargin">20dp</dimen>
     <dimen name="dateSeparatorContainerBottomMargin">10dp</dimen>
 
+    <!--Visit Type Dialog-->
+    <dimen name="visityTypeDialogSubTitleTextSize">15sp</dimen>
+    <dimen name="visitTyTypeDialogSubTitleHorizontalMargin">20dp</dimen>
+    <dimen name="visitTyTypeDialogSubTitleBottomMargin">20dp</dimen>
+    <dimen name="visitTyTypeDialogTitleTextSize">23sp</dimen>
+    <dimen name="visitTyTypeDialogTitlePadding">10dp</dimen>
+    <dimen name="visitTypeListMargin">20dp</dimen>
+    <dimen name="visitTypeListHeight">360dp</dimen>
+    <dimen name="visitTypeDialogHorizontalMargin">26dp</dimen>
+    <dimen name="visitTypeItemHeight">70dp</dimen>
+    <dimen name="visitTypeItemHorizontalMargin">10dp</dimen>
+    <dimen name="visitTypeItemImageSize">40dp</dimen>
+    <dimen name="visitTypeItemImageMargin">5dp</dimen>
+    <dimen name="visitTypeItemPrePaymentMargin">5dp</dimen>
+    <dimen name="visitTypeItemPrePaymentTextSize">17sp</dimen>
+    <dimen name="visitTypeItemTextSize">24sp</dimen>
+
 
 </resources>
