@@ -62,6 +62,7 @@ public class RetailActivity extends MenuPatientActivity implements RetailPatient
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         retailModel = getConvertedDTO(RetailModel.class);
+        paymentsModel = getConvertedDTO(PaymentsModel.class);
         if (retailModel == null) {
             callRetailService();
         } else {
@@ -81,6 +82,7 @@ public class RetailActivity extends MenuPatientActivity implements RetailPatient
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
+                paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
                 retailModel = DtoHelper.getConvertedDTO(RetailModel.class, workflowDTO);
                 resumeOnCreate();
             }
@@ -94,7 +96,6 @@ public class RetailActivity extends MenuPatientActivity implements RetailPatient
     }
 
     private void resumeOnCreate() {
-        paymentsModel = getConvertedDTO(PaymentsModel.class);
         Fragment fragment;
         if (retailModel.getPayload().getRetailPracticeList().size() == 1) {
             selectedPractice = retailModel.getPayload().getRetailPracticeList().get(0);

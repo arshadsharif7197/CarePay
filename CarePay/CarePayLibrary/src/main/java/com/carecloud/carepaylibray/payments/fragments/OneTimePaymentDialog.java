@@ -94,8 +94,8 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
         }
 
         TextView paymentHeader = (TextView) findViewById(R.id.partialPaymentHeader);
-        String maxAmount = Label.getLabel("payment_partial_maximum_amount") +
-                currencyFormat.format(calculateFullAmount());
+        String maxAmount = String.format(Label.getLabel("payment.partial.amountSelector.maximum.amount"),
+                currencyFormat.format(calculateFullAmount()));
         paymentHeader.setText(maxAmount);
     }
 

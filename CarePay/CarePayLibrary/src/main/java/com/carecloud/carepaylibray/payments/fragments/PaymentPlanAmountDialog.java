@@ -71,14 +71,14 @@ public class PaymentPlanAmountDialog extends PartialPaymentDialog {
             footer.setText(amountBetween);
             footer.setVisibility(View.VISIBLE);
         } else if (minimumPaymentAmount > 0D) {
-            String minimumAmount = Label.getLabel("payment_partial_minimum_amount") +
-                    currencyFormat.format(minimumPaymentAmount);
+            String minimumAmount = String.format(Label.getLabel("payment.partial.amountSelector.minimum.amount"),
+                    currencyFormat.format(minimumPaymentAmount));
             footer.setText(minimumAmount);
             footer.setVisibility(View.VISIBLE);
         } else if (maximumPaymentAmount < fullAmount) {
-            String minimumAmount = Label.getLabel("payment_partial_maximum_amount") +
-                    currencyFormat.format(maximumPaymentAmount);
-            footer.setText(minimumAmount);
+            String maximum = String.format(Label.getLabel("payment.partial.amountSelector.maximum.amount"),
+                    currencyFormat.format(maximumPaymentAmount));
+            footer.setText(maximum);
             footer.setVisibility(View.VISIBLE);
         }
     }
