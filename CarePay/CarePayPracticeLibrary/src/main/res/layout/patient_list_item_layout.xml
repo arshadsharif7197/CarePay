@@ -7,9 +7,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
-    android:layout_marginBottom="@dimen/dimen_10dp"
-    android:layout_marginEnd="@dimen/patientItemHorizontalMargin"
     android:layout_marginStart="@dimen/patientItemHorizontalMargin"
+    android:layout_marginEnd="@dimen/patientItemHorizontalMargin"
+    android:layout_marginBottom="@dimen/dimen_10dp"
     android:background="@drawable/background_rounded_border"
     android:gravity="center_vertical"
     android:minHeight="@dimen/cardQueueMinHeight"
@@ -83,19 +83,20 @@
             android:id="@+id/timeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
             android:layout_marginStart="@dimen/appointmentCardTimeStartMargin"
             android:background="@drawable/bg_green_overlay"
             android:gravity="center"
-            android:textColor="@color/white"
             android:paddingStart="@dimen/appointmentCardTimeHorizontalPadding"
-            android:paddingEnd="@dimen/appointmentCardTimeHorizontalPadding"
             android:paddingTop="@dimen/appointmentCardTimeVerticalPadding"
+            android:paddingEnd="@dimen/appointmentCardTimeHorizontalPadding"
             android:paddingBottom="@dimen/appointmentCardTimeVerticalPadding"
+            android:textColor="@color/white"
             android:textSize="@dimen/appointmentCartTimeTextSize"
-            tools:text="05:35 PM"
-            card_view:customAssetFont="proxima_nova_semi_bold" />
+            android:visibility="gone"
+            card_view:customAssetFont="proxima_nova_semi_bold"
+            tools:text="05:35 PM" />
 
     </RelativeLayout>
 

@@ -318,4 +318,30 @@
     <dimen name="visitTypeItemPrePaymentTextSize">17sp</dimen>
     <dimen name="visitTypeItemTextSize">24sp</dimen>
 
+    <!--Appointment Dialog-->
+    <dimen name="appointmentDialogHeaderHeight">240dp</dimen>
+    <dimen name="appointmentDialogVisibleHeaderHeight">190dp</dimen>
+    <dimen name="appointmentDialogStartDateTextSize">30sp</dimen>
+    <dimen name="appointmentDialogStartDateTopMargin">28dp</dimen>
+    <dimen name="appointmentDialogStartTimeTextSize">40sp</dimen>
+    <dimen name="appointmentDialogHeaderBlanckSpaceHeight">50dp</dimen>
+    <dimen name="appointmentDialogShortNameSize">100dp</dimen>
+    <dimen name="appointmentDialogShortNameTextSize">24sp</dimen>
+    <dimen name="appointmentDialogPatientNameTopMargin">20dp</dimen>
+    <dimen name="appointmentDialogPatientNameTextSize">24sp</dimen>
+    <dimen name="appointmentDialogDoctorTextSize">18sp</dimen>
+    <dimen name="appointmentDialogPhoneBottomMargin">40dp</dimen>
+    <dimen name="appointmentDialogPhoneTopMargin">30dp</dimen>
+    <dimen name="appointmentDialogPhoneHorizontalMargin">100dp</dimen>
+    <dimen name="appointmentDialogPhoneVerticalPadding">20dp</dimen>
+    <dimen name="appointmentDialogPhoneTextSize">24sp</dimen>
+    <dimen name="visitTypeContainerHorizontalPadding">24dp</dimen>
+    <dimen name="visitTypeContainerBottomPadding">40dp</dimen>
+    <dimen name="visitTypeLabelTextSize">24sp</dimen>
+    <dimen name="visitTypeValueTextSize">20sp</dimen>
+    <dimen name="visitTypeLabelEndMargin">10dp</dimen>
+    <dimen name="visitTypeValueHeight">25dp</dimen>
+    <dimen name="appointmentSeparatorTopMargin">20dp</dimen>
+    <dimen name="appointmentDialogButtonTextSize">22sp</dimen>
+
 </resources>
