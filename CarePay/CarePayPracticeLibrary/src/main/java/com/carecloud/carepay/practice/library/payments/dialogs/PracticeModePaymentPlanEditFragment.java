@@ -261,7 +261,8 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
         PaymentPlanModel paymentPlanModel = new PaymentPlanModel();
         paymentPlanModel.setAmount(amounthPayment);
         paymentPlanModel.setFrequencyCode(frequencyOption.getName());
-        paymentPlanModel.setInstallments(installments);
+        paymentPlanModel.setInstallments((int) SystemUtil.safeAdd(installments,
+                paymentPlanDTO.getPayload().getPaymentPlanDetails().getFilteredHistory().size()));
         paymentPlanModel.setEnabled(true);
 
         if (frequencyOption.getName().equals(PaymentPlanModel.FREQUENCY_MONTHLY)) {
