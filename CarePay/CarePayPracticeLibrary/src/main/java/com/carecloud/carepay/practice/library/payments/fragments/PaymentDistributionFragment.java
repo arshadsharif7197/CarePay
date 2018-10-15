@@ -355,7 +355,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
                 originalUnapplied = unappliedCredit;
                 setCurrency(unAppliedTextView, unappliedCredit);
             } else {
-                setCurrency(unAppliedTextView, 0.00);
+                unappliedLayout.setVisibility(View.GONE);
             }
 
             setMaxAmounts();
