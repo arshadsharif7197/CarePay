@@ -473,6 +473,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         boolean isEnabled = validateFields(false);
         getActionButton().setSelected(isEnabled);
         getActionButton().setClickable(isEnabled);
+        getActionButton().setEnabled(isEnabled);
     }
 
     protected Button getActionButton() {
