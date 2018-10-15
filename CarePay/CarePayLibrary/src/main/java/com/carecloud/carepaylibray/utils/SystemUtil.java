@@ -428,4 +428,16 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler {
         return Math.round((base * factor)*100)/100D;
     }
 
+    public static boolean arrayContains(Object[] array, Object search) {
+        if (array == null) {
+            return false;
+        }
+        for (Object item : array) {
+            if (item.equals(search)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
