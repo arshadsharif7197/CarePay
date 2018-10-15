@@ -16,12 +16,19 @@ import com.carecloud.carepay.patient.messages.MessageNavigationCallback;
 import com.carecloud.carepay.patient.messages.adapters.MessagesListAdapter;
 import com.carecloud.carepay.patient.messages.models.Messages;
 import com.carecloud.carepay.patient.messages.models.MessagingDataModel;
+import com.carecloud.carepay.patient.messages.models.MessagingModel;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.models.Paging;
 import com.carecloud.carepaylibray.customcomponents.SwipeViewHolder;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SwipeHelper;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lmenendez on 6/30/17
@@ -45,7 +52,6 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
     private boolean isPaging = false;
 
     private Handler handler;
-    private boolean dontLoad = false;
 
     @Override
     public void onAttach(Context context) {
@@ -61,6 +67,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         handler = new Handler();
+        messagingDataModel = callback.getDto().getPayload();
     }
 
 
@@ -88,19 +95,16 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
 
         View butonNewMessage = view.findViewById(R.id.new_message_button);
         butonNewMessage.setOnClickListener(newMessageAction);
+
+        refreshing = true;
+        updateDisplayDataModel(messagingDataModel);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         refreshing = true;
-        if (!dontLoad) {
-            refreshList(true);
-            dontLoad = true;
-        } else {
-            dontLoad = false;
-        }
-
+        getThreads(0,0);
     }
 
     private void setAdapters() {
@@ -124,10 +128,6 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
             actionButton.setVisibility(View.VISIBLE);
             refreshLayoutView.setEnabled(true);
         }
-    }
-
-    private void refreshList(boolean showShimmerEffect) {
-        callback.getMessageThreads(0, 0, showShimmerEffect);
     }
 
     /**
@@ -189,7 +189,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         public void onRefresh() {
             refreshing = true;
             refreshLayoutView.setRefreshing(refreshing);
-            refreshList(false);
+            getThreads(0,0);
         }
     };
 
@@ -207,7 +207,8 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
                 int last = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
                 if (last > recyclerView.getAdapter().getItemCount() - BOTTOM_ROW_OFFSET && !isPaging) {
                     Paging paging = messagingDataModel.getMessages().getPaging();
-                    callback.getMessageThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage(), false);
+//                    callback.getMessageThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage());
+                    getThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage());
                     isPaging = true;
                 }
             }
@@ -237,17 +238,57 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
             if (deleteThread != null) {
                 MessagesListAdapter messagesListAdapter = (MessagesListAdapter) recyclerView.getAdapter();
                 messagesListAdapter.finalizeMessageRemoval(deleteThread);
-                callback.deleteMessageThread(deleteThread);
+//                callback.deleteMessageThread(deleteThread);
+                deleteMessageThread(deleteThread);
                 //reset delete thread
                 deleteThread = null;
                 Paging paging = messagingDataModel.getMessages().getPaging();
                 if (messagesListAdapter.getItemCount() == 0) {
                     setAdapters();
-                } else if (paging.getResultsPerPage() % messagesListAdapter.getItemCount() < BOTTOM_ROW_OFFSET &&
-                        hasMorePages()) {
-                    callback.getMessageThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage(), false);
+                }else if(paging.getResultsPerPage() % messagesListAdapter.getItemCount() < BOTTOM_ROW_OFFSET &&
+                        hasMorePages()){
+//                    callback.getMessageThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage());
+                    getThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage());
                 }
             }
         }
     }
+
+    private void getThreads(long page, long size){
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("page", String.valueOf(page < 1 ? 1 : page));//first page is 1
+        queryMap.put("limit", String.valueOf(size < 15 ? 15 : size));//default size if 15, should not be less than that
+
+        TransitionDTO inbox = callback.getDto().getMetadata().getLinks().getInbox();
+        getWorkflowServiceHelper().execute(inbox, getMessageThreadsCallback, queryMap);
+    }
+
+    private WorkflowServiceCallback getMessageThreadsCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            MessagingModel messagingModel = DtoHelper.getConvertedDTO(MessagingModel.class, workflowDTO);
+            MessagingDataModel messagingDataModel = messagingModel.getPayload();
+            updateDisplayDataModel(messagingDataModel);
+        }
+
+        @Override
+        public void onFailure(String errorMessage) {
+            hideProgressDialog();
+            showErrorNotification(errorMessage);
+        }
+    };
+
+    private void deleteMessageThread(Messages.Reply deleteThread) {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("message_id", deleteThread.getId());
+
+        TransitionDTO deleteMessage = callback.getDto().getMetadata().getLinks().getDeleteMessage();
+        getWorkflowServiceHelper().execute(deleteMessage, getMessageThreadsCallback, queryMap);
+    }
+
 }
