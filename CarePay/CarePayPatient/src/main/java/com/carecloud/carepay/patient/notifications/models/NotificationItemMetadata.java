@@ -128,6 +128,9 @@ public class NotificationItemMetadata {
 
     public class EventPayload {
 
+        public static final String EXECUTION_TYPE_ONE_TIME = "one_time_payment";
+        public static final String EXECUTION_TYPE_PAYMENT_PLAN = "payment_plan";
+
         @Expose
         @SerializedName("is_payment_successful")
         private boolean isPaymentSuccessful;
