@@ -142,21 +142,23 @@ public class ChangePasswordFragment extends DemographicsBaseSettingsFragment {
                 if (passConstraints(false)) {
                     DemographicMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getMetadata();
                     DemographicTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
-                    TransitionDTO demographicsSettingsUpdatePasswordDTO = demographicsSettingsTransitionsDTO.getChangePassword();
+                    TransitionDTO changePassword = demographicsSettingsTransitionsDTO.getChangePassword();
 
                     Map<String, String> properties = new HashMap<>();
                     properties.put("login_email", getCurrentEmail());
                     properties.put("current_password", currentPasswordEditText.getText().toString().trim());
                     properties.put("proposed_password", newPasswordEditText.getText().toString().trim());
+                    properties.put("id_token", getAppAuthorizationHelper().getIdToken());
                     JSONObject attributes = new JSONObject(properties);
                     String encodedAttributes = new String(Base64.encodeBase64(attributes.toString().getBytes()));
 
                     Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
                     header.put("maintenance", encodedAttributes);
+                    header.put("Authorization", getAppAuthorizationHelper().getAccessToken());
 
                     DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
                     if (demographicsSettingsPayloadDTO != null) {
-                        getWorkflowServiceHelper().execute(demographicsSettingsUpdatePasswordDTO, updatePasswordCallback, null, null, header);
+                        getWorkflowServiceHelper().execute(changePassword, updatePasswordCallback, null, null, header);
                     }
                 }
             }
