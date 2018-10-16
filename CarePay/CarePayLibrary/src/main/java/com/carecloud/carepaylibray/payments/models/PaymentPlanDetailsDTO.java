@@ -106,4 +106,19 @@ public class PaymentPlanDetailsDTO extends PaymentPlanModel {
         return oneTimePayments;
     }
 
+    /**
+     * Get all payment plan history items that successful
+     *
+     * @return filtered list
+     */
+    public List<PaymentPlanHistory> getSuccessfulPaymentHistory() {
+        List<PaymentPlanHistory> paymentHistory = new ArrayList<>();
+        for (PaymentPlanHistory paymentPlanHistory : getPaymentPlanHistoryList()) {
+            if (paymentPlanHistory.getAmount() > 0) {
+                paymentHistory.add(paymentPlanHistory);
+            }
+        }
+        return paymentHistory;
+    }
+
 }

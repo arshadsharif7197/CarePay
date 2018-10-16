@@ -123,7 +123,7 @@ public class PaymentPlanHistoryDetailDialogFragment extends BaseDialogFragment {
 
     private void setAdapter(RecyclerView itemsRecycler) {
         PaymentPlanHistoryDetailAdapter adapter = new PaymentPlanHistoryDetailAdapter(getContext(),
-                paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanHistoryList());
+                paymentPlanDTO.getPayload().getPaymentPlanDetails().getSuccessfulPaymentHistory());
         itemsRecycler.setAdapter(adapter);
     }
 
