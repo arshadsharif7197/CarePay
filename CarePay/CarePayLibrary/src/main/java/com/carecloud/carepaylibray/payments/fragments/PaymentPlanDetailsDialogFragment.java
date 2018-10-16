@@ -94,10 +94,20 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
         TextView practiceInitials = (TextView) view.findViewById(R.id.avTextView);
         practiceInitials.setText(StringUtil.getShortName(practiceName));
 
+        String paymentsMadeOf = Label.getLabel("payment_plan_payments_made_value");
         int paymentCount = planPayload.getPaymentPlanDetails().getFilteredHistory().size();
         int installmentTotal = planPayload.getPaymentPlanDetails().getInstallments();
+        int oneTimePayments = paymentPlanDTO.getPayload().getPaymentPlanDetails()
+                .getPaymentPlanHistoryList().size() - paymentCount;
+        StringBuilder paymentsMadeBuilder = new StringBuilder().append(String.format(paymentsMadeOf, paymentCount, installmentTotal));
+        if(oneTimePayments > 0){
+            paymentsMadeBuilder.append(" + ")
+                    .append(oneTimePayments)
+                    .append(" ")
+                    .append(Label.getLabel("payment_history_detail_extra"));
+        }
         TextView installmentCount = (TextView) view.findViewById(R.id.paymentsInstallmentsCount);
-        installmentCount.setText(String.format(Label.getLabel("payment_plan_payments_made_value"), paymentCount, installmentTotal));
+        installmentCount.setText(paymentsMadeBuilder.toString());
 
         TextView nextInstallment = (TextView) view.findViewById(R.id.nexyPaymentDate);
         nextInstallment.setText(getNextDate(planPayload));

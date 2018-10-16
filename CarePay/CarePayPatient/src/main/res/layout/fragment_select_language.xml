@@ -5,23 +5,23 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/headerContainerLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="4"
-        android:background="@drawable/bg_signup_1_phone"
+        android:background="@drawable/splash_background"
         android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="visible">
+        android:padding="@dimen/dimen_60dp">
 
         <android.support.v7.widget.AppCompatImageView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:adjustViewBounds="true"
             android:src="@drawable/breeze_logo" />
 
-    </LinearLayout>
+    </FrameLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/languageRecyclerView"
