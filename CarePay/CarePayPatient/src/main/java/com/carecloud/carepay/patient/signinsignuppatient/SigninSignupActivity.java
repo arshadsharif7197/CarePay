@@ -1,6 +1,7 @@
 package com.carecloud.carepay.patient.signinsignuppatient;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +15,8 @@ import com.carecloud.carepay.patient.tutorial.tutorial.TutorialActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
@@ -23,7 +26,8 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
  * Created by harish_revuri on 9/7/2016.
  * Activity supporting Signin and Sign-up
  */
-public class SigninSignupActivity extends BasePatientActivity implements FragmentActivityInterface, FingerPrintInterface {
+public class SigninSignupActivity extends BasePatientActivity implements FragmentActivityInterface,
+        FingerPrintInterface, ConfirmationCallback {
 
     private SignInDTO signInSignUpDTO;
 
@@ -48,6 +52,22 @@ public class SigninSignupActivity extends BasePatientActivity implements Fragmen
                 .getBoolean(CarePayConstants.CRASH, false);
         if (crash) {
             Toast.makeText(this, Label.getLabel("crash_handled_error_message"), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        if(getApplicationPreferences().mustForceUpdate()){
+            ConfirmDialogFragment fragment = ConfirmDialogFragment
+                    .newInstance(Label.getLabel("notifications.custom.forceUpdate.title"),
+                    Label.getLabel("notifications.custom.forceUpdate.message.android"),
+                    Label.getLabel("notifications.custom.forceUpdate.action"),
+                    false,
+                    R.layout.fragment_alert_dialog_single_action);
+            fragment.setCallback(this);
+            displayDialogFragment(fragment, false);
         }
     }
 
@@ -81,6 +101,16 @@ public class SigninSignupActivity extends BasePatientActivity implements Fragmen
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.layoutSigninSignup);
         if (fragment instanceof SigninFragment) {
             ((SigninFragment) fragment).signIn(user, pwd);
+        }
+    }
+
+    @Override
+    public void onConfirm() {
+        String appPackageName = getPackageName();
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+        } catch (android.content.ActivityNotFoundException anfe) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
         }
     }
 }

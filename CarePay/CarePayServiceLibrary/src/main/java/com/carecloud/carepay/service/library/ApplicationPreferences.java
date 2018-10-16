@@ -50,6 +50,7 @@ public class ApplicationPreferences {
     private static final String PREFERENCE_LATEST_APP_VERSION = "latest_app_version";
     private static final String PREFERENCE_LAST_APP_VERSION_NUM = "last_app_version_num";
     private static final String PREFERENCE_REMIND_LATEST = "remind_latest";
+    private static final String PREFERENCE_FORCE_UPDATE = "force_update";
 
     private String patientId;
     private String practiceId;
@@ -504,5 +505,13 @@ public class ApplicationPreferences {
 
     public void setRemindLatest(boolean shouldRemind) {
         writeBooleanToSharedPref(PREFERENCE_REMIND_LATEST, shouldRemind);
+    }
+
+    public boolean mustForceUpdate() {
+        return readBooleanFromSharedPref(PREFERENCE_FORCE_UPDATE, false);
+    }
+
+    public void setForceUpdate(boolean mustForceUpdate){
+        writeBooleanToSharedPref(PREFERENCE_FORCE_UPDATE, mustForceUpdate);
     }
 }
