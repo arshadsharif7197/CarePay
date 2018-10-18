@@ -81,6 +81,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     private TextView balanceTextView;
     private TextView paymentTotalTextView;
     private TextView unAppliedTextView;
+
     private View unappliedLayout;
 
     private NestedScrollView scrollView;
