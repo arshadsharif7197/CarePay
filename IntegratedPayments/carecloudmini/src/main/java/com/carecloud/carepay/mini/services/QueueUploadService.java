@@ -4,7 +4,9 @@ import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
 import com.carecloud.carepay.mini.models.queue.QueuePaymentRecord;
@@ -81,7 +83,11 @@ public class QueueUploadService extends IntentService {
 
         String token = AuthorizationUtil.getAuthorizationToken(this).replace("\n", "");
 
+        Log.i(QueueUploadService.class.getName(), "Post Payment Request: " + paymentRequestId);
+        Log.i(QueueUploadService.class.getName(), requestObject.toString());
+
         Call<JsonElement> call = getApplicationHelper().getRestHelper().getPostPaymentCall(token, gson.toJson(requestObject));
+        scheduleCallTimeout(call);
         try{
             Response<JsonElement> response = call.execute();
             if(response.isSuccessful()){
@@ -113,7 +119,11 @@ public class QueueUploadService extends IntentService {
 
         String token = AuthorizationUtil.getAuthorizationToken(this).replace("\n", "");
 
+        Log.i(QueueUploadService.class.getName(), "Post Refund Request: " + paymentRequestId);
+        Log.i(QueueUploadService.class.getName(), requestObject.toString());
+
         Call<JsonElement> call = getApplicationHelper().getRestHelper().getPostRefundCall(token, gson.toJson(requestObject));
+        scheduleCallTimeout(call);
         try{
             Response<JsonElement> response = call.execute();
             if(response.isSuccessful()){
@@ -128,6 +138,18 @@ public class QueueUploadService extends IntentService {
             return false;
         }
 
+    }
+
+    private void scheduleCallTimeout(final Call call){
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(!call.isExecuted() && !call.isCanceled()){
+                    call.cancel();
+                }
+            }
+        }, 1000 * 30);
     }
 
 
