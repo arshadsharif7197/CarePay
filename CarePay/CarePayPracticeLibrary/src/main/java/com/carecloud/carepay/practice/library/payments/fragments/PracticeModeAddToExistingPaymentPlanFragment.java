@@ -50,11 +50,13 @@ public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePa
         super.onCreate(icicle);
         paymentPlan = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, getArguments());
         paymentPlanAmount = paymentPlan.getPayload().getAmount();
-        minAmount = paymentPlan.getPayload().getAmount();
     }
 
     @Override
     public void onViewCreated(View view, Bundle icicle) {
+        paymentPlanAmount = SystemUtil.safeSubtract(paymentPlan.getPayload().getAmount(),
+                paymentPlan.getPayload().getAmountPaid());
+        minAmount = paymentPlanAmount;
         setupToolbar(view, Label.getLabel("payment.addBalanceToPaymentPlan.title.label.screenTitle"));
         setUpAmounts(view);
         balanceItems = filterItems();
