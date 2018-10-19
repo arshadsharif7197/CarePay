@@ -409,6 +409,13 @@ public class NotificationFragment extends BaseFragment
                     //Prevent showing old notifications without pending form data
                     continue;
                 }
+
+                if (notificationType.equals(NotificationType.payments)) {
+                    String eventName = notificationItem.getMetadata().getEvent().getPayload().getEventName();
+                    if (eventName != null && eventName.contains("patient_statement_create")) {//TODO remove this once we can support patient statement notifications
+                        continue;
+                    }
+                }
                 filteredList.add(notificationItem);
             } else {
                 Log.d("test", "test");
@@ -429,6 +436,7 @@ public class NotificationFragment extends BaseFragment
             notificationItems.add(0, customNotificationItem);
         }
     }
+
     @Override
     public void onDestroy() {
         handler.removeCallbacks(deleteNotificationRunnable);
