@@ -8,8 +8,8 @@ android {
         applicationId "com.carecloud.carepay.patient"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 92
-        versionName "1.1.17.1"
+        versionCode 96
+        versionName "1.1.18"
         multiDexEnabled true
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
@@ -54,7 +54,6 @@ android {
             buildConfigField 'String', 'NEW_RELIC_ID', '"AA11d2bb94e604c1b3a506dcda65bd7dfa9995d110"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"458b4517bf5c86c62df069f82fc49aa3"'
 
-            buildConfigField 'boolean', 'useUnifiedAuth', 'true'
             buildConfigField 'String', 'ENVIRONMENT', '"Development"'
         }
         qa {
@@ -70,7 +69,6 @@ android {
             buildConfigField 'String', 'NEW_RELIC_ID', '"AAb24320f2a02bf87d9faf0d7aff73bbeca08d264f"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"458b4517bf5c86c62df069f82fc49aa3"'
 
-            buildConfigField 'boolean', 'useUnifiedAuth', 'true'
             buildConfigField 'String', 'ENVIRONMENT', '"QA"'
         }
         staging {
@@ -86,7 +84,6 @@ android {
             buildConfigField 'String', 'NEW_RELIC_ID', '"AAb24320f2a02bf87d9faf0d7aff73bbeca08d264f"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"458b4517bf5c86c62df069f82fc49aa3"'
 
-            buildConfigField 'boolean', 'useUnifiedAuth', 'true'
             buildConfigField 'String', 'ENVIRONMENT', '"Staging"'
         }
         demo {
@@ -102,7 +99,6 @@ android {
             buildConfigField 'String', 'NEW_RELIC_ID', '"AAb24320f2a02bf87d9faf0d7aff73bbeca08d264f"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"458b4517bf5c86c62df069f82fc49aa3"'
 
-            buildConfigField 'boolean', 'useUnifiedAuth', 'true'
             buildConfigField 'String', 'ENVIRONMENT', '"Demo"'
         }
         production {
@@ -118,7 +114,6 @@ android {
             buildConfigField 'String', 'NEW_RELIC_ID', '"AA2faf2a0d9f02e9595012ede7e6a30ddda5e1b250"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"38fc517bbd790b9d00044891934205a4"'
 
-            buildConfigField 'boolean', 'useUnifiedAuth', 'true'
             buildConfigField 'String', 'ENVIRONMENT', '"Production"'
         }
     }

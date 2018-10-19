@@ -49,7 +49,6 @@ public class CarePayPatientApplication extends CarePayApplication {
         HttpConstants.setApiStartKey(BuildConfig.X_API_KEY);
         HttpConstants.setMessagingBaseUrl(BuildConfig.MESSAGING_BASE_URL);
         HttpConstants.setPushNotificationWebclientUrl(BuildConfig.WEBCLIENT_URL);
-        HttpConstants.setUseUnifiedAuth(BuildConfig.useUnifiedAuth);
         HttpConstants.setMixpanelAPI(mixpanelAPI);
         HttpConstants.setEnvironment(BuildConfig.ENVIRONMENT);
         HttpConstants.setRetailUrl(BuildConfig.RETAIL_URL);

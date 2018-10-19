@@ -13,7 +13,7 @@ public class NavigationStateConstants {
     public static final String PURCHASE = "retail";
     public static final String NOTIFICATION = "notifications";
     public static final String MEDICATION_ALLERGIES = "medications_allergies";
-    public static final String MESSAGES = "messages";
+    public static final String MESSAGES = "messaging";
 
     public static final String PRACTICE_HOME = "practice_home";
     public static final String PRACTICE_MODE_SIGNIN = "practice_mode_signin";

@@ -99,11 +99,8 @@ public class WorkflowServiceHelper {
                 userAuthHeaders.put("username", appAuthorizationHelper.getCurrUser());
             }
 
-            if (HttpConstants.isUseUnifiedAuth()) {
-                userAuthHeaders.put("Authorization", appAuthorizationHelper.getIdToken());
-            } else {
-                userAuthHeaders.put("Authorization", appAuthorizationHelper.getCurrSession().getIdToken().getJWTToken());
-            }
+            userAuthHeaders.put("Authorization", appAuthorizationHelper.getIdToken());
+
         }
 
         userAuthHeaders.putAll(getPreferredLanguageHeader());
@@ -121,6 +118,9 @@ public class WorkflowServiceHelper {
 
         // Add auth headers to custom in case custom has old auth headers
         if (customHeaders != null) {
+            if(customHeaders.containsKey("Authorization")){
+                headers.remove("Authorization");
+            }
             customHeaders.putAll(headers);
 
             return customHeaders;
@@ -355,10 +355,7 @@ public class WorkflowServiceHelper {
                 if (!(message.contains(TOKEN) && message.contains(EXPIRED)) && !message.contains(UNAUTHORIZED) &&
                         !(errorBodyString.contains(TOKEN) && errorBodyString.contains(EXPIRED))) {
                     onFailure(response);
-                } else if (!HttpConstants.isUseUnifiedAuth() && !appAuthorizationHelper
-                        .refreshToken(getCognitoActionCallback(transitionDTO, callback, jsonBody, queryMap, headers))) {
-                    callback.onFailure("No User found to refresh token");
-                } else if (HttpConstants.isUseUnifiedAuth()) {
+                } else {
                     executeRefreshTokenRequest(getRefreshTokenCallback(transitionDTO, callback, jsonBody, queryMap, headers));
                 }
             }

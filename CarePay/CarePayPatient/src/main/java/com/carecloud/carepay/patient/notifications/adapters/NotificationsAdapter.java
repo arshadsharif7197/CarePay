@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.notifications.models.CustomNotificationItem;
 import com.carecloud.carepay.patient.notifications.models.NotificationItem;
+import com.carecloud.carepay.patient.notifications.models.NotificationItemMetadata;
 import com.carecloud.carepay.patient.notifications.models.NotificationType;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
@@ -270,24 +271,31 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             headerTextColor = R.color.emerald;
             imageBackground = R.drawable.round_list_tv_green;
             imageIcon = R.drawable.icn_payment_confirm_check;
-            if (notificationItem.getMetadata().getEvent().getPayload().getScheduledPaymentExecution() == null) {
-                headerText = Label.getLabel("notifications.notificationList.regularPayment.header.successfulPaymentNotification");
-                messageText = Label.getLabel("notifications.notificationList.regularPayment.message.successfulPaymentNotification");
-            } else {
+            if (notificationItem.getMetadata().getEvent().getPayload().getExecutionType()
+                    .equals(NotificationItemMetadata.EventPayload.EXECUTION_TYPE_ONE_TIME)) {
                 headerText = Label.getLabel("notifications.notificationList.scheduledPayment.header.successfulPaymentNotification");
                 messageText = Label.getLabel("notifications.notificationList.scheduledPayment.message.successfulPaymentNotification");
+                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_success_payment);
+                holder.cellAvatar.setVisibility(View.VISIBLE);
+            } else {
+                headerText = Label.getLabel("notifications.notificationList.regularPayment.header.successfulPaymentNotification");
+                messageText = Label.getLabel("notifications.notificationList.regularPayment.message.successfulPaymentNotification");
             }
 
         } else {
             headerTextColor = R.color.remove_red;
             imageBackground = R.drawable.round_list_tv_red;
             imageIcon = R.drawable.icn_close;
-            if (notificationItem.getMetadata().getEvent().getPayload().getScheduledPaymentExecution() == null) {
-                headerText = Label.getLabel("notifications.notificationList.regularPayment.header.failedPaymentNotification");
-                messageText = Label.getLabel("notifications.notificationList.regularPayment.message.failedPaymentNotification");
-            } else {
+            if (notificationItem.getMetadata().getEvent().getPayload().getExecutionType() != null
+                    && notificationItem.getMetadata().getEvent().getPayload().getExecutionType()
+                    .equals(NotificationItemMetadata.EventPayload.EXECUTION_TYPE_ONE_TIME)) {
                 headerText = Label.getLabel("notifications.notificationList.scheduledPayment.header.failedPaymentNotification");
                 messageText = Label.getLabel("notifications.notificationList.scheduledPayment.message.failedPaymentNotification");
+                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_failed_payment);
+                holder.cellAvatar.setVisibility(View.VISIBLE);
+            } else {
+                headerText = Label.getLabel("notifications.notificationList.regularPayment.header.failedPaymentNotification");
+                messageText = Label.getLabel("notifications.notificationList.regularPayment.message.failedPaymentNotification");
             }
         }
         holder.image.setVisibility(View.VISIBLE);
@@ -438,7 +446,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     private String getTimeStamp(NotificationItem notificationItem) {
         DateUtil dateUtil = DateUtil.getInstance().setDateRaw(notificationItem.getMetadata().getCreatedDt());
-
+        if (dateUtil.isToday()) {
+            return Label.getLabel("today_label");
+        }
         return dateUtil.toStringWithFormatMmSlashDdSlashYyyy();
     }
 

@@ -34,7 +34,6 @@ import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -442,12 +441,6 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        // log out previous user from Cognito
-        if (!HttpConstants.isUseUnifiedAuth()) {
-            Log.v(this.getClass().getSimpleName(), "sign out Cognito");
-            getAppAuthorizationHelper().getPool().getUser().signOut();
-            getAppAuthorizationHelper().setUser(null);
-        }
         if (!(getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)) {
             getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
         }
