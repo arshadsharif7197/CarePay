@@ -66,6 +66,8 @@ public class WelcomeActivity extends FullScreenActivity {
     private static final int POST_RETRY_DELAY = 1000 * 10;
     private static final int DEVICE_KEEP_ALIVE_PERIOD = 1000 * 30;
     private static final int MAX_FAIL_COUNT = 15;
+    private static final String ID_PROPERTY = "deepstream_record_id";
+    private static final String PROPERTY_REFUND = "refund_request";
 
     private ApplicationHelper applicationHelper;
     private TextView message;
@@ -518,7 +520,12 @@ public class WelcomeActivity extends FullScreenActivity {
         public void onPaymentComplete(String paymentRequestId, JsonElement requestObject) {
             Log.d(TAG, "Payment completed for: "+paymentRequestId);
 
-            if(connectedDevice.isRefunding()){
+            boolean hasRefundProperty = false;
+            if(requestObject.isJsonObject()){
+                String id = requestObject.getAsJsonObject().get(ID_PROPERTY).getAsString();
+                hasRefundProperty = id != null && id.contains(PROPERTY_REFUND);
+            }
+            if(connectedDevice.isRefunding() || hasRefundProperty){
                 postRefundRequest(paymentRequestId, requestObject);
             }else {
                 postPaymentRequest(paymentRequestId, requestObject);
@@ -529,7 +536,12 @@ public class WelcomeActivity extends FullScreenActivity {
         public void onPaymentCompleteWithError(String paymentRequestId, JsonElement paymentPayload, String errorMessage) {
             logNewRelicPaymentError(errorMessage, paymentPayload.toString());
 
-            if(connectedDevice.isRefunding()){
+            boolean hasRefundProperty = false;
+            if(paymentPayload.isJsonObject()){
+                String id = paymentPayload.getAsJsonObject().get(ID_PROPERTY).getAsString();
+                hasRefundProperty = id != null && id.contains(PROPERTY_REFUND);
+            }
+            if(connectedDevice.isRefunding() || hasRefundProperty){
                 postRefundRequest(paymentRequestId, paymentPayload);
             }else {
                 postPaymentRequest(paymentRequestId, paymentPayload);
