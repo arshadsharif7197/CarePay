@@ -168,9 +168,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         balanceTextView = (TextView) view.findViewById(R.id.balance_value);
         unAppliedTextView = (TextView) view.findViewById(R.id.unapplied_value);
 
-        unappliedLayout = view.findViewById(R.id.unapplied_layout);
-
         scrollView = (NestedScrollView) view.findViewById(R.id.nested_scroller);
+
+        unappliedLayout = view.findViewById(R.id.unapplied_layout);
 
         RecyclerView.LayoutManager balanceLayoutManager = new LinearLayoutManager(getContext());
         balanceDetailsRecycler = (RecyclerView) view.findViewById(R.id.balances_recycler);
