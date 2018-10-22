@@ -4,7 +4,6 @@ import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -22,6 +21,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -33,19 +34,19 @@ import retrofit2.Response;
 public class QueueUploadService extends IntentService {
     public static final int INTERVAL = 1000 * 60 * 15;
 
-    public QueueUploadService(){
+    public QueueUploadService() {
         super(QueueUploadService.class.getName());
     }
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         List<QueuePaymentRecord> queuedRecords = QueuePaymentRecord.listAll(QueuePaymentRecord.class);
-        for(QueuePaymentRecord record : queuedRecords){
-            if(record.isRefund()){
+        for (QueuePaymentRecord record : queuedRecords) {
+            if (record.isRefund()) {
                 if (postRefundRequest(record.getPaymentRequestId(), record.getRequestObject())) {
                     record.delete();
                 }
-            }else {
+            } else {
                 if (postPaymentRequest(record.getPaymentRequestId(), record.getRequestObject())) {
                     record.delete();
                 }
@@ -65,16 +66,16 @@ public class QueueUploadService extends IntentService {
         Intent scheduledService = new Intent(getBaseContext(), QueueUploadService.class);
         PendingIntent pendingIntent = PendingIntent.getService(getBaseContext(), 0x222, scheduledService, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+INTERVAL, pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + INTERVAL, pendingIntent);
     }
 
-    private boolean postPaymentRequest(String paymentRequestId, JsonElement requestObject){
-        if(StringUtil.isNullOrEmpty(paymentRequestId)){
+    private boolean postPaymentRequest(String paymentRequestId, JsonElement requestObject) {
+        if (StringUtil.isNullOrEmpty(paymentRequestId)) {
             return true;// this will clear the empty record
         }
 
         Gson gson = new Gson();
-        if(requestObject == null){
+        if (requestObject == null) {
             StreamRecord streamRecord = new StreamRecord();
             streamRecord.setDeepstreamRecordId(paymentRequestId);
 
@@ -88,11 +89,11 @@ public class QueueUploadService extends IntentService {
 
         Call<JsonElement> call = getApplicationHelper().getRestHelper().getPostPaymentCall(token, gson.toJson(requestObject));
         scheduleCallTimeout(call);
-        try{
+        try {
             Response<JsonElement> response = call.execute();
-            if(response.isSuccessful()){
+            if (response.isSuccessful()) {
                 return true;
-            }else{
+            } else {
                 String errorMessage = RestCallServiceHelper.parseError(response, "error", "message");
                 logNewRelicPaymentError(errorMessage, requestObject, false);
                 return errorMessage.contains("payment request has already been completed"); //this processing error indicates that the payment should not be retried
@@ -104,13 +105,13 @@ public class QueueUploadService extends IntentService {
 
     }
 
-    private boolean postRefundRequest(String paymentRequestId, JsonElement requestObject){
-        if(StringUtil.isNullOrEmpty(paymentRequestId)){
+    private boolean postRefundRequest(String paymentRequestId, JsonElement requestObject) {
+        if (StringUtil.isNullOrEmpty(paymentRequestId)) {
             return true;// this will clear the empty record
         }
 
         Gson gson = new Gson();
-        if(requestObject == null){
+        if (requestObject == null) {
             StreamRecord streamRecord = new StreamRecord();
             streamRecord.setDeepstreamRecordId(paymentRequestId);
 
@@ -124,11 +125,11 @@ public class QueueUploadService extends IntentService {
 
         Call<JsonElement> call = getApplicationHelper().getRestHelper().getPostRefundCall(token, gson.toJson(requestObject));
         scheduleCallTimeout(call);
-        try{
+        try {
             Response<JsonElement> response = call.execute();
-            if(response.isSuccessful()){
+            if (response.isSuccessful()) {
                 return true;
-            }else{
+            } else {
                 String errorMessage = RestCallServiceHelper.parseError(response, "error", "message");
                 logNewRelicPaymentError(errorMessage, requestObject, true);
                 return errorMessage.contains("payment request has already been completed"); //this processing error indicates that the payment should not be retried
@@ -140,20 +141,16 @@ public class QueueUploadService extends IntentService {
 
     }
 
-    private void scheduleCallTimeout(final Call call){
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+    private void scheduleCallTimeout(final Call call) {
+        new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                if(!call.isExecuted() && !call.isCanceled()){
-                    call.cancel();
-                }
+                call.cancel();
             }
-        }, 1000 * 30);
+        }, 1000 * 40);
     }
 
-
-    protected ApplicationHelper getApplicationHelper(){
+    protected ApplicationHelper getApplicationHelper() {
         return (ApplicationHelper) getApplication();
     }
 
@@ -254,7 +251,7 @@ public class QueueUploadService extends IntentService {
 //        });
 //    }
 
-    private void logNewRelicPaymentError(String errorMessage, Object payload, boolean isRefund){
+    private void logNewRelicPaymentError(String errorMessage, Object payload, boolean isRefund) {
         Map<String, Object> eventMap = new HashMap<>();
         eventMap.put("Error Message", errorMessage);
         eventMap.put("Request Payload", payload);
