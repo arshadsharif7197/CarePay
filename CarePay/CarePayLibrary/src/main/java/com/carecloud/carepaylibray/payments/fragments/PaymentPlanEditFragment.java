@@ -298,6 +298,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         setCreditCardInfo(creditCard, paymentMethodEditText);
         this.creditCard = creditCard;
         showDialog();
+        enableCreatePlanButton();
     }
 
     protected void updatePaymentPlan() {
