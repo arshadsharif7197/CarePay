@@ -568,10 +568,10 @@ public class WelcomeActivity extends FullScreenActivity {
         @Override
         public void onPaymentFailed(String paymentRequestId, String message) {
             String printMessage = "Payment failed for: "+paymentRequestId;
-            logNewRelicPaymentError(message, printMessage);
+            logNewRelicPaymentError(StringUtil.getSafeString(message), printMessage);
             Log.d(TAG, printMessage);
-            Log.d(TAG, message);
-            showErrorToast(message);
+            Log.d(TAG, StringUtil.getSafeString(message));
+            showErrorToast(StringUtil.getSafeString(message));
             releasePaymentRequest(paymentRequestId);
         }
 
