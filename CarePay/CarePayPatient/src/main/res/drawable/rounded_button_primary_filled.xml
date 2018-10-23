@@ -11,6 +11,7 @@
                 android:left="@dimen/dimen_12dp"
                 android:right="@dimen/dimen_12dp"
                 android:top="@dimen/dimen_5dp" />
+            <solid android:color="@color/colorPrimary" />
         </shape>
     </item>
 </layer-list>

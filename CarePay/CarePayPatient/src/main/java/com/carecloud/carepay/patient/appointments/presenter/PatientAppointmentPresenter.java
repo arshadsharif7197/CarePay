@@ -269,6 +269,10 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         return getPracticeSettings();
     }
 
+    public AppointmentsResultModel getMainAppointmentDto() {
+        return appointmentsResultModel;
+    }
+
     @Override
     public void onCancelAppointment(final AppointmentDTO appointmentDTO) {
         final AppointmentCancellationFee cancellationFee = getCancellationFee(appointmentDTO);

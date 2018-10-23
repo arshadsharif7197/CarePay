@@ -9,6 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.appointments.fragments.AppointmentTabHostFragment;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
@@ -59,8 +60,12 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         getWorkflowServiceHelper().execute(getTransitionAppointments(), new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
-                replaceFragment(ShimmerFragment.newInstance(R.layout.shimmer_default_header,
-                        R.layout.shimmer_default_item), false);
+                ShimmerFragment shimmerFragment = ShimmerFragment.newInstance(R.layout.shimmer_default_header,
+                        R.layout.shimmer_default_item);
+                shimmerFragment.setTabbed(true,
+                        Label.getLabel("appointments.list.tab.title.current"),
+                        Label.getLabel("appointments.list.tab.title.history"));
+                replaceFragment(shimmerFragment, false);
             }
 
             @Override
@@ -84,7 +89,8 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             paymentsModel = getConvertedDTO(PaymentsModel.class);
         }
         initPresenter();
-        gotoAppointmentListFragment();
+        AppointmentTabHostFragment fragment = AppointmentTabHostFragment.newInstance(0);
+        replaceFragment(fragment, false);
     }
 
     @Override
@@ -109,11 +115,6 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         if (!toolbarHidden) {
             displayToolbar(true, menuItem.getTitle().toString());
         }
-    }
-
-    private void gotoAppointmentListFragment() {
-        AppointmentsListFragment fragment = AppointmentsListFragment.newInstance(appointmentsResultModel);
-        replaceFragment(fragment, false);
     }
 
     private void initPresenter() {

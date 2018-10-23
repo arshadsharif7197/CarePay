@@ -13,11 +13,10 @@ public class AppointmentDisplayUtil {
     /**
      * Determint the display style for an appointment object
      *
-     * @param appointmentDTO appointment object
+     * @param appointmentsPayload appointment object
      * @return display style enum
      */
-    public static AppointmentDisplayStyle determineDisplayStyle(AppointmentDTO appointmentDTO) {
-        AppointmentsPayloadDTO appointmentsPayload = appointmentDTO.getPayload();
+    public static AppointmentDisplayStyle determineDisplayStyle(AppointmentsPayloadDTO appointmentsPayload) {
         if (appointmentsPayload.getAppointmentStatus().getCode() != null) {
             switch (appointmentsPayload.getAppointmentStatus().getCode()) {
                 case CarePayConstants.CHECKED_IN:
