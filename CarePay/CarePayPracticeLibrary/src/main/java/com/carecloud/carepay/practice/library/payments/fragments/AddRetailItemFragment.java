@@ -72,7 +72,7 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        return inflater.inflate(R.layout.fragment_retail_search, container, false);
     }
 
     @Override
@@ -95,6 +95,7 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
 
         searchView = (SearchView) view.findViewById(R.id.search_entry_view);
         searchView.setOnQueryTextListener(queryTextListener);
+        searchView.setQueryHint(Label.getLabel("search_field_hint"));
 
         TextView noResultsMessage = (TextView) view.findViewById(R.id.no_results_message);
         noResultsMessage.setText(Label.getLabel("payment_retail_items_no_results"));

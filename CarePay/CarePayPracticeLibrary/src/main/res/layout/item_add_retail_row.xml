@@ -99,7 +99,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/product_price"
-                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginTop="@dimen/dimen_20dp"
                 android:maxLines="1"
                 android:textColor="@color/remove_red"
                 android:textSize="@dimen/text_size_20"
