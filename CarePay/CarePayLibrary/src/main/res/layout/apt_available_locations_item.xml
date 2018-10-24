@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="match_parent">
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/available_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:id="@+id/available_location"
         android:layout_marginRight="@dimen/dimen_8dp"
-        android:text="Location"
         android:background="@drawable/rounded_button_blue_border_selector"
-        app:customAssetFont="proxima_nova_regular"/>
+        android:text="Location"
+        app:customAssetFont="proxima_nova_regular" />
 
 </FrameLayout>

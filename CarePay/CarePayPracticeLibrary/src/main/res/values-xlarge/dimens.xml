@@ -367,4 +367,9 @@
     <dimen name="adHocFormsListItemDateTextSize">14sp</dimen>
     <dimen name="adHocFormsListItemNameTextSize">18sp</dimen>
 
+    <!--Available Hours Dialog-->
+    <dimen name="locationTextStartMargin">16dp</dimen>
+    <dimen name="locationTextEndMargin">8dp</dimen>
+    <dimen name="availableHoursListHorizontalPadding">16dp</dimen>
+
 </resources>

@@ -324,7 +324,7 @@
     <dimen name="visitTypeItemImageMargin">5dp</dimen>
     <dimen name="visitTypeItemPrePaymentMargin">5dp</dimen>
     <dimen name="visitTypeItemPrePaymentTextSize">14sp</dimen>
-    <dimen name="visitTypeItemTextSize">20sp</dimen>
+    <dimen name="visitTypeItemTextSize">16sp</dimen>
 
     <!--Appointment Dialog-->
     <dimen name="appointmentDialogHeaderHeight">165dp</dimen>
@@ -374,6 +374,11 @@
     <dimen name="adHocFormsListItemHeight">45dp</dimen>
     <dimen name="adHocFormsListItemDateTextSize">10sp</dimen>
     <dimen name="adHocFormsListItemNameTextSize">13sp</dimen>
+
+    <!--Available Hours Dialog-->
+    <dimen name="locationTextStartMargin">16dp</dimen>
+    <dimen name="locationTextEndMargin">8dp</dimen>
+    <dimen name="availableHoursListHorizontalPadding">8dp</dimen>
 
 
 </resources>
