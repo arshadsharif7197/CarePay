@@ -18,7 +18,6 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
@@ -68,6 +67,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
                 appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
+                paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
                 resumeOnCreate();
             }
 
@@ -80,7 +80,9 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     }
 
     private void resumeOnCreate() {
-        paymentsModel = getConvertedDTO(PaymentsModel.class);
+        if (paymentsModel == null) {
+            paymentsModel = getConvertedDTO(PaymentsModel.class);
+        }
         initPresenter();
         gotoAppointmentListFragment();
     }

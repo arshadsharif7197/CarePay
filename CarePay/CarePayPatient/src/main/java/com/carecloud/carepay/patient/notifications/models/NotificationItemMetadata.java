@@ -128,6 +128,9 @@ public class NotificationItemMetadata {
 
     public class EventPayload {
 
+        public static final String EXECUTION_TYPE_ONE_TIME = "one_time_payment";
+        public static final String EXECUTION_TYPE_PAYMENT_PLAN = "payment_plan";
+
         @Expose
         @SerializedName("is_payment_successful")
         private boolean isPaymentSuccessful;
@@ -139,6 +142,10 @@ public class NotificationItemMetadata {
         @Expose
         @SerializedName("scheduled_payment_execution")
         private ScheduledPaymentExecution scheduledPaymentExecution;
+
+        @Expose
+        @SerializedName("event_name")
+        private String eventName;
 
         public boolean isPaymentSuccessful() {
             return isPaymentSuccessful;
@@ -162,6 +169,14 @@ public class NotificationItemMetadata {
 
         public void setScheduledPaymentExecution(ScheduledPaymentExecution scheduledPaymentExecution) {
             this.scheduledPaymentExecution = scheduledPaymentExecution;
+        }
+
+        public String getEventName() {
+            return eventName;
+        }
+
+        public void setEventName(String eventName) {
+            this.eventName = eventName;
         }
     }
 

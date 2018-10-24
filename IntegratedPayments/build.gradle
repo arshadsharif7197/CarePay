@@ -2,9 +2,9 @@
 
 buildscript {
     repositories {
-        jcenter()
         google()
         mavenCentral()
+        jcenter()
     }
 
     dependencies {
@@ -19,13 +19,13 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
+        google()
         mavenCentral()
         maven {
             url 'https://jitpack.io'
             credentials { username authToken }
         }
-        google()
+        jcenter()
     }
 }
 
