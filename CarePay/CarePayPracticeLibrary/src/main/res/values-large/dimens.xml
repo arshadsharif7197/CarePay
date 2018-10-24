@@ -380,5 +380,20 @@
     <dimen name="locationTextEndMargin">8dp</dimen>
     <dimen name="availableHoursListHorizontalPadding">8dp</dimen>
 
+    <!--Confirmation Appointment Dialog-->
+    <dimen name="appointmentRequestDialogHeaderHeight">110dp</dimen>
+    <dimen name="appointmentRequestDialogVisibleHeaderHeight">75dp</dimen>
+    <dimen name="contentViewHeaderTitleTextSize">19sp</dimen>
+    <dimen name="contentViewHeaderTitleHeight">40dp</dimen>
+    <dimen name="providerDoctorNameTopMargin">8dp</dimen>
+    <dimen name="providerDoctorNameTextSize">18sp</dimen>
+    <dimen name="providerDoctorSpecialityTextSize">16sp</dimen>
+    <dimen name="separatorTopMargin">15dp</dimen>
+    <dimen name="providerPlaceNameTopMargin">15dp</dimen>
+    <dimen name="providerPlaceNameTextSize">17sp</dimen>
+    <dimen name="providerPlaceAddressTextSize">12sp</dimen>
+    <dimen name="visitTypeContainerTopMargin">15dp</dimen>
+    <dimen name="reasonTypeValueTextSize">14sp</dimen>
+
 
 </resources>

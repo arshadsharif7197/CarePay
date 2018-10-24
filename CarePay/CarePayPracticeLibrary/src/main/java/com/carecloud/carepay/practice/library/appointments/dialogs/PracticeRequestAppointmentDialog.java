@@ -72,7 +72,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
     @Override
     protected void onAddContentView(LayoutInflater inflater) {
         View view = inflater.inflate(R.layout.dialog_request_appointment_summary, null);
-        ((FrameLayout) findViewById(com.carecloud.carepay.practice.library.R.id.base_dialog_content_layout)).addView(view);
+        ((FrameLayout) findViewById(R.id.base_dialog_content_layout)).addView(view);
         inflateUIComponents(view);
     }
 
@@ -82,8 +82,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
     }
 
     private void inflateUIComponents(View view) {
-        Button requestAppointmentButton = (Button)
-                view.findViewById(R.id.requestAppointmentButton);
+        Button requestAppointmentButton = (Button) view.findViewById(R.id.requestAppointmentButton);
         ApplicationMode.ApplicationType applicationType = callback.getApplicationMode().getApplicationType();
         boolean autoScheduleAppointments = callback.getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests();
 
@@ -120,12 +119,12 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         setCancelable(false);
 
         View prepaidLayout = findViewById(R.id.prepaymentLayout);
-        if(visitTypeDTO.getAmount() > 0){
+        if (visitTypeDTO.getAmount() > 0) {
             prepaidLayout.setVisibility(View.VISIBLE);
             TextView prepaidAmount = (TextView) findViewById(R.id.prepaymentAmount);
             prepaidAmount.setText(NumberFormat.getCurrencyInstance(Locale.US).format(visitTypeDTO.getAmount()));
             requestAppointmentButton.setText(Label.getLabel("appointments_prepayment_button"));
-        }else{
+        } else {
             prepaidLayout.setVisibility(View.GONE);
         }
 
