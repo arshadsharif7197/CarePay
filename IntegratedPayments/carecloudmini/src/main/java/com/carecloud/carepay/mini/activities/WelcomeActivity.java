@@ -232,6 +232,7 @@ public class WelcomeActivity extends FullScreenActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                setSystemUiFullscreen();
                 isDisconnecting = false;
                 String id = applicationHelper.getApplicationPreferences().getDeviceId();
                 if(!isConnecting) {
@@ -246,6 +247,7 @@ public class WelcomeActivity extends FullScreenActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                setSystemUiFullscreen();
                 if(!isDisconnecting) {
                     isDisconnecting = true;
                     String id = applicationHelper.getApplicationPreferences().getDeviceId();
@@ -276,6 +278,7 @@ public class WelcomeActivity extends FullScreenActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                setSystemUiFullscreen();
                 if(connectedDevice != null) {
                     String id = applicationHelper.getApplicationPreferences().getDeviceId();
                     if(!DeviceConnection.updateConnection(WelcomeActivity.this, id, connectedDevice)){
@@ -290,6 +293,7 @@ public class WelcomeActivity extends FullScreenActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                setSystemUiFullscreen();
                 message.setText(messageText);
             }
         });
