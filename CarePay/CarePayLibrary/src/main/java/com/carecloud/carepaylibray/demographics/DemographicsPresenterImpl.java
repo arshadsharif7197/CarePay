@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.demographics;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -374,8 +375,8 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             fm.popBackStack(InsuranceEditDialog.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
             navigateToFragment(healthInsuranceFragment, true);
             if (proceed) {
+                healthInsuranceFragment.setShouldContinue(true);
                 fm.executePendingTransactions();
-                healthInsuranceFragment.openNextFragment(this.demographicDTO);
             }
             return;
         }
@@ -403,13 +404,16 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     @Override
-    public void showRemovePrimaryInsuranceDialog(ConfirmationCallback callback) {
+    public void showRemovePrimaryInsuranceDialog(ConfirmationCallback callback, DialogInterface.OnCancelListener cancelListener) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         String message = isPatientMode ? Label.getLabel("demographics_insurance_primary_alert_message_patient")
                 : Label.getLabel("demographics_insurance_primary_alert_message");
         ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment
                 .newInstance(Label.getLabel("demographics_insurance_primary_alert_title"), message);
         confirmDialogFragment.setCallback(callback);
+        if(cancelListener != null){
+            confirmDialogFragment.setOnCancelListener(cancelListener);
+        }
         String tag = confirmDialogFragment.getClass().getName();
         confirmDialogFragment.show(ft, tag);
     }

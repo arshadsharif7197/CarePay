@@ -23,7 +23,7 @@ public class Messages extends PagingDto {
         this.data = data;
     }
 
-    public class Reply {
+    public static class Reply {
 
         @SerializedName("id")
         private String id;
@@ -125,7 +125,7 @@ public class Messages extends PagingDto {
         }
     }
 
-    public class Participant {
+    public static class Participant {
 
         @SerializedName("name")
         private String name;
@@ -135,6 +135,9 @@ public class Messages extends PagingDto {
 
         @SerializedName("type")
         private String type;
+
+        @SerializedName("patient_id")
+        private String linkedPatientId;
 
         public String getName() {
             return name;
@@ -158,6 +161,14 @@ public class Messages extends PagingDto {
 
         public void setType(String type) {
             this.type = type;
+        }
+
+        public String getLinkedPatientId() {
+            return linkedPatientId;
+        }
+
+        public void setLinkedPatientId(String linkedPatientId) {
+            this.linkedPatientId = linkedPatientId;
         }
     }
 }

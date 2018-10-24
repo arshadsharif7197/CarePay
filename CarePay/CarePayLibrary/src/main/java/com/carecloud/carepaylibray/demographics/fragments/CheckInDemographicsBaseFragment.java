@@ -200,15 +200,10 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             key = storedName;
         }
         storeOption = getOptionByKey(options, key, storeOption);
-        if (StringUtil.isNullOrEmpty(storedName)) {
-            String chooseLabel = Label.getLabel("demographics_choose");
-            if (optional != null) {
-                optional.setVisibility(View.VISIBLE);
-            }
-
-            textView.setText(chooseLabel);
-        }else{
+        if (!StringUtil.isNullOrEmpty(storedName)) {
             textView.setText(storeOption.getLabel());
+        }else if (optional != null) {
+            optional.setVisibility(View.VISIBLE);
         }
 
     }

@@ -150,6 +150,7 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
             attachCallback(getContext());
         }
         callback.setCheckinFlow(CheckinFlowState.MEDICATIONS_AND_ALLERGIES, 1, 1);
+        hideProgressDialog();
     }
 
     @Override

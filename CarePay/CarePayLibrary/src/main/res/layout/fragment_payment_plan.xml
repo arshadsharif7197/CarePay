@@ -328,7 +328,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dimen_10dp"
-                    android:background="@drawable/button_selector_always_click"
+                    android:background="@drawable/button_selector_always_click_green"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:textSize="@dimen/respons_button_text_size"

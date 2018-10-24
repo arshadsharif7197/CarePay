@@ -141,7 +141,7 @@
                 android:textColor="@color/light_gray"
                 android:textSize="@dimen/amountLabelTextSize"
                 app:customAssetFont="proxima_nova_regular"
-                breeze:textKey="payment.paymentPlanDetail.text.label.paymentPlanAmount"
+                breeze:textKey="payment.paymentPlanDashboard.header.label.remainingBalance"
                 tools:text="Payment Plan Amount" />
 
             <View

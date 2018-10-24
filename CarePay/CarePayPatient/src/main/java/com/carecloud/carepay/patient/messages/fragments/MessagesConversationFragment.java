@@ -17,12 +17,20 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.MessageNavigationCallback;
 import com.carecloud.carepay.patient.messages.adapters.MessagesConversationAdapter;
 import com.carecloud.carepay.patient.messages.models.Messages;
+import com.carecloud.carepay.patient.messages.models.MessagingPostModel;
+import com.carecloud.carepay.patient.messages.models.MessagingThreadDTO;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lmenendez on 7/5/17
@@ -152,8 +160,20 @@ public class MessagesConversationFragment extends BaseFragment {
     private void postNewMessage(){
         String message = messageTextInput.getText().toString();
         if(!StringUtil.isNullOrEmpty(message)){
-            callback.postMessage(thread, message);
+//            callback.postMessage(thread, message);
             refreshing = true;
+
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("message_id", thread.getId());
+
+            MessagingPostModel postModel = new MessagingPostModel();
+            String userId = callback.getUserId();
+            postModel.getParticipant().setUserId(userId);
+            postModel.getParticipant().setName(callback.lookupName(thread, userId));
+            postModel.setMessage(message);
+
+            TransitionDTO reply = callback.getDto().getMetadata().getLinks().getReply();
+            getWorkflowServiceHelper().execute(reply, getMessagesCallback(true), DtoHelper.getStringDTO(postModel), queryMap);
         }
         messageTextInput.setText(null);
     }
@@ -181,7 +201,11 @@ public class MessagesConversationFragment extends BaseFragment {
     }
 
     private void refreshThreadMessages(){
-        callback.getThreadMessages(thread);
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("message_id", thread.getId());
+
+        TransitionDTO messages = callback.getDto().getMetadata().getLinks().getMessage();
+        getWorkflowServiceHelper().execute(messages, getMessagesCallback(false), queryMap);
     }
 
 
@@ -225,5 +249,32 @@ public class MessagesConversationFragment extends BaseFragment {
         return null;
     }
 
+
+    private WorkflowServiceCallback getMessagesCallback(final boolean postNewMessage) {
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                MessagingThreadDTO messagingThreadDTO = DtoHelper.getConvertedDTO(MessagingThreadDTO.class, workflowDTO);
+                updateThreadMessages(messagingThreadDTO.getPayload());
+
+                if(postNewMessage) {
+                    MixPanelUtil.logEvent(getString(R.string.event_message_reply));
+                }
+
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+            }
+        };
+    }
 
 }

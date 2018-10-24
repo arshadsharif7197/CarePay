@@ -159,7 +159,7 @@
     </style>
 
     <style name="EditTextStyle" parent="Base.Widget.AppCompat.EditText">
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/primary_color_enabled_selector</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/textview_default_textsize</item>
