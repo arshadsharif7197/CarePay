@@ -1,12 +1,17 @@
 package com.carecloud.carepay.patient.messages.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,21 +24,30 @@ import com.carecloud.carepay.patient.messages.models.Messages;
 import com.carecloud.carepay.patient.messages.models.MessagingPostModel;
 import com.carecloud.carepay.patient.messages.models.MessagingThreadDTO;
 import com.carecloud.carepay.patient.messages.models.ProviderContact;
+import com.carecloud.carepay.service.library.RestCallServiceCallback;
+import com.carecloud.carepay.service.library.RestCallServiceHelper;
+import com.carecloud.carepay.service.library.RestDef;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.media.MediaScannerPresenter;
+import com.carecloud.carepaylibray.media.MediaViewInterface;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.JsonElement;
+
+import java.io.File;
+import java.util.HashMap;
 
 /**
  * Created by lmenendez on 7/7/17
  */
 
-public class MessagesNewThreadFragment extends BaseFragment {
+public class MessagesNewThreadFragment extends BaseFragment implements MediaViewInterface {
 
     private EditText subjectInput;
     private EditText messageInput;
@@ -41,6 +55,7 @@ public class MessagesNewThreadFragment extends BaseFragment {
 
     private ProviderContact provider;
     private MessageNavigationCallback callback;
+    private MediaScannerPresenter mediaScannerPresenter;
 
     /**
      * Get a new instance of MessagesNewThreadFragment
@@ -101,6 +116,14 @@ public class MessagesNewThreadFragment extends BaseFragment {
             public void onClick(View view) {
 //                callback.postNewMessage(provider, subjectInput.getText().toString(), messageInput.getText().toString());
                 postNewMessage(provider, subjectInput.getText().toString(), messageInput.getText().toString());
+            }
+        });
+
+        View uploadButton = view.findViewById(R.id.upload_button);
+        uploadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectFile();
             }
         });
 
@@ -196,5 +219,88 @@ public class MessagesNewThreadFragment extends BaseFragment {
                 showErrorNotification(exceptionMessage);
             }
         };
+    }
+
+    private void selectFile(){
+        mediaScannerPresenter = new MediaScannerPresenter(getContext(), this, null);
+        mediaScannerPresenter.selectFile();
+    }
+
+    private void uploadFile(File file){
+        RestCallServiceHelper restCallServiceHelper = new RestCallServiceHelper(getAppAuthorizationHelper(), getApplicationMode());
+        restCallServiceHelper.executeRequest(RestDef.POST,
+                "https://documents.development.carecloud.com",
+                uploadCallback,
+                true,
+                false,
+                null,
+                new HashMap<String, String>(),
+                null,
+                file,
+                "documents");
+    }
+
+    private RestCallServiceCallback uploadCallback = new RestCallServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(JsonElement jsonElement) {
+            hideProgressDialog();
+            Log.d(MessagesNewThreadFragment.class.getName(), jsonElement != null ? jsonElement.toString() : "no data");
+        }
+
+        @Override
+        public void onFailure(String errorMessage) {
+            hideProgressDialog();
+            Log.d(MessagesNewThreadFragment.class.getName(), errorMessage);
+        }
+    };
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        handleRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    public void handleRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (mediaScannerPresenter != null) {
+            mediaScannerPresenter.handleRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    @Override
+    public void setCapturedBitmap(String path, View view) {
+        File file = new File(path);
+        uploadFile(file);
+    }
+
+    @Override
+    public void handleStartActivityForResult(Intent intent, int requestCode) {
+        startActivityForResult(intent, requestCode);
+    }
+
+    @Nullable
+    @Override
+    public Fragment getCallingFragment() {
+        return this;
+    }
+
+    @Override
+    public void setupImageBase64() {
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (!handleActivityResult(requestCode, resultCode, data)) {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+    @Override
+    public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
+        return mediaScannerPresenter != null && mediaScannerPresenter.handleActivityResult(requestCode, resultCode, data);
     }
 }

@@ -93,6 +93,21 @@
                 breeze:textKey="messaging_create_message_button"
                 app:customAssetFont="gotham_rounded_medium" />
 
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/upload_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginStart="0dp"
+                style="@style/ResponsButtonStyle"
+                android:enabled="true"
+                android:textSize="@dimen/text_size_13"
+                tools:text="Upload"
+                breeze:textKey="upload"
+                app:customAssetFont="gotham_rounded_medium" />
+
+
         </LinearLayout>
     </ScrollView>
 
