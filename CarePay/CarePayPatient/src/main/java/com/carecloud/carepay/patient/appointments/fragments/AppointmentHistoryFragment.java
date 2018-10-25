@@ -68,16 +68,6 @@ public class AppointmentHistoryFragment extends BaseFragment
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         appointmentDto = ((PatientAppointmentPresenter) callback.getAppointmentPresenter()).getMainAppointmentDto();
-        UserPracticeDTO practice1 = new UserPracticeDTO();
-        practice1.setPracticeName("Pablo 1");
-        practice1.setPracticeId("asdasdasd");
-        practice1.setPracticeMgmt("carecloud");
-        UserPracticeDTO practice2 = new UserPracticeDTO();
-        practice2.setPracticeName("Pablo 2");
-        practice2.setPracticeId("asdasd22asd");
-        practice2.setPracticeMgmt("carecloud");
-        appointmentDto.getPayload().getUserPractices().add(practice1);
-        appointmentDto.getPayload().getUserPractices().add(practice2);
         paging = appointmentDto.getPayload().getPagingInfo().get(0).getPaging();
     }
 
