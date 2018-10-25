@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/text_size_30sp"
+            android:textSize="@dimen/nextAppointmentTitleTextSize"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="next_appointment_toolbar_title" />
 
@@ -45,8 +45,8 @@
             <RelativeLayout
                 android:id="@+id/providerContainer"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_100dp"
-                android:layout_marginTop="30dp">
+                android:layout_height="@dimen/nextAppointmentProviderContainerHeight"
+                android:layout_marginTop="@dimen/nextAppointmentProviderContainerTopMargin">
 
                 <View
                     android:id="@+id/providerMessageHeader"
@@ -72,13 +72,12 @@
                         android:id="@+id/providerMessage"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/dimen_80dp"
-                        android:layout_marginStart="@dimen/dimen_20dp"
+                        android:layout_marginEnd="@dimen/nextAppointmentProviderMessageEndMargin"
+                        android:layout_marginStart="@dimen/nextAppointmentProviderMessageStartMargin"
                         android:gravity="start|center_vertical"
-                        android:paddingBottom="@dimen/dimen_20dp"
-                        android:paddingTop="@dimen/dimen_20dp"
+                        android:paddingBottom="@dimen/nextAppointmentProviderMessageVerticalPadding"
+                        android:paddingTop="@dimen/nextAppointmentProviderMessageVerticalPadding"
                         android:textColor="@color/white"
-                        android:visibility="visible"
                         app:customAssetFont="proxima_nova_regular"
                         breeze:textKey="next_appointment_default_provider_message" />
 
@@ -86,15 +85,15 @@
 
                 <ImageView
                     android:id="@+id/providerPicImageView"
-                    android:layout_width="@dimen/dimen_100dp"
-                    android:layout_height="@dimen/dimen_100dp"
+                    android:layout_width="@dimen/nextAppointmentProviderImageSize"
+                    android:layout_height="@dimen/nextAppointmentProviderImageSize"
                     android:layout_alignParentEnd="true"
                     android:src="@drawable/icn_placeholder_user_profile_png" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/providerInitials"
-                    android:layout_width="@dimen/dimen_100dp"
-                    android:layout_height="@dimen/dimen_100dp"
+                    android:layout_width="@dimen/nextAppointmentProviderImageSize"
+                    android:layout_height="@dimen/nextAppointmentProviderImageSize"
                     android:layout_alignParentEnd="true"
                     android:background="@drawable/round_list_tv"
                     android:gravity="center_vertical|center_horizontal"
@@ -106,20 +105,21 @@
             </RelativeLayout>
 
             <LinearLayout
+                android:id="@+id/mainContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_20dp"
+                android:layout_marginTop="@dimen/nextAppointmentMainContainerTopMargin"
                 android:orientation="vertical"
-                android:paddingEnd="@dimen/dimen_40dp"
-                android:paddingStart="@dimen/dimen_40dp">
+                android:paddingEnd="@dimen/nextAppointmentMainContainerHorizontalPadding"
+                android:paddingStart="@dimen/nextAppointmentMainContainerHorizontalPadding">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                     android:id="@+id/providerTextInputLayout"
                     style="@style/TextInputLayoutStyle"
                     android:layout_below="@id/providerContainer"
-                    android:paddingEnd="@dimen/dimen_10dp"
-                    android:paddingStart="@dimen/dimen_10dp"
-                    android:paddingTop="@dimen/dimen_5dp"
+                    android:paddingEnd="@dimen/nextAppointmentFieldHorizontalPadding"
+                    android:paddingStart="@dimen/nextAppointmentFieldHorizontalPadding"
+                    android:paddingTop="@dimen/nextAppointmentFieldTopMargin"
                     app:customAssetFont="proxima_nova_semi_bold"
                     app:hintTextAppearance="@style/FloatingLabelStyle">
 
@@ -131,7 +131,7 @@
                         android:drawableEnd="@drawable/icon_drop_down"
                         android:editable="false"
                         android:focusableInTouchMode="false"
-                        android:textSize="@dimen/text_size_16"
+                        android:textSize="@dimen/nextAppointmentFieldTextSize"
                         android:imeOptions="actionNext"
                         app:customAssetFont="proxima_nova_semi_bold"
                         breeze:hintKey="next_appointment_provider_hint" />
@@ -147,9 +147,9 @@
                     android:id="@+id/visitTypeTextInputLayout"
                     style="@style/TextInputLayoutStyle"
                     android:layout_below="@id/separator1"
-                    android:paddingEnd="@dimen/dimen_10dp"
-                    android:paddingStart="@dimen/dimen_10dp"
-                    android:paddingTop="@dimen/dimen_5dp"
+                    android:paddingEnd="@dimen/nextAppointmentFieldHorizontalPadding"
+                    android:paddingStart="@dimen/nextAppointmentFieldHorizontalPadding"
+                    android:paddingTop="@dimen/nextAppointmentFieldTopMargin"
                     app:customAssetFont="proxima_nova_semi_bold"
                     app:hintTextAppearance="@style/FloatingLabelStyle">
 
@@ -161,6 +161,7 @@
                         android:drawableEnd="@drawable/icon_drop_down"
                         android:editable="false"
                         android:focusableInTouchMode="false"
+                        android:textSize="@dimen/nextAppointmentFieldTextSize"
                         android:imeOptions="actionNext"
                         app:customAssetFont="proxima_nova_semi_bold"
                         breeze:hintKey="next_appointment_choose_visit_type_hint" />
@@ -176,9 +177,9 @@
                     android:id="@+id/visitTimeTextInputLayout"
                     style="@style/TextInputLayoutStyle"
                     android:layout_below="@id/separator"
-                    android:paddingEnd="@dimen/dimen_10dp"
-                    android:paddingStart="@dimen/dimen_10dp"
-                    android:paddingTop="@dimen/dimen_5dp"
+                    android:paddingEnd="@dimen/nextAppointmentFieldHorizontalPadding"
+                    android:paddingStart="@dimen/nextAppointmentFieldHorizontalPadding"
+                    android:paddingTop="@dimen/nextAppointmentFieldTopMargin"
                     app:customAssetFont="proxima_nova_semi_bold"
                     app:hintTextAppearance="@style/FloatingLabelStyle">
 
@@ -189,6 +190,7 @@
                         android:cursorVisible="false"
                         android:drawableEnd="@drawable/icon_drop_down"
                         android:editable="false"
+                        android:textSize="@dimen/nextAppointmentFieldTextSize"
                         android:enabled="false"
                         android:focusableInTouchMode="false"
                         android:imeOptions="actionDone"
@@ -217,18 +219,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="@dimen/dimen_10dp">
+        android:padding="@dimen/distributionButtonContainersPadding">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/scheduleLaterButton"
             android:layout_width="0dp"
-            android:layout_height="@dimen/dimen_48dp"
-            android:layout_margin="@dimen/dimen_10dp"
+            android:layout_height="@dimen/commonButtonHeight"
+            android:layout_margin="@dimen/distributionButtonContainersPadding"
             android:layout_weight="1"
             android:background="@drawable/round_border_button_bg"
             android:textAllCaps="false"
             android:textColor="@color/primary_color_enabled_selector"
-            android:textSize="@dimen/text_size_18sp"
+            android:textSize="@dimen/respons_button_text_size"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="schedule_appointment_later_button_label"
             tools:text="Schedule Later" />
@@ -236,14 +238,14 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/scheduleAppointmentButton"
             android:layout_width="0dp"
-            android:layout_height="@dimen/dimen_48dp"
-            android:layout_margin="@dimen/dimen_10dp"
+            android:layout_height="@dimen/commonButtonHeight"
+            android:layout_margin="@dimen/distributionButtonContainersPadding"
             android:layout_weight="1"
             android:background="@drawable/green_rounded_button_selector"
             android:enabled="false"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_18sp"
+            android:textSize="@dimen/respons_button_text_size"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="schedule_appointment_button_label"
             tools:text="Schedule Appointment" />

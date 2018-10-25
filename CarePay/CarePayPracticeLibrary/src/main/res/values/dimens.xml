@@ -15,6 +15,7 @@
     <dimen name="checkboxPadding">@dimen/radioButtonPadding</dimen>
     <dimen name="commonPracticeDialogHeight">672dp</dimen>
     <dimen name="separatorHeight">1dp</dimen>
+    <dimen name="ediTextPadding">15dp</dimen>
 
     <!-- Default dimens which will be use for any default styling  -->
     <dimen name="dimen_1dp">1dp</dimen>
@@ -538,6 +539,20 @@
     <dimen name="checkInOptionsLayoutBottomMargin">25dp</dimen>
     <dimen name="languageSpinnerStartMargin">20dp</dimen>
     <dimen name="checkInLanguageContainerStartMargin">0dp</dimen>
+
+    <!--Next Appointment Screen-->
+    <dimen name="nextAppointmentTitleTextSize">30sp</dimen>
+    <dimen name="nextAppointmentProviderContainerHeight">100dp</dimen>
+    <dimen name="nextAppointmentProviderContainerTopMargin">30dp</dimen>
+    <dimen name="nextAppointmentProviderMessageEndMargin">80dp</dimen>
+    <dimen name="nextAppointmentProviderMessageStartMargin">20dp</dimen>
+    <dimen name="nextAppointmentProviderMessageVerticalPadding">20dp</dimen>
+    <dimen name="nextAppointmentProviderImageSize">100dp</dimen>
+    <dimen name="nextAppointmentMainContainerTopMargin">20dp</dimen>
+    <dimen name="nextAppointmentMainContainerHorizontalPadding">40dp</dimen>
+    <dimen name="nextAppointmentFieldHorizontalPadding">10dp</dimen>
+    <dimen name="nextAppointmentFieldTopMargin">5dp</dimen>
+    <dimen name="nextAppointmentFieldTextSize">16sp</dimen>
 
 
 </resources>
