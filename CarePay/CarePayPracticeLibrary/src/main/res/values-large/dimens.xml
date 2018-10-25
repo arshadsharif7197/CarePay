@@ -423,6 +423,7 @@
     <dimen name="nextAppointmentFieldHorizontalPadding">5dp</dimen>
     <dimen name="nextAppointmentFieldTopMargin">3dp</dimen>
     <dimen name="nextAppointmentFieldTextSize">14sp</dimen>
+    <dimen name="webFormButtonMargin">10dp</dimen>
 
 
 </resources>
