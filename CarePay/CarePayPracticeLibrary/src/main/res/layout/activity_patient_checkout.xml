@@ -17,23 +17,23 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:background="@color/left_panel_color"
             android:orientation="vertical"
-            android:paddingEnd="@dimen/dimen_5dp"
-            android:paddingStart="@dimen/checkin_main_panel_start_padding"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true">
+            android:paddingStart="@dimen/checkInMainPanelStartPadding"
+            android:paddingEnd="@dimen/checkInMainPanelEndPadding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/logoutTextview"
-                android:layout_width="@dimen/nav_header_height"
-                android:layout_height="@dimen/dimen_48dp"
+                android:layout_width="@dimen/checkOutLogoutWidth"
+                android:layout_height="@dimen/checkOutLogoutHeight"
                 android:layout_alignParentStart="true"
-                android:layout_marginTop="@dimen/dimen_30dp"
+                android:layout_marginTop="@dimen/logOutTopMargin"
                 android:background="@drawable/bg_blue_overlay"
                 android:gravity="center"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_22sp"
+                android:textSize="@dimen/logOutTextSize"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="practice_app_logout_text" />
 
@@ -42,10 +42,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_marginEnd="@dimen/dimen_30dp"
+                android:layout_marginEnd="@dimen/checkInMessageEndMargin"
                 android:gravity="start"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_30sp"
+                android:textSize="@dimen/checkInMessageTextSize"
                 app:customAssetFont="gotham_rounded_bold"
                 breeze:textKey="practice_checkout_header_label"
                 tools:text="Let's get you checked in!" />
@@ -55,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="@dimen/dimen_25dp">
+                android:layout_marginBottom="@dimen/checkInOptionsLayoutBottomMargin">
 
                 <ImageView
                     android:id="@+id/btnHome"
@@ -68,26 +68,26 @@
 
                 <include
                     layout="@layout/lang_spinner"
-                    android:layout_width="@dimen/home_spinner_width"
-                    android:layout_height="@dimen/home_spinner_height"
+                    android:layout_width="@dimen/languageSpinnerWidth"
+                    android:layout_height="@dimen/languageSpinnerHeight"
                     android:layout_centerVertical="true"
-                    android:layout_toEndOf="@id/btnHome"
-                    android:layout_marginStart="@dimen/dimen_20dp"/>
+                    android:layout_marginStart="@dimen/languageSpinnerStartMargin"
+                    android:layout_toEndOf="@id/btnHome" />
 
             </RelativeLayout>
 
             <FrameLayout
                 android:id="@+id/languageContainer"
-                android:layout_width="@dimen/dimen_180dp"
+                android:layout_width="@dimen/languageContainerWidth"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/optionsLayout"
-                android:animateLayoutChanges="true"
-                android:visibility="gone">
+                android:layout_marginStart="@dimen/checkInLanguageContainerStartMargin"
+                android:animateLayoutChanges="true">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dimen_15dp"
+                    android:layout_marginBottom="@dimen/languageContainerMarginTop"
                     android:background="@drawable/bottom_rounded_white"
                     android:minHeight="@dimen/dimen_60dp">
 
@@ -111,7 +111,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="-25dp"
+            android:layout_marginEnd="@dimen/checkInShadowEndMargin"
             android:src="@drawable/side_shadow" />
 
     </RelativeLayout>

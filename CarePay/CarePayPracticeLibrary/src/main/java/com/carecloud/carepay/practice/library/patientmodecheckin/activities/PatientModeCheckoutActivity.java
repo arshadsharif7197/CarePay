@@ -423,7 +423,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     @Override
     public void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
         boolean addExisting = false;
-        if(paymentsModel.getPaymentPayload().mustAddToExisting(amount, selectedBalance)){
+        if (paymentsModel.getPaymentPayload().mustAddToExisting(amount, selectedBalance)) {
             onAddBalanceToExistingPlan(paymentsModel, selectedBalance, amount);
             addExisting = true;
         } else {
@@ -972,10 +972,10 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     @Override
     public void completePaymentPlanProcess(WorkflowDTO workflowDTO) {
-        if(continuePaymentsDTO != null) {
+        if (continuePaymentsDTO != null) {
             PracticeNavigationHelper.navigateToWorkflow(getContext(), continuePaymentsDTO);
             continuePaymentsDTO = null;
-        }else{
+        } else {
             //this may be a result of a fail on the continue call so lets try to continue again
             PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             AppointmentDTO appointmentDTO = getAppointment();
@@ -991,7 +991,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         }
     }
 
-    private WorkflowServiceCallback getCompletePlanAction(final WorkflowDTO paymentPlanWorkflowDTO, final int mode, final boolean hasDisplayedConfirm){
+    private WorkflowServiceCallback getCompletePlanAction(final WorkflowDTO paymentPlanWorkflowDTO, final int mode, final boolean hasDisplayedConfirm) {
         return new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
@@ -1001,18 +1001,18 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
-                if(NavigationStateConstants.PAYMENTS.equals(workflowDTO.getState())){
-                    if(!hasDisplayedConfirm) {
+                if (NavigationStateConstants.PAYMENTS.equals(workflowDTO.getState())) {
+                    if (!hasDisplayedConfirm) {
                         //need to display payments again, so we need to display this payment plan confirmation first
                         //hold the workflow response so that we can navigate to is after they click ok in confirm
                         continuePaymentsDTO = workflowDTO;
                         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, paymentPlanWorkflowDTO);
                         PracticePaymentPlanConfirmationFragment confirmationFragment = PracticePaymentPlanConfirmationFragment.newInstance(paymentPlanWorkflowDTO, getPracticeInfo(paymentsModel), mode);
                         displayDialogFragment(confirmationFragment, false);
-                    }else {
+                    } else {
                         PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
                     }
-                }else{
+                } else {
                     //done with checkin.. need to display success and pass the payment plan success
                     PracticeAppointmentDTO practiceAppointmentDTO = DtoHelper
                             .getConvertedDTO(PracticeAppointmentDTO.class, workflowDTO);

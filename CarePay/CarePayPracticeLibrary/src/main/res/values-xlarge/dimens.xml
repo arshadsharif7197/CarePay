@@ -387,4 +387,18 @@
     <dimen name="visitTypeContainerTopMargin">25dp</dimen>
     <dimen name="reasonTypeValueTextSize">17sp</dimen>
 
+    <!--Check In Screen-->
+    <dimen name="checkInShadowEndMargin">-25dp</dimen>
+    <dimen name="checkInMainPanelStartPadding">30dp</dimen>
+    <dimen name="checkInMainPanelEndPadding">5dp</dimen>
+    <dimen name="logOutTopMargin">30dp</dimen>
+    <dimen name="logOutTextSize">22sp</dimen>
+    <dimen name="checkOutLogoutHeight">48dp</dimen>
+    <dimen name="checkOutLogoutWidth">170dp</dimen>
+    <dimen name="checkInMessageEndMargin">30dp</dimen>
+    <dimen name="checkInMessageTextSize">30sp</dimen>
+    <dimen name="checkInOptionsLayoutBottomMargin">25dp</dimen>
+    <dimen name="languageSpinnerStartMargin">20dp</dimen>
+    <dimen name="checkInLanguageContainerStartMargin">0dp</dimen>
+
 </resources>
