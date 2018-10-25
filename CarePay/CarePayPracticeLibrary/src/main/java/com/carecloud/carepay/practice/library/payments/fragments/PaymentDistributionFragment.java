@@ -54,8 +54,8 @@ import com.carecloud.carepaylibray.retail.models.RetailItemPayload;
 import com.carecloud.carepaylibray.retail.models.RetailLineItemMetadata;
 import com.carecloud.carepaylibray.retail.models.RetailOrderItem;
 import com.carecloud.carepaylibray.retail.models.RetailPostModelOrder;
-import com.carecloud.carepaylibray.retail.models.RetailSelectedOption;
 import com.carecloud.carepaylibray.retail.models.RetailProductsModel;
+import com.carecloud.carepaylibray.retail.models.RetailSelectedOption;
 import com.carecloud.carepaylibray.utils.BounceHelper;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -81,14 +81,12 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     private TextView balanceTextView;
     private TextView paymentTotalTextView;
     private TextView unAppliedTextView;
-    private View unappliedLayout;
 
     private NestedScrollView scrollView;
     private RecyclerView balanceDetailsRecycler;
     private View newChargesLayout;
     private RecyclerView newChargesRecycler;
     private Button payButton;
-    private Button paymentPlanButton;
     private View emptyBalanceLayout;
     private View actionButton;
     private View retailChargesLayout;
@@ -164,15 +162,13 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
         setupButtons(view);
 
-        balanceTextView = (TextView) view.findViewById(R.id.balance_value);
-        unAppliedTextView = (TextView) view.findViewById(R.id.unapplied_value);
+        balanceTextView = view.findViewById(R.id.balance_value);
+        unAppliedTextView = view.findViewById(R.id.unapplied_value);
 
-        unappliedLayout = view.findViewById(R.id.unapplied_layout);
-
-        scrollView = (NestedScrollView) view.findViewById(R.id.nested_scroller);
+        scrollView = view.findViewById(R.id.nested_scroller);
 
         RecyclerView.LayoutManager balanceLayoutManager = new LinearLayoutManager(getContext());
-        balanceDetailsRecycler = (RecyclerView) view.findViewById(R.id.balances_recycler);
+        balanceDetailsRecycler = view.findViewById(R.id.balances_recycler);
         balanceDetailsRecycler.setLayoutManager(balanceLayoutManager);
         balanceDetailsRecycler.addOnScrollListener(scrollListener);
 
@@ -184,7 +180,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         newChargesLayout = view.findViewById(R.id.new_charges_layout);
         RecyclerView.LayoutManager chargesLayoutManager = new LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL, false);
-        newChargesRecycler = (RecyclerView) view.findViewById(R.id.new_charges_recycler);
+        newChargesRecycler = view.findViewById(R.id.new_charges_recycler);
         newChargesRecycler.setLayoutManager(chargesLayoutManager);
         newChargesRecycler.addOnScrollListener(scrollListener);
 
@@ -195,7 +191,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         retailChargesLayout = view.findViewById(R.id.retail_charges_layout);
         RecyclerView.LayoutManager retailLayoutManager = new LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL, false);
-        retailChargesRecycler = (RecyclerView) view.findViewById(R.id.retail_charges_recycler);
+        retailChargesRecycler = view.findViewById(R.id.retail_charges_recycler);
         retailChargesRecycler.setLayoutManager(retailLayoutManager);
         retailChargesRecycler.addOnScrollListener(scrollListener);
 
@@ -204,7 +200,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         retailTouchHelper.attachToRecyclerView(retailChargesRecycler);
 
         emptyBalanceLayout = view.findViewById(R.id.empty_balance_layout);
-        TextView emptyMessage = (TextView) view.findViewById(R.id.no_payment_message);
+        TextView emptyMessage = view.findViewById(R.id.no_payment_message);
         emptyMessage.setText(Label.getLabel("payment_balance_empty_payment_screen"));
         emptyMessage.setVisibility(View.GONE);
 
@@ -227,9 +223,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     }
 
     private void setupToolbar(View view, String titleString) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.payment_toolbar);
+        Toolbar toolbar = view.findViewById(R.id.payment_toolbar);
         if (toolbar != null) {
-            TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+            TextView title = toolbar.findViewById(R.id.toolbar_title);
             title.setText(titleString);
         }
     }
@@ -258,7 +254,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         addButton.setOnClickListener(addItem);
         addButtonEmpty.setOnClickListener(addItem);
 
-        paymentPlanButton = (Button) view.findViewById(R.id.payment_left_button);
+        Button paymentPlanButton = view.findViewById(R.id.payment_left_button);
         paymentPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -269,7 +265,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             }
         });
 
-        payButton = (Button) view.findViewById(R.id.payment_pay_button);
+        payButton = view.findViewById(R.id.payment_pay_button);
         payButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -287,7 +283,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             }
         });
 
-        paymentTotalTextView = (TextView) view.findViewById(R.id.payment_value);
+        paymentTotalTextView = view.findViewById(R.id.payment_value);
         paymentTotalTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -319,9 +315,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(paymentsPickerWindow.isShowing()){
+                if (paymentsPickerWindow.isShowing()) {
                     paymentsPickerWindow.dismiss();
-                }else {
+                } else {
                     int offset = view.getWidth() / 2 - paymentsPickerWindow.getWidth() / 2;
                     paymentsPickerWindow.showAsDropDown(view, offset, 0);
                     view.setSelected(true);
@@ -448,19 +444,19 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         if (position > 0) {
             locationY = (int) balanceDetailsRecycler.getChildAt(position).getY();
         }
-        if(locationY < 0){
+        if (locationY < 0) {
             position = chargeItems.indexOf(balanceItemDTO);
             if (position > 0) {
                 locationY = (int) newChargesRecycler.getChildAt(position).getY();
             }
         }
-        if(locationY < 0){
+        if (locationY < 0) {
             position = retailItems.indexOf(balanceItemDTO);
             if (position > 0) {
                 locationY = (int) retailChargesRecycler.getChildAt(position).getY();
             }
         }
-        if(locationY < 0){
+        if (locationY < 0) {
             //not found
             return;
         }
@@ -956,7 +952,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             addPaymentObject(balanceItemDTO, postModel);
         }
 
-        if(!retailItems.isEmpty()) {
+        if (!retailItems.isEmpty()) {
             generateRetailOrder(postModel);
         }
 
@@ -1017,11 +1013,11 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         }
     }
 
-    private void generateRetailOrder(IntegratedPaymentPostModel postModel){
+    private void generateRetailOrder(IntegratedPaymentPostModel postModel) {
         RetailPostModelOrder retailOrder = new RetailPostModelOrder();
         double subtotal = 0D;
         double total = 0D;
-        for(BalanceItemDTO balanceItemDTO : retailItems){
+        for (BalanceItemDTO balanceItemDTO : retailItems) {
             RetailItemDto retailItemDto = balanceItemDTO.getRetailPayload().getRetailItemDto();
 
             RetailOrderItem orderItem = new RetailOrderItem();
@@ -1039,8 +1035,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             orderItem.setQuantity(quantity);
 
             Map<Integer, RetailItemOptionChoiceDto> selectedOptions = balanceItemDTO.getRetailPayload().getSelectedOptions();
-            for (int i=0; i<retailItemDto.getOptions().size(); i++) {
-                if(selectedOptions.containsKey(i)) {
+            for (int i = 0; i < retailItemDto.getOptions().size(); i++) {
+                if (selectedOptions.containsKey(i)) {
                     RetailSelectedOption selectedOption = new RetailSelectedOption();
                     selectedOption.setName(retailItemDto.getOptions().get(i).getName());
                     selectedOption.setValue(selectedOptions.get(i).getName());
@@ -1059,21 +1055,21 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             retailPaymentLineItem.setRetailMetadata(new RetailLineItemMetadata());
 
             StringBuilder descriptionBuilder = new StringBuilder(retailItemDto.getName());
-            if(!orderItem.getSelectedOptions().isEmpty()){
+            if (!orderItem.getSelectedOptions().isEmpty()) {
                 descriptionBuilder.append(" -");
-                for(RetailSelectedOption option : orderItem.getSelectedOptions()){
+                for (RetailSelectedOption option : orderItem.getSelectedOptions()) {
                     descriptionBuilder.append(" ")
                             .append(option.getName())
                             .append(": ")
                             .append(option.getValue())
                             .append(",");
                 }
-                descriptionBuilder.deleteCharAt(descriptionBuilder.length()-1);
+                descriptionBuilder.deleteCharAt(descriptionBuilder.length() - 1);
             }
-            if(quantity > 1){
-                if(orderItem.getSelectedOptions().isEmpty()){
+            if (quantity > 1) {
+                if (orderItem.getSelectedOptions().isEmpty()) {
                     descriptionBuilder.append(" - ");
-                }else{
+                } else {
                     descriptionBuilder.append(", ");
                 }
                 descriptionBuilder.append("Qty: ").append(quantity);
@@ -1087,11 +1083,11 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         retailOrder.setSubTotal(subtotal);
         retailOrder.setTotal(total);
 
-        if(patientDemographics != null){
+        if (patientDemographics != null) {
             RetailBillingPerson billingPerson = retailOrder.getBillingPerson();
             billingPerson.setName(patientDemographics.getPersonalDetails().getFullName());
             billingPerson.setStreet(patientDemographics.getAddress().getAddress1());
-            if(!StringUtil.isNullOrEmpty(patientDemographics.getAddress().getAddress2())){
+            if (!StringUtil.isNullOrEmpty(patientDemographics.getAddress().getAddress2())) {
                 billingPerson.setStreet(billingPerson.getStreet() + " " +
                         patientDemographics.getAddress().getAddress2());
             }
@@ -1108,7 +1104,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         return (double) Math.round(amount * 100) / 100;
     }
 
-    private boolean hasBalance(){
+    private boolean hasBalance() {
         return paymentsModel.getPaymentPayload().getPatientBalances().size() > 0
                 && paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().size() > 0
                 && paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getPayload().size() > 0;
@@ -1133,7 +1129,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     public void onAddRetailAction() {
         actionButton.setSelected(false);
         hideDialog();
-        if(paymentsModel.getPaymentPayload().getRetailProducts().getProducts().getItems().isEmpty()) {
+        if (paymentsModel.getPaymentPayload().getRetailProducts().getProducts().getItems().isEmpty()) {
             UserPracticeDTO practiceDTO = callback.getPracticeInfo(paymentsModel);
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("practice_id", practiceDTO.getPracticeId());
@@ -1141,7 +1137,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
             TransitionDTO getProducts = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getProducts();
             getWorkflowServiceHelper().execute(getProducts, getRetailProductsCallback, queryMap);
-        }else{
+        } else {
             callback.showRetailItems(paymentsModel, PaymentDistributionFragment.this);
         }
     }
@@ -1169,4 +1165,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         }
     };
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.clear();
+    }
 }
