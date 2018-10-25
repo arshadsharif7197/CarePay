@@ -550,6 +550,9 @@
     <dimen name="checkInFlowProgressHorizontalPadding">10dp</dimen>
     <dimen name="checkInFlowProgressStartMargin">8dp</dimen>
     <dimen name="checkInFlowProgressTextSize">14sp</dimen>
+    <dimen name="checkInToolbarPaddingTop">10dp</dimen>
+    <dimen name="checkInDotSize">10dp</dimen>
+    <dimen name="checkInDotSpacing">12dp</dimen>
 
     <!--Next Appointment Screen-->
     <dimen name="nextAppointmentTitleTextSize">30sp</dimen>
@@ -565,6 +568,21 @@
     <dimen name="nextAppointmentFieldTopMargin">5dp</dimen>
     <dimen name="nextAppointmentFieldTextSize">16sp</dimen>
     <dimen name="webFormButtonMargin">20dp</dimen>
+
+    <!--Personal Demographics-->
+    <dimen name="demographicPictureContainerPadding">10dp</dimen>
+    <dimen name="changeCurrentPhotoButtonTopMargin">20dp</dimen>
+    <dimen name="changeCurrentPhotoButtonHorizontalPadding">32dp</dimen>
+    <dimen name="changeCurrentPhotoButtonVerticalPadding">8dp</dimen>
+    <dimen name="changeCurrentPhotoButtonTextSize">13sp</dimen>
+    <dimen name="demographicErrorContainerWidth">57dp</dimen>
+    <dimen name="demographicErrorViewWidth">22dp</dimen>
+    <dimen name="demographicsSubHeadingTextSize">20sp</dimen>
+    <dimen name="demographicsSubHeadingVerticalMargin">20dp</dimen>
+    <dimen name="demographicsSubHeadingHorizontalMargin">20dp</dimen>
+    <dimen name="demogrDocsFrontScanImageWidth">230dp</dimen>
+    <dimen name="demogrDocsFrontScanImageHeight">144dp</dimen>
+    <dimen name="demogrDocsVerticalMargin">60dp</dimen>
 
 
 </resources>

@@ -1,101 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    android:id="@+id/scanIdRootLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:descendantFocusability="beforeDescendants"
     android:focusable="true"
-    android:id="@+id/scanIdRootLayout"
-    android:paddingLeft="@dimen/dimen_57dp">
+    android:orientation="vertical">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/demo_view_height"
-        android:layout_marginBottom="@dimen/divider_margin_bottom"
         android:layout_marginTop="@dimen/divider_margin_top"
-        android:background="@color/light_gray"/>
-
+        android:layout_marginBottom="@dimen/divider_margin_bottom"
+        android:background="@color/light_gray" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight=".35"/>
+            android:layout_weight=".35" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center_horizontal">
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_60dp"
-                android:orientation="vertical"
-                android:gravity="center_horizontal">
+                android:layout_marginTop="@dimen/demogrDocsVerticalMargin"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/demogrDocsFrontScanImage"
-                    android:layout_width="@dimen/dimen_230dp"
-                    android:layout_height="@dimen/dimen_144dp"
+                    android:layout_width="@dimen/demogrDocsFrontScanImageWidth"
+                    android:layout_height="@dimen/demogrDocsFrontScanImageHeight"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/scanned_id_doc"
-                    android:src="@drawable/icn_placeholder_document"/>
+                    android:src="@drawable/icn_placeholder_document" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayButton
                     android:id="@+id/demogrDocsFrontScanButton"
                     style="@style/DemographicsDocsButtonStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/commonButtonHeight"
                     android:layout_gravity="center"
-                    android:minHeight="0dp"
                     android:layout_marginStart="0dp"
                     android:layout_marginTop="@dimen/dimen_13dp"
+                    android:minHeight="0dp"
                     android:padding="@dimen/dimen_10dp"
                     app:customAssetFont="gotham_rounded_medium"
-                    breeze:textKey="demographics_documents_picture_of_front"/>
+                    breeze:textKey="demographics_documents_picture_of_front" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_60dp"
-                android:layout_marginBottom="@dimen/dimen_60dp"
-                android:orientation="vertical"
-                android:gravity="center_horizontal">
+                android:layout_marginTop="@dimen/demogrDocsVerticalMargin"
+                android:layout_marginBottom="@dimen/demogrDocsVerticalMargin"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/demogrDocsBackScanImage"
-                    android:layout_width="@dimen/dimen_230dp"
-                    android:layout_height="@dimen/dimen_144dp"
+                    android:layout_width="@dimen/demogrDocsFrontScanImageWidth"
+                    android:layout_height="@dimen/demogrDocsFrontScanImageHeight"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/scanned_id_doc"
-                    android:src="@drawable/icn_placeholder_document"/>
+                    android:src="@drawable/icn_placeholder_document" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayButton
                     android:id="@+id/demogrDocsBackScanButton"
                     style="@style/DemographicsDocsButtonStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/commonButtonHeight"
                     android:layout_gravity="center"
-                    android:minHeight="0dp"
                     android:layout_marginStart="0dp"
                     android:layout_marginTop="@dimen/dimen_13dp"
+                    android:minHeight="0dp"
                     android:padding="@dimen/dimen_10dp"
                     app:customAssetFont="gotham_rounded_medium"
-                    breeze:textKey="demographics_documents_picture_of_back"/>
+                    breeze:textKey="demographics_documents_picture_of_back" />
 
             </LinearLayout>
 
@@ -104,7 +99,7 @@
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight=".35"/>
+            android:layout_weight=".35" />
 
     </LinearLayout>
 </LinearLayout>

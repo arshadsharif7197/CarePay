@@ -13,7 +13,7 @@
     <dimen name="dialog_profile_pic_size">60dp</dimen>
     <dimen name="commonButtonHeight">35dp</dimen>
     <dimen name="buttonStrokeWidth">1dp</dimen>
-    <dimen name="formEditTextTextSize">18sp</dimen>
+    <dimen name="formEditTextTextSize">17sp</dimen>
     <dimen name="optionalLabelRightMargin">20dp</dimen>
     <dimen name="optionalLabelTextSize">8sp</dimen>
     <dimen name="radioButtonSize">30dp</dimen>
@@ -420,9 +420,12 @@
     <dimen name="checkInFlowProgressHorizontalPadding">10dp</dimen>
     <dimen name="checkInFlowProgressStartMargin">8dp</dimen>
     <dimen name="checkInFlowProgressTextSize">11sp</dimen>
+    <dimen name="checkInToolbarPaddingTop">5dp</dimen>
+    <dimen name="checkInDotSize">5dp</dimen>
+    <dimen name="checkInDotSpacing">8dp</dimen>
 
     <!--Next Appointment Screen-->
-    <dimen name="nextAppointmentTitleTextSize">24sp</dimen>
+    <dimen name="nextAppointmentTitleTextSize">23sp</dimen>
     <dimen name="nextAppointmentProviderContainerHeight">80dp</dimen>
     <dimen name="nextAppointmentProviderContainerTopMargin">15dp</dimen>
     <dimen name="nextAppointmentProviderMessageEndMargin">50dp</dimen>
@@ -435,6 +438,22 @@
     <dimen name="nextAppointmentFieldTopMargin">3dp</dimen>
     <dimen name="nextAppointmentFieldTextSize">14sp</dimen>
     <dimen name="webFormButtonMargin">10dp</dimen>
+
+    <!--Personal Demographics-->
+    <dimen name="demographicPictureContainerPadding">5dp</dimen>
+    <dimen name="changeCurrentPhotoButtonTopMargin">10dp</dimen>
+    <dimen name="changeCurrentPhotoButtonHorizontalPadding">20dp</dimen>
+    <dimen name="changeCurrentPhotoButtonVerticalPadding">5dp</dimen>
+    <dimen name="changeCurrentPhotoButtonTextSize">11sp</dimen>
+    <dimen name="demographicErrorContainerWidth">57dp</dimen>
+    <dimen name="demographicErrorImageHeight">25dp</dimen>
+    <dimen name="demographicErrorViewWidth">20dp</dimen>
+    <dimen name="demographicsSubHeadingTextSize">14sp</dimen>
+    <dimen name="demographicsSubHeadingVerticalMargin">10dp</dimen>
+    <dimen name="demographicsSubHeadingHorizontalMargin">20dp</dimen>
+    <dimen name="demogrDocsFrontScanImageWidth">180dp</dimen>
+    <dimen name="demogrDocsFrontScanImageHeight">124dp</dimen>
+    <dimen name="demogrDocsVerticalMargin">30dp</dimen>
 
 
 </resources>

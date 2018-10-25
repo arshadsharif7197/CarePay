@@ -474,5 +474,7 @@
     <dimen name="optionalLabelRightMargin">38dp</dimen>
     <dimen name="optionalLabelTextSize">9sp</dimen>
     <dimen name="itemCreditCardImageSize">36dp</dimen>
+    <dimen name="demographicErrorImageHeight">30dp</dimen>
+    <dimen name="demographicErrorViewWidth">22dp</dimen>
 
 </resources>
