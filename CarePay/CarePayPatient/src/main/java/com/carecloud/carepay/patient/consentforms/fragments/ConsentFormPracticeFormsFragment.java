@@ -132,8 +132,7 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
                             Label.getLabel("adhoc.forms.empty.label.description"));
             return;
         }
-        adapter = new ConsentFormsAdapter(practiceForms, mode);
-        adapter.setCallback(this);
+        adapter = new ConsentFormsAdapter(getContext(), this, practiceForms, mode);
         practiceConsentFormsRecyclerView.setAdapter(adapter);
 
         if (mode == ConsentFormViewPagerFragment.HISTORIC_MODE) {
