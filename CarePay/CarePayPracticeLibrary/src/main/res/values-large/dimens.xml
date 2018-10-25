@@ -397,7 +397,8 @@
     <dimen name="reasonTypeValueTextSize">14sp</dimen>
 
     <!--Check In Screen-->
-    <dimen name="checkInShadowEndMargin">-27dp</dimen>
+    <dimen name="checkInShadowEndMargin">-40dp</dimen>
+    <dimen name="checkOutShadowEndMargin">-27dp</dimen>
     <dimen name="checkInMainPanelStartPadding">15dp</dimen>
     <dimen name="checkInMainPanelEndPadding">5dp</dimen>
     <dimen name="logOutTopMargin">15dp</dimen>
@@ -409,6 +410,16 @@
     <dimen name="checkInOptionsLayoutBottomMargin">15dp</dimen>
     <dimen name="languageSpinnerStartMargin">20dp</dimen>
     <dimen name="checkInLanguageContainerStartMargin">25dp</dimen>
+    <dimen name="checkInBreezeLogoWidth">150dp</dimen>
+    <dimen name="checkInBreezeLogoHeight">40dp</dimen>
+    <dimen name="checkInBreezeLogoTopMargin">15dp</dimen>
+    <dimen name="checkInLeftMessageTopMargin">80dp</dimen>
+    <dimen name="checkInSeparatorVerticalMargin">10dp</dimen>
+    <dimen name="checkInFlowTitleBottomMargin">5dp</dimen>
+    <dimen name="checkInFlowTitleTextSize">13sp</dimen>
+    <dimen name="checkInFlowProgressHorizontalPadding">10dp</dimen>
+    <dimen name="checkInFlowProgressStartMargin">8dp</dimen>
+    <dimen name="checkInFlowProgressTextSize">11sp</dimen>
 
     <!--Next Appointment Screen-->
     <dimen name="nextAppointmentTitleTextSize">24sp</dimen>

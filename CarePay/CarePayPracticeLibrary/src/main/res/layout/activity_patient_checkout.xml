@@ -68,10 +68,10 @@
 
                 <include
                     layout="@layout/lang_spinner"
-                    android:layout_width="@dimen/languageSpinnerWidth"
-                    android:layout_height="@dimen/languageSpinnerHeight"
+                    android:layout_width="@dimen/home_spinner_width"
+                    android:layout_height="@dimen/home_spinner_height"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/languageSpinnerStartMargin"
+                    android:layout_marginStart="@dimen/dimen_20dp"
                     android:layout_toEndOf="@id/btnHome" />
 
             </RelativeLayout>
@@ -112,7 +112,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/checkInShadowEndMargin"
+            android:layout_marginEnd="@dimen/checkOutShadowEndMargin"
             android:src="@drawable/side_shadow" />
 
     </RelativeLayout>
