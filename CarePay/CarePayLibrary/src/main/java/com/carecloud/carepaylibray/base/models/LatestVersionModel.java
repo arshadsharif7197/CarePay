@@ -16,6 +16,9 @@ public class LatestVersionModel {
     @SerializedName("latest_version_number")
     private int versionNumber;
 
+    @SerializedName("force_update")
+    private boolean forceUpdate = false;
+
     public String getDeviceType() {
         return deviceType;
     }
@@ -46,5 +49,13 @@ public class LatestVersionModel {
 
     public void setVersionNumber(int versionNumber) {
         this.versionNumber = versionNumber;
+    }
+
+    public boolean isForceUpdate() {
+        return forceUpdate;
+    }
+
+    public void setForceUpdate(boolean forceUpdate) {
+        this.forceUpdate = forceUpdate;
     }
 }
