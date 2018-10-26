@@ -16,11 +16,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.MessageNavigationCallback;
+import com.carecloud.carepay.patient.messages.models.AttachmentPostModel;
 import com.carecloud.carepay.patient.messages.models.AttachmentUploadModel;
 import com.carecloud.carepay.patient.messages.models.Messages;
 import com.carecloud.carepay.patient.messages.models.MessagingPostModel;
@@ -43,6 +45,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.JsonElement;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -59,7 +62,7 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
     private MessageNavigationCallback callback;
     private MediaScannerPresenter mediaScannerPresenter;
 
-    private String attachmentId;
+    private AttachmentPostModel attachmentPostModel;
 
     /**
      * Get a new instance of MessagesNewThreadFragment
@@ -193,6 +196,14 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
         postModel.setMessage(message);
         postModel.setSubject(subject);
 
+        if(attachmentPostModel != null){
+            attachmentPostModel.setPatientId(providerContact.getPatientId());
+            attachmentPostModel.setPracticeId(providerContact.getBusinessEntityId());
+
+            postModel.setAttachments(new ArrayList<AttachmentPostModel>());
+            postModel.getAttachments().add(attachmentPostModel);
+        }
+
         TransitionDTO newMessage = callback.getDto().getMetadata().getLinks().getNewMessage();
         getWorkflowServiceHelper().execute(newMessage, postNewMessageCallback(providerContact), DtoHelper.getStringDTO(postModel));
 
@@ -241,7 +252,7 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
         RestCallServiceHelper restCallServiceHelper = new RestCallServiceHelper(getAppAuthorizationHelper(), getApplicationMode());
         restCallServiceHelper.executeRequest(RestDef.POST,
                 baseUrl,
-                uploadCallback,
+                getUploadCallback(file),
                 true,
                 false,
                 null,
@@ -251,28 +262,33 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
                 path.replace("/", ""));
     }
 
-    private RestCallServiceCallback uploadCallback = new RestCallServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(JsonElement jsonElement) {
-            hideProgressDialog();
-            Log.d(MessagesNewThreadFragment.class.getName(), jsonElement != null ? jsonElement.toString() : "no data");
-            if(jsonElement != null && jsonElement.isJsonObject()) {
-                AttachmentUploadModel uploadModel = DtoHelper.getConvertedDTO(AttachmentUploadModel.class, jsonElement.getAsJsonObject());
-                attachmentId = uploadModel.getNodeId();
+    private RestCallServiceCallback getUploadCallback(final File file) {
+        return new RestCallServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
             }
-        }
 
-        @Override
-        public void onFailure(String errorMessage) {
-            hideProgressDialog();
-            Log.d(MessagesNewThreadFragment.class.getName(), errorMessage);
-        }
-    };
+            @Override
+            public void onPostExecute(JsonElement jsonElement) {
+                hideProgressDialog();
+                Log.d(MessagesNewThreadFragment.class.getName(), jsonElement != null ? jsonElement.toString() : "no data");
+                if (jsonElement != null && jsonElement.isJsonObject()) {
+                    AttachmentUploadModel uploadModel = DtoHelper.getConvertedDTO(AttachmentUploadModel.class, jsonElement.getAsJsonObject());
+                    attachmentPostModel = new AttachmentPostModel();
+                    attachmentPostModel.setNodeId(uploadModel.getNodeId());
+                    attachmentPostModel.setDescription(file.getName());
+                    attachmentPostModel.setFormat(MimeTypeMap.getFileExtensionFromUrl(file.getAbsolutePath()));
+                }
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                hideProgressDialog();
+                Log.d(MessagesNewThreadFragment.class.getName(), errorMessage);
+            }
+        };
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
