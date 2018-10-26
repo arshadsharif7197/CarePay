@@ -122,10 +122,18 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
             postModel.setExecution(existingPlan.getPayload().getExecution());
             postModel.setPapiPaymentMethod(existingPlan.getPayload().getPaymentMethod());
 
-            try {
-                paymentPlanModel.setDayOfMonth(Integer.parseInt(paymentDateOption.getName()));
-            } catch (NumberFormatException nfe) {
-                nfe.printStackTrace();
+            if (frequencyOption.getName().equals(PaymentPlanModel.FREQUENCY_MONTHLY)) {
+                try {
+                    paymentPlanModel.setDayOfMonth(Integer.parseInt(paymentDateOption.getName()));
+                } catch (NumberFormatException nfe) {
+                    nfe.printStackTrace();
+                }
+            } else {
+                try {
+                    paymentPlanModel.setDayOfWeek(Integer.parseInt(paymentDateOption.getName()));
+                } catch (NumberFormatException nfe) {
+                    nfe.printStackTrace();
+                }
             }
 
             postModel.setPaymentPlanModel(paymentPlanModel);

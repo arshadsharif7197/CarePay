@@ -14,13 +14,16 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsToggleOption;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -47,9 +50,9 @@ public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePa
 
     @Override
     public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
         paymentPlan = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, getArguments());
         paymentPlanAmount = paymentPlan.getPayload().getAmount();
+        super.onCreate(icicle);
     }
 
     @Override
@@ -86,8 +89,27 @@ public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePa
 
     private void populateFields(PaymentPlanDTO paymentPlan) {
         planNameEditText.setText(paymentPlan.getPayload().getDescription());
-        DemographicsOption dateOption = dateOptions.get(paymentPlan.getPayload()
-                .getPaymentPlanDetails().getDayOfMonth() - 1);
+        frequencyOption = new DemographicsToggleOption();
+        frequencyOption.setLabel(StringUtil.capitalize(paymentPlan.getPayload()
+                .getPaymentPlanDetails().getFrequencyCode()));
+        frequencyOption.setName(paymentPlan.getPayload().getPaymentPlanDetails().getFrequencyCode());
+        manageFrequencyChange((DemographicsToggleOption) frequencyOption, true);
+
+        DemographicsOption dateOption;
+        if (paymentPlan.getPayload().getPaymentPlanDetails().getFrequencyCode()
+                .equals(PaymentPlanDetailsDTO.FREQUENCY_MONTHLY)) {
+            dateOption = dateOptions.get(paymentPlan.getPayload()
+                    .getPaymentPlanDetails().getDayOfMonth() - 1);
+            selectedDateOptions = dateOptions;
+        } else {
+            if (paymentPlan.getPayload().getPaymentPlanDetails().getDayOfWeek() > dayOfWeekOptions.size()) {
+                dateOption = dayOfWeekOptions.get(0);
+            } else {
+                dateOption = dayOfWeekOptions.get(paymentPlan.getPayload()
+                        .getPaymentPlanDetails().getDayOfWeek());
+            }
+            selectedDateOptions = dayOfWeekOptions;
+        }
         paymentDateEditText.setText(dateOption.getLabel());
         installmentsEditText.setText(String.valueOf(paymentPlan.getPayload()
                 .getPaymentPlanDetails().getInstallments()));
@@ -155,10 +177,18 @@ public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePa
         paymentPlanModel.setInstallments(installments);
         paymentPlanModel.setEnabled(true);
 
-        try {
-            paymentPlanModel.setDayOfMonth(Integer.parseInt(paymentDateOption.getName()));
-        } catch (NumberFormatException nfe) {
-            nfe.printStackTrace();
+        if (frequencyOption.getName().equals(PaymentPlanModel.FREQUENCY_MONTHLY)) {
+            try {
+                paymentPlanModel.setDayOfMonth(Integer.parseInt(paymentDateOption.getName()));
+            } catch (NumberFormatException nfe) {
+                nfe.printStackTrace();
+            }
+        } else {
+            try {
+                paymentPlanModel.setDayOfWeek(Integer.parseInt(paymentDateOption.getName()));
+            } catch (NumberFormatException nfe) {
+                nfe.printStackTrace();
+            }
         }
 
         postModel.setPaymentPlanModel(paymentPlanModel);
@@ -197,4 +227,33 @@ public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePa
             }
         }, new Gson().toJson(postModel), queryMap);
     }
+//
+//    @Override
+//    protected List<DemographicsToggleOption> generateFrequencyOptions(PaymentsSettingsPaymentPlansDTO paymentPlansRules) {
+//        frequencyOption = new DemographicsToggleOption();
+//        frequencyOption.setLabel(StringUtil.capitalize(paymentPlan.getPayload()
+//                .getPaymentPlanDetails().getFrequencyCode()));
+//        frequencyOption.setName(paymentPlan.getPayload().getPaymentPlanDetails().getFrequencyCode());
+//        if (paymentPlan.getPayload().getPaymentPlanDetails().getFrequencyCode()
+//                .equals(PaymentPlanDetailsDTO.FREQUENCY_MONTHLY)) {
+//            dateOptions = generateDateOptions();
+//            paymentDateOption = dateOptions.get(paymentPlan.getPayload()
+//                    .getPaymentPlanDetails().getDayOfMonth() - 1);
+//            selectedDateOptions = dateOptions;
+//        } else {
+//            dayOfWeekOptions = generateDayOptions();
+//            if (paymentPlan.getPayload().getPaymentPlanDetails().getDayOfWeek() > dayOfWeekOptions.size()) {
+//                paymentDateOption = dayOfWeekOptions.get(0);
+//            } else {
+//                paymentDateOption = dayOfWeekOptions.get(paymentPlan.getPayload()
+//                        .getPaymentPlanDetails().getDayOfWeek());
+//            }
+//            selectedDateOptions = dayOfWeekOptions;
+//        }
+//
+//        List<DemographicsToggleOption> options = new ArrayList<>();
+//        options.add(frequencyOption);
+//        return options;
+//    }
+//
 }
