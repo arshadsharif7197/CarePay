@@ -2,6 +2,7 @@ package com.carecloud.carepay.patient.messages.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.MessageNavigationCallback;
+import com.carecloud.carepay.patient.messages.models.AttachmentUploadModel;
 import com.carecloud.carepay.patient.messages.models.Messages;
 import com.carecloud.carepay.patient.messages.models.MessagingPostModel;
 import com.carecloud.carepay.patient.messages.models.MessagingThreadDTO;
@@ -56,6 +58,8 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
     private ProviderContact provider;
     private MessageNavigationCallback callback;
     private MediaScannerPresenter mediaScannerPresenter;
+
+    private String attachmentId;
 
     /**
      * Get a new instance of MessagesNewThreadFragment
@@ -227,9 +231,16 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
     }
 
     private void uploadFile(File file){
+        TransitionDTO transitionDTO = callback.getDto().getMetadata().getLinks().getUploadAttachment();
+        Uri uri = Uri.parse(transitionDTO.getUrl());
+        String path = uri.getPath();
+        String baseUrl = transitionDTO.getUrl();
+        if(baseUrl != null && path != null) {
+            baseUrl = baseUrl.substring(0, baseUrl.length() - path.length());
+        }
         RestCallServiceHelper restCallServiceHelper = new RestCallServiceHelper(getAppAuthorizationHelper(), getApplicationMode());
         restCallServiceHelper.executeRequest(RestDef.POST,
-                "https://documents.development.carecloud.com",
+                baseUrl,
                 uploadCallback,
                 true,
                 false,
@@ -237,7 +248,7 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
                 new HashMap<String, String>(),
                 null,
                 file,
-                "documents");
+                path.replace("/", ""));
     }
 
     private RestCallServiceCallback uploadCallback = new RestCallServiceCallback() {
@@ -250,6 +261,10 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
         public void onPostExecute(JsonElement jsonElement) {
             hideProgressDialog();
             Log.d(MessagesNewThreadFragment.class.getName(), jsonElement != null ? jsonElement.toString() : "no data");
+            if(jsonElement != null && jsonElement.isJsonObject()) {
+                AttachmentUploadModel uploadModel = DtoHelper.getConvertedDTO(AttachmentUploadModel.class, jsonElement.getAsJsonObject());
+                attachmentId = uploadModel.getNodeId();
+            }
         }
 
         @Override
