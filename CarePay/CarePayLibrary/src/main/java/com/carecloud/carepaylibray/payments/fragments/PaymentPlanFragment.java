@@ -337,6 +337,9 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
             interval = PaymentSettingsBalanceRangeRule.INTERVAL_WEEKS;
         }
         updateHints();
+        if (applyRangeRules) {
+            paymentPlanBalanceRules = getPaymentPlanSettings(interval);
+        }
         updatePaymentPlanParameters();
     }
 
@@ -602,7 +605,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
                 paymentDateOption = dayOfWeekOptions.get(0);
             }
         }
-        if (optionList.size() > 0) {
+        if (optionList.size() > -1) {
             frequencyOption = optionList.get(0);
         }
 
