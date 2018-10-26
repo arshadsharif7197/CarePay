@@ -227,33 +227,4 @@ public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePa
             }
         }, new Gson().toJson(postModel), queryMap);
     }
-//
-//    @Override
-//    protected List<DemographicsToggleOption> generateFrequencyOptions(PaymentsSettingsPaymentPlansDTO paymentPlansRules) {
-//        frequencyOption = new DemographicsToggleOption();
-//        frequencyOption.setLabel(StringUtil.capitalize(paymentPlan.getPayload()
-//                .getPaymentPlanDetails().getFrequencyCode()));
-//        frequencyOption.setName(paymentPlan.getPayload().getPaymentPlanDetails().getFrequencyCode());
-//        if (paymentPlan.getPayload().getPaymentPlanDetails().getFrequencyCode()
-//                .equals(PaymentPlanDetailsDTO.FREQUENCY_MONTHLY)) {
-//            dateOptions = generateDateOptions();
-//            paymentDateOption = dateOptions.get(paymentPlan.getPayload()
-//                    .getPaymentPlanDetails().getDayOfMonth() - 1);
-//            selectedDateOptions = dateOptions;
-//        } else {
-//            dayOfWeekOptions = generateDayOptions();
-//            if (paymentPlan.getPayload().getPaymentPlanDetails().getDayOfWeek() > dayOfWeekOptions.size()) {
-//                paymentDateOption = dayOfWeekOptions.get(0);
-//            } else {
-//                paymentDateOption = dayOfWeekOptions.get(paymentPlan.getPayload()
-//                        .getPaymentPlanDetails().getDayOfWeek());
-//            }
-//            selectedDateOptions = dayOfWeekOptions;
-//        }
-//
-//        List<DemographicsToggleOption> options = new ArrayList<>();
-//        options.add(frequencyOption);
-//        return options;
-//    }
-//
 }
