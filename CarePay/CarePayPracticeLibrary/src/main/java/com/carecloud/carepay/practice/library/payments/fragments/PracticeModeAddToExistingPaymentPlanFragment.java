@@ -149,8 +149,11 @@ public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePa
     }
 
     private void updatePaymentPlan() {
+        double submitAmount = SystemUtil.safeAdd(paymentPlanAmount,
+                        paymentPlan.getPayload().getAmountPaid());
+
         PaymentPlanPostModel postModel = new PaymentPlanPostModel();
-        postModel.setAmount(paymentPlanAmount);
+        postModel.setAmount(submitAmount);
         postModel.setExecution(paymentPlan.getPayload().getExecution());
         List<PaymentPlanLineItem> lineItems = getPaymentPlanLineItems();
         lineItems.addAll(paymentPlan.getPayload().getLineItems());
@@ -173,7 +176,7 @@ public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePa
 
         PaymentPlanModel paymentPlanModel = new PaymentPlanModel();
         paymentPlanModel.setAmount(amounthPayment);
-        paymentPlanModel.setFrequencyCode(PaymentPlanModel.FREQUENCY_MONTHLY);
+        paymentPlanModel.setFrequencyCode(frequencyOption.getName());
         paymentPlanModel.setInstallments(installments);
         paymentPlanModel.setEnabled(true);
 
