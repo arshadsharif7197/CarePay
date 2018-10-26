@@ -74,7 +74,8 @@
 
         <FrameLayout
             android:layout_width="@dimen/dialog_width"
-            android:layout_height="@dimen/list_dialog_min_height"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/list_dialog_min_height"
             android:background="@drawable/patient_mode_dialog_body_bg">
 
             <android.support.v7.widget.RecyclerView

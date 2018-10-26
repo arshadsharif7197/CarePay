@@ -55,7 +55,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
 public class PaymentPlanFragment extends BasePaymentDialogFragment
         implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
 
@@ -193,8 +192,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         totalTextView.setText(currencyFormatter.format(paymentPlanAmount));
 
         parametersTextView = (TextView) view.findViewById(R.id.paymentPlanParametersTextView);
-        if (parametersTextView != null && paymentPlanBalanceRules != null) {
-            updatePaymentPlanParameters();
+        if (parametersTextView != null) {
             parametersTextView.setVisibility(View.VISIBLE);
         }
     }
@@ -205,11 +203,13 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         String monthlyOrWeekly = interval == PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS
                 ? Label.getLabel("payment.paymentPlan.frequency.option.monthly").toLowerCase()
                 : Label.getLabel("payment.paymentPlan.frequency.option.weekly").toLowerCase();
-        parametersTextView.setText(String.format(Locale.US, Label.getLabel("payment_plan_parameters_temporal"),
-                paymentPlanBalanceRules.getMaxDuration().getValue(),
-                monthOrWeek,
-                monthlyOrWeekly,
-                currencyFormatter.format(paymentPlanBalanceRules.getMinPaymentRequired().getValue())));
+        if (parametersTextView != null && paymentPlanBalanceRules != null) {
+            parametersTextView.setText(String.format(Locale.US, Label.getLabel("payment_plan_parameters_temporal"),
+                    paymentPlanBalanceRules.getMaxDuration().getValue(),
+                    monthOrWeek,
+                    monthlyOrWeekly,
+                    currencyFormatter.format(paymentPlanBalanceRules.getMinPaymentRequired().getValue())));
+        }
     }
 
     protected void setupFields(View view) {
@@ -337,6 +337,10 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
             interval = PaymentSettingsBalanceRangeRule.INTERVAL_WEEKS;
         }
         updateHints();
+        if (applyRangeRules) {
+            paymentPlanBalanceRules = getPaymentPlanSettings(interval);
+        }
+        updatePaymentPlanParameters();
     }
 
     protected void manageFrequencyChange(DemographicsToggleOption option, boolean refresh) {
@@ -601,7 +605,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
                 paymentDateOption = dayOfWeekOptions.get(0);
             }
         }
-        if (optionList.size() > 0) {
+        if (optionList.size() > -1) {
             frequencyOption = optionList.get(0);
         }
 
@@ -876,8 +880,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
                     editable.clear();
                 } else {
                     valueInputCallback.onValueInput(input);
-                    enableCreatePlanButton();
                 }
+                enableCreatePlanButton();
             }
         };
     }
