@@ -106,12 +106,12 @@
 
     <style name="DemographicsReviewLabelStyle" parent="DemographicsDocsLabelStyle">
         <item name="android:paddingStart">0dp</item>
-        <item name="android:textSize">@dimen/text_size_24sp</item>
+        <item name="android:textSize">@dimen/DemographicsReviewLabelStyleTextSize</item>
     </style>
 
     <style name="DemographicsReviewClickableStyle" parent="DemographicsDocsClickableTextStyle">
         <item name="android:layout_marginStart">0dp</item>
-        <item name="android:textSize">@dimen/text_size_17sp</item>
+        <item name="android:textSize">@dimen/DemographicsReviewClickableStyleTextSize</item>
         <item name="android:gravity">end</item>
     </style>
 
@@ -139,5 +139,4 @@
         <item name="colorControlActivated">@color/light_gray</item>
         <item name="colorControlHighlight">@color/light_gray</item>
     </style>
-
 </resources>

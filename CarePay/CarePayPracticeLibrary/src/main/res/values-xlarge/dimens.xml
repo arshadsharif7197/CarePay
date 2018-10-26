@@ -447,4 +447,49 @@
     <dimen name="demogrDocsFrontScanImageHeight">144dp</dimen>
     <dimen name="demogrDocsVerticalMargin">60dp</dimen>
 
+    <!--Health Insurance Screen-->
+    <dimen name="insurancePhotoAlertStartMargin">10dp</dimen>
+    <dimen name="insurancePhotoAlertTopMargin">30dp</dimen>
+    <dimen name="insurancePhotoAlertEndMargin">5dp</dimen>
+    <dimen name="insurancePhotoAlertPadding">20dp</dimen>
+    <dimen name="insurancePhotoAlertTextSize">16sp</dimen>
+    <dimen name="insuranceListTopMargin">60dp</dimen>
+    <dimen name="insuranceListEndMargin">40dp</dimen>
+    <dimen name="addAnotherInsuranceButtonTopMargin">25dp</dimen>
+    <dimen name="addAnotherInsuranceButtonBottomMargin">10dp</dimen>
+    <dimen name="addAnotherInsuranceButtonHorizontalPadding">24dp</dimen>
+    <dimen name="addAnotherInsuranceButtonVerticalPadding">10dp</dimen>
+    <dimen name="addAnotherInsuranceButtonTextSize">13sp</dimen>
+    <dimen name="addAnotherInsuranceButtonEndMargin">40dp</dimen>
+    <dimen name="demographicErrorContainerEndMargin">10dp</dimen>
+    <dimen name="demographicErrorContainerVerticalPadding">3dp</dimen>
+    <dimen name="editInsuranceListButtonStartMargin">10dp</dimen>
+    <dimen name="insuranceTypeItemHorizontalPadding">9dp</dimen>
+    <dimen name="insuranceTypeItemVerticalPadding">3dp</dimen>
+    <dimen name="insuranceTypeItemTextSize">14sp</dimen>
+    <dimen name="insuranceNameItemVerticalPadding">24dp</dimen>
+    <dimen name="DemographicsReviewClickableStyleTextSize">17sp</dimen>
+    <dimen name="DemographicsReviewLabelStyleTextSize">24sp</dimen>
+    <dimen name="demographicInsurancePhotoButtonTextSize">13sp</dimen>
+    <dimen name="addEditInsuranceMainContainerHorizontalMargin">26dp</dimen>
+
+    <!--Medication Allergy Fragment-->
+    <dimen name="medicationAllergyContainerVerticalPadding">30dp</dimen>
+    <dimen name="medicationAllergyHeaderMessageTextSize">14sp</dimen>
+    <dimen name="medicationAllergyHeaderMessagePadding">20dp</dimen>
+    <dimen name="medicationAllergyHeaderMessageTopMargin">8dp</dimen>
+    <dimen name="allergiesLayoutHorizontalPadding">30dp</dimen>
+    <dimen name="allergyHeaderTopMargin">30dp</dimen>
+    <dimen name="allergyHeaderTextSize">15sp</dimen>
+    <dimen name="allergyHeaderPadding">10dp</dimen>
+    <dimen name="noAllergiesCheckBoxTextSize">17sp</dimen>
+    <dimen name="noAllergiesCheckBoxPadding">10dp</dimen>
+    <dimen name="allergyTitleTextSize">17sp</dimen>
+    <dimen name="allergyTitlePadding">10dp</dimen>
+    <dimen name="emptyMedicationPhotoLayoutTopMargin">20dp</dimen>
+    <dimen name="medicationListHorizontalPadding">30dp</dimen>
+    <dimen name="medicationListTopPadding">10dp</dimen>
+    <dimen name="medicationAllergyItemTextSize">14sp</dimen>
+    <dimen name="medicationAllergyItemMargin">16dp</dimen>
+
 </resources>

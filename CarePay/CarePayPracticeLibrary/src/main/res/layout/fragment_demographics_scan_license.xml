@@ -57,6 +57,7 @@
                     android:layout_marginStart="0dp"
                     android:layout_marginTop="@dimen/dimen_13dp"
                     android:minHeight="0dp"
+                    android:gravity="center"
                     android:padding="@dimen/dimen_10dp"
                     app:customAssetFont="gotham_rounded_medium"
                     breeze:textKey="demographics_documents_picture_of_front" />
@@ -87,6 +88,7 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="0dp"
                     android:layout_marginTop="@dimen/dimen_13dp"
+                    android:gravity="center"
                     android:minHeight="0dp"
                     android:padding="@dimen/dimen_10dp"
                     app:customAssetFont="gotham_rounded_medium"

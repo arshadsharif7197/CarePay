@@ -382,14 +382,14 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/demogrDocsFrontScanButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/commonButtonHeight"
                 android:layout_marginTop="@dimen/dimen_13dp"
                 android:background="@drawable/round_border_button_bg"
                 android:gravity="center"
                 android:paddingBottom="@dimen/dimen_10dp"
                 android:paddingTop="@dimen/dimen_10dp"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_13"
+                android:textSize="@dimen/demographicInsurancePhotoButtonTextSize"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="demographics_insurance_retake_front_photo" />
         </LinearLayout>
@@ -413,14 +413,14 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/demogrDocsBackScanButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/commonButtonHeight"
                 android:layout_marginTop="@dimen/dimen_13dp"
                 android:background="@drawable/round_border_button_bg"
                 android:gravity="center"
                 android:paddingBottom="@dimen/dimen_10dp"
                 android:paddingTop="@dimen/dimen_10dp"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_13"
+                android:textSize="@dimen/demographicInsurancePhotoButtonTextSize"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="demographics_insurance_retake_back_photo" />
         </LinearLayout>

@@ -131,7 +131,7 @@
             android:background="@drawable/round_border_button_bg"
             android:gravity="center"
             android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/text_size_22"
+            android:textSize="@dimen/respons_button_text_size"
             android:visibility="gone"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="practice_checkin_demogr_ins_dont_have_one_button_label" />
@@ -145,7 +145,7 @@
             android:background="@drawable/green_rounded_button_selector_always_click"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_22"
+            android:textSize="@dimen/respons_button_text_size"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="demographics_review_next_button" />
 
