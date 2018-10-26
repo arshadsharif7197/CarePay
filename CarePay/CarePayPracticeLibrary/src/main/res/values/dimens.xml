@@ -628,6 +628,13 @@
     <dimen name="medicationListTopPadding">10dp</dimen>
     <dimen name="medicationAllergyItemTextSize">14sp</dimen>
     <dimen name="medicationAllergyItemMargin">16dp</dimen>
+    <dimen name="medicationAllergyItemVerticalPadding">5dp</dimen>
+    <dimen name="responsTotalLabelTopMargin">40dp</dimen>
+    <dimen name="responsibilityListTopMargin">30dp</dimen>
+    <dimen name="paymentMethodItemMargin">13dp</dimen>
+    <dimen name="paymentMethodImageWidth">36dp</dimen>
+    <dimen name="paymentMethodItemNamePadding">13dp</dimen>
+    <dimen name="paymentMethodItemNameTextSize">22sp</dimen>
 
 
 </resources>

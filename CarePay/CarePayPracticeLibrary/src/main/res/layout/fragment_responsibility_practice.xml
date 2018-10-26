@@ -26,7 +26,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_30sp"
+            android:textSize="@dimen/nextAppointmentTitleTextSize"
             app:customAssetFont="gotham_rounded_medium" />
 
 
@@ -48,14 +48,14 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/respons_total_label"
                 style="@style/ResponsTotalLabelStyle"
-                android:layout_marginTop="@dimen/dimen_40dp"
+                android:layout_marginTop="@dimen/responsTotalLabelTopMargin"
                 android:textColor="@color/glitter"
                 app:customAssetFont="gotham_rounded_light" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/respons_total"
                 style="@style/ResponsTotalStyle"
-                android:layout_marginBottom="@dimen/dimen_40dp"
+                android:layout_marginBottom="@dimen/responsTotalLabelTopMargin"
                 android:textColor="@color/white"
                 app:customAssetFont="gotham_rounded_medium" />
         </LinearLayout>
@@ -75,7 +75,7 @@
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/dimen_30dp"
+                android:layout_marginTop="@dimen/responsibilityListTopMargin"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -102,18 +102,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="@dimen/dimen_10dp">
+            android:padding="@dimen/distributionButtonContainersPadding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/create_payment_plan_button"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/dimen_48dp"
+                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:layout_weight="1"
-                android:layout_marginEnd="@dimen/dimen_5dp"
                 android:background="@drawable/round_border_button_bg"
                 android:textAllCaps="false"
                 android:textColor="@color/primary_color_enabled_selector"
-                android:textSize="@dimen/text_size_18sp"
+                android:textSize="@dimen/respons_button_text_size"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="payment_create_plan"
                 tools:text="Create Plan"
@@ -122,14 +122,13 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/make_partial_payment_button"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/dimen_48dp"
-                android:layout_marginEnd="@dimen/dimen_5dp"
-                android:layout_marginStart="@dimen/dimen_5dp"
+                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:layout_weight="1"
                 android:background="@drawable/primary_rounded_button_selector"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_18sp"
+                android:textSize="@dimen/respons_button_text_size"
                 breeze:textKey="payment_partial_payment_text"
                 app:customAssetFont="gotham_rounded_medium"
                 tools:text="Pay Partial"
@@ -138,13 +137,13 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/pay_total_amount_button"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/dimen_48dp"
-                android:layout_marginStart="@dimen/dimen_5dp"
+                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:layout_weight="1"
                 android:background="@drawable/green_rounded_button_selector"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_18sp"
+                android:textSize="@dimen/respons_button_text_size"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="payment_details_pay_now"
                 tools:text="Pay Now"

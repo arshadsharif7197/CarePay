@@ -37,8 +37,8 @@
     <LinearLayout
         android:layout_width="@dimen/dialog_amount_width"
         android:layout_height="@dimen/dialog_amount_height"
-        android:layout_marginEnd="@dimen/dimen_26dp"
         android:layout_marginStart="@dimen/dimen_26dp"
+        android:layout_marginEnd="@dimen/dimen_26dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -54,9 +54,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:maxLines="2"
-                android:paddingEnd="@dimen/dimen_25dp"
                 android:paddingStart="@dimen/dimen_25dp"
                 android:paddingTop="@dimen/dimen_15dp"
+                android:paddingEnd="@dimen/dimen_25dp"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_18sp"
                 app:customAssetFont="gotham_rounded_book"
@@ -66,8 +66,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginEnd="@dimen/dimen_15dp"
                 android:layout_marginStart="@dimen/dimen_15dp"
+                android:layout_marginEnd="@dimen/dimen_15dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -106,9 +106,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:maxLines="2"
-                android:paddingBottom="@dimen/dimen_5dp"
-                android:paddingEnd="@dimen/dimen_25dp"
                 android:paddingStart="@dimen/dimen_25dp"
+                android:paddingEnd="@dimen/dimen_25dp"
+                android:paddingBottom="@dimen/dimen_5dp"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_15"
                 android:visibility="gone"
@@ -129,16 +129,16 @@
                 android:layout_gravity="center"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
-                android:paddingBottom="@dimen/dimen_5dp"
-                android:paddingTop="@dimen/dimen_5dp">
+                android:paddingTop="@dimen/dimen_5dp"
+                android:paddingBottom="@dimen/dimen_5dp">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/pendingAmountTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="@dimen/dimen_10dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginBottom="@dimen/dimen_10dp"
                     android:textColor="@color/grayRound"
                     android:textSize="@dimen/text_size_18sp"
                     android:visibility="gone"
@@ -365,25 +365,23 @@
 
         </FrameLayout>
 
-
         <LinearLayout
             android:id="@+id/bottom_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/patient_mode_dialog_body_bg"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="@dimen/distributionButtonContainersPadding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/enter_amount_button"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_48dp"
-                android:layout_marginBottom="@dimen/dimen_15dp"
-                android:layout_marginEnd="@dimen/dimen_20dp"
-                android:layout_marginStart="@dimen/dimen_20dp"
+                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:background="@drawable/button_sign_in_selector"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_22sp"
+                android:textSize="@dimen/respons_button_text_size"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="payment_partial_label"
                 tools:text="Pay" />

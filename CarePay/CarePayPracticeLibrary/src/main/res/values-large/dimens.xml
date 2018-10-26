@@ -497,8 +497,15 @@
     <dimen name="emptyMedicationPhotoLayoutTopMargin">10dp</dimen>
     <dimen name="medicationListHorizontalPadding">15dp</dimen>
     <dimen name="medicationListTopPadding">10dp</dimen>
-    <dimen name="medicationAllergyItemTextSize">11sp</dimen>
+    <dimen name="medicationAllergyItemTextSize">10sp</dimen>
     <dimen name="medicationAllergyItemMargin">10dp</dimen>
+    <dimen name="medicationAllergyItemVerticalPadding">2dp</dimen>
+    <dimen name="responsTotalLabelTopMargin">20dp</dimen>
+    <dimen name="responsibilityListTopMargin">15dp</dimen>
+    <dimen name="paymentMethodItemMargin">8dp</dimen>
+    <dimen name="paymentMethodImageWidth">25dp</dimen>
+    <dimen name="paymentMethodItemNamePadding">8dp</dimen>
+    <dimen name="paymentMethodItemNameTextSize">15sp</dimen>
 
 
 </resources>
