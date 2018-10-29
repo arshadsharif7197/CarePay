@@ -267,6 +267,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         String messageText;
         int imageBackground;
         int imageIcon;
+        if ("patient_statement".equals(notificationItem.getMetadata().getNotificationSubtype())) {
+            displayPaymentStatementNotification(holder, notificationItem);
+            return;
+        }
         if (notificationItem.getMetadata().getEvent().getPayload().isPaymentSuccessful()) {
             headerTextColor = R.color.emerald;
             imageBackground = R.drawable.round_list_tv_green;
@@ -317,6 +321,22 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 stringBuilder.length() - practiceName.length(), stringBuilder.length(),
                 Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         holder.message.setText(stringBuilder);
+    }
+
+    private void displayPaymentStatementNotification(NotificationViewHolder holder, NotificationItem notificationItem) {
+        holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_money);
+        holder.cellAvatar.setVisibility(View.VISIBLE);
+        holder.header.setText(Label.getLabel("notifications.notificationList.statement.newStatementTitle"));
+        holder.header.setTextColor(ContextCompat.getColor(context, R.color.emerald));
+        UserPracticeDTO practice = ApplicationPreferences.getInstance()
+                .getUserPractice(notificationItem.getMetadata().getPracticeId());
+        String practiceName = practice.getPracticeName();
+        holder.message.setText(String.format(Label
+                .getLabel("notifications.notificationList.statement.newStatementMessage"), practiceName));
+        holder.initials.setBackgroundResource(R.drawable.round_list_tv_green);
+        holder.initials.setText(" ");
+        holder.image.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icn_new_statement));
+        holder.image.setVisibility(View.VISIBLE);
     }
 
     private void displayCreditCardNotification(NotificationViewHolder holder, NotificationItem notificationItem) {

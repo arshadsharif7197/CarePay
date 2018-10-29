@@ -15,6 +15,7 @@ import com.carecloud.carepay.patient.notifications.models.NotificationItem;
 import com.carecloud.carepay.patient.notifications.models.NotificationStatus;
 import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
+import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -131,7 +132,11 @@ public class NotificationActivity extends MenuPatientActivity
                 callConsentFormsScreen(notificationItem);
                 break;
             case payments:
-
+                if ("patient_statement".equals(notificationItem.getMetadata().getNotificationSubtype())) {
+                    Intent intent = new Intent(this, ViewPaymentBalanceHistoryActivity.class);
+                    startActivity(intent);
+                    break;
+                }
                 break;
             case secure_message:
                 if (notificationItem.getPayload().getReadStatus() == NotificationStatus.unread) {
@@ -169,7 +174,7 @@ public class NotificationActivity extends MenuPatientActivity
         });
     }
 
-    private void callMessagesScreen(NotificationItem notificationItem){
+    private void callMessagesScreen(NotificationItem notificationItem) {
         displayMessagesScreen();
     }
 

@@ -35,6 +35,10 @@ public class NotificationItemMetadata {
     @Expose
     private NotificationType notificationType;
 
+    @SerializedName("notification_subtype")
+    @Expose
+    private String notificationSubtype;
+
     @SerializedName("event")
     @Expose
     private Event event;
@@ -101,6 +105,14 @@ public class NotificationItemMetadata {
 
     public void setNotificationType(NotificationType notificationType) {
         this.notificationType = notificationType;
+    }
+
+    public String getNotificationSubtype() {
+        return notificationSubtype;
+    }
+
+    public void setNotificationSubtype(String notificationSubtype) {
+        this.notificationSubtype = notificationSubtype;
     }
 
     public Event getEvent() {
