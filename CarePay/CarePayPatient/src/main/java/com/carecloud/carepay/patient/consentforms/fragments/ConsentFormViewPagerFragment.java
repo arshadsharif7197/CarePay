@@ -106,8 +106,6 @@ public class ConsentFormViewPagerFragment extends BaseFragment {
                 .newInstance(selectedPracticeIndex, PENDING_MODE);
         ConsentFormPracticeFormsFragment paymentHistoryFragment = ConsentFormPracticeFormsFragment
                 .newInstance(selectedPracticeIndex, HISTORIC_MODE);
-//        pendingPaymentsFragment.setTargetFragment(this, 1);
-//        paymentHistoryFragment.setTargetFragment(this, 1);
 
         String pendingTabTitle = Label.getLabel("payment_patient_balance_tab");
         String historyTabTitle = Label.getLabel("payment_patient_history_tab");
