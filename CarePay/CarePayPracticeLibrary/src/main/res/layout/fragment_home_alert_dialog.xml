@@ -98,7 +98,7 @@
                 android:layout_marginEnd="@dimen/dimen_10dp"
                 android:layout_marginStart="@dimen/dimen_10dp"
                 android:layout_weight="1"
-                android:background="@drawable/bg_yellow_overlay"
+                android:background="@drawable/bg_red_overlay"
                 android:padding="@dimen/dimen_5dp"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
