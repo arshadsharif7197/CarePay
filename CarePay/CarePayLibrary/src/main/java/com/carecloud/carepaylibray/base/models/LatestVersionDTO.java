@@ -1,21 +1,20 @@
 package com.carecloud.carepaylibray.base.models;
 
-import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 
 public class LatestVersionDTO {
 
     @SerializedName("metadata")
-    private JsonElement metadata;
+    private LatestVersionMetadataDTO metadata = new LatestVersionMetadataDTO();
 
     @SerializedName("payload")
     private LatestVersionPayloadDTO payload = new LatestVersionPayloadDTO();
 
-    public JsonElement getMetadata() {
+    public LatestVersionMetadataDTO getMetadata() {
         return metadata;
     }
 
-    public void setMetadata(JsonElement metadata) {
+    public void setMetadata(LatestVersionMetadataDTO metadata) {
         this.metadata = metadata;
     }
 

@@ -101,6 +101,7 @@ public class PaymentPlanHistoryDetailDialogFragment extends BaseDialogFragment {
         if(oneTimePayments > 0){
             paymentsMadeBuilder.append(" + ")
                     .append(oneTimePayments)
+                    .append(" ")
                     .append(Label.getLabel("payment_history_detail_extra"));
         }
         TextView paymentsMadeTextView = (TextView) view.findViewById(R.id.paymentsMadeTextView);

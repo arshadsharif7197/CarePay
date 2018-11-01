@@ -436,18 +436,22 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         if (throwable!=null){
             Log.e("CareCloud", "" + throwable.getMessage(), throwable);
         }
-        Intent intent = new Intent();
-        intent.setAction("com.carecloud.carepay.restart");
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-        intent.putExtra(CarePayConstants.CRASH, crash);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(),
-                0, intent, PendingIntent.FLAG_ONE_SHOT);
-        AlarmManager mgr = (AlarmManager) getBaseContext()
-                .getSystemService(Context.ALARM_SERVICE);
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis(), pendingIntent);
+        if(crash) {
+            Intent intent = new Intent();
+            intent.setAction("com.carecloud.carepay.restart");
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+            intent.putExtra(CarePayConstants.CRASH, crash);
+            PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(),
+                    0, intent, PendingIntent.FLAG_ONE_SHOT);
+            AlarmManager mgr = (AlarmManager) getBaseContext()
+                    .getSystemService(Context.ALARM_SERVICE);
+            if (mgr != null) {
+                mgr.set(AlarmManager.RTC, System.currentTimeMillis(), pendingIntent);
+            }
+        }
         finishAffinity();
-        System.exit(2);
+        System.exit(crash ? 2 : 0);
     }
 
 }

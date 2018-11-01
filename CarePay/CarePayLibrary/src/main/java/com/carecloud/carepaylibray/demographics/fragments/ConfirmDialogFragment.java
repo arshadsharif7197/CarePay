@@ -54,10 +54,27 @@ public class ConfirmDialogFragment extends BaseDialogFragment {
         return fragment;
     }
 
+    public static ConfirmDialogFragment newInstance(String title,
+                                                    String message,
+                                                    String positiveButtonLabel,
+                                                    boolean userCancelable,
+                                                    int customLayout) {
+        Bundle args = new Bundle();
+        args.putString("title", title);
+        args.putString("message", message);
+        args.putString("positiveButtonLabel", positiveButtonLabel);
+        args.putBoolean("userCancelable", userCancelable);
+        args.putInt("customLayout", customLayout);
+        ConfirmDialogFragment fragment = new ConfirmDialogFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home_alert_dialog, container, false);
+        int layout = getArguments().getInt("customLayout", 0);
+        return inflater.inflate(layout != 0 ? layout : R.layout.fragment_home_alert_dialog, container, false);
     }
 
     @Override
@@ -104,6 +121,16 @@ public class ConfirmDialogFragment extends BaseDialogFragment {
                     cancel();
                 }
             });
+        }
+
+        boolean userCancelable = getArguments().getBoolean("userCancelable", true);
+        if (!userCancelable) {
+            if (noButton != null) {
+                noButton.setVisibility(View.GONE);
+            }
+            if (closeView != null) {
+                closeView.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
