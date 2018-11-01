@@ -144,7 +144,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         appointment.setProviderId(appointmentResourcesDTO.getResource().getProvider().getId());
         appointment.setVisitReasonId(visitTypeDTO.getId());
         appointment.setResourceId(appointmentResourcesDTO.getResource().getId());
-        appointment.setComplaint(visitTypeDTO.getName());
+        appointment.setComplaint(reasonForVisit);
         appointment.setComments(reasonForVisit);
 
         appointment.getPatient().setId(patientId);

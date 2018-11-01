@@ -7,7 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -71,8 +73,8 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
     @SuppressLint("InflateParams")
     @Override
     protected void onAddContentView(LayoutInflater inflater) {
-        View view = inflater.inflate(R.layout.dialog_request_appointment_summary, null);
-        ((FrameLayout) findViewById(com.carecloud.carepay.practice.library.R.id.base_dialog_content_layout)).addView(view);
+        View view = inflater.inflate(R.layout.dialog_request_appointment_patient_mode, null);
+        ((FrameLayout) findViewById(R.id.base_dialog_content_layout)).addView(view);
         inflateUIComponents(view);
     }
 
@@ -87,9 +89,18 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         ApplicationMode.ApplicationType applicationType = callback.getApplicationMode().getApplicationType();
         boolean autoScheduleAppointments = callback.getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests();
 
+        final EditText reasonForVisitEditText = view.findViewById(R.id.reasonForVisitEditText);
         requestAppointmentButton.setText(Label.getLabel(applicationType == ApplicationMode.ApplicationType.PRACTICE ||
                 autoScheduleAppointments ? "schedule_appointment_button_label" : "appointments_request_heading"));
-        requestAppointmentButton.setOnClickListener(requestAppointmentClickListener);
+        requestAppointmentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (null != callback) {
+                    callback.requestAppointment(appointmentSlot, reasonForVisitEditText.getText().toString());
+                }
+                dismiss();
+            }
+        });
         requestAppointmentButton.requestFocus();
 
         DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentSlot.getStartTime());
@@ -103,10 +114,9 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         providerImageTextView.setText(StringUtil.getShortName(appointmentResourcesDTO.getResource().getProvider().getName()));
 
         TextView appointmentDoctorNameTextView = (TextView) view.findViewById(R.id.provider_doctor_name);
-        appointmentDoctorNameTextView.setText(appointmentResourcesDTO.getResource().getProvider().getName());
-
-        TextView appointmentDoctorSpecialityTextView = (TextView) view.findViewById(R.id.provider_doctor_speciality);
-        appointmentDoctorSpecialityTextView.setText(appointmentResourcesDTO.getResource().getProvider().getSpecialty().getName());
+        appointmentDoctorNameTextView.setText(String
+                .format("%s | %s", appointmentResourcesDTO.getResource().getProvider().getName(),
+                        appointmentResourcesDTO.getResource().getProvider().getSpecialty().getName()));
 
         TextView appointmentPlaceNameTextView = (TextView) view.findViewById(R.id.provider_place_name);
         appointmentPlaceNameTextView.setText(appointmentSlot.getLocation().getName());
@@ -120,53 +130,43 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
         setCancelable(false);
 
         View prepaidLayout = findViewById(R.id.prepaymentLayout);
-        if(visitTypeDTO.getAmount() > 0){
+        if (visitTypeDTO.getAmount() > 0) {
             prepaidLayout.setVisibility(View.VISIBLE);
             TextView prepaidAmount = (TextView) findViewById(R.id.prepaymentAmount);
             prepaidAmount.setText(NumberFormat.getCurrencyInstance(Locale.US).format(visitTypeDTO.getAmount()));
             requestAppointmentButton.setText(Label.getLabel("appointments_prepayment_button"));
-        }else{
+        } else {
             prepaidLayout.setVisibility(View.GONE);
         }
+
+        final ScrollView scrollContainer = view.findViewById(R.id.scrollContainer);
+        scrollContainer.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollContainer.fullScroll(View.FOCUS_UP);
+            }
+        });
 
     }
 
     private void initializeVisitTypeTextView(View view) {
         visitTypeTextView = (TextView) view.findViewById(R.id.reasonTextView);
-
         if (null == visitTypeDTO) {
             dismiss();
             return;
         }
-
         String visitReason = visitTypeDTO.getName();
         if (SystemUtil.isNotEmptyString(visitReason)) {
             visitTypeTextView.setText(visitReason);
         }
     }
 
-    /**
-     * Click listener for request appointment button
-     */
-    private View.OnClickListener requestAppointmentClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (null != callback) {
-                callback.requestAppointment(appointmentSlot,
-                        visitTypeTextView.getText().toString().trim());
-            }
-            dismiss();
-        }
-    };
-
     @Override
     protected void onDialogCancel() {
         super.onDialogCancel();
-
         if (null != callback) {
             callback.onAppointmentUnconfirmed();
         }
-
         dismiss();
     }
 }
