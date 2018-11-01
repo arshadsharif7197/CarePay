@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.messages.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,10 +15,17 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.MessageNavigationCallback;
+import com.carecloud.carepay.patient.messages.models.Messages;
+import com.carecloud.carepay.patient.messages.models.MessagingPostModel;
+import com.carecloud.carepay.patient.messages.models.MessagingThreadDTO;
 import com.carecloud.carepay.patient.messages.models.ProviderContact;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -91,7 +99,8 @@ public class MessagesNewThreadFragment extends BaseFragment {
         buttonCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.postNewMessage(provider, subjectInput.getText().toString(), messageInput.getText().toString());
+//                callback.postNewMessage(provider, subjectInput.getText().toString(), messageInput.getText().toString());
+                postNewMessage(provider, subjectInput.getText().toString(), messageInput.getText().toString());
             }
         });
 
@@ -147,5 +156,45 @@ public class MessagesNewThreadFragment extends BaseFragment {
         };
     }
 
+    private void postNewMessage(ProviderContact providerContact, String subject, String message){
+        MessagingPostModel postModel = new MessagingPostModel();
+        Messages.Participant participant = postModel.getParticipant();
+        participant.setName(providerContact.getName());
+        participant.setUserId(providerContact.getId());
+        participant.setLinkedPatientId(providerContact.getPatientId());
 
+        postModel.setMessage(message);
+        postModel.setSubject(subject);
+
+        TransitionDTO newMessage = callback.getDto().getMetadata().getLinks().getNewMessage();
+        getWorkflowServiceHelper().execute(newMessage, postNewMessageCallback(providerContact), DtoHelper.getStringDTO(postModel));
+
+    }
+
+    private WorkflowServiceCallback postNewMessageCallback(final ProviderContact provider) {
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                MessagingThreadDTO messagingThreadDTO = DtoHelper.getConvertedDTO(MessagingThreadDTO.class, workflowDTO);
+                getFragmentManager().popBackStack(MessagesProvidersFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                callback.displayThreadMessages(messagingThreadDTO.getPayload());
+
+                String[] params = {getString(R.string.param_provider_id), getString(R.string.param_provider_name)};
+                Object[] values = {provider.getId(), provider.getName()};
+                MixPanelUtil.logEvent(getString(R.string.event_message_new), params, values);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+            }
+        };
+    }
 }

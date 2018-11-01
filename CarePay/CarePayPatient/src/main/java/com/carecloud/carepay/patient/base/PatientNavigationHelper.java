@@ -186,8 +186,7 @@ public class PatientNavigationHelper {
             case NavigationStateConstants.MESSAGES:
                 intent = new Intent(context, MessagesActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                context.startActivity(intent);
-                return;
+                break;
 
             case NavigationStateConstants.PATIENT_MY_HEALTH:
                 intent = new Intent(context, MyHealthActivity.class);
