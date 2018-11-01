@@ -130,7 +130,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     }
 
     @Override
-    public void requestAppointment(AppointmentsSlotsDTO appointmentSlot, String comments) {
+    public void requestAppointment(AppointmentsSlotsDTO appointmentSlot, String reasonForVisit) {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
         queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
@@ -145,7 +145,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         appointment.setVisitReasonId(visitTypeDTO.getId());
         appointment.setResourceId(appointmentResourcesDTO.getResource().getId());
         appointment.setComplaint(visitTypeDTO.getName());
-        appointment.setComments(comments);
+        appointment.setComments(reasonForVisit);
 
         appointment.getPatient().setId(patientId);
 
