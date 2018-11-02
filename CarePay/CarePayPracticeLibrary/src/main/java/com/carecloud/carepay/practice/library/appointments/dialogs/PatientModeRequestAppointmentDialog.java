@@ -27,15 +27,13 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
+public class PatientModeRequestAppointmentDialog extends BasePracticeDialog {
 
     private final AppointmentsSlotsDTO appointmentSlot;
-    private Context context;
     private final LayoutInflater inflater;
     private final AppointmentResourcesDTO appointmentResourcesDTO;
     private VisitTypeDTO visitTypeDTO;
     private final AppointmentNavigationCallback callback;
-    private TextView visitTypeTextView;
 
     /**
      * Constructor.
@@ -45,20 +43,20 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
      * @param appointmentSlot The appointment data
      * @param callback        for dialog actions
      */
-    public PracticeRequestAppointmentDialog(Context context, String cancelString,
-                                            AppointmentsSlotsDTO appointmentSlot,
-                                            AppointmentResourcesDTO appointmentResourcesDTO,
-                                            VisitTypeDTO visitTypeDTO,
-                                            AppointmentNavigationCallback callback) {
+    public PatientModeRequestAppointmentDialog(Context context, String cancelString,
+                                               AppointmentsSlotsDTO appointmentSlot,
+                                               AppointmentResourcesDTO appointmentResourcesDTO,
+                                               VisitTypeDTO visitTypeDTO,
+                                               AppointmentNavigationCallback callback) {
 
         super(context, cancelString, false);
-        this.context = context;
+        Context context1 = context;
         this.appointmentSlot = appointmentSlot;
         this.appointmentResourcesDTO = appointmentResourcesDTO;
         this.visitTypeDTO = visitTypeDTO;
         this.callback = callback;
 
-        inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater = (LayoutInflater) context1.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -83,7 +81,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
 
     }
 
-    private void inflateUIComponents(View view) {
+    protected void inflateUIComponents(View view) {
         Button requestAppointmentButton = (Button)
                 view.findViewById(R.id.requestAppointmentButton);
         ApplicationMode.ApplicationType applicationType = callback.getApplicationMode().getApplicationType();
@@ -150,7 +148,7 @@ public class PracticeRequestAppointmentDialog extends BasePracticeDialog {
     }
 
     private void initializeVisitTypeTextView(View view) {
-        visitTypeTextView = (TextView) view.findViewById(R.id.reasonTextView);
+        TextView visitTypeTextView = (TextView) view.findViewById(R.id.reasonTextView);
         if (null == visitTypeDTO) {
             dismiss();
             return;

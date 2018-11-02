@@ -11,14 +11,17 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.adapters.ProvidersListAdapter;
+import com.carecloud.carepay.practice.library.appointments.dialogs.PatientModeRequestAppointmentDialog;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
@@ -229,6 +232,21 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
             }
         }
         return null;
+    }
+
+    @Override
+    public void onHoursAndLocationSelected(AppointmentsSlotsDTO appointmentsSlot,
+                                           AppointmentAvailabilityDTO availabilityDTO) {
+        // Call Request appointment Summary dialog from here
+        String cancelString = Label.getLabel("available_hours_back");
+        new PatientModeRequestAppointmentDialog(
+                this,
+                cancelString,
+                appointmentsSlot,
+                appointmentResourcesDTO,
+                visitTypeDTO,
+                this
+        ).show();
     }
 
     @Override

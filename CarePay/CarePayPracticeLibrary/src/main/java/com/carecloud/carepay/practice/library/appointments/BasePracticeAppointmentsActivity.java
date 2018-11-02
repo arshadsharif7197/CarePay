@@ -9,7 +9,8 @@ import android.support.v4.app.FragmentTransaction;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAvailableHoursDialogFragment;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeChooseProviderDialog;
-import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeRequestAppointmentDialog;
+import com.carecloud.carepay.practice.library.appointments.dialogs.PatientModeRequestAppointmentDialog;
+import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeModeRequestAppointmentDialog;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
@@ -67,10 +68,10 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     private Date startDate;
     private Date endDate;
 
-    private AppointmentResourcesDTO appointmentResourcesDTO;
+    protected AppointmentResourcesDTO appointmentResourcesDTO;
     protected AppointmentsResultModel appointmentsResultModel;
     private AppointmentsResultModel resourcesToSchedule;
-    private VisitTypeDTO visitTypeDTO;
+    protected VisitTypeDTO visitTypeDTO;
     private AppointmentsSlotsDTO appointmentSlot;
 
     private PaymentsModel paymentsModel;
@@ -105,7 +106,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
                                            AppointmentAvailabilityDTO availabilityDTO) {
         // Call Request appointment Summary dialog from here
         String cancelString = Label.getLabel("available_hours_back");
-        new PracticeRequestAppointmentDialog(
+        new PracticeModeRequestAppointmentDialog(
                 this,
                 cancelString,
                 appointmentsSlot,
