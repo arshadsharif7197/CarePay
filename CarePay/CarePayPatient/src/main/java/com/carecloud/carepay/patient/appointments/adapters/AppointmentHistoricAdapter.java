@@ -3,10 +3,13 @@ package com.carecloud.carepay.patient.appointments.adapters;
 import android.content.Context;
 import android.view.View;
 
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author pjohnson on 19/10/18.
@@ -18,9 +21,13 @@ public class AppointmentHistoricAdapter extends BaseAppointmentAdapter {
 
     public AppointmentHistoricAdapter(Context context,
                                       List<AppointmentDTO> appointments,
+                                      List<UserPracticeDTO> userPracticeDTOs,
+                                      Map<String, Set<String>> enabledPracticeLocations,
                                       SelectAppointmentCallback callback) {
         this.context = context;
         this.sortedAppointments = appointments;
+        this.userPracticeDTOs = userPracticeDTOs;
+        this.enabledPracticeLocations = enabledPracticeLocations;
         this.callback = callback;
     }
 
@@ -35,13 +42,26 @@ public class AppointmentHistoricAdapter extends BaseAppointmentAdapter {
 
         //cleanup
         cleanupViews(holder);
-        bindView(holder, appointmentsPayload, false);
+
+        boolean isBreezePractice = isBreezePractice(appointmentDTO.getMetadata().getPracticeId());
+        Set<String> enabledLocations = enabledPracticeLocations.get(appointmentDTO.getMetadata()
+                .getPracticeId());
+        boolean shouldShowCheckoutButton = shouldShowCheckOutButton(appointmentDTO, enabledLocations,
+                isBreezePractice);
+        bindView(holder, appointmentsPayload, shouldShowCheckoutButton);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (callback != null) {
                     callback.onItemTapped(sortedAppointments.get(holder.getAdapterPosition()));
                 }
+            }
+        });
+
+        holder.checkOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.onCheckoutTapped(sortedAppointments.get(position));
             }
         });
 
@@ -69,5 +89,7 @@ public class AppointmentHistoricAdapter extends BaseAppointmentAdapter {
 
     public interface SelectAppointmentCallback {
         void onItemTapped(AppointmentDTO appointmentDTO);
+
+        void onCheckoutTapped(AppointmentDTO appointmentDTO);
     }
 }

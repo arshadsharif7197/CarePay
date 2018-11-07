@@ -15,6 +15,7 @@ import com.carecloud.carepay.patient.appointments.adapters.AppointmentHistoricAd
 import com.carecloud.carepay.patient.appointments.adapters.PracticesAdapter;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -36,6 +37,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author pjohnson on 19/10/18.
@@ -92,8 +94,19 @@ public class AppointmentHistoryFragment extends BaseFragment
         selectedPractice = appointmentDto.getPayload().getUserPractices().get(0);
         callAppointmentService(selectedPractice, true, true);
         historicAppointmentsRecyclerView = view.findViewById(R.id.historicAppointmentsRecyclerView);
+
+
+        Map<String, Set<String>> enabledPracticeLocations = new HashMap<>();
+        for (AppointmentDTO appointmentDTO : appointmentDto.getPayload().getAppointments()) {
+            String practiceId = appointmentDTO.getMetadata().getPracticeId();
+            if (!enabledPracticeLocations.containsKey(practiceId)) {
+                enabledPracticeLocations.put(practiceId,
+                        ApplicationPreferences.getInstance().getPracticesWithBreezeEnabled(practiceId));
+            }
+        }
+
         adapter = new AppointmentHistoricAdapter(getContext(), new ArrayList<AppointmentDTO>(),
-                this);
+                appointmentDto.getPayload().getUserPractices(), enabledPracticeLocations, this);
         historicAppointmentsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         historicAppointmentsRecyclerView.setAdapter(adapter);
         historicAppointmentsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -239,6 +252,11 @@ public class AppointmentHistoryFragment extends BaseFragment
     @Override
     public void onItemTapped(AppointmentDTO appointmentDTO) {
         showAppointmentPopup(appointmentDTO);
+    }
+
+    @Override
+    public void onCheckoutTapped(AppointmentDTO appointmentDTO) {
+        ((PatientAppointmentPresenter) callback.getAppointmentPresenter()).onCheckOutStarted(appointmentDTO);
     }
 
     private void showAppointmentPopup(AppointmentDTO appointmentDTO) {

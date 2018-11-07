@@ -31,9 +31,7 @@ import java.util.Set;
  */
 
 public class AppointmentListAdapter extends BaseAppointmentAdapter {
-    private final Map<String, Set<String>> enabledPracticeLocations;
     private SelectAppointmentCallback callback;
-    private List<UserPracticeDTO> userPracticeDTOs;
     private List<AppointmentDTO> appointmentItems;
 
     /**
@@ -106,22 +104,6 @@ public class AppointmentListAdapter extends BaseAppointmentAdapter {
         this.appointmentItems = appointmentItems;
         sortAppointments();
         notifyDataSetChanged();
-    }
-
-    private boolean shouldShowCheckOutButton(AppointmentDTO appointmentDTO,
-                                             Set<String> enabledLocations,
-                                             boolean isBreezePractice) {
-        boolean isTheLocationWithBreezeEnabled = enabledLocations == null;
-        if (enabledLocations != null) {
-            for (String locationId : enabledLocations) {
-                if (locationId.equals(appointmentDTO.getPayload().getLocation().getGuid())) {
-                    isTheLocationWithBreezeEnabled = true;
-                    break;
-                }
-            }
-        }
-
-        return isBreezePractice && isTheLocationWithBreezeEnabled && appointmentDTO.getPayload().canCheckOut();
     }
 
     private void sortAppointments() {
@@ -202,18 +184,6 @@ public class AppointmentListAdapter extends BaseAppointmentAdapter {
 
             sortedAppointments.add(appointmentDTO);
         }
-    }
-
-    private boolean isBreezePractice(String practiceId) {
-        if (practiceId == null) {
-            return false;
-        }
-        for (UserPracticeDTO userPracticeDTO : userPracticeDTOs) {
-            if (userPracticeDTO.getPracticeId() != null && userPracticeDTO.getPracticeId().equals(practiceId)) {
-                return userPracticeDTO.isBreezePractice();
-            }
-        }
-        return false;
     }
 
     public interface SelectAppointmentCallback {

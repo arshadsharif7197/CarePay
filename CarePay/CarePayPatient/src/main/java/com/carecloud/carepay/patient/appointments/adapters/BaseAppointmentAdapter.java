@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayUtil;
@@ -25,6 +26,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author pjohnson on 19/10/18.
@@ -36,6 +39,8 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
     private static final int VIEW_TYPE_LOADING = 3;
     protected Context context;
     protected List<AppointmentDTO> sortedAppointments = new ArrayList<>();
+    protected List<UserPracticeDTO> userPracticeDTOs;
+    protected Map<String, Set<String>> enabledPracticeLocations;
 
 
     @Override
@@ -230,6 +235,34 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
             appointmentPayload.setDisplayStyle(displayStyle);
         }
         return displayStyle;
+    }
+
+    protected boolean isBreezePractice(String practiceId) {
+        if (practiceId == null) {
+            return false;
+        }
+        for (UserPracticeDTO userPracticeDTO : userPracticeDTOs) {
+            if (userPracticeDTO.getPracticeId() != null && userPracticeDTO.getPracticeId().equals(practiceId)) {
+                return userPracticeDTO.isBreezePractice();
+            }
+        }
+        return false;
+    }
+
+    protected boolean shouldShowCheckOutButton(AppointmentDTO appointmentDTO,
+                                             Set<String> enabledLocations,
+                                             boolean isBreezePractice) {
+        boolean isTheLocationWithBreezeEnabled = enabledLocations == null;
+        if (enabledLocations != null) {
+            for (String locationId : enabledLocations) {
+                if (locationId.equals(appointmentDTO.getPayload().getLocation().getGuid())) {
+                    isTheLocationWithBreezeEnabled = true;
+                    break;
+                }
+            }
+        }
+
+        return isBreezePractice && isTheLocationWithBreezeEnabled && appointmentDTO.getPayload().canCheckOut();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
