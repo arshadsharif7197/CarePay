@@ -29,6 +29,8 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -69,6 +71,13 @@ public class AppointmentHistoryFragment extends BaseFragment
         super.onCreate(icicle);
         appointmentDto = ((PatientAppointmentPresenter) callback.getAppointmentPresenter()).getMainAppointmentDto();
         paging = appointmentDto.getPayload().getPagingInfo().get(0).getPaging();
+
+        Collections.sort(appointmentDto.getPayload().getUserPractices(), new Comparator<UserPracticeDTO>() {
+            @Override
+            public int compare(final UserPracticeDTO object1, final UserPracticeDTO object2) {
+                return object1.getPracticeName().compareTo(object2.getPracticeName());
+            }
+        });
     }
 
     @Nullable
