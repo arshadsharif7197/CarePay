@@ -88,6 +88,9 @@ public class AppointmentPayloadModel implements Serializable {
     @SerializedName("adhoc_forms_patient_mode")
     @Expose
     private AdhocFormsPatientModeInfo adhocFormsPatientModeInfo = new AdhocFormsPatientModeInfo();
+    @SerializedName("portal_settings")
+    @Expose
+    private List<PortalSettingDTO> portalSettings = new ArrayList<>();
 
     /**
      * @return languages
@@ -333,5 +336,13 @@ public class AppointmentPayloadModel implements Serializable {
 
     public void setAdhocFormsPatientModeInfo(AdhocFormsPatientModeInfo adhocFormsPatientModeInfo) {
         this.adhocFormsPatientModeInfo = adhocFormsPatientModeInfo;
+    }
+
+    public List<PortalSettingDTO> getPortalSettings() {
+        return portalSettings;
+    }
+
+    public void setPortalSettings(List<PortalSettingDTO> portalSettings) {
+        this.portalSettings = portalSettings;
     }
 }

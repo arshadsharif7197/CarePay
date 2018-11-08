@@ -411,7 +411,10 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         practiceId = appointmentDTO.getMetadata().getPracticeId();
         practiceMgmt = appointmentDTO.getMetadata().getPracticeMgmt();
         patientId = appointmentDTO.getMetadata().getPatientId();
-        AppointmentDetailDialog detailDialog = AppointmentDetailDialog.newInstance(appointmentDTO, getPracticeInfo(appointmentDTO).isBreezePractice());
+        AppointmentDetailDialog detailDialog = AppointmentDetailDialog
+                .newInstance(appointmentDTO, getPracticeInfo(appointmentDTO).isBreezePractice(),
+                        appointmentDTO.getPayload().isRescheduleEnabled(appointmentDTO.getMetadata().getPracticeId(),
+                                appointmentsResultModel.getPayload().getPortalSettings()));
         viewHandler.displayDialogFragment(detailDialog, false);
     }
 
