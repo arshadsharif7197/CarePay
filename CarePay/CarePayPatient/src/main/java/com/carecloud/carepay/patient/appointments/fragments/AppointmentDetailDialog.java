@@ -319,7 +319,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     break;
                 }
                 case CHECKED_OUT: {
-                    header.setBackgroundResource(R.drawable.appointment_dialog_dark_gray_bg);
+                    header.setBackgroundResource(R.drawable.checked_out_appointment_card_background);
+                    providerInitials.setBackgroundResource(R.drawable.round_list_tv_default);
                     appointmentDateTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                     appointmentTimeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                     appointmentVisitTypeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
