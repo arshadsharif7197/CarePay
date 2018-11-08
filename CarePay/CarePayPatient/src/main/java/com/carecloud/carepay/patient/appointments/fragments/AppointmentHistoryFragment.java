@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.appointments.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -131,6 +132,14 @@ public class AppointmentHistoryFragment extends BaseFragment
         if (appointmentDto.getPayload().getUserPractices().size() > 1) {
             showPracticeToolbar(view);
         }
+
+        FloatingActionButton floatingActionButton = view.findViewById(com.carecloud.carepaylibrary.R.id.fab);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.getAppointmentPresenter().newAppointment();
+            }
+        });
     }
 
     private void showPracticeToolbar(View view) {
