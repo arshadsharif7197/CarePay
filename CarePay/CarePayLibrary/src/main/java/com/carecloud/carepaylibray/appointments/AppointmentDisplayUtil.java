@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.appointments;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 
 /**
@@ -10,13 +9,18 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 
 public class AppointmentDisplayUtil {
 
+    public static AppointmentDisplayStyle determineDisplayStyle(AppointmentsPayloadDTO appointmentsPayload) {
+        return determineDisplayStyle(appointmentsPayload, true);
+    }
+
     /**
      * Determint the display style for an appointment object
      *
      * @param appointmentsPayload appointment object
      * @return display style enum
      */
-    public static AppointmentDisplayStyle determineDisplayStyle(AppointmentsPayloadDTO appointmentsPayload) {
+    public static AppointmentDisplayStyle determineDisplayStyle(AppointmentsPayloadDTO appointmentsPayload,
+                                                                boolean checkToday) {
         if (appointmentsPayload.getAppointmentStatus().getCode() != null) {
             switch (appointmentsPayload.getAppointmentStatus().getCode()) {
                 case CarePayConstants.CHECKED_IN:
@@ -42,10 +46,10 @@ public class AppointmentDisplayUtil {
                 case CarePayConstants.PENDING:
                 case CarePayConstants.CHECKING_IN:
                 default: {
-                    if (appointmentsPayload.isAppointmentToday()) {
-                        if (appointmentsPayload.isAppointmentOver()) {
-                            return AppointmentDisplayStyle.MISSED;
-                        }
+
+                    if (appointmentsPayload.isAppointmentOver() && checkToday) {
+                        return AppointmentDisplayStyle.MISSED;
+                    } else if (appointmentsPayload.isAppointmentToday()) {
                         return AppointmentDisplayStyle.PENDING;
                     }
                     return AppointmentDisplayStyle.PENDING_UPCOMING;

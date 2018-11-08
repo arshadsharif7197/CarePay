@@ -19,6 +19,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
+import com.carecloud.carepaylibray.appointments.AppointmentDisplayUtil;
 import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentDialogFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
@@ -218,7 +219,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         if (appointmentDTO != null && appointmentDTO.getPayload().getDisplayStyle() != null) {
             Set<String> enabledLocations = ApplicationPreferences.getInstance()
                     .getPracticesWithBreezeEnabled(appointmentDTO.getMetadata().getPracticeId());
-            AppointmentDisplayStyle style = appointmentDTO.getPayload().getDisplayStyle();
+            AppointmentDisplayStyle style = AppointmentDisplayUtil.determineDisplayStyle(appointmentDTO.getPayload());
             switch (style) {
                 case CHECKED_IN: {
                     header.setBackgroundResource(R.drawable.appointment_dialog_green_bg);

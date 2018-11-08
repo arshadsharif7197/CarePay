@@ -197,7 +197,9 @@ public class AppointmentHistoryFragment extends BaseFragment
                         } else if (!refresh) {
                             adapter.setLoading(true);
                         }
+                        List<UserPracticeDTO> userPractices = appointmentDto.getPayload().getUserPractices();
                         appointmentDto = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
+                        appointmentDto.getPayload().setUserPractices(userPractices);
                         isPaging = false;
                         adapter.setLoading(false);
                         if (appointmentDto.getPayload().getPagingInfo().size() > 0) {
@@ -205,6 +207,9 @@ public class AppointmentHistoryFragment extends BaseFragment
                         }
                         if (appointmentDto.getPayload().getAppointments().size() > 0) {
                             showHistoricAppointments(appointmentDto.getPayload().getAppointments(), refresh);
+                            if (appointmentDto.getPayload().getUserPractices().size() > 1) {
+//                                showPracticeToolbar(getView());
+                            }
                         } else {
                             showNoAppointmentsLayout();
                         }

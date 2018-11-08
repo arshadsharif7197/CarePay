@@ -335,7 +335,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.initials.setText(StringUtil.getShortName(provider.getName()));
         holder.header.setText("Notification");
 
-        AppointmentDisplayStyle displayStyle = AppointmentDisplayUtil.determineDisplayStyle(appointment.getPayload());
+        AppointmentDisplayStyle displayStyle = AppointmentDisplayUtil.determineDisplayStyle(appointment.getPayload(), false);
         notificationItem.getPayload().getAppointment().getPayload().setDisplayStyle(displayStyle);
 
         switch (displayStyle) {
