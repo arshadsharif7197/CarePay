@@ -162,6 +162,26 @@ public class PracticeNavigationHelper {
                 }
                 break;
             }
+            case NavigationStateConstants.MEDICATIONS: {
+                if (context instanceof PatientModeCheckinActivity) {
+                    ((PatientModeCheckinActivity) context).navigateToMedications(workflowDTO);
+                    return;
+                } else {
+                    intent = new Intent(context, PatientModeCheckinActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                }
+                break;
+            }
+            case NavigationStateConstants.ALLERGIES: {
+                if (context instanceof PatientModeCheckinActivity) {
+                    ((PatientModeCheckinActivity) context).navigateToAllergy(workflowDTO);
+                    return;
+                } else {
+                    intent = new Intent(context, PatientModeCheckinActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                }
+                break;
+            }
             case NavigationStateConstants.CONSENT_FORMS: {
                 if (context instanceof PatientModeCheckinActivity) {
                     ((PatientModeCheckinActivity) context).navigateToConsentForms(workflowDTO);

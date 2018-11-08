@@ -14,6 +14,10 @@ public class MedicationAllergiesTransitionsDTO {
     @Expose
     private TransitionDTO medications =  new TransitionDTO();
 
+    @SerializedName("allergies")
+    @Expose
+    private TransitionDTO allergies =  new TransitionDTO();
+
 
     public TransitionDTO getMedications() {
         return medications;
@@ -21,5 +25,13 @@ public class MedicationAllergiesTransitionsDTO {
 
     public void setMedications(TransitionDTO medications) {
         this.medications = medications;
+    }
+
+    public TransitionDTO getAllergies() {
+        return allergies;
+    }
+
+    public void setAllergies(TransitionDTO allergies) {
+        this.allergies = allergies;
     }
 }
