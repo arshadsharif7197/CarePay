@@ -73,7 +73,11 @@ public class AppointmentHistoryFragment extends BaseFragment
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         appointmentDto = ((PatientAppointmentPresenter) callback.getAppointmentPresenter()).getMainAppointmentDto();
-        paging = appointmentDto.getPayload().getPagingInfo().get(0).getPaging();
+        if (!appointmentDto.getPayload().getPagingInfo().isEmpty()) {
+            paging = appointmentDto.getPayload().getPagingInfo().get(0).getPaging();
+        } else {
+            paging = new Paging();
+        }
 
         Collections.sort(appointmentDto.getPayload().getUserPractices(), new Comparator<UserPracticeDTO>() {
             @Override
@@ -81,6 +85,8 @@ public class AppointmentHistoryFragment extends BaseFragment
                 return object1.getPracticeName().compareTo(object2.getPracticeName());
             }
         });
+        selectedPractice = appointmentDto.getPayload().getUserPractices().get(0);
+        callAppointmentService(selectedPractice, true, true);
     }
 
     @Nullable
@@ -92,11 +98,7 @@ public class AppointmentHistoryFragment extends BaseFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        selectedPractice = appointmentDto.getPayload().getUserPractices().get(0);
-        callAppointmentService(selectedPractice, true, true);
         historicAppointmentsRecyclerView = view.findViewById(R.id.historicAppointmentsRecyclerView);
-
-
         Map<String, Set<String>> enabledPracticeLocations = new HashMap<>();
         for (AppointmentDTO appointmentDTO : appointmentDto.getPayload().getAppointments()) {
             String practiceId = appointmentDTO.getMetadata().getPracticeId();
@@ -186,12 +188,16 @@ public class AppointmentHistoryFragment extends BaseFragment
                         } else if (!refresh) {
                             adapter.setLoading(true);
                         }
-                        getView().findViewById(R.id.fakeView).setVisibility(View.VISIBLE);
+                        if (getView() != null) {
+                            getView().findViewById(R.id.fakeView).setVisibility(View.VISIBLE);
+                        }
                     }
 
                     @Override
                     public void onPostExecute(WorkflowDTO workflowDTO) {
-                        getView().findViewById(R.id.fakeView).setVisibility(View.GONE);
+                        if (isVisible()) {
+                            getView().findViewById(R.id.fakeView).setVisibility(View.GONE);
+                        }
                         if (showShimmerLayout) {
                             hideShimmerEffect();
                         } else if (!refresh) {
@@ -207,9 +213,6 @@ public class AppointmentHistoryFragment extends BaseFragment
                         }
                         if (appointmentDto.getPayload().getAppointments().size() > 0) {
                             showHistoricAppointments(appointmentDto.getPayload().getAppointments(), refresh);
-                            if (appointmentDto.getPayload().getUserPractices().size() > 1) {
-//                                showPracticeToolbar(getView());
-                            }
                         } else {
                             showNoAppointmentsLayout();
                         }
@@ -217,7 +220,9 @@ public class AppointmentHistoryFragment extends BaseFragment
 
                     @Override
                     public void onFailure(String exceptionMessage) {
-                        getView().findViewById(R.id.fakeView).setVisibility(View.GONE);
+                        if (isVisible()) {
+                            getView().findViewById(R.id.fakeView).setVisibility(View.GONE);
+                        }
                         isPaging = false;
                         adapter.setLoading(false);
                         if (showShimmerLayout) {

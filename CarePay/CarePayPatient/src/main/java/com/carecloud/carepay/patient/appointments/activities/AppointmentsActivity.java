@@ -6,11 +6,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentTabHostFragment;
-import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
@@ -79,6 +79,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             @Override
             public void onFailure(String exceptionMessage) {
                 hideProgressDialog();
+                Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
                 showErrorNotification(exceptionMessage);
             }
         }, queryMap);
@@ -160,7 +161,6 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_appointments);
         displayToolbar(true, menuItem.getTitle().toString());
         toolbarHidden = false;
-
         refreshAppointments();
         if (showSuccess) {
             showAppointmentConfirmation(isAutoScheduled);
@@ -169,12 +169,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
     @Override
     public void refreshAppointments() {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container_main);
-        if (fragment != null && fragment instanceof AppointmentsListFragment) {
-            AppointmentsListFragment appointmentsListFragment = (AppointmentsListFragment) fragment;
-            appointmentsListFragment.refreshAppointmentList();
-        }
-
+        callAppointmentService();
     }
 
     private void showAppointmentConfirmation(boolean isAutoScheduled) {
