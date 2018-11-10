@@ -2,6 +2,8 @@
 <resources>
     <color name="colorPrimary">#5BC5D0</color>
     <color name="colorPrimaryDark">#489DA6</color>
+    <color name="colorPrimaryGradientLight">#9DE2E9</color>
+    <color name="colorPrimaryGradientDark">#4EA9B3</color>
     <color name="colorAccent">#acacac</color>
 
     <color name="left_panel_color">#4EAAB3</color>

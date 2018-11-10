@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.splash;
 
-import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
@@ -10,14 +11,17 @@ import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepay.service.library.platform.AndroidPlatform;
-import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
+import com.carecloud.carepaylibray.base.models.DeviceVersionModel;
+import com.carecloud.carepaylibray.base.models.LatestVersionDTO;
+import com.carecloud.carepaylibray.base.models.LatestVersionModel;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;
@@ -87,8 +91,9 @@ public class SplashActivity extends BasePracticeActivity {
                 getApplicationPreferences().setUserLanguage(workflowDTO.getPayload()
                         .getAsJsonObject("language_metadata").get("code").getAsString());
             }
-            PracticeNavigationHelper.navigateToWorkflow(getContext(), initialWorkFlow, getIntent().getExtras());
-            SplashActivity.this.finish();
+
+            LatestVersionDTO latestVersionDTO = DtoHelper.getConvertedDTO(LatestVersionDTO.class, workflowDTO);
+            checkLatestVersion(latestVersionDTO.getMetadata().getLinks().getCheckLatestVersion());
         }
 
         @Override
@@ -97,4 +102,55 @@ public class SplashActivity extends BasePracticeActivity {
             Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+    private void checkLatestVersion(TransitionDTO versionCheckLink) {
+        try {
+            PackageInfo packageInfo = getContext().getPackageManager()
+                    .getPackageInfo(getContext().getPackageName(), 0);
+            DeviceVersionModel versionModel = new DeviceVersionModel();
+            versionModel.setApplicationName(packageInfo.packageName);
+            versionModel.setVersionName(packageInfo.versionName);
+            versionModel.setVersionNumber(packageInfo.versionCode);
+            versionModel.setDeviceType(HttpConstants.getDeviceInformation().getDeviceType());
+
+            Gson gson = new Gson();
+            String payload = gson.toJson(versionModel);
+            getWorkflowServiceHelper().execute(versionCheckLink, getVersionCheckCallback(versionModel), payload, null, getWorkflowServiceHelper().getApplicationStartHeaders());
+        } catch (PackageManager.NameNotFoundException nfe) {
+            nfe.printStackTrace();
+            PracticeNavigationHelper.navigateToWorkflow(getContext(), initialWorkFlow, getIntent().getExtras());
+            SplashActivity.this.finish();
+
+        }
+    }
+
+    private WorkflowServiceCallback getVersionCheckCallback(final DeviceVersionModel deviceVersionModel) {
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                LatestVersionDTO latestVersionDTO = DtoHelper.getConvertedDTO(LatestVersionDTO.class, workflowDTO);
+                LatestVersionModel latestVersionModel = latestVersionDTO.getPayload().getVersionModel();
+                getApplicationPreferences().setLatestVersion(deviceVersionModel.getVersionNumber() >= latestVersionModel.getVersionNumber());
+                if (getApplicationPreferences().getLastVersionNum() != latestVersionModel.getVersionNumber()) {
+                    getApplicationPreferences().setLastVersionNum(latestVersionModel.getVersionNumber());
+                }
+                getApplicationPreferences().setForceUpdate(deviceVersionModel.getVersionNumber() <
+                        latestVersionModel.getVersionNumber() && latestVersionModel.isForceUpdate());
+                PracticeNavigationHelper.navigateToWorkflow(getContext(), initialWorkFlow, getIntent().getExtras());
+                SplashActivity.this.finish();
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                Log.d(getClass().getName(), exceptionMessage);
+                PracticeNavigationHelper.navigateToWorkflow(getContext(), initialWorkFlow, getIntent().getExtras());
+                SplashActivity.this.finish();
+            }
+        };
+    }
+
 }

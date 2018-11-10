@@ -9,8 +9,12 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsToggleOption;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsSettingsPaymentPlansDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
@@ -22,12 +26,12 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
+import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
 
 /**
  * Created by lmenendez on 2/12/18
@@ -55,8 +59,18 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
         Bundle args = getArguments();
         existingPlan = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
         super.onCreate(icicle);
+        setInterval();
+        paymentPlanBalanceRules = getPaymentPlanSettings(interval);
     }
 
+    private void setInterval() {
+        if (existingPlan.getPayload().getPaymentPlanDetails().getFrequencyCode()
+                .equals(PaymentPlanModel.FREQUENCY_MONTHLY)) {
+            interval = PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS;
+        } else {
+            interval = PaymentSettingsBalanceRangeRule.INTERVAL_WEEKS;
+        }
+    }
 
     @Override
     public void onViewCreated(View view, Bundle icicle) {
@@ -69,8 +83,6 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
         installmentsEditText.setText(String.valueOf(getRemainingPayments()));
         planNameEditText.setText(existingPlan.getPayload().getDescription());
         frequencyCodeEditText.setText(frequencyOption.getLabel());
-        paymentDateEditText.setText(String.valueOf(existingPlan.getPayload()
-                .getPaymentPlanDetails().getDayOfMonth()));
 
         createPlanButton.setText(Label.getLabel("demographics_save_changes_button"));
     }
@@ -110,10 +122,18 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
             postModel.setExecution(existingPlan.getPayload().getExecution());
             postModel.setPapiPaymentMethod(existingPlan.getPayload().getPaymentMethod());
 
-            try {
-                paymentPlanModel.setDayOfMonth(Integer.parseInt(paymentDateOption.getName()));
-            } catch (NumberFormatException nfe) {
-                nfe.printStackTrace();
+            if (frequencyOption.getName().equals(PaymentPlanModel.FREQUENCY_MONTHLY)) {
+                try {
+                    paymentPlanModel.setDayOfMonth(Integer.parseInt(paymentDateOption.getName()));
+                } catch (NumberFormatException nfe) {
+                    nfe.printStackTrace();
+                }
+            } else {
+                try {
+                    paymentPlanModel.setDayOfWeek(Integer.parseInt(paymentDateOption.getName()));
+                } catch (NumberFormatException nfe) {
+                    nfe.printStackTrace();
+                }
             }
 
             postModel.setPaymentPlanModel(paymentPlanModel);
@@ -194,6 +214,34 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
 
     protected void onPlanEdited(WorkflowDTO workflowDTO) {
         callback.onPaymentPlanAddedExisting(workflowDTO);
+    }
+
+    @Override
+    protected List<DemographicsToggleOption> generateFrequencyOptions(PaymentsSettingsPaymentPlansDTO paymentPlansRules) {
+        frequencyOption = new DemographicsToggleOption();
+        frequencyOption.setLabel(StringUtil.capitalize(existingPlan.getPayload()
+                .getPaymentPlanDetails().getFrequencyCode()));
+        frequencyOption.setName(existingPlan.getPayload().getPaymentPlanDetails().getFrequencyCode());
+        if (existingPlan.getPayload().getPaymentPlanDetails().getFrequencyCode()
+                .equals(PaymentPlanDetailsDTO.FREQUENCY_MONTHLY)) {
+            dateOptions = generateDateOptions();
+            paymentDateOption = dateOptions.get(existingPlan.getPayload()
+                    .getPaymentPlanDetails().getDayOfMonth() - 1);
+            selectedDateOptions = dateOptions;
+        } else {
+            dayOfWeekOptions = generateDayOptions();
+            if (existingPlan.getPayload().getPaymentPlanDetails().getDayOfWeek() > dayOfWeekOptions.size()) {
+                paymentDateOption = dayOfWeekOptions.get(0);
+            } else {
+                paymentDateOption = dayOfWeekOptions.get(existingPlan.getPayload()
+                        .getPaymentPlanDetails().getDayOfWeek());
+            }
+            selectedDateOptions = dayOfWeekOptions;
+        }
+
+        List<DemographicsToggleOption> options = new ArrayList<>();
+        options.add(frequencyOption);
+        return options;
     }
 
 }
