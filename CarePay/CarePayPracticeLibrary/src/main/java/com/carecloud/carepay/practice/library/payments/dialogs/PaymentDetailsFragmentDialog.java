@@ -123,7 +123,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                 .setText(StringUtil.getShortName(name + " " + lastName));
 
 
-        payNowButton.setText(Label.getLabel("payment_details_pay_now"));
+        payNowButton.setText(Label.getLabel("payment_pay_total_button"));
         RecyclerView paymentDetailsRecyclerView = ((RecyclerView) view.findViewById(R.id.payment_receipt_details_view));
         paymentDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
