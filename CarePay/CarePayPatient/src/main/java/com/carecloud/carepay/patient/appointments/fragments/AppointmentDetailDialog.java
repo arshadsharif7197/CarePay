@@ -147,30 +147,30 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         cancelAppointment.setOnClickListener(cancelAppointmentClick);
 
         header = view.findViewById(R.id.dialogHeaderLayout);
-        appointmentDateTextView = (TextView) view.findViewById(R.id.appointDateTextView);
-        appointmentTimeTextView = (TextView) view.findViewById(R.id.appointTimeTextView);
-        appointmentVisitTypeTextView = (TextView) view.findViewById(R.id.appointmentVisitTypeTextView);
+        appointmentDateTextView = view.findViewById(R.id.appointDateTextView);
+        appointmentTimeTextView = view.findViewById(R.id.appointTimeTextView);
+        appointmentVisitTypeTextView = view.findViewById(R.id.appointmentVisitTypeTextView);
 
-        providerInitials = (TextView) view.findViewById(R.id.appointShortnameTextView);
-        providerPhoto = (ImageView) view.findViewById(R.id.appointUserPicImageView);
-        providerName = (TextView) view.findViewById(R.id.providerName);
-        providerSpecialty = (TextView) view.findViewById(R.id.providerSpecialty);
+        providerInitials = view.findViewById(R.id.appointShortnameTextView);
+        providerPhoto = view.findViewById(R.id.appointUserPicImageView);
+        providerName = view.findViewById(R.id.providerName);
+        providerSpecialty = view.findViewById(R.id.providerSpecialty);
 
-        locationName = (TextView) view.findViewById(R.id.appointAddressHeaderTextView);
-        locationAddress = (TextView) view.findViewById(R.id.appointAddressTextView);
+        locationName = view.findViewById(R.id.appointAddressHeaderTextView);
+        locationAddress = view.findViewById(R.id.appointAddressTextView);
         mapButton = view.findViewById(R.id.appointLocationImageView);
         mapButton.setOnClickListener(mapClick);
         callButton = view.findViewById(R.id.appointDailImageView);
         callButton.setOnClickListener(callClick);
 
-        appointmentStatus = (TextView) view.findViewById(R.id.appointment_status);
+        appointmentStatus = view.findViewById(R.id.appointment_status);
 
         queueLayout = view.findViewById(R.id.queue_layout);
-        queueStatus = (TextView) view.findViewById(R.id.queue_status);
+        queueStatus = view.findViewById(R.id.queue_status);
 
         actionsLayout = view.findViewById(R.id.appointment_actions_layout);
-        leftButton = (Button) view.findViewById(R.id.appointment_button_left);
-        rightButton = (Button) view.findViewById(R.id.appointment_button_right);
+        leftButton = view.findViewById(R.id.appointment_button_left);
+        rightButton = view.findViewById(R.id.appointment_button_right);
     }
 
     private void setCommonValues() {
@@ -226,17 +226,14 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     appointmentDateTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                     appointmentTimeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                     appointmentVisitTypeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
-                    if (appointmentDTO.getPayload().isAppointmentToday() || !appointmentDTO.getPayload().isAppointmentOver()) {
+                    if (appointmentDTO.getPayload().isAppointmentToday()
+                            || !appointmentDTO.getPayload().isAppointmentOver()) {
                         if (appointmentDTO.getPayload().getAppointmentStatus().getOriginalName() == null) {
                             callback.getQueueStatus(appointmentDTO, queueStatusCallback);
                         }
-                        if (isLocationWithBreezeEnabled(enabledLocations)
-                                && appointmentDTO.getPayload().canCheckOut()) {
-                            actionsLayout.setVisibility(View.VISIBLE);
-                            leftButton.setVisibility(View.VISIBLE);
-                            leftButton.setText(Label.getLabel("appointment_request_checkout_now"));
-                            leftButton.setOnClickListener(checkOutClick);
-                        }
+                        showCheckoutButton(enabledLocations);
+                    } else if (appointmentDTO.getPayload().isAppointmentOver()) {
+                        showCheckoutButton(enabledLocations);
                     }
                     break;
                 }
@@ -334,6 +331,16 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     cleanupViews();
                 }
             }
+        }
+    }
+
+    private void showCheckoutButton(Set<String> enabledLocations) {
+        if (isLocationWithBreezeEnabled(enabledLocations)
+                && appointmentDTO.getPayload().canCheckOut()) {
+            actionsLayout.setVisibility(View.VISIBLE);
+            leftButton.setVisibility(View.VISIBLE);
+            leftButton.setText(Label.getLabel("appointment_request_checkout_now"));
+            leftButton.setOnClickListener(checkOutClick);
         }
     }
 
