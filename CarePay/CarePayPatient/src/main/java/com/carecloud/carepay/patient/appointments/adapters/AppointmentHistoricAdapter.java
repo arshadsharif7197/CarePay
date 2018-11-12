@@ -1,11 +1,15 @@
 package com.carecloud.carepay.patient.appointments.adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 
+import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
+import com.carecloud.carepaylibray.utils.DateUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -65,6 +69,36 @@ public class AppointmentHistoricAdapter extends BaseAppointmentAdapter {
             }
         });
 
+    }
+
+    @Override
+    protected void bindView(final ViewHolder holder, AppointmentsPayloadDTO appointmentsPayload,
+                            boolean shouldShowCheckoutButton) {
+        super.bindView(holder, appointmentsPayload, shouldShowCheckoutButton);
+        AppointmentDisplayStyle style = getDisplayStyle(appointmentsPayload);
+        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentsPayload.getStartTime());
+        switch (style) {
+            case MISSED:
+                holder.upcomingDateLayout.setVisibility(View.VISIBLE);
+                holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
+                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDayOrdinal());
+                holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
+                holder.todayTimeMessage.setVisibility(View.GONE);
+                holder.todayTimeLayout.setVisibility(View.GONE);
+            case CANCELED_UPCOMING:
+            case CANCELED: {
+                holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.payne_gray));
+                holder.initials.setBackgroundResource(R.drawable.round_list_tv_charcoal);
+                holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
+                break;
+            }
+            case CHECKED_OUT:
+                holder.checkedOutLabel.setVisibility(View.GONE);
+                holder.upcomingDateLayout.setVisibility(View.VISIBLE);
+                holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
+                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDayOrdinal());
+                holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
+        }
     }
 
     @Override
