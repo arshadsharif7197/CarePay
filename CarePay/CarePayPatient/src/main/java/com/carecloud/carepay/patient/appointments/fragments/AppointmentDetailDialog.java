@@ -208,8 +208,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
 
             LocationDTO location = appointmentDTO.getPayload().getLocation();
             locationName.setText(location.getName());
-            locationAddress.setText(location.getAddress().getPlaceAddressString());
-            mapButton.setEnabled(!StringUtil.isNullOrEmpty(location.getAddress().getPlaceAddressString()));
+            locationAddress.setText(location.getAddress().getPlaceAddressStringWithShortZip());
+            mapButton.setEnabled(!StringUtil.isNullOrEmpty(location.getAddress().getPlaceAddressStringWithShortZip()));
         }
     }
 
