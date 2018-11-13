@@ -499,7 +499,9 @@
     <dimen name="medicationListTopPadding">10dp</dimen>
     <dimen name="medicationAllergyItemTextSize">10sp</dimen>
     <dimen name="medicationAllergyItemMargin">10dp</dimen>
-    <dimen name="medicationAllergyItemVerticalPadding">2dp</dimen>
+    <dimen name="medicationAllergyItemVerticalPadding">4dp</dimen>
+    <dimen name="medicationAllergyItemRemoveButtonWidth">60dp</dimen>
+    <dimen name="medicationAllergyStrikeMargin">13dp</dimen>
     <dimen name="responsTotalLabelTopMargin">20dp</dimen>
     <dimen name="responsibilityListTopMargin">15dp</dimen>
     <dimen name="paymentMethodItemMargin">8dp</dimen>
