@@ -48,7 +48,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/closeLayout"
         android:layout_marginBottom="@dimen/apt_dl_margin"
-        android:background="@drawable/bg_cardview">
+        android:background="@drawable/bg_cardview"
+        android:paddingBottom="@dimen/dimen_20dp">
 
         <LinearLayout
             android:id="@+id/appointDialogButtonLayout"
