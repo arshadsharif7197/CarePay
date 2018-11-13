@@ -44,12 +44,11 @@
             app:customAssetFont="gotham_rounded_bold" />
     </LinearLayout>
 
-
     <LinearLayout
-        android:layout_width="@dimen/visit_type_dialog_width"
+        android:layout_width="@dimen/dialog_width"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/dimen_26dp"
-        android:layout_marginStart="@dimen/dimen_26dp"
+        android:layout_marginStart="@dimen/visitTypeDialogHorizontalMargin"
+        android:layout_marginEnd="@dimen/visitTypeDialogHorizontalMargin"
         android:background="@drawable/dialog_background"
         android:orientation="vertical">
 
@@ -65,14 +64,13 @@
 
         </android.support.v7.widget.Toolbar>
 
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/visitTypeList"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/visit_type_list_height"
-            android:layout_marginBottom="@dimen/dimen_20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_height="@dimen/visitTypeListHeight"
+            android:layout_marginStart="@dimen/visitTypeListMargin"
+            android:layout_marginEnd="@dimen/visitTypeListMargin"
+            android:layout_marginBottom="@dimen/visitTypeListMargin"
             android:contentDescription="@string/content_description_visit_type"
             android:divider="@color/divider_color"
             android:dividerHeight="1dp"
@@ -82,7 +80,7 @@
         <RelativeLayout
             android:id="@+id/emptyStateScreen"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/visit_type_list_height"
+            android:layout_height="@dimen/visitTypeListHeight"
             android:visibility="gone">
 
             <View
@@ -97,12 +95,12 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@id/placeHolder"
                 android:layout_centerInParent="true"
-                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:layout_marginBottom="@dimen/visitTyTypeDialogSubTitleBottomMargin"
                 android:gravity="center"
-                android:paddingEnd="@dimen/dimen_20dp"
-                android:paddingStart="@dimen/dimen_20dp"
+                android:paddingStart="@dimen/visitTyTypeDialogSubTitleHorizontalMargin"
+                android:paddingEnd="@dimen/visitTyTypeDialogSubTitleHorizontalMargin"
                 android:textColor="@color/cadet_gray"
-                android:textSize="@dimen/text_size_15"
+                android:textSize="@dimen/visityTypeDialogSubTitleTextSize"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="appointment.visitType.message.label.emptyScreenSubTitle"
                 tools:text="Your practice currently has no visit type available at the moment" />
@@ -113,9 +111,9 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@id/subtitle"
                 android:gravity="center"
-                android:padding="@dimen/dimen_10dp"
+                android:padding="@dimen/visitTyTypeDialogTitlePadding"
                 android:textColor="@color/charcoal"
-                android:textSize="@dimen/text_size_23sp"
+                android:textSize="@dimen/visitTyTypeDialogTitleTextSize"
                 app:customAssetFont="gotham_rounded_book"
                 breeze:textKey="appointment.visitType.message.label.emptyScreenTitle"
                 tools:text="No visit type available" />

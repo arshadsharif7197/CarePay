@@ -372,7 +372,7 @@
         <item name="android:background">@drawable/button_gray_border</item>
         <item name="android:padding">@dimen/dimen_3dp</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:textSize">@dimen/text_size_9sp</item>
+        <item name="android:textSize">@dimen/optionalLabelTextSize</item>
         <item name="android:textColor">@color/optional_gray</item>
         <item name="android:visibility">gone</item>
     </style>

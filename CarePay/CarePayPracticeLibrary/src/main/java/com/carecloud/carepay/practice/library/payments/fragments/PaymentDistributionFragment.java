@@ -54,8 +54,8 @@ import com.carecloud.carepaylibray.retail.models.RetailItemPayload;
 import com.carecloud.carepaylibray.retail.models.RetailLineItemMetadata;
 import com.carecloud.carepaylibray.retail.models.RetailOrderItem;
 import com.carecloud.carepaylibray.retail.models.RetailPostModelOrder;
-import com.carecloud.carepaylibray.retail.models.RetailProductsModel;
 import com.carecloud.carepaylibray.retail.models.RetailSelectedOption;
+import com.carecloud.carepaylibray.retail.models.RetailProductsModel;
 import com.carecloud.carepaylibray.utils.BounceHelper;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -159,16 +159,15 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
     @Override
     public void onViewCreated(View view, Bundle icicle) {
-
         setupButtons(view);
 
-        balanceTextView = view.findViewById(R.id.balance_value);
-        unAppliedTextView = view.findViewById(R.id.unapplied_value);
+        balanceTextView = (TextView) view.findViewById(R.id.balance_value);
+        unAppliedTextView = (TextView) view.findViewById(R.id.unapplied_value);
 
-        scrollView = view.findViewById(R.id.nested_scroller);
+        scrollView = (NestedScrollView) view.findViewById(R.id.nested_scroller);
 
         RecyclerView.LayoutManager balanceLayoutManager = new LinearLayoutManager(getContext());
-        balanceDetailsRecycler = view.findViewById(R.id.balances_recycler);
+        balanceDetailsRecycler = (RecyclerView) view.findViewById(R.id.balances_recycler);
         balanceDetailsRecycler.setLayoutManager(balanceLayoutManager);
         balanceDetailsRecycler.addOnScrollListener(scrollListener);
 
@@ -180,7 +179,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         newChargesLayout = view.findViewById(R.id.new_charges_layout);
         RecyclerView.LayoutManager chargesLayoutManager = new LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL, false);
-        newChargesRecycler = view.findViewById(R.id.new_charges_recycler);
+        newChargesRecycler = (RecyclerView) view.findViewById(R.id.new_charges_recycler);
         newChargesRecycler.setLayoutManager(chargesLayoutManager);
         newChargesRecycler.addOnScrollListener(scrollListener);
 
@@ -191,7 +190,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         retailChargesLayout = view.findViewById(R.id.retail_charges_layout);
         RecyclerView.LayoutManager retailLayoutManager = new LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL, false);
-        retailChargesRecycler = view.findViewById(R.id.retail_charges_recycler);
+        retailChargesRecycler = (RecyclerView) view.findViewById(R.id.retail_charges_recycler);
         retailChargesRecycler.setLayoutManager(retailLayoutManager);
         retailChargesRecycler.addOnScrollListener(scrollListener);
 
@@ -200,7 +199,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         retailTouchHelper.attachToRecyclerView(retailChargesRecycler);
 
         emptyBalanceLayout = view.findViewById(R.id.empty_balance_layout);
-        TextView emptyMessage = view.findViewById(R.id.no_payment_message);
+        TextView emptyMessage = (TextView) view.findViewById(R.id.no_payment_message);
         emptyMessage.setText(Label.getLabel("payment_balance_empty_payment_screen"));
         emptyMessage.setVisibility(View.GONE);
 
@@ -223,9 +222,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     }
 
     private void setupToolbar(View view, String titleString) {
-        Toolbar toolbar = view.findViewById(R.id.payment_toolbar);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.payment_toolbar);
         if (toolbar != null) {
-            TextView title = toolbar.findViewById(R.id.toolbar_title);
+            TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
             title.setText(titleString);
         }
     }
@@ -244,8 +243,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         View.OnClickListener addItem = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clearPickers();
-                clearLastSwipeView();
                 callback.lookupChargeItem(paymentsModel.getPaymentPayload().getSimpleChargeItems(),
                         PaymentDistributionFragment.this);
                 hideDialog();
@@ -254,23 +251,19 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         addButton.setOnClickListener(addItem);
         addButtonEmpty.setOnClickListener(addItem);
 
-        Button paymentPlanButton = view.findViewById(R.id.payment_left_button);
+        Button paymentPlanButton = (Button) view.findViewById(R.id.payment_left_button);
         paymentPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clearPickers();
-                clearLastSwipeView();
                 callback.showPaymentPlanDashboard(paymentsModel);
                 hideDialog();
             }
         });
 
-        payButton = view.findViewById(R.id.payment_pay_button);
+        payButton = (Button) view.findViewById(R.id.payment_pay_button);
         payButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clearPickers();
-                clearLastSwipeView();
                 if (validateBalanceItems()) {
                     distributeAmountOverBalanceItems(paymentAmount);
 
@@ -283,30 +276,12 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             }
         });
 
-        paymentTotalTextView = view.findViewById(R.id.payment_value);
+        paymentTotalTextView = (TextView) view.findViewById(R.id.payment_value);
         paymentTotalTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clearPickers();
-                clearLastSwipeView();
                 callback.showAmountEntry(PaymentDistributionFragment.this,
                         null, null);
-                hideDialog();
-            }
-        });
-
-        View historyButton = view.findViewById(R.id.button_history);
-        boolean hasHistory = !paymentsModel.getPaymentPayload()
-                .getTransactionHistory().getPaymentHistoryList().isEmpty();
-        boolean hasPlans = !paymentsModel.getPaymentPayload()
-                .getFilteredPlans(getApplicationMode().getUserPracticeDTO().getPracticeId()).isEmpty();
-//        historyButton.setVisibility(hasHistory || hasPlans ? View.VISIBLE : View.INVISIBLE);
-        historyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearPickers();
-                clearLastSwipeView();
-                callback.showPaymentHistory(paymentsModel);
                 hideDialog();
             }
         });
@@ -317,9 +292,11 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             public void onClick(View view) {
                 if (paymentsPickerWindow.isShowing()) {
                     paymentsPickerWindow.dismiss();
+                    view.setSelected(false);
                 } else {
+                    clearPickers();
                     int offset = view.getWidth() / 2 - paymentsPickerWindow.getWidth() / 2;
-                    paymentsPickerWindow.showAsDropDown(view, offset, 0);
+                    paymentsPickerWindow.showAsDropDown(view, offset, 3);
                     view.setSelected(true);
                 }
             }
@@ -675,11 +652,14 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
     @Override
     public void pickProvider(View view, BalanceItemDTO balanceItem) {
+        boolean isShowing = providerPickerWindow.isShowing();
         clearPickers();
         clearLastSwipeView();
-        int offset = view.getWidth() / 2 - providerPickerWindow.getWidth() / 2;
-        providerPickerWindow.setBalanceItemDTO(balanceItem);
-        providerPickerWindow.showAsDropDown(view, offset, 10);
+        if (!isShowing) {
+            int offset = view.getWidth() / 2 - providerPickerWindow.getWidth() / 2;
+            providerPickerWindow.setBalanceItemDTO(balanceItem);
+            providerPickerWindow.showAsDropDown(view, offset, 10);
+        }
     }
 
     @Override
@@ -690,11 +670,14 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
     @Override
     public void pickLocation(View view, BalanceItemDTO balanceItem) {
+        boolean isShowing = locationPickerWindow.isShowing();
         clearPickers();
         clearLastSwipeView();
-        int offset = view.getWidth() / 2 - locationPickerWindow.getWidth() / 2;
-        locationPickerWindow.setBalanceItemDTO(balanceItem);
-        locationPickerWindow.showAsDropDown(view, offset, 10);
+        if (!isShowing) {
+            int offset = view.getWidth() / 2 - locationPickerWindow.getWidth() / 2;
+            locationPickerWindow.setBalanceItemDTO(balanceItem);
+            locationPickerWindow.showAsDropDown(view, offset, 10);
+        }
     }
 
     @Override
@@ -705,15 +688,11 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
     @Override
     public void editAmount(double amount, BalanceItemDTO balanceItem) {
-        clearPickers();
-        clearLastSwipeView();
         modifyLineItem(balanceItem, null, null, amount);
     }
 
     @Override
     public void pickAmount(BalanceItemDTO balanceItem) {
-        clearPickers();
-        clearLastSwipeView();
         callback.showAmountEntry(this, balanceItem, null);
         hideDialog();
     }
@@ -1013,7 +992,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         }
     }
 
-    private void generateRetailOrder(IntegratedPaymentPostModel postModel) {
+    private void generateRetailOrder(IntegratedPaymentPostModel postModel){
         RetailPostModelOrder retailOrder = new RetailPostModelOrder();
         double subtotal = 0D;
         double total = 0D;
@@ -1035,8 +1014,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             orderItem.setQuantity(quantity);
 
             Map<Integer, RetailItemOptionChoiceDto> selectedOptions = balanceItemDTO.getRetailPayload().getSelectedOptions();
-            for (int i = 0; i < retailItemDto.getOptions().size(); i++) {
-                if (selectedOptions.containsKey(i)) {
+            for (int i=0; i<retailItemDto.getOptions().size(); i++) {
+                if(selectedOptions.containsKey(i)) {
                     RetailSelectedOption selectedOption = new RetailSelectedOption();
                     selectedOption.setName(retailItemDto.getOptions().get(i).getName());
                     selectedOption.setValue(selectedOptions.get(i).getName());
@@ -1055,21 +1034,21 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             retailPaymentLineItem.setRetailMetadata(new RetailLineItemMetadata());
 
             StringBuilder descriptionBuilder = new StringBuilder(retailItemDto.getName());
-            if (!orderItem.getSelectedOptions().isEmpty()) {
+            if(!orderItem.getSelectedOptions().isEmpty()){
                 descriptionBuilder.append(" -");
-                for (RetailSelectedOption option : orderItem.getSelectedOptions()) {
+                for(RetailSelectedOption option : orderItem.getSelectedOptions()){
                     descriptionBuilder.append(" ")
                             .append(option.getName())
                             .append(": ")
                             .append(option.getValue())
                             .append(",");
                 }
-                descriptionBuilder.deleteCharAt(descriptionBuilder.length() - 1);
+                descriptionBuilder.deleteCharAt(descriptionBuilder.length()-1);
             }
-            if (quantity > 1) {
-                if (orderItem.getSelectedOptions().isEmpty()) {
+            if(quantity > 1){
+                if(orderItem.getSelectedOptions().isEmpty()){
                     descriptionBuilder.append(" - ");
-                } else {
+                }else{
                     descriptionBuilder.append(", ");
                 }
                 descriptionBuilder.append("Qty: ").append(quantity);
@@ -1083,7 +1062,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         retailOrder.setSubTotal(subtotal);
         retailOrder.setTotal(total);
 
-        if (patientDemographics != null) {
+        if(patientDemographics != null){
             RetailBillingPerson billingPerson = retailOrder.getBillingPerson();
             billingPerson.setName(patientDemographics.getPersonalDetails().getFullName());
             billingPerson.setStreet(patientDemographics.getAddress().getAddress1());
@@ -1165,9 +1144,4 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         }
     };
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.clear();
-    }
 }

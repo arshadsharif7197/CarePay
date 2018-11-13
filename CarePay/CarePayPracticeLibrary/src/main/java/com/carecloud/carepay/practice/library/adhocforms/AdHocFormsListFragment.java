@@ -137,6 +137,8 @@ public class AdHocFormsListFragment extends BaseDialogFragment
 
         } else {
             view.findViewById(R.id.noFormsContainer).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.sendFormButton).setVisibility(View.INVISIBLE);
+            view.findViewById(R.id.fillNowFormButton).setVisibility(View.INVISIBLE);
         }
 
         View close = view.findViewById(R.id.closeViewLayout);

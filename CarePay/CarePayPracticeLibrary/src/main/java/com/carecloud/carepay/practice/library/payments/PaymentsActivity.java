@@ -178,8 +178,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         }
 
         findViewById(R.id.practice_payment_find_patient).setOnClickListener(onFindPatientClick());
-        findViewById(R.id.practice_payment_filter_label).setOnClickListener(onFilterIconClick());
-        findViewById(R.id.practice_payment_go_back).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.filterTextView).setOnClickListener(onFilterIconClick());
+        findViewById(R.id.goBackTextview).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();
@@ -308,11 +308,10 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
             @Override
             public void onClick(View view) {
-                TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getFindPatient();
-
+                TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata()
+                        .getPaymentsLinks().getFindPatient();
                 FindPatientDialog findPatientDialog = new FindPatientDialog(PaymentsActivity.this,
-                        transitionDTO,
-                        Label.getLabel("practice_payments_filter_find_patient_by_name"));
+                        transitionDTO, Label.getLabel("practice_payments_filter_find_patient_by_name"));
                 setFindPatientOnItemClickedListener(findPatientDialog);
                 findPatientDialog.show();
             }

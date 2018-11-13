@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-
     android:background="@android:color/white"
     android:orientation="vertical">
 
@@ -15,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foregroundGravity="center_vertical"
-        android:paddingTop="@dimen/dimen_10dp">
+        android:paddingTop="@dimen/checkInToolbarPaddingTop">
 
         <include
             android:id="@+id/toolbar_layout"
@@ -35,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_30"
+                android:textSize="@dimen/nextAppointmentTitleTextSize"
                 app:customAssetFont="gotham_rounded_medium" />
         </LinearLayout>
     </FrameLayout>
@@ -48,18 +46,18 @@
         app:activeDotColor="@color/colorPrimary"
         app:activeDotIcon="@drawable/circle_indicator_blue"
         app:activeDotIndex="-1"
-        app:dotSize="10dp"
+        app:dotSize="@dimen/checkInDotSize"
         app:inactiveDotColor="@color/colorPrimary"
         app:inactiveDotIcon="@drawable/circle_indicator_gray"
         app:numberDots="5"
-        app:spacing="12dp" />
+        app:spacing="@dimen/checkInDotSpacing" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/demo_view_height"
         android:background="@color/light_gray"
         android:focusable="true"
-        android:focusableInTouchMode="true"/>
+        android:focusableInTouchMode="true" />
 
     <ScrollView
         android:id="@+id/demographicsScrollView"
@@ -78,26 +76,26 @@
             <View
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight=".10"/>
+                android:layout_weight=".05" />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center_horizontal">
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/demographicsSubHeading"
                     style="@style/DemographicsDocsHeaderSubtitleStyle"
-                    android:textSize="@dimen/text_size_20sp"
-                    android:textColor="@color/textview_default_textcolor"
-                    android:layout_marginTop="@dimen/dimen_20dp"
+                    android:layout_marginLeft="@dimen/demographicsSubHeadingHorizontalMargin"
+                    android:layout_marginTop="@dimen/demographicsSubHeadingVerticalMargin"
+                    android:layout_marginRight="@dimen/demographicsSubHeadingHorizontalMargin"
                     android:layout_marginBottom="@dimen/dimen_20dp"
-                    android:layout_marginLeft="@dimen/dimen_57dp"
-                    android:layout_marginRight="@dimen/dimen_20dp"
-                    tools:text="This is what some header text might look like"
-                    app:customAssetFont="gotham_rounded_medium"/>
+                    android:textColor="@color/textview_default_textcolor"
+                    android:textSize="@dimen/demographicsSubHeadingTextSize"
+                    app:customAssetFont="gotham_rounded_medium"
+                    tools:text="This is what some header text might look like" />
 
                 <FrameLayout
                     android:id="@+id/checkinDemographicsContentLayout"
@@ -109,8 +107,7 @@
             <View
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight=".10"
-                android:layout_marginLeft="@dimen/dimen_57dp"/>
+                android:layout_weight=".10" />
 
         </LinearLayout>
     </ScrollView>
@@ -123,19 +120,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_20dp">
+        android:padding="@dimen/distributionButtonContainersPadding">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/check_in_demographics_left_button"
             android:layout_width="0dp"
-            android:layout_height="@dimen/dimen_48dp"
-            android:layout_marginBottom="@dimen/dimen_20dp"
-            android:layout_marginStart="@dimen/dimen_20dp"
+            android:layout_height="@dimen/commonButtonHeight"
+            android:layout_margin="@dimen/distributionButtonContainersPadding"
             android:layout_weight="1"
             android:background="@drawable/round_border_button_bg"
             android:gravity="center"
             android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/text_size_22"
+            android:textSize="@dimen/respons_button_text_size"
             android:visibility="gone"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="practice_checkin_demogr_ins_dont_have_one_button_label" />
@@ -143,15 +139,13 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/checkinDemographicsNextButton"
             android:layout_width="0dp"
-            android:layout_height="@dimen/dimen_48dp"
-            android:layout_marginBottom="@dimen/dimen_20dp"
-            android:layout_marginEnd="@dimen/dimen_20dp"
-            android:layout_marginStart="@dimen/dimen_20dp"
+            android:layout_height="@dimen/commonButtonHeight"
+            android:layout_margin="@dimen/distributionButtonContainersPadding"
             android:layout_weight="1"
             android:background="@drawable/green_rounded_button_selector_always_click"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_22"
+            android:textSize="@dimen/respons_button_text_size"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="demographics_review_next_button" />
 

@@ -9,8 +9,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginEnd="@dimen/dimen_10dp"
-        android:layout_marginStart="@dimen/dimen_10dp">
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginEnd="@dimen/dimen_10dp">
 
         <ImageView
             android:id="@+id/notificationPaymentImage"

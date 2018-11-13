@@ -57,13 +57,13 @@
             android:layout_alignParentBottom="true"
             android:background="@drawable/patient_mode_dialog_body_bg"
             android:orientation="horizontal"
-            android:padding="@dimen/dimen_10dp">
+            android:padding="@dimen/distributionButtonContainersPadding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/createPaymentPlanButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_10dp"
+                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:background="@drawable/bg_yellow_overlay"
                 android:gravity="center"
                 android:textAllCaps="false"
@@ -99,26 +99,26 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/currentPaymentPlansRecycler"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/completedLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dimen_10dp"
-                    android:layout_marginStart="@dimen/dimen_15dp"
-                    android:layout_marginTop="@dimen/dimen_25dp"
+                    android:layout_marginBottom="@dimen/itemDashboardFieldMargin"
+                    android:layout_marginStart="@dimen/dashboardLabelStartMargin"
+                    android:layout_marginTop="@dimen/dashboardLabelTopMargin"
                     android:textAllCaps="true"
                     android:textColor="@color/textview_default_textcolor"
-                    android:textSize="@dimen/text_size_18sp"
+                    android:textSize="@dimen/dashboardLabelTextSize"
                     app:customAssetFont="proxima_nova_semi_bold"
                     breeze:textKey="payment.paymentPlanDashboard.section.title.completed"
-                    tools:text="Completed"/>
+                    tools:text="Completed" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/completedPaymentPlansRecycler"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
@@ -130,10 +130,10 @@
             android:layout_height="match_parent"
             android:layout_below="@id/toolbarLayout"
             android:background="@drawable/patient_mode_dialog_body_bg"
-            android:orientation="vertical"
             android:gravity="center"
-            android:paddingStart="@dimen/dimen_40dp"
+            android:orientation="vertical"
             android:paddingEnd="@dimen/dimen_40dp"
+            android:paddingStart="@dimen/dimen_40dp"
             android:visibility="gone">
 
             <ImageView
@@ -150,9 +150,9 @@
                 android:gravity="center"
                 android:textColor="@color/Feldgrau"
                 android:textSize="@dimen/text_size_26sp"
-                tools:text="No active or past payment plans"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="payment.paymentPlanDashboard.nopaymentplans.label.title" />
+                breeze:textKey="payment.paymentPlanDashboard.nopaymentplans.label.title"
+                tools:text="No active or past payment plans" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/no_payment_message"
@@ -162,19 +162,19 @@
                 android:gravity="center"
                 android:textColor="@color/pastel_blue"
                 android:textSize="@dimen/text_size_19sp"
-                tools:text="Use the button below to create a payment plan."
+                app:customAssetFont="gotham_rounded_book"
                 breeze:textKey="payment.paymentPlanDashboard.nopaymentplans.label.subtitle"
-                app:customAssetFont="gotham_rounded_book"/>
+                tools:text="Use the button below to create a payment plan." />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/createNewPlanButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimen_60dp"
-                android:paddingStart="@dimen/dimen_60dp"
-                android:paddingEnd="@dimen/dimen_60dp"
                 android:background="@drawable/bg_yellow_overlay"
                 android:gravity="center"
+                android:paddingEnd="@dimen/dimen_60dp"
+                android:paddingStart="@dimen/dimen_60dp"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/respons_button_text_size"
@@ -183,8 +183,6 @@
                 tools:text="Create Payment Plan" />
 
         </LinearLayout>
-
-
 
 
     </RelativeLayout>

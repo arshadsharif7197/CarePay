@@ -435,15 +435,12 @@
     <dimen name="element_space">15dp</dimen>
     <dimen name="button_confirm_height">58dp</dimen>
 
-    <dimen name="button_height">77dp</dimen>
-    <dimen name="button_width">66dp</dimen>
     <dimen name="key_border_width">1dp</dimen>
     <dimen name="button_padding">2dp</dimen>
     <dimen name="button_margin_top">30dp</dimen>
     <dimen name="pin_header_text_size">36sp</dimen>
     <dimen name="pin_sub_header_text_size">22sp</dimen>
     <dimen name="pin_sub_edit_text_size">50sp</dimen>
-    <dimen name="button_pin_text_size">38sp</dimen>
     <dimen name="button_delete_key_width">40dp</dimen>
     <dimen name="button_delete_key_height">27dp</dimen>
     <dimen name="keypad_width">600dp</dimen>
@@ -474,5 +471,10 @@
     <dimen name="paymentDetailLabelTextSize">16sp</dimen>
     <dimen name="paymentDetailAmountTextSize">15sp</dimen>
     <dimen name="paymentDetailDateTextSize">12sp</dimen>
+    <dimen name="optionalLabelRightMargin">38dp</dimen>
+    <dimen name="optionalLabelTextSize">9sp</dimen>
+    <dimen name="itemCreditCardImageSize">36dp</dimen>
+    <dimen name="demographicErrorImageHeight">30dp</dimen>
+    <dimen name="demographicErrorViewWidth">22dp</dimen>
 
 </resources>

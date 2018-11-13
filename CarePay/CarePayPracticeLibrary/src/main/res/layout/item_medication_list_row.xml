@@ -18,7 +18,7 @@
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/padding_xlarge"
+            android:layout_margin="@dimen/medicationAllergyItemMargin"
             android:layout_weight="1">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -28,7 +28,7 @@
                 android:gravity="start"
                 android:maxLines="2"
                 android:textColor="@color/lightSlateGray"
-                android:textSize="@dimen/text_size_14"
+                android:textSize="@dimen/medicationAllergyItemTextSize"
                 app:customAssetFont="proxima_nova_semi_bold"
                 tools:text="Medication X\n line 2 "/>
 
@@ -60,15 +60,15 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/medication_allergy_delete_button"
             android:layout_width="@dimen/dimen_80dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/commonButtonHeight"
             android:layout_marginEnd="@dimen/padding_xlarge"
             android:background="@drawable/button_round_red_border"
-            android:paddingBottom="@dimen/padding_small"
+            android:paddingBottom="@dimen/medicationAllergyItemVerticalPadding"
             android:paddingEnd="@dimen/padding_large"
             android:paddingStart="@dimen/padding_large"
-            android:paddingTop="@dimen/padding_small"
+            android:paddingTop="@dimen/medicationAllergyItemVerticalPadding"
             android:textColor="@color/remove_red"
-            android:textSize="@dimen/text_size_14"
+            android:textSize="@dimen/medicationAllergyItemTextSize"
             app:customAssetFont="proxima_nova_semi_bold"
             tools:text="Remove"/>
 
@@ -78,6 +78,6 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_1dp"
-        android:background="@color/light_gray"/>
+        android:background="@color/light_gray" />
 
 </LinearLayout>
