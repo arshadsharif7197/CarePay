@@ -1343,8 +1343,13 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     }
 
     @Override
-    public void onPaymentPlanCanceled(WorkflowDTO workflowDTO) {
-        showSuccessToast(Label.getLabel("payment.cancelPaymentPlan.success.banner.text"));
+    public void onPaymentPlanCanceled(WorkflowDTO workflowDTO, boolean isDeleted) {
+        String message = "payment.cancelPaymentPlan.success.banner.text";
+        if (isDeleted) {
+            message = Label.getLabel("payment.deletePaymentPlan.success.banner.text");
+        }
+        showSuccessToast(Label.getLabel(message));
+
         getSupportFragmentManager().popBackStackImmediate(PaymentDistributionFragment.class.getName(),
                 FragmentManager.POP_BACK_STACK_INCLUSIVE);
         Map<String, String> queryMap = new HashMap<>();
@@ -1378,11 +1383,16 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     }
 
     @Override
-    public void showCancelPaymentPlanConfirmDialog(ConfirmationCallback confirmationCallback) {
+    public void showCancelPaymentPlanConfirmDialog(ConfirmationCallback confirmationCallback, boolean isDeletion) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        String title = Label.getLabel("payment.cancelPaymentPlan.confirmation.popup.title");
+        String message = Label.getLabel("payment.cancelPaymentPlan.confirmation.popup.message");
+        if (isDeletion) {
+            title = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.title");
+            message = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.message");
+        }
         ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment
-                .newInstance(Label.getLabel("payment.cancelPaymentPlan.confirmDialog.title.cancelPaymentPlanTitle"),
-                        Label.getLabel("payment.cancelPaymentPlan.confirmDialog.message.cancelPaymentPlanMessage"));
+                .newInstance(title, message);
         confirmDialogFragment.setCallback(confirmationCallback);
         String tag = confirmDialogFragment.getClass().getName();
         confirmDialogFragment.show(ft, tag);

@@ -191,10 +191,17 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
             }
         });
         Button cancelPaymentPlanButton = (Button) view.findViewById(R.id.cancelPaymentPlanButton);
+        boolean deletePaymentPlan = false;
+        if (paymentsModel.getPaymentPayload().findScheduledPayment(paymentPlanDTO) == null
+                && paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanHistoryList().isEmpty()) {
+            deletePaymentPlan = true;
+            cancelPaymentPlanButton.setText(Label.getLabel("payment.editPaymentPlan.delete.button.label"));
+        }
+        final boolean finalDeletePaymentPlan = deletePaymentPlan;
         cancelPaymentPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showCancelPaymentPlanConfirmDialog();
+                showCancelPaymentPlanConfirmDialog(finalDeletePaymentPlan);
             }
         });
         cancelPaymentPlanButton.setVisibility(canCancelPlan(paymentPlanDTO.getMetadata().getPracticeId())
@@ -208,21 +215,18 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         boolean isEnabled = validateFields(false) || !frequencyOption.isEnabled();
         getActionButton().setSelected(isEnabled);
         getActionButton().setClickable(isEnabled);
-
-//        getActionButton().setEnabled(validateFields(false) ||
-//                !frequencyOption.isEnabled());
     }
 
-    protected void showCancelPaymentPlanConfirmDialog() {
+    protected void showCancelPaymentPlanConfirmDialog(final boolean deletePaymentPlan) {
         callback.showCancelPaymentPlanConfirmDialog(new ConfirmationCallback() {
             @Override
             public void onConfirm() {
-                cancelPaymentPlan();
+                cancelPaymentPlan(deletePaymentPlan);
             }
-        });
+        }, deletePaymentPlan);
     }
 
-    private void cancelPaymentPlan() {
+    private void cancelPaymentPlan(final boolean deletePaymentPlan) {
         TransitionDTO updatePaymentTransition = paymentsModel.getPaymentsMetadata()
                 .getPaymentsTransitions().getDeletePaymentPlan();
         Map<String, String> queryMap = new HashMap<>();
@@ -241,7 +245,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
                 dismiss();
-                callback.onPaymentPlanCanceled(workflowDTO);
+                callback.onPaymentPlanCanceled(workflowDTO, deletePaymentPlan);
             }
 
             @Override
