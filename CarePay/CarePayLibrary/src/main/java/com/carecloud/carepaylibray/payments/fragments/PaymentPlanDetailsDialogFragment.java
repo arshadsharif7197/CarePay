@@ -98,7 +98,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
         int paymentCount = planPayload.getPaymentPlanDetails().getFilteredHistory().size();
         int installmentTotal = planPayload.getPaymentPlanDetails().getInstallments();
         int oneTimePayments = paymentPlanDTO.getPayload().getPaymentPlanDetails()
-                .getPaymentPlanHistoryList().size() - paymentCount;
+                .getOneTimePayments().size();
         StringBuilder paymentsMadeBuilder = new StringBuilder().append(String.format(paymentsMadeOf, paymentCount, installmentTotal));
         if(oneTimePayments > 0){
             paymentsMadeBuilder.append(" + ")
