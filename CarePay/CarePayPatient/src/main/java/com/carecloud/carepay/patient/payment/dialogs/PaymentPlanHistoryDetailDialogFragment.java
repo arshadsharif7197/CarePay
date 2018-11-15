@@ -96,7 +96,7 @@ public class PaymentPlanHistoryDetailDialogFragment extends BaseDialogFragment {
         int installments = paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments();
         int payments = paymentPlanDTO.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
         int oneTimePayments = paymentPlanDTO.getPayload().getPaymentPlanDetails()
-                .getPaymentPlanHistoryList().size() - payments;
+                .getOneTimePayments().size();
         StringBuilder paymentsMadeBuilder = new StringBuilder().append(String.format(paymentsMadeOf, payments, installments));
         if(oneTimePayments > 0){
             paymentsMadeBuilder.append(" + ")
@@ -123,7 +123,7 @@ public class PaymentPlanHistoryDetailDialogFragment extends BaseDialogFragment {
 
     private void setAdapter(RecyclerView itemsRecycler) {
         PaymentPlanHistoryDetailAdapter adapter = new PaymentPlanHistoryDetailAdapter(getContext(),
-                paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanHistoryList());
+                paymentPlanDTO.getPayload().getPaymentPlanDetails().getSuccessfulPaymentHistory());
         itemsRecycler.setAdapter(adapter);
     }
 
