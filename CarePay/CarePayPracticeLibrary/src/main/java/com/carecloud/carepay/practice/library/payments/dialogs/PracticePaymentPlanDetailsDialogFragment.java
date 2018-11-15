@@ -146,7 +146,7 @@ public class PracticePaymentPlanDetailsDialogFragment extends BaseDialogFragment
         int oneTimePayments = paymentPlan.getPayload().getPaymentPlanDetails()
                 .getOneTimePayments().size();
         StringBuilder paymentsMadeBuilder = new StringBuilder().append(String.format(paymentsMadeOf, paymentCount, installmentTotal));
-        if(oneTimePayments > 0){
+        if (oneTimePayments > 0) {
             paymentsMadeBuilder.append(" + ")
                     .append(oneTimePayments)
                     .append(" ")
@@ -188,6 +188,15 @@ public class PracticePaymentPlanDetailsDialogFragment extends BaseDialogFragment
                     dismiss();
                 }
             });
+        }
+
+        if (paymentPlan.getPayload().getPaymentPlanDetails().isCancelled()) {
+            view.findViewById(R.id.cancelledInfoContainer).setVisibility(View.VISIBLE);
+            TextView cancelledInfoTextView = view.findViewById(R.id.cancelledInfoTextView);
+            cancelledInfoTextView.setText(String
+                    .format(Label.getLabel("payment.paymentPlanDetail.cancelInfo.label.canceledOn"),
+                            DateUtil.getInstance().setDateRaw(paymentPlan.getMetadata().getUpdatedDate())
+                                    .getDateAsMonthLiteralDayOrdinalYear()));
         }
     }
 
