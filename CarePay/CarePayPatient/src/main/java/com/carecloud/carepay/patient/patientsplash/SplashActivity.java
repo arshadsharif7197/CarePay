@@ -102,7 +102,7 @@ public class SplashActivity extends BasePatientActivity {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             navigateToWorkflow(workflowDTO, getIntent().getExtras());
             // end-splash activity and transition
-                SplashActivity.this.finish();
+            SplashActivity.this.finish();
         }
 
         @Override
@@ -142,9 +142,11 @@ public class SplashActivity extends BasePatientActivity {
                 LatestVersionDTO latestVersionDTO = DtoHelper.getConvertedDTO(LatestVersionDTO.class, workflowDTO);
                 LatestVersionModel latestVersionModel = latestVersionDTO.getPayload().getVersionModel();
                 getApplicationPreferences().setLatestVersion(deviceVersionModel.getVersionNumber() >= latestVersionModel.getVersionNumber());
-                if(getApplicationPreferences().getLastVersionNum() != latestVersionModel.getVersionNumber()){
+                if (getApplicationPreferences().getLastVersionNum() != latestVersionModel.getVersionNumber()) {
                     getApplicationPreferences().setLastVersionNum(latestVersionModel.getVersionNumber());
                 }
+                getApplicationPreferences().setForceUpdate(deviceVersionModel.getVersionNumber() <
+                        latestVersionModel.getVersionNumber() && latestVersionModel.isForceUpdate());
             }
 
             @Override

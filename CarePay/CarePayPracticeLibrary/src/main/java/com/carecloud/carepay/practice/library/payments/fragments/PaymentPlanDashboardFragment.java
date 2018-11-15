@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -87,18 +88,18 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
         setUpButtons(view);
 
         View emptyPlansLayout = view.findViewById(R.id.empty_plans_layout);
-        if(completedPaymentPlansRecycler.getAdapter().getItemCount() == 0 &&
+        if (completedPaymentPlansRecycler.getAdapter().getItemCount() == 0 &&
                 currentPaymentPlansRecycler.getAdapter().getItemCount() == 0) {
             emptyPlansLayout.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             emptyPlansLayout.setVisibility(View.GONE);
         }
     }
 
     private void setupToolbar(View view, String titleString) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.payment_toolbar);
+        Toolbar toolbar = view.findViewById(R.id.payment_toolbar);
         if (toolbar != null) {
-            TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+            TextView title = toolbar.findViewById(R.id.toolbar_title);
             title.setText(titleString);
         }
 
@@ -114,7 +115,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
     }
 
     protected void setCurrentPaymentPlans(View view) {
-        currentPaymentPlansRecycler = (RecyclerView) view.findViewById(R.id.currentPaymentPlansRecycler);
+        currentPaymentPlansRecycler = view.findViewById(R.id.currentPaymentPlansRecycler);
         currentPaymentPlansRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         PaymentPlanDashboardAdapter adapter = new PaymentPlanDashboardAdapter(
                 getPaymentPlansFiltered(paymentsModel.getPaymentPayload().getPatientPaymentPlans(),
@@ -124,7 +125,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
     }
 
     private void setCompletedPaymentPlans(View view) {
-        completedPaymentPlansRecycler = (RecyclerView) view.findViewById(R.id.completedPaymentPlansRecycler);
+        completedPaymentPlansRecycler = view.findViewById(R.id.completedPaymentPlansRecycler);
         completedPaymentPlansRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         PaymentPlanDashboardAdapter adapter = new PaymentPlanDashboardAdapter(
                 getPaymentPlansFiltered(paymentsModel.getPaymentPayload().getPatientPaymentPlans(),
@@ -153,8 +154,8 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
     }
 
     private void setUpButtons(View view) {
-        Button createPaymentPlanButton = (Button) view.findViewById(R.id.createPaymentPlanButton);
-        Button createNewPlanButton = (Button) view.findViewById(R.id.createNewPlanButton);
+        Button createPaymentPlanButton = view.findViewById(R.id.createPaymentPlanButton);
+        Button createNewPlanButton = view.findViewById(R.id.createNewPlanButton);
 
         View.OnClickListener createListener = new View.OnClickListener() {
             @Override
@@ -203,5 +204,17 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
     public void onDetailClicked(PaymentPlanDTO paymentPlan, boolean completed) {
         callback.showPaymentPlanDetail(paymentsModel, paymentPlan, completed);
         dismiss();
+    }
+
+    @Override
+    public void onDetach() {
+        callback = null;
+        super.onDetach();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.clear();
     }
 }
