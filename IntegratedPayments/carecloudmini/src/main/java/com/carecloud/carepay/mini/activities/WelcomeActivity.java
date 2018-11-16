@@ -66,6 +66,8 @@ public class WelcomeActivity extends FullScreenActivity {
     private static final int POST_RETRY_DELAY = 1000 * 10;
     private static final int DEVICE_KEEP_ALIVE_PERIOD = 1000 * 30;
     private static final int MAX_FAIL_COUNT = 15;
+    private static final String ID_PROPERTY = "deepstream_record_id";
+    private static final String PROPERTY_REFUND = "refund_request";
 
     private ApplicationHelper applicationHelper;
     private TextView message;
@@ -230,6 +232,7 @@ public class WelcomeActivity extends FullScreenActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                setSystemUiFullscreen();
                 isDisconnecting = false;
                 String id = applicationHelper.getApplicationPreferences().getDeviceId();
                 if(!isConnecting) {
@@ -244,6 +247,7 @@ public class WelcomeActivity extends FullScreenActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                setSystemUiFullscreen();
                 if(!isDisconnecting) {
                     isDisconnecting = true;
                     String id = applicationHelper.getApplicationPreferences().getDeviceId();
@@ -274,6 +278,7 @@ public class WelcomeActivity extends FullScreenActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                setSystemUiFullscreen();
                 if(connectedDevice != null) {
                     String id = applicationHelper.getApplicationPreferences().getDeviceId();
                     if(!DeviceConnection.updateConnection(WelcomeActivity.this, id, connectedDevice)){
@@ -288,6 +293,7 @@ public class WelcomeActivity extends FullScreenActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                setSystemUiFullscreen();
                 message.setText(messageText);
             }
         });
@@ -518,7 +524,12 @@ public class WelcomeActivity extends FullScreenActivity {
         public void onPaymentComplete(String paymentRequestId, JsonElement requestObject) {
             Log.d(TAG, "Payment completed for: "+paymentRequestId);
 
-            if(connectedDevice.isRefunding()){
+            boolean hasRefundProperty = false;
+            if(requestObject.isJsonObject()){
+                String id = requestObject.getAsJsonObject().get(ID_PROPERTY).getAsString();
+                hasRefundProperty = id != null && id.contains(PROPERTY_REFUND);
+            }
+            if(connectedDevice.isRefunding() || hasRefundProperty){
                 postRefundRequest(paymentRequestId, requestObject);
             }else {
                 postPaymentRequest(paymentRequestId, requestObject);
@@ -529,7 +540,12 @@ public class WelcomeActivity extends FullScreenActivity {
         public void onPaymentCompleteWithError(String paymentRequestId, JsonElement paymentPayload, String errorMessage) {
             logNewRelicPaymentError(errorMessage, paymentPayload.toString());
 
-            if(connectedDevice.isRefunding()){
+            boolean hasRefundProperty = false;
+            if(paymentPayload.isJsonObject()){
+                String id = paymentPayload.getAsJsonObject().get(ID_PROPERTY).getAsString();
+                hasRefundProperty = id != null && id.contains(PROPERTY_REFUND);
+            }
+            if(connectedDevice.isRefunding() || hasRefundProperty){
                 postRefundRequest(paymentRequestId, paymentPayload);
             }else {
                 postPaymentRequest(paymentRequestId, paymentPayload);
@@ -568,10 +584,10 @@ public class WelcomeActivity extends FullScreenActivity {
         @Override
         public void onPaymentFailed(String paymentRequestId, String message) {
             String printMessage = "Payment failed for: "+paymentRequestId;
-            logNewRelicPaymentError(message, printMessage);
+            logNewRelicPaymentError(StringUtil.getSafeString(message), printMessage);
             Log.d(TAG, printMessage);
-            Log.d(TAG, message);
-            showErrorToast(message);
+            Log.d(TAG, StringUtil.getSafeString(message));
+            showErrorToast(StringUtil.getSafeString(message));
             releasePaymentRequest(paymentRequestId);
         }
 

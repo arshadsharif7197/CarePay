@@ -60,4 +60,8 @@ public class StringUtil {
         return String.valueOf(word.charAt(0)).toUpperCase();
     }
 
+    public static String getSafeString(String string){
+        return string != null ? string : "";
+    }
+
 }
