@@ -202,13 +202,16 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
                 !StringUtil.isNullOrEmpty(visitTimeTextView.getText().toString().trim()));
 
         final ScrollView scrollContainer = view.findViewById(R.id.scrollContainer);
-        scrollContainer.postDelayed(new Runnable() {
+        view.postDelayed(new Runnable() {
             @Override
             public void run() {
                 SystemUtil.hideSoftKeyboard(getContext(), view);
-                scrollContainer.fullScroll(View.FOCUS_UP);
+                if (scrollContainer != null) {
+                    scrollContainer.fullScroll(View.FOCUS_UP);
+                }
             }
         }, 300);
+
         reasonForVisitEditText = view.findViewById(R.id.reasonForVisitEditText);
     }
 
