@@ -93,7 +93,7 @@ public class PatientModeRequestAppointmentDialog extends BasePracticeDialog {
         requestAppointmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != callback) {
+                if (callback != null) {
                     callback.requestAppointment(appointmentSlot, reasonForVisitEditText.getText().toString());
                 }
                 dismiss();

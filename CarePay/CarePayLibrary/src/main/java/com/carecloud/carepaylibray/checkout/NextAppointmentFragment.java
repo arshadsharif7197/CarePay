@@ -12,7 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -68,6 +70,7 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
     private TextView visitTimeTextView;
     private Button scheduleAppointmentButton;
     private AppointmentResourcesDTO appointmentResourcesDTO;
+    private EditText reasonForVisitEditText;
 
     /**
      * new Instance of NextAppointmentFragment
@@ -137,7 +140,7 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
         }
     }
 
-    private void setUpUi(View view) {
+    private void setUpUi(final View view) {
         setUpProviderMessage(view, selectedProvider);
 
         Button scheduleLaterButton = (Button) view.findViewById(R.id.scheduleLaterButton);
@@ -197,6 +200,16 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
         });
         visitTimeTextView.getOnFocusChangeListener().onFocusChange(visitTimeTextView,
                 !StringUtil.isNullOrEmpty(visitTimeTextView.getText().toString().trim()));
+
+        final ScrollView scrollContainer = view.findViewById(R.id.scrollContainer);
+        scrollContainer.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                SystemUtil.hideSoftKeyboard(getContext(), view);
+                scrollContainer.fullScroll(View.FOCUS_UP);
+            }
+        }, 300);
+        reasonForVisitEditText = view.findViewById(R.id.reasonForVisitEditText);
     }
 
     private void setUpProviderMessage(View view, ProviderDTO provider) {
@@ -258,15 +271,15 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
         appointment.setProviderId(selectedProvider.getId());
         appointment.setProviderGuid(selectedProvider.getGuid());
         appointment.setVisitReasonId(visitType.getId());
-        appointment.setComplaint(visitType.getName());
+        appointment.setComplaint(reasonForVisitEditText.getText().toString());
         appointment.setStartTime(visitTime.getStartTime());
         appointment.setEndTime(visitTime.getEndTime());
         appointment.setLocationId(visitTime.getLocation().getId());
         appointment.setLocationGuid(visitTime.getLocation().getGuid());
+        appointment.setComments(visitType.getName());
         if (appointmentResourcesDTO != null) {
             appointment.setResourceId(appointmentResourcesDTO.getResource().getId());
         }
-        appointment.setComments("");
         appointment.getPatient().setId(selectedAppointment.getMetadata().getPatientId());
 
         if (visitType.getAmount() > 0) {
