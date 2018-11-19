@@ -189,7 +189,9 @@ public class LoginFragment extends RegistrationFragment {
             enableFields(true);
             Log.d(LoginFragment.class.getName(), jsonElement.toString());
             callback.setPreRegisterDataModel(jsonElement);
-            displayNextStep();
+            if(isAdded()) {
+                displayNextStep();
+            }
         }
 
         @Override

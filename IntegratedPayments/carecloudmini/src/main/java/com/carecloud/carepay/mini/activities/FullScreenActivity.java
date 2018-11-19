@@ -40,7 +40,7 @@ public abstract class FullScreenActivity extends AppCompatActivity {
         customerMode = true;
     }
 
-    private void setSystemUiFullscreen() {
+    protected void setSystemUiFullscreen() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         View decorView = getWindow().getDecorView();

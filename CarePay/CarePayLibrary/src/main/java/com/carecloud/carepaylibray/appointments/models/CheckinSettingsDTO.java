@@ -20,6 +20,9 @@ public class CheckinSettingsDTO {
     @SerializedName("health_insurance_required")
     private boolean showHealthInsurance = true;
 
+    @SerializedName("allow_patients_upload_medications")
+    private boolean allowMedicationPicture = true;
+
     public boolean shouldShowMedications() {
         return showMedications;
     }
@@ -50,5 +53,13 @@ public class CheckinSettingsDTO {
 
     public void setShowHealthInsurance(boolean showHealthInsurance) {
         this.showHealthInsurance = showHealthInsurance;
+    }
+
+    public boolean isAllowMedicationPicture() {
+        return allowMedicationPicture;
+    }
+
+    public void setAllowMedicationPicture(boolean allowMedicationPicture) {
+        this.allowMedicationPicture = allowMedicationPicture;
     }
 }

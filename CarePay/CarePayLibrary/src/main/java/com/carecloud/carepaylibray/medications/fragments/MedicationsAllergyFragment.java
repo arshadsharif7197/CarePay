@@ -102,6 +102,8 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
     private TextView allergyChooseButton;
     private TextView medicationChooseButton;
 
+    private boolean shouldAllowMedPicture = true;
+
 
     public interface MedicationAllergyCallback {
         void showMedicationAllergySearchFragment(int searchType);
@@ -183,6 +185,11 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
         }
         if (!checkinSettings.shouldShowMedications()) {
             view.findViewById(R.id.medications_layout).setVisibility(View.GONE);
+        }
+        if (!checkinSettings.isAllowMedicationPicture()) {
+            emptyPhotoLayout.setVisibility(View.GONE);
+            photoLayout.setVisibility(View.GONE);
+            shouldAllowMedPicture = false;
         }
     }
 
@@ -318,7 +325,7 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
     }
 
     private void setAdapterVisibility() {
-        if (currentMedications.isEmpty() && !hasPhoto()) {
+        if (currentMedications.isEmpty() && (!shouldAllowMedPicture || !hasPhoto())) {
             medicationRecycler.setVisibility(View.GONE);
             assertNoMedications.setVisibility(View.VISIBLE);
             assertNoMedications.setEnabled(true);
@@ -372,6 +379,9 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
     }
 
     private boolean hasPhoto() {
+        if (!shouldAllowMedPicture) {
+            return false;
+        }
         return (!StringUtil.isNullOrEmpty(medicationsAllergiesDTO.getPayload()
                 .getMedicationsImage().getPayload().getUrl()) &&
                 (medicationsPostModel.getMedicationsImage() == null ||
@@ -654,12 +664,14 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
 
     @Override
     public void onImageLoadCompleted(boolean success) {
-        if (success) {
-            emptyPhotoLayout.setVisibility(View.GONE);
-            photoLayout.setVisibility(View.VISIBLE);
-        } else {
-            emptyPhotoLayout.setVisibility(View.VISIBLE);
-            photoLayout.setVisibility(View.GONE);
+        if (shouldAllowMedPicture) {
+            if (success) {
+                emptyPhotoLayout.setVisibility(View.GONE);
+                photoLayout.setVisibility(View.VISIBLE);
+            } else {
+                emptyPhotoLayout.setVisibility(View.VISIBLE);
+                photoLayout.setVisibility(View.GONE);
+            }
         }
         setAdapterVisibility();
     }
