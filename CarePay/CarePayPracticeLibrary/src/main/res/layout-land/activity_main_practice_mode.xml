@@ -13,9 +13,9 @@
         android:id="@+id/headerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/home_main_margin_end"
         android:layout_marginStart="@dimen/home_main_margin_start"
-        android:layout_marginTop="@dimen/home_main_margin_top">
+        android:layout_marginTop="@dimen/home_main_margin_top"
+        android:layout_marginEnd="@dimen/home_main_margin_end">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,8 +55,8 @@
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/queueTitleTextView"
                     style="@style/HomeScreenAlertStyle"
-                    android:paddingEnd="@dimen/home_alert_text_padding_end"
                     android:paddingStart="@dimen/home_alert_text_padding_start"
+                    android:paddingEnd="@dimen/home_alert_text_padding_end"
                     app:customAssetFont="gotham_rounded_medium"
                     breeze:textKey="checkingin_notifications"
                     tools:text="Checking In" />
@@ -84,8 +84,8 @@
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/alaertTitleTextView"
                     style="@style/HomeScreenAlertStyle"
-                    android:paddingEnd="@dimen/home_alert_text_padding_end"
                     android:paddingStart="@dimen/home_alert_text_padding_start"
+                    android:paddingEnd="@dimen/home_alert_text_padding_end"
                     app:customAssetFont="gotham_rounded_medium"
                     breeze:textKey="alerts"
                     tools:text="Alerts" />
@@ -115,8 +115,8 @@
         android:id="@+id/languageContainer"
         android:layout_width="@dimen/dimen_140dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_below="@id/headerLayout"
+        android:layout_alignParentEnd="true"
         android:layout_marginEnd="@dimen/dimen_15dp"
         android:animateLayoutChanges="true"
         android:visibility="gone">
@@ -142,14 +142,25 @@
             android:src="@drawable/sort_up" />
     </FrameLayout>
 
+    <ImageView
+        android:id="@+id/titleHeaderTextview"
+        android:layout_width="@dimen/home_logo_width"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/headerLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/mainTitleHeaderMarginTop"
+        android:contentDescription="@string/home_logo"
+        android:src="?practiceLogoDrawable" />
+
     <LinearLayout
         android:id="@+id/layoutContainer"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginEnd="@dimen/mainLayoutContainerHorizontalMargin"
         android:layout_marginStart="@dimen/mainLayoutContainerHorizontalMargin"
         android:layout_marginTop="@dimen/mainLayoutContainerTopMargin"
+        android:layout_marginEnd="@dimen/mainLayoutContainerHorizontalMargin"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -159,8 +170,8 @@
             android:layout_height="@dimen/home_button_height"
             android:background="@drawable/home_button_selector_top_left"
             android:clickable="true"
-            android:paddingBottom="@dimen/homeItemVerticalPadding"
-            android:paddingTop="@dimen/homeItemVerticalPadding">
+            android:paddingTop="@dimen/homeItemVerticalPadding"
+            android:paddingBottom="@dimen/homeItemVerticalPadding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/homeCheckinLabel"
@@ -185,8 +196,8 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
                 android:background="@color/light_gray"
-                android:paddingBottom="@dimen/dimen_40dp"
-                android:paddingTop="@dimen/dimen_40dp" />
+                android:paddingTop="@dimen/dimen_40dp"
+                android:paddingBottom="@dimen/dimen_40dp" />
 
         </RelativeLayout>
 
@@ -196,8 +207,8 @@
             android:layout_height="@dimen/home_button_height"
             android:background="@drawable/home_button_selector"
             android:clickable="true"
-            android:paddingBottom="@dimen/homeItemVerticalPadding"
-            android:paddingTop="@dimen/homeItemVerticalPadding">
+            android:paddingTop="@dimen/homeItemVerticalPadding"
+            android:paddingBottom="@dimen/homeItemVerticalPadding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/homePaymentsLabel"
@@ -221,8 +232,8 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
                 android:background="@color/light_gray"
-                android:paddingBottom="@dimen/dimen_40dp"
-                android:paddingTop="@dimen/dimen_40dp" />
+                android:paddingTop="@dimen/dimen_40dp"
+                android:paddingBottom="@dimen/dimen_40dp" />
 
         </RelativeLayout>
 
@@ -257,8 +268,8 @@
             android:id="@+id/homeCheckoutClickable"
             android:layout_width="@dimen/home_button_width"
             android:layout_height="@dimen/home_button_height"
-            android:layout_marginEnd="1dp"
             android:layout_marginStart="1dp"
+            android:layout_marginEnd="1dp"
             android:background="@drawable/home_button_selector_top_right"
             android:clickable="true"
             android:paddingTop="@dimen/homeItemVerticalPadding"
@@ -286,17 +297,6 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/titleHeaderTextview"
-        android:layout_width="@dimen/home_logo_width"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/headerLayout"
-        android:layout_marginTop="@dimen/mainTitleHeaderMarginTop"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="@string/home_logo"
-        android:src="?practiceLogoDrawable" />
-
-    <ImageView
         android:id="@+id/shadow"
         android:layout_width="@dimen/home_shadow_width"
         android:layout_height="wrap_content"
@@ -306,13 +306,59 @@
         android:contentDescription="Shadow"
         android:src="@drawable/home_shadow" />
 
+    <RelativeLayout
+        android:id="@+id/updateAlertContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layoutContainer"
+        android:layout_alignStart="@id/layoutContainer"
+        android:layout_alignEnd="@id/layoutContainer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/updateAlertContainerTopMargin"
+        android:background="@drawable/appointment_dialog_yellow_bg"
+        android:padding="@dimen/updateAlertContainerPadding"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/updateAlertImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginEnd="@dimen/updateAlertImageEndMargin"
+            android:src="@drawable/icn_notification_app_update" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/updateAlertTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/updateAlertImage"
+            android:textColor="@color/white"
+            android:textSize="@dimen/updateAlertTitleTextSize"
+            app:customAssetFont="gotham_rounded_bold"
+            breeze:textKey="notifications.custom.header.appUpdateRequired"
+            tools:text="Your app is not up to date!" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/updateAlertMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/updateAlertTitle"
+            android:layout_marginTop="@dimen/updateAlertMessageTopMargin"
+            android:layout_toEndOf="@id/updateAlertImage"
+            android:textColor="@color/white"
+            android:textSize="@dimen/updateAlertMessageTextSize"
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textKey="practice.main.updateAlert.label.updateMessage"
+            tools:text="We’re always working to make Breeze better, but your app is not up to date. Tap here to update." />
+    </RelativeLayout>
+
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/office_news_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/layoutContainer"
-        android:layout_marginTop="@dimen/officeNewsHeaderTopMargin"
+        android:layout_below="@id/updateAlertContainer"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/officeNewsHeaderTopMargin"
         android:textColor="@color/soft_sky"
         android:textSize="@dimen/officeNewsHeaderTextSize"
         android:visibility="gone"
@@ -328,8 +374,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/dimen_20dp"
         android:background="?newsBackgroundColor"
-        android:paddingBottom="@dimen/dimen_20dp"
         android:paddingTop="@dimen/dimen_20dp"
+        android:paddingBottom="@dimen/dimen_20dp"
         android:visibility="gone" />
 
 </RelativeLayout>
