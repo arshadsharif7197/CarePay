@@ -32,7 +32,7 @@
                 android:layout_marginEnd="@dimen/dimen_30dp"
                 android:gravity="start"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_30sp"
+                android:textSize="@dimen/checkoutMessageTextSize"
                 app:customAssetFont="gotham_rounded_bold"
                 breeze:textKey="survey.patientMode.form.label.leftMesssage"
                 tools:text="We value your feedback!" />

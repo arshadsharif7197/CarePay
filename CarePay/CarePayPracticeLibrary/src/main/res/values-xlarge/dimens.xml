@@ -217,5 +217,6 @@
     <dimen name="divider1Width">550dp</dimen>
     <dimen name="negativeContainerTopMargin">40dp</dimen>
     <dimen name="surveyFeedbackButtonWidth">300dp</dimen>
+    <dimen name="checkoutMessageTextSize">40sp</dimen>
 
 </resources>
