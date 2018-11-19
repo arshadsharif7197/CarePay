@@ -192,8 +192,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         });
         Button cancelPaymentPlanButton = (Button) view.findViewById(R.id.cancelPaymentPlanButton);
         boolean deletePaymentPlan = false;
-        if (paymentsModel.getPaymentPayload().findScheduledPayment(paymentPlanDTO) == null
-                && paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanHistoryList().isEmpty()) {
+        if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanHistoryList().isEmpty()) {
             deletePaymentPlan = true;
             cancelPaymentPlanButton.setText(Label.getLabel("payment.editPaymentPlan.delete.button.label"));
         }
