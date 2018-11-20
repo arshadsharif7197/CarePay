@@ -174,6 +174,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
                 }
             }
         });
+        subtitleTextView.setVisibility(View.VISIBLE);
     }
 
     private void manageGoBackButton(View view, SurveyModel surveyModel, final WorkflowDTO workflowDTO) {
