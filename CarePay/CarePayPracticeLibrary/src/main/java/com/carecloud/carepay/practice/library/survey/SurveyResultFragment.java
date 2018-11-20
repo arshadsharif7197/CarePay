@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,7 +82,8 @@ public class SurveyResultFragment extends BaseFragment {
         if (showFeedBackLayout) {
             view.findViewById(R.id.negativeContainer).setVisibility(View.VISIBLE);
             feedbackEditText = view.findViewById(R.id.feedbackEditText);
-            view.findViewById(R.id.submitButton).setOnClickListener(new View.OnClickListener() {
+            final View submitButton = view.findViewById(R.id.submitButton);
+            submitButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     sendResponse(surveyModel, true);
@@ -90,6 +93,26 @@ public class SurveyResultFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     sendResponse(surveyModel, false);
+                }
+            });
+            feedbackEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (s.length() == 0) {
+                        submitButton.setEnabled(false);
+                    } else {
+                        submitButton.setEnabled(true);
+                    }
                 }
             });
         } else {
