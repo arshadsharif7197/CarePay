@@ -194,7 +194,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     }
 
     protected void initSelectableInput(TextView textView, DemographicsOption storeOption,
-                                       String storedName, View optional, List<DemographicsOption> options) {
+                                       String storedName, View requiredView, List<DemographicsOption> options) {
         String key = storeOption.getName();
         if (StringUtil.isNullOrEmpty(key)){
             key = storedName;
@@ -202,8 +202,8 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         storeOption = getOptionByKey(options, key, storeOption);
         if (!StringUtil.isNullOrEmpty(storedName)) {
             textView.setText(storeOption.getLabel());
-        }else if (optional != null) {
-            optional.setVisibility(View.VISIBLE);
+        }else if (requiredView != null) {
+            requiredView.setVisibility(View.VISIBLE);
         }
 
     }
@@ -313,7 +313,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     protected TextWatcher getValidateEmptyTextWatcher(final TextInputLayout inputLayout) {
         return new TextWatcher() {
-            public int count;
+            int count;
 
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
@@ -339,7 +339,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         };
     }
 
-    protected TextWatcher getOptionalViewTextWatcher(final View optionalView) {
+    protected TextWatcher getRequiredViewTextWatcher(final View requiredView) {
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
@@ -353,9 +353,9 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             @Override
             public void afterTextChanged(Editable editable) {
                 if (StringUtil.isNullOrEmpty(editable.toString())) {
-                    optionalView.setVisibility(View.VISIBLE);
+                    requiredView.setVisibility(View.VISIBLE);
                 } else {
-                    optionalView.setVisibility(View.GONE);
+                    requiredView.setVisibility(View.GONE);
                 }
                 checkIfEnableButton(getView());
             }
@@ -426,15 +426,15 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         }
     };
 
-    protected OnOptionSelectedListener getDefaultOnOptionsSelectedListener(final TextView textView, final DemographicsOption storeOption, final View optional) {
+    protected OnOptionSelectedListener getDefaultOnOptionsSelectedListener(final TextView textView, final DemographicsOption storeOption, final View requiredView) {
         return new OnOptionSelectedListener() {
             @Override
             public void onOptionSelected(DemographicsOption option) {
                 if (textView != null) {
                     textView.setText(option.getLabel());
                 }
-                if (optional != null) {
-                    optional.setVisibility(View.GONE);
+                if (requiredView != null) {
+                    requiredView.setVisibility(View.GONE);
                 }
                 storeOption.setLabel(option.getLabel());
                 storeOption.setName(option.getName());
@@ -632,7 +632,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     };
 
     protected void setUpField(TextInputLayout textInputLayout, EditText editText, boolean isVisible,
-                              String value, boolean isRequired, View optionalView) {
+                              String value, boolean isRequired, View requiredView) {
         editText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(textInputLayout, null));
         setVisibility(textInputLayout, isVisible);
         editText.setText(StringUtil.captialize(value).trim());
@@ -640,11 +640,18 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
                 !StringUtil.isNullOrEmpty(editText.getText().toString().trim()));
         if (isRequired) {
             editText.addTextChangedListener(getValidateEmptyTextWatcher(textInputLayout));
-        } else if (optionalView != null) {
-            editText.addTextChangedListener(getOptionalViewTextWatcher(optionalView));
         }
-        if (optionalView != null && !StringUtil.isNullOrEmpty(value)) {
-            optionalView.setVisibility(View.GONE);
+
+        if (requiredView != null) {
+            editText.addTextChangedListener(getRequiredViewTextWatcher(requiredView));
+        }
+
+        if(requiredView != null) {
+            if (!StringUtil.isNullOrEmpty(value)) {
+                requiredView.setVisibility(View.GONE);
+            } else if (isRequired) {
+                requiredView.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -674,8 +681,8 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     protected void setFieldError(TextInputLayout inputLayout, String error, boolean shouldRequestFocus) {
         if (inputLayout != null) {
             if (!inputLayout.isErrorEnabled()) {
-                inputLayout.setError(error);
                 inputLayout.setErrorEnabled(true);
+                inputLayout.setError(error);
             }
             if (shouldRequestFocus) {
                 inputLayout.clearFocus();
