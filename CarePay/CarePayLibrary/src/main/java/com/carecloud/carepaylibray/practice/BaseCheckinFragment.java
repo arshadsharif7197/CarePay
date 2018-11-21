@@ -52,7 +52,8 @@ public abstract class BaseCheckinFragment extends BaseFragment implements Icicle
             AppointmentDTO appointmentDTO = getAppointmentById(checkInWorkflowDTO.getPayload()
                     .getAppointments(), callback.getAppointmentId());
             if ((appointmentDTO != null && appointmentDTO.getPayload().getAppointmentStatus().getCode()
-                    .equalsIgnoreCase(CarePayConstants.CHECKED_IN)) || NavigationStateConstants.PATIENT_HOME.equals(workflowDTO.getState())) {
+                    .equalsIgnoreCase(CarePayConstants.CHECKED_IN))
+                    || NavigationStateConstants.PATIENT_HOME.equals(workflowDTO.getState())) {
                 callback.displayCheckInSuccess(workflowDTO);
             } else {
                 callback.navigateToWorkflow(workflowDTO);
