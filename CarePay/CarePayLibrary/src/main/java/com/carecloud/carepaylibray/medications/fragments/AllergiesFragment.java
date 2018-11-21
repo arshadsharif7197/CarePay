@@ -191,9 +191,9 @@ public class AllergiesFragment extends BaseCheckinFragment implements
 
     @Override
     public void deleteItem(MedicationsAllergiesObject item) {
+        item.setDeleted(true);
         if (item instanceof AllergiesObject) {
             //remove Medication from list
-//            currentAllergies.remove(item);
             if (addAllergies.contains(item)) {
                 addAllergies.remove(item);
                 tempAllergies.add((AllergiesObject) item);
@@ -315,7 +315,7 @@ public class AllergiesFragment extends BaseCheckinFragment implements
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             showErrorNotification(exceptionMessage);
-            Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 

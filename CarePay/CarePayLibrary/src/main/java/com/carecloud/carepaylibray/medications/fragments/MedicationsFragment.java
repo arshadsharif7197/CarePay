@@ -261,7 +261,6 @@ public class MedicationsFragment extends BaseCheckinFragment implements
         item.setDeleted(true);
         if (item instanceof MedicationsObject) {
             //remove Medication from list
-//            currentMedications.remove(item);
             if (addMedications.contains(item)) {
                 addMedications.remove(item);
                 tempMedications.add((MedicationsObject) item);
@@ -320,7 +319,12 @@ public class MedicationsFragment extends BaseCheckinFragment implements
     private List<MedicationsObject> getAllModifiedMedications() {
         List<MedicationsObject> combinedList = new ArrayList<>();
         combinedList.addAll(addMedications);
-        combinedList.addAll(removeMedications);
+        for(MedicationsObject removeMedication : removeMedications){
+            MedicationsObject cloneObject = new MedicationsObject();
+            cloneObject.setUuid(removeMedication.getUuid());
+            cloneObject.setAction(removeMedication.getAction());
+            combinedList.add(cloneObject);
+        }
         return combinedList;
     }
 
@@ -406,7 +410,7 @@ public class MedicationsFragment extends BaseCheckinFragment implements
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             showErrorNotification(exceptionMessage);
-            Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
