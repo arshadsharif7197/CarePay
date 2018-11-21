@@ -349,7 +349,8 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
                 showMedicationAllergySearchFragment(mode);
             }
         });
-        showFragmentAsDialogIfNeeded(dialogFragment);
+        FragmentManager fm = getSupportFragmentManager();
+        dialogFragment.show(fm, dialogFragment.getClass().getName());
     }
 
     @Override
