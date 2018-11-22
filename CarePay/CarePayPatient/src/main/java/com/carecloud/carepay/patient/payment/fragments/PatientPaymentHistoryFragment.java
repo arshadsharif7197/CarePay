@@ -15,6 +15,7 @@ import com.carecloud.carepay.patient.payment.adapters.PaymentHistoryAdapter;
 import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.models.NextPagingDTO;
@@ -24,10 +25,12 @@ import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
-import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_HISTORY;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_HISTORY;
 
 /**
  * Created by jorge on 02/01/17
@@ -82,7 +85,7 @@ public class PatientPaymentHistoryFragment extends BaseFragment
         super.onViewCreated(view, savedInstanceState);
         noPaymentsLayout = view.findViewById(R.id.no_payment_layout);
         setUpRecyclerView(view);
-        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+        refreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -92,10 +95,9 @@ public class PatientPaymentHistoryFragment extends BaseFragment
     }
 
     private void setUpRecyclerView(View view) {
-        historyRecyclerView = (RecyclerView) view.findViewById(R.id.payment_list_recycler);
+        historyRecyclerView = view.findViewById(R.id.payment_list_recycler);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         historyRecyclerView.addOnScrollListener(scrollListener);
-
         if (hasCharges()) {
             setAdapter(null);
         } else {
@@ -113,8 +115,11 @@ public class PatientPaymentHistoryFragment extends BaseFragment
                 historyAdapter.setPaymentHistoryItems(paymentHistoryItems);
             }
         } else {
-            historyAdapter = new PaymentHistoryAdapter(getContext(), paymentHistoryItems,
-                    paymentsModel.getPaymentPayload().getUserPractices(), this);
+            Map<String, UserPracticeDTO> practiceMap = new HashMap<>();
+            for (UserPracticeDTO userPracticeDTO : paymentsModel.getPaymentPayload().getUserPractices()) {
+                practiceMap.put(userPracticeDTO.getPracticeId(), userPracticeDTO);
+            }
+            historyAdapter = new PaymentHistoryAdapter(getContext(), paymentHistoryItems, this, practiceMap);
             historyRecyclerView.setAdapter(historyAdapter);
         }
     }
@@ -204,7 +209,7 @@ public class PatientPaymentHistoryFragment extends BaseFragment
 
     @Override
     public void onHistoryItemClicked(PaymentHistoryItem item) {
-        if(!refreshLayout.isRefreshing()) {
+        if (!refreshLayout.isRefreshing()) {
             callback.displayPaymentHistoryDetails(item);
         }
     }
