@@ -259,6 +259,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                         CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD), 0, practiceName.length(),
                 Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         holder.message.setText(stringBuilder);
+        UserPracticeDTO practice = callback.getUserPracticeById(notificationItem.getMetadata().getPracticeId());
+        loadImage(holder, practice.getPracticePhoto(), true);
     }
 
     private void displayPaymentNotification(NotificationViewHolder holder, NotificationItem notificationItem) {
@@ -397,8 +399,14 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 resetViews(holder);
         }
 
+        String photoUrl = appointment.getPayload().getProvider().getPhoto();
+        loadImage(holder, photoUrl, false);
+
+    }
+
+    private void loadImage(final NotificationViewHolder holder, String photoUrl, final boolean hideBadge) {
         int size = context.getResources().getDimensionPixelSize(R.dimen.payment_details_dialog_icon_size);
-        Picasso.with(context).load(appointment.getPayload().getProvider().getPhoto())
+        Picasso.with(context).load(photoUrl)
                 .resize(size, size)
                 .centerCrop()
                 .transform(new CircleImageTransform())
@@ -407,7 +415,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                     public void onSuccess() {
                         holder.image.setVisibility(View.VISIBLE);
                         holder.initials.setVisibility(View.GONE);
-                        holder.cellAvatar.setVisibility(View.VISIBLE);
+                        holder.cellAvatar.setVisibility(hideBadge ? View.GONE : View.VISIBLE);
                     }
 
                     @Override
@@ -416,7 +424,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                         holder.initials.setVisibility(View.VISIBLE);
                     }
                 });
-
     }
 
     private String getFormattedMessge(String messageBase, String... fields) {
