@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.label.Label;
@@ -76,21 +77,21 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         boolean autoScheduleAppointments = callback.getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests();
         View view = findViewById(R.id.appointDialogButtonLayout);
         view.setVisibility(View.VISIBLE);
-        Button appointmentRequestButton = (Button) findViewById(R.id.requestAppointmentButton);
+        Button appointmentRequestButton = findViewById(R.id.requestAppointmentButton);
         appointmentRequestButton.setText(Label.getLabel(autoScheduleAppointments ?
                 "appointments_schedule_button" : "appointments_request_heading"));
         appointmentRequestButton.requestFocus();
 
-        TextView reasonTextView = (TextView) childActionView.findViewById(R.id.reasonTextView);
+        TextView reasonTextView = childActionView.findViewById(R.id.reasonTextView);
         String visitReason = visitTypeDTO.getName();
         reasonTextView.setText(visitReason);
 
-        final EditText reasonForVisitEditText = (EditText) childActionView.findViewById(R.id.reasonForVisitEditText);
+        final EditText reasonForVisitEditText = childActionView.findViewById(R.id.reasonForVisitEditText);
 
         View prepaidLayout = childActionView.findViewById(R.id.prepaymentLayout);
         if (visitTypeDTO.getAmount() > 0) {
             prepaidLayout.setVisibility(View.VISIBLE);
-            TextView prepaidAmount = (TextView) childActionView.findViewById(R.id.prepaymentAmount);
+            TextView prepaidAmount = childActionView.findViewById(R.id.prepaymentAmount);
             prepaidAmount.setText(NumberFormat.getCurrencyInstance(Locale.US).format(visitTypeDTO.getAmount()));
             appointmentRequestButton.setText(Label.getLabel("appointments_prepayment_button"));
         } else {
@@ -107,5 +108,13 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         });
 
         ((ViewGroup) getAddActionChildView()).addView(childActionView);
+
+        final ScrollView scrollContainer = findViewById(R.id.containerScrollView);
+        scrollContainer.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollContainer.fullScroll(View.FOCUS_UP);
+            }
+        });
     }
 }

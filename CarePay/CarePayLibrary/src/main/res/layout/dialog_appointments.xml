@@ -60,7 +60,6 @@
             android:orientation="horizontal"
             android:paddingStart="@dimen/dimen_10dp"
             android:paddingEnd="@dimen/dimen_10dp"
-            android:paddingBottom="@dimen/dimen_10dp"
             android:visibility="gone">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
