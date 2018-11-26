@@ -10,9 +10,12 @@ import com.carecloud.carepaylibray.appointments.interfaces.AppointmentNavigation
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 
 public class PracticeModeRequestAppointmentDialog extends PatientModeRequestAppointmentDialog {
 
+
+    private final PatientModel patientModel;
 
     /**
      * Constructor.
@@ -23,14 +26,17 @@ public class PracticeModeRequestAppointmentDialog extends PatientModeRequestAppo
      * @param appointmentResourcesDTO
      * @param visitTypeDTO
      * @param callback                for dialog actions
+     * @param patientModel
      */
     public PracticeModeRequestAppointmentDialog(Context context,
                                                 String cancelString,
                                                 AppointmentsSlotsDTO appointmentSlot,
                                                 AppointmentResourcesDTO appointmentResourcesDTO,
                                                 VisitTypeDTO visitTypeDTO,
-                                                AppointmentNavigationCallback callback) {
+                                                AppointmentNavigationCallback callback,
+                                                PatientModel patientModel) {
         super(context, cancelString, appointmentSlot, appointmentResourcesDTO, visitTypeDTO, callback);
+        this.patientModel = patientModel;
     }
 
     protected void inflateUIComponents(View view) {
@@ -41,6 +47,18 @@ public class PracticeModeRequestAppointmentDialog extends PatientModeRequestAppo
         summaryHeaderContainer.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.dark_blue));
         View toolbar = findViewById(R.id.content_view_header_title);
         toolbar.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.background_top_rounded_dark_blue));
+
+        TextView appointmentDoctorNameTextView = view.findViewById(R.id.provider_doctor_name);
+        appointmentDoctorNameTextView.setText(String
+                .format("%s | %s", patientModel.getFullName(), patientModel.getPhoneNumber()));
+
+        TextView providerName = view.findViewById(R.id.providerName);
+        providerName.setVisibility(View.VISIBLE);
+        providerName.setText(appointmentResourcesDTO.getResource().getProvider().getFullName());
+        view.findViewById(R.id.provider_place_address).setVisibility(View.GONE);
+        view.findViewById(R.id.provider_place_name).setVisibility(View.GONE);
+        view.findViewById(R.id.addressSeparator).setVisibility(View.GONE);
+
     }
 
 

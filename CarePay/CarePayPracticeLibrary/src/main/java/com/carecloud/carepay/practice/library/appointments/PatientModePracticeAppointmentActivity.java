@@ -25,6 +25,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -136,7 +137,9 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
         queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
 
         AppointmentsResultModel appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
-        setPatientId(getApplicationMode().getPatientId() == null ? "" : getApplicationMode().getPatientId());
+        PatientModel patient = new PatientModel();
+        patient.setPatientId(getApplicationMode().getPatientId() == null ? "" : getApplicationMode().getPatientId());
+        setPatient(patient);
         TransitionDTO resourcesToSchedule = appointmentsResultModel.getMetadata().getLinks().getResourcesToSchedule();
         getWorkflowServiceHelper().execute(resourcesToSchedule, scheduleResourcesCallback, queryMap);
     }

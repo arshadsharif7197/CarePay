@@ -31,9 +31,9 @@ public class PatientModeRequestAppointmentDialog extends BasePracticeDialog {
 
     private final AppointmentsSlotsDTO appointmentSlot;
     private final LayoutInflater inflater;
-    private final AppointmentResourcesDTO appointmentResourcesDTO;
+    protected final AppointmentResourcesDTO appointmentResourcesDTO;
     private VisitTypeDTO visitTypeDTO;
-    private final AppointmentNavigationCallback callback;
+    protected final AppointmentNavigationCallback callback;
 
     /**
      * Constructor.
@@ -82,8 +82,7 @@ public class PatientModeRequestAppointmentDialog extends BasePracticeDialog {
     }
 
     protected void inflateUIComponents(View view) {
-        Button requestAppointmentButton = (Button)
-                view.findViewById(R.id.requestAppointmentButton);
+        Button requestAppointmentButton = view.findViewById(R.id.requestAppointmentButton);
         ApplicationMode.ApplicationType applicationType = callback.getApplicationMode().getApplicationType();
         boolean autoScheduleAppointments = callback.getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests();
 
@@ -105,21 +104,21 @@ public class PatientModeRequestAppointmentDialog extends BasePracticeDialog {
 
         setDialogTitle(dateUtil.getDateAsDayMonthDayOrdinalYear(Label.getLabel("appointments_web_today_heading")));
 
-        TextView appointmentTimeTextView = (TextView) view.findViewById(R.id.appointment_time);
+        TextView appointmentTimeTextView = view.findViewById(R.id.appointment_time);
         appointmentTimeTextView.setText(dateUtil.getTime12Hour());
 
-        TextView providerImageTextView = (TextView) view.findViewById(R.id.provider_short_name);
+        TextView providerImageTextView = view.findViewById(R.id.provider_short_name);
         providerImageTextView.setText(StringUtil.getShortName(appointmentResourcesDTO.getResource().getProvider().getName()));
 
-        TextView appointmentDoctorNameTextView = (TextView) view.findViewById(R.id.provider_doctor_name);
+        TextView appointmentDoctorNameTextView = view.findViewById(R.id.provider_doctor_name);
         appointmentDoctorNameTextView.setText(String
                 .format("%s | %s", appointmentResourcesDTO.getResource().getProvider().getName(),
                         appointmentResourcesDTO.getResource().getProvider().getSpecialty().getName()));
 
-        TextView appointmentPlaceNameTextView = (TextView) view.findViewById(R.id.provider_place_name);
+        TextView appointmentPlaceNameTextView = view.findViewById(R.id.provider_place_name);
         appointmentPlaceNameTextView.setText(appointmentSlot.getLocation().getName());
 
-        TextView appointmentAddressTextView = (TextView) view.findViewById(R.id.provider_place_address);
+        TextView appointmentAddressTextView = view.findViewById(R.id.provider_place_address);
         appointmentAddressTextView.setText(appointmentSlot.getLocation().getAddress().getPlaceAddressString());
 
         initializeVisitTypeTextView(view);
@@ -130,7 +129,7 @@ public class PatientModeRequestAppointmentDialog extends BasePracticeDialog {
         View prepaidLayout = findViewById(R.id.prepaymentLayout);
         if (visitTypeDTO.getAmount() > 0) {
             prepaidLayout.setVisibility(View.VISIBLE);
-            TextView prepaidAmount = (TextView) findViewById(R.id.prepaymentAmount);
+            TextView prepaidAmount = findViewById(R.id.prepaymentAmount);
             prepaidAmount.setText(NumberFormat.getCurrencyInstance(Locale.US).format(visitTypeDTO.getAmount()));
             requestAppointmentButton.setText(Label.getLabel("appointments_prepayment_button"));
         } else {
@@ -148,7 +147,7 @@ public class PatientModeRequestAppointmentDialog extends BasePracticeDialog {
     }
 
     private void initializeVisitTypeTextView(View view) {
-        TextView visitTypeTextView = (TextView) view.findViewById(R.id.reasonTextView);
+        TextView visitTypeTextView = view.findViewById(R.id.reasonTextView);
         if (null == visitTypeDTO) {
             dismiss();
             return;

@@ -363,7 +363,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         return new FindPatientDialog.OnItemClickedListener() {
             @Override
             public void onItemClicked(PatientModel patient) {
-                setPatientId(patient.getPatientId());
+                setPatient(patient);
                 if (needsToConfirmAppointmentCreation) {
                     getPatientBalances(patient);
                 } else {
@@ -450,7 +450,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                 PracticeModePracticeAppointmentsActivity.this
         );
         displayDialogFragment(dialog, true);
-        setPatientId(appointmentDTO.getMetadata().getPatientId());
+        setPatient(appointmentDTO.getPayload().getPatient());
     }
 
     private void confirmAppointment(AppointmentDTO appointmentDTO) {
@@ -595,7 +595,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void onLeftActionTapped(PaymentsModel paymentsModel, double owedAmount) {
-        getAllPracticeForms(getPatientId(), null, paymentsModel);
+        getAllPracticeForms(getPatient().getPatientId(), null, paymentsModel);
     }
 
     @Override

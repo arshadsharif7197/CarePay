@@ -72,6 +72,10 @@
             android:layout_weight="1"
             android:fillViewport="true">
 
+            <!--<RelativeLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content">-->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -102,6 +106,17 @@
                     tools:text="Main Medical Center" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/providerName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/lightSlateGray"
+                    android:textSize="@dimen/text_size_20"
+                    android:visibility="gone"
+                    app:customAssetFont="proxima_nova_regular"
+                    tools:text="Main Medical Center" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/provider_place_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -113,6 +128,7 @@
                     tools:text="5200 Blue Lagoon Drive Miami, FL 33126" />
 
                 <FrameLayout
+                    android:id="@+id/addressSeparator"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_10dp">
@@ -164,7 +180,6 @@
                         tools:ignore="RelativeOverlap"
                         tools:text="Follow-Up" />
                 </LinearLayout>
-
 
                 <LinearLayout
                     android:id="@+id/prepaymentLayout"
@@ -221,9 +236,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginTop="@dimen/dimen_25dp"
                     android:textColor="@color/textview_default_textcolor"
                     android:textSize="@dimen/text_size_24sp"
-                    android:layout_marginTop="@dimen/dimen_25dp"
                     app:customAssetFont="gotham_rounded_book"
                     breeze:textKey="appointments_reason_for_visit_heading"
                     tools:text="Reason for Visit" />
@@ -244,6 +259,7 @@
                     breeze:hintKey="appointment.request.visitTypeReason.hint.typeHint" />
 
             </LinearLayout>
+            <!--</RelativeLayout>-->
         </ScrollView>
 
         <LinearLayout
