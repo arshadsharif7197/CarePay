@@ -6,4 +6,7 @@
     <dimen name="closeIconSize">19dp</dimen>
     <dimen name="lineItemTextSize">18sp</dimen>
     <dimen name="roundBorderBottonVerticalPadding">8dp</dimen>
+    <dimen name="reasonForVisitHorizontalMargin">14dp</dimen>
+    <dimen name="visitTypeContainerVerticalPadding">15dp</dimen>
+    <dimen name="reasonForVisitTopMargin">10dp</dimen>
 </resources>

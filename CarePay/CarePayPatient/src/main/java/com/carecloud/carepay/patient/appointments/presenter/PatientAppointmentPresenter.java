@@ -216,7 +216,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     @Override
-    public void requestAppointment(AppointmentsSlotsDTO appointmentSlot, String comments) {
+    public void requestAppointment(AppointmentsSlotsDTO appointmentSlot, String reasonForVisit) {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("practice_mgmt", practiceMgmt);
         queryMap.put("practice_id", practiceId);
@@ -231,8 +231,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         appointment.setProviderGuid(selectedAppointmentResourcesDTO.getResource().getProvider().getGuid());
         appointment.setVisitReasonId(selectedVisitTypeDTO.getId());
         appointment.setResourceId(selectedAppointmentResourcesDTO.getResource().getId());
-        appointment.setComplaint(selectedVisitTypeDTO.getName());
-        appointment.setComments(comments);
+        appointment.setComplaint(reasonForVisit);
+        appointment.setComments(reasonForVisit);
 
         appointment.getPatient().setId(patientId);
 
