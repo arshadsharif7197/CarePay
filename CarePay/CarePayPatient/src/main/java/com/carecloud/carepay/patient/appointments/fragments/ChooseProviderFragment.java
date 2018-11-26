@@ -107,8 +107,8 @@ public class ChooseProviderFragment extends BaseAppointmentFragment
         chooseProviderFragment = this;
 
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.add_appointment_toolbar);
-        TextView titleView = (TextView) toolbar.findViewById(R.id.add_appointment_toolbar_title);
+        Toolbar toolbar = view.findViewById(R.id.add_appointment_toolbar);
+        TextView titleView = toolbar.findViewById(R.id.add_appointment_toolbar_title);
         titleView.setText(Label.getLabel("choose_provider_heading"));
         titleView.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
         toolbar.setTitle("");
@@ -124,7 +124,7 @@ public class ChooseProviderFragment extends BaseAppointmentFragment
             }
         });
 
-        providersRecyclerView = ((RecyclerView) view.findViewById(R.id.providers_recycler_view));
+        providersRecyclerView = view.findViewById(R.id.providers_recycler_view);
 
         //Fetch provider data
         getResourcesInformation();
