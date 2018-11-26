@@ -11,6 +11,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 public class PracticeModeRequestAppointmentDialog extends PatientModeRequestAppointmentDialog {
 
@@ -49,8 +50,12 @@ public class PracticeModeRequestAppointmentDialog extends PatientModeRequestAppo
         toolbar.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.background_top_rounded_dark_blue));
 
         TextView appointmentDoctorNameTextView = view.findViewById(R.id.provider_doctor_name);
-        appointmentDoctorNameTextView.setText(String
-                .format("%s | %s", patientModel.getFullName(), patientModel.getPhoneNumber()));
+        if (StringUtil.isNullOrEmpty(patientModel.getPhoneNumber())) {
+            appointmentDoctorNameTextView.setText(patientModel.getFullName());
+        } else {
+            appointmentDoctorNameTextView.setText(String
+                    .format("%s | %s", patientModel.getFullName(), patientModel.getPhoneNumber()));
+        }
 
         TextView providerName = view.findViewById(R.id.providerName);
         providerName.setVisibility(View.VISIBLE);
