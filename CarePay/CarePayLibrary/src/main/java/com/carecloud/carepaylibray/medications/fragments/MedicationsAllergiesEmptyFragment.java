@@ -90,7 +90,7 @@ public class MedicationsAllergiesEmptyFragment extends BaseCheckinFragment {
 
         ImageView headerIcon = view.findViewById(R.id.headerIconImageView);
         headerIcon.setImageResource(selectedMode == ALLERGY_MODE ?
-                R.drawable.icon_allergy : R.drawable.icon_medication);
+                R.drawable.icn_allergies_lg : R.drawable.icn_medications_lg);
         TextView emptyMessage = view.findViewById(R.id.empty_message);
         emptyMessage.setText(selectedMode == ALLERGY_MODE ?
                 Label.getLabel("medication_allergies_check_allergies") :
