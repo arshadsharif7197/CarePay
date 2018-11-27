@@ -23,11 +23,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BackPressedFragmentInterface;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepaylibray.survey.model.SocialNetworkLink;
-import com.carecloud.carepaylibray.survey.model.SurveyDTO;
-import com.carecloud.carepaylibray.survey.model.SurveyModel;
-import com.carecloud.carepaylibray.survey.model.SurveyQuestionDTO;
-import com.carecloud.carepaylibray.survey.model.SurveySettings;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -35,6 +30,11 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
+import com.carecloud.carepaylibray.survey.model.SocialNetworkLink;
+import com.carecloud.carepaylibray.survey.model.SurveyDTO;
+import com.carecloud.carepaylibray.survey.model.SurveyModel;
+import com.carecloud.carepaylibray.survey.model.SurveyQuestionDTO;
+import com.carecloud.carepaylibray.survey.model.SurveySettings;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -101,10 +101,10 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        noThanksButton = (Button) view.findViewById(R.id.noThanksButton);
-        subtitleTextView = (TextView) view.findViewById(R.id.subtitleTextView);
-        submitButton = (Button) view.findViewById(R.id.submitButton);
-        feedbackEditText = (EditText) view.findViewById(R.id.feedbackEditText);
+        noThanksButton = view.findViewById(R.id.noThanksButton);
+        subtitleTextView = view.findViewById(R.id.subtitleTextView);
+        submitButton = view.findViewById(R.id.submitButton);
+        feedbackEditText = view.findViewById(R.id.feedbackEditText);
         final SurveyModel surveyModel = surveyDto.getPayload().getSurvey();
         if (surveyModel.isAlreadyFilled() || surveyModel.isZeroAnswers()) {
             manageGoBackButton(view, surveyModel, null);
@@ -177,8 +177,8 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         subtitleTextView.setVisibility(View.VISIBLE);
     }
 
-    private void manageGoBackButton(View view, SurveyModel surveyModel, final WorkflowDTO workflowDTO) {
-        Button goBackButton = (Button) view.findViewById(R.id.okButton);
+    private Button manageGoBackButton(View view, SurveyModel surveyModel, final WorkflowDTO workflowDTO) {
+        Button goBackButton = view.findViewById(R.id.okButton);
         goBackButton.setVisibility(View.VISIBLE);
         goBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -201,17 +201,22 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
             subtitleTextView.setText(Label.getLabel("survey.successScreen.subtitle.message.alreadyFilled"));
             subtitleTextView.setVisibility(View.VISIBLE);
         }
+        return goBackButton;
     }
 
-    protected void displaySocialNetworksLinks(View view) {
-        subtitleTextView.setVisibility(View.VISIBLE);
+    protected void displaySocialNetworksLinks(View view, SurveyModel survey, WorkflowDTO workflowDTO) {
         noThanksButton.setVisibility(View.VISIBLE);
         SurveySettings settings = surveyDto.getPayload().getSurveySettings();
         if (settings.getNetworkLinks().isEnable()
                 && !settings.getNetworkLinks().getLinks().isEmpty()) {
+            subtitleTextView.setVisibility(View.VISIBLE);
             createSocialLinkViews(view, settings);
         } else {
-            showOkButton(null);
+            view.findViewById(R.id.fakeView).setVisibility(View.VISIBLE);
+            Button goBackButton = manageGoBackButton(view, survey, workflowDTO);
+            subtitleTextView.setVisibility(View.GONE);
+            goBackButton.setText(Label.getLabel("survey.successScreen.button.title.back"));
+            noThanksButton.setVisibility(View.GONE);
         }
     }
 
@@ -221,7 +226,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         feedbackEditText.setVisibility(View.GONE);
         subtitleTextView.setVisibility(View.GONE);
         noThanksButton.setVisibility(View.GONE);
-        Button okButton = (Button) getView().findViewById(R.id.okButton);
+        Button okButton = getView().findViewById(R.id.okButton);
         okButton.setVisibility(View.VISIBLE);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -238,9 +243,9 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         }
 
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-        LinearLayout firstRow = (LinearLayout) view.findViewById(R.id.firstRow);
+        LinearLayout firstRow = view.findViewById(R.id.firstRow);
         firstRow.removeAllViews();
-        LinearLayout secondRow = (LinearLayout) view.findViewById(R.id.secondRow);
+        LinearLayout secondRow = view.findViewById(R.id.secondRow);
         secondRow.removeAllViews();
         LinearLayout row = firstRow;
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ActionBar.LayoutParams.WRAP_CONTENT);
@@ -248,12 +253,12 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         for (final SocialNetworkLink link : settings.getNetworkLinks().getLinks()) {
             View child = layoutInflater
                     .inflate(R.layout.layout_survey_social_network, null, false);
-            TextView socialNetworkNameTextView = (TextView) child.findViewById(R.id.socialNetworkNameTextView);
+            TextView socialNetworkNameTextView = child.findViewById(R.id.socialNetworkNameTextView);
             socialNetworkNameTextView.setText(Label
                     .getLabel("survey.successScreen.socialLink.label." + link.getId()));
             int linkImageId = getLinkImageResource(link);
             if (linkImageId != -1) {
-                ImageView linkImageView = (ImageView) child.findViewById(R.id.socialNetworkImageView);
+                ImageView linkImageView = child.findViewById(R.id.socialNetworkImageView);
                 linkImageView.setImageDrawable(ContextCompat.getDrawable(getContext(), linkImageId));
             }
             child.setOnClickListener(new View.OnClickListener() {
@@ -347,7 +352,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
 
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
+                hideProgressDialog();
                 if (survey.isZeroAnswers()) {
                     manageGoBackButton(getView(), survey, workflowDTO);
                 } else if (!submitFeedbackButtonPressed) {
@@ -355,7 +360,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
                 } else if (showOkButton) {
                     showOkButton(workflowDTO);
                 } else if (comesFromNotification) {
-                    displaySocialNetworksLinks(getView());
+                    displaySocialNetworksLinks(getView(), survey, workflowDTO);
                 } else {
                     finishCheckOutFlow(workflowDTO);
                 }
@@ -373,7 +378,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
 
     private void finishCheckOutFlow(final WorkflowDTO workflowDTO) {
         getView().findViewById(R.id.fakeView).setVisibility(View.VISIBLE);
-        Button goBackButton = (Button) getView().findViewById(R.id.okButton);
+        Button goBackButton = getView().findViewById(R.id.okButton);
         goBackButton.setVisibility(View.VISIBLE);
         goBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
