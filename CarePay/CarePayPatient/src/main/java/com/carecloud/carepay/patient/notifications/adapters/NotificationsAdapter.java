@@ -236,7 +236,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_msg);
         holder.cellAvatar.setVisibility(View.VISIBLE);
 
-        loadImage(holder, practiceDTO.getPracticePhoto(), false);
+//        loadImage(holder, practiceDTO.getPracticePhoto(), false);
     }
 
     private void displayPendingFormNotification(NotificationViewHolder holder, NotificationItem notificationItem) {
@@ -262,7 +262,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         holder.message.setText(stringBuilder);
         UserPracticeDTO practice = callback.getUserPracticeById(notificationItem.getMetadata().getPracticeId());
-        loadImage(holder, practice.getPracticePhoto(), true);
+//        loadImage(holder, practice.getPracticePhoto(), true);
     }
 
     private void displayPaymentNotification(NotificationViewHolder holder, NotificationItem notificationItem) {
@@ -321,7 +321,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 stringBuilder.length() - practiceName.length(), stringBuilder.length(),
                 Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         holder.message.setText(stringBuilder);
-        loadImage(holder, practice.getPracticePhoto(), true);
+//        loadImage(holder, practice.getPracticePhoto(), true);
     }
 
     private void displayCreditCardNotification(NotificationViewHolder holder, NotificationItem notificationItem) {
@@ -415,7 +415,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
         String photoUrl = provider.getPhoto();
         if (!StringUtil.isNullOrEmpty(photoUrl)) {
-//            loadImage(holder, photoUrl, false);
+            loadImage(holder, photoUrl, false);
         }
 
     }

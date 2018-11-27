@@ -98,16 +98,16 @@ public class CareTeamDetailFragment extends BaseFragment {
     }
 
     private void setUpUI(View view) {
-        final TextView avatarTextView = (TextView) view.findViewById(R.id.avatarTextView);
+        final TextView avatarTextView = view.findViewById(R.id.avatarTextView);
         avatarTextView.setText(StringUtil.getShortName(provider.getFullName()));
-        final ImageView providerImageView = (ImageView) view.findViewById(R.id.providerImageView);
+        final ImageView providerImageView = view.findViewById(R.id.providerImageView);
         Picasso.with(getContext()).load(provider.getPhoto())
                 .transform(new CircleImageTransform())
                 .into(providerImageView, new Callback() {
                     @Override
                     public void onSuccess() {
                         providerImageView.setVisibility(View.VISIBLE);
-                        avatarTextView.setVisibility(View.GONE);
+                        avatarTextView.setVisibility(View.INVISIBLE);
                     }
 
                     @Override
@@ -117,21 +117,21 @@ public class CareTeamDetailFragment extends BaseFragment {
                     }
                 });
 
-        TextView providerNameTextView = (TextView) view.findViewById(R.id.providerNameTextView);
+        TextView providerNameTextView = view.findViewById(R.id.providerNameTextView);
         providerNameTextView.setText(provider.getFullName());
-        TextView specialityValueTextView = (TextView) view.findViewById(R.id.specialityValueTextView);
+        TextView specialityValueTextView = view.findViewById(R.id.specialityValueTextView);
         specialityValueTextView.setText(provider.getSpecialityName());
-        TextView practiceValueTextView = (TextView) view.findViewById(R.id.practiceValueTextView);
+        TextView practiceValueTextView = view.findViewById(R.id.practiceValueTextView);
         practiceValueTextView.setText(provider.getPractice());
-        TextView addressValueTextView = (TextView) view.findViewById(R.id.addressValueTextView);
+        TextView addressValueTextView = view.findViewById(R.id.addressValueTextView);
         addressValueTextView.setText(provider.getAddress().getAddress().getLine1());
-        TextView zipCodeValueTextView = (TextView) view.findViewById(R.id.zipCodeValueTextView);
+        TextView zipCodeValueTextView = view.findViewById(R.id.zipCodeValueTextView);
         zipCodeValueTextView.setText(provider.getAddress().getAddress().getZipCode());
-        TextView stateValueTextView = (TextView) view.findViewById(R.id.stateValueTextView);
+        TextView stateValueTextView = view.findViewById(R.id.stateValueTextView);
         stateValueTextView.setText(provider.getAddress().getAddress().getStateName());
-        TextView cityValueTextView = (TextView) view.findViewById(R.id.cityValueTextView);
+        TextView cityValueTextView = view.findViewById(R.id.cityValueTextView);
         cityValueTextView.setText(provider.getAddress().getAddress().getCity());
-        TextView phoneValueTextView = (TextView) view.findViewById(R.id.phoneValueTextView);
+        TextView phoneValueTextView = view.findViewById(R.id.phoneValueTextView);
         phoneValueTextView.setText(provider.getPhone());
         phoneValueTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,7 +171,7 @@ public class CareTeamDetailFragment extends BaseFragment {
 
     private void setUpToolbar(View view) {
         callback.displayToolbar(false, null);
-        Toolbar toolbar = (Toolbar) view.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,7 +179,7 @@ public class CareTeamDetailFragment extends BaseFragment {
                 getActivity().onBackPressed();
             }
         });
-        TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
+        TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(Label.getLabel("my_health_care_team_detail_title"));
     }
 }
