@@ -49,17 +49,19 @@ public class PracticeModeRequestAppointmentDialog extends PatientModeRequestAppo
         View toolbar = findViewById(R.id.content_view_header_title);
         toolbar.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.background_top_rounded_dark_blue));
 
-        TextView appointmentDoctorNameTextView = view.findViewById(R.id.provider_doctor_name);
+        TextView providerImageTextView = view.findViewById(R.id.provider_short_name);
+        providerImageTextView.setText(StringUtil.getShortName(patientModel.getFullName()));
+        TextView patientNameTextView = view.findViewById(R.id.provider_doctor_name);
         if (StringUtil.isNullOrEmpty(patientModel.getPhoneNumber())) {
-            appointmentDoctorNameTextView.setText(patientModel.getFullName());
+            patientNameTextView.setText(patientModel.getFullName());
         } else {
-            appointmentDoctorNameTextView.setText(String
+            patientNameTextView.setText(String
                     .format("%s | %s", patientModel.getFullName(), patientModel.getPhoneNumber()));
         }
 
-        TextView providerName = view.findViewById(R.id.providerName);
-        providerName.setVisibility(View.VISIBLE);
-        providerName.setText(appointmentResourcesDTO.getResource().getProvider().getFullName());
+        TextView providerNameTextView = view.findViewById(R.id.providerName);
+        providerNameTextView.setVisibility(View.VISIBLE);
+        providerNameTextView.setText(appointmentResourcesDTO.getResource().getProvider().getFullName());
         view.findViewById(R.id.provider_place_address).setVisibility(View.GONE);
         view.findViewById(R.id.provider_place_name).setVisibility(View.GONE);
         view.findViewById(R.id.addressSeparator).setVisibility(View.GONE);
