@@ -11,8 +11,11 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.models.Messages;
 import com.carecloud.carepaylibray.customcomponents.SwipeViewHolder;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,9 +67,9 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
         holder.undoButton.setVisibility(View.GONE);
         holder.swipeLayout.setVisibility(View.VISIBLE);
 
-        String providerName = digProvider(thread);
-        holder.providerName.setText(providerName);
-        holder.providerInitials.setText(StringUtil.getShortName(providerName));
+        Messages.Participant provider = digProvider(thread);
+        holder.providerName.setText(provider.getName());
+        holder.providerInitials.setText(StringUtil.getShortName(provider.getName()));
         holder.providerTitle.setText(thread.getSubject());
 
         String dateString = DateUtil.getInstance().setDateRaw(thread.getLastUpdate())
@@ -99,6 +102,10 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
             holder.unreadCount.setVisibility(View.VISIBLE);
         } else {
             holder.unreadCount.setVisibility(View.GONE);
+        }
+
+        if (!StringUtil.isNullOrEmpty(provider.getPhoto())) {
+            loadImage(holder, provider.getPhoto());
         }
     }
 
@@ -173,13 +180,13 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
     }
 
 
-    private String digProvider(Messages.Reply thread) {
+    private Messages.Participant digProvider(Messages.Reply thread) {
         List<Messages.Reply> replies = thread.getReplies();
         if (!replies.isEmpty()) {
             for (Messages.Reply reply : replies) {
                 for (Messages.Participant participant : reply.getParticipants()) {
                     if (participant.getType() != null && participant.getType().equals("provider")) {
-                        return participant.getName();
+                        return participant;
                     }
                 }
             }
@@ -187,11 +194,32 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
 
         for (Messages.Participant participant : thread.getParticipants()) {
             if (!participant.getUserId().equals(userId)) {
-                return participant.getName();
+                return participant;
             }
         }
 
         return null;
+    }
+
+    private void loadImage(final MessagesListAdapter.ViewHolder holder, String photoUrl) {
+        int size = context.getResources().getDimensionPixelSize(R.dimen.payment_details_dialog_icon_size);
+        Picasso.with(context).load(photoUrl)
+                .resize(size, size)
+                .centerCrop()
+                .transform(new CircleImageTransform())
+                .into(holder.providerImage, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        holder.providerImage.setVisibility(View.VISIBLE);
+                        holder.providerInitials.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onError() {
+                        holder.providerImage.setVisibility(View.GONE);
+                        holder.providerInitials.setVisibility(View.VISIBLE);
+                    }
+                });
     }
 
     class ViewHolder extends SwipeViewHolder {
@@ -208,12 +236,12 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
 
         ViewHolder(View itemView) {
             super(itemView);
-            unreadCount = (TextView) itemView.findViewById(R.id.unread_count);
-            providerImage = (ImageView) itemView.findViewById(R.id.provider_image);
-            providerInitials = (TextView) itemView.findViewById(R.id.provider_initials);
-            providerName = (TextView) itemView.findViewById(R.id.provider_name);
-            providerTitle = (TextView) itemView.findViewById(R.id.provider_title);
-            timeStamp = (TextView) itemView.findViewById(R.id.time_stamp);
+            unreadCount = itemView.findViewById(R.id.unread_count);
+            providerImage = itemView.findViewById(R.id.provider_image);
+            providerInitials = itemView.findViewById(R.id.provider_initials);
+            providerName = itemView.findViewById(R.id.provider_name);
+            providerTitle = itemView.findViewById(R.id.provider_title);
+            timeStamp = itemView.findViewById(R.id.time_stamp);
             swipeLayout = itemView.findViewById(R.id.swipe_layout);
             undoButton = itemView.findViewById(R.id.undo_button);
             deleteLayout = itemView.findViewById(R.id.delete_message);

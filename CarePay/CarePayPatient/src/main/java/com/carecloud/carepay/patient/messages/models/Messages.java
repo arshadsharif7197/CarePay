@@ -139,6 +139,9 @@ public class Messages extends PagingDto {
         @SerializedName("patient_id")
         private String linkedPatientId;
 
+        @SerializedName("photo")
+        private String photo;
+
         public String getName() {
             return name;
         }
@@ -169,6 +172,14 @@ public class Messages extends PagingDto {
 
         public void setLinkedPatientId(String linkedPatientId) {
             this.linkedPatientId = linkedPatientId;
+        }
+
+        public String getPhoto() {
+            return photo;
+        }
+
+        public void setPhoto(String photo) {
+            this.photo = photo;
         }
     }
 }

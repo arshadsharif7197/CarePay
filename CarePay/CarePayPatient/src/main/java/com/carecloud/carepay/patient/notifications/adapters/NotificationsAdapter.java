@@ -235,6 +235,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
         holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_msg);
         holder.cellAvatar.setVisibility(View.VISIBLE);
+
+        loadImage(holder, practiceDTO.getPracticePhoto(), false);
     }
 
     private void displayPendingFormNotification(NotificationViewHolder holder, NotificationItem notificationItem) {
@@ -300,10 +302,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 messageText = Label.getLabel("notifications.notificationList.regularPayment.message.failedPaymentNotification");
             }
         }
-        holder.image.setVisibility(View.VISIBLE);
+        holder.imageView.setVisibility(View.VISIBLE);
         holder.initials.setBackgroundResource(imageBackground);
         holder.initials.setText(" ");
-        holder.image.setImageDrawable(ContextCompat.getDrawable(context, imageIcon));
+        holder.imageView.setImageDrawable(ContextCompat.getDrawable(context, imageIcon));
 
 
         holder.header.setText(headerText);
@@ -319,6 +321,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 stringBuilder.length() - practiceName.length(), stringBuilder.length(),
                 Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         holder.message.setText(stringBuilder);
+        loadImage(holder, practice.getPracticePhoto(), true);
     }
 
     private void displayCreditCardNotification(NotificationViewHolder holder, NotificationItem notificationItem) {
@@ -395,12 +398,25 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_checked_out);
                 break;
             }
+            case REQUESTED: {
+                holder.header.setText(Label.getLabel("notification_denied_appointment_title"));
+                holder.header.setTextColor(ContextCompat.getColor(context, R.color.remove_red));
+                setFormattedMessage(holder.message, Label.getLabel("notification_denied_appointment_message"),
+                        appointmentDate, provider.getName());
+                holder.initials.setTextColor(ContextCompat.getColor(context, R.color.remove_red));
+                holder.initials.setBackgroundResource(R.drawable.round_list_tv_red_border);
+                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_denied);
+                holder.cellAvatar.setVisibility(View.VISIBLE);
+                break;
+            }
             default:
                 resetViews(holder);
         }
 
-        String photoUrl = appointment.getPayload().getProvider().getPhoto();
-        loadImage(holder, photoUrl, false);
+        String photoUrl = provider.getPhoto();
+        if (!StringUtil.isNullOrEmpty(photoUrl)) {
+//            loadImage(holder, photoUrl, false);
+        }
 
     }
 
@@ -410,17 +426,17 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 .resize(size, size)
                 .centerCrop()
                 .transform(new CircleImageTransform())
-                .into(holder.image, new Callback() {
+                .into(holder.picImage, new Callback() {
                     @Override
                     public void onSuccess() {
-                        holder.image.setVisibility(View.VISIBLE);
+                        holder.picImage.setVisibility(View.VISIBLE);
                         holder.initials.setVisibility(View.GONE);
                         holder.cellAvatar.setVisibility(hideBadge ? View.GONE : View.VISIBLE);
                     }
 
                     @Override
                     public void onError() {
-                        holder.image.setVisibility(View.GONE);
+                        holder.picImage.setVisibility(View.GONE);
                         holder.initials.setVisibility(View.VISIBLE);
                     }
                 });
@@ -465,7 +481,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.initials.setBackgroundResource(R.drawable.round_list_tv);
         holder.initials.setVisibility(View.VISIBLE);
         holder.cellAvatar.setVisibility(View.GONE);
-        holder.image.setVisibility(View.GONE);
+        holder.picImage.setVisibility(View.GONE);
+        holder.imageView.setVisibility(View.GONE);
         holder.deleteButton.setVisibility(View.VISIBLE);
         holder.undoButton.setVisibility(View.GONE);
         holder.notificationItemView.setVisibility(View.VISIBLE);
@@ -474,7 +491,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     class NotificationViewHolder extends SwipeViewHolder {
         TextView initials;
         ImageView cellAvatar;
-        ImageView image;
+        ImageView picImage;
+        ImageView imageView;
         TextView header;
         TextView message;
         TextView time;
@@ -485,15 +503,16 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
         NotificationViewHolder(View itemView) {
             super(itemView);
-            initials = (TextView) itemView.findViewById(R.id.avatarTextView);
-            cellAvatar = (ImageView) itemView.findViewById(R.id.cellAvatarImageView);
-            image = (ImageView) itemView.findViewById(R.id.providerPicImageView);
-            header = (TextView) itemView.findViewById(R.id.notification_header);
-            message = (TextView) itemView.findViewById(R.id.notification_message);
-            time = (TextView) itemView.findViewById(R.id.notification_time);
+            initials = itemView.findViewById(R.id.avatarTextView);
+            cellAvatar = itemView.findViewById(R.id.cellAvatarImageView);
+            picImage = itemView.findViewById(R.id.providerPicImageView);
+            header = itemView.findViewById(R.id.notification_header);
+            message = itemView.findViewById(R.id.notification_message);
+            time = itemView.findViewById(R.id.notification_time);
             deleteButton = itemView.findViewById(R.id.delete_notification);
             notificationItemView = itemView.findViewById(R.id.notification_item_layout);
             undoButton = itemView.findViewById(R.id.undo_button);
+            imageView = itemView.findViewById(R.id.imageView);
         }
 
         @Override
