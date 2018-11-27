@@ -202,6 +202,8 @@ public class AllergiesFragment extends BaseCheckinFragment implements
                 AllergiesObject allergyToDelete = new AllergiesObject();
                 allergyToDelete.setAction(item.getAction());
                 allergyToDelete.setUuid(item.getUuid());
+                allergyToDelete.setInteroperableID(((AllergiesObject) item).getInteroperableID());
+                allergyToDelete.setInteroperableDesc(((AllergiesObject) item).getInteroperableDesc());
                 removeAllergies.add(allergyToDelete);
             }
         }
