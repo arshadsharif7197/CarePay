@@ -177,6 +177,16 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     }
 
     @Override
+    public void navigateToMedications(WorkflowDTO workflowDTO) {
+        demographicsPresenter.navigateToMedications(workflowDTO, true);
+    }
+
+    @Override
+    public void navigateToAllergy(WorkflowDTO workflowDTO) {
+        demographicsPresenter.navigateToAllergy(workflowDTO, true);
+    }
+
+    @Override
     public void updateCheckInFlow(CheckinFlowState flowState, int totalPages, int currentPage) {
         switch (flowState) {
             case DEMOGRAPHICS:
