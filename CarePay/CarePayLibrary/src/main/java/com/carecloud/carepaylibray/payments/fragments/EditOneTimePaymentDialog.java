@@ -110,6 +110,7 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
                 Label.getLabel("button_no"),
                 Label.getLabel("button_yes"));
         confirmDialogFragment.setCallback(confirmDeleteCallback);
+        confirmDialogFragment.setNegativeAction(true);
         confirmDialogFragment.setOnCancelListener(new OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {

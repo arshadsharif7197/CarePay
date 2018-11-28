@@ -304,6 +304,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 if (!presenter.handleHomeButtonClick()) {
                     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                     ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(null, null);
+                    confirmDialogFragment.setNegativeAction(true);
                     confirmDialogFragment.setCallback(new ConfirmationCallback() {
                         @Override
                         public void onConfirm() {

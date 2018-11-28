@@ -487,6 +487,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
                 : Label.getLabel("demographics_insurance_primary_alert_message");
         ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment
                 .newInstance(Label.getLabel("demographics_insurance_primary_alert_title"), message);
+        confirmDialogFragment.setNegativeAction(true);
         confirmDialogFragment.setCallback(callback);
         if (cancelListener != null) {
             confirmDialogFragment.setOnCancelListener(cancelListener);
