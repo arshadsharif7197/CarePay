@@ -44,6 +44,7 @@ import java.util.Set;
 
 public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private static final String KEY_BREEZE_PRACTICE = "is_breeze_practice";
+    private static final String KEY_RESCHEDULE_ENABLED = "isRescheduleEnabled";
 
     private AppointmentDTO appointmentDTO;
 
@@ -70,6 +71,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private Button rightButton;
 
     private boolean isBreezePractice = true;
+    private boolean isRescheduleEnabled = true;
 
 
     /**
@@ -78,10 +80,13 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
      * @param appointmentDTO appointment info
      * @return AppointmentDetailDialog
      */
-    public static AppointmentDetailDialog newInstance(AppointmentDTO appointmentDTO, boolean isBreezePractice) {
+    public static AppointmentDetailDialog newInstance(AppointmentDTO appointmentDTO,
+                                                      boolean isBreezePractice,
+                                                      boolean isRescheduleEnabled) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, appointmentDTO);
         args.putBoolean(KEY_BREEZE_PRACTICE, isBreezePractice);
+        args.putBoolean(KEY_RESCHEDULE_ENABLED, isRescheduleEnabled);
 
         AppointmentDetailDialog detailDialog = new AppointmentDetailDialog();
         detailDialog.setArguments(args);
@@ -123,6 +128,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         if (args != null) {
             appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, args);
             isBreezePractice = args.getBoolean(KEY_BREEZE_PRACTICE);
+            isRescheduleEnabled = args.getBoolean(KEY_RESCHEDULE_ENABLED);
         }
     }
 
@@ -282,9 +288,11 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     appointmentStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.remove_red));
                     appointmentStatus.setText(Label.getLabel("appointments_missed_heading"));
                     actionsLayout.setVisibility(View.VISIBLE);
-                    leftButton.setVisibility(View.VISIBLE);
-                    leftButton.setText(Label.getLabel("appointment_reschedule_button"));
-                    leftButton.setOnClickListener(rescheduleClick);
+                    if (isRescheduleEnabled) {
+                        leftButton.setVisibility(View.VISIBLE);
+                        leftButton.setText(Label.getLabel("appointment_reschedule_button"));
+                        leftButton.setOnClickListener(rescheduleClick);
+                    }
                     break;
                 }
                 case CANCELED_UPCOMING:
