@@ -5,6 +5,7 @@ public enum CheckinFlowState {
     DEMOGRAPHICS,
     CONSENT,
     MEDICATIONS_AND_ALLERGIES,
+    ALLERGIES,
     INTAKE,
     PAYMENT;
 }

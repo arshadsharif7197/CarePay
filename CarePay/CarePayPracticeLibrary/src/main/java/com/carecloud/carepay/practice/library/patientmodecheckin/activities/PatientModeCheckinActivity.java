@@ -53,7 +53,6 @@ import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
-import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
@@ -329,6 +328,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 findViewById(R.id.checkin_flow_demographics),
                 findViewById(R.id.checkin_flow_consent),
                 findViewById(R.id.checkin_flow_medications),
+                findViewById(R.id.checkin_flow_allergies),
                 findViewById(R.id.checkin_flow_intake),
                 findViewById(R.id.checkin_flow_payment)
         };
@@ -336,7 +336,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         String[] labels = new String[]{
                 Label.getLabel("demographics_patient_information_title"),
                 Label.getLabel("demographics_consent_forms_title"),
-                Label.getLabel("demographics_meds_allergies_title"),
+                Label.getLabel("demographics_meds_title"),
+                Label.getLabel("demographics_allergies_title"),
                 Label.getLabel("practice_chekin_section_intake_forms"),
                 Label.getLabel("demographics_payment_title")
         };
@@ -741,6 +742,16 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     @Override
     public void navigateToMedicationsAllergy(WorkflowDTO workflowDTO) {
         presenter.navigateToMedicationsAllergy(workflowDTO);
+    }
+
+    @Override
+    public void navigateToMedications(WorkflowDTO workflowDTO) {
+        presenter.navigateToMedications(workflowDTO, true);
+    }
+
+    @Override
+    public void navigateToAllergy(WorkflowDTO workflowDTO) {
+        presenter.navigateToAllergy(workflowDTO, true);
     }
 
     @Override
