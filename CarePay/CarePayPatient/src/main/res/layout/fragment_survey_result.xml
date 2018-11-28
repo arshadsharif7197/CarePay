@@ -82,6 +82,7 @@
         android:textColor="@color/white"
         android:textSize="16sp"
         android:visibility="gone"
+        app:customAssetFont="gotham_rounded_book"
         breeze:textKey="surveys_no_thank_you"
         tools:text="No, thank you" />
 
