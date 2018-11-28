@@ -37,4 +37,5 @@ public class PaymentsSectionsPagerAdapter extends FragmentStatePagerAdapter {
     public CharSequence getPageTitle(int position) {
         return fragmentTitles.get(position);
     }
+
 }

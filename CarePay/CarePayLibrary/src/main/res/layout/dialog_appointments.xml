@@ -6,8 +6,11 @@
     android:id="@+id/rootDialogAppointLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/dimen_10dp"
     android:background="@color/transparent_apt"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingStart="@dimen/dimen_10dp"
+    android:paddingEnd="@dimen/dimen_10dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -66,8 +69,8 @@
                 android:layout_margin="@dimen/dimen_5dp"
                 android:ellipsize="end"
                 android:gravity="center_horizontal"
-                android:paddingEnd="@dimen/dimen_5dp"
                 android:paddingStart="@dimen/dimen_5dp"
+                android:paddingEnd="@dimen/dimen_5dp"
                 android:singleLine="true"
                 android:textColor="@color/slateGray"
                 android:textSize="@dimen/apt_dl_textview_size"
@@ -91,8 +94,8 @@
                 android:layout_margin="@dimen/apt_dl_appt_time_margin"
                 android:ellipsize="end"
                 android:gravity="center_horizontal"
-                android:paddingEnd="@dimen/dimen_5dp"
                 android:paddingStart="@dimen/dimen_5dp"
+                android:paddingEnd="@dimen/dimen_5dp"
                 android:singleLine="true"
                 android:textColor="@color/slateGray"
                 android:textSize="@dimen/apt_dl_textview_size"
@@ -133,8 +136,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/apt_dl_appt_time_margin"
             android:orientation="vertical"
-            android:paddingEnd="@dimen/apt_dl_margin"
-            android:paddingStart="@dimen/apt_dl_margin">
+            android:paddingStart="@dimen/apt_dl_margin"
+            android:paddingEnd="@dimen/apt_dl_margin">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/providerName"
@@ -166,8 +169,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/apt_dl_view_margin"
                 android:layout_marginTop="@dimen/apt_dl_view_margin"
+                android:layout_marginBottom="@dimen/apt_dl_view_margin"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -219,9 +222,9 @@
                     android:id="@+id/appointDailImageView"
                     android:layout_width="@dimen/apt_dl_zero_ht_wdh"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/apt_dialog_appoint_dail_margin"
                     android:layout_marginStart="@dimen/apt_dialog_appoint_dail_margin"
                     android:layout_marginTop="@dimen/apt_dialog_appoint_dail_margin"
+                    android:layout_marginBottom="@dimen/apt_dialog_appoint_dail_margin"
                     android:layout_weight="0.15"
                     android:src="@drawable/icn_appointment_card_call" />
 
@@ -281,18 +284,18 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingBottom="@dimen/apt_dl_margin"
-            android:paddingEnd="@dimen/dimen_10dp"
             android:paddingStart="@dimen/dimen_10dp"
             android:paddingTop="@dimen/apt_dl_margin"
+            android:paddingEnd="@dimen/dimen_10dp"
+            android:paddingBottom="@dimen/apt_dl_margin"
             android:visibility="gone">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/appointment_button_left"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dimen_48dp"
-                android:layout_marginEnd="@dimen/dimen_10dp"
                 android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_marginEnd="@dimen/dimen_10dp"
                 android:layout_weight="1"
                 android:background="@drawable/button_blue_border_selector"
                 android:textAllCaps="true"
@@ -307,8 +310,8 @@
                 android:id="@+id/appointment_button_right"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dimen_48dp"
-                android:layout_marginEnd="@dimen/dimen_10dp"
                 android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_marginEnd="@dimen/dimen_10dp"
                 android:layout_weight="1"
                 android:background="@drawable/button_green_selector"
                 android:textAllCaps="true"

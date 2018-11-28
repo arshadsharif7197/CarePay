@@ -6,13 +6,14 @@
     android:layout_height="match_parent">
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-        android:id="@+id/available_location"
+        android:id="@+id/practiceTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginEnd="@dimen/dimen_8dp"
-        android:background="@drawable/rounded_button_blue_border_selector"
-        app:customAssetFont="proxima_nova_regular"
+        android:background="@drawable/rounded_button_practice_selector"
+        android:textColor="@color/practice_text_color_selector"
+        app:customAssetFont="proxima_nova_semi_bold"
         tools:text="Location" />
 
 </FrameLayout>

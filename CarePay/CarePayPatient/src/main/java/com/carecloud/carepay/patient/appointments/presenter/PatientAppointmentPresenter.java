@@ -269,6 +269,10 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         return getPracticeSettings();
     }
 
+    public AppointmentsResultModel getMainAppointmentDto() {
+        return appointmentsResultModel;
+    }
+
     @Override
     public void onCancelAppointment(final AppointmentDTO appointmentDTO) {
         final AppointmentCancellationFee cancellationFee = getCancellationFee(appointmentDTO);
@@ -411,7 +415,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         practiceId = appointmentDTO.getMetadata().getPracticeId();
         practiceMgmt = appointmentDTO.getMetadata().getPracticeMgmt();
         patientId = appointmentDTO.getMetadata().getPatientId();
-        AppointmentDetailDialog detailDialog = AppointmentDetailDialog.newInstance(appointmentDTO, getPracticeInfo(appointmentDTO).isBreezePractice());
+        AppointmentDetailDialog detailDialog = AppointmentDetailDialog
+                .newInstance(appointmentDTO, getPracticeInfo(appointmentDTO).isBreezePractice());
         viewHandler.displayDialogFragment(detailDialog, false);
     }
 
