@@ -85,7 +85,7 @@ public class PatientModeRequestAppointmentDialog extends BasePracticeDialog {
 
     }
 
-    protected void inflateUIComponents(View view) {
+    protected void inflateUIComponents(final View view) {
         Button requestAppointmentButton = view.findViewById(R.id.requestAppointmentButton);
         ApplicationMode.ApplicationType applicationType = callback.getApplicationMode().getApplicationType();
         boolean autoScheduleAppointments = callback.getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests();
@@ -102,7 +102,6 @@ public class PatientModeRequestAppointmentDialog extends BasePracticeDialog {
                 dismiss();
             }
         });
-        requestAppointmentButton.requestFocus();
 
         DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentSlot.getStartTime());
 
@@ -145,6 +144,7 @@ public class PatientModeRequestAppointmentDialog extends BasePracticeDialog {
             @Override
             public void run() {
                 scrollContainer.fullScroll(View.FOCUS_UP);
+                SystemUtil.hideSoftKeyboard(getContext(), view);
             }
         });
 
