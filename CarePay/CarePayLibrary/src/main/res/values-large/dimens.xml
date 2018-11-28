@@ -5,4 +5,7 @@
     <dimen name="textview_default_textsize">16sp</dimen>
     <dimen name="closeIconSize">15dp</dimen>
     <dimen name="roundBorderBottonVerticalPadding">4dp</dimen>
+    <dimen name="reasonForVisitHorizontalMargin">14dp</dimen>
+    <dimen name="visitTypeContainerVerticalPadding">15dp</dimen>
+    <dimen name="reasonForVisitTopMargin">10dp</dimen>
 </resources>

@@ -16,7 +16,7 @@ public interface AppointmentNavigationCallback extends VisitTypeInterface, Avail
 
     void rescheduleAppointment(AppointmentDTO appointmentDTO);
 
-    void requestAppointment(AppointmentsSlotsDTO appointmentSlot, String comments);
+    void requestAppointment(AppointmentsSlotsDTO appointmentSlot, String reasonForVisit);
 
     void onAppointmentUnconfirmed();
 
