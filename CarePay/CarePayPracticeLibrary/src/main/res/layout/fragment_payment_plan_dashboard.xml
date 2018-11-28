@@ -179,7 +179,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/respons_button_text_size"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="payment.paymentPlanDashboard.nopaymentplans.button.title"
+                breeze:textKey="payment.paymentPlanDashboard.button.label.createPaymentPlan"
                 tools:text="Create Payment Plan" />
 
         </LinearLayout>
