@@ -120,12 +120,28 @@
             android:id="@+id/practice_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_14dp"
+            android:layout_marginEnd="@dimen/dimen_14dp"
             android:layout_marginTop="@dimen/dimen_16dp"
             android:gravity="center"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_20"
             app:customAssetFont="proxima_nova_semi_bold"
-            breeze:textKey="payment_receipt_title" />
+            breeze:textKey="payment_receipt_title"
+            tools:text="Practice Name"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/paymentPlanNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_14dp"
+            android:layout_marginEnd="@dimen/dimen_14dp"
+            android:gravity="center"
+            android:textColor="@color/optional_gray"
+            android:textSize="@dimen/text_size_16"
+            app:customAssetFont="proxima_nova_semi_bold"
+            breeze:textKey="payment_receipt_title"
+            tools:text="Payment Plan Name"/>
 
         <View
             android:layout_width="match_parent"
@@ -161,8 +177,8 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_12sp"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="payment_plan_edit"
-                tools:text="Edit Plan" />
+                breeze:textKey="payment_plan_edit_button"
+                tools:text="Edit Payment Plan" />
 
         </LinearLayout>
 
