@@ -216,8 +216,8 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
             view.findViewById(R.id.visitTypeContainer).setVisibility(View.GONE);
             view.findViewById(R.id.separator2).setVisibility(View.GONE);
         } else {
-            userNameTextView.setText(selectedAppointment.getPayload().getPatient().getFirstName() + " "
-                    + selectedAppointment.getPayload().getPatient().getLastName());
+            userNameTextView.setText(String.format("%s %s", selectedAppointment.getPayload().getPatient().getFirstName(),
+                    selectedAppointment.getPayload().getPatient().getLastName()));
             appointmentHourTextView.setText(DateUtil.getHoursFormatted(selectedAppointment.getPayload()
                     .getStartTime()));
             TextView appointmentProviderTextView = view.findViewById(R.id.appointmentProviderTextView);

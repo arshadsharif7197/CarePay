@@ -70,6 +70,9 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
                 }
                 dto = gson.fromJson(workflowString, PaymentsModel.class);
             } else {
+                if (isCheckOut) {
+                    appointmentDTO.getPayload().getAppointmentStatus().setName("Checked-Out");
+                }
                 dto = gson.fromJson(workflowString, AppointmentsResultModel.class);
             }
             String appointmentTransitionsWorkflow = extra.getString(CarePayConstants.EXTRA_APPOINTMENT_TRANSITIONS);
