@@ -266,7 +266,7 @@
                             android:layout_marginTop="@dimen/apt_dialog_appoint_dail_margin"
                             android:layout_marginBottom="@dimen/apt_dialog_appoint_dail_margin"
                             android:layout_weight="0.15"
-                            android:src="@drawable/icn_appointment_card_call" />
+                            android:src="@drawable/selector_phone_icon" />
 
                     </LinearLayout>
 
