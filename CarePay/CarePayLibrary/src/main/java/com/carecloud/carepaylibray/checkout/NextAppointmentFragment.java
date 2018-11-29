@@ -219,7 +219,7 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
         final ImageView providerPicImageView = view.findViewById(R.id.providerPicImageView);
         final TextView providerInitials = view.findViewById(R.id.providerInitials);
         providerInitials.setText(StringUtil.getShortName(provider.getName()));
-        int size = getResources().getDimensionPixelSize(R.dimen.nextAppointmentProviderPicImageSize);
+        int size = getResources().getDimensionPixelSize(R.dimen.nextAppointmentProviderImageSize);
         Picasso.with(getContext()).load(provider.getPhoto())
                 .resize(size,size)
                 .centerCrop()

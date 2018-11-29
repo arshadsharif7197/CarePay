@@ -95,16 +95,16 @@
 
                 <ImageView
                     android:id="@+id/providerPicImageView"
-                    android:layout_width="@dimen/nextAppointmentProviderPicImageSize"
-                    android:layout_height="@dimen/nextAppointmentProviderPicImageSize"
+                    android:layout_width="@dimen/nextAppointmentProviderImageSize"
+                    android:layout_height="@dimen/nextAppointmentProviderImageSize"
                     android:layout_centerHorizontal="true"
                     android:scaleType="center"
                     android:src="@drawable/icn_placeholder_user_profile_png" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/providerInitials"
-                    android:layout_width="@dimen/nextAppointmentProviderPicImageSize"
-                    android:layout_height="@dimen/nextAppointmentProviderPicImageSize"
+                    android:layout_width="@dimen/nextAppointmentProviderImageSize"
+                    android:layout_height="@dimen/nextAppointmentProviderImageSize"
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="start"
                     android:background="@drawable/round_list_tv"
