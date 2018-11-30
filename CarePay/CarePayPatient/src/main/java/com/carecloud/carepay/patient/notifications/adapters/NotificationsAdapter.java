@@ -236,13 +236,15 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_msg);
         holder.cellAvatar.setVisibility(View.VISIBLE);
 
-//        loadImage(holder, practiceDTO.getPracticePhoto(), false);
+        loadImage(holder, practiceDTO.getPracticePhoto(), false);
     }
 
     private void displayPendingFormNotification(NotificationViewHolder holder, NotificationItem notificationItem) {
-        holder.initials.setText(StringUtil.getShortName(notificationItem.getPayload().getPracticeName()));
-        holder.initials.setTextColor(ContextCompat.getColor(context, R.color.lightning_yellow));
-        holder.initials.setBackgroundResource(R.drawable.round_list_tv_yellow_border);
+        holder.initials.setText("");
+//        holder.initials.setTextColor(ContextCompat.getColor(context, R.color.lightning_yellow));
+        holder.initials.setBackgroundResource(R.drawable.round_list_tv_yellow);
+        holder.imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icn_pending_form_notification));
+        holder.imageView.setVisibility(View.VISIBLE);
 
         String headerText = Label.getLabel("consentForms.providersList.item.label.pendingFormCount");
         if (notificationItem.getPayload().getPendingForms() > 1) {
@@ -261,7 +263,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                         CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD), 0, practiceName.length(),
                 Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         holder.message.setText(stringBuilder);
-        UserPracticeDTO practice = callback.getUserPracticeById(notificationItem.getMetadata().getPracticeId());
+//        UserPracticeDTO practice = callback.getUserPracticeById(notificationItem.getMetadata().getPracticeId());
 //        loadImage(holder, practice.getPracticePhoto(), true);
     }
 
