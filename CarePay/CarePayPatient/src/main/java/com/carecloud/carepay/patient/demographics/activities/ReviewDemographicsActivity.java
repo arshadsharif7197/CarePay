@@ -125,6 +125,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
                             Label.getLabel("checkin_confirm_exit_message"),
                             Label.getLabel("button_no"),
                             Label.getLabel("button_yes"));
+            fragment.setNegativeAction(true);
             fragment.setCallback(this);
             displayDialogFragment(fragment, false);
             return true;
@@ -174,6 +175,16 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     @Override
     public void navigateToMedicationsAllergy(WorkflowDTO workflowDTO) {
         demographicsPresenter.navigateToMedicationsAllergy(workflowDTO);
+    }
+
+    @Override
+    public void navigateToMedications(WorkflowDTO workflowDTO) {
+        demographicsPresenter.navigateToMedications(workflowDTO, true);
+    }
+
+    @Override
+    public void navigateToAllergy(WorkflowDTO workflowDTO) {
+        demographicsPresenter.navigateToAllergy(workflowDTO, true);
     }
 
     @Override

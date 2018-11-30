@@ -269,5 +269,6 @@
     <dimen name="pickItemTextSize">17sp</dimen>
     <dimen name="pickItemVerticalPadding">8dp</dimen>
     <dimen name="lineItemDetailButtonTextSize">13sp</dimen>
+    <dimen name="nextAppointmentProviderImageSize">100dp</dimen>
 
 </resources>

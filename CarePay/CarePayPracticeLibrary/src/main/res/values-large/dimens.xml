@@ -130,5 +130,6 @@
     <dimen name="paymentDetailLabelTextSize">13sp</dimen>
     <dimen name="paymentDetailAmountTextSize">12sp</dimen>
     <dimen name="paymentDetailDateTextSize">10sp</dimen>
+    <dimen name="nextAppointmentProviderImageSize">100dp</dimen>
 
 </resources>

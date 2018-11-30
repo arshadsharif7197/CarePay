@@ -129,9 +129,9 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
     }
 
     private void setUpToolbar(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         callback.setToolbar(toolbar);
-        TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
+        TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(Label.getLabel("next_appointment_toolbar_title"));
 
         if (!callback.shouldAllowNavigateBack()) {
@@ -143,7 +143,7 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
     private void setUpUi(final View view) {
         setUpProviderMessage(view, selectedProvider);
 
-        Button scheduleLaterButton = (Button) view.findViewById(R.id.scheduleLaterButton);
+        Button scheduleLaterButton = view.findViewById(R.id.scheduleLaterButton);
         scheduleLaterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -151,7 +151,7 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
             }
         });
 
-        scheduleAppointmentButton = (Button) getView().findViewById(R.id.scheduleAppointmentButton);
+        scheduleAppointmentButton = getView().findViewById(R.id.scheduleAppointmentButton);
         scheduleAppointmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -159,7 +159,7 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
             }
         });
 
-        chooseProviderTextView = (TextView) view.findViewById(R.id.providerTextView);
+        chooseProviderTextView = view.findViewById(R.id.providerTextView);
         chooseProviderTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -170,8 +170,8 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
             chooseProviderTextView.setText(selectedProvider.getFullName());
         }
 
-        visitTypeTextInputLayout = (TextInputLayout) view.findViewById(R.id.visitTypeTextInputLayout);
-        visitTypeTextView = (TextView) view.findViewById(R.id.visitTypeTextView);
+        visitTypeTextInputLayout = view.findViewById(R.id.visitTypeTextInputLayout);
+        visitTypeTextView = view.findViewById(R.id.visitTypeTextView);
         visitTypeTextView.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(visitTypeTextInputLayout, null));
         visitTypeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -182,8 +182,8 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
         visitTypeTextView.getOnFocusChangeListener().onFocusChange(visitTypeTextView,
                 !StringUtil.isNullOrEmpty(visitTypeTextView.getText().toString().trim()));
 
-        visitTimeTextInputLayout = (TextInputLayout) view.findViewById(R.id.visitTimeTextInputLayout);
-        visitTimeTextView = (TextView) view.findViewById(R.id.visitTimeTextView);
+        visitTimeTextInputLayout = view.findViewById(R.id.visitTimeTextInputLayout);
+        visitTimeTextView = view.findViewById(R.id.visitTimeTextView);
         visitTimeTextView.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(visitTimeTextInputLayout, null));
         visitTimeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -216,10 +216,12 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
     }
 
     private void setUpProviderMessage(View view, ProviderDTO provider) {
-        final ImageView providerPicImageView = (ImageView) view.findViewById(R.id.providerPicImageView);
-        final TextView providerInitials = (TextView) view.findViewById(R.id.providerInitials);
+        final ImageView providerPicImageView = view.findViewById(R.id.providerPicImageView);
+        final TextView providerInitials = view.findViewById(R.id.providerInitials);
         providerInitials.setText(StringUtil.getShortName(provider.getName()));
+        int size = getResources().getDimensionPixelSize(R.dimen.nextAppointmentProviderImageSize);
         Picasso.with(getContext()).load(provider.getPhoto())
+                .resize(size,size)
                 .centerCrop()
                 .transform(new CircleImageTransform())
                 .into(providerPicImageView, new Callback() {

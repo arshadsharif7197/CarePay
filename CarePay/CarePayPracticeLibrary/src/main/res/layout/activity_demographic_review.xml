@@ -66,6 +66,10 @@
                 layout="@layout/item_checkin_flow" />
 
             <include
+                android:id="@+id/checkin_flow_allergies"
+                layout="@layout/item_checkin_flow" />
+
+            <include
                 android:id="@+id/checkin_flow_intake"
                 layout="@layout/item_checkin_flow" />
 

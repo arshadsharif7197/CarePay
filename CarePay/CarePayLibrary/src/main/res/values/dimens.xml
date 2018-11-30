@@ -477,5 +477,6 @@
     <dimen name="reasonForVisitHorizontalMargin">14dp</dimen>
     <dimen name="visitTypeContainerVerticalPadding">15dp</dimen>
     <dimen name="reasonForVisitTopMargin">10dp</dimen>
+    <dimen name="nextAppointmentProviderImageSize">80dp</dimen>
 
 </resources>

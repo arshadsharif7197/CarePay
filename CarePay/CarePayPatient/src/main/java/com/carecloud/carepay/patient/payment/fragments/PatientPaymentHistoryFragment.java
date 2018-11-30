@@ -32,12 +32,15 @@ import java.util.Map;
 
 import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_HISTORY;
 
+import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_HISTORY;
+
 /**
  * Created by jorge on 02/01/17
  */
 public class PatientPaymentHistoryFragment extends BaseFragment
         implements PaymentHistoryAdapter.HistoryItemClickListener {
-    private static final int BOTTOM_ROW_OFFSET = 2;
+    private static final int ITEMS_PER_PAGE = 50;
+    private static final int BOTTOM_ROW_OFFSET = (int) (ITEMS_PER_PAGE * 0.33);
 
     private PaymentsModel paymentsModel;
     private Paging paging;
@@ -150,7 +153,7 @@ public class PatientPaymentHistoryFragment extends BaseFragment
     private void loadNextPage() {
         NextPagingDTO next = new NextPagingDTO();
         next.setNextPage(paging.getCurrentPage() + 1);
-        next.setPageCount(paging.getResultsPerPage());
+        next.setPageCount(ITEMS_PER_PAGE);
 
         TransitionDTO nextPageTransition = paymentsModel.getPaymentsMetadata().getPaymentsLinks()
                 .getPaymentTransactionHistory();
