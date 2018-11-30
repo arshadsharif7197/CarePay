@@ -298,23 +298,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment
                 hideDialog();
             }
         });
-
-        View historyButton = view.findViewById(R.id.button_history);
-        boolean hasHistory = !paymentsModel.getPaymentPayload()
-                .getTransactionHistory().getPaymentHistoryList().isEmpty();
-        boolean hasPlans = !paymentsModel.getPaymentPayload()
-                .getFilteredPlans(getApplicationMode().getUserPracticeDTO().getPracticeId()).isEmpty();
-//        historyButton.setVisibility(hasHistory || hasPlans ? View.VISIBLE : View.INVISIBLE);
-        historyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearPickers();
-                clearLastSwipeView();
-                callback.showPaymentHistory(paymentsModel);
-                hideDialog();
-            }
-        });
-
         actionButton = view.findViewById(R.id.action_button);
         actionButton.setOnClickListener(new View.OnClickListener() {
             @Override

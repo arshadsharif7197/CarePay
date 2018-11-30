@@ -619,14 +619,30 @@
                 android:id="@+id/divider2"
                 android:layout_width="@dimen/checkin_complete_divider_width"
                 android:layout_height="@dimen/dimen_1dp"
+                android:layout_marginBottom="@dimen/dimen_20dp"
                 android:background="@color/white" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/surveyButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:background="@drawable/button_rounded_white"
+                android:padding="@dimen/dimen_10dp"
+                android:textColor="@color/lemonGreen"
+                android:textSize="@dimen/text_size_22sp"
+                android:visibility="gone"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="check_in-out.succcess.button.label.survey"
+                tools:text="Take a survey" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/browseOurShopTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:layout_marginTop="@dimen/dimen_30dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
                 android:background="@drawable/button_rounded_white"
                 android:padding="@dimen/dimen_10dp"
                 android:textColor="@color/lemonGreen"

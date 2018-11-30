@@ -322,6 +322,8 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
             if (NavigationStateConstants.APPOINTMENTS.equals(state)
                     || NavigationStateConstants.PATIENT_HOME.equals(state)) {
                 callback.showAllDone(workflowDTO);
+            } else if (NavigationStateConstants.SURVEYS_CHECKOUT.equals(state)) {
+                callback.startSurveyFlow(workflowDTO);
             } else {
                 callback.navigateToWorkflow(workflowDTO);
             }
@@ -359,6 +361,8 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
             if (NavigationStateConstants.APPOINTMENTS.equals(state)
                     || NavigationStateConstants.PATIENT_HOME.equals(state)) {
                 callback.showAllDone(workflowDTO);
+            } else if (NavigationStateConstants.SURVEYS_CHECKOUT.equals(state)) {
+                callback.startSurveyFlow(workflowDTO);
             } else {
                 callback.navigateToWorkflow(workflowDTO);
             }
