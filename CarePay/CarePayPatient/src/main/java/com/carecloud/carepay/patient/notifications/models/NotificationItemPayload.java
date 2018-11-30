@@ -1,6 +1,6 @@
 package com.carecloud.carepay.patient.notifications.models;
 
-import com.carecloud.carepay.patient.survey.model.PendingSurveyDto;
+import com.carecloud.carepaylibray.survey.model.PendingSurveyDto;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

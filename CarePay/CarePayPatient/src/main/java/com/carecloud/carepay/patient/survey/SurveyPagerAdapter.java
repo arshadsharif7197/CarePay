@@ -1,7 +1,6 @@
 package com.carecloud.carepay.patient.survey;
 
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.survey.model.SurveyQuestionDTO;
+import com.carecloud.carepaylibray.survey.model.SurveyQuestionDTO;
 
 import java.util.List;
 
@@ -29,11 +28,11 @@ public class SurveyPagerAdapter extends PagerAdapter {
         final SurveyQuestionDTO question = questions.get(position);
         LayoutInflater inflater = LayoutInflater.from(container.getContext());
         View view = inflater.inflate(R.layout.item_survey, container, false);
-        TextView surveyQuestionTextView = (TextView) view.findViewById(R.id.surveyQuestionTextView);
+        TextView surveyQuestionTextView = view.findViewById(R.id.surveyQuestionTextView);
         surveyQuestionTextView.setText(question.getTitle());
         container.addView(view);
         view.setTag(question.getUuid());
-        final RatingBar surveyQuestionRatingBar = (RatingBar) view.findViewById(R.id.surveyQuestionRatingBar);
+        final RatingBar surveyQuestionRatingBar = view.findViewById(R.id.surveyQuestionRatingBar);
 
         surveyQuestionRatingBar.setNumStars(5);
         surveyQuestionRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {

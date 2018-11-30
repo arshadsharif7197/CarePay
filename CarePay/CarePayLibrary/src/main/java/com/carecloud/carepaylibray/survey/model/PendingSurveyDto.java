@@ -1,6 +1,5 @@
-package com.carecloud.carepay.patient.survey.model;
+package com.carecloud.carepaylibray.survey.model;
 
-import com.carecloud.carepay.patient.notifications.models.NotificationItemMetadata;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -15,7 +14,7 @@ public class PendingSurveyDto {
 
     @Expose
     @SerializedName("metadata")
-    private NotificationItemMetadata metadata = new NotificationItemMetadata();
+    private PendingSurveyMetadata metadata = new PendingSurveyMetadata();
 
     public PendingSurveyPayload getPayload() {
         return payload;
@@ -25,11 +24,11 @@ public class PendingSurveyDto {
         this.payload = payload;
     }
 
-    public NotificationItemMetadata getMetadata() {
+    public PendingSurveyMetadata getMetadata() {
         return metadata;
     }
 
-    public void setMetadata(NotificationItemMetadata metadata) {
+    public void setMetadata(PendingSurveyMetadata metadata) {
         this.metadata = metadata;
     }
 }

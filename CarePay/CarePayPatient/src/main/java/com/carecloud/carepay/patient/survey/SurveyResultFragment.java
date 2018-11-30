@@ -23,11 +23,11 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BackPressedFragmentInterface;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.survey.model.SocialNetworkLink;
-import com.carecloud.carepay.patient.survey.model.SurveyDTO;
-import com.carecloud.carepay.patient.survey.model.SurveyModel;
-import com.carecloud.carepay.patient.survey.model.SurveyQuestionDTO;
-import com.carecloud.carepay.patient.survey.model.SurveySettings;
+import com.carecloud.carepaylibray.survey.model.SocialNetworkLink;
+import com.carecloud.carepaylibray.survey.model.SurveyDTO;
+import com.carecloud.carepaylibray.survey.model.SurveyModel;
+import com.carecloud.carepaylibray.survey.model.SurveyQuestionDTO;
+import com.carecloud.carepaylibray.survey.model.SurveySettings;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -346,7 +346,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
 
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
-                hideProgressDialog();
+            hideProgressDialog();
                 if (survey.isZeroAnswers()) {
                     manageGoBackButton(getView(), survey, workflowDTO);
                 } else if (!submitFeedbackButtonPressed) {

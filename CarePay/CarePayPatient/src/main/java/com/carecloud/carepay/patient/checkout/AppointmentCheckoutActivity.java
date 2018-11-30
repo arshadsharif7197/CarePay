@@ -87,7 +87,6 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         AppointmentPrepaymentCallback, ProviderInterface, PatientPaymentMethodInterface,
         PaymentPlanCompletedInterface, PaymentPlanCreateInterface {
 
-    public static final int CHECKOUT_FLOW = 210;
     private String appointmentId;
     private AppointmentDTO selectedAppointment;
 
@@ -571,6 +570,11 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_checkout_completed), 1);
             MixPanelUtil.endTimer(getString(R.string.timer_checkout));
         }
+    }
+
+    @Override
+    public void startSurveyFlow(WorkflowDTO workflowDTO) {
+        navigateToWorkflow(workflowDTO);
     }
 
     WorkflowServiceCallback continueCallback = new WorkflowServiceCallback() {

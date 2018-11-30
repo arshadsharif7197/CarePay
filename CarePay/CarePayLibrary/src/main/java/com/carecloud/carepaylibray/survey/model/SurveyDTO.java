@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.survey.model;
+package com.carecloud.carepaylibray.survey.model;
 
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.google.gson.annotations.Expose;

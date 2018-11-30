@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BackPressedFragmentInterface;
-import com.carecloud.carepay.patient.survey.model.SurveyDTO;
-import com.carecloud.carepay.patient.survey.model.SurveyModel;
+import com.carecloud.carepaylibray.survey.model.SurveyDTO;
+import com.carecloud.carepaylibray.survey.model.SurveyModel;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
