@@ -672,8 +672,17 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             builder.replace(last, builder.length(), "");
             ((ISession) viewHandler.getContext()).showErrorNotification(builder.toString());
         } else {
+            String paymentType = Label.getLabel("appointment.confirmationScreen.type.label.paymentType");
+            try {
+                if (workflowDTO.getPayload().getAsJsonObject("appointments") != null) {
+                    paymentType = Label.getLabel("appointment.confirmationScreen.paymentType.label.cancellationType");
+                }
+            } catch (Exception e) {
+                //Using this try catch because middleware returns different structure for the appointment.
+                //In appointment prepayment it returns an array with 1 appointment and for cancellation it returns an object.
+            }
             PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
-                    .newInstance(workflowDTO, Label.getLabel("appointment.confirmationScreen.type.label.paymentType"),
+                    .newInstance(workflowDTO, paymentType,
                             Label.getLabel("add_appointment_back_to_appointments_button"));
             viewHandler.displayDialogFragment(confirmationFragment, false);
         }
