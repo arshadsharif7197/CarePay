@@ -1208,6 +1208,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment
                 .newInstance(Label.getLabel("payment.cancelPaymentPlan.confirmDialog.title.cancelPaymentPlanTitle"),
                         Label.getLabel("payment.cancelPaymentPlan.confirmDialog.message.cancelPaymentPlanMessage"));
+        confirmDialogFragment.setNegativeAction(true);
         confirmDialogFragment.setCallback(confirmationCallback);
         String tag = confirmDialogFragment.getClass().getName();
         confirmDialogFragment.show(ft, tag);
@@ -1250,5 +1251,11 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             }
         });
         displayDialogFragment(fragment, false);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.clear();
     }
 }

@@ -174,13 +174,37 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                         new SimpleCallback() {
                             @Override
                             public void callback() {
-                                presenter.changeLanguage();
-                                changeMenuLanguage();
-                                languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
+                                callSelfService(languageSwitch);
                             }
                         });
             }
         });
+    }
+
+    private void callSelfService(final TextView languageSwitch) {
+        Map<String, String> query = new HashMap<>();
+        query.put("appointment_id", presenter.appointmentId);
+        getWorkflowServiceHelper().execute(presenter.getDemographicDTO().getMetadata().getLinks().getSelf(),
+                new WorkflowServiceCallback() {
+                    @Override
+                    public void onPreExecute() {
+                        showProgressDialog();
+                    }
+
+                    @Override
+                    public void onPostExecute(WorkflowDTO workflowDTO) {
+                        hideProgressDialog();
+                        presenter.changeLanguage(workflowDTO);
+                        changeMenuLanguage();
+                        languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
+                    }
+
+                    @Override
+                    public void onFailure(String exceptionMessage) {
+                        hideProgressDialog();
+                        showErrorToast(exceptionMessage);
+                    }
+                }, query);
     }
 
     private void changeMenuLanguage() {
@@ -280,6 +304,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 if (!presenter.handleHomeButtonClick()) {
                     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                     ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(null, null);
+                    confirmDialogFragment.setNegativeAction(true);
                     confirmDialogFragment.setCallback(new ConfirmationCallback() {
                         @Override
                         public void onConfirm() {
@@ -297,13 +322,14 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     private void initializeLeftNavigation() {
         TextView title = (TextView) findViewById(R.id.checkInLeftNavigationTitle);
-        if(title != null) {
+        if (title != null) {
             title.setText(Label.getLabel("practice_checkin_header_label"));
         }
         checkInFlowViews = new View[]{
                 findViewById(R.id.checkin_flow_demographics),
                 findViewById(R.id.checkin_flow_consent),
                 findViewById(R.id.checkin_flow_medications),
+                findViewById(R.id.checkin_flow_allergies),
                 findViewById(R.id.checkin_flow_intake),
                 findViewById(R.id.checkin_flow_payment)
         };
@@ -311,7 +337,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         String[] labels = new String[]{
                 Label.getLabel("demographics_patient_information_title"),
                 Label.getLabel("demographics_consent_forms_title"),
-                Label.getLabel("demographics_meds_allergies_title"),
+                Label.getLabel("demographics_meds_title"),
+                Label.getLabel("demographics_allergies_title"),
                 Label.getLabel("practice_chekin_section_intake_forms"),
                 Label.getLabel("demographics_payment_title")
         };
@@ -716,6 +743,16 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     @Override
     public void navigateToMedicationsAllergy(WorkflowDTO workflowDTO) {
         presenter.navigateToMedicationsAllergy(workflowDTO);
+    }
+
+    @Override
+    public void navigateToMedications(WorkflowDTO workflowDTO) {
+        presenter.navigateToMedications(workflowDTO, true);
+    }
+
+    @Override
+    public void navigateToAllergy(WorkflowDTO workflowDTO) {
+        presenter.navigateToAllergy(workflowDTO, true);
     }
 
     @Override

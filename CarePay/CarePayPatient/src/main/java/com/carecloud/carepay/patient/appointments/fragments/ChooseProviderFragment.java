@@ -88,14 +88,6 @@ public class ChooseProviderFragment extends BaseAppointmentFragment
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (callback == null) {
-            attachCallback(getContext());
-        }
-    }
-
-    @Override
     @SuppressLint("InflateParams")
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,6 +128,14 @@ public class ChooseProviderFragment extends BaseAppointmentFragment
 
         //Fetch provider data
         getResourcesInformation();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (callback == null) {
+            attachCallback(getContext());
+        }
     }
 
     private void getResourcesInformation() {

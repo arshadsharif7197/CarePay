@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.base.ShimmerFragment;
+import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormPracticeFormsFragment;
 import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormProvidersListFragment;
 import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormViewPagerFragment;
 import com.carecloud.carepay.patient.consentforms.fragments.FilledFormFragment;
@@ -21,8 +23,11 @@ import com.carecloud.carepaylibray.consentforms.models.UserFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ConsentFormsActivity extends MenuPatientActivity implements ConsentFormActivityInterface {
 
@@ -33,6 +38,37 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Consent
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         consentFormsDTO = getConvertedDTO(ConsentFormDTO.class);
+        if (consentFormsDTO == null) {
+            callConsentFormsService(savedInstanceState);
+        } else {
+            resumeOnCreate(savedInstanceState);
+        }
+    }
+
+    private void callConsentFormsService(final Bundle savedInstanceState) {
+        Map<String, String> queryMap = new HashMap<>();
+        getWorkflowServiceHelper().execute(getTransitionForms(), new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                replaceFragment(ShimmerFragment.newInstance(R.layout.shimmer_default_item), false);
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                consentFormsDTO = DtoHelper.getConvertedDTO(ConsentFormDTO.class, workflowDTO);
+                resumeOnCreate(savedInstanceState);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+            }
+        }, queryMap);
+    }
+
+    private void resumeOnCreate(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             replaceFragment(ConsentFormProvidersListFragment.newInstance(), false);
         }

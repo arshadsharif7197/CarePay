@@ -47,10 +47,11 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
     private RetailProductsModel retailProductsModel;
     private Paging paging;
     private boolean isPaging = false;
+    private View emptyState;
 
     private String searchString;
 
-    public static AddRetailItemFragment getInstance(PaymentsModel paymentsModel){
+    public static AddRetailItemFragment getInstance(PaymentsModel paymentsModel) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
 
@@ -60,7 +61,7 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
         Bundle args = getArguments();
@@ -70,12 +71,12 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
-        return inflater.inflate(R.layout.fragment_search, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
+        return inflater.inflate(R.layout.fragment_retail_search, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         setupToolbar(view);
 
         View closeButton = view.findViewById(R.id.closeViewLayout);
@@ -94,28 +95,34 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
 
         searchView = (SearchView) view.findViewById(R.id.search_entry_view);
         searchView.setOnQueryTextListener(queryTextListener);
+        searchView.setQueryHint(Label.getLabel("search_field_hint"));
+
+        TextView noResultsMessage = (TextView) view.findViewById(R.id.no_results_message);
+        noResultsMessage.setText(Label.getLabel("payment_retail_items_no_results"));
+        emptyState = view.findViewById(R.id.emptyStateScreen);
 
         setAdapter(retailProductsModel.getProducts().getItems());
 
-        View searchLayout = view.findViewById(R.id.search_edit_frame);
-        searchLayout.setVisibility(View.GONE);
     }
 
-    private void setupToolbar(View view){
+    private void setupToolbar(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.search_toolbar);
         TextView textView = (TextView) toolbar.findViewById(R.id.toolbar_title);
         textView.setText(Label.getLabel("payment_retail_items_title"));
 
     }
 
-    private void setAdapter(List<RetailItemDto> retailItems){
-        if(searchRecycler.getAdapter()==null){
+    private void setAdapter(List<RetailItemDto> retailItems) {
+        if (searchRecycler.getAdapter() == null) {
             AddRetailItemAdapter adapter = new AddRetailItemAdapter(getContext(), retailItems, this);
             searchRecycler.setAdapter(adapter);
-        }else{
+        } else {
             AddRetailItemAdapter adapter = (AddRetailItemAdapter) searchRecycler.getAdapter();
             adapter.setRetailItems(retailItems);
         }
+
+        emptyState.setVisibility(searchRecycler.getAdapter().getItemCount() == 0 ?
+                View.VISIBLE : View.GONE);
     }
 
     private SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
@@ -134,14 +141,14 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
         }
     };
 
-    private RecyclerView.OnScrollListener retailScrollListener = new RecyclerView.OnScrollListener(){
+    private RecyclerView.OnScrollListener retailScrollListener = new RecyclerView.OnScrollListener() {
 
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
             if (hasMorePages()) {
-                int last = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-                if(last > recyclerView.getAdapter().getItemCount() - BOTTOM_ROW_OFFSET && !isPaging){
+                int last = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+                if (last > recyclerView.getAdapter().getItemCount() - BOTTOM_ROW_OFFSET && !isPaging) {
                     loadNextPage();
                     isPaging = true;
                 }
@@ -149,19 +156,19 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
         }
     };
 
-    private boolean hasMorePages(){
+    private boolean hasMorePages() {
         return paging.getCurrentPage() != paging.getTotalPages();
     }
 
-    private void loadNextPage(){
+    private void loadNextPage() {
         UserPracticeDTO practiceDTO = paymentsModel.getPaymentPayload().getUserPractices().get(0);//safe in practice mode
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("practice_mgmt", practiceDTO.getPracticeMgmt());
         queryMap.put("practice_id", practiceDTO.getPracticeId());
-        queryMap.put("products.page", String.valueOf(paging.getCurrentPage()+1));
+        queryMap.put("products.page", String.valueOf(paging.getCurrentPage() + 1));
         queryMap.put("products.limit", String.valueOf(paging.getResultsPerPage()));
 
-        if(!StringUtil.isNullOrEmpty(searchString)){
+        if (!StringUtil.isNullOrEmpty(searchString)) {
             queryMap.put("products.search", searchString);
         }
 
@@ -171,6 +178,7 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
 
     private WorkflowServiceCallback nextPageCallback = new WorkflowServiceCallback() {
         AddRetailItemAdapter adapter;
+
         @Override
         public void onPreExecute() {
             adapter = (AddRetailItemAdapter) searchRecycler.getAdapter();
@@ -184,9 +192,9 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
             RetailProductsModel.ProductsDto productsDto = paymentsModel.getPaymentPayload()
                     .getRetailProducts().getProducts();
             Paging nextPage = productsDto.getPaging();
-            if(nextPage.getCurrentPage() != paging.getCurrentPage()){
+            if (nextPage.getCurrentPage() != paging.getCurrentPage()) {
                 paging = nextPage;
-                List<RetailItemDto> newItems =  productsDto.getItems();
+                List<RetailItemDto> newItems = productsDto.getItems();
                 adapter.addRetailItems(newItems);
             }
             isPaging = false;
@@ -200,7 +208,7 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
         }
     };
 
-    private void loadSearchResults(){
+    private void loadSearchResults() {
         UserPracticeDTO practiceDTO = paymentsModel.getPaymentPayload().getUserPractices().get(0);//safe in practice mode
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("practice_mgmt", practiceDTO.getPracticeMgmt());
@@ -208,7 +216,7 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
         queryMap.put("products.page", String.valueOf(1));
         queryMap.put("products.limit", String.valueOf(paging.getResultsPerPage()));
 
-        if(!StringUtil.isNullOrEmpty(searchString)){
+        if (!StringUtil.isNullOrEmpty(searchString)) {
             queryMap.put("products.search", searchString);
         }
 
@@ -218,6 +226,7 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
 
     private WorkflowServiceCallback searchCallback = new WorkflowServiceCallback() {
         AddRetailItemAdapter adapter;
+
         @Override
         public void onPreExecute() {
             adapter = (AddRetailItemAdapter) searchRecycler.getAdapter();
@@ -232,8 +241,8 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
             RetailProductsModel.ProductsDto productsDto = paymentsModel.getPaymentPayload()
                     .getRetailProducts().getProducts();
             paging = productsDto.getPaging();
-            List<RetailItemDto> searchItems =  productsDto.getItems();
-            adapter.setRetailItems(searchItems);
+            List<RetailItemDto> searchItems = productsDto.getItems();
+            setAdapter(searchItems);
         }
 
         @Override
@@ -253,7 +262,6 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
         callback.addRetailItem(retailItem);
         dismiss();
     }
-
 
 
 }

@@ -40,7 +40,8 @@ import java.util.List;
  */
 public class ConsentFormPracticeFormsFragment extends BaseFragment implements ConsentFormsFormsInterface {
 
-    private static final int BOTTOM_ROW_OFFSET = 2;
+    private static final int ITEMS_PER_PAGE = 20;
+    private static final int BOTTOM_ROW_OFFSET = (int) (ITEMS_PER_PAGE * 0.33);
 
     private ConsentFormPracticeFormInterface callback;
     private ConsentFormDTO consentFormDto;
@@ -101,7 +102,7 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
                 @Override
                 public void onClick(View v) {
                     List<ConsentFormUserResponseDTO> localSelectedFormResponse = new ArrayList<>();
-                    for(PracticeForm form : selectedForms) {
+                    for (PracticeForm form : selectedForms) {
                         localSelectedFormResponse.add(form.getFormUserResponseDTO());
                     }
                     callback.showForms(selectedForms, localSelectedFormResponse, selectedPracticeIndex, true);
@@ -119,17 +120,20 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
                 .findViewById(R.id.providerConsentFormsRecyclerView);
         practiceConsentFormsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         List<PracticeForm> practiceForms = getPracticeForms(userFormDto);
-        if(practiceForms.isEmpty()){
+        if (practiceForms.isEmpty()) {
             view.findViewById(R.id.emptyStateScreen).setVisibility(View.VISIBLE);
             TextView title = (TextView) view.findViewById(R.id.emptyStateTitleTextView);
             title.setText(Label.getLabel(mode == ConsentFormViewPagerFragment.HISTORIC_MODE ?
                     "adhoc.historyforms.empty.label.title" : "adhoc.pendingforms.empty.label.title"));
             practiceConsentFormsRecyclerView.setVisibility(View.GONE);
             signSelectedFormsButton.setVisibility(View.GONE);
+            ((TextView) view.findViewById(R.id.emptyStateSubTitleTextView)).setText(
+                    mode == ConsentFormViewPagerFragment.HISTORIC_MODE ?
+                            Label.getLabel("adhoc.historyforms.empty.label.description") :
+                            Label.getLabel("adhoc.forms.empty.label.description"));
             return;
         }
-        adapter = new ConsentFormsAdapter(practiceForms, mode);
-        adapter.setCallback(this);
+        adapter = new ConsentFormsAdapter(getContext(), this, practiceForms, mode);
         practiceConsentFormsRecyclerView.setAdapter(adapter);
 
         if (mode == ConsentFormViewPagerFragment.HISTORIC_MODE) {
@@ -208,7 +212,7 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
         query.put("practice_mgmt", metadata.getPracticeMgmt());
         query.put("practice_id", metadata.getPracticeId());
         query.put("page_number", String.valueOf(paging.getCurrentPage() + 1));
-        query.put("page_count", String.valueOf(paging.getResultsPerPage()));
+        query.put("page_count", String.valueOf(ITEMS_PER_PAGE));
 
         TransitionDTO nextPageTransition = consentFormDto.getMetadata().getLinks().getHistoryForms();
         getWorkflowServiceHelper().execute(nextPageTransition, nextPageCallback, query);

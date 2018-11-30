@@ -71,7 +71,7 @@
                     android:id="@+id/messageEditText"
                     style="@style/SigninSignupEditStyle"
                     android:imeOptions="actionDone"
-                    android:inputType="textCapSentences"
+                    android:inputType="textCapSentences|textMultiLine"
                     android:maxLines="10"
                     android:nextFocusForward="@+id/messageEditText"
                     tools:hint="Type your Message"

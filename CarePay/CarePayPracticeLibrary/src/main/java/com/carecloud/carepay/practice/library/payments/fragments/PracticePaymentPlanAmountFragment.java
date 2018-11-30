@@ -17,6 +17,8 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import java.text.NumberFormat;
+
 public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDialogFragment {
 
     private PaymentsModel paymentsModel;
@@ -75,6 +77,7 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
         header.setText(Label.getLabel("payment_plan_partial_amount_header"));
         applyButton.setEnabled(false);
         applyButton.setText(Label.getLabel("payment_create_payment_plan"));
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
         TextView footer = (TextView) findViewById(R.id.partialPaymentHeaderBottom);
         if (minimumPaymentAmount > 0D && maximumPaymentAmount < fullAmount) {
             String amountBetween = String.format(Label.getLabel("payment_partial_amount_between"),
@@ -83,13 +86,13 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
             footer.setText(amountBetween);
             footer.setVisibility(View.VISIBLE);
         } else if (minimumPaymentAmount > 0D) {
-            String minimumAmount = Label.getLabel("payment_partial_minimum_amount") +
-                    currencyFormat.format(minimumPaymentAmount);
+            String minimumAmount = String.format(Label.getLabel("payment.partial.amountSelector.minimum.amount"),
+                    currencyFormat.format(minimumPaymentAmount));
             footer.setText(minimumAmount);
             footer.setVisibility(View.VISIBLE);
         } else if (maximumPaymentAmount < fullAmount) {
-            String minimumAmount = Label.getLabel("payment_partial_maximum_amount") +
-                    currencyFormat.format(maximumPaymentAmount);
+            String minimumAmount = String.format(Label.getLabel("payment.partial.amountSelector.maximum.amount"),
+                    currencyFormat.format(maximumPaymentAmount));
             footer.setText(minimumAmount);
             footer.setVisibility(View.VISIBLE);
         }

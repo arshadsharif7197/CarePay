@@ -50,7 +50,6 @@ public class CarePayCloverApplication extends CarePayApplication
         HttpConstants.setApiStartUrl(BuildConfig.API_START_URL);
         HttpConstants.setApiStartKey(BuildConfig.X_API_KEY);
         HttpConstants.setPushNotificationWebclientUrl(BuildConfig.WEBCLIENT_URL);
-        HttpConstants.setUseUnifiedAuth(BuildConfig.useUnifiedAuth);
         HttpConstants.setMixpanelAPI(mixpanelAPI);
         HttpConstants.setEnvironment(BuildConfig.ENVIRONMENT);
         HttpConstants.setDeepStreamUrl(BuildConfig.DEEPSTREAM_URL);

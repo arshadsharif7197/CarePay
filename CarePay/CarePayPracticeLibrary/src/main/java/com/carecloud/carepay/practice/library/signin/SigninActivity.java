@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.library.signin;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
@@ -34,7 +35,6 @@ import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -46,7 +46,9 @@ import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
@@ -72,7 +74,8 @@ import java.util.Set;
  * On success authentication screen will navigate next screen from the transition Json
  * On failed showing the authentication failure dialog with no navigation
  */
-public class SigninActivity extends BasePracticeActivity implements SelectPracticeCallback {
+public class SigninActivity extends BasePracticeActivity implements SelectPracticeCallback,
+        ConfirmationCallback {
 
     private static final int RESET_PASSWORD = 100;
 
@@ -116,6 +119,24 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             }
         }
     }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        if(getApplicationPreferences().mustForceUpdate() &&
+                getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE){
+            ConfirmDialogFragment fragment = ConfirmDialogFragment
+                    .newInstance(Label.getLabel("notifications.custom.forceUpdate.title"),
+                            Label.getLabel("notifications.custom.forceUpdate.message.android"),
+                            Label.getLabel("notifications.custom.forceUpdate.action"),
+                            false,
+                            R.layout.fragment_alert_dialog_single_action);
+            fragment.setCallback(this);
+            displayDialogFragment(fragment, false);
+        }
+    }
+
 
     @Override
     public void onUserInteraction() {
@@ -442,12 +463,6 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        // log out previous user from Cognito
-        if (!HttpConstants.isUseUnifiedAuth()) {
-            Log.v(this.getClass().getSimpleName(), "sign out Cognito");
-            getAppAuthorizationHelper().getPool().getUser().signOut();
-            getAppAuthorizationHelper().setUser(null);
-        }
         if (!(getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)) {
             getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
         }
@@ -682,6 +697,17 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         String[] params = {getString(R.string.param_login_type), getString(R.string.param_app_mode)};
         Object[] values = {getString(R.string.login_password), getString(R.string.app_mode_patient)};
         MixPanelUtil.logEvent(getString(R.string.event_signin_loginSuccess), params, values);
+    }
+
+
+    @Override
+    public void onConfirm() {
+        String appPackageName = getPackageName();
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+        } catch (android.content.ActivityNotFoundException anfe) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+        }
     }
 
 }

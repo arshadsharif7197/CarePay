@@ -8,15 +8,17 @@
     android:layout_height="wrap_content"
     android:background="?android:selectableItemBackground"
     android:orientation="vertical"
-    android:paddingEnd="@dimen/dimen_13dp"
-    android:paddingStart="@dimen/dimen_13dp">
+    android:paddingEnd="@dimen/dimen_17dp"
+    android:paddingStart="@dimen/dimen_17dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/dimen_20dp"
-        android:paddingTop="@dimen/dimen_20dp">
+        android:paddingTop="@dimen/dimen_20dp"
+        android:paddingEnd="@dimen/dimen_13dp"
+        android:paddingStart="@dimen/dimen_13dp">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -49,7 +51,7 @@
                 android:textColor="@color/cadet_gray"
                 android:textSize="@dimen/text_size_13"
                 app:customAssetFont="proxima_nova_regular"
-                tools:text="Last signed: 05/04/17" />
+                tools:text="Last Reviewed: 05/04/17" />
 
         </LinearLayout>
 

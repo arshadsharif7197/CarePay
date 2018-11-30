@@ -41,7 +41,6 @@ import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLinksD
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.Defs;
-import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -607,13 +606,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
      */
     private void logOut(TransitionDTO transitionsDTO) {
         Map<String, String> query = new HashMap<>();
-        Map<String, String> headers = new HashMap<>();
-        if (!HttpConstants.isUseUnifiedAuth()) {
-            headers.put("x-api-key", HttpConstants.getApiStartKey());
-            headers.put("Authorization", getAppAuthorizationHelper().getCurrSession().getIdToken().getJWTToken());
-        } else {
-            headers.putAll(getWorkflowServiceHelper().getApplicationStartHeaders());
-        }
+        Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
+
         query.put("transition", "true");
         getWorkflowServiceHelper().execute(transitionsDTO, logOutCall, query, headers);
     }
@@ -656,10 +650,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             getApplicationMode().clearUserPracticeDTO();
-            if (!HttpConstants.isUseUnifiedAuth()) {
-                // log out previous user from Cognito
-                getAppAuthorizationHelper().getPool().getUser().signOut();
-            }
             getAppAuthorizationHelper().setUser(null);
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
             CloverMainActivity.this.finish();

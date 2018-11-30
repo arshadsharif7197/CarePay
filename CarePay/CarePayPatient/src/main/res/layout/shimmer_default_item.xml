@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dimen_80dp"
+    android:orientation="vertical"
+    android:paddingEnd="@dimen/list_apt_padding_right"
+    android:paddingStart="@dimen/list_apt_padding_right">
+
+    <View
+        android:id="@+id/avatarTextView"
+        android:layout_width="@dimen/payment_details_dialog_icon_size"
+        android:layout_height="@dimen/payment_details_dialog_icon_size"
+        android:layout_centerVertical="true"
+        android:layout_gravity="start"
+        android:background="@drawable/round_list_tv"
+        android:gravity="center_vertical|center_horizontal"
+        android:src="@drawable/icn_placeholder_user_profile_png"
+        android:textColor="@color/lightSlateGray"
+        android:textSize="@dimen/apt_dl_text_big" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/dimen_15dp"
+        android:layout_toEndOf="@id/avatarTextView"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="@dimen/dimen_160dp"
+            android:layout_height="@dimen/shimmerTextHeight"
+            android:layout_marginBottom="@dimen/dimen_5dp"
+            android:layout_marginStart="@dimen/textview_margin"
+            android:background="@color/light_gray_dialog" />
+
+        <View
+            android:layout_width="@dimen/dimen_80dp"
+            android:layout_height="@dimen/shimmerTextHeight"
+            android:layout_marginStart="@dimen/textview_margin"
+            android:background="@color/light_gray_dialog" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="@dimen/dimen_80dp"
+        android:layout_height="@dimen/shimmerTextHeight"
+        android:layout_marginStart="@dimen/textview_margin"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:background="@color/light_gray_dialog" />
+
+    <View
+        android:id="@+id/appointment_list_item_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/gray" />
+
+</RelativeLayout>

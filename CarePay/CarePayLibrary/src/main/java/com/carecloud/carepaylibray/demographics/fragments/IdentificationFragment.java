@@ -45,7 +45,7 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
+//        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
         if (icicle != null) {
             String demographicDtoString = icicle.getString(KEY_DTO);
             if (demographicDtoString != null) {
@@ -113,6 +113,11 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
                 .setAppointmentpayloaddto(demographicDTO.getPayload().getAppointmentpayloaddto());
         updatableDemographicDTO.setMetadata(demographicDTO.getMetadata());
         return updatableDemographicDTO;
+    }
+
+    @Override
+    protected void replaceTranslatedOptionsValues() {
+
     }
 
     private DemographicIdDocPayloadDTO getPostModel() {

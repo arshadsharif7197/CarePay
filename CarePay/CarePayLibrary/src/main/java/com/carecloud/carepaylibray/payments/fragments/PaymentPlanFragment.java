@@ -29,6 +29,7 @@ import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsToggleOption;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
@@ -47,14 +48,13 @@ import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
+
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
-
 public class PaymentPlanFragment extends BasePaymentDialogFragment
         implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
 
@@ -79,12 +79,12 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
     protected EditText amountPaymentEditText;
     private TextView lastPaymentMessage;
 
-    protected List<DemographicsOption> frequencyOptions;
+    protected List<DemographicsToggleOption> frequencyOptions;
     protected List<DemographicsOption> dateOptions;
     protected List<DemographicsOption> dayOfWeekOptions;
     protected List<DemographicsOption> selectedDateOptions;
     protected DemographicsOption paymentDateOption;
-    protected DemographicsOption frequencyOption;
+    protected DemographicsToggleOption frequencyOption;
     protected double amounthPayment;
     protected int installments;
     protected boolean applyRangeRules = true;
@@ -92,7 +92,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
     protected boolean isCalculatingAmount = false;
     protected boolean isCalculatingTime = false;
     private String dialogTitle;
-    private TextView parametersTextView;
+    protected TextView parametersTextView;
     @PaymentSettingsBalanceRangeRule.IntervalRange
     protected String interval = PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS;
     protected String practiceId;
@@ -132,13 +132,16 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
-        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
-        selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
-        //calculateTotalAmount(selectedBalance);
-        paymentPlanAmount = calculateTotalAmount(args.getDouble(KEY_PLAN_AMOUNT, paymentPlanAmount));
+        if (paymentsModel == null) {
+            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
+        }
+        if (selectedBalance == null) {
+            selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
+        }
         if (selectedBalance != null) {
             practiceId = selectedBalance.getMetadata().getPracticeId();
         }
+        paymentPlanAmount = calculateTotalAmount(args.getDouble(KEY_PLAN_AMOUNT, paymentPlanAmount));
         PaymentsPayloadSettingsDTO paymentSettings = paymentsModel.getPaymentPayload().getPaymentSetting(practiceId);
         frequencyOptions = generateFrequencyOptions(paymentSettings.getPayload().getPaymentPlans());
         if (selectedBalance != null) {
@@ -189,8 +192,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         totalTextView.setText(currencyFormatter.format(paymentPlanAmount));
 
         parametersTextView = (TextView) view.findViewById(R.id.paymentPlanParametersTextView);
-        if (parametersTextView != null && paymentPlanBalanceRules != null) {
-            updatePaymentPlanParameters();
+        if (parametersTextView != null) {
             parametersTextView.setVisibility(View.VISIBLE);
         }
     }
@@ -201,11 +203,13 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         String monthlyOrWeekly = interval == PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS
                 ? Label.getLabel("payment.paymentPlan.frequency.option.monthly").toLowerCase()
                 : Label.getLabel("payment.paymentPlan.frequency.option.weekly").toLowerCase();
-        parametersTextView.setText(String.format(Locale.US, Label.getLabel("payment_plan_parameters_temporal"),
-                paymentPlanBalanceRules.getMaxDuration().getValue(),
-                monthOrWeek,
-                monthlyOrWeekly,
-                currencyFormatter.format(paymentPlanBalanceRules.getMinPaymentRequired().getValue())));
+        if (parametersTextView != null && paymentPlanBalanceRules != null) {
+            parametersTextView.setText(String.format(Locale.US, Label.getLabel("payment_plan_parameters_temporal"),
+                    paymentPlanBalanceRules.getMaxDuration().getValue(),
+                    monthOrWeek,
+                    monthlyOrWeekly,
+                    currencyFormatter.format(paymentPlanBalanceRules.getMinPaymentRequired().getValue())));
+        }
     }
 
     protected void setupFields(View view) {
@@ -254,7 +258,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
                                 @Override
                                 public void onValueOption(DemographicsOption option) {
                                     if (!frequencyOption.getName().equals(option.getName())) {
-                                        manageFrequencyChange(option, true);
+                                        manageFrequencyChange((DemographicsToggleOption) option, true);
                                     }
 
                                 }
@@ -333,9 +337,13 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
             interval = PaymentSettingsBalanceRangeRule.INTERVAL_WEEKS;
         }
         updateHints();
+        if (applyRangeRules) {
+            paymentPlanBalanceRules = getPaymentPlanSettings(interval);
+        }
+        updatePaymentPlanParameters();
     }
 
-    protected void manageFrequencyChange(DemographicsOption option, boolean refresh) {
+    protected void manageFrequencyChange(DemographicsToggleOption option, boolean refresh) {
         frequencyOption = option;
         frequencyCodeEditText.setText(option.getLabel());
         if (option.getName().equals(PaymentPlanModel.FREQUENCY_MONTHLY)) {
@@ -366,20 +374,21 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         if (applyRangeRules) {
             paymentPlanBalanceRules = getPaymentPlanSettings(interval);
         }
-        if (parametersTextView != null) {
+        if (parametersTextView != null && paymentPlanBalanceRules != null) {
             updatePaymentPlanParameters();
         }
         paymentDateEditText.setText(paymentDateOption.getLabel());
 
     }
 
-    private void resetInstallmentsAndAmountFields() {
+    protected void resetInstallmentsAndAmountFields() {
         installmentsEditText.setText("");
         amountPaymentEditText.setText("");
         installments = 0;
         amounthPayment = 0;
         installmentsInputLayout.setErrorEnabled(false);
         amountPaymentInputLayout.setErrorEnabled(false);
+        lastPaymentMessage.setVisibility(View.INVISIBLE);
     }
 
     private void updateHints() {
@@ -468,6 +477,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         boolean isEnabled = validateFields(false);
         getActionButton().setSelected(isEnabled);
         getActionButton().setClickable(isEnabled);
+        getActionButton().setEnabled(isEnabled);
     }
 
     protected Button getActionButton() {
@@ -501,25 +511,24 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
     }
 
     protected PaymentSettingsBalanceRangeRule getPaymentPlanSettings(String interval) {
-        for (PaymentsPayloadSettingsDTO settingsDTO : paymentsModel.getPaymentPayload().getPaymentSettings()) {
-            if (practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())) {
-                PaymentSettingsBalanceRangeRule temp = null;
-                for (PaymentSettingsBalanceRangeRule balanceRangeRule : settingsDTO.getPayload()
-                        .getPaymentPlans().getBalanceRangeRules()) {
-                    if ((interval == null) || interval.equals(balanceRangeRule.getMaxDuration().getInterval())) {
-                        double minAmount = balanceRangeRule.getMinBalance().getValue();
-                        double maxAmount = balanceRangeRule.getMaxBalance().getValue();
-                        double minTempValue = temp == null ? 0 : temp.getMinBalance().getValue();
-                        if (paymentPlanAmount >= minAmount && paymentPlanAmount <= maxAmount &&
-                                minAmount > minTempValue) {
-                            temp = balanceRangeRule;
-                        }
-                    }
+        PaymentsPayloadSettingsDTO settingsDTO = paymentsModel.getPaymentPayload().getPaymentSetting(practiceId);
+        if(settingsDTO == null){
+            return null;
+        }
+        PaymentSettingsBalanceRangeRule temp = null;
+        for (PaymentSettingsBalanceRangeRule balanceRangeRule : settingsDTO.getPayload()
+                .getPaymentPlans().getBalanceRangeRules()) {
+            if ((interval == null) || interval.equals(balanceRangeRule.getMaxDuration().getInterval())) {
+                double minAmount = balanceRangeRule.getMinBalance().getValue();
+                double maxAmount = balanceRangeRule.getMaxBalance().getValue();
+                double minTempValue = temp == null ? 0 : temp.getMinBalance().getValue();
+                if (paymentPlanAmount >= minAmount && paymentPlanAmount <= maxAmount &&
+                        minAmount > minTempValue) {
+                    temp = balanceRangeRule;
                 }
-                return temp;
             }
         }
-        return null;
+        return temp;
     }
 
     protected List<DemographicsOption> generateDateOptions() {
@@ -567,8 +576,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         return optionList;
     }
 
-    protected List<DemographicsOption> generateFrequencyOptions(PaymentsSettingsPaymentPlansDTO paymentPlansRules) {
-        List<DemographicsOption> optionList = new ArrayList<>();
+    protected List<DemographicsToggleOption> generateFrequencyOptions(PaymentsSettingsPaymentPlansDTO paymentPlansRules) {
+        List<DemographicsToggleOption> optionList = new ArrayList<>();
         if (selectedBalance != null) {
             practiceId = selectedBalance.getMetadata().getPracticeId();
         }
@@ -576,7 +585,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
                 .INTERVAL_MONTHS);
         if ((paymentPlansRules.getFrequencyCode().getMonthly().isAllowed() && (paymentSettings != null))
                 || !applyRangeRules) {
-            DemographicsOption monthly = new DemographicsOption();
+            DemographicsToggleOption monthly = new DemographicsToggleOption();
             monthly.setName(PaymentPlanModel.FREQUENCY_MONTHLY);
             monthly.setLabel(Label.getLabel("payment.paymentPlan.frequency.option.monthly"));
             optionList.add(monthly);
@@ -585,10 +594,9 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         }
 
         paymentSettings = getPaymentPlanSettings(PaymentSettingsBalanceRangeRule.INTERVAL_WEEKS);
-        //TODO: (#WeeklyPaymentPlans) uncomment the last part of the line
         if ((paymentPlansRules.getFrequencyCode().getWeekly().isAllowed() && (paymentSettings != null))
-                ) {//|| !applyRangeRules) {
-            DemographicsOption weekly = new DemographicsOption();
+                || !applyRangeRules) {
+            DemographicsToggleOption weekly = new DemographicsToggleOption();
             weekly.setName(PaymentPlanModel.FREQUENCY_WEEKLY);
             weekly.setLabel(Label.getLabel("payment.paymentPlan.frequency.option.weekly"));
             optionList.add(weekly);
@@ -628,10 +636,10 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
                 if (isUserInteraction) {
                     setError(installmentsInputLayout, Label.getLabel("validation_required_field")
                             , isUserInteraction);
-                    return false;
                 } else {
                     clearError(installmentsInputLayout);
                 }
+                return false;
             } else if (installments < 2) {
                 setError(installmentsInputLayout,
                         String.format(Label.getLabel("payment_plan_min_months_error_temporal"),
@@ -657,10 +665,10 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
                 if (isUserInteraction) {
                     setError(R.id.paymentAmountInputLayout, Label.getLabel("validation_required_field")
                             , isUserInteraction);
-                    return false;
                 } else {
                     clearError(R.id.paymentAmountInputLayout);
                 }
+                return false;
             } else if (amounthPayment < paymentPlanBalanceRules.getMinPaymentRequired().getValue()) {
                 if (isUserInteraction) {
                     setError(R.id.paymentAmountInputLayout,
@@ -872,8 +880,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
                     editable.clear();
                 } else {
                     valueInputCallback.onValueInput(input);
-                    enableCreatePlanButton();
                 }
+                enableCreatePlanButton();
             }
         };
     }
@@ -908,7 +916,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
     };
 
     private void showChooseDialog(Context context,
-                                  List<DemographicsOption> options,
+                                  List<? extends DemographicsOption> options,
                                   String title,
                                   final ValueOptionCallback valueInputCallback) {
 

@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -22,7 +23,6 @@ public class AllDoneDialogFragment extends BaseDialogFragment {
     private WorkflowDTO workflowDto;
 
     /**
-     *
      * @param workflowDTO the workflow
      * @return a new instance of AllDoneDialogFragment
      */
@@ -58,6 +58,8 @@ public class AllDoneDialogFragment extends BaseDialogFragment {
     }
 
     private void finishCheckOut() {
-        PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDto);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(CarePayConstants.REFRESH, true);
+        PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDto, bundle);
     }
 }

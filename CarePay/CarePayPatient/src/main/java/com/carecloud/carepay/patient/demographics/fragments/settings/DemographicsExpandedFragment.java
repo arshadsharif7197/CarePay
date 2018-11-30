@@ -193,6 +193,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getEmailAddress(),
                 personalInfoSection.getProperties().getEmailAddress(), R.id.emailContainer, R.id.emailInputLayout,
                 R.id.email, R.id.emailOptional, null, null);
+        view.findViewById(R.id.email).setVisibility(View.GONE);
 
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getPreferredLanguage(),
                 personalInfoSection.getProperties().getPreferredLanguage(),
@@ -241,12 +242,8 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                 R.id.maritalStatusEditText, R.id.maritalStatusOptional, selectedMaritalStatus,
                 Label.getLabel("demographics_marital_status"));
 
-/*
-        setUpDemographicField(view, demographicPayload.getPersonalDetails().getReferralSource(),
-                personalInfoSection.getProperties().getReferralSource(), R.id.referralSourceDemographicsLayout,
-                R.id.referralSourceInputLayout, R.id.referralSourceEditText,
-                R.id.referralSourceOptional, selectedReferralSource, Label.getLabel("demographics_referral_source"));
-*/
+        //hide referral source
+        view.findViewById(R.id.referralSourceDemographicsLayout).setVisibility(View.GONE);
 
         setUpPrimaryCarePhysician(view, demographicPayload.getPrimaryPhysician(), demogarphic.getPrimaryPhysician());
         setUpReferringPhysician(view, demographicPayload.getReferringPhysician(), demogarphic.getReferringPhysician());

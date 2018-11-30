@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.notifications.adapters.NotificationsAdapter;
+import com.carecloud.carepay.patient.notifications.models.CustomNotificationItem;
 import com.carecloud.carepay.patient.notifications.models.NotificationItem;
 import com.carecloud.carepay.patient.notifications.models.NotificationType;
 import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
@@ -50,7 +51,8 @@ public class NotificationFragment extends BaseFragment
 
     private static final long NOTIFICATION_DELETE_DELAY = 1000 * 5;
     private static final String TAG = NotificationFragment.class.getName();
-    private static final int BOTTOM_ROW_OFFSET = 2;
+    private static final int ITEMS_PER_PAGE = 100;
+    private static final int BOTTOM_ROW_OFFSET = (int) (ITEMS_PER_PAGE * 0.33);
 
     private NotificationsDTO notificationsDTO;
     private List<NotificationItem> notificationItems = new ArrayList<>();
@@ -108,6 +110,7 @@ public class NotificationFragment extends BaseFragment
         notificationItems = filterNotifications(notificationsDTO.getPayload().getNotifications(),
                 supportedNotificationTypes);
         paging = notificationsDTO.getPayload().getPaging();
+        addAppStatusNotification();
 
 
         handler = new Handler();
@@ -224,11 +227,6 @@ public class NotificationFragment extends BaseFragment
         }
     };
 
-    @Override
-    public void onResume() {
-        super.onResume();
-//        loadNextPage();
-    }
 
     private void setAdapter() {
         if (!notificationItems.isEmpty()) {
@@ -279,7 +277,7 @@ public class NotificationFragment extends BaseFragment
 
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("page", String.valueOf(currentPage + 1));
-        queryMap.put("limit", String.valueOf(paging.getResultsPerPage()));
+        queryMap.put("limit", String.valueOf(ITEMS_PER_PAGE));
 
         TransitionDTO refreshTransition = notificationsDTO.getMetadata().getLinks().getNotifications();
         getWorkflowServiceHelper().execute(refreshTransition, getRefreshCallback(refresh), queryMap);
@@ -302,6 +300,7 @@ public class NotificationFragment extends BaseFragment
                 if (refresh) {
                     notificationItems = filterNotifications(notificationsDTO.getPayload().getNotifications(),
                             supportedNotificationTypes);
+                    addAppStatusNotification();
                 } else {
                     notificationItems.addAll(filterNotifications(notificationsDTO.getPayload().getNotifications(),
                             supportedNotificationTypes));
@@ -332,10 +331,19 @@ public class NotificationFragment extends BaseFragment
     @Override
     public void viewSwipeCompleted(SwipeViewHolder holder) {
         NotificationItem notificationItem = notificationItems.get(holder.getAdapterPosition());
-        notificationsAdapter.scheduleNotificationRemoval(notificationItem);
-        notificationsAdapter.notifyItemChanged(holder.getAdapterPosition());
-        deleteNotificationRunnable.setNotificationItem(notificationItem);
-        handler.postDelayed(deleteNotificationRunnable, NOTIFICATION_DELETE_DELAY);
+        if (notificationItem instanceof CustomNotificationItem) {
+            getApplicationPreferences().setRemindLatest(false);
+            notificationItems.remove(notificationItem);
+            notificationsAdapter.notifyItemRemoved(holder.getAdapterPosition());
+            if (notificationItems.size() == 0) {
+                setAdapter();
+            }
+        } else {
+            notificationsAdapter.scheduleNotificationRemoval(notificationItem);
+            notificationsAdapter.notifyItemChanged(holder.getAdapterPosition());
+            deleteNotificationRunnable.setNotificationItem(notificationItem);
+            handler.postDelayed(deleteNotificationRunnable, NOTIFICATION_DELETE_DELAY);
+        }
     }
 
     private DeleteNotificationRunnable deleteNotificationRunnable = new DeleteNotificationRunnable();
@@ -403,12 +411,37 @@ public class NotificationFragment extends BaseFragment
                     //Prevent showing old notifications without pending form data
                     continue;
                 }
+
+                if (notificationType.equals(NotificationType.payments)) {
+                    String eventName = notificationItem.getMetadata().getEvent().getPayload().getEventName();
+                    if (eventName != null && eventName.contains("patient_statement_create")) {//TODO remove this once we can support patient statement notifications
+                        continue;
+                    }
+                }
                 filteredList.add(notificationItem);
-            }else{
+            } else {
                 Log.d("test", "test");
             }
         }
         return filteredList;
     }
 
+    private void addAppStatusNotification() {
+        boolean shouldRemind = getApplicationPreferences().shouldRemindLatest();
+        if (shouldRemind) {
+            boolean isLatest = getApplicationPreferences().isLatestVersion();
+            CustomNotificationItem customNotificationItem = new CustomNotificationItem();
+            customNotificationItem.setNotificationType(isLatest ?
+                    CustomNotificationItem.TYPE_APP_UPDATED :
+                    CustomNotificationItem.TYPE_UPDATE_REQUIRED);
+
+            notificationItems.add(0, customNotificationItem);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        handler.removeCallbacks(deleteNotificationRunnable);
+        super.onDestroy();
+    }
 }

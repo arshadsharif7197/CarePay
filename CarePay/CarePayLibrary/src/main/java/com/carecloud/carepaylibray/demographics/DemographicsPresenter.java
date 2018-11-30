@@ -10,12 +10,10 @@ import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragmen
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.interfaces.DemographicExtendedInterface;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
-import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearchFragment;
-import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
+import com.carecloud.carepaylibray.medications.interfaces.MedicationAllergyCallback;
 
 public interface DemographicsPresenter extends HealthInsuranceFragment.InsuranceDocumentScannerListener,
-        MedicationsAllergyFragment.MedicationAllergyCallback,
-        MedicationAllergySearchFragment.MedicationAllergySearchCallback,
+        MedicationAllergyCallback,
         CheckinFlowCallback,
         InsuranceEditDialog.InsuranceEditDialogListener,
         DemographicExtendedInterface {
@@ -52,6 +50,10 @@ public interface DemographicsPresenter extends HealthInsuranceFragment.Insurance
     void navigateToIntakeForms(WorkflowDTO workflowDTO);
 
     void navigateToMedicationsAllergy(WorkflowDTO workflowDTO);
+
+    void navigateToMedications(WorkflowDTO workflowDTO, boolean checkEmpty);
+
+    void navigateToAllergy(WorkflowDTO workflowDTO, boolean checkEmpty);
 
     void navigateToThirdParty(WorkflowDTO workflowDTO);
 

@@ -124,6 +124,7 @@
     <dimen name="paymentDetailLabelTextSize">16sp</dimen>
     <dimen name="paymentDetailAmountTextSize">15sp</dimen>
     <dimen name="paymentDetailDateTextSize">12sp</dimen>
+    <dimen name="nextAppointmentProviderImageSize">100dp</dimen>
 
     <!--Payments Activity-->
     <dimen name="findPatientButtonRightMargin">50dp</dimen>

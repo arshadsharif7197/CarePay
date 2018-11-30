@@ -12,7 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -68,6 +70,7 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
     private TextView visitTimeTextView;
     private Button scheduleAppointmentButton;
     private AppointmentResourcesDTO appointmentResourcesDTO;
+    private EditText reasonForVisitEditText;
 
     /**
      * new Instance of NextAppointmentFragment
@@ -126,9 +129,9 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
     }
 
     private void setUpToolbar(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         callback.setToolbar(toolbar);
-        TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
+        TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(Label.getLabel("next_appointment_toolbar_title"));
 
         if (!callback.shouldAllowNavigateBack()) {
@@ -137,10 +140,10 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
         }
     }
 
-    private void setUpUi(View view) {
+    private void setUpUi(final View view) {
         setUpProviderMessage(view, selectedProvider);
 
-        Button scheduleLaterButton = (Button) view.findViewById(R.id.scheduleLaterButton);
+        Button scheduleLaterButton = view.findViewById(R.id.scheduleLaterButton);
         scheduleLaterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -148,7 +151,7 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
             }
         });
 
-        scheduleAppointmentButton = (Button) getView().findViewById(R.id.scheduleAppointmentButton);
+        scheduleAppointmentButton = getView().findViewById(R.id.scheduleAppointmentButton);
         scheduleAppointmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -156,7 +159,7 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
             }
         });
 
-        chooseProviderTextView = (TextView) view.findViewById(R.id.providerTextView);
+        chooseProviderTextView = view.findViewById(R.id.providerTextView);
         chooseProviderTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -167,8 +170,8 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
             chooseProviderTextView.setText(selectedProvider.getFullName());
         }
 
-        visitTypeTextInputLayout = (TextInputLayout) view.findViewById(R.id.visitTypeTextInputLayout);
-        visitTypeTextView = (TextView) view.findViewById(R.id.visitTypeTextView);
+        visitTypeTextInputLayout = view.findViewById(R.id.visitTypeTextInputLayout);
+        visitTypeTextView = view.findViewById(R.id.visitTypeTextView);
         visitTypeTextView.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(visitTypeTextInputLayout, null));
         visitTypeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,8 +182,8 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
         visitTypeTextView.getOnFocusChangeListener().onFocusChange(visitTypeTextView,
                 !StringUtil.isNullOrEmpty(visitTypeTextView.getText().toString().trim()));
 
-        visitTimeTextInputLayout = (TextInputLayout) view.findViewById(R.id.visitTimeTextInputLayout);
-        visitTimeTextView = (TextView) view.findViewById(R.id.visitTimeTextView);
+        visitTimeTextInputLayout = view.findViewById(R.id.visitTimeTextInputLayout);
+        visitTimeTextView = view.findViewById(R.id.visitTimeTextView);
         visitTimeTextView.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(visitTimeTextInputLayout, null));
         visitTimeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -197,13 +200,28 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
         });
         visitTimeTextView.getOnFocusChangeListener().onFocusChange(visitTimeTextView,
                 !StringUtil.isNullOrEmpty(visitTimeTextView.getText().toString().trim()));
+
+        final ScrollView scrollContainer = view.findViewById(R.id.scrollContainer);
+        view.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                SystemUtil.hideSoftKeyboard(getContext(), view);
+                if (scrollContainer != null) {
+                    scrollContainer.fullScroll(View.FOCUS_UP);
+                }
+            }
+        }, 300);
+
+        reasonForVisitEditText = view.findViewById(R.id.reasonForVisitEditText);
     }
 
     private void setUpProviderMessage(View view, ProviderDTO provider) {
-        final ImageView providerPicImageView = (ImageView) view.findViewById(R.id.providerPicImageView);
-        final TextView providerInitials = (TextView) view.findViewById(R.id.providerInitials);
+        final ImageView providerPicImageView = view.findViewById(R.id.providerPicImageView);
+        final TextView providerInitials = view.findViewById(R.id.providerInitials);
         providerInitials.setText(StringUtil.getShortName(provider.getName()));
+        int size = getResources().getDimensionPixelSize(R.dimen.nextAppointmentProviderImageSize);
         Picasso.with(getContext()).load(provider.getPhoto())
+                .resize(size,size)
                 .centerCrop()
                 .transform(new CircleImageTransform())
                 .into(providerPicImageView, new Callback() {
@@ -258,15 +276,15 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
         appointment.setProviderId(selectedProvider.getId());
         appointment.setProviderGuid(selectedProvider.getGuid());
         appointment.setVisitReasonId(visitType.getId());
-        appointment.setComplaint(visitType.getName());
+        appointment.setComplaint(reasonForVisitEditText.getText().toString());
         appointment.setStartTime(visitTime.getStartTime());
         appointment.setEndTime(visitTime.getEndTime());
         appointment.setLocationId(visitTime.getLocation().getId());
         appointment.setLocationGuid(visitTime.getLocation().getGuid());
+        appointment.setComments(visitType.getName());
         if (appointmentResourcesDTO != null) {
             appointment.setResourceId(appointmentResourcesDTO.getResource().getId());
         }
-        appointment.setComments("");
         appointment.getPatient().setId(selectedAppointment.getMetadata().getPatientId());
 
         if (visitType.getAmount() > 0) {

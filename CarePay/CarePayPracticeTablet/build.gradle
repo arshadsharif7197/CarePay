@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 apply plugin: 'newrelic'
 android {
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion "27.0.3"
 
     defaultConfig {
         applicationId "com.carecloud.carepay.practice.tablet"
         minSdkVersion 17
-        targetSdkVersion 25
-        versionCode 97
-        versionName "1.2.15"
+        targetSdkVersion 26
+        versionCode 107
+        versionName "1.2.20"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -57,7 +57,6 @@ android {
             buildConfigField 'String', 'NEW_RELIC_ID', '"AAa1dc91ad54786d7f8f9cce36898810d795f1f75a"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"0191c29a6357d500973052dcfb314c55"'
 
-            buildConfigField 'boolean', 'useUnifiedAuth', 'true'
             buildConfigField 'String', 'ENVIRONMENT', '"Development"'
         }
         qa {
@@ -75,7 +74,6 @@ android {
             buildConfigField 'String', 'NEW_RELIC_ID', '"AA8bbfbf57d80019455e6c05822d9d5038a718b924"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"0191c29a6357d500973052dcfb314c55"'
 
-            buildConfigField 'boolean', 'useUnifiedAuth', 'true'
             buildConfigField 'String', 'ENVIRONMENT', '"QA"'
         }
         staging {
@@ -93,7 +91,6 @@ android {
             buildConfigField 'String', 'NEW_RELIC_ID', '"AA8bbfbf57d80019455e6c05822d9d5038a718b924"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"0191c29a6357d500973052dcfb314c55"'
 
-            buildConfigField 'boolean', 'useUnifiedAuth', 'true'
             buildConfigField 'String', 'ENVIRONMENT', '"Staging"'
         }
         demo {
@@ -111,7 +108,6 @@ android {
             buildConfigField 'String', 'NEW_RELIC_ID', '"AA8bbfbf57d80019455e6c05822d9d5038a718b924"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"0191c29a6357d500973052dcfb314c55"'
 
-            buildConfigField 'boolean', 'useUnifiedAuth', 'true'
             buildConfigField 'String', 'ENVIRONMENT', '"Demo"'
         }
         production {
@@ -129,7 +125,6 @@ android {
             buildConfigField 'String', 'NEW_RELIC_ID', '"AAae417ce2d433e6eb08fb05d2beffd8ac08f5917c"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"2fe22aeabd463e5dc1ecf8a050605eae"'
 
-            buildConfigField 'boolean', 'useUnifiedAuth', 'true'
             buildConfigField 'String', 'ENVIRONMENT', '"Production"'
         }
     }

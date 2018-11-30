@@ -166,6 +166,27 @@ public class PatientNavigationHelper {
                 }
                 break;
             }
+            case NavigationStateConstants.MEDICATIONS: {
+                if (context instanceof ReviewDemographicsActivity) {
+                    ((ReviewDemographicsActivity) context).navigateToMedications(workflowDTO);
+                    return;
+                } else {
+                    intent = new Intent(context, ReviewDemographicsActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                }
+                break;
+            }
+            case NavigationStateConstants.ALLERGIES: {
+                if (context instanceof ReviewDemographicsActivity) {
+                    ((ReviewDemographicsActivity) context).navigateToAllergy(workflowDTO);
+                    return;
+                } else {
+                    intent = new Intent(context, ReviewDemographicsActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                }
+                break;
+            }
+
             case NavigationStateConstants.PATIENT_APP_CHECKOUT:
             case NavigationStateConstants.PATIENT_FORM_CHECKOUT:
             case NavigationStateConstants.PATIENT_PAY_CHECKOUT: {

@@ -21,6 +21,8 @@ public abstract class MedicationsAllergiesObject implements Comparable<Medicatio
     @Expose
     private String uuid;
 
+    private transient boolean deleted = false;
+
     public MedicationAllergiesAction getAction() {
         return action;
     }
@@ -48,5 +50,13 @@ public abstract class MedicationsAllergiesObject implements Comparable<Medicatio
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

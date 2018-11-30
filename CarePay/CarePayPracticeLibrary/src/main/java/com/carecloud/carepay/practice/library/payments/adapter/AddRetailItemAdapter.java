@@ -95,6 +95,8 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
                 .safeAdd(retailItem.getPrice(), priceModification)));
         holder.productPlaceholder.setText(StringUtil.getShortName(retailItem.getName()));
 
+        holder.soldOut.setVisibility(retailItem.isInStock() ? View.INVISIBLE : View.VISIBLE);
+
         int size = context.getResources().getDimensionPixelSize(R.dimen.dimen_60dp);
         Picasso.with(context).load(retailItem.getThumbnailUrl())
                 .resize(size, size)
@@ -179,6 +181,7 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
         TextView productPlaceholder;
         ImageView productThumbnail;
         TextView price;
+        View soldOut;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -187,6 +190,7 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
             productPlaceholder = (TextView) itemView.findViewById(R.id.product_placeholder);
             price = (TextView) itemView.findViewById(R.id.product_price);
             productThumbnail = (ImageView) itemView.findViewById(R.id.product_thumbnail);
+            soldOut = itemView.findViewById(R.id.sold_out);
         }
 
     }

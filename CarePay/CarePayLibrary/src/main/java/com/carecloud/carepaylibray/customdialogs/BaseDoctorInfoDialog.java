@@ -26,15 +26,6 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener {
 
     private static final String LOG_TAG = BaseDoctorInfoDialog.class.getSimpleName();
-
-    public enum AppointmentType {
-        UPCOMING,
-        MISSED,
-        REQUESTED,
-        CANCEL,
-        CANCELLED
-    }
-
     private Context context;
     private AppointmentsPayloadDTO payload;
     private View addActionLayout;

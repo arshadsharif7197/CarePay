@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.demographics.activities;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -39,8 +40,8 @@ import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.PhysicianDto;
-import com.carecloud.carepaylibray.demographics.fragments.EmergencyContactFragment;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
+import com.carecloud.carepaylibray.demographics.fragments.EmergencyContactFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.SearchPhysicianFragment;
 import com.carecloud.carepaylibray.demographics.interfaces.DemographicExtendedInterface;
@@ -248,12 +249,16 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     }
 
     @Override
-    public void showRemovePrimaryInsuranceDialog(ConfirmationCallback callback) {
+    public void showRemovePrimaryInsuranceDialog(ConfirmationCallback callback, DialogInterface.OnCancelListener cancelListener) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment
                 .newInstance(Label.getLabel("demographics_insurance_primary_alert_title"),
                         Label.getLabel("demographics_insurance_primary_alert_message_patient"));
         confirmDialogFragment.setCallback(callback);
+        confirmDialogFragment.setNegativeAction(true);
+        if (cancelListener != null) {
+            confirmDialogFragment.setOnCancelListener(cancelListener);
+        }
         String tag = confirmDialogFragment.getClass().getName();
         confirmDialogFragment.show(ft, tag);
     }
