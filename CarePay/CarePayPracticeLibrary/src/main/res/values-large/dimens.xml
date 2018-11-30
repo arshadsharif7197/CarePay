@@ -6,12 +6,24 @@
     <dimen name="toolbar_vertical_padding">0dp</dimen>
     <dimen name="search_container_padding">10dp</dimen>
     <dimen name="list_padding">6dp</dimen>
-    <dimen name="dialog_width">380dp</dimen>
     <dimen name="profile_pic_size">50dp</dimen>
     <dimen name="errorTextSize">8sp</dimen>
     <dimen name="textview_default_textsize">13sp</dimen>
     <dimen name="hint_floating_size">9dp</dimen>
     <dimen name="dialog_profile_pic_size">60dp</dimen>
+    <dimen name="commonButtonHeight">35dp</dimen>
+    <dimen name="buttonStrokeWidth">1dp</dimen>
+    <dimen name="formEditTextTextSize">17sp</dimen>
+    <dimen name="optionalLabelRightMargin">20dp</dimen>
+    <dimen name="optionalLabelTextSize">8sp</dimen>
+    <dimen name="radioButtonSize">30dp</dimen>
+    <dimen name="radioButtonPadding">6dp</dimen>
+    <dimen name="checkboxSize">@dimen/radioButtonSize</dimen>
+    <dimen name="checkboxPadding">@dimen/radioButtonPadding</dimen>
+    <dimen name="dialog_width">360dp</dimen>
+    <dimen name="commonPracticeDialogHeight">450dp</dimen>
+    <dimen name="separatorHeight">0.5dp</dimen>
+    <dimen name="ediTextPadding">10dp</dimen>
 
     <!--Language-->
     <dimen name="langSpinnerTextSize">15sp</dimen>

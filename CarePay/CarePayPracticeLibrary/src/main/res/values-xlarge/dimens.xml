@@ -6,9 +6,18 @@
     <dimen name="search_container_padding">30dp</dimen>
     <dimen name="bottom_button_container_padding">10dp</dimen>
     <dimen name="list_padding">16dp</dimen>
-    <dimen name="dialog_width">510dp</dimen>
     <dimen name="profile_pic_size">60dp</dimen>
     <dimen name="dialog_profile_pic_size">88dp</dimen>
+    <dimen name="commonButtonHeight">50dp</dimen>
+    <dimen name="buttonStrokeWidth">2dp</dimen>
+    <dimen name="radioButtonSize">40dp</dimen>
+    <dimen name="radioButtonPadding">8dp</dimen>
+    <dimen name="checkboxSize">@dimen/radioButtonSize</dimen>
+    <dimen name="checkboxPadding">@dimen/radioButtonPadding</dimen>
+    <dimen name="commonPracticeDialogHeight">672dp</dimen>
+    <dimen name="dialog_width">510dp</dimen>
+    <dimen name="separatorHeight">1dp</dimen>
+    <dimen name="ediTextPadding">15dp</dimen>
 
     <!--Language-->
     <dimen name="langSpinnerTextSize">20sp</dimen>
