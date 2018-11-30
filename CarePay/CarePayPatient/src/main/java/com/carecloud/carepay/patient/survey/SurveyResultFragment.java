@@ -365,6 +365,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
                 hideProgressDialog();
                 showErrorNotification(exceptionMessage);
                 Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
+                showOkButton(null);
             }
         }, jsonResponse, query, header);
     }
