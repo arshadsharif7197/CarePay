@@ -19,6 +19,7 @@ import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistor
 import com.carecloud.carepay.patient.retail.activities.RetailActivity;
 import com.carecloud.carepay.patient.selectlanguage.SelectLanguageActivity;
 import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
+import com.carecloud.carepay.patient.survey.SurveyActivity;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
@@ -165,6 +166,27 @@ public class PatientNavigationHelper {
                 }
                 break;
             }
+            case NavigationStateConstants.MEDICATIONS: {
+                if (context instanceof ReviewDemographicsActivity) {
+                    ((ReviewDemographicsActivity) context).navigateToMedications(workflowDTO);
+                    return;
+                } else {
+                    intent = new Intent(context, ReviewDemographicsActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                }
+                break;
+            }
+            case NavigationStateConstants.ALLERGIES: {
+                if (context instanceof ReviewDemographicsActivity) {
+                    ((ReviewDemographicsActivity) context).navigateToAllergy(workflowDTO);
+                    return;
+                } else {
+                    intent = new Intent(context, ReviewDemographicsActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                }
+                break;
+            }
+
             case NavigationStateConstants.PATIENT_APP_CHECKOUT:
             case NavigationStateConstants.PATIENT_FORM_CHECKOUT:
             case NavigationStateConstants.PATIENT_PAY_CHECKOUT: {
@@ -186,8 +208,12 @@ public class PatientNavigationHelper {
             case NavigationStateConstants.MESSAGES:
                 intent = new Intent(context, MessagesActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                return;
+            case NavigationStateConstants.SURVEYS_CHECKOUT:
+            case NavigationStateConstants.SURVEYS:
+                intent = new Intent(context, SurveyActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
-
             case NavigationStateConstants.PATIENT_MY_HEALTH:
                 intent = new Intent(context, MyHealthActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

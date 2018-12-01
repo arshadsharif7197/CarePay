@@ -28,6 +28,7 @@ import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPaylo
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.survey.model.SurveyDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -35,14 +36,14 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import static com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment.MODE_ADD;
-import static com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment.MODE_CREATE;
-import static com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment.MODE_EDIT;
-
 import java.text.NumberFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import static com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment.MODE_ADD;
+import static com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment.MODE_CREATE;
+import static com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment.MODE_EDIT;
 
 /**
  * Created by lmenendez on 4/11/17
@@ -126,7 +127,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
             if (selectedAppointment == null) {
                 selectedAppointment = DtoHelper.getConvertedDTO(AppointmentDTO.class, icicle);
             }
-            if (hasPayment||isCash) {
+            if (hasPayment || isCash) {
                 paymentsModel = (PaymentsModel) dto;
                 hasPaymentPlan = confirmationMode > -1;
                 if (hasPaymentPlan) {
@@ -185,7 +186,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
                 .setVisibility((hasPayment && !hasPaymentPlan) || isCash ? View.VISIBLE : View.GONE);
         view.findViewById(R.id.paymentPlanInformation).setVisibility(hasPaymentPlan ? View.VISIBLE : View.GONE);
 
-        final ImageView userImage = (ImageView) view.findViewById(R.id.userImage);
+        final ImageView userImage = view.findViewById(R.id.userImage);
         Picasso.with(getContext()).load(userImageUrl)
                 .placeholder(R.drawable.icn_placeholder_user_profile_png)
                 .transform(new CircleImageTransform())
@@ -203,8 +204,8 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
                     }
                 });
 
-        TextView userNameTextView = (TextView) view.findViewById(R.id.userNameTextView);
-        TextView appointmentHourTextView = (TextView) view.findViewById(R.id.appointmentHourTextView);
+        TextView userNameTextView = view.findViewById(R.id.userNameTextView);
+        TextView appointmentHourTextView = view.findViewById(R.id.appointmentHourTextView);
         if (isAdHocForms) {
             userNameTextView.setText(((AppointmentsResultModel) callback.getDto())
                     .getPayload().getDemographicDTO().getPayload()
@@ -215,31 +216,31 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
             view.findViewById(R.id.visitTypeContainer).setVisibility(View.GONE);
             view.findViewById(R.id.separator2).setVisibility(View.GONE);
         } else {
-            userNameTextView.setText(selectedAppointment.getPayload().getPatient().getFirstName() + " "
-                    + selectedAppointment.getPayload().getPatient().getLastName());
+            userNameTextView.setText(String.format("%s %s", selectedAppointment.getPayload().getPatient().getFirstName(),
+                    selectedAppointment.getPayload().getPatient().getLastName()));
             appointmentHourTextView.setText(DateUtil.getHoursFormatted(selectedAppointment.getPayload()
                     .getStartTime()));
-            TextView appointmentProviderTextView = (TextView) view.findViewById(R.id.appointmentProviderTextView);
+            TextView appointmentProviderTextView = view.findViewById(R.id.appointmentProviderTextView);
             appointmentProviderTextView.setText(String.format(Label.getLabel("checkin_complete_provider_label"),
                     selectedAppointment.getPayload().getProvider().getName()));
-            TextView appointmentStatusTextView = (TextView) view.findViewById(R.id.appointmentStatusTextView);
+            TextView appointmentStatusTextView = view.findViewById(R.id.appointmentStatusTextView);
             String status = selectedAppointment.getPayload().getAppointmentStatus().getName();
             if ("checked-in".equals(status.toLowerCase()) || "checked-out".equals(status.toLowerCase())) {
                 status = String.format(Label.getLabel("confirm_appointment_checkout_status"), status.replace("-", " "));
             }
             appointmentStatusTextView.setText(status);
-            TextView appointmentVisitTypeTextView = (TextView) view.findViewById(R.id.appointmentVisitTypeTextView);
+            TextView appointmentVisitTypeTextView = view.findViewById(R.id.appointmentVisitTypeTextView);
             appointmentVisitTypeTextView.setText(selectedAppointment.getPayload().getVisitType().getName());
         }
 
-        TextView continueTextView = (TextView) view.findViewById(R.id.continueTextView);
+        TextView continueTextView = view.findViewById(R.id.continueTextView);
         continueTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 callback.logout();
             }
         });
-        TextView goToStoreTextView = (TextView) view.findViewById(R.id.browseOurShopTextView);
+        TextView goToStoreTextView = view.findViewById(R.id.browseOurShopTextView);
         goToStoreTextView.setVisibility(storeButtonEnabled && !isCash ? View.VISIBLE : View.GONE);
         goToStoreTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -247,7 +248,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
                 callback.goToShop();
             }
         });
-        ImageView homeModeSwitchImageView = (ImageView) view.findViewById(R.id.homeModeSwitchImageView);
+        ImageView homeModeSwitchImageView = view.findViewById(R.id.homeModeSwitchImageView);
         homeModeSwitchImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -256,21 +257,21 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
         });
 
 
-        TextView paymentTypeTextView = (TextView) view.findViewById(R.id.paymentTypeTextView);
+        TextView paymentTypeTextView = view.findViewById(R.id.paymentTypeTextView);
         if (hasPayment && !hasPaymentPlan) {
             paymentTypeTextView.setText(Label.getLabel("payment_type_one_time"));
 
-            TextView paymentMethodTextView = (TextView) view.findViewById(R.id.paymentMethodTextView);
+            TextView paymentMethodTextView = view.findViewById(R.id.paymentMethodTextView);
             paymentMethodTextView.setText(PaymentConfirmationFragment.getPaymentMethod(patientPaymentPayload));
 
-            TextView confirmationNumberTextView = (TextView) view.findViewById(R.id.confirmationNumberTextView);
+            TextView confirmationNumberTextView = view.findViewById(R.id.confirmationNumberTextView);
             confirmationNumberTextView.setText(patientPaymentPayload.getConfirmation());
 
-            TextView totalPaidTextView = (TextView) view.findViewById(R.id.totalPaidTextView);
+            TextView totalPaidTextView = view.findViewById(R.id.totalPaidTextView);
             totalPaidTextView.setText(currencyFormatter.format(patientPaymentPayload.getTotalPaid()));
 
             if (appointmentNavigationType == Defs.NAVIGATE_CHECKOUT) {
-                TextView successMessage = (TextView) view.findViewById(R.id.successMessage);
+                TextView successMessage = view.findViewById(R.id.successMessage);
                 successMessage.setText(Label.getLabel("confirm_appointment_checkout"));
             }
             //todo display possible errors
@@ -280,19 +281,19 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
 
             paymentTypeTextView.setText(getMessageLabel());
 
-            TextView totalAmount = (TextView) view.findViewById(R.id.payment_confirm_amount_value);
+            TextView totalAmount = view.findViewById(R.id.payment_confirm_amount_value);
             totalAmount.setText(currencyFormatter.format(paymentPlanPayloadDTO.getAmount()));
 
-            TextView installments = (TextView) view.findViewById(R.id.payment_confirm_installments_value);
+            TextView installments = view.findViewById(R.id.payment_confirm_installments_value);
             installments.setText(String.valueOf(paymentPlanPayloadDTO.getPaymentPlanDetails().getInstallments()));
 
             String paymentAmountString = currencyFormatter
                     .format(paymentPlanPayloadDTO.getPaymentPlanDetails().getAmount()) +
                     paymentPlanPayloadDTO.getPaymentPlanDetails().getFrequencyString();
-            TextView paymentAmount = (TextView) view.findViewById(R.id.payment_confirm_payment_value);
+            TextView paymentAmount = view.findViewById(R.id.payment_confirm_payment_value);
             paymentAmount.setText(paymentAmountString);
 
-            TextView dueDate = (TextView) view.findViewById(R.id.payment_confirm_due_value);
+            TextView dueDate = view.findViewById(R.id.payment_confirm_due_value);
             dueDate.setText(StringUtil.getOrdinal(getApplicationPreferences().getUserLanguage(),
                     paymentPlanPayloadDTO.getPaymentPlanDetails().getDayOfMonth()));
 
@@ -307,26 +308,26 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
 
             view.findViewById(R.id.continueTextView).setVisibility(View.GONE);
 
-            ImageView successImage = (ImageView) view.findViewById(R.id.checkImage);
+            ImageView successImage = view.findViewById(R.id.checkImage);
             successImage.setImageResource(R.drawable.cash_success);
 
-            TextView paymentMethodTextView = (TextView) view.findViewById(R.id.paymentMethodTextView);
+            TextView paymentMethodTextView = view.findViewById(R.id.paymentMethodTextView);
             paymentMethodTextView.setText(Label.getLabel("payment_method_cash"));
 
-            TextView totalLabel = (TextView) view.findViewById(R.id.totalPaidLabel);
+            TextView totalLabel = view.findViewById(R.id.totalPaidLabel);
             totalLabel.setText(Label.getLabel("payment_confirm_cash_total"));
 
             //only take first balance since this is practice app
             double pendingAmount = paymentsModel.getPaymentPayload().getPatientBalances().get(0)
                     .getBalances().get(0).getPayload().get(0).getAmount();
-            TextView totalAmount = (TextView) view.findViewById(R.id.totalPaidTextView);
+            TextView totalAmount = view.findViewById(R.id.totalPaidTextView);
             totalAmount.setText(currencyFormatter.format(pendingAmount));
 
             View main = view.findViewById(R.id.mainLayout);
             main.setBackgroundResource(R.color.lightning_yellow);
 
-            TextView successMessage = (TextView) view.findViewById(R.id.successMessage);
-            if (appointmentNavigationType == Defs.NAVIGATE_CHECKOUT ) {
+            TextView successMessage = view.findViewById(R.id.successMessage);
+            if (appointmentNavigationType == Defs.NAVIGATE_CHECKOUT) {
                 successMessage.setText(Label.getLabel("confirm_appointment_checkout_cash_payment_message"));
             } else {
                 successMessage.setText(Label.getLabel("confirm_appointment_checkin_cash_payment_message"));
@@ -336,12 +337,31 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
             paymentTypeTextView.setText(Label.getLabel("payment_confirm_type_no_paid"));
 
             if (appointmentNavigationType == Defs.NAVIGATE_CHECKOUT) {
-                TextView successMessage = (TextView) view.findViewById(R.id.successMessage);
+                TextView successMessage = view.findViewById(R.id.successMessage);
                 successMessage.setText(Label.getLabel("confirm_appointment_checkout"));
             }
         }
 
+        manageSurvey(view);
 
+    }
+
+    private void manageSurvey(View view) {
+        Bundle extra = getArguments();
+        long id = extra.getLong(SurveyDTO.class.getSimpleName(), -1);
+        if (id > 0 && !isCash) {
+            if (view.findViewById(R.id.browseOurShopTextView).getVisibility() == View.VISIBLE) {
+                view.findViewById(R.id.continueTextView).setVisibility(View.GONE);
+            }
+            TextView surveyButton = view.findViewById(R.id.surveyButton);
+            surveyButton.setVisibility(View.VISIBLE);
+            surveyButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callback.fillSurvey();
+                }
+            });
+        }
     }
 
     private void setUpForAdHocForms(View view) {
@@ -354,7 +374,7 @@ public class CheckInCompletedDialogFragment extends BaseDialogFragment {
         view.findViewById(R.id.paymentTypeLayout).setVisibility(View.GONE);
         view.findViewById(R.id.continueTextView).setVisibility(View.GONE);
         view.findViewById(R.id.separator3).setVisibility(View.GONE);
-        RecyclerView signedFormsRecyclerView = (RecyclerView) view.findViewById(R.id.signedFormsRecyclerView);
+        RecyclerView signedFormsRecyclerView = view.findViewById(R.id.signedFormsRecyclerView);
         signedFormsRecyclerView.setVisibility(View.VISIBLE);
         signedFormsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         AdHocRecyclerViewNameAdapter adapter = new AdHocRecyclerViewNameAdapter(filledForms);

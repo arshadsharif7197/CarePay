@@ -19,7 +19,7 @@ public class PracticeHomeScreenPayloadDTO {
     @SerializedName("alerts")
     @Expose
     private HomeScreenAlertsDTO alerts = new HomeScreenAlertsDTO();
-    @SerializedName("user_practices")
+    @SerializedName(value="user_practices", alternate = "practice_information")
     @Expose
     private List<UserPracticeDTO> userPractices = new ArrayList<>();
     @SerializedName("office_news")

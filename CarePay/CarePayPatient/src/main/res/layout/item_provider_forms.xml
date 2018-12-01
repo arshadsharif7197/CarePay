@@ -51,7 +51,7 @@
                 android:textColor="@color/cadet_gray"
                 android:textSize="@dimen/text_size_13"
                 app:customAssetFont="proxima_nova_regular"
-                tools:text="Last signed: 05/04/17" />
+                tools:text="Last Reviewed: 05/04/17" />
 
         </LinearLayout>
 

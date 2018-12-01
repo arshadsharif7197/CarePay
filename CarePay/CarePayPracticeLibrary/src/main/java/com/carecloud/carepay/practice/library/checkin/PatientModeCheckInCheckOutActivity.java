@@ -21,18 +21,17 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.Defs;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.updatebalance.PaymentUpdateBalanceDTO;
-import com.carecloud.carepaylibray.utils.DateUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -164,9 +163,11 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
 
             findViewById(R.id.no_appointment_layout).setVisibility(View.GONE);
 
+            UserPracticeDTO practiceInfo = appointmentsResultModel.getPayload().getUserPractices().get(0);
+
             AppointmentsListAdapter appointmentsListAdapter = new AppointmentsListAdapter(
-                    PatientModeCheckInCheckOutActivity.this, appointmentsItems, appointmentsResultModel,
-                    appointmentNavigationType);
+                    PatientModeCheckInCheckOutActivity.this, appointmentsItems,
+                    appointmentsResultModel, appointmentNavigationType, practiceInfo);
             appointmentsRecyclerView.setAdapter(appointmentsListAdapter);
             appointmentsListAdapter.setListener(this);
 

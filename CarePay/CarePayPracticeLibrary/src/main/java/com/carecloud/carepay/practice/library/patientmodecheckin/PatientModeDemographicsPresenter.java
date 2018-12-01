@@ -102,6 +102,7 @@ public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl 
     private void showHomeAlertDialog() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(null, null);
+        confirmDialogFragment.setNegativeAction(true);
         confirmDialogFragment.setCallback(new ConfirmationCallback() {
             @Override
             public void onConfirm() {
