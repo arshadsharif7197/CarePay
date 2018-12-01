@@ -82,6 +82,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     private TextView paymentTotalTextView;
     private TextView unAppliedTextView;
 
+    private View unappliedLayout;
+
     private NestedScrollView scrollView;
     private RecyclerView balanceDetailsRecycler;
     private View newChargesLayout;
@@ -166,6 +168,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         unAppliedTextView = view.findViewById(R.id.unapplied_value);
 
         scrollView = view.findViewById(R.id.nested_scroller);
+
+        unappliedLayout = view.findViewById(R.id.unapplied_layout);
 
         RecyclerView.LayoutManager balanceLayoutManager = new LinearLayoutManager(getContext());
         balanceDetailsRecycler = view.findViewById(R.id.balances_recycler);
@@ -361,7 +365,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
                 originalUnapplied = unappliedCredit;
                 setCurrency(unAppliedTextView, unappliedCredit);
             } else {
-                setCurrency(unAppliedTextView, 0.00);
+                unappliedLayout.setVisibility(View.GONE);
             }
 
             setMaxAmounts();
