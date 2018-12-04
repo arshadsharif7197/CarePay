@@ -66,6 +66,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     protected TextInputLayout nameOnCardTextInputLayout;
     protected TextInputLayout creditCardNoTextInput;
     protected TextInputLayout verificationCodeTextInput;
+    protected TextInputLayout expirationDateTextInput;
     protected TextInputLayout address1TextInput;
     protected TextInputLayout address2TextInput;
     protected TextInputLayout zipCodeTextInput;
@@ -77,7 +78,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     protected CarePayTextView cardTypeTextView;
     protected CarePayTextView billingAddressTextView;
     protected EditText verificationCodeEditText;
-    protected TextView expirationDateEditText;
+    protected EditText expirationDateEditText;
     protected TextView title;
     protected CheckBox saveCardOnFileCheckBox;
     protected CheckBox setAsDefaultCheckBox;
@@ -308,6 +309,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         verificationCodeTextInput = view.findViewById(R.id.verificationCodeTextInputLayout);
         verificationCodeEditText = view.findViewById(R.id.verificationCodeEditText);
 
+        expirationDateTextInput = view.findViewById(R.id.expirationDateInputLayout);
         expirationDateEditText = view.findViewById(R.id.expirationDateEditText);
         expirationDateEditText.setOnClickListener(pickDateListener);
 
@@ -497,6 +499,8 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
                 .getHintFocusChangeListener(creditCardNoTextInput, null));
         nameOnCardEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(nameOnCardTextInputLayout, null));
+        expirationDateEditText.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(expirationDateTextInput, null));
         verificationCodeEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(verificationCodeTextInput, null));
         address1EditText.setOnFocusChangeListener(SystemUtil
@@ -596,6 +600,8 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     @Override
     public void onDateSet(int year, int monthOfYear) {
         expirationDateEditText.setText(DateUtil.getInstance().formatMonthYear(year, monthOfYear));
+        expirationDateEditText.getOnFocusChangeListener().onFocusChange(expirationDateEditText,
+                !StringUtil.isNullOrEmpty(expirationDateEditText.getText().toString().trim()));
         validateCreditCardDetails();
     }
 

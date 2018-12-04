@@ -58,7 +58,10 @@
                         android:maxLength="200"
                         android:maxLines="1"
                         android:nextFocusForward="@+id/creditCardNoEditText"
-                        android:padding="@dimen/dimen_10dp"
+                        android:paddingStart="@dimen/dimen_10dp"
+                        android:paddingEnd="@dimen/dimen_10dp"
+                        android:paddingTop="@dimen/dimen_10dp"
+                        android:paddingBottom="@dimen/dimen_20dp"
                         app:customAssetFont="proxima_nova_regular"
                         breeze:hintKey="payment_name_on_card_text" />
 
@@ -92,8 +95,11 @@
                         android:imeOptions="actionNext"
                         android:inputType="number"
                         android:maxLength="19"
+                        android:paddingTop="@dimen/dimen_10dp"
                         android:nextFocusForward="@+id/verificationCodeEditText"
-                        android:padding="@dimen/dimen_10dp"
+                        android:paddingStart="@dimen/dimen_10dp"
+                        android:paddingEnd="@dimen/dimen_10dp"
+                        android:paddingBottom="@dimen/dimen_20dp"
                         app:customAssetFont="proxima_nova_regular"
                         breeze:hintKey="payment_credit_card_number" />
 
@@ -140,7 +146,10 @@
                         android:imeOptions="actionDone"
                         android:inputType="number"
                         android:maxLength="4"
-                        android:padding="@dimen/dimen_10dp"
+                        android:paddingTop="@dimen/dimen_10dp"
+                        android:paddingStart="@dimen/dimen_10dp"
+                        android:paddingEnd="@dimen/dimen_10dp"
+                        android:paddingBottom="@dimen/dimen_20dp"
                         app:customAssetFont="proxima_nova_regular"
                         breeze:hintKey="payment_verification_number" />
 
@@ -183,42 +192,16 @@
                     android:editable="false"
                     android:focusableInTouchMode="false"
                     android:imeOptions="actionNext"
-                    android:padding="@dimen/dimen_10dp"
+                    android:paddingTop="@dimen/dimen_10dp"
+                    android:paddingStart="@dimen/dimen_10dp"
+                    android:paddingEnd="@dimen/dimen_10dp"
+                    android:paddingBottom="@dimen/dimen_20dp"
                     app:customAssetFont="proxima_nova_regular"
                     app:hintTextAppearance="@style/FloatingLabelStyle"
                     breeze:hintKey="payment_expiration_date"
                     tools:hint="Expiration Date" />
 
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
-
-            <!--<RelativeLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_margin="@dimen/payment_method_layout_checkbox_margin">-->
-
-                <!--<com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
-                    <!--android:id="@+id/expirationDateTextView"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_centerVertical="true"-->
-                    <!--android:padding="@dimen/dimen_10dp"-->
-                    <!--android:textColor="@color/charcoal"-->
-                    <!--android:textSize="@dimen/payment_method_layout_label_text_size"-->
-                    <!--app:customAssetFont="proxima_nova_regular"-->
-                    <!--breeze:textKey="payment_expiration_date" />-->
-
-
-                <!--<com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
-                    <!--android:id="@+id/pickDateTextView"-->
-                    <!--style="@style/PaymentPickDateLabelStyle"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_centerVertical="true"-->
-                    <!--android:clickable="true"-->
-                    <!--app:customAssetFont="proxima_nova_semi_bold"-->
-                    <!--breeze:textKey="payment_pick_date" />-->
-
-            <!--</RelativeLayout>-->
 
             <View
                 android:layout_width="match_parent"
@@ -227,7 +210,7 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
                 android:id="@+id/saveCardOnFileCheckBox"
-                style="@style/PaymentMethodLabelStyle"
+                style="@style/PaymentAddCreditCardInputStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/payment_method_layout_checkbox_margin"
@@ -235,7 +218,7 @@
                 android:button="@null"
                 android:drawableRight="@drawable/cell_checkbox"
                 android:padding="@dimen/dimen_10dp"
-                app:customAssetFont="proxima_nova_semi_bold"
+                app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="payment_save_card_on_file" />
 
             <View
@@ -245,7 +228,7 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
                 android:id="@+id/setAsDefaultCheckBox"
-                style="@style/PaymentMethodLabelStyle"
+                style="@style/PaymentAddCreditCardInputStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/payment_method_layout_checkbox_margin"
@@ -253,7 +236,7 @@
                 android:button="@null"
                 android:drawableRight="@drawable/cell_checkbox"
                 android:padding="@dimen/dimen_10dp"
-                app:customAssetFont="proxima_nova_semi_bold"
+                app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="payment_set_as_default_credit_card_label" />
 
             <View
