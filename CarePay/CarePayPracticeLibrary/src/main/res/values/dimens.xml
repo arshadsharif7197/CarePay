@@ -369,6 +369,7 @@
     <dimen name="negativeContainerTopMargin">40dp</dimen>
     <dimen name="surveyFeedbackButtonWidth">300dp</dimen>
     <dimen name="checkoutMessageTextSize">40sp</dimen>
+    <dimen name="addNewCreditCardTextFieldSize">18sp</dimen>
 
 
 </resources>
