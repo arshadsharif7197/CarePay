@@ -236,6 +236,7 @@
     <dimen name="negativeContainerTopMargin">40dp</dimen>
     <dimen name="surveyFeedbackButtonWidth">300dp</dimen>
     <dimen name="checkoutMessageTextSize">30sp</dimen>
+    <dimen name="practiceAppointmentDetailDialogWidth">360dp</dimen>
 
 
 </resources>
