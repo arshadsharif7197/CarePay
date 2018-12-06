@@ -80,7 +80,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-//        appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
+        appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
         paymentsModel = getConvertedDTO(PaymentsModel.class);
     }
 
