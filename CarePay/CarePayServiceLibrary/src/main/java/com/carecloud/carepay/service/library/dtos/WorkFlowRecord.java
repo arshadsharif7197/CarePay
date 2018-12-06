@@ -13,6 +13,9 @@ import java.io.Reader;
 public class WorkFlowRecord {
     private static final String WORKFLOW_SESSION = "workflow_session";
 
+    private static long lastfindId;
+    private static WorkFlowRecord lastFindRecord;
+
     private String metadata;
     private String payload;
     private String state;
@@ -72,10 +75,17 @@ public class WorkFlowRecord {
     }
 
     public static WorkFlowRecord findById(Context context, long id) {
+        if(id == lastfindId && lastFindRecord != null){
+            return lastFindRecord;
+        }
+
         File cacheDir = new File(context.getCacheDir(), WORKFLOW_SESSION);
         File findFile = findFileByName(String.valueOf(id), cacheDir);
         if (findFile != null) {
-            return getWorkflowRecordFromFile(findFile);
+            WorkFlowRecord findRecord = getWorkflowRecordFromFile(findFile);
+            lastfindId = id;
+            lastFindRecord = findRecord;
+            return findRecord;
         }
         return null;
     }
