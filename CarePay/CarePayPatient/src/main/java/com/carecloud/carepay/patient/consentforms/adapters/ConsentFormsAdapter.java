@@ -72,13 +72,19 @@ public class ConsentFormsAdapter extends RecyclerView.Adapter<ConsentFormsAdapte
         holder.container.setOnClickListener(null);
         holder.formNameTextView.setText(form.getPayload().get("title").getAsString());
         SpannableStringBuilder sb = new SpannableStringBuilder();
-        if (form.getLastModifiedDate() != null) {
-            holder.formCheckBox.setVisibility(View.GONE);
-            sb.append(String.format(Label.getLabel("adhoc_form_date_placeholder"),
-                    DateUtil.getInstance().setDateRaw(form.getLastModifiedDate())
+        if (form.getPendingMetadata() != null) {
+            sb.append(String.format(Label.getLabel("consentForms.providersFormList.item.status.receivedOn"),
+                    DateUtil.getInstance().setDateRaw(form.getPendingMetadata().getCreatedDate())
                             .toStringWithFormatMmSlashDdSlashYyyy()));
         } else {
-            sb.append(Label.getLabel("consentForms.providersFormList.item.status.neverReviewedStatus"));
+            if (form.getLastModifiedDate() != null) {
+                holder.formCheckBox.setVisibility(View.GONE);
+                sb.append(String.format(Label.getLabel("adhoc_form_date_placeholder"),
+                        DateUtil.getInstance().setDateRaw(form.getLastModifiedDate())
+                                .toStringWithFormatMmSlashDdSlashYyyy()));
+            } else {
+                sb.append(Label.getLabel("consentForms.providersFormList.item.status.neverReviewedStatus"));
+            }
         }
 
         if (mode == ConsentFormViewPagerFragment.PENDING_MODE) {

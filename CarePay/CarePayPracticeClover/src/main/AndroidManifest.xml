@@ -98,6 +98,12 @@
             android:name="com.carecloud.carepay.practice.library.retail.RetailPracticeActivity"
             android:screenOrientation="sensorLandscape"/>
         <activity
+            android:name="com.carecloud.carepay.practice.library.survey.SurveyActivity"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.survey.SurveyResultActivity"
+            android:screenOrientation="sensorLandscape"/>
+        <activity
             android:name="com.carecloud.carepay.practice.clover.cloverqrcodescanner.CloverQRScannerActivity"
             android:label="@string/qr_code_scanner"
             android:screenOrientation="sensorLandscape">

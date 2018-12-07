@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
@@ -15,8 +14,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
-        android:layout_marginTop="@dimen/dimen_10dp">
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_weight="3">
 
         <ImageView
             android:id="@+id/homeModeSwitchImageView"
@@ -76,6 +75,20 @@
                 tools:text="Browse Our Shop" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/surveyButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/button_rounded_white"
+                android:padding="@dimen/dimen_10dp"
+                android:textColor="@color/lemonGreen"
+                android:textSize="@dimen/text_size_22sp"
+                android:visibility="gone"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="check_in-out.succcess.button.label.survey"
+                tools:text="Take a survey" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/continueTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -107,8 +120,8 @@
             android:layout_marginEnd="@dimen/dimen_50dp"
             android:layout_marginStart="@dimen/dimen_50dp"
             android:layout_marginTop="@dimen/dimen_50dp"
-            android:orientation="vertical"
-            android:elevation="@dimen/dimen_15dp">
+            android:elevation="@dimen/dimen_15dp"
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:id="@+id/header"

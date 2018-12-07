@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.customdialog.ConfirmationPinDialog;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.CheckInCompletedDialogFragment;
 import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckCompleteInterface;
+import com.carecloud.carepay.practice.library.survey.SurveyActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -21,6 +23,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.survey.model.SurveyDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
@@ -34,8 +37,9 @@ import java.util.Map;
 public class CompleteCheckActivity extends BasePracticeActivity implements CheckCompleteInterface {
 
     private DTO dto;
-    private AppointmentsResultModel appointmentsResultModel;
+    private AppointmentsResultModel metadataModel;
     private WorkflowDTO workflowDTO;
+    private static final int SURVEY_FLOW = 123;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,11 +62,14 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
                 }
                 dto = gson.fromJson(workflowString, PaymentsModel.class);
             } else {
+                if (isCheckOut) {
+                    appointmentDTO.getPayload().getAppointmentStatus().setName("Checked-Out");
+                }
                 dto = gson.fromJson(workflowString, AppointmentsResultModel.class);
             }
             String appointmentTransitionsWorkflow = extra.getString(CarePayConstants.EXTRA_APPOINTMENT_TRANSITIONS);
             if (appointmentTransitionsWorkflow != null) {
-                appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class,
+                metadataModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class,
                         appointmentTransitionsWorkflow);
             }
 
@@ -106,21 +113,21 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
         if (NavigationStateConstants.PATIENT_HOME.equals(getWorkflowDto().getState())) {
             navigateToWorkflow(getWorkflowDto());
         } else {
-            if (appointmentsResultModel == null) {
-                appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, getWorkflowDto());
+            if (metadataModel == null) {
+                metadataModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, getWorkflowDto());
             }
-            goToHome(appointmentsResultModel.getMetadata().getTransitions().getLogout());
+            goToHome(metadataModel.getMetadata().getTransitions().getLogout());
         }
     }
 
     @Override
     public void showConfirmationPinDialog() {
-        if (appointmentsResultModel == null) {
-            appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, getWorkflowDto());
+        if (metadataModel == null) {
+            metadataModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, getWorkflowDto());
         }
         ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this,
-                appointmentsResultModel.getMetadata().getLinks().getPinpad(), false,
-                appointmentsResultModel.getMetadata().getLinks().getLanguage());
+                metadataModel.getMetadata().getLinks().getPinpad(), false,
+                metadataModel.getMetadata().getLinks().getLanguage());
         confirmationPinDialog.show();
     }
 
@@ -128,7 +135,7 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
     public void goToShop() {
         TransitionDTO shopTransition;
         if (dto instanceof PaymentsModel) {
-            shopTransition = appointmentsResultModel.getMetadata().getLinks().getShop();
+            shopTransition = metadataModel.getMetadata().getLinks().getShop();
         } else {
             shopTransition = ((AppointmentsResultModel) dto).getMetadata().getLinks().getShop();
         }
@@ -141,8 +148,19 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
     }
 
     @Override
+    public void fillSurvey() {
+        Bundle extra = getIntent().getBundleExtra(CarePayConstants.EXTRA_BUNDLE);
+        long id = extra.getLong(SurveyDTO.class.getSimpleName());
+        Bundle bundle = new Bundle();
+        bundle.putLong(WorkflowDTO.class.getName(), id);
+        Intent intent = new Intent(getContext(), SurveyActivity.class);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, SURVEY_FLOW);
+    }
+
+    @Override
     public void onPinConfirmationCheck(boolean isCorrectPin, String pin) {
-        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getPracticeMode();
+        TransitionDTO transitionDTO = metadataModel.getMetadata().getTransitions().getPracticeMode();
         Map<String, String> query = new HashMap<>();
         query.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
         query.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
@@ -170,7 +188,7 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
     };
 
     private WorkflowDTO retrieveStoredWorkflow(long id) {
-        WorkFlowRecord workFlowRecord = WorkFlowRecord.findById(WorkFlowRecord.class, id);
+        WorkFlowRecord workFlowRecord = WorkFlowRecord.findById(getContext(), id);
         if (workFlowRecord != null) {
             return new WorkflowDTO(workFlowRecord);
         }

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RatingBar
+        android:id="@+id/surveyQuestionRatingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="@dimen/dimen_5dp"
+        android:layout_marginStart="@dimen/dimen_5dp"
+        android:progressDrawable="@drawable/rating_star" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/surveyQuestionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/surveyQuestionRatingBar"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:padding="@dimen/dimen_10dp"
+        android:textColor="@color/charcoal"
+        android:textSize="30sp"
+        app:customAssetFont="gotham_rounded_medium"
+        tools:text="How would you rate our practice?" />
+
+</RelativeLayout>

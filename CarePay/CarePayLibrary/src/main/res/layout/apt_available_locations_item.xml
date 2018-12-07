@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="@dimen/dimen_8dp"
+        android:layout_marginEnd="@dimen/dimen_8dp"
         android:background="@drawable/rounded_button_blue_border_selector"
         android:text="Location"
         app:customAssetFont="proxima_nova_regular" />

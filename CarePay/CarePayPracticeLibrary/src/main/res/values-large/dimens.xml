@@ -226,6 +226,19 @@
     <dimen name="payment_method_parent_layout_padding">@dimen/dashboardLabelStartMargin</dimen>
     <dimen name="paymentPlanNameTextSize">12sp</dimen>
 
+
+    <!--Survey Flow-->
+    <dimen name="questionNumberTextSize">15sp</dimen>
+    <dimen name="questionTextSize">24sp</dimen>
+    <dimen name="checkImageVerticalMargin">40dp</dimen>
+    <dimen name="checkImageSize">120dp</dimen>
+    <dimen name="successMessageTextSize">26sp</dimen>
+    <dimen name="successMessageBottomMargin">20dp</dimen>
+    <dimen name="divider1Width">400dp</dimen>
+    <dimen name="negativeContainerTopMargin">40dp</dimen>
+    <dimen name="surveyFeedbackButtonWidth">300dp</dimen>
+    <dimen name="checkoutMessageTextSize">30sp</dimen>
+
     <!--Payment Plan Detail-->
     <dimen name="paymentPlanDetailSectionHorizontalMargin">10dp</dimen>
     <dimen name="paymentPlanDetailSectionVerticalPadding">15dp</dimen>

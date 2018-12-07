@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/medication_none_placeholder"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -13,36 +14,67 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/medication_allergy_text_view"
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/medicationAllergyItemMargin"
-            android:layout_weight="1"
-            android:gravity="left"
-            android:maxLines="2"
-            android:text="Medication X"
-            android:textColor="@color/lightSlateGray"
-            android:textSize="@dimen/medicationAllergyItemTextSize"
-            app:customAssetFont="proxima_nova_semi_bold" />
+            android:layout_margin="@dimen/padding_xlarge"
+            android:layout_weight="1">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/medication_allergy_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:maxLines="2"
+                android:textColor="@color/lightSlateGray"
+                android:textSize="@dimen/text_size_14"
+                app:customAssetFont="proxima_nova_semi_bold"
+                tools:text="Medication X\n line 2 "/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <View
+                    android:id="@+id/medication_allergy_strike"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/remove_red"
+                    android:visibility="gone"/>
+
+                <View
+                    android:id="@+id/medication_allergy_strike2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/dimen_17dp"
+                    android:background="@color/remove_red"
+                    android:visibility="gone"/>
+
+            </LinearLayout>
+
+        </FrameLayout>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/medication_allergy_delete_button"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/commonButtonHeight"
+            android:layout_width="@dimen/dimen_80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/padding_xlarge"
             android:background="@drawable/button_round_red_border"
-            android:paddingStart="@dimen/padding_large"
-            android:paddingTop="@dimen/medicationAllergyItemVerticalPadding"
+            android:paddingBottom="@dimen/padding_small"
             android:paddingEnd="@dimen/padding_large"
-            android:paddingBottom="@dimen/medicationAllergyItemVerticalPadding"
-            android:text="Remove"
+            android:paddingStart="@dimen/padding_large"
+            android:paddingTop="@dimen/padding_small"
             android:textColor="@color/remove_red"
-            android:textSize="@dimen/medicationAllergyItemTextSize"
-            app:customAssetFont="proxima_nova_semi_bold" />
+            android:textSize="@dimen/text_size_14"
+            app:customAssetFont="proxima_nova_semi_bold"
+            tools:text="Remove"/>
 
     </LinearLayout>
 
     <View
+        android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_1dp"
         android:background="@color/light_gray" />

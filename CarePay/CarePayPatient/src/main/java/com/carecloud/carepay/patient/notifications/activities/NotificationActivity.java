@@ -16,6 +16,7 @@ import com.carecloud.carepay.patient.notifications.models.NotificationStatus;
 import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -130,6 +131,12 @@ public class NotificationActivity extends MenuPatientActivity
                 }
                 callConsentFormsScreen(notificationItem);
                 break;
+            case pending_survey:
+                if (notificationItem.getPayload().getReadStatus() == NotificationStatus.unread) {
+                    markNotificationRead(notificationItem);
+                }
+                callSurveyService(notificationItem);
+                break;
             case payments:
 
                 break;
@@ -143,6 +150,37 @@ public class NotificationActivity extends MenuPatientActivity
                 //todo handle other notification types
                 break;
         }
+    }
+
+    private void callSurveyService(final NotificationItem notificationItem) {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", notificationItem.getMetadata().getPracticeMgmt());
+        queryMap.put("practice_id", notificationItem.getMetadata().getPracticeId());
+        queryMap.put("appointment_id", notificationItem.getPayload().getPendingSurvey().getMetadata().getAppointmentId());
+        queryMap.put("patient_id", notificationItem.getMetadata().getPatientId());
+        getWorkflowServiceHelper().execute(notificationsDTO.getMetadata().getLinks().getPendingSurvey(),
+                new WorkflowServiceCallback() {
+                    @Override
+                    public void onPreExecute() {
+                        showProgressDialog();
+                    }
+
+                    @Override
+                    public void onPostExecute(WorkflowDTO workflowDTO) {
+                        hideProgressDialog();
+                        Bundle bundle = new Bundle();
+                        bundle.putString(CarePayConstants.PATIENT_ID, notificationItem.getMetadata().getPatientId());
+                        bundle.putBoolean(CarePayConstants.NOTIFICATIONS_FLOW, true);
+                        navigateToWorkflow(workflowDTO, bundle);
+                    }
+
+                    @Override
+                    public void onFailure(String exceptionMessage) {
+                        hideProgressDialog();
+                        showErrorNotification(exceptionMessage);
+                        Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+                    }
+                }, queryMap);
     }
 
     private void callConsentFormsScreen(final NotificationItem notificationItem) {
@@ -169,7 +207,7 @@ public class NotificationActivity extends MenuPatientActivity
         });
     }
 
-    private void callMessagesScreen(NotificationItem notificationItem){
+    private void callMessagesScreen(NotificationItem notificationItem) {
         displayMessagesScreen();
     }
 

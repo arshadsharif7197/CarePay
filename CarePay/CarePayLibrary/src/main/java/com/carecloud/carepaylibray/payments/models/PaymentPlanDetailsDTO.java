@@ -84,11 +84,41 @@ public class PaymentPlanDetailsDTO extends PaymentPlanModel {
     public List<PaymentPlanHistory> getFilteredHistory() {
         List<PaymentPlanHistory> filteredHistory = new ArrayList<>();
         for (PaymentPlanHistory paymentPlanHistory : getPaymentPlanHistoryList()) {
-            if (!paymentPlanHistory.isOneTimePayment()) {
+            if (!paymentPlanHistory.isOneTimePayment() && paymentPlanHistory.getAmount() > 0) {
                 filteredHistory.add(paymentPlanHistory);
             }
         }
         return filteredHistory;
+    }
+
+    /**
+     * Get all payment plan history items that are one time payments
+     *
+     * @return filtered list
+     */
+    public List<PaymentPlanHistory> getOneTimePayments() {
+        List<PaymentPlanHistory> oneTimePayments = new ArrayList<>();
+        for (PaymentPlanHistory paymentPlanHistory : getPaymentPlanHistoryList()) {
+            if (paymentPlanHistory.isOneTimePayment() && paymentPlanHistory.getAmount() > 0) {
+                oneTimePayments.add(paymentPlanHistory);
+            }
+        }
+        return oneTimePayments;
+    }
+
+    /**
+     * Get all payment plan history items that successful
+     *
+     * @return filtered list
+     */
+    public List<PaymentPlanHistory> getSuccessfulPaymentHistory() {
+        List<PaymentPlanHistory> paymentHistory = new ArrayList<>();
+        for (PaymentPlanHistory paymentPlanHistory : getPaymentPlanHistoryList()) {
+            if (paymentPlanHistory.getAmount() > 0) {
+                paymentHistory.add(paymentPlanHistory);
+            }
+        }
+        return paymentHistory;
     }
 
 }
