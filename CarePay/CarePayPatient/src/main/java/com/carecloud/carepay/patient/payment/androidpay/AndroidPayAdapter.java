@@ -137,17 +137,7 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
                 .addAllowedCardNetwork(WalletConstants.CardNetwork.DISCOVER)
                 .build();
         setGoogleApiClient();
-//        Wallet.Payments.isReadyToPay(googleApiClient, req).setResultCallback(
-//                new ResultCallback<BooleanResult>() {
-//                    @Override
-//                    public void onResult(@NonNull BooleanResult booleanResult) {
-//                        if (booleanResult.getStatus().isSuccess() && booleanResult.getValue()) {
-//                            if(callback != null) {
-//                                callback.onAndroidPayReady();
-//                            }
-//                        }
-//                    }
-//                });
+
         Task<Boolean> task = paymentsClient.isReadyToPay(req);
         task.addOnCompleteListener(new OnCompleteListener<Boolean>() {
             @Override
@@ -166,16 +156,6 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
 
     //region GoogleClient
     private void setGoogleApiClient() {
-//        if(googleApiClient == null) {
-//            googleApiClient = new GoogleApiClient.Builder(activity)
-//                    .addApi(Wallet.API, new Wallet.WalletOptions.Builder()
-//                            .setEnvironment(PaymentConstants.WALLET_ENVIRONMENT)
-//                            .setTheme(WalletConstants.THEME_LIGHT)
-//                            .build())
-//                    .enableAutoManage(activity, this)
-//                    .build();
-//        }
-
         if(paymentsClient == null){
             paymentsClient = Wallet.getPaymentsClient(activity,
                     new Wallet.WalletOptions.Builder()
@@ -185,11 +165,6 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
     }
 
     private void disconnectGoogleAPI() {
-//        if(googleApiClient != null) {
-//            googleApiClient.stopAutoManage(activity);
-//            googleApiClient.disconnect();
-//            googleApiClient = null;
-//        }
         if(paymentsClient != null){
             paymentsClient = null;
         }
@@ -395,7 +370,7 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
         return PaymentMethodTokenizationParameters.newBuilder()
                 .setPaymentMethodTokenizationType(WalletConstants.PAYMENT_METHOD_TOKENIZATION_TYPE_PAYMENT_GATEWAY)
                 .addParameter("gateway", PaymentConstants.MERCHANT_GATEWAY)
-                .addParameter("gatewayMerchantId", "8192620122")
+                .addParameter("gatewayMerchantId", papiAccount.getDefaultBankAccountMid())
                 .build();
     }
 
@@ -598,16 +573,6 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
         map3DS.put("version", jsonToken.getString("protocolVersion"));
         map3DS.put("data", jsonToken.getString("signedMessage"));
         map3DS.put("type", "G");
-
-//        String signedMessage = jsonToken.getString("signedMessage");
-//        JSONObject dataObject = new JSONObject(signedMessage);
-
-//        Map<String, Object> dataMap = new HashMap<>();
-//        dataMap.put("encryptedMessage", dataObject.getString("encryptedMessage"));
-//        dataMap.put("ephemeralPublicKey", dataObject.getString("ephemeralPublicKey"));
-//        dataMap.put("tag", dataObject.getString("tag"));
-//
-//        map3DS.put("data", dataMap);
 
         payloadMap.put("3DS", map3DS);
 

@@ -119,6 +119,11 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         paymentMethodFragmentProgressBar = (ProgressBar) view.findViewById(R.id.paymentMethodFragmentProgressBar);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
         initAndroidPay();
     }
 
@@ -272,8 +277,9 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
             androidPayButton.setVisibility(View.VISIBLE);
             androidPayButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View view) {
                     androidPayAdapter.createAndroidPayRequest(amountToMakePayment, papiAccount);
+                    view.setVisibility(View.INVISIBLE);
                 }
             });
         }
@@ -287,10 +293,12 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     @Override
     public void onAndroidPayFailed(String message) {
         showErrorNotification(message);
+        androidPayButton.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onAndroidPaySuccess(JsonElement jsonElement) {
+        showProgressDialog();
         if(paymentsModel.getPaymentPayload().getPaymentPostModel() == null){
             processPayment(jsonElement);
         }else{
