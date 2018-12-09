@@ -12,7 +12,7 @@ import com.google.gson.annotations.SerializedName;
 public class DemographicLinksDTO {
     @SerializedName("self")
     @Expose
-    private BaseLinkModel self = new BaseLinkModel();
+    private TransitionDTO self = new TransitionDTO();
 
     @SerializedName("demographics")
     @Expose
@@ -29,14 +29,14 @@ public class DemographicLinksDTO {
     /**
      * @return The self
      */
-    public BaseLinkModel getSelf() {
+    public TransitionDTO getSelf() {
         return self;
     }
 
     /**
      * @param self The self
      */
-    public void setSelf(BaseLinkModel self) {
+    public void setSelf(TransitionDTO self) {
         this.self = self;
     }
 

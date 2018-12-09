@@ -105,4 +105,9 @@ public class DemographicsAllSetFragment extends CheckInDemographicsBaseFragment 
 
         getWorkflowServiceHelper().execute(transitionDTO, confirmDemWorkflowCallback, body, queries, getWorkflowServiceHelper().getPreferredLanguageHeader());
     }
+
+    @Override
+    protected void replaceTranslatedOptionsValues() {
+
+    }
 }

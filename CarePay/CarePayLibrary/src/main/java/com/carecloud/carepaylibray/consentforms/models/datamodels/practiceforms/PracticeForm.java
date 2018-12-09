@@ -1,6 +1,7 @@
 
 package com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms;
 
+import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -17,7 +18,13 @@ public class PracticeForm implements Serializable {
     @Expose
     private PracticeFormMetadata metadata = new PracticeFormMetadata();
 
-    private transient String lastModifiedDate;
+    @SerializedName("pending_metadata")
+    @Expose
+    private PracticeFormMetadata pendingMetadata = new PracticeFormMetadata();
+
+    private transient ConsentFormUserResponseDTO formUserResponseDTO;
+
+    private String lastModifiedDate;
 
     private boolean selected;
 
@@ -51,5 +58,21 @@ public class PracticeForm implements Serializable {
 
     public void setSelected(boolean selected) {
         this.selected = selected;
+    }
+
+    public ConsentFormUserResponseDTO getFormUserResponseDTO() {
+        return formUserResponseDTO;
+    }
+
+    public void setFormUserResponseDTO(ConsentFormUserResponseDTO formUserResponseDTO) {
+        this.formUserResponseDTO = formUserResponseDTO;
+    }
+
+    public PracticeFormMetadata getPendingMetadata() {
+        return pendingMetadata;
+    }
+
+    public void setPendingMetadata(PracticeFormMetadata pendingMetadata) {
+        this.pendingMetadata = pendingMetadata;
     }
 }

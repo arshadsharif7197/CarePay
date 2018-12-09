@@ -37,7 +37,7 @@
         android:layout_marginEnd="@dimen/dimen_5dp"
         android:layout_toStartOf="@id/formLastEditDateTextView"
         android:gravity="start"
-        android:singleLine="true"
+        android:maxLines="3"
         android:textColor="@color/slateGray"
         android:textSize="18sp"
         app:customAssetFont="gotham_rounded_medium"

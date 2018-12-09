@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:breeze="http://schemas.carecloud.com/breeze"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/headerContainer"
@@ -45,8 +45,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_16dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_horizontal">
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/planInstallmentDetail"
@@ -55,19 +55,19 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_38"
                         app:customAssetFont="gotham_rounded_medium"
-                        tools:text="$27.08"/>
+                        tools:text="$27.08" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/planInstallmentFrequency"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="-3dp"
                         android:layout_gravity="bottom"
+                        android:layout_marginStart="-3dp"
                         android:paddingBottom="6dp"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_20"
                         app:customAssetFont="gotham_rounded_medium"
-                        tools:text="/month"/>
+                        tools:text="/month" />
 
                 </LinearLayout>
 
@@ -83,16 +83,16 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true">
+                android:layout_centerHorizontal="true"
+                android:orientation="horizontal">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/avTextView"
                     android:layout_width="@dimen/payment_details_dialog_icon_size"
                     android:layout_height="@dimen/payment_details_dialog_icon_size"
-                    android:layout_marginStart="@dimen/dimen_10dp"
                     android:layout_marginEnd="@dimen/dimen_10dp"
+                    android:layout_marginStart="@dimen/dimen_10dp"
                     android:background="@drawable/round_list_tv"
                     android:gravity="center_vertical|center_horizontal"
                     android:src="@drawable/icn_placeholder_user_profile_png"
@@ -101,15 +101,15 @@
 
                 <ProgressBar
                     android:id="@+id/paymentPlanProgress"
+                    style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="@dimen/payment_details_dialog_icon_size"
                     android:layout_height="@dimen/payment_details_dialog_icon_size"
-                    android:layout_marginStart="@dimen/dimen_10dp"
                     android:layout_marginEnd="@dimen/dimen_10dp"
-                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_marginStart="@dimen/dimen_10dp"
                     android:indeterminate="false"
                     android:max="100"
                     android:progress="25"
-                    android:progressDrawable="@drawable/payment_plan_progress"/>
+                    android:progressDrawable="@drawable/payment_plan_progress" />
 
 
             </LinearLayout>
@@ -120,20 +120,36 @@
             android:id="@+id/practice_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_14dp"
+            android:layout_marginEnd="@dimen/dimen_14dp"
             android:layout_marginTop="@dimen/dimen_16dp"
             android:gravity="center"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_20"
             app:customAssetFont="proxima_nova_semi_bold"
-            breeze:textKey="payment_receipt_title" />
+            breeze:textKey="payment_receipt_title"
+            tools:text="Practice Name"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/paymentPlanNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_14dp"
+            android:layout_marginEnd="@dimen/dimen_14dp"
+            android:gravity="center"
+            android:textColor="@color/optional_gray"
+            android:textSize="@dimen/text_size_16"
+            app:customAssetFont="proxima_nova_semi_bold"
+            breeze:textKey="payment_receipt_title"
+            tools:text="Payment Plan Name"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/dimen_15dp"
             android:layout_marginEnd="@dimen/dimen_20dp"
             android:layout_marginStart="@dimen/dimen_20dp"
             android:layout_marginTop="@dimen/dimen_15dp"
-            android:layout_marginBottom="@dimen/dimen_15dp"
             android:background="@color/light_gray_dialog" />
 
         <LinearLayout
@@ -161,8 +177,8 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_12sp"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="payment_plan_edit"
-                tools:text="Edit Plan"/>
+                breeze:textKey="payment_plan_edit_button"
+                tools:text="Edit Payment Plan" />
 
         </LinearLayout>
 
@@ -170,21 +186,21 @@
             android:id="@+id/scheduledPaymentLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/round_border"
-            android:layout_marginStart="@dimen/dimen_14dp"
-            android:layout_marginEnd="@dimen/dimen_14dp"
-            android:layout_marginTop="@dimen/dimen_10dp"
             android:layout_marginBottom="@dimen/dimen_4dp"
-            android:padding="@dimen/dimen_12dp"
+            android:layout_marginEnd="@dimen/dimen_14dp"
+            android:layout_marginStart="@dimen/dimen_14dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:background="@drawable/round_border"
             android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/dimen_12dp"
             android:visibility="gone">
 
             <ImageView
                 android:layout_width="@dimen/dimen_22dp"
                 android:layout_height="@dimen/dimen_22dp"
                 android:layout_marginEnd="@dimen/dimen_10dp"
-                android:src="@drawable/icn_pending"/>
+                android:src="@drawable/icn_pending" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/scheduledPaymentMessage"
@@ -197,6 +213,12 @@
                 android:textSize="@dimen/text_size_13"
                 app:customAssetFont="proxima_nova_regular"
                 tools:text="$20.00 scheduled for 12/10/2018" />
+
+            <ImageView
+                android:layout_width="@dimen/dimen_22dp"
+                android:layout_height="@dimen/dimen_22dp"
+                android:layout_marginStart="@dimen/dimen_10dp"
+                android:src="@drawable/icon_pencil" />
 
         </LinearLayout>
 
@@ -219,14 +241,14 @@
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
                         android:gravity="start"
                         android:textColor="@color/textview_default_textcolor"
                         android:textSize="@dimen/text_size_17"
-                        tools:text="Payments Made"
+                        app:customAssetFont="proxima_nova_regular"
                         breeze:textKey="payment_plan_payments_made"
-                        app:customAssetFont="proxima_nova_regular"/>
+                        tools:text="Payments Made" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/paymentsInstallmentsCount"
@@ -236,8 +258,8 @@
                         android:gravity="end"
                         android:textColor="@color/textview_default_textcolor"
                         android:textSize="@dimen/text_size_14"
-                        tools:text="1 of 10"
-                        app:customAssetFont="proxima_nova_semi_bold"/>
+                        app:customAssetFont="proxima_nova_semi_bold"
+                        tools:text="1 of 10" />
 
                 </LinearLayout>
 
@@ -250,14 +272,14 @@
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
                         android:gravity="start"
                         android:textColor="@color/textview_default_textcolor"
                         android:textSize="@dimen/text_size_17"
-                        tools:text="Next Payment"
+                        app:customAssetFont="proxima_nova_regular"
                         breeze:textKey="payment_plan_next_payment"
-                        app:customAssetFont="proxima_nova_regular"/>
+                        tools:text="Next Payment" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/nexyPaymentDate"
@@ -267,8 +289,8 @@
                         android:gravity="end"
                         android:textColor="@color/textview_default_textcolor"
                         android:textSize="@dimen/text_size_14"
-                        tools:text="February 28th"
-                        app:customAssetFont="proxima_nova_semi_bold"/>
+                        app:customAssetFont="proxima_nova_semi_bold"
+                        tools:text="February 28th" />
 
                 </LinearLayout>
 
@@ -281,14 +303,14 @@
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
                         android:gravity="start"
                         android:textColor="@color/textview_default_textcolor"
                         android:textSize="@dimen/text_size_17"
-                        tools:text="Total Amount"
+                        app:customAssetFont="proxima_nova_regular"
                         breeze:textKey="payment_receipt_total_amount"
-                        app:customAssetFont="proxima_nova_regular"/>
+                        tools:text="Total Amount" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/transaction_total"
@@ -298,8 +320,8 @@
                         android:gravity="end"
                         android:textColor="@color/textview_default_textcolor"
                         android:textSize="@dimen/text_size_14"
-                        tools:text="$999.99"
-                        app:customAssetFont="proxima_nova_semi_bold"/>
+                        app:customAssetFont="proxima_nova_semi_bold"
+                        tools:text="$999.99" />
 
                 </LinearLayout>
 
@@ -312,14 +334,14 @@
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
                         android:gravity="start"
                         android:textColor="@color/textview_default_textcolor"
                         android:textSize="@dimen/text_size_17"
-                        tools:text="Plan Balance"
+                        app:customAssetFont="proxima_nova_regular"
                         breeze:textKey="payment_plan_balance"
-                        app:customAssetFont="proxima_nova_regular"/>
+                        tools:text="Plan Balance" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/planBalance"
@@ -329,14 +351,15 @@
                         android:gravity="end"
                         android:textColor="@color/textview_default_textcolor"
                         android:textSize="@dimen/text_size_14"
-                        tools:text="$999.99"
-                        app:customAssetFont="proxima_nova_semi_bold"/>
+                        app:customAssetFont="proxima_nova_semi_bold"
+                        tools:text="$999.99" />
 
                 </LinearLayout>
 
 
             </LinearLayout>
         </ScrollView>
+
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/payment_details_pay_now_button"
             android:layout_width="match_parent"

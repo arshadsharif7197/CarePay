@@ -16,9 +16,11 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.checkout.BaseWebFormFragment;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
+import com.carecloud.carepaylibray.consentforms.models.UserFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
-import com.carecloud.carepaylibray.consentforms.models.payload.FormDTO;
+import com.carecloud.carepaylibray.consentforms.models.payload.ConsentFormPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -36,22 +38,29 @@ public class FilledFormFragment extends BaseWebFormFragment {
     private ConsentFormDTO consentFormDto;
     private ConsentFormInterface callback;
     private List<JsonObject> jsonFormSaveResponseArray = new ArrayList<>();
-    private FormDTO formDto;
+    private UserFormDTO formDto;
+    private boolean showSignButton;
+    private TextView title;
 
     /**
      * @param selectedProviderIndex the provider index
      * @param showSignButton        to show or hide the bottom button
      * @return a new instance of FilledFormFragment
      */
-    public static FilledFormFragment newInstance(int selectedProviderIndex, boolean showSignButton) {
+    public static FilledFormFragment newInstance(int selectedProviderIndex, boolean showSignButton,
+                                                 List<ConsentFormUserResponseDTO> formsResponses) {
         Bundle args = new Bundle();
         args.putInt("selectedProviderIndex", selectedProviderIndex);
         args.putBoolean("showSignButton", showSignButton);
+
+        ConsentFormPayloadDTO responsePayload = new ConsentFormPayloadDTO();
+        responsePayload.setResponses(formsResponses);
+        DtoHelper.bundleDto(args, responsePayload);
+
         FilledFormFragment fragment = new FilledFormFragment();
         fragment.setArguments(args);
         return fragment;
     }
-
 
     @Override
     public void onAttach(Context context) {
@@ -65,23 +74,26 @@ public class FilledFormFragment extends BaseWebFormFragment {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         consentFormDto = (ConsentFormDTO) callback.getDto();
-        formDto = consentFormDto.getPayload().getForms()
+        formDto = consentFormDto.getPayload().getUserForms()
                 .get(getArguments().getInt("selectedProviderIndex"));
-        filledForms = formDto.getPatientFormsResponses();
+        ConsentFormPayloadDTO responsePayload = DtoHelper
+                .getConvertedDTO(ConsentFormPayloadDTO.class, getArguments());
+        filledForms = responsePayload.getResponses();
         formsList = callback.getAllFormsToShow();
         setTotalForms(formsList.size());
     }
+
 
     @Override
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         lastFormButtonLabel = Label.getLabel("adhoc_sign_form_button_label");
-        boolean showSignButton = getArguments().getBoolean("showSignButton", false);
+        showSignButton = getArguments().getBoolean("showSignButton", false);
         nextButton.setVisibility(showSignButton ? View.VISIBLE : View.GONE);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
-        ((TextView) toolbar.findViewById(R.id.toolbar_title))
-                .setText(Label.getLabel("consentForms.consentForm.title.label.form"));
+        title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        title.setText(Label.getLabel("consentForms.consentForm.title.label.form"));
         callback.setToolbar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,11 +101,17 @@ public class FilledFormFragment extends BaseWebFormFragment {
                 navigateBack();
             }
         });
+        nextButton.setBackgroundResource(R.drawable.button_green_selector);
     }
 
     @Override
     protected void displayNextForm(List<ConsentFormUserResponseDTO> filledForms) {
         int displayedFormsIndex = getDisplayedFormsIndex();
+        if (showSignButton) {
+            title.setText(String.format(
+                    Label.getLabel("consentForms.consentForm.title.label.formCount"),
+                    getDisplayedFormsIndex() + 1, getTotalForms()));
+        }
         if (getDisplayedFormsIndex() < getTotalForms()) {
             PracticeForm practiceForm = formsList.get(displayedFormsIndex);
             JsonObject payload = practiceForm.getPayload();
@@ -107,6 +125,9 @@ public class FilledFormFragment extends BaseWebFormFragment {
                         JsonObject json = new JsonObject();
                         json.addProperty("uuid", response.getFormId());
                         json.add("response", response.getResponse());
+                        if (!showSignButton) {
+                            json.addProperty("updated_dt", practiceForm.getLastModifiedDate());
+                        }
                         userResponse = json;
                         break;
                     }

@@ -19,6 +19,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
+import com.carecloud.carepaylibray.appointments.AppointmentDisplayUtil;
 import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentDialogFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
@@ -43,6 +44,7 @@ import java.util.Set;
 
 public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private static final String KEY_BREEZE_PRACTICE = "is_breeze_practice";
+    private static final String KEY_RESCHEDULE_ENABLED = "isRescheduleEnabled";
 
     private AppointmentDTO appointmentDTO;
 
@@ -69,6 +71,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private Button rightButton;
 
     private boolean isBreezePractice = true;
+    private boolean isRescheduleEnabled = true;
 
 
     /**
@@ -77,10 +80,13 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
      * @param appointmentDTO appointment info
      * @return AppointmentDetailDialog
      */
-    public static AppointmentDetailDialog newInstance(AppointmentDTO appointmentDTO, boolean isBreezePractice) {
+    public static AppointmentDetailDialog newInstance(AppointmentDTO appointmentDTO,
+                                                      boolean isBreezePractice,
+                                                      boolean isRescheduleEnabled) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, appointmentDTO);
         args.putBoolean(KEY_BREEZE_PRACTICE, isBreezePractice);
+        args.putBoolean(KEY_RESCHEDULE_ENABLED, isRescheduleEnabled);
 
         AppointmentDetailDialog detailDialog = new AppointmentDetailDialog();
         detailDialog.setArguments(args);
@@ -122,6 +128,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         if (args != null) {
             appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, args);
             isBreezePractice = args.getBoolean(KEY_BREEZE_PRACTICE);
+            isRescheduleEnabled = args.getBoolean(KEY_RESCHEDULE_ENABLED);
         }
     }
 
@@ -146,30 +153,30 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         cancelAppointment.setOnClickListener(cancelAppointmentClick);
 
         header = view.findViewById(R.id.dialogHeaderLayout);
-        appointmentDateTextView = (TextView) view.findViewById(R.id.appointDateTextView);
-        appointmentTimeTextView = (TextView) view.findViewById(R.id.appointTimeTextView);
-        appointmentVisitTypeTextView = (TextView) view.findViewById(R.id.appointmentVisitTypeTextView);
+        appointmentDateTextView = view.findViewById(R.id.appointDateTextView);
+        appointmentTimeTextView = view.findViewById(R.id.appointTimeTextView);
+        appointmentVisitTypeTextView = view.findViewById(R.id.appointmentVisitTypeTextView);
 
-        providerInitials = (TextView) view.findViewById(R.id.appointShortnameTextView);
-        providerPhoto = (ImageView) view.findViewById(R.id.appointUserPicImageView);
-        providerName = (TextView) view.findViewById(R.id.providerName);
-        providerSpecialty = (TextView) view.findViewById(R.id.providerSpecialty);
+        providerInitials = view.findViewById(R.id.appointShortnameTextView);
+        providerPhoto = view.findViewById(R.id.appointUserPicImageView);
+        providerName = view.findViewById(R.id.providerName);
+        providerSpecialty = view.findViewById(R.id.providerSpecialty);
 
-        locationName = (TextView) view.findViewById(R.id.appointAddressHeaderTextView);
-        locationAddress = (TextView) view.findViewById(R.id.appointAddressTextView);
+        locationName = view.findViewById(R.id.appointAddressHeaderTextView);
+        locationAddress = view.findViewById(R.id.appointAddressTextView);
         mapButton = view.findViewById(R.id.appointLocationImageView);
         mapButton.setOnClickListener(mapClick);
         callButton = view.findViewById(R.id.appointDailImageView);
         callButton.setOnClickListener(callClick);
 
-        appointmentStatus = (TextView) view.findViewById(R.id.appointment_status);
+        appointmentStatus = view.findViewById(R.id.appointment_status);
 
         queueLayout = view.findViewById(R.id.queue_layout);
-        queueStatus = (TextView) view.findViewById(R.id.queue_status);
+        queueStatus = view.findViewById(R.id.queue_status);
 
         actionsLayout = view.findViewById(R.id.appointment_actions_layout);
-        leftButton = (Button) view.findViewById(R.id.appointment_button_left);
-        rightButton = (Button) view.findViewById(R.id.appointment_button_right);
+        leftButton = view.findViewById(R.id.appointment_button_left);
+        rightButton = view.findViewById(R.id.appointment_button_right);
     }
 
     private void setCommonValues() {
@@ -218,23 +225,21 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         if (appointmentDTO != null && appointmentDTO.getPayload().getDisplayStyle() != null) {
             Set<String> enabledLocations = ApplicationPreferences.getInstance()
                     .getPracticesWithBreezeEnabled(appointmentDTO.getMetadata().getPracticeId());
-            AppointmentDisplayStyle style = appointmentDTO.getPayload().getDisplayStyle();
+            AppointmentDisplayStyle style = AppointmentDisplayUtil.determineDisplayStyle(appointmentDTO.getPayload());
             switch (style) {
                 case CHECKED_IN: {
                     header.setBackgroundResource(R.drawable.appointment_dialog_green_bg);
                     appointmentDateTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                     appointmentTimeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                     appointmentVisitTypeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
-                    if (appointmentDTO.getPayload().isAppointmentToday() || !appointmentDTO.getPayload().isAppointmentOver()) {
+                    if (appointmentDTO.getPayload().isAppointmentToday()
+                            || !appointmentDTO.getPayload().isAppointmentOver()) {
                         if (appointmentDTO.getPayload().getAppointmentStatus().getOriginalName() == null) {
                             callback.getQueueStatus(appointmentDTO, queueStatusCallback);
                         }
-                        if (shouldShowCheckInButton(enabledLocations)) {
-                            actionsLayout.setVisibility(View.VISIBLE);
-                            leftButton.setVisibility(View.VISIBLE);
-                            leftButton.setText(Label.getLabel("appointment_request_checkout_now"));
-                            leftButton.setOnClickListener(checkOutClick);
-                        }
+                        showCheckoutButton(enabledLocations);
+                    } else if (appointmentDTO.getPayload().isAppointmentOver()) {
+                        showCheckoutButton(enabledLocations);
                     }
                     break;
                 }
@@ -248,7 +253,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                         if (shouldShowCancelButton(enabledLocations)) {
                             cancelAppointment.setVisibility(View.VISIBLE);
                         }
-                        if (shouldShowCheckInButton(enabledLocations)) {
+                        if (isLocationWithBreezeEnabled(enabledLocations)) {
                             leftButton.setVisibility(View.VISIBLE);
                             leftButton.setText(Label.getLabel("appointments_check_in_at_office"));
                             leftButton.setOnClickListener(scanClick);
@@ -283,9 +288,11 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     appointmentStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.remove_red));
                     appointmentStatus.setText(Label.getLabel("appointments_missed_heading"));
                     actionsLayout.setVisibility(View.VISIBLE);
-                    leftButton.setVisibility(View.VISIBLE);
-                    leftButton.setText(Label.getLabel("appointment_reschedule_button"));
-                    leftButton.setOnClickListener(rescheduleClick);
+                    if (isRescheduleEnabled) {
+                        leftButton.setVisibility(View.VISIBLE);
+                        leftButton.setText(Label.getLabel("appointment_reschedule_button"));
+                        leftButton.setOnClickListener(rescheduleClick);
+                    }
                     break;
                 }
                 case CANCELED_UPCOMING:
@@ -308,7 +315,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                         if (shouldShowCancelButton(enabledLocations)) {
                             cancelAppointment.setVisibility(View.VISIBLE);
                         }
-                        if (shouldShowCheckInButton(enabledLocations)) {
+                        if (isLocationWithBreezeEnabled(enabledLocations)) {
                             actionsLayout.setVisibility(View.VISIBLE);
                             rightButton.setVisibility(View.VISIBLE);
                             rightButton.setText(Label.getLabel("appointments_check_in_early"));
@@ -318,7 +325,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     break;
                 }
                 case CHECKED_OUT: {
-                    header.setBackgroundResource(R.drawable.appointment_dialog_dark_gray_bg);
+                    header.setBackgroundResource(R.drawable.checked_out_appointment_card_background);
+                    providerInitials.setBackgroundResource(R.drawable.round_list_tv_default);
                     appointmentDateTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                     appointmentTimeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                     appointmentVisitTypeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
@@ -334,12 +342,22 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         }
     }
 
-    private boolean shouldShowCancelButton(Set<String> enabledLocations) {
-        return appointmentDTO.getPayload().isAppointmentCancellable(callback.getPracticeSettings())
-                && shouldShowCheckInButton(enabledLocations);
+    private void showCheckoutButton(Set<String> enabledLocations) {
+        if (isLocationWithBreezeEnabled(enabledLocations)
+                && appointmentDTO.getPayload().canCheckOut()) {
+            actionsLayout.setVisibility(View.VISIBLE);
+            leftButton.setVisibility(View.VISIBLE);
+            leftButton.setText(Label.getLabel("appointment_request_checkout_now"));
+            leftButton.setOnClickListener(checkOutClick);
+        }
     }
 
-    private boolean shouldShowCheckInButton(Set<String> enabledLocations) {
+    private boolean shouldShowCancelButton(Set<String> enabledLocations) {
+        return appointmentDTO.getPayload().isAppointmentCancellable(callback.getPracticeSettings())
+                && isLocationWithBreezeEnabled(enabledLocations);
+    }
+
+    private boolean isLocationWithBreezeEnabled(Set<String> enabledLocations) {
         boolean isTheLocationWithBreezeEnabled = enabledLocations == null;
         if (enabledLocations != null) {
             for (String locationId : enabledLocations) {

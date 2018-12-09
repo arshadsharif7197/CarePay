@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.fcm;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -10,20 +11,12 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.base.CarePayPatientApplication;
 import com.carecloud.carepay.patient.notifications.activities.NotificationProxyActivity;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepaylibray.fcm.NotificationModel;
-import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -31,10 +24,21 @@ import java.util.Map;
  */
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
-    private static final String TAG = "Pablo";
+    private static final String TAG = "Breeze";
+    private static final String NOTIFICATION_CHANNEL_ID = "breeze_notifications";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if(notificationManager != null && Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
+            NotificationChannel channel = notificationManager.getNotificationChannel(NOTIFICATION_CHANNEL_ID);
+            if(channel == null){
+                channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID,
+                        getString(R.string.notification_channel_name),
+                        NotificationManager.IMPORTANCE_HIGH);
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
 
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: " + remoteMessage.getFrom());
@@ -62,15 +66,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             PendingIntent.FLAG_UPDATE_CURRENT
                     );
             builder.setContentIntent(resultPendingIntent);
+            builder.setChannelId(NOTIFICATION_CHANNEL_ID);
+
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                 builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
             }
             // Sets an ID for the notification
             int notificationId = 001;
             // Gets an instance of the NotificationManager service
-            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             // Builds the notification and issues it.
-            notificationManager.notify(notificationId, builder.build());
+            if(notificationManager != null) {
+                notificationManager.notify(notificationId, builder.build());
+            }
             updateBadgeCounters();
 
         }
@@ -96,30 +103,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Intent intent = new Intent(CarePayConstants.UPDATE_BADGES_BROADCAST);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
 
-//        TransitionDTO badgeCounterTransition = ApplicationPreferences.getInstance().getBadgeCounterTransition();
-//        Map<String, String> queryMap = new HashMap<>();
-//        ((CarePayPatientApplication) getApplicationContext()).getWorkflowServiceHelper()
-//                .execute(badgeCounterTransition, new WorkflowServiceCallback() {
-//                    @Override
-//                    public void onPreExecute() {
-//
-//                    }
-//
-//                    @Override
-//                    public void onPostExecute(WorkflowDTO workflowDTO) {
-//                        UnifiedSignInResponse dto = DtoHelper
-//                                .getConvertedDTO(UnifiedSignInResponse.class, workflowDTO);
-//                        ApplicationPreferences.getInstance()
-//                                .setMessagesBadgeCounter(dto.getPayload().getBadgeCounter().getMessages());
-//                        ApplicationPreferences.getInstance()
-//                                .setFormsBadgeCounter(dto.getPayload().getBadgeCounter().getPendingForms());
-//                    }
-//
-//                    @Override
-//                    public void onFailure(String exceptionMessage) {
-//
-//                    }
-//                }, queryMap);
     }
 
 

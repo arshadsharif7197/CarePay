@@ -84,3 +84,4 @@
 
 #Clover SDK
 -keep class com.clover.sdk.** { *; }
+-keep class com.clover.common2.** { *; }

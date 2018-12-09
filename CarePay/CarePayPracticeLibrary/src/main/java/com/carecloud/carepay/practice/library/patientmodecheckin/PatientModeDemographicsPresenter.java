@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
+import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.patientmodecheckin.models.PatientModeCheckinDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -13,8 +14,11 @@ import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenterImpl;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
+import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 
 import java.util.List;
@@ -98,6 +102,7 @@ public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl 
     private void showHomeAlertDialog() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(null, null);
+        confirmDialogFragment.setNegativeAction(true);
         confirmDialogFragment.setCallback(new ConfirmationCallback() {
             @Override
             public void onConfirm() {
@@ -145,14 +150,18 @@ public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl 
         return demographicDTO.getMetadata().getLinks().getLanguage();
     }
 
-    public void changeLanguage() {
-        Fragment fragment = getSupportFragmentManager()
-                .findFragmentById(com.carecloud.carepaylibrary.R.id.root_layout);
+    public void changeLanguage(WorkflowDTO workflowDTO) {
+        DemographicDTO demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, workflowDTO);
+        this.demographicDTO.setMetadata(demographicDTO.getMetadata());
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.root_layout);
         if (fragment != null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.detach(fragment);
             transaction.attach(fragment);
             transaction.commit();
+            if (fragment instanceof CheckInDemographicsBaseFragment) {
+                ((CheckInDemographicsBaseFragment) fragment).afterLanguageChanged(demographicDTO);
+            }
         }
     }
 }

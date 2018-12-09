@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.mini.HttpConstants;
 import com.carecloud.carepay.mini.R;
 import com.carecloud.carepay.mini.interfaces.ApplicationHelper;
+import com.carecloud.carepay.mini.models.metadata.DeviceMetadata;
 import com.carecloud.carepay.mini.models.queue.QueuePaymentRecord;
 import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
 import com.carecloud.carepay.mini.services.QueueUploadService;
@@ -47,6 +48,7 @@ import com.newrelic.agent.android.NewRelic;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,16 +65,20 @@ public class WelcomeActivity extends FullScreenActivity {
     private static final int PAYMENT_COMPLETE_RESET = 1000 * 3;
     private static final int POST_RETRY_DELAY = 1000 * 10;
     private static final int DEVICE_KEEP_ALIVE_PERIOD = 1000 * 30;
-    private static final int MAX_FAIL_COUNT = 60;
+    private static final int MAX_FAIL_COUNT = 15;
+    private static final String ID_PROPERTY = "deepstream_record_id";
+    private static final String PROPERTY_REFUND = "refund_request";
 
     private ApplicationHelper applicationHelper;
     private TextView message;
     private Handler handler;
 
     private Device connectedDevice;
+    private DeviceMetadata deviceMetadata;
 
     private int paymentAttempt = 0;
     private boolean isDisconnecting = false;
+    private boolean isConnecting = false;
     private boolean isResumed = false;
     private boolean hasNetworkFailed = false;
 
@@ -94,6 +100,7 @@ public class WelcomeActivity extends FullScreenActivity {
         environment.setText(HttpConstants.getEnvironment());
 
         setupNewRelic();
+        setDeviceMetadata();
 
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(connectionStateChangedReceiver, intentFilter);
@@ -225,9 +232,13 @@ public class WelcomeActivity extends FullScreenActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                setSystemUiFullscreen();
                 isDisconnecting = false;
                 String id = applicationHelper.getApplicationPreferences().getDeviceId();
-                DeviceConnection.connect(WelcomeActivity.this, id, connectionCallback, connectionActionCallback);
+                if(!isConnecting) {
+                    isConnecting = true;
+                    DeviceConnection.connect(WelcomeActivity.this, id, connectionCallback, connectionActionCallback);
+                }
             }
         });
     }
@@ -236,6 +247,7 @@ public class WelcomeActivity extends FullScreenActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                setSystemUiFullscreen();
                 if(!isDisconnecting) {
                     isDisconnecting = true;
                     String id = applicationHelper.getApplicationPreferences().getDeviceId();
@@ -266,6 +278,7 @@ public class WelcomeActivity extends FullScreenActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                setSystemUiFullscreen();
                 if(connectedDevice != null) {
                     String id = applicationHelper.getApplicationPreferences().getDeviceId();
                     if(!DeviceConnection.updateConnection(WelcomeActivity.this, id, connectedDevice)){
@@ -280,6 +293,7 @@ public class WelcomeActivity extends FullScreenActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                setSystemUiFullscreen();
                 message.setText(messageText);
             }
         });
@@ -353,16 +367,20 @@ public class WelcomeActivity extends FullScreenActivity {
 
         @Override
         public void onDeviceConnected(Device device) {
+            isConnecting = false;
             updateMessage(getString(R.string.welcome_waiting));
             connectedDevice = device;
+            connectedDevice.setMetadata(new Gson().toJsonTree(deviceMetadata));
+            updateConnectedDevice();
             failCount = 0;
         }
 
         @Override
         public void onConnectionFailure(String errorMessage) {
             Log.d(TAG, "Connection Failure: " + errorMessage);
-
+            isConnecting = false;
             if(!hasNetworkFailed && isResumed) {
+                logNewRelicConnectionError(errorMessage);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -376,11 +394,13 @@ public class WelcomeActivity extends FullScreenActivity {
                 });
             }else{
                 Looper.getMainLooper().getThread().interrupt();
-                updateMessage(getString(R.string.welcome_connect_error));
+                displayConnectionError();
             }
 
             if(failCount < MAX_FAIL_COUNT) {
                 failCount++;
+            }else{
+                displayConnectionError();
             }
         }
 
@@ -504,7 +524,12 @@ public class WelcomeActivity extends FullScreenActivity {
         public void onPaymentComplete(String paymentRequestId, JsonElement requestObject) {
             Log.d(TAG, "Payment completed for: "+paymentRequestId);
 
-            if(connectedDevice.isRefunding()){
+            boolean hasRefundProperty = false;
+            if(requestObject.isJsonObject()){
+                String id = requestObject.getAsJsonObject().get(ID_PROPERTY).getAsString();
+                hasRefundProperty = id != null && id.contains(PROPERTY_REFUND);
+            }
+            if(connectedDevice.isRefunding() || hasRefundProperty){
                 postRefundRequest(paymentRequestId, requestObject);
             }else {
                 postPaymentRequest(paymentRequestId, requestObject);
@@ -515,7 +540,12 @@ public class WelcomeActivity extends FullScreenActivity {
         public void onPaymentCompleteWithError(String paymentRequestId, JsonElement paymentPayload, String errorMessage) {
             logNewRelicPaymentError(errorMessage, paymentPayload.toString());
 
-            if(connectedDevice.isRefunding()){
+            boolean hasRefundProperty = false;
+            if(paymentPayload.isJsonObject()){
+                String id = paymentPayload.getAsJsonObject().get(ID_PROPERTY).getAsString();
+                hasRefundProperty = id != null && id.contains(PROPERTY_REFUND);
+            }
+            if(connectedDevice.isRefunding() || hasRefundProperty){
                 postRefundRequest(paymentRequestId, paymentPayload);
             }else {
                 postPaymentRequest(paymentRequestId, paymentPayload);
@@ -554,10 +584,10 @@ public class WelcomeActivity extends FullScreenActivity {
         @Override
         public void onPaymentFailed(String paymentRequestId, String message) {
             String printMessage = "Payment failed for: "+paymentRequestId;
-            logNewRelicPaymentError(message, printMessage);
+            logNewRelicPaymentError(StringUtil.getSafeString(message), printMessage);
             Log.d(TAG, printMessage);
-            Log.d(TAG, message);
-            showErrorToast(message);
+            Log.d(TAG, StringUtil.getSafeString(message));
+            showErrorToast(StringUtil.getSafeString(message));
             releasePaymentRequest(paymentRequestId);
         }
 
@@ -790,7 +820,7 @@ public class WelcomeActivity extends FullScreenActivity {
                     connectDevice();
                 }else{
                     hasNetworkFailed = true;
-                    updateMessage(getString(R.string.welcome_connect_error));
+                    displayConnectionError();
                     Log.w(TAG, "Activity is Resumed: "+isResumed);
                     Log.w(TAG, "Network Info: "+ (networkInfo != null? networkInfo.getState() : " NULL"));
                 }
@@ -808,7 +838,7 @@ public class WelcomeActivity extends FullScreenActivity {
             if(!hasNetworkFailed && (connectedDevice == null || !connectedDevice.getState().equals(DeviceDef.STATE_IN_USE))){
                 connectDevice();
             }else if(hasNetworkFailed){
-                updateMessage(getString(R.string.welcome_connect_error));
+                displayConnectionError();
             }
             scheduleDeviceRefresh();
         }
@@ -829,6 +859,24 @@ public class WelcomeActivity extends FullScreenActivity {
 
     }
 
+    private void logNewRelicConnectionError(String errorMessage){
+        Map<String, Object> eventMap = new HashMap<>();
+        eventMap.put("Error Message", errorMessage);
+        if(connectedDevice != null) {
+            eventMap.put("Device ID", connectedDevice.getDeviceId());
+            eventMap.put("Device Name", connectedDevice.getName());
+            eventMap.put("Device Record", connectedDevice);
+        } else {
+            eventMap.put("Startup Error", true);
+        }
+
+        String eventType = "Connection Error";
+
+        NewRelic.recordCustomEvent(eventType, eventMap);
+
+    }
+
+
     private void setupNewRelic(){
         NewRelic.setUserId(applicationHelper.getApplicationPreferences().getDeviceId());
         NewRelic.setAttribute(getString(R.string.key_practice_id),
@@ -841,4 +889,37 @@ public class WelcomeActivity extends FullScreenActivity {
                 applicationHelper.getApplicationPreferences().getDeviceName());
     }
 
+    private void setDeviceMetadata(){
+        deviceMetadata = new DeviceMetadata();
+        deviceMetadata.setPracticeID(applicationHelper.getApplicationPreferences().getPracticeId());
+        deviceMetadata.setPracticeName(applicationHelper.getApplicationPreferences().getUserPracticeDTO().getPracticeName());
+        deviceMetadata.setLocationID(applicationHelper.getApplicationPreferences().getLocationId());
+    }
+
+    private void displayConnectionError(){
+        String error;
+        if(hasNetworkFailed){
+            error = getString(R.string.welcome_network_error);
+        }else if(!canConnectToInternet()){
+            error = getString(R.string.welcome_internet_error);
+        }else {
+            error = getString(R.string.welcome_deepstream_error);
+        }
+        if(!message.getText().toString().equals(error)){
+            //only log to new relic if the error is not already set to prevent duplicate logs
+            // since this is called in several places
+            logNewRelicConnectionError(error);
+        }
+        updateMessage(error);
+    }
+
+    private boolean canConnectToInternet(){
+        try {
+            String command = "ping -c 1 8.8.8.8";
+            return (Runtime.getRuntime().exec(command).waitFor() == 0);
+        }catch (IOException | InterruptedException ex){
+            ex.printStackTrace();
+        }
+        return false;
+    }
 }

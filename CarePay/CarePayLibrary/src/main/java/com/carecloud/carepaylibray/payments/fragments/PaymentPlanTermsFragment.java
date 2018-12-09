@@ -109,7 +109,9 @@ public class PaymentPlanTermsFragment extends BasePaymentDialogFragment {
         }
         String termsAndConditions = paymentPlansSettings.getTermsAndConditions().getBody();
         if (ApplicationPreferences.getInstance().getUserLanguage().equals("es")) {
-            if (StringUtil.isNullOrEmpty(paymentPlansSettings.getTermsAndConditions().getTranslations().getEs().getBody())) {
+            if ((paymentPlansSettings.getTermsAndConditions().getTranslations().getEs() != null)
+                    && (StringUtil.isNullOrEmpty(paymentPlansSettings.getTermsAndConditions()
+                    .getTranslations().getEs().getBody()))) {
                 termsAndConditions = paymentPlansSettings.getTermsAndConditions().getTranslations().getEs().getBody();
             }
         }
@@ -166,6 +168,7 @@ public class PaymentPlanTermsFragment extends BasePaymentDialogFragment {
 
     protected void onPaymentPlanSubmitted(WorkflowDTO workflowDTO) {
         callback.onSubmitPaymentPlan(workflowDTO);
+        dismiss();
     }
 
     private void submitPaymentPlan() {

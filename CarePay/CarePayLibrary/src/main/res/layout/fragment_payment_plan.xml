@@ -63,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/dimen_10dp"
                     android:textColor="@color/light_gray"
-                    android:textSize="@dimen/text_size_13"
+                    android:textSize="@dimen/text_size_12sp"
                     app:customAssetFont="proxima_nova_regular"
                     tools:text="This balance must be paid over a maximum of 6 months and requires a downpayment of $20." />
 
@@ -178,6 +178,7 @@
                             android:editable="false"
                             android:focusableInTouchMode="false"
                             android:imeOptions="actionNext"
+                            android:textColor="@color/primary_color_enabled_selector"
                             app:customAssetFont="proxima_nova_regular"
                             app:hintTextAppearance="@style/FloatingLabelStyle"
                             breeze:hintKey="payment.paymentPlan.frequency.field.hint"
@@ -327,7 +328,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dimen_10dp"
-                    android:background="@drawable/button_selector_always_click"
+                    android:background="@drawable/button_selector_always_click_green"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:textSize="@dimen/respons_button_text_size"
@@ -339,9 +340,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_red_border"
+                    android:foreground="?selectableItemBackground"
                     android:textAllCaps="true"
                     android:textColor="@color/harvard_crimson"
-                    android:foreground="?selectableItemBackground"
                     android:textSize="@dimen/respons_button_text_size"
                     breeze:textKey="payment_plan_cancel"
                     tools:text="Cancel Plan" />

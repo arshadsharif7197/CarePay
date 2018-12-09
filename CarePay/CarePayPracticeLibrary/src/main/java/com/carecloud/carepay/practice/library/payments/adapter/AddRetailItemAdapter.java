@@ -13,12 +13,18 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.retail.models.RetailItemDto;
+import com.carecloud.carepaylibray.retail.models.RetailItemOptionChoiceDto;
+import com.carecloud.carepaylibray.retail.models.RetailItemOptionDto;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lmenendez on 3/16/17.
@@ -27,7 +33,7 @@ import java.util.List;
 public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdapter.ViewHolder> {
     private static final int VIEW_TYPE_LOADING = 1;
 
-    public interface AddRetailItemCallback{
+    public interface AddRetailItemCallback {
         void retailItemSelected(RetailItemDto retailItem);
     }
 
@@ -38,13 +44,14 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
 
     /**
      * Constructor
-     * @param context context
+     *
+     * @param context     context
      * @param retailItems list of retail items
-     * @param callback callback
+     * @param callback    callback
      */
-    public AddRetailItemAdapter(Context context, @NonNull List<RetailItemDto> retailItems, AddRetailItemCallback callback){
+    public AddRetailItemAdapter(Context context, @NonNull List<RetailItemDto> retailItems, AddRetailItemCallback callback) {
         this.context = context;
-        this.retailItems = retailItems;
+        this.retailItems = filterActiveItems(retailItems);
         this.callback = callback;
     }
 
@@ -52,9 +59,9 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view;
-        if(viewType == VIEW_TYPE_LOADING) {
+        if (viewType == VIEW_TYPE_LOADING) {
             view = inflater.inflate(R.layout.item_loading, parent, false);
-        }else {
+        } else {
             view = inflater.inflate(R.layout.item_add_retail_row, parent, false);
         }
         return new ViewHolder(view);
@@ -62,17 +69,33 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        if(position >= retailItems.size()){
+        if (position >= retailItems.size()) {
             return;
         }
 
         final RetailItemDto retailItem = retailItems.get(position);
 
         holder.productName.setText(retailItem.getName());
-        SpannableString spannableString = new SpannableString(Html.fromHtml(retailItem.getDescription()));
-        holder.subTitle.setText(spannableString);
-        holder.price.setText(StringUtil.getFormattedBalanceAmount(retailItem.getPrice()));
+        if (retailItem.getDescription() != null) {
+            SpannableString spannableString = new SpannableString(Html.fromHtml(retailItem.getDescription()));
+            holder.subTitle.setText(spannableString);
+        } else {
+            holder.subTitle.setText(null);
+        }
+        Map<Integer, RetailItemOptionChoiceDto> defaultOptions = new HashMap<>();
+        for (int i = 0; i < retailItem.getOptions().size(); i++) {
+            RetailItemOptionDto optionDto = retailItem.getOptions().get(i);
+            if (!optionDto.getChoices().isEmpty()) {
+                defaultOptions.put(i, optionDto.getChoices().get(optionDto.getDefaultChoice()));
+            }
+        }
+
+        double priceModification = retailItem.getPriceModification(defaultOptions);
+        holder.price.setText(StringUtil.getFormattedBalanceAmount(SystemUtil
+                .safeAdd(retailItem.getPrice(), priceModification)));
         holder.productPlaceholder.setText(StringUtil.getShortName(retailItem.getName()));
+
+        holder.soldOut.setVisibility(retailItem.isInStock() ? View.INVISIBLE : View.VISIBLE);
 
         int size = context.getResources().getDimensionPixelSize(R.dimen.dimen_60dp);
         Picasso.with(context).load(retailItem.getThumbnailUrl())
@@ -102,8 +125,8 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
     }
 
     @Override
-    public int getItemViewType(int position){
-        if(position >= retailItems.size()){
+    public int getItemViewType(int position) {
+        if (position >= retailItems.size()) {
             return VIEW_TYPE_LOADING;
         }
         return 0;
@@ -111,41 +134,54 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
 
     @Override
     public int getItemCount() {
-        if(isLoading){
-            return retailItems.size()+1;
+        if (isLoading) {
+            return retailItems.size() + 1;
         }
         return retailItems.size();
     }
 
-    public void setLoading(boolean isLoading){
+    public void setLoading(boolean isLoading) {
         this.isLoading = isLoading;
     }
 
     /**
      * add more retail items
+     *
      * @param retailItems retail items
      */
     public void addRetailItems(List<RetailItemDto> retailItems) {
-        this.retailItems.addAll(retailItems);
+        this.retailItems.addAll(filterActiveItems(retailItems));
         notifyDataSetChanged();
     }
 
     /**
      * Set the retail items
+     *
      * @param retailItems retail items
      */
     public void setRetailItems(List<RetailItemDto> retailItems) {
-        this.retailItems = retailItems;
+        this.retailItems = filterActiveItems(retailItems);
         notifyDataSetChanged();
     }
 
+    private List<RetailItemDto> filterActiveItems(List<RetailItemDto> retailItems) {
+        List<RetailItemDto> filteredItems = new ArrayList<>();
+        for (RetailItemDto item : retailItems) {
+            if (item.isEnabled()) {
+                filteredItems.add(item);
+            }
+        }
+        return filteredItems;
+    }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+
+    class ViewHolder extends RecyclerView.ViewHolder {
         TextView productName;
         TextView subTitle;
         TextView productPlaceholder;
         ImageView productThumbnail;
         TextView price;
+        View soldOut;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -154,6 +190,7 @@ public class AddRetailItemAdapter extends RecyclerView.Adapter<AddRetailItemAdap
             productPlaceholder = (TextView) itemView.findViewById(R.id.product_placeholder);
             price = (TextView) itemView.findViewById(R.id.product_price);
             productThumbnail = (ImageView) itemView.findViewById(R.id.product_thumbnail);
+            soldOut = itemView.findViewById(R.id.sold_out);
         }
 
     }

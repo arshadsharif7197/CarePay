@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foregroundGravity="center_vertical"
+        android:paddingTop="@dimen/dimen_10dp">
+
+        <include
+            android:id="@+id/toolbar_layout"
+            layout="@layout/toolbar_no_title"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/allergy_medication_header"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_30sp"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="medication_allergies_titlebar_text"/>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/headerIconImageView"
+            android:layout_width="@dimen/dimen_150dp"
+            android:layout_height="@dimen/dimen_150dp"
+            android:layout_marginTop="@dimen/dimen_30dp"
+            android:src="@drawable/icon_medication"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/empty_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_30dp"
+            android:gravity="center_horizontal|top"
+            android:paddingEnd="@dimen/dimen_30dp"
+            android:paddingStart="@dimen/dimen_30dp"
+            android:textColor="@color/optional_gray"
+            android:textSize="@dimen/text_size_40sp"
+            app:customAssetFont="gotham_rounded_book"
+            tools:text="Are you taking any medications?"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:background="@color/light_gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimen_20dp"
+        android:orientation="horizontal">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/button_no"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:background="@drawable/button_rounded_red"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_22"
+            android:textAllCaps="false"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="no"
+            tools:text="No"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/button_yes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/dimen_10dp"
+            android:background="@drawable/green_rounded_button_selector"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_22"
+            android:textAllCaps="false"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="yes"
+            tools:text="Yes"/>
+
+
+
+    </LinearLayout>
+
+</LinearLayout>

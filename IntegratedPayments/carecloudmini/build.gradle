@@ -2,15 +2,15 @@ apply plugin: 'com.android.application'
 apply plugin: 'newrelic'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion '27.0.3'
     flavorDimensions "default"
     defaultConfig {
         applicationId "com.carecloud.carepay.mini"
         minSdkVersion 17
-        targetSdkVersion 25
-        versionCode 17
-        versionName "1.3.6"
+        targetSdkVersion 26
+        versionCode 20
+        versionName "1.3.9"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -50,7 +50,7 @@ android {
             buildConfigField 'String', 'NEW_RELIC_ID', '"AAd42346a8ad752df162926e940501caaac45776d0"'
         }
         demo{
-            applicationId "com.carecloud.carepay.mini"
+            applicationId "com.carecloud.carepay.mini.demo"
             buildConfigField 'String', 'X_API_KEY', '"6N2E6zF3kZatorkHdxIY94SUccVP09s17NiqCZcU"'
             buildConfigField 'String', 'API_BASE_URL', '"https://payments.careclouddemo.com/"'
             buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream.careclouddemo.com:443"'
@@ -85,9 +85,9 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     implementation 'com.newrelic.agent.android:android-agent:5.+'
-    implementation 'com.android.support:appcompat-v7:25.4.0'
-    implementation 'com.android.support:support-v4:25.4.0'
-    implementation 'com.android.support:recyclerview-v7:25.4.0'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:support-v4:26.1.0'
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'jp.wasabeef:picasso-transformations:2.1.2'
     implementation 'com.squareup.retrofit2:retrofit:2.2.0'

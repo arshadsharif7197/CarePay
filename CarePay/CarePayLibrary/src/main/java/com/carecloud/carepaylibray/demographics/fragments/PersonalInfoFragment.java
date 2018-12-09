@@ -26,7 +26,6 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
@@ -38,7 +37,6 @@ import com.carecloud.carepaylibray.media.MediaScannerPresenter;
 import com.carecloud.carepaylibray.media.MediaViewInterface;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
-import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -57,20 +55,18 @@ import java.io.IOException;
 
 public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implements MediaViewInterface {
 
-
-    private DemographicDataModel dataModel;
     private Button buttonChangeCurrentPhoto;
     boolean hasNewImage = false;
     private MediaScannerPresenter mediaScannerPresenter;
     private String base64ProfileImage;
-    private EditText phoneNumberTypeEditText;
     private DemographicsOption selectedPhoneType = new DemographicsOption();
 
+    private EditText phoneNumberTypeEditText;
 
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
+        demographicDTO = checkinFlowCallback.getDemographicDTO();// DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
         dataModel = demographicDTO.getMetadata().getNewDataModel();
         preventNavBack = getArguments().getBoolean(PREVENT_NAV_BACK);
     }
@@ -96,7 +92,6 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         checkinFlowCallback.setCurrentStep(CheckinFlowCallback.PERSONAL_INFO);
     }
 
-
     private void initialiseUIFields(View view) {
         setHeaderTitle(
                 Label.getLabel("demographics_review_peronsonalinfo_section"),
@@ -105,7 +100,6 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
                 view);
         initNextButton(view);
     }
-
 
     private void initViews(View view) {
         DemographicPayloadDTO demographicPayload = demographicDTO.getPayload().getDemographics().getPayload();
@@ -158,15 +152,13 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         TextInputLayout phoneTypeInputLayout = (TextInputLayout) view.findViewById(R.id.phoneTypeInputLayout);
         phoneNumberTypeEditText = (EditText) view.findViewById(R.id.phoneTypeEditText);
         phoneNumberTypeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(phoneTypeInputLayout, null));
-        selectedPhoneType.setLabel(demographicPayload.getAddress().getPhoneNumberType());
-        selectedPhoneType.setName(demographicPayload.getAddress().getPhoneNumberType());
         phoneNumberTypeEditText.setOnClickListener(getSelectOptionsListener(dataModel
                         .getDemographic().getAddress().getProperties().getPhoneType().getOptions(),
                 getDefaultOnOptionsSelectedListener(phoneNumberTypeEditText, selectedPhoneType, null),
                 Label.getLabel("phone_type_label")));
         initSelectableInput(phoneNumberTypeEditText, selectedPhoneType,
-                demographicPayload.getAddress().getPhoneNumberType(), null);
-        phoneNumberTypeEditText.setText(demographicPayload.getAddress().getPhoneNumberType());
+                demographicPayload.getAddress().getPhoneNumberType(), null,
+                dataModel.getDemographic().getAddress().getProperties().getPhoneType().getOptions());
 
     }
 
@@ -188,7 +180,6 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
                 }
             });
         }
-
 
         if (demographicDTO != null) {
             String profilePicURL = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
@@ -462,4 +453,16 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         }
     }
 
+    @Override
+    public void afterLanguageChanged(DemographicDTO demographicDTO) {
+        super.afterLanguageChanged(demographicDTO);
+        dataModel = demographicDTO.getMetadata().getNewDataModel();
+    }
+
+    @Override
+    protected void replaceTranslatedOptionsValues() {
+        initSelectableInput(phoneNumberTypeEditText, selectedPhoneType,
+                selectedPhoneType.getName(), null,
+                dataModel.getDemographic().getAddress().getProperties().getPhoneType().getOptions());
+    }
 }

@@ -103,7 +103,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         initViews();
     }
 
-    protected int getContentLayout(){
+    protected int getContentLayout() {
         return R.layout.dialog_partial_payment;
     }
 
@@ -127,13 +127,14 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         String title = Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount(fullAmount);
         partialPaymentTotalAmountTitle.setText(title);
 
-        if(selectedBalance == null){
+        if (selectedBalance == null) {
             selectedBalance = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
         }
         minimumPayment = getMinimumPayment(selectedBalance.getMetadata().getPracticeId());
-        if(minimumPayment > 0){
+        if (minimumPayment > 0) {
             TextView header = (TextView) findViewById(R.id.partialPaymentHeader);
-            String headerText = Label.getLabel("payment_partial_minimum_amount") + currencyFormat.format(minimumPayment);
+            String headerText = String.format(Label.getLabel("payment.partial.amountSelector.minimum.amount"),
+                    currencyFormat.format(minimumPayment));
             header.setText(headerText);
         }
         SystemUtil.showSoftKeyboard(context);
@@ -148,13 +149,13 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
             cancel();
         } else if (viewId == R.id.payPartialButton) {
             double amount = Double.parseDouble(amountText.getText().toString());
-            if(amount > fullAmount){
+            if (amount > fullAmount) {
                 String errorMessage = Label.getLabel("payment_partial_max_error") + currencyFormat.format(fullAmount);
                 CustomMessageToast toast = new CustomMessageToast(context, errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
                 toast.show();
                 return;
             }
-            if(minimumPayment > 0 && amount < minimumPayment){
+            if (minimumPayment > 0 && amount < minimumPayment) {
                 String errorMessage = Label.getLabel("payment_partial_minimum_error") + currencyFormat.format(minimumPayment);
                 CustomMessageToast toast = new CustomMessageToast(context, errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
                 toast.show();
@@ -230,8 +231,8 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
                                 if (amountEditText.length() > 8) {
                                     amountEditText = amountEditText.substring(0, 8);
                                 }
-                                if (amountEditText.startsWith("0")){
-                                    amountEditText=amountEditText.substring(1);
+                                if (amountEditText.startsWith("0")) {
+                                    amountEditText = amountEditText.substring(1);
                                 }
                                 amountText.setText(amountEditText);
                             }
@@ -242,7 +243,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
                             }
                         }
             } else {
-                if (!amountEditText.contains(".")){
+                if (!amountEditText.contains(".")) {
                     amountText.setSelection(amountText.length());
                 }
                 amountChangeFlag = true;
@@ -328,7 +329,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
                     paymentLineItem.setLocationID(appointmentDTO.getPayload().getLocation().getGuid());
                 }
 
-                switch (responsibility.getType()){
+                switch (responsibility.getType()) {
                     case PendingBalancePayloadDTO.CO_INSURANCE_TYPE:
                         paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_COINSURANCE);
                         break;
@@ -379,8 +380,8 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
         return responsibilityTypes;
     }
 
-    protected double getMinimumPayment(String practiceId){
-        if(practiceId != null) {
+    protected double getMinimumPayment(String practiceId) {
+        if (practiceId != null) {
             for (PaymentsPayloadSettingsDTO payloadSettingsDTO : paymentsDTO.getPaymentPayload().getPaymentSettings()) {
                 if (practiceId.equals(payloadSettingsDTO.getMetadata().getPracticeId())) {
                     return payloadSettingsDTO.getPayload().getRegularPayments().getMinimumPartialPaymentAmount();

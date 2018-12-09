@@ -22,6 +22,10 @@ public class ConsentFormUserResponseDTO {
     @SerializedName("metadata")
     private JsonObject metadata;
 
+    @Expose
+    @SerializedName("updated_dt")
+    private String updateDate;
+
     public String getFormId() {
         return formId;
     }
@@ -44,5 +48,13 @@ public class ConsentFormUserResponseDTO {
 
     public void setMetadata(JsonObject metadata) {
         this.metadata = metadata;
+    }
+
+    public String getUpdatedDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
     }
 }

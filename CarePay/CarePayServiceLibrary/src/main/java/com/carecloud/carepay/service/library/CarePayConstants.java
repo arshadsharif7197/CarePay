@@ -5,7 +5,6 @@ package com.carecloud.carepay.service.library;
  */
 public class CarePayConstants {
 
-
     private CarePayConstants() {
     }
 
@@ -157,7 +156,7 @@ public class CarePayConstants {
     public static final String EXTRA_APPOINTMENT_TRANSITIONS = "appointmentWorkflow";
     public static final String EXTRA_BUNDLE = "extra";
     public static final String EXTRA_CONFIRMATION_MODE = "confirmationMode";
-    public static final String EXTRA_PAYMENT_CASH ="makeCashPayment";
+    public static final String EXTRA_PAYMENT_CASH = "makeCashPayment";
 
 
     public static final String OPEN_NOTIFICATIONS = "shouldOpenNotifications";
@@ -171,9 +170,14 @@ public class CarePayConstants {
     public static final String LOGIN_OPTION_SEARCH = "login_option_search";
 
     public static final String CRASH = "crash";
+    public static final String REFRESH = "refresh";
 
     public static final String SEARCH_MODE = "searchMode";
     public static final String PATIENT_MODE_LABELS_PREFIX = "P-";
     public static final String UPDATE_BADGES_BROADCAST = "updateBadges";
+
+    public static final String GET_STARTED_URL = "/get_started";
+    public static final String PATIENT_ID = "patientId";
+    public static final String NOTIFICATIONS_FLOW = "notifications";
 
 }

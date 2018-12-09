@@ -71,14 +71,14 @@ public class PaymentPlanAmountDialog extends PartialPaymentDialog {
             footer.setText(amountBetween);
             footer.setVisibility(View.VISIBLE);
         } else if (minimumPaymentAmount > 0D) {
-            String minimumAmount = Label.getLabel("payment_partial_minimum_amount") +
-                    currencyFormat.format(minimumPaymentAmount);
+            String minimumAmount = String.format(Label.getLabel("payment.partial.amountSelector.minimum.amount"),
+                    currencyFormat.format(minimumPaymentAmount));
             footer.setText(minimumAmount);
             footer.setVisibility(View.VISIBLE);
         } else if (maximumPaymentAmount < fullAmount) {
-            String minimumAmount = Label.getLabel("payment_partial_maximum_amount") +
-                    currencyFormat.format(maximumPaymentAmount);
-            footer.setText(minimumAmount);
+            String maximum = String.format(Label.getLabel("payment.partial.amountSelector.maximum.amount"),
+                    currencyFormat.format(maximumPaymentAmount));
+            footer.setText(maximum);
             footer.setVisibility(View.VISIBLE);
         }
     }
@@ -92,7 +92,7 @@ public class PaymentPlanAmountDialog extends PartialPaymentDialog {
     protected double calculateFullAmount() {
         double amount = 0D;
         for (PendingBalancePayloadDTO pendingBalancePayloadDTO : selectedBalance.getPayload()) {
-            if(pendingBalancePayloadDTO.getType().equals(PendingBalancePayloadDTO.PATIENT_BALANCE)) {
+            if (pendingBalancePayloadDTO.getType().equals(PendingBalancePayloadDTO.PATIENT_BALANCE)) {
                 amount = SystemUtil.safeAdd(amount, pendingBalancePayloadDTO.getAmount());
             }
         }
@@ -108,7 +108,8 @@ public class PaymentPlanAmountDialog extends PartialPaymentDialog {
             }
             double planAmount = Double.parseDouble(amountEditText);
 
-            boolean canCreatePlan = ((!hasExistingPlans || canCreateMultiple) && hasApplicableRule(practiceId, planAmount));
+            boolean canCreatePlan = ((!hasExistingPlans || canCreateMultiple)
+                    && hasApplicableRule(practiceId, planAmount));
             if (canCreatePlan || (hasExistingPlans && canAddToExisting && canAddToExisting(planAmount))) {
                 payPartialButton.setEnabled(true);
                 if (canCreatePlan) {
@@ -146,28 +147,34 @@ public class PaymentPlanAmountDialog extends PartialPaymentDialog {
         if (amount > maximumPaymentAmount) {
             return false;
         }
-        for (PaymentsPayloadSettingsDTO settingsDTO : paymentsModel.getPaymentPayload().getPaymentSettings()) {
-            if (practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())) {
-                for (PaymentSettingsBalanceRangeRule balanceRangeRule : settingsDTO.getPayload().getPaymentPlans().getBalanceRangeRules()) {
-                    double minAmount = balanceRangeRule.getMinBalance().getValue();
-                    double maxAmount = balanceRangeRule.getMaxBalance().getValue();
-                    if (amount >= minAmount && amount <= maxAmount) {
-                        return true;
-                    }
+        PaymentsPayloadSettingsDTO settingsDTO = paymentsModel.getPaymentPayload().getPaymentSetting(practiceId);
+        for (PaymentSettingsBalanceRangeRule balanceRangeRule : settingsDTO.getPayload()
+                .getPaymentPlans().getBalanceRangeRules()) {
+            if (isFrequencyEnabled(settingsDTO, balanceRangeRule)) {
+                double minAmount = balanceRangeRule.getMinBalance().getValue();
+                double maxAmount = balanceRangeRule.getMaxBalance().getValue();
+                if (amount >= minAmount && amount <= maxAmount) {
+                    return true;
                 }
             }
         }
+
         return false;
     }
 
-    private void determineParameters() {
-        for (PaymentsPayloadSettingsDTO settingsDTO : paymentsModel.getPaymentPayload().getPaymentSettings()) {
-            if (practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())) {
-                canAddToExisting = settingsDTO.getPayload().getPaymentPlans().isAddBalanceToExisting();
-                canCreateMultiple = settingsDTO.getPayload().getPaymentPlans().isCanHaveMultiple();
-
-            }
+    private boolean isFrequencyEnabled(PaymentsPayloadSettingsDTO settingsDTO,
+                                       PaymentSettingsBalanceRangeRule balanceRangeRule) {
+        if (balanceRangeRule.getMaxDuration().getInterval().equals(PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS)) {
+            return settingsDTO.getPayload().getPaymentPlans().getFrequencyCode().getMonthly().isAllowed();
+        } else {
+            return settingsDTO.getPayload().getPaymentPlans().getFrequencyCode().getWeekly().isAllowed();
         }
+    }
+
+    private void determineParameters() {
+        PaymentsPayloadSettingsDTO settingsDTO = paymentsModel.getPaymentPayload().getPaymentSetting(practiceId);
+        canAddToExisting = settingsDTO.getPayload().getPaymentPlans().isAddBalanceToExisting();
+        canCreateMultiple = settingsDTO.getPayload().getPaymentPlans().isCanHaveMultiple();
 
         minimumPaymentAmount = paymentsModel.getPaymentPayload().getMinimumAllowablePlanAmount(practiceId);
         maximumPaymentAmount = paymentsModel.getPaymentPayload().getMaximumAllowablePlanAmount(practiceId);

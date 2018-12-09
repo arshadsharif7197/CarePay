@@ -30,7 +30,7 @@ public class PatientModel {
     @Expose
     private String dateOfBirth;
 
-    @SerializedName("gender")
+    @SerializedName(value="gender")
     @Expose
     private String gender;
 

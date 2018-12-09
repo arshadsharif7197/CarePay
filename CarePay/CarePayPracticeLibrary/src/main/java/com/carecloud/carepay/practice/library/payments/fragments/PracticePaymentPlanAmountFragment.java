@@ -17,6 +17,8 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import java.text.NumberFormat;
+
 public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDialogFragment {
 
     private PaymentsModel paymentsModel;
@@ -36,7 +38,8 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
      * @param selectedBalance selected balance
      * @return an instance of PracticePaymentPlanAmountFragment
      */
-    public static PracticePaymentPlanAmountFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance) {
+    public static PracticePaymentPlanAmountFragment newInstance(PaymentsModel paymentsModel,
+                                                                PendingBalanceDTO selectedBalance) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
@@ -74,6 +77,7 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
         header.setText(Label.getLabel("payment_plan_partial_amount_header"));
         applyButton.setEnabled(false);
         applyButton.setText(Label.getLabel("payment_create_payment_plan"));
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
         TextView footer = (TextView) findViewById(R.id.partialPaymentHeaderBottom);
         if (minimumPaymentAmount > 0D && maximumPaymentAmount < fullAmount) {
             String amountBetween = String.format(Label.getLabel("payment_partial_amount_between"),
@@ -82,13 +86,13 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
             footer.setText(amountBetween);
             footer.setVisibility(View.VISIBLE);
         } else if (minimumPaymentAmount > 0D) {
-            String minimumAmount = Label.getLabel("payment_partial_minimum_amount") +
-                    currencyFormat.format(minimumPaymentAmount);
+            String minimumAmount = String.format(Label.getLabel("payment.partial.amountSelector.minimum.amount"),
+                    currencyFormat.format(minimumPaymentAmount));
             footer.setText(minimumAmount);
             footer.setVisibility(View.VISIBLE);
         } else if (maximumPaymentAmount < fullAmount) {
-            String minimumAmount = Label.getLabel("payment_partial_maximum_amount") +
-                    currencyFormat.format(maximumPaymentAmount);
+            String minimumAmount = String.format(Label.getLabel("payment.partial.amountSelector.maximum.amount"),
+                    currencyFormat.format(maximumPaymentAmount));
             footer.setText(minimumAmount);
             footer.setVisibility(View.VISIBLE);
         }
@@ -110,7 +114,8 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
             return;
         }
 
-        boolean canCreatePlan = ((!hasExistingPlans || canCreateMultiple) && hasApplicableRule(practiceId, planAmount));
+        boolean canCreatePlan = ((!hasExistingPlans || canCreateMultiple)
+                && hasApplicableRule(practiceId, planAmount));
         if ((canCreatePlan || (hasExistingPlans && canAddToExisting && canAddToExisting(planAmount)))
                 && planAmount > 0.0) {
             applyButton.setEnabled(true);
@@ -134,7 +139,7 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
     private double calculateFullAmount() {
         double amount = 0D;
         for (PendingBalancePayloadDTO pendingBalancePayloadDTO : selectedBalance.getPayload()) {
-            if(pendingBalancePayloadDTO.getType().equals(PendingBalancePayloadDTO.PATIENT_BALANCE)) {
+            if (pendingBalancePayloadDTO.getType().equals(PendingBalancePayloadDTO.PATIENT_BALANCE)) {
                 amount = SystemUtil.safeAdd(amount, pendingBalancePayloadDTO.getAmount());
             }
         }
@@ -146,9 +151,11 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
     }
 
     private boolean hasApplicableRule(String practiceId, double amount) {
-        for (PaymentsPayloadSettingsDTO settingsDTO : paymentsModel.getPaymentPayload().getPaymentSettings()) {
-            if (practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())) {
-                for (PaymentSettingsBalanceRangeRule balanceRangeRule : settingsDTO.getPayload().getPaymentPlans().getBalanceRangeRules()) {
+        PaymentsPayloadSettingsDTO settingsDTO = paymentsModel.getPaymentPayload().getPaymentSetting(practiceId);
+        if (practiceId != null && practiceId.equals(settingsDTO.getMetadata().getPracticeId())) {
+            for (PaymentSettingsBalanceRangeRule balanceRangeRule : settingsDTO.getPayload()
+                    .getPaymentPlans().getBalanceRangeRules()) {
+                if (isFrequencyEnabled(settingsDTO, balanceRangeRule)) {
                     double minAmount = balanceRangeRule.getMinBalance().getValue();
                     double maxAmount = balanceRangeRule.getMaxBalance().getValue();
                     if (amount >= minAmount && amount <= maxAmount) {
@@ -158,6 +165,15 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
             }
         }
         return false;
+    }
+
+    private boolean isFrequencyEnabled(PaymentsPayloadSettingsDTO settingsDTO,
+                                       PaymentSettingsBalanceRangeRule balanceRangeRule) {
+        if (balanceRangeRule.getMaxDuration().getInterval().equals(PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS)) {
+            return settingsDTO.getPayload().getPaymentPlans().getFrequencyCode().getMonthly().isAllowed();
+        } else {
+            return settingsDTO.getPayload().getPaymentPlans().getFrequencyCode().getWeekly().isAllowed();
+        }
     }
 
     private void determineParameters() {

@@ -36,7 +36,6 @@ import com.smartystreets.api.us_zipcode.City;
  */
 public class AddressFragment extends CheckInDemographicsBaseFragment {
 
-    private DemographicDataModel dataModel;
     private DemographicAddressPayloadDTO demographicAddressPayloadDTO;
     private EditText cityEditText;
     private TextView stateEditText;
@@ -46,9 +45,6 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
-        dataModel = demographicDTO.getMetadata().getNewDataModel();
-
         if (demographicDTO.getPayload().getDemographics() != null) {
             demographicAddressPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getAddress();
         }
@@ -150,7 +146,8 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                         Label.getLabel("demographics_documents_title_select_state")));
 
         String state = demographicPayload.getAddress().getState();
-        initSelectableInput(stateEditText, selectedState, state, null);
+        initSelectableInput(stateEditText, selectedState, state, null,
+                addressSection.getProperties().getState().getOptions());
         stateEditText.getOnFocusChangeListener().onFocusChange(stateEditText, true);
     }
 
@@ -200,6 +197,11 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         updatableDemographicDTO.setMetadata(demographicDTO.getMetadata());
         updatableDemographicDTO.getPayload().setAppointmentpayloaddto(demographicDTO.getPayload().getAppointmentpayloaddto());
         return updatableDemographicDTO;
+    }
+
+    @Override
+    protected void replaceTranslatedOptionsValues() {
+
     }
 
     @Override

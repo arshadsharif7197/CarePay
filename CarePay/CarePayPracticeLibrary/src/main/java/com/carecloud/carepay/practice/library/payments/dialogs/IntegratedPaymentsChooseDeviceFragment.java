@@ -25,6 +25,7 @@ import com.carecloud.carepay.practice.library.payments.models.IntegratedPaymentD
 import com.carecloud.carepay.practice.library.payments.models.IntegratedPaymentDeviceGroupPayload;
 import com.carecloud.carepay.practice.library.payments.models.IntegratedPaymentQueueRecord;
 import com.carecloud.carepay.practice.library.payments.models.ShamrockPaymentMetadata;
+import com.carecloud.carepay.practice.library.payments.models.ShamrockPaymentModel;
 import com.carecloud.carepay.practice.library.payments.models.ShamrockPaymentsPostModel;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.RestCallServiceCallback;
@@ -148,7 +149,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         processPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                processShamrockPayment();
+                processIntegratedPayment();
             }
         });
         refreshProcessButton();
@@ -310,7 +311,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         }
     }
 
-    private void processShamrockPayment(){
+    private void processIntegratedPayment(){
         IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
 
         ShamrockPaymentsPostModel shamrockPaymentsPostModel = new ShamrockPaymentsPostModel().setIntegratedPaymentPostModel(postModel);
@@ -325,29 +326,26 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         metadata.setUserId(userId);
         metadata.setBreezeUserId(getAppAuthorizationHelper().getPatientUser());
 
-        String endpoint = getString(R.string.carepay_init_payment_request);
-        String url = HttpConstants.getPaymentsUrl();
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("patient_id", practiceInfo.getPatientId());
 
-        Map<String, String> headers = new HashMap<>();
-        headers.put("x-api-key", HttpConstants.getPaymentsApiKey());
-
-        Gson gson = new Gson();
-        RestCallServiceHelper restCallServiceHelper = new RestCallServiceHelper(getAppAuthorizationHelper(), getApplicationMode());
-        restCallServiceHelper.executeRequest(RestDef.POST, url, initPaymentCallback, true, false, null, null, headers, gson.toJson(shamrockPaymentsPostModel), endpoint);
+        TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getInitializePaymentRequest();
+        String payload = DtoHelper.getStringDTO(shamrockPaymentsPostModel);
+        getWorkflowServiceHelper().execute(transitionDTO, initPaymentRequestCallback, payload, queryMap);
     }
 
-    private RestCallServiceCallback initPaymentCallback = new RestCallServiceCallback() {
+    private WorkflowServiceCallback initPaymentRequestCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             showProgressDialog();
         }
 
         @Override
-        public void onPostExecute(JsonElement jsonElement) {
+        public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
 
-            Gson gson = new Gson();
-            ShamrockPaymentsPostModel postModel = gson.fromJson(jsonElement, ShamrockPaymentsPostModel.class);
+            ShamrockPaymentModel shamrockPaymentModel = DtoHelper.getConvertedDTO(ShamrockPaymentModel.class, workflowDTO);
+            ShamrockPaymentsPostModel postModel = shamrockPaymentModel.getPayload().getPostModel();
             selectedDevice.setPaymentRequestId(postModel.getDeepstreamId());
             DeviceInfo.updateDevice(userId, authToken, selectedDevice.getDeviceId(), selectedDevice);
             ClientPayment.trackPaymentRequest(userId, authToken, selectedDevice.getPaymentRequestId(), paymentRequestCallback);

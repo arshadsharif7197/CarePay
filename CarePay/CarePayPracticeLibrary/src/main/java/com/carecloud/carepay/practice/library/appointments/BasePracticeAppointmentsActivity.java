@@ -9,7 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAvailableHoursDialogFragment;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeChooseProviderDialog;
-import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeRequestAppointmentDialog;
+import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeModeRequestAppointmentDialog;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
@@ -35,6 +35,7 @@ import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
+import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
@@ -67,20 +68,19 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     private Date startDate;
     private Date endDate;
 
-    private AppointmentResourcesDTO appointmentResourcesDTO;
+    protected AppointmentResourcesDTO appointmentResourcesDTO;
     protected AppointmentsResultModel appointmentsResultModel;
     private AppointmentsResultModel resourcesToSchedule;
-    private VisitTypeDTO visitTypeDTO;
+    protected VisitTypeDTO visitTypeDTO;
     private AppointmentsSlotsDTO appointmentSlot;
 
     private PaymentsModel paymentsModel;
-
-    private String patientId;
+    private PatientModel patientModel;
 
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
+//        appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
         paymentsModel = getConvertedDTO(PaymentsModel.class);
     }
 
@@ -105,13 +105,14 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
                                            AppointmentAvailabilityDTO availabilityDTO) {
         // Call Request appointment Summary dialog from here
         String cancelString = Label.getLabel("available_hours_back");
-        new PracticeRequestAppointmentDialog(
+        new PracticeModeRequestAppointmentDialog(
                 this,
                 cancelString,
                 appointmentsSlot,
                 appointmentResourcesDTO,
                 visitTypeDTO,
-                this
+                this,
+                patientModel
         ).show();
     }
 
@@ -130,7 +131,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     }
 
     @Override
-    public void requestAppointment(AppointmentsSlotsDTO appointmentSlot, String comments) {
+    public void requestAppointment(AppointmentsSlotsDTO appointmentSlot, String reasonForVisit) {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
         queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
@@ -144,10 +145,10 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         appointment.setProviderId(appointmentResourcesDTO.getResource().getProvider().getId());
         appointment.setVisitReasonId(visitTypeDTO.getId());
         appointment.setResourceId(appointmentResourcesDTO.getResource().getId());
-        appointment.setComplaint(visitTypeDTO.getName());
-        appointment.setComments(comments);
+        appointment.setComplaint(reasonForVisit);
+        appointment.setComments(reasonForVisit);
 
-        appointment.getPatient().setId(patientId);
+        appointment.getPatient().setId(patientModel.getPatientId());
 
         double amount = visitTypeDTO.getAmount();
         if (amount > 0 && paymentsModel != null) {
@@ -184,7 +185,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
             String[] values = {visitTypeDTO.getName(),
                     getApplicationMode().getUserPracticeDTO().getPracticeId(),
                     getApplicationMode().getUserPracticeDTO().getPracticeName(),
-                    patientId};
+                    patientModel.getPatientId()};
             MixPanelUtil.logEvent(getString(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
                     R.string.event_appointment_requested : R.string.event_appointment_scheduled), params, values);
             if (applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
@@ -198,12 +199,12 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         }
     };
 
-    public String getPatientId() {
-        return patientId;
+    public PatientModel getPatient() {
+        return patientModel;
     }
 
-    public void setPatientId(String patientId) {
-        this.patientId = patientId;
+    public void setPatient(PatientModel patient) {
+        this.patientModel = patient;
     }
 
     @Override
@@ -421,7 +422,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     @Override
     public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
         UserPracticeDTO userPracticeDTO = paymentsModel.getPaymentPayload().getUserPractices().get(0);
-        userPracticeDTO.setPatientId(patientId);
+        userPracticeDTO.setPatientId(patientModel.getPatientId());
         return userPracticeDTO;
     }
 

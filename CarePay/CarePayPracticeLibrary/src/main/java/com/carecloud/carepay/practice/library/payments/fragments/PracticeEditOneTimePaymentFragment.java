@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,9 +36,9 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
     private ScheduledPaymentModel scheduledPaymentModel;
 
     /**
-     * @param paymentResultModel the payment model
-     * @param owedAmount         fullAmount owed
-     * @param paymentPlanDTO     payment plan dto
+     * @param paymentResultModel    the payment model
+     * @param owedAmount            fullAmount owed
+     * @param paymentPlanDTO        payment plan dto
      * @param scheduledPaymentModel scheduled payment
      * @return an instance of PracticeEditOneTimePaymentFragment
      */
@@ -78,20 +79,24 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
 
-        applyButton.setText(Label.getLabel("payment_plan_reschedule_payment"));
+        applyButton.setText(Label.getLabel("payment_plan_reschedule_payment_short"));
         String dateString = scheduledPaymentModel.getPayload().getPaymentDate();
-        schedulePaymentDateText.setText(DateUtil.getInstance().setDateRaw(dateString).toStringWithFormatMmSlashDdSlashYyyy());
+        schedulePaymentDateText.setText(DateUtil.getInstance().setDateRaw(dateString)
+                .toStringWithFormatMmSlashDdSlashYyyy());
         schedulePaymentDateText.setOnClickListener(selectDateButtonListener);
+        schedulePaymentDateText.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                ContextCompat.getDrawable(getContext(), R.drawable.icon_drop_down), null);
 
         numberStr = String.valueOf(scheduledPaymentModel.getPayload().getAmount());
-        char last = numberStr.charAt(numberStr.length()-1);
+        char last = numberStr.charAt(numberStr.length() - 1);
         int decimal = numberStr.indexOf('.');
-        while(last == '0' || last == '.'){
-            if(numberStr.length() <= decimal){
+        while (last == '0' || last == '.') {
+            if (numberStr.length() <= decimal) {
                 break;
             }
-            numberStr = numberStr.substring(0, numberStr.length()-1);
-            last = numberStr.charAt(numberStr.length()-1);
+            numberStr = numberStr.substring(0, numberStr.length() - 1);
+            last = numberStr.charAt(numberStr.length() - 1);
+
         }
         amountTextView = (EditText) findViewById(R.id.enter_amount_text);
         amountTextView.setText(currencyFormat.format(scheduledPaymentModel.getPayload().getAmount()));
@@ -107,7 +112,7 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
         updateLayout();
     }
 
-    private void deletePayment(ScheduledPaymentModel scheduledPaymentModel){
+    private void deletePayment(ScheduledPaymentModel scheduledPaymentModel) {
         ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(
                 Label.getLabel("payment.oneTimePayment.scheduled.delete.title"),
                 String.format(
@@ -119,6 +124,7 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
                 Label.getLabel("button_no"),
                 Label.getLabel("button_yes"));
         confirmDialogFragment.setCallback(confirmDeleteCallback);
+        confirmDialogFragment.setNegativeAction(true);
         confirmDialogFragment.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {

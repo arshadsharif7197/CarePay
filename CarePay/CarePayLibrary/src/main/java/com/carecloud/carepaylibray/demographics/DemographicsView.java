@@ -27,6 +27,10 @@ public interface DemographicsView {
 
     void navigateToMedicationsAllergy(WorkflowDTO workflowDTO);
 
+    void navigateToMedications(WorkflowDTO workflowDTO);
+
+    void navigateToAllergy(WorkflowDTO workflowDTO);
+
     FragmentManager getSupportFragmentManager();
 
     Context getContext();

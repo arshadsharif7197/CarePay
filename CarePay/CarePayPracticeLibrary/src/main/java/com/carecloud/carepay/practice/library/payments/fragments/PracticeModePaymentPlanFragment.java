@@ -27,6 +27,7 @@ import com.carecloud.carepaylibray.payments.models.MerchantServiceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -84,12 +85,14 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
     @Override
     public void onCreate(Bundle icicle) {
         applyRangeRules = false;
+        paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, getArguments());
+        selectedBalance = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
         super.onCreate(icicle);
-        paymentPlanAmount = 0.00;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        paymentPlanAmount = 0.00;
         return inflater.inflate(R.layout.fragment_practice_create_payment_plan, container, false);
     }
 
@@ -203,7 +206,8 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
                     }
                 }
             }
-            if (balanceItem.getBalance() != balanceItem.getAmountInPaymentPlan()) {
+            if ((balanceItem.getBalance() > 0)
+                    && (balanceItem.getBalance() != balanceItem.getAmountInPaymentPlan())) {
                 filteredList.add(balanceItem);
             }
         }
@@ -287,26 +291,29 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
             clearError(R.id.paymentDrawDayInputLayout);
         }
 
-        if (StringUtil.isNullOrEmpty(numberPaymentsEditText.getText().toString())) {
+        String monthOrWeek = interval == PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS
+                ? Label.getLabel("pluralRule.many.month") : Label.getLabel("pluralRule.many.week");
+        if (StringUtil.isNullOrEmpty(installmentsEditText.getText().toString())) {
             if (isUserInteraction) {
-                setError(numberPaymentsInputLayout, Label.getLabel("validation_required_field")
+                setError(installmentsInputLayout, Label.getLabel("validation_required_field")
                         , isUserInteraction);
                 return false;
             } else {
-                clearError(numberPaymentsInputLayout);
+                clearError(installmentsInputLayout);
             }
         } else if (installments < 2) {
-            setError(numberPaymentsInputLayout,
-                    String.format(Label.getLabel("payment_plan_min_months_error"),
+            setError(installmentsInputLayout,
+                    String.format(Label.getLabel("payment_plan_min_months_error_temporal"),
+                            monthOrWeek,
                             String.valueOf(2))
                     , isUserInteraction);
             clearError(R.id.paymentAmountInputLayout);
             return false;
         } else {
-            clearError(numberPaymentsInputLayout);
+            clearError(installmentsInputLayout);
         }
 
-        if (StringUtil.isNullOrEmpty(monthlyPaymentEditText.getText().toString())) {
+        if (StringUtil.isNullOrEmpty(amountPaymentEditText.getText().toString())) {
             if (isUserInteraction) {
                 setError(R.id.paymentAmountInputLayout, Label.getLabel("validation_required_field")
                         , isUserInteraction);
@@ -352,7 +359,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
             paymentValueTextView.setText(currencyFormatter.format(paymentPlanAmount));
             item.setAmountSelected(0.00);
         }
-        refreshNumberOfPayments(numberPaymentsEditText.getText().toString());
+        refreshNumberOfPayments(installmentsEditText.getText().toString());
         return true;
     }
 

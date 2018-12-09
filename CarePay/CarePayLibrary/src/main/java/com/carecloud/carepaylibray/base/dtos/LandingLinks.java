@@ -34,6 +34,15 @@ public class LandingLinks extends BaseLinks {
     @SerializedName("forms_history")
     @Expose
     private TransitionDTO formsHistory = new TransitionDTO();
+    @SerializedName("user_forms")
+    @Expose
+    private TransitionDTO userForms = new TransitionDTO();
+    @SerializedName("messaging")
+    @Expose
+    private TransitionDTO messaging = new TransitionDTO();
+    @SerializedName("pending_survey")
+    @Expose
+    private TransitionDTO pendingSurvey = new TransitionDTO();
 
     public TransitionDTO getPatientBalances() {
         return patientBalances;
@@ -97,5 +106,29 @@ public class LandingLinks extends BaseLinks {
 
     public void setFormsHistory(TransitionDTO formsHistory) {
         this.formsHistory = formsHistory;
+    }
+
+    public TransitionDTO getUserForms() {
+        return userForms;
+    }
+
+    public void setUserForms(TransitionDTO userForms) {
+        this.userForms = userForms;
+    }
+
+    public TransitionDTO getMessaging() {
+        return messaging;
+    }
+
+    public void setMessaging(TransitionDTO messaging) {
+        this.messaging = messaging;
+    }
+
+    public TransitionDTO getPendingSurvey() {
+        return pendingSurvey;
+    }
+
+    public void setPendingSurvey(TransitionDTO pendingSurvey) {
+        this.pendingSurvey = pendingSurvey;
     }
 }

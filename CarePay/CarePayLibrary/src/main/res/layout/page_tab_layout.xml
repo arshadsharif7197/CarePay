@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.carecloud.carepaylibray.customcomponents.CarePayTextView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.carecloud.carepaylibray.customcomponents.CarePayTextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tab_title"
@@ -10,7 +9,7 @@
     android:padding="@dimen/dimen_8dp"
     android:textColor="@color/white_grey_selected_selector"
     android:textSize="@dimen/text_size_14"
-    tools:text="Pending"
-    app:customAssetFont="gotham_rounded_medium">
+    app:customAssetFont="gotham_rounded_medium"
+    tools:text="Pending">
 
 </com.carecloud.carepaylibray.customcomponents.CarePayTextView>

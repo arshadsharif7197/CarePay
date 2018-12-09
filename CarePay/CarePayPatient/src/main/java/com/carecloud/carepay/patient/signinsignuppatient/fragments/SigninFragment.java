@@ -22,7 +22,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
@@ -35,6 +34,7 @@ import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
@@ -44,6 +44,7 @@ import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.PlainWebViewFragment;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.signinsignup.fragments.ResetPasswordFragment;
@@ -218,11 +219,16 @@ public class SigninFragment extends BaseFragment {
 
                 }
             });
-        } else {
-            signInButton.setLayoutParams(new RelativeLayout
-                    .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
 
+        view.findViewById(R.id.get_started).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PlainWebViewFragment fragment = PlainWebViewFragment
+                        .newInstance(HttpConstants.getRetailUrl()+CarePayConstants.GET_STARTED_URL);
+                callback.replaceFragment(fragment, true);
+            }
+        });
     }
 
     public void signIn(String email, String pwd) {
@@ -342,7 +348,6 @@ public class SigninFragment extends BaseFragment {
                 MixPanelUtil.logEvent(getString(R.string.event_signin_loginSuccess),
                         getString(R.string.param_login_type),
                         getString(R.string.login_password));
-
             }
 
             @Override
@@ -620,4 +625,6 @@ public class SigninFragment extends BaseFragment {
             throw new RuntimeException("Failed to init Cipher", e);
         }
     }
+
+
 }

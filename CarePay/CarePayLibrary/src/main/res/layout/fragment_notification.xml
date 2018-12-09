@@ -8,6 +8,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true">
 
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
@@ -15,7 +16,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/white">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/notifications_recycler"
@@ -32,12 +34,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ImageView
+            android:id="@+id/no_apt_placeholder_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/no_apt_placeholder_icon"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/icn_empty_state_notifications"/>
 
@@ -50,8 +52,8 @@
             android:gravity="center"
             android:textColor="@color/textview_default_textcolor"
             android:textSize="21sp"
-            breeze:textKey="no_notifications_message_title"
-            app:customAssetFont="gotham_rounded_medium" />
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="no_notifications_message_title"/>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/no_notificaton_message_desc"
@@ -63,8 +65,8 @@
             android:gravity="center"
             android:textColor="@color/optionl_gray"
             android:textSize="13sp"
-            breeze:textKey="no_notifications_message_text"
-            app:customAssetFont="proxima_nova_regular" />
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textKey="no_notifications_message_text"/>
 
         <View
             android:layout_width="match_parent"

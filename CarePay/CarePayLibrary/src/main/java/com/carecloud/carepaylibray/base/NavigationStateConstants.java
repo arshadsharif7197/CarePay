@@ -5,7 +5,7 @@ public class NavigationStateConstants {
     public static final String LANGUAGE_SELECTION = "language_selection";
     public static final String DEMOGRAPHIC_VERIFY = "demographics_verify";
     public static final String CONSENT_FORMS = "consent_forms";
-    public static final String FORMS_HISTORY = "forms_history";
+    public static final String FORMS_HISTORY = "user_forms";
     public static final String DEMOGRAPHICS = "demographics";
     public static final String INTAKE_FORMS = "intake_forms";
     public static final String PAYMENTS = "payments";
@@ -13,7 +13,9 @@ public class NavigationStateConstants {
     public static final String PURCHASE = "retail";
     public static final String NOTIFICATION = "notifications";
     public static final String MEDICATION_ALLERGIES = "medications_allergies";
-    public static final String MESSAGES = "messages";
+    public static final String MEDICATIONS = "medications";
+    public static final String ALLERGIES = "allergies";
+    public static final String MESSAGES = "messaging";
 
     public static final String PRACTICE_HOME = "practice_home";
     public static final String PRACTICE_MODE_SIGNIN = "practice_mode_signin";
@@ -35,4 +37,6 @@ public class NavigationStateConstants {
     public static final String THIRD_PARTY_CHECK_IN = "third_party_checkin";
     public static final String THIRD_PARTY_CHECK_OUT = "third_party_checkout";
 
+    public static final String SURVEYS = "surveys";
+    public static final String SURVEYS_CHECKOUT = "surveys_checkout";
 }

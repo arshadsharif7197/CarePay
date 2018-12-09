@@ -2,6 +2,7 @@
     <string name="app_name">Breeze</string>
     <string name="account_name">com.google.android.gms.samples.wallet.KEY_USERNAME</string>
 
+    <string name="notification_channel_name">Breeze</string>
 
     <string name="msg_auth_token_key">token</string>
     <string name="msg_path_start">inbox</string>

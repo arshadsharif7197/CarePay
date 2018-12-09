@@ -74,6 +74,7 @@ public class ShamrockPaymentMetadata extends IntegratedPaymentMetadata {
         super.setAppointmentId(metadata.getAppointmentId());
         super.setAppointmentRequestDTO(metadata.getAppointmentRequestDTO());
         super.setCancellationReasonId(metadata.getCancellationReasonId());
+        super.setOrder(metadata.getOrder());
 
 
         return this;

@@ -72,10 +72,12 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
 
     @Override
     public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
         paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, getArguments());
+        practiceId = paymentPlanDTO.getMetadata().getPracticeId();
+        paymentPlanAmount = SystemUtil.safeSubtract(paymentPlanDTO.getPayload().getAmount(),
+                paymentPlanDTO.getPayload().getAmountPaid());
+        super.onCreate(icicle);
         selectedBalance = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
-        paymentPlanAmount = paymentPlanDTO.getPayload().getAmount();
         if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode()
                 .equals(PaymentPlanDetailsDTO.FREQUENCY_MONTHLY)) {
             frequencyOption = frequencyOptions.get(0);
@@ -120,7 +122,7 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
 
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
         TextView paymentPlanValueTextView = (TextView) view.findViewById(R.id.paymentPlanValueTextView);
-        paymentPlanValueTextView.setText(currencyFormatter.format(paymentPlanDTO.getPayload().getAmount()));
+        paymentPlanValueTextView.setText(currencyFormatter.format(paymentPlanAmount));
 
         TextView paymentAmountTextView = (TextView) view.findViewById(R.id.paymentAmountTextView);
         String paymentAmount = currencyFormatter.format(paymentPlanDTO.getPayload()
@@ -143,12 +145,13 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
                     .getDayOfTheWeek(paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfWeek()));
         }
 
-        installments = paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments();
-        numberPaymentsEditText.setText(String.valueOf(installments));
-        numberPaymentsEditText.getOnFocusChangeListener().onFocusChange(numberPaymentsEditText, true);
+        installments = paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments() -
+                paymentPlanDTO.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
+        installmentsEditText.setText(String.valueOf(installments));
+        installmentsEditText.getOnFocusChangeListener().onFocusChange(installmentsEditText, true);
 
-        monthlyPaymentAmount = paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount();
-        monthlyPaymentEditText.setText(currencyFormatter.format(monthlyPaymentAmount));
+        amounthPayment = paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount();
+        amountPaymentEditText.setText(currencyFormatter.format(amounthPayment));
 
     }
 
@@ -236,7 +239,7 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
 
     protected void updatePaymentPlan() {
         PaymentPlanPostModel postModel = new PaymentPlanPostModel();
-        postModel.setAmount(paymentPlanAmount);
+        postModel.setAmount(paymentPlanDTO.getPayload().getAmount());
         postModel.setExecution(paymentPlanDTO.getPayload().getExecution());
         postModel.setLineItems(paymentPlanDTO.getPayload().getLineItems());
         postModel.setDescription(planNameEditText.getText().toString());
@@ -256,9 +259,10 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
         }
 
         PaymentPlanModel paymentPlanModel = new PaymentPlanModel();
-        paymentPlanModel.setAmount(monthlyPaymentAmount);
+        paymentPlanModel.setAmount(amounthPayment);
         paymentPlanModel.setFrequencyCode(frequencyOption.getName());
-        paymentPlanModel.setInstallments(installments);
+        paymentPlanModel.setInstallments((int) SystemUtil.safeAdd(installments,
+                paymentPlanDTO.getPayload().getPaymentPlanDetails().getFilteredHistory().size()));
         paymentPlanModel.setEnabled(true);
 
         if (frequencyOption.getName().equals(PaymentPlanModel.FREQUENCY_MONTHLY)) {
