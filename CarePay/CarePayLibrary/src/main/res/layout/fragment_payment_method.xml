@@ -43,8 +43,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/dimen_15dp"
-            android:background="@drawable/pay_google_button_border"
-            android:src="@drawable/pay_google_button"
+            android:background="@drawable/pay_google_background_dark"
+            android:src="@drawable/pay_google_button_dark"
             android:scaleType="fitCenter"
             android:visibility="gone"/>
 
