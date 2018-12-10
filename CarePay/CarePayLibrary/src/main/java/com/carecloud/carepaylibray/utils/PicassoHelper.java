@@ -82,13 +82,17 @@ public class PicassoHelper {
                     @Override
                     public void onSuccess() {
                         imageView.setVisibility(View.VISIBLE);
-                        viewToHide.setVisibility(View.GONE);
+                        if(viewToHide!=null){
+                            viewToHide.setVisibility(View.GONE);
+                        }
                     }
 
                     @Override
                     public void onError() {
+                        if(viewToHide!=null){
+                            viewToHide.setVisibility(View.VISIBLE);
+                        }
                         imageView.setVisibility(View.GONE);
-                        viewToHide.setVisibility(View.VISIBLE);
                     }
                 });
     }
