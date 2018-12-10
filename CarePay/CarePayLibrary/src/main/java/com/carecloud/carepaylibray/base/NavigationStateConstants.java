@@ -37,4 +37,6 @@ public class NavigationStateConstants {
     public static final String THIRD_PARTY_CHECK_IN = "third_party_checkin";
     public static final String THIRD_PARTY_CHECK_OUT = "third_party_checkout";
 
+    public static final String SURVEYS = "surveys";
+    public static final String SURVEYS_CHECKOUT = "surveys_checkout";
 }

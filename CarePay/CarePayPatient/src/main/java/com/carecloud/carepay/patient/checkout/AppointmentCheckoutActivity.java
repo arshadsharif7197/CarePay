@@ -21,6 +21,7 @@ import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFr
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
 import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
+import com.carecloud.carepay.patient.survey.SurveyActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -105,13 +106,15 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
         appointmentId = extra.getString(CarePayConstants.APPOINTMENT_ID);
 
+
         if (savedInstanceState == null) {
             initDto(getConvertedDTO(WorkflowDTO.class));
 
             if (getAppointment() != null) {
                 //Log Check-out Started
                 String[] params = {getString(R.string.param_practice_id), getString(R.string.param_appointment_id), getString(R.string.param_appointment_type), getString(R.string.param_is_guest)};
-                Object[] values = {getAppointment().getMetadata().getPracticeId(), getAppointmentId(), getAppointment().getPayload().getVisitType().getName(), false};
+                Object[] values = {getAppointment().getMetadata().getPracticeId(), getAppointmentId(),
+                        getAppointment().getPayload().getVisitType().getName(), false};
                 MixPanelUtil.logEvent(getString(R.string.event_checkout_started), params, values);
                 MixPanelUtil.startTimer(getString(R.string.timer_checkout));
             }
@@ -248,7 +251,8 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
-        replaceFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount, false), true);
+        replaceFragment(PatientPaymentMethodFragment
+                .newInstance(paymentsModel, amount, false), true);
 
         MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment));
     }
@@ -267,14 +271,17 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     @Override
     public void onPaymentPlanAction(PaymentsModel paymentsModel) {
-        PendingBalanceDTO selectedBalancesItem = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);//this should be a safe assumption for checkin
-        PendingBalanceDTO reducedBalancesItem = paymentsModel.getPaymentPayload().reduceBalanceItems(selectedBalancesItem, false);
+        PendingBalanceDTO selectedBalancesItem = paymentsModel.getPaymentPayload()
+                .getPatientBalances().get(0).getBalances().get(0);//this should be a safe assumption for checkin
+        PendingBalanceDTO reducedBalancesItem = paymentsModel.getPaymentPayload()
+                .reduceBalanceItems(selectedBalancesItem, false);
         new PaymentPlanAmountDialog(getContext(), paymentsModel, reducedBalancesItem, this).show();
     }
 
     @Override
     public void onStartPaymentPlan(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
-        PaymentPlanPaymentMethodFragment fragment = PaymentPlanPaymentMethodFragment.newInstance(paymentsModel, paymentPlanPostModel);
+        PaymentPlanPaymentMethodFragment fragment = PaymentPlanPaymentMethodFragment
+                .newInstance(paymentsModel, paymentPlanPostModel);
         replaceFragment(fragment, true);
     }
 
@@ -284,7 +291,10 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     }
 
     @Override
-    public void onSelectPaymentPlanMethod(PaymentsMethodsDTO selectedPaymentMethod, PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel, boolean onlySelectMode) {
+    public void onSelectPaymentPlanMethod(PaymentsMethodsDTO selectedPaymentMethod,
+                                          PaymentsModel paymentsModel,
+                                          PaymentPlanPostModel paymentPlanPostModel,
+                                          boolean onlySelectMode) {
         if ((paymentsModel.getPaymentPayload().getPatientCreditCards() != null)
                 && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             PaymentPlanChooseCreditCardFragment fragment = PaymentPlanChooseCreditCardFragment
@@ -296,7 +306,9 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     }
 
     @Override
-    public void onAddPaymentPlanCard(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel, boolean onlySelectMode) {
+    public void onAddPaymentPlanCard(PaymentsModel paymentsModel,
+                                     PaymentPlanPostModel paymentPlanPostModel,
+                                     boolean onlySelectMode) {
         PaymentPlanAddCreditCardFragment fragment = PaymentPlanAddCreditCardFragment
                 .newInstance(paymentsModel, paymentPlanPostModel, onlySelectMode);
         replaceFragment(fragment, true);
@@ -311,24 +323,32 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     @Override
     public void onSubmitPaymentPlan(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment.newInstance(workflowDTO, getPracticeInfo(paymentsModel), PaymentPlanConfirmationFragment.MODE_CREATE);
+        PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment
+                .newInstance(workflowDTO, getPracticeInfo(paymentsModel), PaymentPlanConfirmationFragment.MODE_CREATE);
         displayDialogFragment(confirmationFragment, false);
     }
 
     @Override
-    public void onAddBalanceToExistingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
+    public void onAddBalanceToExistingPlan(PaymentsModel paymentsModel,
+                                           PendingBalanceDTO selectedBalance,
+                                           double amount) {
         ValidPlansFragment fragment = ValidPlansFragment.newInstance(paymentsModel, selectedBalance, amount);
         replaceFragment(fragment, true);
     }
 
     @Override
-    public void onSelectedPlanToAdd(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO selectedPlan, double amount) {
-        AddExistingPaymentPlanFragment fragment = AddExistingPaymentPlanFragment.newInstance(paymentsModel, selectedBalance, selectedPlan, amount);
+    public void onSelectedPlanToAdd(PaymentsModel paymentsModel,
+                                    PendingBalanceDTO selectedBalance,
+                                    PaymentPlanDTO selectedPlan, double amount) {
+        AddExistingPaymentPlanFragment fragment = AddExistingPaymentPlanFragment
+                .newInstance(paymentsModel, selectedBalance, selectedPlan, amount);
         replaceFragment(fragment, true);
     }
 
     @Override
-    public void displayBalanceDetails(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem, PendingBalanceDTO selectedBalance) {
+    public void displayBalanceDetails(PaymentsModel paymentsModel,
+                                      PendingBalancePayloadDTO paymentLineItem,
+                                      PendingBalanceDTO selectedBalance) {
         PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
                 .newInstance(paymentsModel, paymentLineItem, selectedBalance, false);
         displayDialogFragment(dialog, false);
@@ -417,7 +437,8 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     @Override
     public void showPaymentPendingConfirmation(PaymentsModel paymentsModel) {
-        new CustomMessageToast(this, Label.getLabel("payments_external_pending"), CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
+        new CustomMessageToast(this, Label.getLabel("payments_external_pending"),
+                CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
 
         UserPracticeDTO userPracticeDTO = getPracticeInfo(paymentsModel);
         Map<String, String> queryMap = new HashMap<>();
@@ -543,11 +564,17 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         //Log Check-out Completed
         if (getAppointment() != null) {
             String[] params = {getString(R.string.param_practice_id), getString(R.string.param_appointment_id), getString(R.string.param_appointment_type), getString(R.string.param_is_guest)};
-            Object[] values = {getAppointment().getMetadata().getPracticeId(), getAppointmentId(), getAppointment().getPayload().getVisitType().getName(), false};
+            Object[] values = {getAppointment().getMetadata().getPracticeId(), getAppointmentId(),
+                    getAppointment().getPayload().getVisitType().getName(), false};
             MixPanelUtil.logEvent(getString(R.string.event_checkout_completed), params, values);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_checkout_completed), 1);
             MixPanelUtil.endTimer(getString(R.string.timer_checkout));
         }
+    }
+
+    @Override
+    public void startSurveyFlow(WorkflowDTO workflowDTO) {
+        navigateToWorkflow(workflowDTO);
     }
 
     WorkflowServiceCallback continueCallback = new WorkflowServiceCallback() {
@@ -560,9 +587,12 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         public void onPostExecute(WorkflowDTO workflowDTO) {
             paymentStarted = false;
             hideProgressDialog();
-            PatientNavigationHelper
-                    .navigateToWorkflow(getContext(), workflowDTO,
-                            getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO));
+            boolean expectsResult = false;
+            if (workflowDTO.getState().equals(NavigationStateConstants.SURVEYS_CHECKOUT)) {
+                expectsResult = true;
+            }
+            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, expectsResult,
+                    SurveyActivity.FLAG_SURVEY_FLOW, getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO));
 
             completeCheckout();
         }

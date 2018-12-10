@@ -6,9 +6,18 @@
     <dimen name="search_container_padding">30dp</dimen>
     <dimen name="bottom_button_container_padding">10dp</dimen>
     <dimen name="list_padding">16dp</dimen>
-    <dimen name="dialog_width">510dp</dimen>
     <dimen name="profile_pic_size">60dp</dimen>
     <dimen name="dialog_profile_pic_size">88dp</dimen>
+    <dimen name="commonButtonHeight">50dp</dimen>
+    <dimen name="buttonStrokeWidth">2dp</dimen>
+    <dimen name="radioButtonSize">40dp</dimen>
+    <dimen name="radioButtonPadding">8dp</dimen>
+    <dimen name="checkboxSize">@dimen/radioButtonSize</dimen>
+    <dimen name="checkboxPadding">@dimen/radioButtonPadding</dimen>
+    <dimen name="commonPracticeDialogHeight">672dp</dimen>
+    <dimen name="dialog_width">510dp</dimen>
+    <dimen name="separatorHeight">1dp</dimen>
+    <dimen name="ediTextPadding">15dp</dimen>
 
     <!--Language-->
     <dimen name="langSpinnerTextSize">20sp</dimen>
@@ -125,5 +134,99 @@
     <dimen name="paymentDetailAmountTextSize">15sp</dimen>
     <dimen name="paymentDetailDateTextSize">12sp</dimen>
     <dimen name="nextAppointmentProviderImageSize">100dp</dimen>
+
+    <!--Payments Activity-->
+    <dimen name="findPatientButtonRightMargin">50dp</dimen>
+    <dimen name="mainScreensTitleTextSize">22sp</dimen>
+    <dimen name="paymentContainerBottomMargin">10dp</dimen>
+    <dimen name="paymentContainerHorizontalMargin">120dp</dimen>
+    <dimen name="changeDateHorizontalPadding">20dp</dimen>
+    <dimen name="changeDateVerticalPadding">10dp</dimen>
+    <dimen name="listPatientsMarginTop">20dp</dimen>
+    <dimen name="patientItemHorizontalMargin">10dp</dimen>
+    <dimen name="paymentContainerTopMargin">19dp</dimen>
+
+    <!--Find patient Dialog-->
+    <dimen name="findPatientDialogTitleTextSize">36sp</dimen>
+    <dimen name="findPatientDialogTitleBottomMargin">26dp</dimen>
+    <dimen name="findPatientSearchBoxWidth">520dp</dimen>
+    <dimen name="findPatientSearchBoxHeight">60dp</dimen>
+    <dimen name="findPatientSearchBoxHorizontalMargin">26dp</dimen>
+    <dimen name="findPatientSearchBoxVerticalPadding">17dp</dimen>
+    <dimen name="findPatientSearchBoxHorizontalPadding">25dp</dimen>
+    <dimen name="findPatientSearchBoxTextSize">22sp</dimen>
+    <dimen name="findPatientDialogResultsTopMargin">18dp</dimen>
+    <dimen name="findPatientDialogResultsHorizontalPadding">11dp</dimen>
+    <dimen name="patientNotFoundTextSize">15sp</dimen>
+    <dimen name="patientDOBTextSize">15sp</dimen>
+    <dimen name="findPatientItemVerticalPadding">11dp</dimen>
+
+    <!--Dots Menu-->
+    <dimen name="dotSize">3dp</dimen>
+    <dimen name="dotHorizontalMargin">12dp</dimen>
+    <dimen name="dotSemiHorizontalMargin">6dp</dimen>
+
+    <!--Distribution Fragment-->
+    <dimen name="payment_distibution_dialog_height">600dp</dimen>
+    <dimen name="payment_distribution_dialog_width">860dp</dimen>
+    <dimen name="toolbarTitleTextSize">26sp</dimen>
+    <dimen name="toolbarLayoutHeight">64dp</dimen>
+    <dimen name="amountsContainerPadding">8dp</dimen>
+    <dimen name="actionButtonWidth">88dp</dimen>
+    <dimen name="actionButtonHeight">38dp</dimen>
+    <dimen name="actionButtonMargin">8dp</dimen>
+    <dimen name="actionButtonPadding">12dp</dimen>
+    <dimen name="amountLabelTextSize">16sp</dimen>
+    <dimen name="roundedValueVerticalPadding">8dp</dimen>
+    <dimen name="roundedValueHorizontalPadding">16dp</dimen>
+    <dimen name="distributionButtonContainersPadding">8dp</dimen>
+    <dimen name="distributionItemHeight">81dp</dimen>
+    <dimen name="distributionItemTextSize">16sp</dimen>
+    <dimen name="distributionItemShortNameSize">50dp</dimen>
+    <dimen name="distributionPlanInfoTextSize">13sp</dimen>
+    <dimen name="distributionCellPadding">8dp</dimen>
+    <dimen name="distributionItemAmountTextSize">20sp</dimen>
+    <dimen name="popUpRecyclerMargin">5dp</dimen>
+
+    <!--Dashboard Fragment-->
+    <dimen name="itemDashboardProgressBarSize">60dp</dimen>
+    <dimen name="itemDashboardProgressBarRightMargin">10dp</dimen>
+    <dimen name="itemDashboardBarHeight">60dp</dimen>
+    <dimen name="itemDashboardBarVerticalMargin">10dp</dimen>
+    <dimen name="itemDashboardTotalAmountTextSize">20sp</dimen>
+    <dimen name="itemDashboardNameTextSize">15sp</dimen>
+    <dimen name="itemDashboardFieldMargin">10dp</dimen>
+    <dimen name="itemDashboardButtonWidth">130dp</dimen>
+    <dimen name="itemDashboardButtonVerticalPadding">8dp</dimen>
+    <dimen name="itemDashboardButtonTextSize">15sp</dimen>
+    <dimen name="dashboardLabelTopMargin">25dp</dimen>
+    <dimen name="dashboardLabelStartMargin">15dp</dimen>
+    <dimen name="dashboardLabelTextSize">18sp</dimen>
+    <dimen name="itemDashboardScheduledPaymentIndicatorSize">30dp</dimen>
+
+    <!--Credit Card-->
+    <dimen name="itemCreditCardImageSize">36dp</dimen>
+    <dimen name="itemCreditCardVerticalMargin">13dp</dimen>
+    <dimen name="itemCreditCardNameTextSize">22sp</dimen>
+
+    <!--Create Payment Plan Fragment-->
+    <dimen name="itemPaymentPlanTextSize">15sp</dimen>
+    <dimen name="itemPaymentPlanColumnNameTextSize">12sp</dimen>
+    <dimen name="itemPaymentPlanValuesTextSize">16sp</dimen>
+    <dimen name="lastPaymentTextSize">17sp</dimen>
+    <dimen name="formEditTextTextSize">24sp</dimen>
+    <dimen name="payment_method_parent_layout_padding">17dp</dimen>
+
+    <!--Survey Flow-->
+    <dimen name="questionNumberTextSize">15sp</dimen>
+    <dimen name="questionTextSize">24sp</dimen>
+    <dimen name="checkImageVerticalMargin">40dp</dimen>
+    <dimen name="checkImageSize">120dp</dimen>
+    <dimen name="successMessageTextSize">26sp</dimen>
+    <dimen name="successMessageBottomMargin">20dp</dimen>
+    <dimen name="divider1Width">550dp</dimen>
+    <dimen name="negativeContainerTopMargin">40dp</dimen>
+    <dimen name="surveyFeedbackButtonWidth">300dp</dimen>
+    <dimen name="checkoutMessageTextSize">40sp</dimen>
 
 </resources>
