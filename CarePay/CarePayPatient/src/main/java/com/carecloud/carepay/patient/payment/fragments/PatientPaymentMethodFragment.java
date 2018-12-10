@@ -69,6 +69,8 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     private View androidPayButton;
     private PapiAccountsDTO papiAccount;
 
+    protected boolean shouldInitAndroidPay = true;
+
     /**
      * @param paymentsModel  the payments DTO
      * @param amount         the amount
@@ -123,7 +125,9 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     @Override
     public void onResume() {
         super.onResume();
-        initAndroidPay();
+        if(shouldInitAndroidPay) {
+            initAndroidPay();
+        }
     }
 
     @Override
@@ -270,14 +274,16 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         public void onPostExecute(WorkflowDTO workflowDTO) {
             PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             papiAccount = paymentsModel.getPaymentPayload().getPapiAccountByType(PaymentConstants.ANDROID_PAY_PAPI_ACCOUNT_TYPE);
-            androidPayButton.setVisibility(View.VISIBLE);
-            androidPayButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    androidPayAdapter.createAndroidPayRequest(amountToMakePayment, papiAccount);
-                    view.setVisibility(View.INVISIBLE);
-                }
-            });
+            if(papiAccount.getDefaultBankAccountMid() != null) {
+                androidPayButton.setVisibility(View.VISIBLE);
+                androidPayButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        androidPayAdapter.createAndroidPayRequest(amountToMakePayment, papiAccount);
+                        view.setVisibility(View.INVISIBLE);
+                    }
+                });
+            }
         }
 
         @Override
@@ -340,7 +346,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         }
     }
 
-    private void processPayment(JsonElement rawResponse, IntegratedPaymentPostModel postModel) {
+    protected void processPayment(JsonElement rawResponse, IntegratedPaymentPostModel postModel) {
         try {
             Gson gson = new Gson();
             PayeezyAndroidPayResponse androidPayResponse = gson.fromJson(rawResponse, PayeezyAndroidPayResponse.class);
@@ -385,7 +391,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         getWorkflowServiceHelper().execute(transitionDTO, getMakePaymentCallback(rawResponse), paymentModelJson, queries, header);
     }
 
-    private WorkflowServiceCallback getMakePaymentCallback(final JsonElement rawResponse) {
+    protected WorkflowServiceCallback getMakePaymentCallback(final JsonElement rawResponse) {
         return new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
@@ -412,7 +418,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     }
 
 
-    private IntegratedPaymentCardData getCreditCardModel(PayeezyAndroidPayResponse androidPayResponse) {
+    protected IntegratedPaymentCardData getCreditCardModel(PayeezyAndroidPayResponse androidPayResponse) {
         IntegratedPaymentCardData creditCardModel = new IntegratedPaymentCardData();
         creditCardModel.setCardType(androidPayResponse.getCard().getType());
         creditCardModel.setCardNumber(androidPayResponse.getCard().getCardNumber());
@@ -425,7 +431,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     }
 
 
-    private void logPaymentFail(String message, boolean paymentSuccess, Object paymentJson, String error) {
+    protected void logPaymentFail(String message, boolean paymentSuccess, Object paymentJson, String error) {
         Map<String, Object> eventMap = new HashMap<>();
         eventMap.put("Successful Payment", paymentSuccess);
         eventMap.put("Fail Reason", message);
