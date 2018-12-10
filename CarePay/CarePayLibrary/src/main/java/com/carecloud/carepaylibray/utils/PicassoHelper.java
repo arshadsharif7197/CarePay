@@ -2,7 +2,11 @@ package com.carecloud.carepaylibray.utils;
 
 import android.content.Context;
 import android.net.Uri;
+import android.view.View;
+import android.widget.ImageView;
 
+import com.carecloud.carepaylibrary.R;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.UrlConnectionDownloader;
 
@@ -17,13 +21,23 @@ import java.util.Set;
 
 public class PicassoHelper {
 
+    private static PicassoHelper INSTANCE;
     private static Map<String, String> headers;
 
     private PicassoHelper() {
     }
 
+    public static PicassoHelper get() {
+        if (INSTANCE == null) {
+            INSTANCE = new PicassoHelper();
+        }
+
+        return INSTANCE;
+    }
+
     /**
      * Instance Creation
+     *
      * @param context Context
      * @return Picasso
      */
@@ -50,12 +64,33 @@ public class PicassoHelper {
         @Override
         protected HttpURLConnection openConnection(final Uri uri) throws IOException {
             HttpURLConnection connection = super.openConnection(uri);
-            Set<Map.Entry<String, String>> entrySet =  headers.entrySet();
-            for (Map.Entry<String, String> entry: entrySet) {
+            Set<Map.Entry<String, String>> entrySet = headers.entrySet();
+            for (Map.Entry<String, String> entry : entrySet) {
                 connection.setRequestProperty(entry.getKey(), entry.getValue());
             }
             return connection;
         }
+    }
+
+    public void loadImage(Context context, final ImageView imageView, final View viewToHide, String photoUrl) {
+        int size = context.getResources().getDimensionPixelSize(R.dimen.payment_details_dialog_icon_size);
+        Picasso.with(context).load(photoUrl)
+                .resize(size, size)
+                .centerCrop()
+                .transform(new CircleImageTransform())
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        imageView.setVisibility(View.VISIBLE);
+                        viewToHide.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onError() {
+                        imageView.setVisibility(View.GONE);
+                        viewToHide.setVisibility(View.VISIBLE);
+                    }
+                });
     }
 
 }
