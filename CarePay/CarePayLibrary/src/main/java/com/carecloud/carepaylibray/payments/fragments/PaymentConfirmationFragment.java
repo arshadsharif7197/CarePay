@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -16,6 +17,7 @@ import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler
 import com.carecloud.carepaylibray.payments.interfaces.PaymentCompletedInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -173,6 +175,9 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
             case PAYMENT_METHOD_CARD:
             case PAYMENT_METHOD_NEW_CARD:
             default:
+                if(patientPaymentPayload.getExecution().equals(IntegratedPaymentPostModel.EXECUTION_ANDROID)){
+                    return CarePayConstants.TYPE_GOOGLE_PAY;
+                }
                 return Label.getLabel("payment_method_creditcard");
         }
     }

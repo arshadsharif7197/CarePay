@@ -70,8 +70,8 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     private PapiAccountsDTO papiAccount;
 
     /**
-     * @param paymentsModel the payments DTO
-     * @param amount        the amount
+     * @param paymentsModel  the payments DTO
+     * @param amount         the amount
      * @param onlySelectMode indicates only selection mode
      * @return an instance of PatientPaymentMethodFragment
      */
@@ -107,7 +107,6 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        paymentTypeMap.put(CarePayConstants.TYPE_ANDROID_PAY, R.drawable.payment_android_button_selector);
     }
 
     @Override
@@ -122,7 +121,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         initAndroidPay();
     }
@@ -165,15 +164,15 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
             case PaymentConstants.REQUEST_CODE_GOOGLE_PAYMENT:
                 switch (resultCode) {
                     case Activity.RESULT_OK:
-                    if (androidPayAdapter == null) {
-                        androidPayAdapter = new AndroidPayAdapter(getActivity(), paymentsModel.getPaymentPayload().getMerchantServices());
-                    }
-                    androidPayAdapter.handleGooglePaymentData(data, papiAccount, amountToMakePayment, this);
+                        if (androidPayAdapter == null) {
+                            androidPayAdapter = new AndroidPayAdapter(getActivity(), paymentsModel.getPaymentPayload().getMerchantServices());
+                        }
+                        androidPayAdapter.handleGooglePaymentData(data, papiAccount, amountToMakePayment, this);
                         break;
                     case AutoResolveHelper.RESULT_ERROR:
                         Status status = AutoResolveHelper.getStatusFromIntent(data);
-                        if(status != null){
-                            Log.e(PatientPaymentMethodFragment.TAG, ""+status.getStatusMessage());
+                        if (status != null) {
+                            Log.e(PatientPaymentMethodFragment.TAG, "" + status.getStatusMessage());
                         }
                         break;
                     default:
@@ -212,15 +211,12 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     private void initAndroidPay() {
         androidPayAdapter = new AndroidPayAdapter(getActivity(), paymentsModel.getPaymentPayload().getMerchantServices());
         androidPayAdapter.initAndroidPay(this);
-//        showOrHideProgressDialog(true);
     }
 
 
     private void addAndroidPayPaymentMethod() {
         callback.setAndroidPayTargetFragment(this);
         androidPayButton = findViewById(R.id.google_pay_button);
-
-//        androidPayAdapter.createWalletButton(amountToMakePayment, (ViewGroup) findViewById(R.id.dynamic_wallet_button_fragment));
     }
 
     private void handleError(int errorCode) {
@@ -252,7 +248,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         getPapiAccount();
     }
 
-    private void getPapiAccount(){
+    private void getPapiAccount() {
         UserPracticeDTO userPractice = callback.getPracticeInfo(paymentsModel);
 
         Map<String, String> queryMap = new HashMap<>();
@@ -299,9 +295,9 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     @Override
     public void onAndroidPaySuccess(JsonElement jsonElement) {
         showProgressDialog();
-        if(paymentsModel.getPaymentPayload().getPaymentPostModel() == null){
+        if (paymentsModel.getPaymentPayload().getPaymentPostModel() == null) {
             processPayment(jsonElement);
-        }else{
+        } else {
             processPayment(jsonElement, paymentsModel.getPaymentPayload().getPaymentPostModel());
         }
     }
@@ -455,21 +451,21 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         Gson gson = new Gson();
         eventMap.put("Post Model", gson.toJson(paymentsModel.getPaymentPayload().getPaymentPostModel()));
 
-        if(paymentJson == null){
+        if (paymentJson == null) {
             paymentJson = "";
-        }else{
+        } else {
             eventMap.put("Payment Object", paymentJson.toString());
         }
 
-        if(error == null){
+        if (error == null) {
             error = "";
-        }else{
+        } else {
             eventMap.put("Error Message", error);
         }
 
         NewRelic.recordCustomEvent("AndroidPaymentFail", eventMap);
 
-        if(paymentSuccess){
+        if (paymentSuccess) {
             //sent to Pay Queue API endpoint
             queuePayment(
                     amountToMakePayment,
@@ -484,28 +480,28 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         }
     }
 
-    private void queuePayment(double amount, IntegratedPaymentPostModel postModel, String patientID, String practiceId, String practiceMgmt, String paymentJson, String errorMessage){
-        if(postModel!=null){
+    private void queuePayment(double amount, IntegratedPaymentPostModel postModel, String patientID, String practiceId, String practiceMgmt, String paymentJson, String errorMessage) {
+        if (postModel != null) {
 
-            if(postModel.getExecution() == null){
+            if (postModel.getExecution() == null) {
                 postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_CLOVER);
             }
 
-            if(postModel.getTransactionResponse()==null){
+            if (postModel.getTransactionResponse() == null) {
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("Payment Response", paymentJson);
                 jsonObject.addProperty("Error Message", errorMessage);
                 postModel.setTransactionResponse(jsonObject);
-            }else{
-                if(!postModel.getTransactionResponse().has("Payment Response")) {
+            } else {
+                if (!postModel.getTransactionResponse().has("Payment Response")) {
                     postModel.getTransactionResponse().addProperty("Payment Response", paymentJson);
                 }
-                if(!postModel.getTransactionResponse().has("Error Message")) {
+                if (!postModel.getTransactionResponse().has("Error Message")) {
                     postModel.getTransactionResponse().addProperty("Error Message", errorMessage);
                 }
             }
 
-            if(postModel.getAmount() == 0){
+            if (postModel.getAmount() == 0) {
                 postModel.setAmount(amount);
             }
         }
@@ -513,12 +509,11 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
 
         Gson gson = new Gson();
         String paymentModelJson = paymentJson;
-        try{
+        try {
             paymentModelJson = gson.toJson(postModel);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
-
 
 
         //store in local DB
@@ -532,7 +527,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         String paymentModelJsonEnc = EncryptionUtil.encrypt(getContext(), paymentModelJson, practiceId);
         paymentRecord.setPaymentModelJsonEnc(paymentModelJsonEnc);
 
-        if(StringUtil.isNullOrEmpty(paymentModelJsonEnc)){
+        if (StringUtil.isNullOrEmpty(paymentModelJsonEnc)) {
             paymentRecord.setPaymentModelJson(paymentModelJson);
         }
         paymentRecord.save();
