@@ -5,6 +5,9 @@ import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.platform.AndroidPlatform;
+import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepaylibrary.R;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -25,6 +28,7 @@ public class PicassoHelper {
     private static Map<String, String> headers;
 
     private PicassoHelper() {
+//        Picasso.setSingletonInstance(Picasso.with(((AndroidPlatform) Platform.get()).getContext()));
     }
 
     public static PicassoHelper get() {
