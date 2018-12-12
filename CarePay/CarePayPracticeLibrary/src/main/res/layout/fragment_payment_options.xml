@@ -97,7 +97,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/paymentOptionContainerHeight"
                     android:background="?android:selectableItemBackground"
-                    android:padding="@dimen/paymentOptionContainerPadding"
+                    android:paddingEnd="@dimen/paymentOptionContainerPadding"
+                    android:paddingStart="@dimen/paymentOptionContainerPadding"
                     android:visibility="gone">
 
                     <ProgressBar
@@ -137,7 +138,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/paymentOptionContainerHeight"
                     android:background="?android:selectableItemBackground"
-                    android:padding="@dimen/paymentOptionContainerPadding"
+                    android:paddingEnd="@dimen/paymentOptionContainerPadding"
+                    android:paddingStart="@dimen/paymentOptionContainerPadding"
                     android:visibility="gone">
 
                     <ProgressBar
@@ -177,20 +179,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/paymentOptionContainerHeight"
                     android:background="?android:selectableItemBackground"
-                    android:padding="@dimen/paymentOptionContainerPadding"
+                    android:paddingEnd="@dimen/paymentOptionContainerPadding"
+                    android:paddingStart="@dimen/paymentOptionContainerPadding"
                     android:visibility="gone">
 
-                    <ProgressBar
+                    <ImageView
                         android:id="@+id/paymentPlanProgressBar"
-                        style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="@dimen/paymentOptionIconSize"
                         android:layout_height="@dimen/paymentOptionIconSize"
                         android:layout_centerVertical="true"
                         android:layout_margin="@dimen/paymentOptionIconMargin"
-                        android:indeterminate="false"
-                        android:max="100"
-                        android:progress="25"
-                        android:progressDrawable="@drawable/progress_bar_drawable" />
+                        android:padding="@dimen/dimen_1dp"
+                        android:src="@drawable/icn_pay_option_plan"/>
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/paymentPlanTextView"
@@ -217,7 +217,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/paymentOptionContainerHeight"
                     android:background="?android:selectableItemBackground"
-                    android:padding="@dimen/paymentOptionContainerPadding"
+                    android:paddingEnd="@dimen/paymentOptionContainerPadding"
+                    android:paddingStart="@dimen/paymentOptionContainerPadding"
                     android:visibility="gone">
 
                     <ProgressBar

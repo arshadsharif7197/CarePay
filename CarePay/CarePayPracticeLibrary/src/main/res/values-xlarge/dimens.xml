@@ -233,7 +233,7 @@
     <dimen name="paymentOptionIconSize">60dp</dimen>
     <dimen name="paymentOptionIconMargin">10dp</dimen>
     <dimen name="paymentOptionTextSize">26sp</dimen>
-    <dimen name="paymentOptionContainerHeight">80dp</dimen>
+    <dimen name="paymentOptionContainerHeight">90dp</dimen>
     <dimen name="paymentOptionContainerPadding">10dp</dimen>
     <dimen name="paymentOptionHeaderPadding">15dp</dimen>
     <dimen name="paymentOptionHeaderMessageTextSize">22sp</dimen>

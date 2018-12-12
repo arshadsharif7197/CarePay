@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
@@ -20,9 +19,9 @@ import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author pjohnson on 11/20/18.
@@ -85,8 +84,8 @@ public class PaymentOptionsFragmentDialog extends BaseDialogFragment {
                 .getPatientBalances().get(0).getBalances().get(0);
         if (total > 0) {
             TextView balanceTextView = view.findViewById(R.id.balanceTextView);
-            NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
-            balanceTextView.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
+            NumberFormat numForm = NumberFormat.getCurrencyInstance(Locale.US);
+            balanceTextView.setText(numForm.format(total));
             View payTotalAmountContainer = view.findViewById(R.id.payTotalAmountContainer);
             payTotalAmountContainer.setVisibility(View.VISIBLE);
             payTotalAmountContainer.setOnClickListener(new View.OnClickListener() {

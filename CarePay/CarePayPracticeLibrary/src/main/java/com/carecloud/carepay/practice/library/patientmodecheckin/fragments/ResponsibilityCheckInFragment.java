@@ -32,6 +32,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
 
@@ -136,8 +137,8 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
                     fillDetailAdapter(view, getAllPendingBalancePayloads(paymentList));
 
                     try {
-                        NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
-                        responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
+                        NumberFormat numForm = NumberFormat.getCurrencyInstance(Locale.US);
+                        responseTotal.setText(numForm.format(total));
                     } catch (NumberFormatException ex) {
                         ex.printStackTrace();
                         Log.e(LOG_TAG, ex.getMessage());
