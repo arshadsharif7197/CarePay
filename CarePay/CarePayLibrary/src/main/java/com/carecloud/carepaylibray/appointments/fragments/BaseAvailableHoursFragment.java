@@ -51,7 +51,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFragment implements FilterableAvailableHoursAdapter.SelectAppointmentTimeSlotCallback, AvailableLocationsAdapter.SelectLocationCallback {
+public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFragment
+        implements FilterableAvailableHoursAdapter.SelectAppointmentTimeSlotCallback,
+        AvailableLocationsAdapter.SelectLocationCallback {
 
     protected Date startDate;
     protected Date endDate;
@@ -251,7 +253,8 @@ public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFr
     }
 
     protected void selectDateRange() {
-        callback.selectDateRange(startDate, endDate, selectedVisitTypeDTO, selectedResource, appointmentsResultModel);
+        callback.selectDateRange(startDate, endDate, selectedVisitTypeDTO, selectedResource,
+                appointmentsResultModel);
     }
 
     protected void onAdapterRefresh(int count) {

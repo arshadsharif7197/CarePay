@@ -13,6 +13,8 @@ public class NavigationStateConstants {
     public static final String PURCHASE = "retail";
     public static final String NOTIFICATION = "notifications";
     public static final String MEDICATION_ALLERGIES = "medications_allergies";
+    public static final String MEDICATIONS = "medications";
+    public static final String ALLERGIES = "allergies";
     public static final String MESSAGES = "messaging";
 
     public static final String PRACTICE_HOME = "practice_home";
@@ -35,4 +37,6 @@ public class NavigationStateConstants {
     public static final String THIRD_PARTY_CHECK_IN = "third_party_checkin";
     public static final String THIRD_PARTY_CHECK_OUT = "third_party_checkout";
 
+    public static final String SURVEYS = "surveys";
+    public static final String SURVEYS_CHECKOUT = "surveys_checkout";
 }

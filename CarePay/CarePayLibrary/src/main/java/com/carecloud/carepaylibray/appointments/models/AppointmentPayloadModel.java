@@ -3,6 +3,8 @@ package com.carecloud.carepaylibray.appointments.models;
 
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.adhoc.AdhocFormsPatientModeInfo;
+import com.carecloud.carepaylibray.base.models.Paging;
+import com.carecloud.carepaylibray.base.models.PagingDto;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
 import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
@@ -71,7 +73,7 @@ public class AppointmentPayloadModel implements Serializable {
     @SerializedName("patient_forms_filled")
     private List<ConsentFormUserResponseDTO> patientFormsFilled = new ArrayList<>();
     @Expose
-    @SerializedName(value = "user_practices", alternate = "practice_information")
+    @SerializedName(value = "practice_information", alternate = "user_practices")
     private List<UserPracticeDTO> userPractices = new ArrayList<>();
     @Expose
     @SerializedName("filled_forms")
@@ -88,6 +90,12 @@ public class AppointmentPayloadModel implements Serializable {
     @SerializedName("adhoc_forms_patient_mode")
     @Expose
     private AdhocFormsPatientModeInfo adhocFormsPatientModeInfo = new AdhocFormsPatientModeInfo();
+    @SerializedName("portal_settings")
+    @Expose
+    private List<PortalSettingDTO> portalSettings = new ArrayList<>();
+    @SerializedName("appointment_page_details")
+    @Expose
+    private List<PagingDto> pagingInfo = new ArrayList<>();
 
     /**
      * @return languages
@@ -333,5 +341,21 @@ public class AppointmentPayloadModel implements Serializable {
 
     public void setAdhocFormsPatientModeInfo(AdhocFormsPatientModeInfo adhocFormsPatientModeInfo) {
         this.adhocFormsPatientModeInfo = adhocFormsPatientModeInfo;
+    }
+
+    public List<PortalSettingDTO> getPortalSettings() {
+        return portalSettings;
+    }
+
+    public void setPortalSettings(List<PortalSettingDTO> portalSettings) {
+        this.portalSettings = portalSettings;
+    }
+
+    public List<PagingDto> getPagingInfo() {
+        return pagingInfo;
+    }
+
+    public void setPagingInfo(List<PagingDto> pagingInfo) {
+        this.pagingInfo = pagingInfo;
     }
 }
