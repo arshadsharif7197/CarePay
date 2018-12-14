@@ -150,8 +150,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 case pending_forms:
                     displayPendingFormNotification(holder, notificationItem);
                     break;
+                case pending_survey:
+                    displayPendingSurvey(holder, notificationItem);
+                    break;
                 case secure_message:
                     displaySecureMessageNotification(holder, notificationItem);
+
                     break;
                 default:
                 case appointment:
@@ -181,6 +185,25 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             }
         });
 
+    }
+
+    private void displayPendingSurvey(NotificationViewHolder holder, NotificationItem notificationItem) {
+        holder.image.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icn_survey));
+        holder.image.setVisibility(View.VISIBLE);
+        holder.initials.setBackgroundResource(R.drawable.round_list_tv_primary);
+        holder.header.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        holder.header.setText(Label.getLabel("survey.notificationList.item.title.newSurvey"));
+        String message = Label.getLabel("survey.notificationList.item.message.newSurvey");
+        UserPracticeDTO practice = ApplicationPreferences.getInstance()
+                .getUserPractice(notificationItem.getMetadata().getPracticeId());
+        String practiceName = practice.getPracticeName();
+        holder.message.setTextColor(ContextCompat.getColor(context, R.color.charcoal));
+        SpannableStringBuilder stringBuilder = new SpannableStringBuilder(String
+                .format(message, practiceName));
+        stringBuilder.setSpan(new CarePayCustomSpan(context, CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD),
+                stringBuilder.length() - practiceName.length(), stringBuilder.length(),
+                Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        holder.message.setText(stringBuilder);
     }
 
     private void displayCustomNotification(NotificationViewHolder holder, CustomNotificationItem notificationItem) {
@@ -237,7 +260,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.cellAvatar.setVisibility(View.VISIBLE);
     }
 
-    private void displayPendingFormNotification(NotificationViewHolder holder, NotificationItem notificationItem) {
+    private void displayPendingFormNotification(NotificationViewHolder holder, NotificationItem
+            notificationItem) {
         holder.initials.setText(StringUtil.getShortName(notificationItem.getPayload().getPracticeName()));
         holder.initials.setTextColor(ContextCompat.getColor(context, R.color.lightning_yellow));
         holder.initials.setBackgroundResource(R.drawable.round_list_tv_yellow_border);
@@ -261,7 +285,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.message.setText(stringBuilder);
     }
 
-    private void displayPaymentNotification(NotificationViewHolder holder, NotificationItem notificationItem) {
+    private void displayPaymentNotification(NotificationViewHolder holder, NotificationItem
+            notificationItem) {
         int headerTextColor;
         String headerText;
         String messageText;
@@ -319,7 +344,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.message.setText(stringBuilder);
     }
 
-    private void displayCreditCardNotification(NotificationViewHolder holder, NotificationItem notificationItem) {
+    private void displayCreditCardNotification(NotificationViewHolder holder, NotificationItem
+            notificationItem) {
 
     }
 
@@ -335,7 +361,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.initials.setText(StringUtil.getShortName(provider.getName()));
         holder.header.setText("Notification");
 
-        AppointmentDisplayStyle displayStyle = AppointmentDisplayUtil.determineDisplayStyle(appointment);
+        AppointmentDisplayStyle displayStyle = AppointmentDisplayUtil.determineDisplayStyle(appointment.getPayload(), false);
         notificationItem.getPayload().getAppointment().getPayload().setDisplayStyle(displayStyle);
 
         switch (displayStyle) {

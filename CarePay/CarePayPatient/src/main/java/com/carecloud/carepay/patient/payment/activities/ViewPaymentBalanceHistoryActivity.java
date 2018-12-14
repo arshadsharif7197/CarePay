@@ -255,18 +255,11 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void onCreditCardSelected(PaymentCreditCardsPayloadDTO creditCard) {
-        getSupportFragmentManager().popBackStackImmediate();
-        getSupportFragmentManager().popBackStackImmediate();
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container_main);
-        if (fragment instanceof PaymentPlanEditFragment) {
-            ((PaymentPlanEditFragment) fragment).replacePaymentMethod(creditCard);
-        } else {
-            getSupportFragmentManager().popBackStackImmediate();
-            fragment = getSupportFragmentManager().findFragmentById(R.id.container_main);
-            if (fragment instanceof PaymentPlanEditFragment) {
-                ((PaymentPlanEditFragment) fragment).replacePaymentMethod(creditCard);
-            }
-        }
+        String tag = PaymentPlanEditFragment.class.getName();
+        getSupportFragmentManager().popBackStackImmediate(tag, 0);
+        PaymentPlanEditFragment fragment = (PaymentPlanEditFragment) getSupportFragmentManager()
+                .findFragmentByTag(tag);
+        fragment.replacePaymentMethod(creditCard);
     }
 
     @Override
@@ -792,6 +785,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                         Label.getLabel("payment.cancelPaymentPlan.confirmDialog.message.cancelPaymentPlanMessage"),
                         Label.getLabel("no"),
                         Label.getLabel("yes"));
+        fragment.setNegativeAction(true);
         fragment.setCallback(confirmationCallback);
         fragment.show(getSupportFragmentManager().beginTransaction(), fragment.getClass().getName());
     }
