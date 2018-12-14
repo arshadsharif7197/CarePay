@@ -25,6 +25,7 @@ import com.carecloud.carepay.patient.base.BackPressedFragmentInterface;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -114,12 +115,6 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
             } else {
                 view.findViewById(R.id.socialNetworksLayout).setVisibility(View.VISIBLE);
                 subtitleTextView.setText(Label.getLabel("surveys_click_spread_word"));
-                noThanksButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        finishFlow();
-                    }
-                });
             }
         }
     }
@@ -132,10 +127,6 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
             bundle.putBoolean(CarePayConstants.REFRESH, true);
             PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, bundle);
         }
-    }
-
-    private void finishFlow() {
-        finishFlow(null);
     }
 
     private void showNegativeFeedbackLayout(View view, final SurveyModel surveyModel) {
@@ -202,22 +193,6 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
             subtitleTextView.setVisibility(View.VISIBLE);
         }
         return goBackButton;
-    }
-
-    protected void displaySocialNetworksLinks(View view, SurveyModel survey, WorkflowDTO workflowDTO) {
-        noThanksButton.setVisibility(View.VISIBLE);
-        SurveySettings settings = surveyDto.getPayload().getSurveySettings();
-        if (settings.getNetworkLinks().isEnable()
-                && !settings.getNetworkLinks().getLinks().isEmpty()) {
-            subtitleTextView.setVisibility(View.VISIBLE);
-            createSocialLinkViews(view, settings);
-        } else {
-            view.findViewById(R.id.fakeView).setVisibility(View.VISIBLE);
-            Button goBackButton = manageGoBackButton(view, survey, workflowDTO);
-            subtitleTextView.setVisibility(View.GONE);
-            goBackButton.setText(Label.getLabel("survey.successScreen.button.title.back"));
-            noThanksButton.setVisibility(View.GONE);
-        }
     }
 
     private void showOkButton(final WorkflowDTO workflowDTO) {
@@ -359,7 +334,8 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
                     finishFlow(workflowDTO);
                 } else if (showOkButton) {
                     showOkButton(workflowDTO);
-                } else if (comesFromNotification) {
+                } else if (comesFromNotification
+                        || getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT) {
                     displaySocialNetworksLinks(getView(), survey, workflowDTO);
                 } else {
                     finishCheckOutFlow(workflowDTO);
@@ -374,6 +350,28 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
                 showOkButton(null);
             }
         }, jsonResponse, query, header);
+    }
+
+    protected void displaySocialNetworksLinks(View view, SurveyModel survey, final WorkflowDTO workflowDTO) {
+        noThanksButton.setVisibility(View.VISIBLE);
+        SurveySettings settings = surveyDto.getPayload().getSurveySettings();
+        if (settings.getNetworkLinks().isEnable()
+                && !settings.getNetworkLinks().getLinks().isEmpty()) {
+            subtitleTextView.setVisibility(View.VISIBLE);
+            createSocialLinkViews(view, settings);
+            noThanksButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finishFlow(workflowDTO);
+                }
+            });
+        } else {
+            view.findViewById(R.id.fakeView).setVisibility(View.VISIBLE);
+            Button goBackButton = manageGoBackButton(view, survey, workflowDTO);
+            subtitleTextView.setVisibility(View.GONE);
+            goBackButton.setText(Label.getLabel("survey.successScreen.button.title.back"));
+            noThanksButton.setVisibility(View.GONE);
+        }
     }
 
     private void finishCheckOutFlow(final WorkflowDTO workflowDTO) {
