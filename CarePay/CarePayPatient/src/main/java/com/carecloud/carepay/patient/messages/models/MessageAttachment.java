@@ -4,33 +4,20 @@ import com.google.gson.annotations.SerializedName;
 
 public class MessageAttachment {
 
-    @SerializedName("0")
-    private AttachmentDocumentWrapper wrapper = new AttachmentDocumentWrapper();
 
-    public AttachmentDocumentWrapper getWrapper() {
-        return wrapper;
+    @SerializedName("document")
+    private AttachmentDocument document = new AttachmentDocument();
+
+    public AttachmentDocument getDocument() {
+        return document;
     }
 
-    public void setWrapper(AttachmentDocumentWrapper wrapper) {
-        this.wrapper = wrapper;
+    public void setDocument(AttachmentDocument document) {
+        this.document = document;
     }
 
 
-    public static class AttachmentDocumentWrapper{
-
-        @SerializedName("document")
-        private AttachmentDocument document = new AttachmentDocument();
-
-        public AttachmentDocument getDocument() {
-            return document;
-        }
-
-        public void setDocument(AttachmentDocument document) {
-            this.document = document;
-        }
-    }
-
-    public static class AttachmentDocument{
+    public static class AttachmentDocument {
 
         @SerializedName("alias")
         private String alias;

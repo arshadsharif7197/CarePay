@@ -150,7 +150,8 @@ public class MessagesConversationFragment extends BaseFragment {
         if(adapter != null){
             adapter.setMessages(messages);
         }else{
-            adapter = new MessagesConversationAdapter(getContext(), messages, callback.getUserId());
+            adapter = new MessagesConversationAdapter(getContext(), messages, callback.getUserId(),
+                    callback.getDto().getMetadata());
             recyclerView.setAdapter(adapter);
         }
 

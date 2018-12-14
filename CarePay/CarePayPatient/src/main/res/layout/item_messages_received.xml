@@ -107,6 +107,54 @@
                 android:textSize="@dimen/text_size_16"
                 tools:text="Hey. I'm sorry ... I was in the shower. I have 20 minutes to be at the shooting of the film Suicide Squad"
                 app:customAssetFont="proxima_nova_regular"/>
+
+            <LinearLayout
+                android:id="@+id/attachmentFileLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                android:background="@drawable/message_received_file_background"
+                android:visibility="gone">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/attachmentExtension"
+                    android:layout_width="@dimen/dimen_48dp"
+                    android:layout_height="@dimen/dimen_48dp"
+                    android:layout_margin="@dimen/dimen_8dp"
+                    android:background="@drawable/round_white_background"
+                    android:textColor="@color/emerald"
+                    android:textSize="@dimen/text_size_12sp"
+                    android:textAllCaps="true"
+                    app:customAssetFont="gotham_rounded_medium"
+                    tools:text="pdf"/>
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/attachmentName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dimen_8dp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_14"
+                    android:textAllCaps="false"
+                    android:gravity="start"
+                    android:singleLine="true"
+                    android:ellipsize="middle"
+                    app:customAssetFont="proxima_nova_regular"
+                    tools:text="FileName.pdf"/>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/attachmentImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:visibility="gone"
+                tools:src="@mipmap/ic_launcher"/>
+
         </LinearLayout>
 
     </LinearLayout>

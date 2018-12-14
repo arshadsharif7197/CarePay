@@ -56,12 +56,15 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
 
     private EditText subjectInput;
     private EditText messageInput;
+    private EditText attachmentInput;
     private View buttonCreate;
+    private View clearAttachmentButton;
 
     private ProviderContact provider;
     private MessageNavigationCallback callback;
     private MediaScannerPresenter mediaScannerPresenter;
 
+    private File attachmentFile;
     private AttachmentPostModel attachmentPostModel;
 
     /**
@@ -99,6 +102,12 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        callback.displayToolbar(false, null);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
         return inflater.inflate(R.layout.fragment_new_thread, container, false);
     }
@@ -107,13 +116,13 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
     public void onViewCreated(View view, Bundle icicle){
         initToolbar(view);
 
-        TextInputLayout subjectLayout = (TextInputLayout) view.findViewById(R.id.subjectInputLayout);
-        subjectInput = (EditText) view.findViewById(R.id.subjectEditText);
+        TextInputLayout subjectLayout = view.findViewById(R.id.subjectInputLayout);
+        subjectInput = view.findViewById(R.id.subjectEditText);
         subjectInput.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(subjectLayout, null));
         subjectInput.addTextChangedListener(getEmptyTextWatcher(subjectLayout));
 
-        TextInputLayout messageLayout = (TextInputLayout) view.findViewById(R.id.messageInputLayout);
-        messageInput = (EditText) view.findViewById(R.id.messageEditText);
+        TextInputLayout messageLayout = view.findViewById(R.id.messageInputLayout);
+        messageInput = view.findViewById(R.id.messageEditText);
         messageInput.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(messageLayout, null));
         messageInput.addTextChangedListener(getEmptyTextWatcher(messageLayout));
 
@@ -126,6 +135,8 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
             }
         });
 
+        attachmentInput = view.findViewById(R.id.attachmentEditText);
+
         View uploadButton = view.findViewById(R.id.upload_button);
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,12 +145,23 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
             }
         });
 
+        clearAttachmentButton = view.findViewById(R.id.clearBtn);
+        clearAttachmentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                attachmentFile = null;
+                attachmentInput.setText(null);
+                attachmentPostModel = null;
+                view.setVisibility(View.INVISIBLE);
+            }
+        });
+
         validateForm();
     }
 
     private void initToolbar(View view){
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(Label.getLabel("messaging_subject_title"));
 
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
@@ -187,6 +209,11 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
     }
 
     private void postNewMessage(ProviderContact providerContact, String subject, String message){
+        if(attachmentFile != null){
+            uploadFile(attachmentFile);
+            return;
+        }
+
         MessagingPostModel postModel = new MessagingPostModel();
         Messages.Participant participant = postModel.getParticipant();
         participant.setName(providerContact.getName());
@@ -279,12 +306,16 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
                     attachmentPostModel.setNodeId(uploadModel.getNodeId());
                     attachmentPostModel.setDescription(file.getName());
                     attachmentPostModel.setFormat(MimeTypeMap.getFileExtensionFromUrl(file.getAbsolutePath()));
+
+                    attachmentFile = null;
+                    postNewMessage(provider, subjectInput.getText().toString(), messageInput.getText().toString());
                 }
             }
 
             @Override
             public void onFailure(String errorMessage) {
                 hideProgressDialog();
+                showErrorNotification(errorMessage);
                 Log.d(MessagesNewThreadFragment.class.getName(), errorMessage);
             }
         };
@@ -304,8 +335,9 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
 
     @Override
     public void setCapturedBitmap(String path, View view) {
-        File file = new File(path);
-        uploadFile(file);
+        attachmentFile = new File(path);
+        attachmentInput.setText(attachmentFile.getName());
+        clearAttachmentButton.setVisibility(View.VISIBLE);
     }
 
     @Override

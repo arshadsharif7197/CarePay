@@ -301,9 +301,12 @@ public class MediaScannerPresenter {
             return;
         }
 
+        String[] mimeTypes = {"image/jpeg", "image/png", "application/pdf", "application/zip",
+                "application/msword", "application/vnd.ms-excel", "text/plain", "text/csv"};
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("*/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
 
         mediaViewInterface.handleStartActivityForResult(intent, REQUEST_CODE_FILE);
 
