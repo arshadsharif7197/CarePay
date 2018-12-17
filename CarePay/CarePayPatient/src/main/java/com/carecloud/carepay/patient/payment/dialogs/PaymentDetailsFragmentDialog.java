@@ -290,7 +290,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                         // already have a plan so need to see if I can create a new one
                         return true;
                     }
-                    break;//don't need to continue going through these rules
+//                    break;//don't need to continue going through these rules
                 }
 //                    break;//don't need to continue going through these rules
             }

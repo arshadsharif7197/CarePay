@@ -3,6 +3,7 @@ package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ public class ConfirmDialogFragment extends BaseDialogFragment {
 
 
     private ConfirmationCallback callback;
+    private boolean isNegativeAction;
 
     public ConfirmDialogFragment() {
         // Required empty public constructor
@@ -112,6 +114,10 @@ public class ConfirmDialogFragment extends BaseDialogFragment {
                     cancel();
                 }
             });
+            if (isNegativeAction) {
+                noButton.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_blue_border));
+                noButton.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+            }
         }
         View closeView = view.findViewById(R.id.closeViewLayout);
         if (closeView != null) {
@@ -121,6 +127,11 @@ public class ConfirmDialogFragment extends BaseDialogFragment {
                     cancel();
                 }
             });
+        }
+
+        if (isNegativeAction) {
+            yesButton.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.button_rounded_red_background));
+            yesButton.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
         }
 
         boolean userCancelable = getArguments().getBoolean("userCancelable", true);
@@ -136,5 +147,13 @@ public class ConfirmDialogFragment extends BaseDialogFragment {
 
     public void setCallback(ConfirmationCallback homeAlertInterface) {
         this.callback = homeAlertInterface;
+    }
+
+    public boolean isNegativeAction() {
+        return isNegativeAction;
+    }
+
+    public void setNegativeAction(boolean negativeAction) {
+        isNegativeAction = negativeAction;
     }
 }

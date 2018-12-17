@@ -40,6 +40,9 @@ public class LandingLinks extends BaseLinks {
     @SerializedName("messaging")
     @Expose
     private TransitionDTO messaging = new TransitionDTO();
+    @SerializedName("pending_survey")
+    @Expose
+    private TransitionDTO pendingSurvey = new TransitionDTO();
 
     public TransitionDTO getPatientBalances() {
         return patientBalances;
@@ -119,5 +122,13 @@ public class LandingLinks extends BaseLinks {
 
     public void setMessaging(TransitionDTO messaging) {
         this.messaging = messaging;
+    }
+
+    public TransitionDTO getPendingSurvey() {
+        return pendingSurvey;
+    }
+
+    public void setPendingSurvey(TransitionDTO pendingSurvey) {
+        this.pendingSurvey = pendingSurvey;
     }
 }

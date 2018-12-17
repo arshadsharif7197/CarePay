@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dimen_20dp"
+    android:orientation="vertical">
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/questionNumberTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:textColor="@color/grayRound"
+        android:textSize="@dimen/questionNumberTextSize"
+        app:customAssetFont="proxima_nova_extra_bold"
+        tools:text="Question #1" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/questionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:textColor="@color/textview_default_textcolor"
+        android:textSize="@dimen/questionTextSize"
+        app:customAssetFont="gotham_rounded_medium"
+        tools:text="How would you rate our practice?" />
+
+    <RatingBar
+        android:id="@+id/surveyQuestionRatingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dimen_5dp"
+        android:layout_marginStart="@dimen/dimen_5dp"
+        android:progressDrawable="@drawable/rating_star" />
+
+
+</LinearLayout>

@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/IntegratedPayments.iml" filepath="$PROJECT_DIR$/.idea/IntegratedPayments.iml" />
       <module fileurl="file://$PROJECT_DIR$/carecloudmini/carecloudmini.iml" filepath="$PROJECT_DIR$/carecloudmini/carecloudmini.iml" />
       <module fileurl="file://$PROJECT_DIR$/fontviews/fontviews.iml" filepath="$PROJECT_DIR$/fontviews/fontviews.iml" />
-      <module fileurl="file://$PROJECT_DIR$/shamrocksdk/shamrocksdk.iml" filepath="$PROJECT_DIR$/shamrocksdk/shamrocksdk.iml" />
     </modules>
   </component>
 </project>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/toolbar_layout"
+        layout="@layout/toolbar_responsibility" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/practiceNameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar_layout"
+        android:padding="@dimen/dimen_10dp"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/text_size_20sp"
+        app:customAssetFont="proxima_nova_regular"
+        tools:text="Hill Valley Heart Clinic" />
+
+    <com.marcok.stepprogressbar.StepProgressBar
+        android:id="@+id/surveyProgressBarIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimen_1dp"
+        android:layout_below="@id/practiceNameTextView"
+        app:activeDotColor="@color/colorPrimary"
+        app:activeDotIcon="@drawable/circle_indicator_blue"
+        app:activeDotIndex="-1"
+        app:dotSize="10dp"
+        app:inactiveDotColor="@color/colorPrimary"
+        app:inactiveDotIcon="@drawable/circle_indicator_gray"
+        app:numberDots="5"
+        app:spacing="12dp" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/progressIndicatorTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/surveyProgressBarIndicator"
+        android:layout_marginTop="@dimen/dimen_5dp"
+        android:paddingEnd="@dimen/dimen_10dp"
+        android:paddingStart="@dimen/dimen_10dp"
+        android:textColor="@color/charcoal"
+        android:textSize="@dimen/text_size_14"
+        app:customAssetFont="proxima_nova_regular"
+        tools:text="Question 2 of 5" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+        android:id="@+id/submitButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/common_button_selector"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:customAssetFont="gotham_rounded_medium"
+        breeze:textKey="survey.form.button.title.nextQuestion" />
+
+    <com.carecloud.carepaylibray.common.NonSwipeableViewPager
+        android:id="@+id/surveyViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/submitButton"
+        android:layout_below="@id/progressIndicatorTextView"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true" />
+
+</RelativeLayout>

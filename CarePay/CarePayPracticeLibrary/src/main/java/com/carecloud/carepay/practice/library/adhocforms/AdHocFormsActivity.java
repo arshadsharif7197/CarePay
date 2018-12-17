@@ -181,7 +181,7 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
         WorkFlowRecord workFlowRecord = new WorkFlowRecord(workflowDTO);
         workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
         Bundle bundle = new Bundle();
-        bundle.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save());
+        bundle.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save(getContext()));
         bundle.putBoolean(CarePayConstants.ADHOC_FORMS, true);
         Intent intent = new Intent(this, CompleteCheckActivity.class);
         intent.putExtra(CarePayConstants.EXTRA_BUNDLE, bundle);

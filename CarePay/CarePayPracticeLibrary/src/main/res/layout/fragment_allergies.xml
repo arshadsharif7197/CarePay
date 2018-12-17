@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:breeze="http://schemas.carecloud.com/breeze"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:focusable="true"
+              android:focusableInTouchMode="true"
+              android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foregroundGravity="center_vertical"
+        android:paddingTop="@dimen/dimen_10dp">
+
+        <include
+            android:id="@+id/toolbar_layout"
+            layout="@layout/toolbar_no_title"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/allergy_medication_header"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_30sp"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="demographics_allergies_title"/>
+
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:background="@color/light_gray" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scroll_medications_allergy"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:id="@+id/container_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".20"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/dimen_30dp"
+                android:paddingTop="@dimen/dimen_30dp">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_30dp"
+                    android:gravity="start"
+                    android:padding="@dimen/padding_large"
+                    android:textAllCaps="true"
+                    android:textColor="@color/textview_default_textcolor"
+                    android:textSize="@dimen/text_size_18sp"
+                    app:customAssetFont="proxima_nova_semi_bold"
+                    breeze:textKey="allergy_section_header"
+                    tools:text="ALLERGIES YOU MAY HAVE"/>
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/alergy_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/lg_grey_rounded_border"
+                    android:visibility="visible"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_20dp"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="@dimen/dimen_10dp"
+                        android:layout_weight="1"/>
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/allergy_choose_button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dimen_10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_blue_border"
+                        android:paddingBottom="@dimen/dimen_10dp"
+                        android:paddingTop="@dimen/dimen_10dp"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/text_size_13"
+                        app:customAssetFont="gotham_rounded_medium"
+                        breeze:textKey="medication_allergies_add_new_allergy"
+                        tools:text="Add new Allergy"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".20"/>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:background="@color/light_gray"/>
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+        android:id="@+id/medication_allergies_continue_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_48dp"
+        android:layout_margin="@dimen/dimen_20dp"
+        android:background="@drawable/green_rounded_button_selector_always_click"
+        android:enabled="true"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_22"
+        app:customAssetFont="gotham_rounded_medium"
+        breeze:textKey="demographics_review_next_button"/>
+
+
+</LinearLayout>

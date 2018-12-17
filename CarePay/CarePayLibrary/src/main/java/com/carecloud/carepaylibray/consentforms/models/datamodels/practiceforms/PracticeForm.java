@@ -18,6 +18,10 @@ public class PracticeForm implements Serializable {
     @Expose
     private PracticeFormMetadata metadata = new PracticeFormMetadata();
 
+    @SerializedName("pending_metadata")
+    @Expose
+    private PracticeFormMetadata pendingMetadata = new PracticeFormMetadata();
+
     private transient ConsentFormUserResponseDTO formUserResponseDTO;
 
     private String lastModifiedDate;
@@ -62,5 +66,13 @@ public class PracticeForm implements Serializable {
 
     public void setFormUserResponseDTO(ConsentFormUserResponseDTO formUserResponseDTO) {
         this.formUserResponseDTO = formUserResponseDTO;
+    }
+
+    public PracticeFormMetadata getPendingMetadata() {
+        return pendingMetadata;
+    }
+
+    public void setPendingMetadata(PracticeFormMetadata pendingMetadata) {
+        this.pendingMetadata = pendingMetadata;
     }
 }
