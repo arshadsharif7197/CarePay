@@ -169,7 +169,12 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
             if (NavigationStateConstants.APPOINTMENTS.equals(workflowDTO.getState())
                     || NavigationStateConstants.PATIENT_HOME.equals(workflowDTO.getState())) {
                 callback.showAllDone(workflowDTO);
+            } else if (NavigationStateConstants.SURVEYS_CHECKOUT.equals(workflowDTO.getState())) {
+                callback.startSurveyFlow(workflowDTO);
+            } else {
+                callback.navigateToWorkflow(workflowDTO);
             }
+            
             if (!workflowDTO.getState().contains("checkout")) {
                 callback.completeCheckout();
             }

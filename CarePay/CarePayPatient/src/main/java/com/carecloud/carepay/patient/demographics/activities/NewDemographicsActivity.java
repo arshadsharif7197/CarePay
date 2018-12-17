@@ -68,6 +68,16 @@ public class NewDemographicsActivity extends BasePatientActivity implements Demo
     }
 
     @Override
+    public void navigateToMedications(WorkflowDTO workflowDTO) {
+        presenter.navigateToMedications(workflowDTO, true);
+    }
+
+    @Override
+    public void navigateToAllergy(WorkflowDTO workflowDTO) {
+        presenter.navigateToAllergy(workflowDTO, true);
+    }
+
+    @Override
     public void updateCheckInFlow(CheckinFlowState flowState, int totalPages, int currentPage) {
         switch (currentPage) {
             case 1:

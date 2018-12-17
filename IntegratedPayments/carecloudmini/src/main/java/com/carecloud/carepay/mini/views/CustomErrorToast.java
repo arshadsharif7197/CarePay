@@ -34,7 +34,9 @@ public class CustomErrorToast extends Toast {
     }
 
     public static void showWithMessage(Context context, String message){
-        new CustomErrorToast(context, message).show();
+        if(context != null) {
+            new CustomErrorToast(context, message).show();
+        }
     }
 
 }

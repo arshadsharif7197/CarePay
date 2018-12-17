@@ -1391,8 +1391,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
             title = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.title");
             message = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.message");
         }
-        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment
-                .newInstance(title, message);
+        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(title, message);
         confirmDialogFragment.setCallback(confirmationCallback);
         String tag = confirmDialogFragment.getClass().getName();
         confirmDialogFragment.show(ft, tag);
