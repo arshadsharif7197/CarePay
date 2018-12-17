@@ -773,7 +773,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void onPaymentPlanCanceled(WorkflowDTO workflowDTO, boolean isDeleted) {
-        String message = "payment.cancelPaymentPlan.success.banner.text";
+        String message = Label.getLabel("payment.cancelPaymentPlan.success.banner.text");
         if (isDeleted) {
             message = Label.getLabel("payment.deletePaymentPlan.success.banner.text");
         }
