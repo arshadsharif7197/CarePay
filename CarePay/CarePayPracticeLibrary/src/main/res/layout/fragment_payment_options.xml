@@ -101,17 +101,14 @@
                     android:paddingStart="@dimen/paymentOptionContainerPadding"
                     android:visibility="gone">
 
-                    <ProgressBar
+                    <ImageView
                         android:id="@+id/totalAmountProgressBar"
-                        style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="@dimen/paymentOptionIconSize"
                         android:layout_height="@dimen/paymentOptionIconSize"
                         android:layout_centerVertical="true"
                         android:layout_margin="@dimen/paymentOptionIconMargin"
-                        android:indeterminate="false"
-                        android:max="100"
-                        android:progress="100"
-                        android:progressDrawable="@drawable/progress_bar_drawable" />
+                        android:padding="@dimen/dimen_1dp"
+                        android:src="@drawable/icn_pay_option_full"/>
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/payTotalTextView"
@@ -142,17 +139,14 @@
                     android:paddingStart="@dimen/paymentOptionContainerPadding"
                     android:visibility="gone">
 
-                    <ProgressBar
+                    <ImageView
                         android:id="@+id/partialPaymentProgressBar"
-                        style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="@dimen/paymentOptionIconSize"
                         android:layout_height="@dimen/paymentOptionIconSize"
                         android:layout_centerVertical="true"
                         android:layout_margin="@dimen/paymentOptionIconMargin"
-                        android:indeterminate="false"
-                        android:max="100"
-                        android:progress="50"
-                        android:progressDrawable="@drawable/progress_bar_drawable" />
+                        android:padding="@dimen/dimen_1dp"
+                        android:src="@drawable/icn_pay_option_partial"/>
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/partialPaymentTextView"
