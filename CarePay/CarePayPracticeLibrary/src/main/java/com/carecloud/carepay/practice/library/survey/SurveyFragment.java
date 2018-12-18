@@ -79,7 +79,7 @@ public class SurveyFragment extends BaseFragment {
                 WorkFlowRecord workFlowRecord = new WorkFlowRecord(workflowDTO);
                 workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
                 Bundle bundle = new Bundle();
-                bundle.putLong(WorkflowDTO.class.getName(), workFlowRecord.save());
+                bundle.putLong(WorkflowDTO.class.getName(), workFlowRecord.save(getContext()));
                 Intent intent = new Intent(getActivity(), SurveyResultActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);

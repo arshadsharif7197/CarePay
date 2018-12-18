@@ -267,7 +267,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
 
         Bundle extra = new Bundle();
-        extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save());
+        extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save(getContext()));
         intent.putExtra(CarePayConstants.EXTRA_BUNDLE, extra);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
@@ -454,7 +454,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
 
             Bundle extra = new Bundle();
-            extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save());
+            extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save(getContext()));
             extra.putBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, true);
             DtoHelper.bundleDto(extra, presenter.getAppointmentPayload());
             //get the appointment transitions from the Demo payload
@@ -911,7 +911,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                     workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
 
                     Bundle extra = new Bundle();
-                    extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save());
+                    extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save(getContext()));
                     extra.putBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, true);
                     extra.putInt(CarePayConstants.EXTRA_CONFIRMATION_MODE, mode);
                     DtoHelper.bundleDto(extra, presenter.getAppointmentPayload());
@@ -962,7 +962,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
 
                 Bundle extra = new Bundle();
-                extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save());
+                extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save(getContext()));
                 extra.putBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, false);
                 extra.putBoolean(CarePayConstants.EXTRA_PAYMENT_CASH, true);
 
