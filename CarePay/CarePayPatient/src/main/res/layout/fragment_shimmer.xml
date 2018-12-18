@@ -4,6 +4,7 @@
     android:id="@+id/payments_pager_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <android.support.design.widget.TabLayout
@@ -11,9 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        app:tabIndicatorColor="@color/white"
         android:textColor="@color/white"
         android:visibility="gone"
+        app:tabIndicatorColor="@color/white"
         app:tabMode="fixed">
 
         <android.support.design.widget.TabItem
@@ -32,15 +33,16 @@
         android:id="@+id/shimmerContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         app:shimmer_base_alpha="0.6"
         app:shimmer_base_color="@color/black"
-        app:shimmer_shape="linear"
-        android:orientation="vertical">
+        app:shimmer_shape="linear">
 
         <android.support.v7.widget.LinearLayoutCompat
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_10dp"
             android:orientation="vertical">
 
         </android.support.v7.widget.LinearLayoutCompat>

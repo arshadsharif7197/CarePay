@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="edit_insurance_close_button" type="id"/>
+    <item name="search_header_title" type="id"/>
+    <item name="search_header_subtitle" type="id"/>
 </resources>

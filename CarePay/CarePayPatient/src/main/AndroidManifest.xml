@@ -130,6 +130,9 @@
         <activity
             android:name=".consentforms.ConsentFormsActivity"
             android:screenOrientation="sensorPortrait" />
+        <activity
+            android:name=".survey.SurveyActivity"
+            android:screenOrientation="sensorPortrait" />
 
         <service
             android:name=".payment.androidpay.AndroidPayQueueUploadService"
