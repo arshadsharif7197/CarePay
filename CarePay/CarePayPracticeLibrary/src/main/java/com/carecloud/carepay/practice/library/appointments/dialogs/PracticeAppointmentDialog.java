@@ -5,7 +5,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.telephony.PhoneNumberUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +40,6 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     private String leftActionLabel;
     private String rightActionLabel;
     private String middleActionLabel;
-    private String photoUrl;
     private AppointmentDisplayStyle style;
 
     private View headerView;
@@ -151,9 +149,8 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         setTextViewById(R.id.appointment_doctor, appointmentPayloadDTO.getProvider().getName());
 
         PatientModel patientDTO = appointmentDTO.getPayload().getPatient();
-        photoUrl = patientDTO.getProfilePhoto();
-        if (photoUrl != null) {
-            initializeProfilePhotoView(view);
+        if (!StringUtil.isNullOrEmpty(patientDTO.getProfilePhoto())) {
+            initializeProfilePhotoView(view, patientDTO.getProfilePhoto());
         }
 
         String patientNameText;
@@ -161,7 +158,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
             patientNameText = StringUtil.captialize(patientDTO.getFullName());
         } else {
             patientNameText = String.format("%s | %s", StringUtil.captialize(patientDTO.getFullName()),
-                    patientDTO.getPrimaryPhoneNumber());
+                    StringUtil.formatPhoneNumber(patientDTO.getPrimaryPhoneNumber()));
         }
         setTextViewById(R.id.appointment_patient_name, patientNameText);
         setTextViewById(R.id.appointment_short_name, patientDTO.getShortName());
@@ -171,7 +168,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         initializeButtons();
     }
 
-    private void initializeProfilePhotoView(View view) {
+    private void initializeProfilePhotoView(View view, String photoUrl) {
         ImageView profileImage = view.findViewById(R.id.appointment_patient_picture_image_view);
 
         Picasso.with(getActivity()).load(photoUrl).transform(new CircleImageTransform())
@@ -292,24 +289,5 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
 
         return textView;
     }
-//
-//    @Override
-//    protected String getCancelString() {
-//        return null;
-//    }
-//
-//    @Override
-//    protected int getCancelImageResource() {
-//        return R.drawable.icn_close;
-//    }
-//
-//    @Override
-//    protected int getContentLayout() {
-//        return R.layout.dialog_practice_appointment;
-//    }
-//
-//    @Override
-//    protected boolean getCancelable() {
-//        return true;
-//    }
+
 }
