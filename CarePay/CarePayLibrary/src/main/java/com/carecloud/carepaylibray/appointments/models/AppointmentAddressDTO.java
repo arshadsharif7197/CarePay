@@ -179,14 +179,13 @@ public class AppointmentAddressDTO {
                 + (countyName == null ? "" : countyName);
     }
 
-    public String getPlaceAddressStringWithShortZip() {
-        return (StringUtil.isNullOrEmpty(line1) ? "" : line1 + " ")
-                + (StringUtil.isNullOrEmpty(line2) ? "" : line2 + " ")
-                + (StringUtil.isNullOrEmpty(city) ? "" : city + " ")
-                + (line3 == null ? "" : line3 + " ")
-                + (StringUtil.isNullOrEmpty(stateName) ? "" : stateName + " ")
-                + (StringUtil.isNullOrEmpty(zipCode) ? "" : zipCode.substring(0, 5) + " ")
-                + (countyName == null ? "" : countyName);
+    public String geAddressStringWithShortZipWOCounty() {
+        return (StringUtil.isNullOrEmpty(line1) ? "" : line1 + ", ")
+                + (StringUtil.isNullOrEmpty(line2) ? "" : line2 + ", ")
+                + (StringUtil.isNullOrEmpty(city) ? "" : city + ", ")
+                + (line3 == null ? "" : line3 + ", ")
+                + (StringUtil.isNullOrEmpty(stateName) ? "" : stateName + ", ")
+                + (StringUtil.isNullOrEmpty(zipCode) ? "" : zipCode.substring(0, 5) + " ");
     }
 
     @Override

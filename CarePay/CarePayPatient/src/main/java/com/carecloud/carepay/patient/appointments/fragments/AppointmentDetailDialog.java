@@ -214,10 +214,10 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     });
 
             LocationDTO location = appointmentDTO.getPayload().getLocation();
-            locationName.setText(location.getName());
+            locationName.setText(StringUtil.capitalize(location.getName()));
             locationAddress.setText(StringUtil
-                    .capitalize(location.getAddress().getPlaceAddressStringWithShortZip().toLowerCase()));
-            mapButton.setEnabled(!StringUtil.isNullOrEmpty(location.getAddress().getPlaceAddressStringWithShortZip()));
+                    .capitalize(location.getAddress().geAddressStringWithShortZipWOCounty().toLowerCase()));
+            mapButton.setEnabled(!StringUtil.isNullOrEmpty(location.getAddress().geAddressStringWithShortZipWOCounty()));
         }
     }
 
