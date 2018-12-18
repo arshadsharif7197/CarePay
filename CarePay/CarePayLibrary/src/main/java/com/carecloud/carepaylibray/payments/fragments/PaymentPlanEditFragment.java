@@ -620,6 +620,8 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         enableCreatePlanButton();
         if (!option.isEnabled()) {
             stubRangeRules();
+        }
+        if (option.getName().equals(paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode())){
             resetPlanParameters();
         }
     }
@@ -650,6 +652,11 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         int completedInstallments = paymentPlanDTO.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
         boolean parametersModified = installments + completedInstallments != paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments() ||
                 amounthPayment != paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount();
+
+        if(!parametersModified){
+            clearError(R.id.paymentMonthCountInputLayout);
+            clearError(R.id.paymentAmountInputLayout);
+        }
 
         return passesStandardValidation && parametersModified || (!metadataUnModified && !parametersModified);
     }
