@@ -58,7 +58,7 @@ public class OfficeNewsListAdapter extends RecyclerView.Adapter<OfficeNewsListAd
         OfficeNewsViewHolder(View itemView) {
             super(itemView);
 
-            newsTitle = (CarePayTextView) itemView.findViewById(R.id.office_news_title);
+            newsTitle = itemView.findViewById(R.id.office_news_title);
             itemView.setOnClickListener(this);
         }
 
