@@ -66,11 +66,9 @@ public class OfficeNewsDetailsDialog extends Dialog {
     @SuppressWarnings("deprecation")
     @SuppressLint("SetJavaScriptEnabled")
     private void initializeView() {
-//        ((TextView) findViewById(R.id.office_news_details_header)).setText(Label.getLabel("news_title"));
-
         if (officeNewsList != null && !officeNewsList.isEmpty()) {
             NewsPagerAdapter adapter = new NewsPagerAdapter();
-            ViewPager newsArticle = (ViewPager) findViewById(R.id.office_news_viewpager);
+            ViewPager newsArticle = findViewById(R.id.office_news_viewpager);
             newsArticle.setAdapter(adapter);
 
             newsArticle.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -100,7 +98,7 @@ public class OfficeNewsDetailsDialog extends Dialog {
     @SuppressWarnings("deprecation")
     private void addView() {
         officeNewsPages = new ArrayList<>();
-        pages = (RadioGroup) findViewById(R.id.office_news_page_indicator);
+        pages = findViewById(R.id.office_news_page_indicator);
         RadioGroup.LayoutParams params;
 
         for (int i = 0; i < officeNewsList.size(); i++) {
@@ -111,7 +109,6 @@ public class OfficeNewsDetailsDialog extends Dialog {
 
             RadioButton newsPages = new RadioButton(context);
             newsPages.setId(i);
-
             newsPages.setButtonDrawable(context.getResources().getDrawable(R.drawable.office_news_page_indicator));
             params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(0, 0, 10, 0);
