@@ -210,8 +210,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
 
     @Override
     protected void enableCreatePlanButton() {
-        //enable edit button if frequency is disabled since these fields would be locked
-        boolean isEnabled = validateFields(false) || !frequencyOption.isEnabled();
+        boolean isEnabled = validateFields(false) ;
         getActionButton().setSelected(isEnabled);
         getActionButton().setClickable(isEnabled);
     }
@@ -655,6 +654,11 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         int completedInstallments = paymentPlanDTO.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
         boolean parametersModified = installments + completedInstallments != paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments() ||
                 amounthPayment != paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount();
+        if(!parametersModified){
+            //clear any errors in these fields if parameters have not been modified
+            clearError(R.id.paymentMonthCountInputLayout);
+            clearError(R.id.paymentAmountInputLayout);
+        }
 
         if(!parametersModified){
             clearError(R.id.paymentMonthCountInputLayout);
