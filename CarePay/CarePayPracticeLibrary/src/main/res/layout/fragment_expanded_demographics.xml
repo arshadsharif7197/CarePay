@@ -767,16 +767,6 @@
                 android:id="@+id/employmentInfoRequiredTextView"
                 layout="@layout/layout_required_text_view"/>
 
-            <!--<com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
-                <!--android:id="@+id/employmentInfoRequiredTextView"-->
-                <!--style="@style/DemographicsOptionalLabelStyle"-->
-                <!--android:layout_gravity="center_vertical|end"-->
-                <!--android:layout_marginEnd="@dimen/dimen_10dp"-->
-                <!--android:layout_marginStart="@dimen/dimen_10dp"-->
-                <!--app:customAssetFont="proxima_nova_semi_bold"-->
-                <!--breeze:textKey="required"-->
-                <!--tools:text="Required"/>-->
-
         </LinearLayout>
 
     </LinearLayout>

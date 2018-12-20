@@ -501,13 +501,6 @@
             android:id="@+id/employmentInfoRequiredTextView"
             layout="@layout/layout_required_text_view"/>
 
-        <!--<com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
-            <!--android:id="@+id/employmentInfoRequiredTextView"-->
-            <!--style="@style/DemographicsOptionalLabelStyle"-->
-            <!--app:customAssetFont="proxima_nova_semi_bold"-->
-            <!--breeze:textKey="required"-->
-            <!--tools:text="Required"/>-->
-
     </LinearLayout>
 
     <FrameLayout
