@@ -755,6 +755,7 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dimen_10dp"
                 android:textAllCaps="true"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/text_size_24sp"
@@ -762,15 +763,19 @@
                 breeze:textKey="demographics_employer_info"
                 tools:text="Employer Info"/>
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            <include
                 android:id="@+id/employmentInfoRequiredTextView"
-                style="@style/DemographicsOptionalLabelStyle"
-                android:layout_gravity="center_vertical|end"
-                android:layout_marginEnd="@dimen/dimen_10dp"
-                android:layout_marginStart="@dimen/dimen_10dp"
-                app:customAssetFont="proxima_nova_semi_bold"
-                breeze:textKey="required"
-                tools:text="Required"/>
+                layout="@layout/layout_required_text_view"/>
+
+            <!--<com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
+                <!--android:id="@+id/employmentInfoRequiredTextView"-->
+                <!--style="@style/DemographicsOptionalLabelStyle"-->
+                <!--android:layout_gravity="center_vertical|end"-->
+                <!--android:layout_marginEnd="@dimen/dimen_10dp"-->
+                <!--android:layout_marginStart="@dimen/dimen_10dp"-->
+                <!--app:customAssetFont="proxima_nova_semi_bold"-->
+                <!--breeze:textKey="required"-->
+                <!--tools:text="Required"/>-->
 
         </LinearLayout>
 

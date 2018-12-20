@@ -442,7 +442,7 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             if (!StringUtil.isNullOrEmpty(employmentStatus)) {
                 showEmployerFields = employmentStatus.toLowerCase().equals("employed")
                         || employmentStatus.toLowerCase().equals("part time");
-            } else if (!employmentInfoSection.isRequired()) {
+            } else if (employmentInfoSection.isRequired()) {
                 employmentStatusRequired.setVisibility(View.VISIBLE);
             }
             if (employmentInfoSection.isRequired()) {
