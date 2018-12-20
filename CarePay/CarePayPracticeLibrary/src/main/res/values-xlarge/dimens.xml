@@ -41,16 +41,16 @@
     <dimen name="signInButtonTextSize">22sp</dimen>
 
     <!-- Home Screen -->
-    <dimen name="mainTitleHeaderMarginTop">40dp</dimen>
-    <dimen name="mainLayoutContainerHorizontalMargin">50dp</dimen>
-    <dimen name="mainLayoutContainerTopMargin">200dp</dimen>
+    <dimen name="mainTitleHeaderMarginTop">30dp</dimen>
+    <dimen name="mainLayoutContainerHorizontalMargin">30dp</dimen>
+    <dimen name="mainLayoutContainerTopMargin">170dp</dimen>
     <dimen name="home_button_width">282dp</dimen>
     <dimen name="home_button_height">250dp</dimen>
     <dimen name="homeItemVerticalPadding">40dp</dimen>
     <dimen name="home_shadow_width">800dp</dimen>
     <dimen name="home_shadow_margin_top">-7dp</dimen>
     <dimen name="home_main_margin_top">30dp</dimen>
-    <dimen name="officeNewsHeaderTopMargin">60dp</dimen>
+    <dimen name="officeNewsHeaderTopMargin">25dp</dimen>
     <dimen name="officeNewsItemWidth">300dp</dimen>
     <dimen name="officeNewListItemTextSize">20sp</dimen>
     <dimen name="home_button_font_size">26sp</dimen>
@@ -58,6 +58,15 @@
     <dimen name="home_alert_checkin_number_wrapper_height">40dp</dimen>
     <dimen name="home_alert_checkin_number_wrapper_width">40dp</dimen>
     <dimen name="officeNewsHeaderTextSize">26sp</dimen>
+    <dimen name="updateAlertContainerPadding">20dp</dimen>
+    <dimen name="updateAlertImageEndMargin">10dp</dimen>
+    <dimen name="updateAlertTitleTextSize">15sp</dimen>
+    <dimen name="updateAlertMessageTextSize">12sp</dimen>
+    <dimen name="updateAlertMessageTopMargin">5dp</dimen>
+    <dimen name="updateAlertContainerTopMargin">35dp</dimen>
+    <dimen name="officeNewsContainerVerticalPadding">10dp</dimen>
+    <dimen name="officeNewsContainerHorizontalPadding">20dp</dimen>
+    <dimen name="officeNewsHorizontalPadding">5dp</dimen>
 
     <!--CheckIn Practice Mode-->
     <dimen name="checkInPanelWidth">1600dp</dimen>
