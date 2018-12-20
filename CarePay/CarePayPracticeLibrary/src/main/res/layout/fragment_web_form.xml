@@ -30,7 +30,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_30"
+                android:textSize="@dimen/nextAppointmentTitleTextSize"
                 app:customAssetFont="gotham_rounded_medium" />
 
         </LinearLayout>
@@ -49,7 +49,6 @@
         app:numberDots="5"
         app:spacing="12dp" />
 
-
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_1dp"
@@ -62,29 +61,26 @@
         android:layout_height="3dp"
         android:indeterminate="true" />
 
-
     <WebView
         android:id="@+id/activity_main_webview_consent"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_1dp"
         android:background="@color/light_gray" />
 
-
     <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:id="@+id/consentButtonNext"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_48dp"
-        android:layout_margin="@dimen/dimen_20dp"
+        android:layout_height="@dimen/commonButtonHeight"
+        android:layout_margin="@dimen/webFormButtonMargin"
         android:background="@drawable/green_rounded_button_selector"
         android:gravity="center"
         android:textColor="@color/white"
-        android:textSize="@dimen/text_size_22"
+        android:textSize="@dimen/respons_button_text_size"
         app:customAssetFont="gotham_rounded_medium"
         breeze:textKey="demographics_review_next_button" />
 

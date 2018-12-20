@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:orientation="horizontal">
-
 
     <FrameLayout
         android:id="@+id/closeViewLayout"
@@ -31,13 +29,12 @@
 
     </FrameLayout>
 
-
     <LinearLayout
         android:layout_width="@dimen/dialog_width"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginStart="@dimen/dimen_26dp"
-        android:layout_marginEnd="@dimen/dimen_26dp">
+        android:layout_marginEnd="@dimen/dimen_26dp"
+        android:orientation="vertical">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -46,7 +43,7 @@
             android:paddingStart="@dimen/dimen_10dp"
             android:paddingEnd="@dimen/dimen_10dp">
 
-            <include layout="@layout/add_appointment_toolbar"/>
+            <include layout="@layout/add_appointment_toolbar" />
 
         </FrameLayout>
 
@@ -54,36 +51,34 @@
             android:id="@+id/prepaymentMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/dimen_10dp"
             android:background="@color/colorPrimaryDark"
             android:gravity="center"
+            android:padding="@dimen/dimen_10dp"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_15"
-            tools:text="Required Prepayment: $49.00"
+            android:visibility="gone"
             app:customAssetFont="proxima_nova_semi_bold"
-            android:visibility="gone"/>
-
+            tools:text="Required Prepayment: $49.00" />
 
         <LinearLayout
             android:id="@+id/location_layout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/add_apt_available_hours_edit_range_height"
+            android:layout_height="@dimen/toolbarLayoutHeight"
             android:background="@color/payne_gray"
             android:orientation="horizontal"
             android:weightSum="3">
-
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/location_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="@dimen/dimen_8dp"
-                android:layout_marginStart="@dimen/dimen_16dp"
+                android:layout_marginStart="@dimen/locationTextStartMargin"
+                android:layout_marginEnd="@dimen/locationTextEndMargin"
                 android:textColor="@color/white"
                 app:customAssetFont="proxima_nova_regular"
-                tools:text="@string/locations_label"
-                breeze:textKey="appointment_locations_label"/>
+                breeze:textKey="appointment_locations_label"
+                tools:text="@string/locations_label" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/available_locations_recycler"
@@ -102,7 +97,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
-                    android:layout_marginRight="@dimen/dimen_8dp"
+                    android:layout_marginEnd="@dimen/locationTextEndMargin"
                     android:background="@drawable/rounded_button_blue_border_selected"
                     android:ellipsize="end"
                     android:text="Location"
@@ -122,9 +117,9 @@
                 android:id="@+id/available_hours_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/list_dialog_min_height"
-                android:paddingLeft="@dimen/apt_available_hours_list_padding"
-                android:paddingRight="@dimen/apt_available_hours_list_padding"
-                android:contentDescription="@string/content_description_available_hours"/>
+                android:contentDescription="@string/content_description_available_hours"
+                android:paddingLeft="@dimen/availableHoursListHorizontalPadding"
+                android:paddingRight="@dimen/availableHoursListHorizontalPadding" />
 
             <FrameLayout
                 android:id="@+id/progressview"
@@ -147,8 +142,9 @@
 
             </FrameLayout>
 
-            <include layout="@layout/no_appointment_layout"
-                     android:id="@+id/no_appointment_layout"/>
+            <include
+                android:id="@+id/no_appointment_layout"
+                layout="@layout/no_appointment_layout" />
 
 
         </FrameLayout>
@@ -157,19 +153,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/patient_mode_dialog_body_bg"
-            android:padding="@dimen/dimen_10dp">
+            android:padding="@dimen/distributionButtonContainersPadding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/edit_date_range_button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_10dp"
+                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:background="@drawable/round_border_button_bg"
                 android:gravity="center"
                 android:padding="@dimen/dimen_8dp"
                 android:text="@string/edit_date_range_button_label"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_16sp"
+                android:textSize="@dimen/respons_button_text_size"
                 android:visibility="visible"
                 app:customAssetFont="gotham_rounded_bold" />
         </FrameLayout>

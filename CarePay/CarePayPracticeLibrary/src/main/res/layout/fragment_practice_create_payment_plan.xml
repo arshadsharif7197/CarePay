@@ -60,13 +60,13 @@
             android:layout_alignParentBottom="true"
             android:background="@drawable/patient_mode_dialog_body_bg"
             android:orientation="horizontal"
-            android:padding="@dimen/dimen_10dp">
+            android:padding="@dimen/distributionButtonContainersPadding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/create_payment_plan_button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_10dp"
+                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:background="@drawable/green_rounded_button_selector_always_click"
                 android:gravity="center"
                 android:textAllCaps="true"
@@ -88,10 +88,10 @@
         <RelativeLayout
             android:id="@+id/amountsContainer"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_60dp"
+            android:layout_height="@dimen/toolbarLayoutHeight"
             android:layout_below="@id/toolbarLayout"
             android:background="@color/dark_blue"
-            android:padding="@dimen/dimen_8dp">
+            android:padding="@dimen/amountsContainerPadding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/paymentValueTextView"
@@ -99,15 +99,14 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/dimen_8dp"
                 android:layout_marginStart="@dimen/dimen_8dp"
                 android:background="@drawable/bg_green_border_trans"
-                android:paddingBottom="@dimen/dimen_8dp"
-                android:paddingEnd="@dimen/dimen_20dp"
-                android:paddingStart="@dimen/dimen_20dp"
-                android:paddingTop="@dimen/dimen_8dp"
+                android:paddingBottom="@dimen/roundedValueVerticalPadding"
+                android:paddingEnd="@dimen/roundedValueHorizontalPadding"
+                android:paddingStart="@dimen/roundedValueHorizontalPadding"
+                android:paddingTop="@dimen/roundedValueVerticalPadding"
                 android:textColor="@color/emerald"
-                android:textSize="@dimen/text_size_16sp"
+                android:textSize="@dimen/amountLabelTextSize"
                 app:customAssetFont="proxima_nova_semi_bold"
                 tools:text="$325.00" />
 
@@ -119,7 +118,7 @@
                 android:layout_toStartOf="@id/paymentValueTextView"
                 android:text=":"
                 android:textColor="@color/light_gray"
-                android:textSize="@dimen/text_size_16sp"
+                android:textSize="@dimen/amountLabelTextSize"
                 app:customAssetFont="proxima_nova_regular"
                 tools:text=":" />
 
@@ -128,10 +127,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/dimen_8dp"
                 android:layout_toStartOf="@id/paymentValueColon"
                 android:textColor="@color/light_gray"
-                android:textSize="@dimen/text_size_16sp"
+                android:textSize="@dimen/amountLabelTextSize"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="payment_total_paid_label"
                 tools:text="Total Being Paid" />
@@ -155,7 +153,7 @@
                 android:layout_marginStart="@dimen/dimen_8dp"
                 android:layout_toStartOf="@id/paymentValueSeparator"
                 android:textColor="@color/light_gray_dialog"
-                android:textSize="@dimen/text_size_16sp"
+                android:textSize="@dimen/amountLabelTextSize"
                 app:customAssetFont="proxima_nova_semi_bold"
                 tools:text="$125.00" />
 
@@ -167,7 +165,7 @@
                 android:layout_toStartOf="@id/balanceValueTextView"
                 android:text=":"
                 android:textColor="@color/light_gray"
-                android:textSize="@dimen/text_size_16sp"
+                android:textSize="@dimen/amountLabelTextSize"
                 app:customAssetFont="proxima_nova_regular"
                 tools:text=":" />
 
@@ -178,7 +176,7 @@
                 android:layout_centerVertical="true"
                 android:layout_toStartOf="@id/balanceColon"
                 android:textColor="@color/light_gray"
-                android:textSize="@dimen/text_size_16sp"
+                android:textSize="@dimen/amountLabelTextSize"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="payment_balance_owed_label"
                 tools:text="Balance Owed" />
@@ -202,7 +200,7 @@
                 android:layout_marginStart="@dimen/dimen_8dp"
                 android:layout_toStartOf="@id/balanceLabelSeparator"
                 android:textColor="@color/light_gray_dialog"
-                android:textSize="@dimen/text_size_16sp"
+                android:textSize="@dimen/amountLabelTextSize"
                 app:customAssetFont="proxima_nova_semi_bold"
                 tools:text="$175.00" />
 
@@ -214,7 +212,7 @@
                 android:layout_toStartOf="@id/unAppliedValueTextView"
                 android:text=":"
                 android:textColor="@color/light_gray"
-                android:textSize="@dimen/text_size_16sp"
+                android:textSize="@dimen/amountLabelTextSize"
                 app:customAssetFont="proxima_nova_regular"
                 tools:text=":" />
 
@@ -225,7 +223,7 @@
                 android:layout_centerVertical="true"
                 android:layout_toStartOf="@id/unAppliedColon"
                 android:textColor="@color/light_gray"
-                android:textSize="@dimen/text_size_16sp"
+                android:textSize="@dimen/amountLabelTextSize"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="payment_total_unapplied"
                 tools:text="Unapplied Credit" />
@@ -253,19 +251,19 @@
                     android:id="@+id/existingChargesLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/existingChargesLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dimen_10dp"
-                        android:layout_marginStart="@dimen/dimen_15dp"
-                        android:layout_marginTop="@dimen/dimen_25dp"
+                        android:layout_marginBottom="@dimen/itemDashboardFieldMargin"
+                        android:layout_marginStart="@dimen/dashboardLabelStartMargin"
+                        android:layout_marginTop="@dimen/dashboardLabelTopMargin"
                         android:textAllCaps="true"
                         android:textColor="@color/textview_default_textcolor"
-                        android:textSize="@dimen/text_size_18sp"
+                        android:textSize="@dimen/dashboardLabelTextSize"
                         app:customAssetFont="proxima_nova_extra_bold"
                         breeze:textKey="payment.addBalanceToPaymentPlan.section.title.existingCharges"
                         tools:text="Existing Charges" />
@@ -286,12 +284,12 @@
                     android:id="@+id/settingsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dimen_10dp"
-                    android:layout_marginStart="@dimen/dimen_15dp"
-                    android:layout_marginTop="@dimen/dimen_25dp"
+                    android:layout_marginBottom="@dimen/itemDashboardFieldMargin"
+                    android:layout_marginStart="@dimen/dashboardLabelStartMargin"
+                    android:layout_marginTop="@dimen/dashboardLabelTopMargin"
                     android:textAllCaps="true"
                     android:textColor="@color/textview_default_textcolor"
-                    android:textSize="@dimen/text_size_18sp"
+                    android:textSize="@dimen/dashboardLabelTextSize"
                     app:customAssetFont="proxima_nova_extra_bold"
                     breeze:textKey="payment.createPaymentPlan.section.title.settings"
                     tools:text="Settings" />
@@ -299,8 +297,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/dimen_15dp"
-                    android:layout_marginStart="@dimen/dimen_15dp"
+                    android:layout_marginEnd="@dimen/dashboardLabelStartMargin"
+                    android:layout_marginStart="@dimen/dashboardLabelStartMargin"
                     android:orientation="vertical">
 
                     <FrameLayout
@@ -342,7 +340,6 @@
                             android:id="@+id/frequencyCodeLayout"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/dimen_5dp"
                             android:layout_weight="1">
 
                             <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
@@ -423,7 +420,6 @@
                             android:id="@+id/paymentMonthCountLayout"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/dimen_5dp"
                             android:layout_weight="1">
 
                             <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
@@ -494,7 +490,7 @@
                         android:paddingEnd="@dimen/dimen_10dp"
                         android:paddingStart="@dimen/dimen_10dp"
                         android:textColor="@color/optional_gray"
-                        android:textSize="@dimen/text_size_17"
+                        android:textSize="@dimen/addNewCardButtonTextSize"
                         android:visibility="invisible"
                         app:customAssetFont="gotham_rounded_book"
                         tools:text="Your last payment will be adjusted to $108.00" />
@@ -505,12 +501,12 @@
                     android:id="@+id/creditCardLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dimen_10dp"
-                    android:layout_marginStart="@dimen/dimen_15dp"
-                    android:layout_marginTop="@dimen/dimen_15dp"
+                    android:layout_marginBottom="@dimen/itemDashboardFieldMargin"
+                    android:layout_marginStart="@dimen/dashboardLabelStartMargin"
+                    android:layout_marginTop="@dimen/dashboardLabelTopMargin"
                     android:textAllCaps="true"
                     android:textColor="@color/textview_default_textcolor"
-                    android:textSize="@dimen/text_size_18sp"
+                    android:textSize="@dimen/dashboardLabelTextSize"
                     app:customAssetFont="proxima_nova_extra_bold"
                     breeze:textKey="payment.createPaymentPlan.section.title.creditCard"
                     tools:text="Credit Card" />
@@ -519,22 +515,22 @@
                     android:id="@+id/creditCardRecycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:choiceMode="singleChoice"
-                    android:padding="@dimen/payment_method_parent_layout_padding" />
+                    android:choiceMode="singleChoice" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayButton
                     android:id="@+id/addNewCardButton"
                     style="@style/BreezeButtonStyleDark"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/commonButtonHeight"
                     android:layout_gravity="end"
+                    android:layout_marginTop="@dimen/dimen_10dp"
                     android:layout_marginBottom="@dimen/dimen_10dp"
                     android:layout_marginEnd="@dimen/dimen_15dp"
                     android:background="@drawable/blue_border_rounded_button_selector"
                     android:paddingEnd="@dimen/dimen_20dp"
                     android:paddingStart="@dimen/dimen_20dp"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/text_size_13"
+                    android:textSize="@dimen/respons_button_text_size"
                     app:customAssetFont="gotham_rounded_medium"
                     breeze:textKey="payment_add_new_credit_card_button" />
 

@@ -23,12 +23,13 @@ public class PopupPickerPayments extends PopupWindow {
 
     /**
      * Constructor
+     *
      * @param context context
      */
     public PopupPickerPayments(Context context,
                                UserPracticeDTO practiceDTO,
                                PaymentPopupListener callback,
-                               boolean hasHistory){
+                               boolean hasHistory) {
         super(context);
         this.context = context;
         this.practiceDTO = practiceDTO;
@@ -38,25 +39,25 @@ public class PopupPickerPayments extends PopupWindow {
         initView();
     }
 
-    private void initView(){
+    private void initView() {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.popup_picker_payments, null, false);
         popupBackgroundView = view.findViewById(R.id.popup_container);
         setContentView(view);
         setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setElevation(10);
         }
     }
 
     @Override
-    public void setContentView(View view){
+    public void setContentView(View view) {
         super.setContentView(view);
 
         setWidth(context.getResources().getDimensionPixelSize(R.dimen.popup_picker_width));
 
         View historyItem = view.findViewById(R.id.history_action_item);
-        if(hasHistory) {
+        if (hasHistory) {
             historyItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -79,7 +80,7 @@ public class PopupPickerPayments extends PopupWindow {
 
         boolean isRetailEnabled = practiceDTO.isRetailEnabled();
         View addRetailItem = view.findViewById(R.id.add_retail_action_item);
-        if(isRetailEnabled){
+        if (isRetailEnabled) {
             addRetailItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -87,19 +88,20 @@ public class PopupPickerPayments extends PopupWindow {
                     dismiss();
                 }
             });
-        } else{
+        } else {
             view.findViewById(R.id.retail_item_layout).setVisibility(View.GONE);
         }
     }
 
     /**
      * Set the background to top view if necessary
+     *
      * @param showOnTop true to show above th anchor view
      */
-    public void flipPopup(boolean showOnTop){
-        if(showOnTop){
+    public void flipPopup(boolean showOnTop) {
+        if (showOnTop) {
             popupBackgroundView.setBackgroundResource(R.drawable.popup_picker_bg_top_new);
-        }else{
+        } else {
             popupBackgroundView.setBackgroundResource(R.drawable.popup_picker_bg_new);
         }
     }

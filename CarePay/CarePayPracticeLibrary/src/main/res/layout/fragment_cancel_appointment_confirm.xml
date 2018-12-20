@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:layout_width="wrap_content"
@@ -34,38 +33,38 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/search_content"
         android:layout_width="@dimen/dialog_width"
         android:layout_height="wrap_content"
-        android:id="@+id/search_content"
-        android:orientation="vertical"
-        android:layout_marginStart="@dimen/dimen_26dp"
-        android:layout_marginEnd="@dimen/dimen_26dp"
+        android:layout_marginStart="@dimen/cancelAppointmentHorizontalMargin"
+        android:layout_marginEnd="@dimen/cancelAppointmentHorizontalMargin"
+        android:layout_toRightOf="@+id/closeViewLayout"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:layout_toRightOf="@+id/closeViewLayout">
+        android:orientation="vertical">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/practice_mode_dialog_header_bg"
-            android:padding="@dimen/dimen_20dp">
+            android:padding="@dimen/cancelAppointmentHeaderPadding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_10dp"
-                android:layout_marginBottom="@dimen/dimen_10dp"
                 android:layout_gravity="center"
+                android:layout_marginTop="@dimen/cancelAppointmentTitleVerticalMargin"
+                android:layout_marginBottom="@dimen/cancelAppointmentTitleVerticalMargin"
                 android:gravity="center"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_30sp"
-                breeze:textKey="cancel_appointment_label"
-                app:customAssetFont="gotham_rounded_bold"/>
+                android:textSize="@dimen/cancelAppointmentTitleTextSize"
+                app:customAssetFont="gotham_rounded_bold"
+                breeze:textKey="cancel_appointment_label" />
         </FrameLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_200dp"
+            android:layout_height="@dimen/cancelAppointmentBodyHeight"
             android:background="@color/white">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -75,45 +74,47 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:textColor="@color/grayRound"
-                android:textSize="@dimen/text_size_20sp"
-                app:customAssetFont="proxima_nova_regular"/>
+                android:textSize="@dimen/cancelAppointmentMessageTextSize"
+                app:customAssetFont="proxima_nova_regular" />
 
         </FrameLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_1dp"
-            android:background="@color/light_gray"/>
+            android:background="@color/light_gray" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/patient_mode_dialog_body_bg"
             android:orientation="horizontal"
-            android:padding="@dimen/dimen_10dp"
-            android:background="@drawable/patient_mode_dialog_body_bg">
+            android:padding="@dimen/distributionButtonContainersPadding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/back_button"
                 style="@style/BreezeButtonStyleDark"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:layout_weight="1"
-                android:layout_margin="@dimen/dimen_10dp"
                 android:background="@drawable/bg_primary_overlay"
-                breeze:textKey="appointment_confirm_cancel_back"
-                app:customAssetFont="gotham_rounded_medium" />
+                android:textSize="@dimen/appointmentDialogButtonTextSize"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="appointment_confirm_cancel_back" />
 
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/confirm_button"
                 style="@style/BreezeButtonStyleDark"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:layout_weight="2"
-                android:layout_margin="@dimen/dimen_10dp"
                 android:background="@drawable/button_rounded_red"
-                breeze:textKey="appointment_confirm_cancel_confirm"
-                app:customAssetFont="gotham_rounded_medium" />
+                android:textSize="@dimen/appointmentDialogButtonTextSize"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="appointment_confirm_cancel_confirm" />
 
 
         </LinearLayout>
@@ -123,8 +124,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_toRightOf="@+id/search_content"
+        android:orientation="vertical"
         android:visibility="invisible">
 
 

@@ -28,7 +28,7 @@
                 android:gravity="start"
                 android:maxLines="2"
                 android:textColor="@color/lightSlateGray"
-                android:textSize="@dimen/text_size_14"
+                android:textSize="@dimen/medicationAllergyItemTextSize"
                 app:customAssetFont="proxima_nova_semi_bold"
                 tools:text="Medication X\n line 2 "/>
 
@@ -68,7 +68,7 @@
             android:paddingStart="@dimen/padding_large"
             android:paddingTop="@dimen/padding_small"
             android:textColor="@color/remove_red"
-            android:textSize="@dimen/text_size_14"
+            android:textSize="@dimen/medicationAllergyItemTextSize"
             app:customAssetFont="proxima_nova_semi_bold"
             tools:text="Remove"/>
 
@@ -78,6 +78,6 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_1dp"
-        android:background="@color/light_gray"/>
+        android:background="@color/light_gray" />
 
 </LinearLayout>

@@ -10,4 +10,6 @@
     <dimen name="visitTypeContainerVerticalPadding">15dp</dimen>
     <dimen name="reasonForVisitTopMargin">10dp</dimen>
     <dimen name="nextAppointmentProviderImageSize">100dp</dimen>
+    <dimen name="optionalLabelRightMargin">38dp</dimen>
+    <dimen name="optionalLabelTextSize">9sp</dimen>
 </resources>

@@ -24,28 +24,29 @@ public class PopupPickerWindow extends PopupWindow {
 
     /**
      * Constructor
+     *
      * @param context context
      */
-    public PopupPickerWindow(Context context){
+    public PopupPickerWindow(Context context) {
         super(context);
         this.context = context;
 
         initView();
     }
 
-    private void initView(){
+    private void initView() {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.popup_picker_list, null, false);
         popupBackgroundView = view.findViewById(R.id.popup_container);
         setContentView(view);
         setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setElevation(10);
         }
     }
 
     @Override
-    public void setContentView(View view){
+    public void setContentView(View view) {
         super.setContentView(view);
 
         setWidth(context.getResources().getDimensionPixelSize(R.dimen.popup_picker_width));
@@ -56,11 +57,11 @@ public class PopupPickerWindow extends PopupWindow {
         popupRecycler.setLayoutManager(layoutManager);
     }
 
-    public void setAdapter(PopupPickerAdapter adapter){
+    public void setAdapter(PopupPickerAdapter adapter) {
         popupRecycler.setAdapter(adapter);
     }
 
-    public PopupPickerAdapter getAdapter(){
+    public PopupPickerAdapter getAdapter() {
         return (PopupPickerAdapter) popupRecycler.getAdapter();
     }
 
@@ -70,12 +71,13 @@ public class PopupPickerWindow extends PopupWindow {
 
     /**
      * Set the background to top view if necessary
+     *
      * @param showOnTop true to show above th anchor view
      */
-    public void flipPopup(boolean showOnTop){
-        if(showOnTop){
+    public void flipPopup(boolean showOnTop) {
+        if (showOnTop) {
             popupBackgroundView.setBackgroundResource(R.drawable.popup_picker_bg_top_new);
-        }else{
+        } else {
             popupBackgroundView.setBackgroundResource(R.drawable.popup_picker_bg_new);
         }
     }
