@@ -16,6 +16,10 @@ public class PracticeFormMetadata {
     @SerializedName("updated_dt")
     private String updatedDate;
 
+    @Expose
+    @SerializedName("created_dt")
+    private String createdDate;
+
     public String getVersion() {
         return version;
     }
@@ -30,5 +34,13 @@ public class PracticeFormMetadata {
 
     public void setUpdatedDate(String updatedDate) {
         this.updatedDate = updatedDate;
+    }
+
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
     }
 }

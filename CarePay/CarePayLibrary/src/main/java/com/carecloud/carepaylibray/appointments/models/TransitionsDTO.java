@@ -76,6 +76,9 @@ public class TransitionsDTO {
     @SerializedName("add_credit_card")
     @Expose
     private TransitionDTO addCreditCard = new TransitionDTO();
+    @Expose
+    @SerializedName("save_survey_response")
+    private TransitionDTO saveSurvey = new TransitionDTO();
 
     /**
      * @return The checkingIn
@@ -251,5 +254,13 @@ public class TransitionsDTO {
 
     public void setUpdatePendingForms(TransitionDTO updatePendingForms) {
         this.updatePendingForms = updatePendingForms;
+    }
+
+    public TransitionDTO getSaveSurvey() {
+        return saveSurvey;
+    }
+
+    public void setSaveSurvey(TransitionDTO saveSurvey) {
+        this.saveSurvey = saveSurvey;
     }
 }

@@ -1295,4 +1295,8 @@ public class DateUtil {
             return toStringWithFormat(FORMAT_MM_SLASH_DD_ES);
         }
     }
+
+    public String getServerFormat(){
+        return toStringWithFormat(FORMAT_TIMEZONE_EN);
+    }
 }

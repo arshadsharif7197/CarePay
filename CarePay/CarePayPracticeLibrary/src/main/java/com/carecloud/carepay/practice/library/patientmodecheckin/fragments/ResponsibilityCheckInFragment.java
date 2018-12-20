@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -30,6 +32,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
 
@@ -63,7 +66,7 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_responsibility_practice, container, false);
 
-        Toolbar toolbar = (Toolbar) view.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             toolbar.setElevation(0);
         }
@@ -77,16 +80,40 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
         });
         toolbar.setTitle("");
 
-        TextView responseTotal = (TextView) view.findViewById(R.id.respons_total);
-        TextView totalResponsibility = (TextView) view.findViewById(R.id.respons_total_label);
+        TextView responseTotal = view.findViewById(R.id.respons_total);
+        TextView totalResponsibility = view.findViewById(R.id.respons_total_label);
 
-        Button payTotalButton = (Button) view.findViewById(R.id.pay_total_amount_button);
-        payTotalButton.setClickable(false);
-        payTotalButton.setEnabled(false);
-
-        Button payPartialButton = (Button) view.findViewById(R.id.make_partial_payment_button);
-        payPartialButton.setClickable(false);
-        payPartialButton.setEnabled(false);
+        Button paymentOptionsButton = view.findViewById(R.id.paymentOptionsButton);
+        paymentOptionsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PaymentOptionsFragmentDialog fragment = PaymentOptionsFragmentDialog.newInstance(paymentDTO);
+                fragment.setCallback(new PaymentOptionsFragmentDialog.PaymentOptionsInterface() {
+                    @Override
+                    public void onOptionSelected(int option) {
+                        switch (option) {
+                            case PaymentOptionsFragmentDialog.PAYMENT_OPTION_TOTAL_AMOUNT:
+                                doPayment();
+                                break;
+                            case PaymentOptionsFragmentDialog.PAYMENT_OPTION_PARTIAL_AMOUNT:
+                                final PendingBalanceDTO selectedBalance = paymentDTO.getPaymentPayload()
+                                        .getPatientBalances().get(0).getBalances().get(0);
+                                actionCallback.onPartialPaymentClicked(total, selectedBalance);
+                                break;
+                            case PaymentOptionsFragmentDialog.PAYMENT_OPTION_PAYMENT_PLAN:
+                                actionCallback.onPaymentPlanAction(paymentDTO);
+                                break;
+                            case PaymentOptionsFragmentDialog.PAYMENT_OPTION_PAY_LATER:
+                                //Not Supported
+                                break;
+                        }
+                    }
+                });
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction transaction = fm.beginTransaction();
+                fragment.show(transaction, fragment.getClass().getCanonicalName());
+            }
+        });
 
         getPaymentInformation();
 
@@ -94,8 +121,8 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
             getPaymentLabels();
             try {
                 ((TextView) view.findViewById(R.id.respons_title)).setText(Label.getLabel("payment_title"));
-
-                List<PendingBalanceDTO> paymentList = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances();
+                List<PendingBalanceDTO> paymentList = paymentDTO.getPaymentPayload()
+                        .getPatientBalances().get(0).getBalances();
 
                 total = 0;
                 if (paymentList != null && paymentList.size() > 0) {
@@ -110,17 +137,8 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
                     fillDetailAdapter(view, getAllPendingBalancePayloads(paymentList));
 
                     try {
-                        if (total > 0) {
-                            payTotalButton.setEnabled(true);
-                            payTotalButton.setClickable(true);
-
-                            payPartialButton.setEnabled(true);
-                            payPartialButton.setClickable(true);
-
-                        }
-
-                        NumberFormat formatter = new DecimalFormat(CarePayConstants.RESPONSIBILITY_FORMATTER);
-                        responseTotal.setText(CarePayConstants.DOLLAR.concat(formatter.format(total)));
+                        NumberFormat numForm = NumberFormat.getCurrencyInstance(Locale.US);
+                        responseTotal.setText(numForm.format(total));
                     } catch (NumberFormatException ex) {
                         ex.printStackTrace();
                         Log.e(LOG_TAG, ex.getMessage());
@@ -132,41 +150,6 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
                 e.printStackTrace();
             }
         }
-
-        payTotalButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                doPayment();
-            }
-        });
-
-
-        final PendingBalanceDTO selectedBalance = paymentDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);
-        payPartialButton.setVisibility(isPartialPayAvailable(selectedBalance.getMetadata().getPracticeId(), total) ? View.VISIBLE : View.GONE);
-        payPartialButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                actionCallback.onPartialPaymentClicked(total, selectedBalance);
-            }
-        });
-
-        boolean paymentPlanEnabled = !paymentDTO.getPaymentPayload().isPaymentPlanCreated() &&
-                isPaymentPlanAvailable(selectedBalance.getMetadata().getPracticeId(), total);
-        Button paymentPlanButton = (Button) view.findViewById(R.id.create_payment_plan_button);
-        paymentPlanButton.setVisibility(paymentPlanEnabled ? View.VISIBLE : View.GONE);
-        paymentPlanButton.setEnabled(paymentPlanEnabled);
-        paymentPlanButton.setClickable(paymentPlanEnabled);
-        paymentPlanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                actionCallback.onPaymentPlanAction(paymentDTO);
-            }
-        });
-        if(mustAddToExisting) {
-            paymentPlanButton.setText(Label.getLabel("payment_plan_add_existing_short"));
-        }
-
-
         return view;
     }
 

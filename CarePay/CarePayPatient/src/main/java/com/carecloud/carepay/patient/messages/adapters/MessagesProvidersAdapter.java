@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.models.ProviderContact;
+import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import java.util.List;
 
 public class MessagesProvidersAdapter extends RecyclerView.Adapter<MessagesProvidersAdapter.ViewHolder> {
 
-    public interface SelectProviderCallback{
+    public interface SelectProviderCallback {
         void onProviderSelected(ProviderContact provider);
     }
 
@@ -31,11 +32,12 @@ public class MessagesProvidersAdapter extends RecyclerView.Adapter<MessagesProvi
 
     /**
      * Constructor
-     * @param context context
+     *
+     * @param context   context
      * @param providers list of providers
-     * @param callback callback
+     * @param callback  callback
      */
-    public MessagesProvidersAdapter(Context context, List<ProviderContact> providers, SelectProviderCallback callback){
+    public MessagesProvidersAdapter(Context context, List<ProviderContact> providers, SelectProviderCallback callback) {
         this.context = context;
         this.providers = providers;
         this.callback = callback;
@@ -54,6 +56,8 @@ public class MessagesProvidersAdapter extends RecyclerView.Adapter<MessagesProvi
         String providerName = provider.getName();
         holder.providerName.setText(providerName);
         holder.providerInitials.setText(StringUtil.getShortName(providerName));
+        holder.providerImage.setVisibility(View.GONE);
+        holder.providerInitials.setVisibility(View.VISIBLE);
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -62,6 +66,10 @@ public class MessagesProvidersAdapter extends RecyclerView.Adapter<MessagesProvi
                 callback.onProviderSelected(provider);
             }
         });
+
+        if(!StringUtil.isNullOrEmpty(provider.getPhoto())){
+            PicassoHelper.get().loadImage(context, holder.providerImage, holder.providerInitials, provider.getPhoto());
+        }
     }
 
     @Override
@@ -70,8 +78,7 @@ public class MessagesProvidersAdapter extends RecyclerView.Adapter<MessagesProvi
     }
 
 
-
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView unreadCount;
         ImageView providerImage;
@@ -81,11 +88,11 @@ public class MessagesProvidersAdapter extends RecyclerView.Adapter<MessagesProvi
 
         ViewHolder(View itemView) {
             super(itemView);
-            unreadCount = (TextView) itemView.findViewById(R.id.unread_count);
-            providerImage = (ImageView) itemView.findViewById(R.id.provider_image);
-            providerInitials = (TextView) itemView.findViewById(R.id.provider_initials);
-            providerName = (TextView) itemView.findViewById(R.id.provider_name);
-            providerTitle = (TextView) itemView.findViewById(R.id.provider_title);
+            unreadCount = itemView.findViewById(R.id.unread_count);
+            providerImage = itemView.findViewById(R.id.provider_image);
+            providerInitials = itemView.findViewById(R.id.provider_initials);
+            providerName = itemView.findViewById(R.id.provider_name);
+            providerTitle = itemView.findViewById(R.id.provider_title);
         }
     }
 }

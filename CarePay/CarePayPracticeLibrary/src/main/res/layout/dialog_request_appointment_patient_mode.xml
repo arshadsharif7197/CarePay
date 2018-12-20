@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_cardview"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/summary_header_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:orientation="vertical">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/appointment_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_30sp"
+                    android:visibility="gone"
+                    app:customAssetFont="proxima_nova_semi_bold"
+                    tools:text="Today, Aug 1st" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/appointment_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="@dimen/dimen_60dp"
+                    android:gravity="center"
+                    android:textColor="@color/white_opacity_60"
+                    android:textSize="@dimen/text_size_40sp"
+                    app:customAssetFont="gotham_rounded_bold"
+                    tools:text="10:15 AM" />
+            </LinearLayout>
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/provider_short_name"
+                android:layout_width="@dimen/provider_card_avatar_size"
+                android:layout_height="@dimen/provider_card_avatar_size"
+                android:layout_below="@id/summary_header_layout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/appointment_summary_provider_image_margin"
+                android:background="@drawable/round_list_tv"
+                android:gravity="center_vertical|center_horizontal"
+                android:src="@drawable/icn_placeholder_user_profile_png"
+                android:textColor="@color/lightSlateGray"
+                android:textSize="@dimen/text_size_40sp"
+                app:customAssetFont="gotham_rounded_medium"
+                tools:text="JS" />
+
+            <ImageView
+                android:id="@+id/picImageView"
+                android:layout_width="@dimen/provider_card_avatar_size"
+                android:layout_height="@dimen/provider_card_avatar_size"
+                android:layout_below="@id/summary_header_layout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/appointment_summary_provider_image_margin"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+        <ScrollView
+            android:id="@+id/scrollContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="@dimen/dimen_24dp"
+                android:layout_marginEnd="@dimen/dimen_24dp"
+                android:orientation="vertical">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/provider_doctor_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_15dp"
+                    android:gravity="center"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_size_24sp"
+                    app:customAssetFont="proxima_nova_semi_bold"
+                    tools:text="Dr. James Seaworth" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/provider_place_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/lightSlateGray"
+                    android:textSize="@dimen/text_size_20"
+                    app:customAssetFont="proxima_nova_extra_bold"
+                    tools:text="Main Medical Center" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/providerName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/lightSlateGray"
+                    android:textSize="@dimen/text_size_20"
+                    android:visibility="gone"
+                    app:customAssetFont="proxima_nova_regular"
+                    tools:text="Main Medical Center" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/provider_place_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:textColor="@color/lightSlateGray"
+                    android:textSize="@dimen/text_size_14sp"
+                    app:customAssetFont="proxima_nova_regular"
+                    tools:text="5200 Blue Lagoon Drive Miami, FL 33126" />
+
+                <FrameLayout
+                    android:id="@+id/addressSeparator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_10dp">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_1dp"
+                        android:layout_gravity="center"
+                        android:background="@color/light_gray" />
+
+                    <ImageView
+                        android:layout_width="@dimen/dimen_18dp"
+                        android:layout_height="@dimen/dimen_26dp"
+                        android:layout_gravity="center"
+                        android:background="@color/white"
+                        android:src="@drawable/icn_location_pin"
+                        tools:ignore="ContentDescription" />
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/dimen_20dp"
+                    android:paddingBottom="@dimen/dimen_20dp">
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/visitTypeLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/textview_default_textcolor"
+                        android:textSize="@dimen/text_size_24sp"
+                        app:customAssetFont="gotham_rounded_book"
+                        breeze:textKey="visit_type_heading"
+                        tools:text="Visit Type" />
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/reasonTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|end"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:textColor="@color/cardview_header_bg"
+                        android:textSize="@dimen/text_size_17"
+                        app:customAssetFont="gotham_rounded_medium"
+                        tools:ignore="RelativeOverlap"
+                        tools:text="Follow-Up" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/prepaymentLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_1dp"
+                        android:background="@color/light_gray" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingTop="@dimen/dimen_20dp"
+                        android:paddingBottom="@dimen/dimen_20dp">
+
+                        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:textColor="@color/textview_default_textcolor"
+                            android:textSize="@dimen/text_size_24sp"
+                            app:customAssetFont="gotham_rounded_book"
+                            breeze:textKey="appointments_prepayment_message"
+                            tools:text="Required Prepayment" />
+
+                        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                            android:id="@+id/prepaymentAmount"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|end"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:textColor="@color/cardview_header_bg"
+                            android:textSize="@dimen/text_size_17"
+                            app:customAssetFont="gotham_rounded_medium"
+                            tools:ignore="RelativeOverlap"
+                            tools:text="$25.00" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_1dp"
+                    android:background="@color/light_gray" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/reasonForVisitLabelTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="@dimen/dimen_25dp"
+                    android:textColor="@color/textview_default_textcolor"
+                    android:textSize="@dimen/text_size_24sp"
+                    app:customAssetFont="gotham_rounded_book"
+                    breeze:textKey="appointments_reason_for_visit_heading"
+                    tools:text="Reason for Visit" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                    android:id="@+id/reasonForVisitEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/reasonForVisitTopMargin"
+                    android:layout_marginBottom="@dimen/visitTypeContainerVerticalPadding"
+                    android:background="@drawable/bg_grey_edit_text"
+                    android:gravity="top"
+                    android:lines="4"
+                    android:maxLength="100"
+                    android:padding="@dimen/reasonForVisitHorizontalMargin"
+                    android:textColorHint="@color/gray"
+                    app:customAssetFont="proxima_nova_regular"
+                    breeze:hintKey="appointment.request.visitTypeReason.hint.typeHint" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_1dp"
+                android:background="@color/light_gray_dialog" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/requestAppointmentButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_24dp"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                android:layout_marginEnd="@dimen/dimen_24dp"
+                android:layout_marginBottom="@dimen/dimen_15dp"
+                android:background="@drawable/bg_green_overlay"
+                android:contentDescription="@string/content_description_request_appointment"
+                android:paddingTop="@dimen/dimen_14dp"
+                android:paddingBottom="@dimen/dimen_14dp"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_22sp"
+                app:customAssetFont="gotham_rounded_medium" />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

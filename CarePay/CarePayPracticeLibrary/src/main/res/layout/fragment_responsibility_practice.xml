@@ -105,48 +105,15 @@
             android:padding="@dimen/dimen_10dp">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                android:id="@+id/create_payment_plan_button"
-                android:layout_width="0dp"
+                android:id="@+id/paymentOptionsButton"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_48dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="@dimen/dimen_5dp"
-                android:background="@drawable/round_border_button_bg"
-                android:textAllCaps="false"
-                android:textColor="@color/primary_color_enabled_selector"
-                android:textSize="@dimen/text_size_18sp"
-                app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="payment_create_plan"
-                tools:text="Create Plan"
-                tools:ignore="ButtonStyle"/>
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                android:id="@+id/make_partial_payment_button"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/dimen_48dp"
-                android:layout_marginEnd="@dimen/dimen_5dp"
-                android:layout_marginStart="@dimen/dimen_5dp"
-                android:layout_weight="1"
-                android:background="@drawable/primary_rounded_button_selector"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_18sp"
-                breeze:textKey="payment_partial_payment_text"
-                app:customAssetFont="gotham_rounded_medium"
-                tools:text="Pay Partial"
-                tools:ignore="ButtonStyle"/>
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                android:id="@+id/pay_total_amount_button"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/dimen_48dp"
-                android:layout_marginStart="@dimen/dimen_5dp"
-                android:layout_weight="1"
                 android:background="@drawable/green_rounded_button_selector"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_18sp"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="payment_details_pay_now"
+                breeze:textKey="payment_options_button"
                 tools:text="Pay Now"
                 tools:ignore="ButtonStyle"/>
 

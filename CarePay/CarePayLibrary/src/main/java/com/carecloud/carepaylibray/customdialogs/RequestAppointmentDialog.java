@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.label.Label;
@@ -15,6 +18,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.interfaces.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
+import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 
@@ -24,6 +28,7 @@ import java.util.Locale;
 public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
 
     private final AppointmentsSlotsDTO appointmentSlot;
+    private final ProviderDTO provider;
     private Context context;
     private VisitTypeDTO visitTypeDTO;
 
@@ -32,26 +37,30 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
     /**
      * Constructor.
      *
-     * @param context           activity context
-     * @param appointmentDTO    appointment model
-     * @param appointmentsSlot  The appointment slot
+     * @param context          activity context
+     * @param appointmentDTO   appointment model
+     * @param appointmentsSlot The appointment slot
+     * @param provider
      */
-    public RequestAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
+    public RequestAppointmentDialog(Context context,
+                                    AppointmentDTO appointmentDTO,
                                     AppointmentsSlotsDTO appointmentsSlot,
-                                    VisitTypeDTO visitTypeDTO) {
+                                    VisitTypeDTO visitTypeDTO,
+                                    ProviderDTO provider) {
 
         super(context, appointmentDTO, true);
         this.context = context;
         this.appointmentSlot = appointmentsSlot;
         this.visitTypeDTO = visitTypeDTO;
+        this.provider = provider;
         setupCallback();
     }
 
     private void setupCallback() {
         try {
-            if(context instanceof AppointmentViewHandler){
+            if (context instanceof AppointmentViewHandler) {
                 callback = ((AppointmentViewHandler) context).getAppointmentPresenter();
-            }else {
+            } else {
                 callback = (AppointmentNavigationCallback) context;
             }
         } catch (ClassCastException cce) {
@@ -73,37 +82,49 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         View childActionView = inflater.inflate(R.layout.dialog_request_appointment, null);
 
         boolean autoScheduleAppointments = callback.getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests();
-        Button appointmentRequestButton = (Button) childActionView.findViewById(R.id.requestAppointmentButton);
+        View view = findViewById(R.id.appointDialogButtonLayout);
+        view.setVisibility(View.VISIBLE);
+        Button appointmentRequestButton = findViewById(R.id.requestAppointmentButton);
         appointmentRequestButton.setText(Label.getLabel(autoScheduleAppointments ?
                 "appointments_schedule_button" : "appointments_request_heading"));
-        appointmentRequestButton.setOnClickListener(this);
         appointmentRequestButton.requestFocus();
 
-        TextView reasonTextView = (TextView) childActionView.findViewById(R.id.reasonTextView);
-
-        String visitReason = visitTypeDTO.getName();// (String) appointmentDTO.getPayload().getChiefComplaint();
+        TextView reasonTextView = childActionView.findViewById(R.id.reasonTextView);
+        String visitReason = visitTypeDTO.getName();
         reasonTextView.setText(visitReason);
 
+
         View prepaidLayout = childActionView.findViewById(R.id.prepaymentLayout);
-        if(visitTypeDTO.getAmount() > 0){
+        if (visitTypeDTO.getAmount() > 0) {
             prepaidLayout.setVisibility(View.VISIBLE);
-            TextView prepaidAmount = (TextView) childActionView.findViewById(R.id.prepaymentAmount);
+            TextView prepaidAmount = childActionView.findViewById(R.id.prepaymentAmount);
             prepaidAmount.setText(NumberFormat.getCurrencyInstance(Locale.US).format(visitTypeDTO.getAmount()));
             appointmentRequestButton.setText(Label.getLabel("appointments_prepayment_button"));
-        }else{
+        } else {
             prepaidLayout.setVisibility(View.GONE);
         }
 
-        ((ViewGroup) getAddActionChildView()).addView(childActionView);
-    }
+        final EditText reasonForVisitEditText = childActionView.findViewById(R.id.reasonForVisitEditText);
+        appointmentRequestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+                final String reasonForVisit = reasonForVisitEditText.getText().toString();
+                callback.requestAppointment(appointmentSlot, reasonForVisit);
+            }
+        });
 
-    @Override
-    public void onClick(View view) {
-        super.onClick(view);
-        int viewId = view.getId();
-        if (viewId == R.id.requestAppointmentButton) {
-            dismiss();
-            callback.requestAppointment(appointmentSlot, "");
-        }
+        ((ViewGroup) getAddActionChildView()).addView(childActionView);
+
+        ImageView appointUserPicImageView = findViewById(R.id.appointUserPicImageView);
+        loadImage(appointUserPicImageView, provider.getPhoto());
+
+        final ScrollView scrollContainer = findViewById(R.id.containerScrollView);
+        scrollContainer.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollContainer.fullScroll(View.FOCUS_UP);
+            }
+        });
     }
 }

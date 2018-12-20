@@ -40,8 +40,8 @@ import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.PhysicianDto;
-import com.carecloud.carepaylibray.demographics.fragments.EmergencyContactFragment;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
+import com.carecloud.carepaylibray.demographics.fragments.EmergencyContactFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.SearchPhysicianFragment;
 import com.carecloud.carepaylibray.demographics.interfaces.DemographicExtendedInterface;
@@ -255,7 +255,8 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
                 .newInstance(Label.getLabel("demographics_insurance_primary_alert_title"),
                         Label.getLabel("demographics_insurance_primary_alert_message_patient"));
         confirmDialogFragment.setCallback(callback);
-        if(cancelListener != null){
+        confirmDialogFragment.setNegativeAction(true);
+        if (cancelListener != null) {
             confirmDialogFragment.setOnCancelListener(cancelListener);
         }
         String tag = confirmDialogFragment.getClass().getName();
