@@ -527,6 +527,8 @@
     <dimen name="medicationAllergyItemTextSize">14sp</dimen>
     <dimen name="medicationAllergyItemMargin">16dp</dimen>
     <dimen name="medicationAllergyItemVerticalPadding">5dp</dimen>
+    <dimen name="medicationAllergyItemRemoveButtonWidth">80dp</dimen>
+    <dimen name="medicationAllergyStrikeMargin">17dp</dimen>
     <dimen name="responsTotalLabelTopMargin">40dp</dimen>
     <dimen name="responsibilityListTopMargin">30dp</dimen>
     <dimen name="paymentMethodItemMargin">13dp</dimen>
