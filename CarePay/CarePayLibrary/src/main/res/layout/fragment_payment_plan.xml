@@ -344,8 +344,8 @@
                     android:textAllCaps="true"
                     android:textColor="@color/harvard_crimson"
                     android:textSize="@dimen/respons_button_text_size"
-                    breeze:textKey="payment_plan_cancel"
-                    tools:text="Cancel Plan" />
+                    breeze:textKey="payment.editPaymentPlan.cancel.button.label"
+                    tools:text="Cancel Payment Plan" />
 
             </LinearLayout>
 

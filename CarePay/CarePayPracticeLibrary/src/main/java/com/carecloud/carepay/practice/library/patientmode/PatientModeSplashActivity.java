@@ -55,17 +55,17 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
     }
 
     @Override
-    public void onUserInteraction(){
+    public void onUserInteraction() {
         super.onUserInteraction();
         isUserInteraction = true;
     }
 
     private void initViews() {
-        getStartedButton = (TextView) findViewById(R.id.getstartedTextview);
-        praticewelcomeText = (TextView) findViewById(R.id.welcomeTitleTextview);
-        practicelogo = (ImageView) findViewById(R.id.practicelogo);
-        lockIcnImageView = (ImageView) findViewById(R.id.lockicnimageView);
-        langSpinner = (Spinner) findViewById(R.id.splashPatientLangSpinner);
+        getStartedButton = findViewById(R.id.getstartedTextview);
+        praticewelcomeText = findViewById(R.id.welcomeTitleTextview);
+        practicelogo = findViewById(R.id.practicelogo);
+        lockIcnImageView = findViewById(R.id.lockicnimageView);
+        langSpinner = findViewById(R.id.splashPatientLangSpinner);
     }
 
     private void initializeLabels() {
@@ -127,7 +127,7 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
         langSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(!isUserInteraction){
+                if (!isUserInteraction) {
                     return;
                 }
                 // save selected in preferences

@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.library.appointments.dialogs;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -65,6 +66,9 @@ public class PracticeModeRequestAppointmentDialog extends PatientModeRequestAppo
         view.findViewById(R.id.provider_place_address).setVisibility(View.GONE);
         view.findViewById(R.id.provider_place_name).setVisibility(View.GONE);
         view.findViewById(R.id.addressSeparator).setVisibility(View.GONE);
+
+        ImageView picImageView = findViewById(R.id.picImageView);
+        loadImage(picImageView, patientModel.getProfilePhoto());
 
     }
 

@@ -50,7 +50,7 @@ public class MessagesProvidersFragment extends BaseFragment implements MessagesP
     public void onViewCreated(View view, Bundle icicle){
         initToolbar(view);
 
-        providersRecycler = (RecyclerView) view.findViewById(R.id.providers_recycler);
+        providersRecycler = view.findViewById(R.id.providers_recycler);
         providersRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
         setAdapter();
@@ -63,8 +63,8 @@ public class MessagesProvidersFragment extends BaseFragment implements MessagesP
     }
 
     private void initToolbar(View view){
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(Label.getLabel("messaging_providers_title"));
 
         toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);

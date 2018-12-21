@@ -5,25 +5,32 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentListItem;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalancesAdapter.ViewHolder> {
     private static final int VIEW_TYPE_BALANCE = 0;
     private static final int VIEW_TYPE_PLAN = 1;
+    private final Map<String, UserPracticeDTO> practiceMap;
 
     private Context context;
     private List<? extends PaymentListItem> listItems = new ArrayList<>();
@@ -35,12 +42,17 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
      * @param context         The context
      * @param pendingBalances The list of the pending listItems
      * @param listener        the listener
+     * @param practiceMap
      */
-    public PaymentBalancesAdapter(Context context, List<? extends PaymentListItem> pendingBalances, OnBalanceListItemClickListener listener, PaymentsModel paymentsModel) {
+    public PaymentBalancesAdapter(Context context, List<? extends PaymentListItem> pendingBalances,
+                                  OnBalanceListItemClickListener listener,
+                                  PaymentsModel paymentsModel,
+                                  Map<String, UserPracticeDTO> practiceMap) {
         this.context = context;
         this.listItems = pendingBalances;
         this.listener = listener;
         this.paymentsModel = paymentsModel;
+        this.practiceMap = practiceMap;
     }
 
     @Override
@@ -59,9 +71,9 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        String practiceId = null;
         if (getItemViewType(position) == VIEW_TYPE_BALANCE) {
             final PaymentsBalancesItem pendingBalance = (PaymentsBalancesItem) listItems.get(position);
-
             String locationName = pendingBalance.getMetadata().getPracticeName();
             holder.shortName.setText(StringUtil.getShortName(locationName));
             holder.locationName.setText(locationName);
@@ -76,6 +88,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
 
             boolean canPay = paymentsModel.getPaymentPayload().canMakePayments(pendingBalance.getMetadata().getPracticeId());
             holder.payLabel.setVisibility(canPay ? View.VISIBLE : View.GONE);
+            practiceId = pendingBalance.getMetadata().getPracticeId();
         } else {
             final PaymentPlanDTO paymentPlanItem = (PaymentPlanDTO) listItems.get(position);
 
@@ -105,7 +118,31 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
                     listener.onPaymentPlanItemClickListener(paymentPlanItem);
                 }
             });
+            practiceId = paymentPlanItem.getMetadata().getPracticeId();
         }
+
+        loadImage(holder, practiceMap.get(practiceId).getPracticePhoto());
+    }
+
+    private void loadImage(final PaymentBalancesAdapter.ViewHolder holder, String photoUrl) {
+        int size = context.getResources().getDimensionPixelSize(R.dimen.payment_details_dialog_icon_size);
+        Picasso.with(context).load(photoUrl)
+                .resize(size, size)
+                .centerCrop()
+                .transform(new CircleImageTransform())
+                .into(holder.picImageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        holder.picImageView.setVisibility(View.VISIBLE);
+                        holder.shortName.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onError() {
+                        holder.picImageView.setVisibility(View.GONE);
+                        holder.shortName.setVisibility(View.VISIBLE);
+                    }
+                });
     }
 
     @Override
@@ -123,6 +160,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
+        private ImageView picImageView;
         private TextView shortName;
         private TextView locationName;
         private TextView amount;
@@ -134,14 +172,15 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
 
         ViewHolder(View itemView) {
             super(itemView);
-            locationName = (TextView) itemView.findViewById(R.id.balancesLocation);
-            amount = (TextView) itemView.findViewById(R.id.balancesTotalAmount);
-            shortName = (TextView) itemView.findViewById(R.id.balancesAvatarTextView);
+            locationName = itemView.findViewById(R.id.balancesLocation);
+            amount = itemView.findViewById(R.id.balancesTotalAmount);
+            shortName = itemView.findViewById(R.id.balancesAvatarTextView);
             payLabel = itemView.findViewById(R.id.balancesPayNowTextView);
-            planDetail = (TextView) itemView.findViewById(R.id.planInstallmentDetail);
-            planProgress = (ProgressBar) itemView.findViewById(R.id.paymentPlanProgress);
+            planDetail = itemView.findViewById(R.id.planInstallmentDetail);
+            planProgress = itemView.findViewById(R.id.paymentPlanProgress);
             scheduledIcon = itemView.findViewById(R.id.scheduledPaymentIcon);
-            planName = (TextView) itemView.findViewById(R.id.planName);
+            planName = itemView.findViewById(R.id.planName);
+            picImageView = itemView.findViewById(R.id.picImageView);
         }
     }
 

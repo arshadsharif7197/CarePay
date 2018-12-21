@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.carecloud.carepay.patient.R;
@@ -13,7 +14,10 @@ import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragme
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentSectionHeaderModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -75,6 +79,7 @@ public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.Provid
                     listener.onProviderListItemClickListener(holder.getAdapterPosition());
                 }
             });
+            loadImage(holder.providerPicImageView, resources.getResource().getProvider().getPhoto());
         } else {
             AppointmentSectionHeaderModel item = (AppointmentSectionHeaderModel) object;
             if (position == 0) {
@@ -82,7 +87,7 @@ public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.Provid
                 holder.providerItemLinearLayout.setVisibility(View.GONE);
 
                 CarePayTextView providerStickyHeaderTitle =
-                        (CarePayTextView) view.findViewById(R.id.providers_sticky_header_title);
+                        view.findViewById(R.id.providers_sticky_header_title);
                 providerStickyHeaderTitle.setText(item.getAppointmentHeader());
                 providerStickyHeaderTitle.setTextColor(
                         ContextCompat.getColor(view.getContext(), R.color.lightSlateGray));
@@ -96,6 +101,25 @@ public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.Provid
         }
     }
 
+    private void loadImage(final ImageView imageView, String url) {
+        int size = context.getResources().getDimensionPixelSize(R.dimen.payment_details_dialog_icon_size);
+        Picasso.with(context).load(url)
+                .resize(size, size)
+                .centerCrop()
+                .transform(new CircleImageTransform())
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        imageView.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onError() {
+                        imageView.setVisibility(View.GONE);
+                    }
+                });
+    }
+
     @Override
     public int getItemCount() {
         return providersArrayList.size();
@@ -107,26 +131,20 @@ public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.Provid
         private CarePayTextView doctorName;
         private CarePayTextView doctorType;
         private CarePayTextView providerSectionHeaderTitle;
+        private ImageView providerPicImageView;
 
         private LinearLayout providerSectionLinearLayout;
         private LinearLayout providerItemLinearLayout;
 
         ProviderViewHolder(View itemView) {
             super(itemView);
-
-            // set doctor name
-            doctorName = (CarePayTextView) itemView.findViewById(R.id.doctor_name);
-            // set doctor type
-            doctorType = (CarePayTextView) itemView.findViewById(R.id.doctor_type);
-            // set doctor short name
-            shortName = (CarePayTextView) itemView.findViewById(R.id.avatarTextView);
-
-            providerSectionLinearLayout = (LinearLayout)
-                    itemView.findViewById(R.id.providers_section_linear_layout);
-            providerItemLinearLayout = (LinearLayout)
-                    itemView.findViewById(R.id.provider_item_linear_layout);
-            providerSectionHeaderTitle = (CarePayTextView)
-                    itemView.findViewById(R.id.providers_section_header_title);
+            doctorName = itemView.findViewById(R.id.doctor_name);
+            doctorType = itemView.findViewById(R.id.doctor_type);
+            shortName = itemView.findViewById(R.id.avatarTextView);
+            providerSectionLinearLayout = itemView.findViewById(R.id.providers_section_linear_layout);
+            providerItemLinearLayout = itemView.findViewById(R.id.provider_item_linear_layout);
+            providerSectionHeaderTitle = itemView.findViewById(R.id.providers_section_header_title);
+            providerPicImageView = itemView.findViewById(R.id.providerPicImageView);
         }
     }
 

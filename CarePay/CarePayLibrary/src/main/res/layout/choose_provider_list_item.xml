@@ -21,8 +21,8 @@
             android:layout_gravity="center_vertical"
             android:background="@color/light_gray"
             android:gravity="center_vertical"
-            android:paddingEnd="0dp"
             android:paddingStart="@dimen/list_apt_padding_right"
+            android:paddingEnd="0dp"
             android:textColor="@color/lightSlateGray"
             android:textSize="@dimen/textview_textsize"
             app:customAssetFont="proxima_nova_semi_bold" />
@@ -39,8 +39,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/apt_dl_image_elevation"
             android:layout_marginTop="@dimen/apt_dl_image_elevation"
+            android:layout_marginBottom="@dimen/apt_dl_image_elevation"
             android:baselineAligned="false"
             android:orientation="horizontal">
 
@@ -59,6 +59,11 @@
                     android:textColor="@color/lightSlateGray"
                     android:textSize="@dimen/apt_dl_text_big"
                     app:customAssetFont="gotham_rounded_medium" />
+                
+                    <ImageView
+                        android:id="@+id/providerPicImageView"
+                        android:layout_width="@dimen/payment_details_dialog_icon_size"
+                        android:layout_height="@dimen/payment_details_dialog_icon_size"/>
             </RelativeLayout>
 
             <LinearLayout

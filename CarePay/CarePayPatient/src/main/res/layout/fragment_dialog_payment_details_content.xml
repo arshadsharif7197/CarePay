@@ -71,6 +71,14 @@
                 android:textColor="@color/lightSlateGray"
                 app:customAssetFont="gotham_rounded_medium" />
 
+            <ImageView
+                android:id="@+id/practiceImageView"
+                android:layout_width="@dimen/payment_details_dialog_icon_size"
+                android:layout_height="@dimen/payment_details_dialog_icon_size"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_vertical|center_horizontal" />
+
         </RelativeLayout>
 
 
