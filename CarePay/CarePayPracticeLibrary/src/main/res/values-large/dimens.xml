@@ -562,4 +562,13 @@
     <dimen name="patientHomeSpinnerWidth">80dp</dimen>
     <dimen name="patientHomeSpinnerHeight">36dp</dimen>
 
+    <!--How to check in-->
+    <dimen name="howToCheckinHomeButtonPadding">20dp</dimen>
+    <dimen name="howToCheckInHeaderMargin">20dp</dimen>
+    <dimen name="howToCheckInTitleTextSize">24sp</dimen>
+    <dimen name="howToCheckInTitleTopMargin">5dp</dimen>
+    <dimen name="howToCheckInTitleBottomMargin">15dp</dimen>
+    <dimen name="howToCheckInOptionPadding">10dp</dimen>
+    <dimen name="howToCheckInOptionTextSize">20sp</dimen>
+
 </resources>
