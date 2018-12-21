@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent">
 
@@ -11,7 +12,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginEnd="@dimen/dimen_8dp"
         android:background="@drawable/rounded_button_blue_border_selector"
-        android:text="Location"
-        app:customAssetFont="proxima_nova_regular" />
+        app:customAssetFont="proxima_nova_regular"
+        tools:text="Location" />
 
 </FrameLayout>

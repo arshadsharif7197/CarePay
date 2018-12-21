@@ -9,6 +9,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -20,9 +21,12 @@ import com.carecloud.carepaylibray.appointments.interfaces.AppointmentNavigation
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -71,9 +75,7 @@ public class PatientModeRequestAppointmentDialog extends BasePracticeDialog {
     @SuppressLint("InflateParams")
     @Override
     protected void onAddContentView(LayoutInflater inflater) {
-//        View view = inflater.inflate(R.layout.dialog_request_appointment_summary, null);
         View view = inflater.inflate(R.layout.dialog_request_appointment_patient_mode, null);
-
         ((FrameLayout) findViewById(R.id.base_dialog_content_layout)).addView(view);
         inflateUIComponents(view);
     }
@@ -146,6 +148,9 @@ public class PatientModeRequestAppointmentDialog extends BasePracticeDialog {
             }
         });
 
+        ImageView picImageView = findViewById(R.id.picImageView);
+        loadImage(picImageView, appointmentResourcesDTO.getResource().getProvider().getPhoto());
+
     }
 
     private void initializeVisitTypeTextView(View view) {
@@ -167,5 +172,24 @@ public class PatientModeRequestAppointmentDialog extends BasePracticeDialog {
             callback.onAppointmentUnconfirmed();
         }
         dismiss();
+    }
+
+    protected void loadImage(final ImageView imageView, String url) {
+        int size = getContext().getResources().getDimensionPixelSize(R.dimen.provider_card_avatar_size);
+        Picasso.with(getContext()).load(url)
+                .resize(size, size)
+                .centerCrop()
+                .transform(new CircleImageTransform())
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        imageView.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onError() {
+                        imageView.setVisibility(View.GONE);
+                    }
+                });
     }
 }

@@ -134,7 +134,7 @@ public class UpdateNameFragment extends DemographicsBaseSettingsFragment {
         setVisibility(middleNameLayout, dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isDisplayed());
         if (dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isRequired()) {
             middleName.addTextChangedListener(getValidateEmptyTextWatcher(middleNameLayout));
-            View middleNameOptional = view.findViewById(R.id.reviewdemogrMiddleNameOptionalLabel);
+            View middleNameOptional = view.findViewById(R.id.middleNameRequired);
             middleNameOptional.setVisibility(View.GONE);
         } else {
             middleName.addTextChangedListener(new TextWatcher() {

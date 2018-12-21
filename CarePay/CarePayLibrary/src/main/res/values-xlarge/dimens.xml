@@ -1,4 +1,3 @@
-
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="hint_floating_size">10sp</dimen>
@@ -7,10 +6,10 @@
     <dimen name="closeIconSize">19dp</dimen>
     <dimen name="lineItemTextSize">18sp</dimen>
     <dimen name="roundBorderBottonVerticalPadding">8dp</dimen>
-    <dimen name="optionalLabelRightMargin">38dp</dimen>
-    <dimen name="optionalLabelTextSize">9sp</dimen>
     <dimen name="reasonForVisitHorizontalMargin">14dp</dimen>
     <dimen name="visitTypeContainerVerticalPadding">15dp</dimen>
     <dimen name="reasonForVisitTopMargin">10dp</dimen>
     <dimen name="nextAppointmentProviderImageSize">100dp</dimen>
+    <dimen name="optionalLabelRightMargin">38dp</dimen>
+    <dimen name="optionalLabelTextSize">9sp</dimen>
 </resources>

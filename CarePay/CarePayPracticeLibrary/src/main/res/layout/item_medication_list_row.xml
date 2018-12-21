@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/medication_none_placeholder"
@@ -27,7 +28,7 @@
                 android:gravity="start"
                 android:maxLines="2"
                 android:textColor="@color/lightSlateGray"
-                android:textSize="@dimen/text_size_14"
+                android:textSize="@dimen/medicationAllergyItemTextSize"
                 app:customAssetFont="proxima_nova_semi_bold"
                 tools:text="Medication X\n line 2 "/>
 
@@ -67,7 +68,7 @@
             android:paddingStart="@dimen/padding_large"
             android:paddingTop="@dimen/padding_small"
             android:textColor="@color/remove_red"
-            android:textSize="@dimen/text_size_14"
+            android:textSize="@dimen/medicationAllergyItemTextSize"
             app:customAssetFont="proxima_nova_semi_bold"
             tools:text="Remove"/>
 

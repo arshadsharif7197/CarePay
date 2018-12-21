@@ -166,7 +166,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     private void showResponsibilityFragment() {
         paymentStarted = true;
         replaceFragment(ResponsibilityFragment
-                .newInstance(paymentsModel, null, true,
+                .newInstance(paymentsModel, null, false,
                         Label.getLabel("checkout_responsibility_title")), shouldAddBackStack);
     }
 

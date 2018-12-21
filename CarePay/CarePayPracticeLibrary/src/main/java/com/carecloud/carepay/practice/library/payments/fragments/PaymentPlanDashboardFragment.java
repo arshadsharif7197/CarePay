@@ -1,7 +1,6 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,6 +40,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
 
     private RecyclerView currentPaymentPlansRecycler;
     private RecyclerView completedPaymentPlansRecycler;
+    private RecyclerView canceledPaymentPlansRecycler;
 
     public static PaymentPlanDashboardFragment newInstance(PaymentsModel paymentsModel) {
         Bundle args = new Bundle();
@@ -85,11 +85,13 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
         hasBalanceForPaymentPlan = hasBalanceForPaymentPlan();
         setCurrentPaymentPlans(view);
         setCompletedPaymentPlans(view);
+        setCanceledPaymentPlans(view);
         setUpButtons(view);
 
         View emptyPlansLayout = view.findViewById(R.id.empty_plans_layout);
-        if (completedPaymentPlansRecycler.getAdapter().getItemCount() == 0 &&
-                currentPaymentPlansRecycler.getAdapter().getItemCount() == 0) {
+        if (completedPaymentPlansRecycler.getAdapter().getItemCount() == 0
+                && currentPaymentPlansRecycler.getAdapter().getItemCount() == 0
+                && canceledPaymentPlansRecycler.getAdapter().getItemCount() == 0) {
             emptyPlansLayout.setVisibility(View.VISIBLE);
         } else {
             emptyPlansLayout.setVisibility(View.GONE);
@@ -119,7 +121,8 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
         currentPaymentPlansRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         PaymentPlanDashboardAdapter adapter = new PaymentPlanDashboardAdapter(
                 getPaymentPlansFiltered(paymentsModel.getPaymentPayload().getPatientPaymentPlans(),
-                        false), paymentsModel, false, hasBalanceForPaymentPlan);
+                        PaymentPlanDetailsDTO.STATUS_PROCESSING), paymentsModel,
+                false, hasBalanceForPaymentPlan);
         adapter.setCallback(this);
         currentPaymentPlansRecycler.setAdapter(adapter);
     }
@@ -129,7 +132,8 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
         completedPaymentPlansRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         PaymentPlanDashboardAdapter adapter = new PaymentPlanDashboardAdapter(
                 getPaymentPlansFiltered(paymentsModel.getPaymentPayload().getPatientPaymentPlans(),
-                        true), paymentsModel, true, false);
+                        PaymentPlanDetailsDTO.STATUS_COMPLETED), paymentsModel,
+                true, false);
         adapter.setCallback(this);
         completedPaymentPlansRecycler.setAdapter(adapter);
 
@@ -138,13 +142,24 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
                 View.GONE : View.VISIBLE);
     }
 
+    private void setCanceledPaymentPlans(View view) {
+        canceledPaymentPlansRecycler = view.findViewById(R.id.canceledPaymentPlansRecycler);
+        canceledPaymentPlansRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        PaymentPlanDashboardAdapter adapter = new PaymentPlanDashboardAdapter(
+                getPaymentPlansFiltered(paymentsModel.getPaymentPayload().getPatientPaymentPlans(),
+                        PaymentPlanDetailsDTO.STATUS_CANCELLED), paymentsModel,
+                true, false);
+        adapter.setCallback(this);
+        canceledPaymentPlansRecycler.setAdapter(adapter);
+
+        View completedLabel = view.findViewById(R.id.canceledLabel);
+        completedLabel.setVisibility(canceledPaymentPlansRecycler.getAdapter().getItemCount() == 0 ?
+                View.GONE : View.VISIBLE);
+    }
+
     private List<PaymentPlanDTO> getPaymentPlansFiltered(List<PaymentPlanDTO> patientPaymentPlans,
-                                                         boolean completed) {
+                                                         String type) {
         List<PaymentPlanDTO> filteredPayments = new ArrayList<>();
-        String type = PaymentPlanDetailsDTO.STATUS_PROCESSING;
-        if (completed) {
-            type = PaymentPlanDetailsDTO.STATUS_COMPLETED;
-        }
         for (PaymentPlanDTO paymentPlan : patientPaymentPlans) {
             if (paymentPlan.getPayload().getPaymentPlanDetails().getPaymentPlanStatus().equals(type)) {
                 filteredPayments.add(paymentPlan);

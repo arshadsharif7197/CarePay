@@ -211,7 +211,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         appointmentDTO.setPayload(payloadDTO);
 
         final RequestAppointmentDialog requestAppointmentDialog = new RequestAppointmentDialog(getContext(),
-                appointmentDTO, appointmentsSlot, selectedVisitTypeDTO);
+                appointmentDTO, appointmentsSlot, selectedVisitTypeDTO, appointmentDTO.getPayload().getProvider());
         requestAppointmentDialog.show();
     }
 

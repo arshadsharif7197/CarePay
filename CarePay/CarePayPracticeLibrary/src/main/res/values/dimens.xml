@@ -171,6 +171,15 @@
     <dimen name="officeNewsItemWidth">300dp</dimen>
     <dimen name="officeNewListItemTextSize">20sp</dimen>
     <dimen name="officeNewsHeaderTextSize">26sp</dimen>
+    <dimen name="updateAlertContainerPadding">20dp</dimen>
+    <dimen name="updateAlertImageEndMargin">10dp</dimen>
+    <dimen name="updateAlertTitleTextSize">15sp</dimen>
+    <dimen name="updateAlertMessageTextSize">12sp</dimen>
+    <dimen name="updateAlertMessageTopMargin">5dp</dimen>
+    <dimen name="updateAlertContainerTopMargin">35dp</dimen>
+    <dimen name="officeNewsContainerVerticalPadding">10dp</dimen>
+    <dimen name="officeNewsContainerHorizontalPadding">20dp</dimen>
+    <dimen name="officeNewsHorizontalPadding">5dp</dimen>
 
     <!--Signature view dialog-->
 
@@ -275,18 +284,6 @@
     <dimen name="pickItemVerticalPadding">8dp</dimen>
     <dimen name="lineItemDetailButtonTextSize">13sp</dimen>
 
-    <!--Payments Activity-->
-    <dimen name="paymentPatientNameTextSize">24sp</dimen>
-    <dimen name="findPatientButtonRightMargin">50dp</dimen>
-    <dimen name="mainScreensTitleTextSize">22sp</dimen>
-    <dimen name="paymentContainerBottomMargin">10dp</dimen>
-    <dimen name="paymentContainerHorizontalMargin">120dp</dimen>
-    <dimen name="changeDateHorizontalPadding">20dp</dimen>
-    <dimen name="changeDateVerticalPadding">10dp</dimen>
-    <dimen name="listPatientsMarginTop">20dp</dimen>
-    <dimen name="patientItemHorizontalMargin">10dp</dimen>
-    <dimen name="paymentContainerTopMargin">19dp</dimen>
-
     <!--Dots Menu-->
     <dimen name="dotSize">3dp</dimen>
     <dimen name="dotHorizontalMargin">12dp</dimen>
@@ -367,6 +364,33 @@
     <dimen name="negativeContainerTopMargin">40dp</dimen>
     <dimen name="surveyFeedbackButtonWidth">300dp</dimen>
     <dimen name="checkoutMessageTextSize">40sp</dimen>
+
+
+    <!--Payment Options Dialog-->
+    <dimen name="paymentOptionIconSize">60dp</dimen>
+    <dimen name="paymentOptionIconMargin">10dp</dimen>
+    <dimen name="paymentOptionTextSize">26sp</dimen>
+    <dimen name="paymentOptionContainerHeight">90dp</dimen>
+    <dimen name="paymentOptionContainerPadding">10dp</dimen>
+    <dimen name="paymentOptionHeaderPadding">15dp</dimen>
+    <dimen name="paymentOptionHeaderMessageTextSize">22sp</dimen>
+    <dimen name="paymentOptionHeaderBalanceTextSize">90sp</dimen>
+    <dimen name="paymentOptionBodyHorizontalPadding">20dp</dimen>
+    <dimen name="paymentOptionBodyVerticalPadding">10dp</dimen>
+    <dimen name="paymentOptionBodyMessageHorizontalPadding">15dp</dimen>
+    <dimen name="paymentOptionBodyMessageTextSize">22sp</dimen>
+
+    <!--Payments Activity-->
+    <dimen name="paymentPatientNameTextSize">24sp</dimen>
+    <dimen name="findPatientButtonRightMargin">50dp</dimen>
+    <dimen name="mainScreensTitleTextSize">22sp</dimen>
+    <dimen name="paymentContainerBottomMargin">10dp</dimen>
+    <dimen name="paymentContainerHorizontalMargin">120dp</dimen>
+    <dimen name="changeDateHorizontalPadding">20dp</dimen>
+    <dimen name="changeDateVerticalPadding">10dp</dimen>
+    <dimen name="listPatientsMarginTop">20dp</dimen>
+    <dimen name="patientItemHorizontalMargin">10dp</dimen>
+    <dimen name="paymentContainerTopMargin">19dp</dimen>
 
     <!--Payment Plan Detail-->
     <dimen name="paymentPlanDetailSectionHorizontalMargin">15dp</dimen>

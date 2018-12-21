@@ -19,9 +19,12 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener {
 
@@ -66,8 +69,8 @@ public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener
 
         DateUtil.getInstance().setDateRaw(payload.getStartTime());
 
-        CarePayTextView dateTextView = ((CarePayTextView) findViewById(R.id.appointDateTextView));
-        CarePayTextView timeTextView = ((CarePayTextView) findViewById(R.id.appointTimeTextView));
+        CarePayTextView dateTextView = findViewById(R.id.appointDateTextView);
+        CarePayTextView timeTextView = findViewById(R.id.appointTimeTextView);
 
         if(isRequestAppointmentDialog) {
             timeTextView.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinal());
@@ -77,22 +80,22 @@ public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener
             timeTextView.setText(DateUtil.getInstance().getTime12Hour());
         }
 
-        CarePayTextView shortNameTextView = ((CarePayTextView) findViewById(R.id.appointShortnameTextView));
+        CarePayTextView shortNameTextView = findViewById(R.id.appointShortnameTextView);
         shortNameTextView.setText(StringUtil.getShortName(payload.getProvider().getName()));
 
-        CarePayTextView nameTextView = ((CarePayTextView) findViewById(R.id.providerName));
+        CarePayTextView nameTextView = findViewById(R.id.providerName);
         nameTextView.setText(payload.getProvider().getName());
 
-        CarePayTextView typeTextView = ((CarePayTextView) findViewById(R.id.providerSpecialty));
+        CarePayTextView typeTextView = findViewById(R.id.providerSpecialty);
         typeTextView.setText(payload.getProvider().getSpecialty().getName());
 
         // Appointment Place name
-        final CarePayTextView addressHeaderTextView = ((CarePayTextView) findViewById(R.id.appointAddressHeaderTextView));
+        final CarePayTextView addressHeaderTextView = findViewById(R.id.appointAddressHeaderTextView);
         placeName = payload.getLocation().getName();
         addressHeaderTextView.setText(placeName);
 
         // Appointment Place address
-        final CarePayTextView addressTextView = ((CarePayTextView) findViewById(R.id.appointAddressTextView));
+        final CarePayTextView addressTextView = findViewById(R.id.appointAddressTextView);
         if( payload.getLocation().getAddress() !=null) {
             placeAddress = payload.getLocation().getAddress().getPlaceAddressString();
             addressTextView.setText(placeAddress);
@@ -163,8 +166,23 @@ public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener
         return addActionLayout;
     }
 
-    protected View getRootView() {
-        return rootLayout;
+    protected void loadImage(final ImageView imageView, String url){
+        int size = context.getResources().getDimensionPixelSize(R.dimen.payment_details_dialog_icon_size);
+        Picasso.with(context).load(url)
+                .resize(size, size)
+                .centerCrop()
+                .transform(new CircleImageTransform())
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        imageView.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onError() {
+                        imageView.setVisibility(View.GONE);
+                    }
+                });
     }
 
 }

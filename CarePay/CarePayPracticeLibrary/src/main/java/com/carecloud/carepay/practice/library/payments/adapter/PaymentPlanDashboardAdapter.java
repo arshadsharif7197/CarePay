@@ -63,9 +63,14 @@ public class PaymentPlanDashboardAdapter extends RecyclerView.Adapter<PaymentPla
         if (completed) {
             holder.paymentPlanProgressBar.setVisibility(View.GONE);
             holder.addBalanceButton.setVisibility(View.GONE);
-            holder.paymentPlanNameTextView.setText(String
-                    .format(Label.getLabel("payment.paymentPlanDashboard.item.label.completedOn"),
-                            getLastPaymentDate(paymentPlan)));
+            String subTitle = String.format(Label.getLabel("payment.paymentPlanDashboard.item.label.completedOn"),
+                    getLastPaymentDate(paymentPlan));
+            if (paymentPlan.getPayload().getPaymentPlanDetails().isCancelled()) {
+                subTitle = String.format(Label.getLabel("payment.paymentPlanDashboard.item.label.canceledOn"),
+                        DateUtil.getInstance().setDateRaw(paymentPlan.getMetadata().getUpdatedDate())
+                                .getDateAsMonthLiteralDayOrdinalYear());
+            }
+            holder.paymentPlanNameTextView.setText(subTitle);
         } else {
             ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload().findScheduledPayment(paymentPlan);
             holder.scheduledPaymentIndicator.setVisibility(scheduledPayment != null ? View.VISIBLE : View.GONE);
