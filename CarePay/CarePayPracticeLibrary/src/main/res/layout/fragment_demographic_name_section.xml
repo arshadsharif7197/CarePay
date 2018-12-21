@@ -17,7 +17,7 @@
         android:orientation="horizontal">
 
         <FrameLayout
-            android:layout_width="@dimen/dimen_57dp"
+            android:layout_width="@dimen/demographicErrorContainerWidth"
             android:layout_height="match_parent"
             android:tag="@string/tag_demographics_error_show_inv"
             android:visibility="invisible">
@@ -67,7 +67,7 @@
         android:orientation="horizontal">
 
         <FrameLayout
-            android:layout_width="@dimen/dimen_57dp"
+            android:layout_width="@dimen/demographicErrorContainerWidth"
             android:layout_height="match_parent"
             android:tag="@string/tag_demographics_error_show_inv"
             android:visibility="invisible">
@@ -118,7 +118,7 @@
         android:orientation="horizontal">
 
         <FrameLayout
-            android:layout_width="@dimen/dimen_57dp"
+            android:layout_width="@dimen/demographicErrorContainerWidth"
             android:layout_height="match_parent"
             android:tag="@string/tag_demographics_error_show_inv"
             android:visibility="invisible">

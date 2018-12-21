@@ -1,27 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:right="@dimen/dimen_12dp">
+    <item android:right="@dimen/dotHorizontalMargin">
         <shape android:shape="oval">
-            <size android:width="@dimen/dimen_3dp"
-                  android:height="@dimen/dimen_3dp"/>
-            <solid android:color="@color/white"/>
+            <size
+                android:width="@dimen/dotSize"
+                android:height="@dimen/dotSize" />
+            <solid android:color="@color/white" />
         </shape>
     </item>
 
-    <item android:left="@dimen/dimen_12dp">
+    <item android:left="@dimen/dotHorizontalMargin">
         <shape android:shape="oval">
-            <size android:width="@dimen/dimen_3dp"
-                  android:height="@dimen/dimen_3dp"/>
-            <solid android:color="@color/white"/>
+            <size
+                android:width="@dimen/dotSize"
+                android:height="@dimen/dotSize" />
+            <solid android:color="@color/white" />
         </shape>
     </item>
 
-    <item android:left="@dimen/dimen_6dp" android:right="@dimen/dimen_6dp">
+    <item
+        android:left="@dimen/dotSemiHorizontalMargin"
+        android:right="@dimen/dotSemiHorizontalMargin">
         <shape android:shape="oval">
-            <size android:width="@dimen/dimen_3dp"
-                  android:height="@dimen/dimen_3dp"/>
-            <solid android:color="@color/white"/>
+            <size
+                android:width="@dimen/dotSize"
+                android:height="@dimen/dotSize" />
+            <solid android:color="@color/white" />
         </shape>
     </item>
 

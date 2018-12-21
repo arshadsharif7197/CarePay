@@ -23,13 +23,13 @@ import com.carecloud.carepaylibray.media.MediaViewInterface;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 
+import java.util.List;
+
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_DTO;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_BACK;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_FRONT;
-
-import java.util.List;
 
 
 public class IdentificationFragment extends CheckInDemographicsBaseFragment implements MediaViewInterface {
@@ -45,7 +45,6 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-//        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
         if (icicle != null) {
             String demographicDtoString = icicle.getString(KEY_DTO);
             if (demographicDtoString != null) {
@@ -123,8 +122,8 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
     private DemographicIdDocPayloadDTO getPostModel() {
         setupImageBase64();
         DemographicIdDocPayloadDTO docPayloadDTO = new DemographicIdDocPayloadDTO();
-        if((hasFrontImage && base64FrontImage != null) ||
-                (hasBackImage && base64BackImage != null)){
+        if ((hasFrontImage && base64FrontImage != null) ||
+                (hasBackImage && base64BackImage != null)) {
             //Log new Identity Doc
             MixPanelUtil.logEvent(getString(R.string.event_add_identity_doc), getString(R.string.param_is_checkin), true);
         }

@@ -57,13 +57,13 @@
             android:layout_alignParentBottom="true"
             android:background="@drawable/patient_mode_dialog_body_bg"
             android:orientation="horizontal"
-            android:padding="@dimen/dimen_10dp">
+            android:padding="@dimen/distributionButtonContainersPadding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/createPaymentPlanButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_10dp"
+                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:background="@drawable/bg_yellow_overlay"
                 android:gravity="center"
                 android:textAllCaps="false"
@@ -105,12 +105,12 @@
                     android:id="@+id/completedLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dimen_15dp"
-                    android:layout_marginTop="@dimen/dimen_25dp"
-                    android:layout_marginBottom="@dimen/dimen_10dp"
+                    android:layout_marginBottom="@dimen/itemDashboardFieldMargin"
+                    android:layout_marginStart="@dimen/dashboardLabelStartMargin"
+                    android:layout_marginTop="@dimen/dashboardLabelTopMargin"
                     android:textAllCaps="true"
                     android:textColor="@color/textview_default_textcolor"
-                    android:textSize="@dimen/text_size_18sp"
+                    android:textSize="@dimen/dashboardLabelTextSize"
                     app:customAssetFont="proxima_nova_semi_bold"
                     breeze:textKey="payment.paymentPlanDashboard.section.title.completed"
                     tools:text="Completed" />
@@ -152,8 +152,8 @@
             android:background="@drawable/patient_mode_dialog_body_bg"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingStart="@dimen/dimen_40dp"
             android:paddingEnd="@dimen/dimen_40dp"
+            android:paddingStart="@dimen/dimen_40dp"
             android:visibility="gone">
 
             <ImageView
@@ -193,8 +193,8 @@
                 android:layout_margin="@dimen/dimen_60dp"
                 android:background="@drawable/bg_yellow_overlay"
                 android:gravity="center"
-                android:paddingStart="@dimen/dimen_60dp"
                 android:paddingEnd="@dimen/dimen_60dp"
+                android:paddingStart="@dimen/dimen_60dp"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/respons_button_text_size"
