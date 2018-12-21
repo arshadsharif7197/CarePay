@@ -535,4 +535,11 @@
     <dimen name="paymentOptionBodyMessageHorizontalPadding">15dp</dimen>
     <dimen name="paymentOptionBodyMessageTextSize">22sp</dimen>
 
+    <!--Patient Splash Screen-->
+    <dimen name="patientSplashPracticeLogoSize">250dp</dimen>
+    <dimen name="patientSplashWelcomeTitleTextSize">36sp</dimen>
+    <dimen name="patientSplashButtonWidth">250dp</dimen>
+    <dimen name="patientSplashButtonHeight">50dp</dimen>
+    <dimen name="patientSplashButtonTextSize">21sp</dimen>
+
 </resources>

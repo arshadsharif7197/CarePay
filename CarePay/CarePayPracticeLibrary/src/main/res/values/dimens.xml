@@ -161,8 +161,7 @@
     <dimen name="home_spinner_width">100dp</dimen>
     <dimen name="home_spinner_height">40dp</dimen>
     <dimen name="home_spinner_padding_righ_left">8dp</dimen>
-    <dimen name="patient_splash_button_width">250dp</dimen>
-    <dimen name="patient_splash_button_height">51dp</dimen>
+
     <dimen name="mainTitleHeaderMarginTop">30dp</dimen>
     <dimen name="mainLayoutContainerHorizontalMargin">30dp</dimen>
     <dimen name="mainLayoutContainerTopMargin">170dp</dimen>
@@ -669,5 +668,12 @@
     <dimen name="paymentOptionBodyVerticalPadding">10dp</dimen>
     <dimen name="paymentOptionBodyMessageHorizontalPadding">15dp</dimen>
     <dimen name="paymentOptionBodyMessageTextSize">22sp</dimen>
+
+    <!--Patient Splash Screen-->
+    <dimen name="patientSplashPracticeLogoSize">250dp</dimen>
+    <dimen name="patientSplashWelcomeTitleTextSize">36sp</dimen>
+    <dimen name="patientSplashButtonWidth">250dp</dimen>
+    <dimen name="patientSplashButtonHeight">50dp</dimen>
+    <dimen name="patientSplashButtonTextSize">21sp</dimen>
 
 </resources>
