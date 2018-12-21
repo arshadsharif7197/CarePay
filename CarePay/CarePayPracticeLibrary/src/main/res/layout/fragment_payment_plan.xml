@@ -97,10 +97,12 @@
                 android:layout_below="@id/paymentPlanParametersTextView"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="@dimen/dimen_10dp"
+                android:paddingStart="45dp"
+                android:paddingEnd="45dp"
                 android:background="@drawable/round_border_button_bg"
                 android:padding="@dimen/dimen_10dp"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_11"
+                android:textSize="@dimen/text_size_12sp"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="payment_plan_add_existing"
                 tools:text="Add to Existing Plan" />
