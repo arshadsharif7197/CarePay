@@ -290,6 +290,7 @@
     <dimen name="apt_available_hours_list_padding">16dp</dimen>
     <dimen name="apt_available_hours_list_header_padding_top">26dp</dimen>
     <dimen name="apt_available_hours_date_picker_padding">18dp</dimen>
+    <dimen name="availableHourListHeaderTextSize">14sp</dimen>
 
     <dimen name="apt_popup_parent_padding">14dp</dimen>
     <dimen name="apt_popup_icon_margin">8dp</dimen>
@@ -471,14 +472,16 @@
     <dimen name="paymentDetailLabelTextSize">16sp</dimen>
     <dimen name="paymentDetailAmountTextSize">15sp</dimen>
     <dimen name="paymentDetailDateTextSize">12sp</dimen>
-    <dimen name="reasonForVisitHorizontalMargin">14dp</dimen>
-    <dimen name="visitTypeContainerVerticalPadding">15dp</dimen>
-    <dimen name="reasonForVisitTopMargin">10dp</dimen>
     <dimen name="nextAppointmentProviderImageSize">80dp</dimen>
+    <dimen name="availableHourItemTextSize">14sp</dimen>
+
     <dimen name="optionalLabelRightMargin">38dp</dimen>
     <dimen name="optionalLabelTextSize">9sp</dimen>
     <dimen name="itemCreditCardImageSize">36dp</dimen>
     <dimen name="demographicErrorImageHeight">30dp</dimen>
     <dimen name="demographicErrorViewWidth">22dp</dimen>
+    <dimen name="reasonForVisitHorizontalMargin">14dp</dimen>
+    <dimen name="visitTypeContainerVerticalPadding">15dp</dimen>
+    <dimen name="reasonForVisitTopMargin">10dp</dimen>
 
 </resources>

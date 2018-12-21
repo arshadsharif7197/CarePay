@@ -21,12 +21,10 @@ import com.carecloud.carepaylibray.appointments.interfaces.AppointmentNavigation
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
-import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -38,6 +36,7 @@ public class PatientModeRequestAppointmentDialog extends BasePracticeDialog {
     protected final AppointmentResourcesDTO appointmentResourcesDTO;
     private VisitTypeDTO visitTypeDTO;
     protected final AppointmentNavigationCallback callback;
+    private TextView providerImageTextView;
 
     /**
      * Constructor.
@@ -110,7 +109,7 @@ public class PatientModeRequestAppointmentDialog extends BasePracticeDialog {
         TextView appointmentTimeTextView = view.findViewById(R.id.appointment_time);
         appointmentTimeTextView.setText(dateUtil.getTime12Hour());
 
-        TextView providerImageTextView = view.findViewById(R.id.provider_short_name);
+        providerImageTextView = view.findViewById(R.id.provider_short_name);
         providerImageTextView.setText(StringUtil.getShortName(appointmentResourcesDTO.getResource().getProvider().getName()));
 
         TextView appointmentDoctorNameTextView = view.findViewById(R.id.provider_doctor_name);
@@ -175,21 +174,6 @@ public class PatientModeRequestAppointmentDialog extends BasePracticeDialog {
     }
 
     protected void loadImage(final ImageView imageView, String url) {
-        int size = getContext().getResources().getDimensionPixelSize(R.dimen.provider_card_avatar_size);
-        Picasso.with(getContext()).load(url)
-                .resize(size, size)
-                .centerCrop()
-                .transform(new CircleImageTransform())
-                .into(imageView, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        imageView.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onError() {
-                        imageView.setVisibility(View.GONE);
-                    }
-                });
+        PicassoHelper.get().loadImage(getContext(), imageView, providerImageTextView, url);
     }
 }
