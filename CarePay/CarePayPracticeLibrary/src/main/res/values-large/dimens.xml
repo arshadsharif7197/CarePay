@@ -550,4 +550,16 @@
     <dimen name="patientSplashButtonHeight">40dp</dimen>
     <dimen name="patientSplashButtonTextSize">16sp</dimen>
 
+    <!--Patient Home-->
+    <dimen name="patientHomeLayoutContainerTopMargin">80dp</dimen>
+    <dimen name="patientHomeLayoutContainerHorizontalMargin">100dp</dimen>
+    <dimen name="patientHomeButtonHeight">120dp</dimen>
+    <dimen name="patientHomeIconButtonWidth">96dp</dimen>
+    <dimen name="patientHomeIconButtonHeight">96dp</dimen>
+    <dimen name="patientHomeSeparatorVerticalMargin">10dp</dimen>
+    <dimen name="patientHomeMainSeparatorHorizontalMargin">15dp</dimen>
+    <dimen name="patientHomeBottomButtonPadding">10dp</dimen>
+    <dimen name="patientHomeSpinnerWidth">80dp</dimen>
+    <dimen name="patientHomeSpinnerHeight">36dp</dimen>
+
 </resources>

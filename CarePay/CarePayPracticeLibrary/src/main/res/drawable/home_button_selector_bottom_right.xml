@@ -20,7 +20,7 @@
         <layer-list>
             <item>
                 <shape android:shape="rectangle">
-                    <corners android:topLeftRadius="10dp" />
+                    <corners android:bottomRightRadius="10dp" />
                     <solid android:color="@color/home_button_pressed_shadow_margin" />
                 </shape>
             </item>
@@ -29,6 +29,6 @@
         </layer-list>
     </item>
 
-    <item android:drawable="@drawable/left_rounded_background" />
+    <item android:drawable="@drawable/home_right_rounded_background" />
 
 </selector>
