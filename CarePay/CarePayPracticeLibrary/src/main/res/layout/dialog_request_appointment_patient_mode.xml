@@ -14,40 +14,38 @@
         android:orientation="vertical">
 
         <RelativeLayout
+            android:id="@+id/header"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="@dimen/appointmentRequestDialogHeaderHeight">
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/summary_header_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"
-                android:orientation="vertical">
+                android:layout_height="@dimen/appointmentRequestDialogVisibleHeaderHeight"
+                android:background="@color/colorPrimary">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/appointment_date"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:gravity="center"
+                    android:layout_centerHorizontal="true"
                     android:textColor="@android:color/white"
-                    android:textSize="@dimen/text_size_30sp"
+                    android:textSize="@dimen/appointmentDialogStartDateTextSize"
                     android:visibility="gone"
                     app:customAssetFont="proxima_nova_semi_bold"
                     tools:text="Today, Aug 1st" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/appointment_time"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginBottom="@dimen/dimen_60dp"
-                    android:gravity="center"
+                    android:layout_below="@id/appointment_date"
+                    android:layout_centerHorizontal="true"
                     android:textColor="@color/white_opacity_60"
-                    android:textSize="@dimen/text_size_40sp"
+                    android:textSize="@dimen/appointmentDialogStartTimeTextSize"
                     app:customAssetFont="gotham_rounded_bold"
-                    tools:text="10:15 AM" />
-            </LinearLayout>
+                    tools:text="10:15 AM"/>
+            </RelativeLayout>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/provider_short_name"
