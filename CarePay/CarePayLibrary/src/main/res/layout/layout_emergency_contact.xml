@@ -42,8 +42,8 @@
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
             <include
-                android:id="@+id/firstNameOptionalTextView"
-                layout="@layout/layout_optional_text_view" />
+                android:id="@+id/firstNameRequired"
+                layout="@layout/layout_required_text_view" />
 
         </FrameLayout>
 
@@ -72,8 +72,8 @@
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
             <include
-                android:id="@+id/middleNameOptionalTextView"
-                layout="@layout/layout_optional_text_view" />
+                android:id="@+id/middleNameRequired"
+                layout="@layout/layout_required_text_view" />
 
         </FrameLayout>
 
@@ -102,8 +102,8 @@
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
             <include
-                android:id="@+id/lastNameOptionalTextView"
-                layout="@layout/layout_optional_text_view" />
+                android:id="@+id/lastNameRequired"
+                layout="@layout/layout_required_text_view" />
 
         </FrameLayout>
 
@@ -133,8 +133,8 @@
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
             <include
-                android:id="@+id/primaryPhoneOptionalTextView"
-                layout="@layout/layout_optional_text_view" />
+                android:id="@+id/phoneNumberRequired"
+                layout="@layout/layout_required_text_view" />
 
         </FrameLayout>
 
@@ -163,8 +163,8 @@
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
             <include
-                android:id="@+id/secondaryPhoneOptionalTextView"
-                layout="@layout/layout_optional_text_view" />
+                android:id="@+id/secondaryPhoneRequired"
+                layout="@layout/layout_required_text_view" />
 
         </FrameLayout>
 
@@ -197,8 +197,8 @@
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
             <include
-                android:id="@+id/emergencyContactRelationshipOptionalLabel"
-                layout="@layout/layout_optional_text_view" />
+                android:id="@+id/emergencyContactRelationshipRequired"
+                layout="@layout/layout_required_text_view" />
 
         </FrameLayout>
 
@@ -221,11 +221,6 @@
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="demographics_address_section"
                 tools:text="Address" />
-
-            <include
-                android:id="@+id/addressInfoOptionalTextView"
-                layout="@layout/layout_optional_text_view"
-                android:visibility="visible" />
 
         </LinearLayout>
 
@@ -277,8 +272,7 @@
 
             <include
                 android:id="@+id/demogrAddressOptionalLabel"
-                layout="@layout/layout_optional_text_view"
-                android:visibility="visible" />
+                layout="@layout/layout_optional_text_view"/>
 
         </FrameLayout>
 
@@ -374,20 +368,6 @@
                 breeze:textKey="demographics_additional_information_section"
                 tools:text="Additional Information" />
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/additionalInfoOptionalTextView"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:breeze="http://schemas.carecloud.com/breeze"
-                xmlns:tools="http://schemas.android.com/tools"
-                style="@style/DemographicsOptionalLabelStyle"
-                android:layout_gravity="center_vertical|end"
-                android:layout_marginEnd="@dimen/dimen_20dp"
-                app:customAssetFont="proxima_nova_semi_bold"
-                android:visibility="visible"
-                breeze:textKey="demographics_details_optional_hint"
-                tools:showIn="@layout/fragment_base_demographics"
-                tools:text="Optional" />
-
         </LinearLayout>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
@@ -462,8 +442,8 @@
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
             <include
-                android:id="@+id/genderOptionalLabel"
-                layout="@layout/layout_optional_text_view" />
+                android:id="@+id/genderRequiredLabel"
+                layout="@layout/layout_required_text_view" />
 
         </FrameLayout>
 

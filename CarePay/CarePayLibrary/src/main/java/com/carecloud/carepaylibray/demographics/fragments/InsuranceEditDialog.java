@@ -499,7 +499,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                 R.id.health_insurance_policy_first_name_holder, null, null, null);
         TextInputLayout firstNameInputLayout = (TextInputLayout) view.findViewById(R.id.health_insurance_policy_first_name_holder_layout);
         EditText firstNameEditText = (EditText) view.findViewById(R.id.health_insurance_policy_first_name_holder);
-        firstNameEditText.addTextChangedListener(getValidateOptionalFields(firstNameInputLayout));
+        firstNameEditText.addTextChangedListener(getValidateOptionsFields(firstNameInputLayout));
 
 
         String lastName = demographicInsurancePayload.getPolicyLastNameHolder();
@@ -508,7 +508,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                 R.id.health_insurance_policy_last_name_holder, null, null, null);
         TextInputLayout lastNameInputLayout = (TextInputLayout) view.findViewById(R.id.health_insurance_policy_last_name_holder_layout);
         EditText lastNameEditText = (EditText) view.findViewById(R.id.health_insurance_policy_last_name_holder);
-        lastNameEditText.addTextChangedListener(getValidateOptionalFields(lastNameInputLayout));
+        lastNameEditText.addTextChangedListener(getValidateOptionsFields(lastNameInputLayout));
 
         otherProviderEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -1014,7 +1014,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     };
 
     private void setUpDemographicField(View view, String keyName, DemographicsField demographicsField,
-                                       Integer containerLayout, int inputLayoutId, int editTextId, Integer optionalViewId,
+                                       Integer containerLayout, int inputLayoutId, int editTextId, Integer requiredViewId,
                                        DemographicsOption demographicsOption, String optionDialogTitle) {
         if (demographicsField == null) {
             demographicsField = new DemographicsField();
@@ -1023,15 +1023,15 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         EditText editText = (EditText) view.findViewById(editTextId);
         setUpDemographicField(view, keyName, demographicsField.isDisplayed(), demographicsField.isRequired(),
                 demographicsField.getOptions(), containerLayout, inputLayout, editText,
-                optionalViewId, demographicsOption, optionDialogTitle, null);
+                requiredViewId, demographicsOption, optionDialogTitle, null);
 
     }
 
     private void setUpDemographicField(View view, String keyName, boolean displayed,
                                        boolean required, List<? extends DemographicsOption> options,
-                                       Integer containerLayout, TextInputLayout inputLayout, EditText editText, Integer optionalViewId,
+                                       Integer containerLayout, TextInputLayout inputLayout, EditText editText, Integer requiredViewId,
                                        DemographicsOption demographicsOption, String optionDialogTitle,
-                                       OnOptionSelectedListener optionalListener) {
+                                       OnOptionSelectedListener requiredListener) {
         if (containerLayout != null) {
             view.findViewById(containerLayout).setVisibility(displayed ? View.VISIBLE : View.GONE);
         }
@@ -1043,25 +1043,25 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         }
         editText.getOnFocusChangeListener().onFocusChange(editText,
                 !StringUtil.isNullOrEmpty(editText.getText().toString().trim()));
-        View optionalView = null;
-        if (optionalViewId != null) {
-            optionalView = view.findViewById(optionalViewId);
-            optionalView.setVisibility(!required && StringUtil.isNullOrEmpty(keyName) ? View.VISIBLE : View.GONE);
+        View requiredView = null;
+        if (requiredViewId != null) {
+            requiredView = view.findViewById(requiredViewId);
+            requiredView.setVisibility(required && StringUtil.isNullOrEmpty(keyName) ? View.VISIBLE : View.GONE);
         }
         if (demographicsOption != null) {
             editText.setOnClickListener(getEditTextClickListener(options, inputLayout, editText,
-                    optionalView, demographicsOption, optionDialogTitle, optionalListener));
+                    requiredView, demographicsOption, optionDialogTitle, requiredListener));
             demographicsOption.setName(editText.getText().toString());
             demographicsOption.setLabel(editText.getText().toString());
         } else if (required) {
-            editText.addTextChangedListener(getValidateOptionalFields(inputLayout));
-        } else if (optionalView != null) {
-            editText.addTextChangedListener(getOptionalViewTextWatcher(optionalView));
+            editText.addTextChangedListener(getValidateOptionsFields(inputLayout));
+        } else if (requiredView != null) {
+            editText.addTextChangedListener(getRequiredViewTextWatcher(requiredView));
         }
     }
 
     protected void initSelectableInput(TextView textView, DemographicsOption storeOption,
-                                       String storedName, View optional, List<DemographicsOption> options) {
+                                       String storedName, View requiredView, List<DemographicsOption> options) {
         String key = storeOption.getName();
         if (StringUtil.isNullOrEmpty(key)){
             key = storedName;
@@ -1069,8 +1069,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         storeOption = getOptionByKey(options, key, storeOption);
         if (!StringUtil.isNullOrEmpty(storedName)) {
             textView.setText(storeOption.getLabel());
-        }else if (optional != null) {
-            optional.setVisibility(View.VISIBLE);
+        }else if (requiredView != null) {
+            requiredView.setVisibility(View.VISIBLE);
         }
 
     }
@@ -1093,10 +1093,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     private View.OnClickListener getEditTextClickListener(List<? extends DemographicsOption> options,
                                                           final TextInputLayout inputLayout,
                                                           final EditText editText,
-                                                          final View optionalLabel,
+                                                          final View requiredLabel,
                                                           final DemographicsOption demographicsOption,
                                                           final String dialogTitle,
-                                                          final OnOptionSelectedListener optionalListener) {
+                                                          final OnOptionSelectedListener optionsListener) {
         return getSelectOptionsListener(options,
                 new OnOptionSelectedListener() {
                     @Override
@@ -1111,20 +1111,20 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                                 .onFocusChange(editText, !StringUtil.isNullOrEmpty(editText.getText().toString()));
                         inputLayout.setError(null);
                         inputLayout.setErrorEnabled(false);
-                        if (optionalLabel != null) {
-                            optionalLabel.setVisibility(View.GONE);
+                        if (requiredLabel != null) {
+                            requiredLabel.setVisibility(View.GONE);
                         }
                         checkIfEnableButton();
 
-                        if (optionalListener != null) {
-                            optionalListener.onOptionSelected(option);
+                        if (optionsListener != null) {
+                            optionsListener.onOptionSelected(option);
                         }
                     }
                 },
                 dialogTitle);
     }
 
-    private TextWatcher getValidateOptionalFields(final TextInputLayout inputLayout) {
+    private TextWatcher getValidateOptionsFields(final TextInputLayout inputLayout) {
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
@@ -1148,7 +1148,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         };
     }
 
-    private TextWatcher getOptionalViewTextWatcher(final View optionalView) {
+    private TextWatcher getRequiredViewTextWatcher(final View requiredView) {
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
@@ -1162,9 +1162,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             @Override
             public void afterTextChanged(Editable editable) {
                 if (StringUtil.isNullOrEmpty(editable.toString())) {
-                    optionalView.setVisibility(View.VISIBLE);
+                    requiredView.setVisibility(View.VISIBLE);
                 } else {
-                    optionalView.setVisibility(View.GONE);
+                    requiredView.setVisibility(View.GONE);
                 }
                 checkIfEnableButton();
             }

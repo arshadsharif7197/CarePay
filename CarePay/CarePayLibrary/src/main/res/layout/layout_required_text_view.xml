@@ -9,6 +9,6 @@
     android:layout_marginEnd="@dimen/dimen_38dp"
     android:visibility="gone"
     app:customAssetFont="proxima_nova_semi_bold"
-    breeze:textKey="demographics_details_optional_hint"
+    breeze:textKey="required"
     tools:showIn="@layout/fragment_base_demographics"
-    tools:text="Optional"/>
+    tools:text="Required"/>
