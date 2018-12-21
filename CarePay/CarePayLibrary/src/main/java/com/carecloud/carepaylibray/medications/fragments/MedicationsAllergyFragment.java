@@ -70,8 +70,6 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
         MedicationAllergiesAdapter.MedicationAllergiesAdapterCallback, MediaViewInterface,
         DocumentScannerAdapter.ImageLoadCallback {
 
-    public static final int ALLERGY_ITEM = 100;
-    public static final int MEDICATION_ITEM = 101;
     private TextView checkBoxAlert;
     private RecyclerView allergyRecycler;
     private RecyclerView medicationRecycler;
@@ -102,10 +100,7 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
     private TextView allergyChooseButton;
     private TextView medicationChooseButton;
 
-
-    public interface MedicationAllergyCallback {
-        void showMedicationAllergySearchFragment(int searchType);
-    }
+    private boolean shouldAllowMedPicture = true;
 
     public static MedicationsAllergyFragment newInstance(MedicationsAllergiesResultsModel medicationsAllergiesDTO) {
         Bundle args = new Bundle();
@@ -184,6 +179,11 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
         if (!checkinSettings.shouldShowMedications()) {
             view.findViewById(R.id.medications_layout).setVisibility(View.GONE);
         }
+        if (!checkinSettings.isAllowMedicationPicture()) {
+            emptyPhotoLayout.setVisibility(View.GONE);
+            photoLayout.setVisibility(View.GONE);
+            shouldAllowMedPicture = false;
+        }
     }
 
     private void inflateToolbarViews(View view) {
@@ -224,11 +224,11 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
         });
 
         EditText unlistedAllergies = (EditText) view.findViewById(R.id.allergy_none_placeholder_text);
-        unlistedAllergies.setOnEditorActionListener(getUnlistedItemActionListener(ALLERGY_ITEM));
+        unlistedAllergies.setOnEditorActionListener(getUnlistedItemActionListener(MedicationAllergySearchFragment.ALLERGY_ITEM));
         unlistedAllergies.setOnFocusChangeListener(getOnFocusChangeListener(Label.getLabel("allergy_none_placeholder_text")));
 
         EditText unlistedMedication = (EditText) view.findViewById(R.id.medication_none_placeholder_text);
-        unlistedMedication.setOnEditorActionListener(getUnlistedItemActionListener(MEDICATION_ITEM));
+        unlistedMedication.setOnEditorActionListener(getUnlistedItemActionListener(MedicationAllergySearchFragment.MEDICATION_ITEM));
         unlistedMedication.setOnFocusChangeListener(getOnFocusChangeListener(Label.getLabel("medication_none_placeholder_text")));
 
         RecyclerView.LayoutManager allergyManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
@@ -297,8 +297,8 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
 
     private void setAdapters() {
         if (medicationRecycler.getAdapter() == null) {
-            MedicationAllergiesAdapter medicationAdapter = new MedicationAllergiesAdapter(currentMedications,
-                    this);
+            MedicationAllergiesAdapter medicationAdapter = new MedicationAllergiesAdapter(getContext(),
+                    getApplicationMode().getApplicationType(), currentMedications, this);
             medicationRecycler.setAdapter(medicationAdapter);
         } else {
             MedicationAllergiesAdapter adapter = ((MedicationAllergiesAdapter) medicationRecycler.getAdapter());
@@ -306,8 +306,8 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
             adapter.notifyDataSetChanged();
         }
         if (allergyRecycler.getAdapter() == null) {
-            MedicationAllergiesAdapter allergyAdapter = new MedicationAllergiesAdapter(currentAllergies,
-                    this);
+            MedicationAllergiesAdapter allergyAdapter = new MedicationAllergiesAdapter(getContext(),
+                    getApplicationMode().getApplicationType(), currentAllergies, this);
             allergyRecycler.setAdapter(allergyAdapter);
         } else {
             MedicationAllergiesAdapter adapter = ((MedicationAllergiesAdapter) allergyRecycler.getAdapter());
@@ -318,7 +318,7 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
     }
 
     private void setAdapterVisibility() {
-        if (currentMedications.isEmpty() && !hasPhoto()) {
+        if (currentMedications.isEmpty() && (!shouldAllowMedPicture || !hasPhoto())) {
             medicationRecycler.setVisibility(View.GONE);
             assertNoMedications.setVisibility(View.VISIBLE);
             assertNoMedications.setEnabled(true);
@@ -372,6 +372,9 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
     }
 
     private boolean hasPhoto() {
+        if (!shouldAllowMedPicture) {
+            return false;
+        }
         return (!StringUtil.isNullOrEmpty(medicationsAllergiesDTO.getPayload()
                 .getMedicationsImage().getPayload().getUrl()) &&
                 (medicationsPostModel.getMedicationsImage() == null ||
@@ -406,6 +409,11 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
             }
         }
         setAdapters();
+
+    }
+
+    @Override
+    public void restoreItem(MedicationsAllergiesObject item) {
 
     }
 
@@ -457,14 +465,14 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
     private View.OnClickListener chooseAllergyClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            callback.showMedicationAllergySearchFragment(ALLERGY_ITEM);
+            callback.showMedicationAllergySearchFragment(MedicationAllergySearchFragment.ALLERGY_ITEM);
         }
     };
 
     private View.OnClickListener chooseMedicationClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            callback.showMedicationAllergySearchFragment(MEDICATION_ITEM);
+            callback.showMedicationAllergySearchFragment(MedicationAllergySearchFragment.MEDICATION_ITEM);
         }
     };
 
@@ -525,7 +533,7 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
                 if (!StringUtil.isNullOrEmpty(textView.getText().toString())) {
-                    if (itemType == MEDICATION_ITEM) {
+                    if (itemType == MedicationAllergySearchFragment.MEDICATION_ITEM) {
                         MedicationsObject medicationsObject = new MedicationsObject();
                         medicationsObject.setDispensableDrugId("");
                         medicationsObject.setDisplayName(textView.getText().toString());
@@ -654,12 +662,14 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
 
     @Override
     public void onImageLoadCompleted(boolean success) {
-        if (success) {
-            emptyPhotoLayout.setVisibility(View.GONE);
-            photoLayout.setVisibility(View.VISIBLE);
-        } else {
-            emptyPhotoLayout.setVisibility(View.VISIBLE);
-            photoLayout.setVisibility(View.GONE);
+        if (shouldAllowMedPicture) {
+            if (success) {
+                emptyPhotoLayout.setVisibility(View.GONE);
+                photoLayout.setVisibility(View.VISIBLE);
+            } else {
+                emptyPhotoLayout.setVisibility(View.VISIBLE);
+                photoLayout.setVisibility(View.GONE);
+            }
         }
         setAdapterVisibility();
     }

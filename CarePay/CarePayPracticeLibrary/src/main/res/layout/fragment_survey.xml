@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/surveyTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/dimen_30dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/text_size_30"
+        app:customAssetFont="gotham_rounded_medium" />
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/demo_view_height"
+        android:layout_below="@id/surveyTitle"
+        android:background="@color/light_gray" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+        android:id="@+id/nextButton"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/commonButtonHeight"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/dimen_20dp"
+        android:background="@drawable/green_rounded_button_selector"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_22"
+        app:customAssetFont="gotham_rounded_medium"
+        breeze:textKey="survey.patientMode.form.button.submitButton" />
+
+    <View
+        android:id="@+id/bottomSeparator"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/demo_view_height"
+        android:layout_above="@id/nextButton"
+        android:background="@color/light_gray" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/surveyRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottomSeparator"
+        android:layout_below="@id/separator"
+        android:layout_margin="@dimen/dimen_20dp" />
+
+</RelativeLayout>

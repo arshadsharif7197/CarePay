@@ -144,9 +144,9 @@ public class PracticePaymentPlanDetailsDialogFragment extends BaseDialogFragment
         int paymentCount = paymentPlan.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
         int installmentTotal = paymentPlan.getPayload().getPaymentPlanDetails().getInstallments();
         int oneTimePayments = paymentPlan.getPayload().getPaymentPlanDetails()
-                .getPaymentPlanHistoryList().size() - paymentCount;
+                .getOneTimePayments().size();
         StringBuilder paymentsMadeBuilder = new StringBuilder().append(String.format(paymentsMadeOf, paymentCount, installmentTotal));
-        if(oneTimePayments > 0){
+        if (oneTimePayments > 0) {
             paymentsMadeBuilder.append(" + ")
                     .append(oneTimePayments)
                     .append(" ")
@@ -167,7 +167,9 @@ public class PracticePaymentPlanDetailsDialogFragment extends BaseDialogFragment
         balanceTextView.setText(currencyFormatter.format(totalAmount - amountPaid));
 
         final ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload().findScheduledPayment(paymentPlan);
-        if (scheduledPayment != null) {
+        if (scheduledPayment != null
+                && paymentPlan.getPayload().getPaymentPlanDetails().getPaymentPlanStatus()
+                .equals(PaymentPlanDetailsDTO.STATUS_PROCESSING)) {
             ScheduledPaymentPayload scheduledPayload = scheduledPayment.getPayload();
 
             View scheduledPaymentLayout = view.findViewById(R.id.scheduledPaymentLayout);
@@ -189,6 +191,27 @@ public class PracticePaymentPlanDetailsDialogFragment extends BaseDialogFragment
                 }
             });
         }
+
+        if (paymentPlan.getPayload().getPaymentPlanDetails().isCancelled()) {
+            setUpViewForCanceledPayment(view, currencyFormatter);
+        }
+    }
+
+    private void setUpViewForCanceledPayment(View view, NumberFormat currencyFormatter) {
+        view.findViewById(R.id.cancelledInfoContainer).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.amountPaidContainer).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.nextPaymentContainer).setVisibility(View.GONE);
+        view.findViewById(R.id.planBalanceContainer).setVisibility(View.GONE);
+        view.findViewById(R.id.transactionTotalContainer).setVisibility(View.GONE);
+        view.findViewById(R.id.planBalanceSeparator).setVisibility(View.GONE);
+        view.findViewById(R.id.transactionSeparator).setVisibility(View.GONE);
+        TextView amountPaidTextView = view.findViewById(R.id.amountPaidTextView);
+        amountPaidTextView.setText(currencyFormatter.format(paymentPlan.getPayload().getAmountPaid()));
+        TextView cancelledInfoTextView = view.findViewById(R.id.cancelledInfoTextView);
+        cancelledInfoTextView.setText(String
+                .format(Label.getLabel("payment.paymentPlanDetail.cancelInfo.label.canceledOn"),
+                        DateUtil.getInstance().setDateRaw(paymentPlan.getMetadata().getUpdatedDate())
+                                .getDateAsMonthLiteralDayOrdinalYear()));
     }
 
     private void setupButtons(View view) {

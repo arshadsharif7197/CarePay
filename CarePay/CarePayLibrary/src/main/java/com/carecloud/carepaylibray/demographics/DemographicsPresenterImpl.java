@@ -23,11 +23,11 @@ import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.PhysicianDto;
 import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.EmergencyContactFragment;
 import com.carecloud.carepaylibray.demographics.fragments.FormsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
-import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment;
 import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.IntakeFormsFragment;
@@ -38,10 +38,14 @@ import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactFragm
 import com.carecloud.carepaylibray.demographics.interfaces.PhysicianFragmentInterface;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.medications.fragments.AllergiesFragment;
 import com.carecloud.carepaylibray.medications.fragments.MedicationAllergySearchFragment;
+import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragment;
 import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
+import com.carecloud.carepaylibray.medications.fragments.MedicationsFragment;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
+import com.carecloud.carepaylibray.medications.models.MedicationsObject;
 import com.carecloud.carepaylibray.third_party.models.ThirdPartyWorkflowDto;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
@@ -135,6 +139,12 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             case NavigationStateConstants.MEDICATION_ALLERGIES:
                 navigateToMedicationsAllergy(workflowDTO);
                 break;
+            case NavigationStateConstants.MEDICATIONS:
+                navigateToMedications(workflowDTO, true);
+                break;
+            case NavigationStateConstants.ALLERGIES:
+                navigateToAllergy(workflowDTO, true);
+                break;
             case NavigationStateConstants.INTAKE_FORMS:
                 navigateToIntakeForms(workflowDTO);
                 break;
@@ -206,7 +216,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     }
 
     @Override
-    public void navigateToThirdParty(WorkflowDTO workflowDTO){
+    public void navigateToThirdParty(WorkflowDTO workflowDTO) {
         ThirdPartyWorkflowDto thirdPartyWorkflow = DtoHelper
                 .getConvertedDTO(ThirdPartyWorkflowDto.class, workflowDTO);
         ThirdPartyTaskFragment fragment = ThirdPartyTaskFragment.newInstance(thirdPartyWorkflow);
@@ -219,6 +229,42 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
                 workflowDTO);
         MedicationsAllergyFragment fragment = MedicationsAllergyFragment.newInstance(medicationsAllergiesDTO);
         navigateToFragment(fragment, true);
+    }
+
+    @Override
+    public void navigateToMedications(WorkflowDTO workflowDTO, boolean checkEmpty) {
+        medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class,
+                workflowDTO);
+        Fragment fragment;
+        if (checkEmpty && medicationsAllergiesDTO.getPayload().getMedications().getPayload().isEmpty()) {
+            fragment = MedicationsAllergiesEmptyFragment.newInstance(medicationsAllergiesDTO,
+                    MedicationsAllergiesEmptyFragment.MEDICATION_MODE);
+        } else {
+            fragment = MedicationsFragment.newInstance(medicationsAllergiesDTO);
+        }
+        navigateToFragment(fragment, true);
+
+        if(!checkEmpty){
+            showMedicationAllergySearchFragment(MedicationAllergySearchFragment.MEDICATION_ITEM);
+        }
+    }
+
+    @Override
+    public void navigateToAllergy(WorkflowDTO workflowDTO, boolean checkEmpty) {
+        medicationsAllergiesDTO = DtoHelper.getConvertedDTO(MedicationsAllergiesResultsModel.class,
+                workflowDTO);
+        Fragment fragment;
+        if (checkEmpty && medicationsAllergiesDTO.getPayload().getAllergies().getPayload().isEmpty()) {
+            fragment = MedicationsAllergiesEmptyFragment.newInstance(medicationsAllergiesDTO,
+                    MedicationsAllergiesEmptyFragment.ALLERGY_MODE);
+        } else {
+            fragment = AllergiesFragment.newInstance(medicationsAllergiesDTO);
+        }
+        navigateToFragment(fragment, true);
+
+        if(!checkEmpty){
+            showMedicationAllergySearchFragment(MedicationAllergySearchFragment.ALLERGY_ITEM);
+        }
     }
 
     @Override
@@ -271,9 +317,40 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
     @Override
     public void addMedicationAllergyItem(MedicationsAllergiesObject item) {
-        MedicationsAllergyFragment medicationsAllergyFragment =
-                (MedicationsAllergyFragment) getSupportFragmentManager().findFragmentById(R.id.root_layout);
-        medicationsAllergyFragment.addItem(item);
+        if (item instanceof MedicationsObject) {
+            MedicationsFragment medicationsFragment = (MedicationsFragment) getSupportFragmentManager().
+                    findFragmentById(R.id.root_layout);
+            medicationsFragment.addItem(item);
+        } else {
+            AllergiesFragment allergiesFragment = (AllergiesFragment) getSupportFragmentManager().
+                    findFragmentById(R.id.root_layout);
+            allergiesFragment.addItem(item);
+        }
+    }
+
+    @Override
+    public void promptAddUnlisted(final MedicationsAllergiesObject item, final int mode) {
+        String title = Label.getLabel("medications_allergies_prompt_unlisted_title");
+        String message = String.format(mode == MedicationAllergySearchFragment.ALLERGY_ITEM ?
+                        Label.getLabel("medications_allergies_prompt_message_allergies") :
+                        Label.getLabel("medications_allergies_prompt_message_medications"),
+                item.getDisplayName());
+
+        ConfirmDialogFragment dialogFragment = ConfirmDialogFragment.newInstance(title, message);
+        dialogFragment.setCallback(new ConfirmationCallback() {
+            @Override
+            public void onConfirm() {
+                addMedicationAllergyItem(item);
+            }
+        });
+        dialogFragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                showMedicationAllergySearchFragment(mode);
+            }
+        });
+        FragmentManager fm = getSupportFragmentManager();
+        dialogFragment.show(fm, dialogFragment.getClass().getName());
     }
 
     @Override
@@ -410,8 +487,9 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
                 : Label.getLabel("demographics_insurance_primary_alert_message");
         ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment
                 .newInstance(Label.getLabel("demographics_insurance_primary_alert_title"), message);
+        confirmDialogFragment.setNegativeAction(true);
         confirmDialogFragment.setCallback(callback);
-        if(cancelListener != null){
+        if (cancelListener != null) {
             confirmDialogFragment.setOnCancelListener(cancelListener);
         }
         String tag = confirmDialogFragment.getClass().getName();

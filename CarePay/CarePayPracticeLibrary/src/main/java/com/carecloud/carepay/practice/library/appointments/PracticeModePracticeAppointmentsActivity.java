@@ -363,20 +363,49 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         return new FindPatientDialog.OnItemClickedListener() {
             @Override
             public void onItemClicked(PatientModel patient) {
-                setPatientId(patient.getPatientId());
-                if (needsToConfirmAppointmentCreation) {
-                    getPatientBalances(patient);
-                } else {
-                    newAppointment();
-                }
+                setPatient(patient);
+                getPatientBalances(patient, needsToConfirmAppointmentCreation);
             }
 
-            private void getPatientBalances(PatientModel patient) {
+            private void getPatientBalances(PatientModel patient, boolean needsToConfirmAppointmentCreation) {
                 Map<String, String> queryMap = new HashMap<>();
                 queryMap.put("patient_id", patient.getPatientId());
-
                 TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getPatientBalances();
-                getWorkflowServiceHelper().execute(transitionDTO, patientBalancesCallback, queryMap);
+                getWorkflowServiceHelper().execute(transitionDTO,
+                        getPatientBalancesCallback(patient, needsToConfirmAppointmentCreation), queryMap);
+            }
+
+
+            private WorkflowServiceCallback getPatientBalancesCallback(final PatientModel patient,
+                                                                       final boolean needsToConfirmAppointmentCreation) {
+                return new WorkflowServiceCallback() {
+
+                    @Override
+                    public void onPreExecute() {
+                        showProgressDialog();
+                    }
+
+                    @Override
+                    public void onPostExecute(WorkflowDTO workflowDTO) {
+                        hideProgressDialog();
+                        PaymentsModel patientDetails = DtoHelper
+                                .getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
+                        patient.setProfilePhoto(patientDetails.getPaymentPayload().getPatientBalances().get(0)
+                                .getDemographics().getPayload().getPersonalDetails().getProfilePhoto());
+                        patient.setPhoneNumber(patientDetails.getPaymentPayload().getPatientBalances().get(0)
+                                .getDemographics().getPayload().getAddress().getPhone());
+                        if (needsToConfirmAppointmentCreation) {
+                            showResponsibilityFragment(patientDetails);
+                        } else {
+                            newAppointment();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(String exceptionMessage) {
+                        showErrorNotification(exceptionMessage);
+                    }
+                };
             }
         };
     }
@@ -400,27 +429,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             hideProgressDialog();
             showErrorNotification(exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
-
-    private WorkflowServiceCallback patientBalancesCallback = new WorkflowServiceCallback() {
-
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            PaymentsModel patientDetails = DtoHelper
-                    .getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
-            showResponsibilityFragment(patientDetails);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            showErrorNotification(exceptionMessage);
         }
     };
 
@@ -450,7 +458,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                 PracticeModePracticeAppointmentsActivity.this
         );
         displayDialogFragment(dialog, true);
-        setPatientId(appointmentDTO.getMetadata().getPatientId());
+        setPatient(appointmentDTO.getPayload().getPatient());
     }
 
     private void confirmAppointment(AppointmentDTO appointmentDTO) {
@@ -595,7 +603,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void onLeftActionTapped(PaymentsModel paymentsModel, double owedAmount) {
-        getAllPracticeForms(getPatientId(), null, paymentsModel);
+        getAllPracticeForms(getPatient().getPatientId(), null, paymentsModel);
     }
 
     @Override

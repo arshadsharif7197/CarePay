@@ -200,13 +200,6 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
         });
     }
 
-    /**
-     * Reload appointment list
-     */
-    public void refreshAppointmentList() {
-        doRefreshAction();
-    }
-
     private void doRefreshAction() {
         // API call to fetch latest appointments
         TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getLinks().getAppointments();

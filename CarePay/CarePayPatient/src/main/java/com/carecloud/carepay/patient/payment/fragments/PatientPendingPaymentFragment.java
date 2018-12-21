@@ -37,6 +37,7 @@ import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHist
  */
 public class PatientPendingPaymentFragment extends BaseFragment
         implements PaymentBalancesAdapter.OnBalanceListItemClickListener {
+
     private PaymentsModel paymentsDTO;
     private View noPaymentsLayout;
     private SwipeRefreshLayout refreshLayout;
@@ -75,7 +76,7 @@ public class PatientPendingPaymentFragment extends BaseFragment
         super.onViewCreated(view, savedInstanceState);
         noPaymentsLayout = view.findViewById(R.id.no_payment_layout);
         setUpRecyclerView(view);
-        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+        refreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -85,13 +86,17 @@ public class PatientPendingPaymentFragment extends BaseFragment
     }
 
     private void setUpRecyclerView(View view) {
-        RecyclerView historyRecyclerView = (RecyclerView) view.findViewById(R.id.payment_list_recycler);
+        RecyclerView historyRecyclerView = view.findViewById(R.id.payment_list_recycler);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        Map<String, UserPracticeDTO> practiceMap = new HashMap<>();
+        for (UserPracticeDTO userPracticeDTO : paymentsDTO.getPaymentPayload().getUserPractices()) {
+            practiceMap.put(userPracticeDTO.getPracticeId(), userPracticeDTO);
+        }
         if (hasPayments() || hasPaymentPlans()) {
             PaymentBalancesAdapter paymentBalancesAdapter = new PaymentBalancesAdapter(
-                    getActivity(), getPendingBalancesList(paymentsDTO),
-                    PatientPendingPaymentFragment.this, paymentsDTO);
+                    getActivity(), getPendingBalancesList(paymentsDTO, practiceMap),
+                    PatientPendingPaymentFragment.this, paymentsDTO, practiceMap);
             historyRecyclerView.setAdapter(paymentBalancesAdapter);
         } else {
             showNoPaymentsLayout();
@@ -118,7 +123,8 @@ public class PatientPendingPaymentFragment extends BaseFragment
         }
     }
 
-    private List<PaymentListItem> getPendingBalancesList(PaymentsModel paymentModel) {
+    private List<PaymentListItem> getPendingBalancesList(PaymentsModel paymentModel,
+                                                         Map<String, UserPracticeDTO> practiceMap) {
         List<PaymentListItem> list = new ArrayList<>();
         //add regular balance items
         for (PatientBalanceDTO patientBalanceDTO : paymentModel.getPaymentPayload().getPatientBalances()) {
@@ -134,11 +140,6 @@ public class PatientPendingPaymentFragment extends BaseFragment
         }
         //add payment plans
         if (!paymentModel.getPaymentPayload().getActivePlans(null).isEmpty()) {
-            Map<String, UserPracticeDTO> practiceMap = new HashMap<>();
-            for (UserPracticeDTO userPracticeDTO : paymentModel.getPaymentPayload().getUserPractices()) {
-                practiceMap.put(userPracticeDTO.getPracticeId(), userPracticeDTO);
-            }
-
             for (PaymentPlanDTO paymentPlanDTO : paymentModel.getPaymentPayload().getActivePlans(null)) {
                 if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanStatus()
                         .equals(PaymentPlanDetailsDTO.STATUS_PROCESSING)) {

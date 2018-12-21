@@ -3,7 +3,6 @@ package com.carecloud.carepay.practice.library.appointments.adapters;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,8 @@ import android.widget.ImageView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.Defs;
+import com.carecloud.carepay.service.library.dtos.AvailableLocationDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
@@ -20,19 +21,17 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
-import java.util.Date;
 import java.util.List;
 
 /**
  * Created by harshal_patil on 10/19/2016
  */
-public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsListAdapter.AppointmentsListViewHolder> {
+public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsListAdapter
+        .AppointmentsListViewHolder> {
 
     private Context context;
     private List<AppointmentDTO> appointmentsArrayList;
@@ -40,6 +39,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
     private AppointmentsAdapterStartCheckInListener listener;
     private @Defs.AppointmentNavigationTypeDef
     int appointmentNavigationType;
+    private final UserPracticeDTO practiceInfo;
 
 
     /**
@@ -47,14 +47,17 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
      *
      * @param context               context
      * @param appointmentsArrayList appointmentsArrayList
+     * @param practiceInfo
      */
     public AppointmentsListAdapter(Context context, List<AppointmentDTO> appointmentsArrayList,
                                    AppointmentsResultModel appointmentInfo,
-                                   @Defs.AppointmentNavigationTypeDef int appointmentNavigationType) {
+                                   @Defs.AppointmentNavigationTypeDef int appointmentNavigationType,
+                                   UserPracticeDTO practiceInfo) {
         this.context = context;
         this.appointmentsArrayList = appointmentsArrayList;
         this.appointmentsResultModel = appointmentInfo;
         this.appointmentNavigationType = appointmentNavigationType;
+        this.practiceInfo = practiceInfo;
     }
 
     @Override
@@ -152,7 +155,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
                 case CarePayConstants.CHECKED_IN:
                     if (appointmentNavigationType == Defs.NAVIGATE_CHECKOUT) {
                         headerBackground.setColor(context.getResources().getColor(R.color.colorPrimary));
-                        startCheckIn.setVisibility(View.VISIBLE);
+                        startCheckIn.setVisibility(isLocationWithBreezeEnabled(payloadDTO) ? View.VISIBLE : View.GONE);
                         startCheckIn.setClickable(true);
                         startCheckIn.setEnabled(true);
                     } else {
@@ -190,23 +193,25 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
 
                         appointmentStatusMissed.setVisibility(View.VISIBLE);
 
-                    } else if (payloadDTO.canCheckInNow(appointmentsResultModel.getPayload().getAppointmentsSettings().get(0))) {
+                    } else if (payloadDTO.canCheckInNow(appointmentsResultModel.getPayload()
+                            .getAppointmentsSettings().get(0))) {
 
                         headerBackground.setColor(context.getResources().getColor(R.color.colorPrimary));
-                        startCheckIn.setVisibility(View.VISIBLE);
+                        startCheckIn.setVisibility(isLocationWithBreezeEnabled(payloadDTO) ? View.VISIBLE : View.GONE);
                         startCheckIn.setClickable(true);
                         startCheckIn.setEnabled(true);
 
                     } else if (isToday) {
 
                         headerBackground.setColor(context.getResources().getColor(R.color.colorPrimary));
-                        startCheckIn.setVisibility(View.VISIBLE);
+                        startCheckIn.setVisibility(isLocationWithBreezeEnabled(payloadDTO) ? View.VISIBLE : View.GONE);
                         startCheckIn.setClickable(false);
                         startCheckIn.setEnabled(false);
 
                     } else {
 
-                        headerBackground.setColor(context.getResources().getColor(R.color.textview_default_textcolor));
+                        headerBackground.setColor(context.getResources()
+                                .getColor(R.color.textview_default_textcolor));
                         appointmentLocationView.setVisibility(View.VISIBLE);
                     }
             }
@@ -218,26 +223,9 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
             shortName.setText(StringUtil.getShortName(provider.getName()));
 
             String photoUrl = provider.getPhoto();
-            if (TextUtils.isEmpty(photoUrl)) {
-                setPhotoView(photoUrl);
-                System.out.println(provider.getName() + " - " + photoUrl);
+            if (!StringUtil.isNullOrEmpty(photoUrl)) {
+                PicassoHelper.get().loadImage(context, profileImage, null, photoUrl);
             }
-        }
-
-        private void setPhotoView(String photoUrl) {
-            Callback callback = new Callback() {
-                @Override
-                public void onSuccess() {
-                    profileImage.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onError() {
-                }
-            };
-
-            Picasso.with(context).load(photoUrl).transform(new CircleImageTransform())
-                    .resize(58, 58).into(profileImage, callback);
         }
 
         private void setCheckInButton(AppointmentDTO appointmentDTO, int position) {
@@ -258,12 +246,14 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
                 }
             });
             if (appointmentNavigationType == Defs.NAVIGATE_CHECKOUT) {
-                startCheckIn.setVisibility(appointmentDTO.getPayload().canCheckOut() ? View.VISIBLE : View.GONE);
+                startCheckIn.setVisibility(isLocationWithBreezeEnabled(appointmentDTO.getPayload())
+                        && appointmentDTO.getPayload().canCheckOut() ? View.VISIBLE : View.GONE);
             }
         }
 
         private void setDateTime(DateUtil dateUtil) {
-            appointmentDate.setText(dateUtil.getDateAsDayMonthDayOrdinalYear(Label.getLabel("appointments_web_today_heading")));
+            appointmentDate.setText(dateUtil.getDateAsDayMonthDayOrdinalYear(Label
+                    .getLabel("appointments_web_today_heading")));
             appointmentTime.setText(dateUtil.getTime12Hour());
         }
 
@@ -271,6 +261,20 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
             appointmentPlaceName.setText(location.getName());
             appointmentPlaceAddress.setText(location.getAddress().toString());
         }
+    }
+
+    private boolean isLocationWithBreezeEnabled(AppointmentsPayloadDTO appointmentPayload) {
+        List<AvailableLocationDTO> enabledLocations = practiceInfo.getLocations();
+        boolean isTheLocationWithBreezeEnabled = enabledLocations == null;
+        if (enabledLocations != null) {
+            for (AvailableLocationDTO location : enabledLocations) {
+                if (location.getGuid().equals(appointmentPayload.getLocation().getGuid())) {
+                    isTheLocationWithBreezeEnabled = true;
+                    break;
+                }
+            }
+        }
+        return isTheLocationWithBreezeEnabled;
     }
 
     public interface AppointmentsAdapterStartCheckInListener {

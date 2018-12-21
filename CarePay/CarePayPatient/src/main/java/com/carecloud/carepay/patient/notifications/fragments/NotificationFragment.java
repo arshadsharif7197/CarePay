@@ -51,7 +51,8 @@ public class NotificationFragment extends BaseFragment
 
     private static final long NOTIFICATION_DELETE_DELAY = 1000 * 5;
     private static final String TAG = NotificationFragment.class.getName();
-    private static final int BOTTOM_ROW_OFFSET = 2;
+    private static final int ITEMS_PER_PAGE = 100;
+    private static final int BOTTOM_ROW_OFFSET = (int) (ITEMS_PER_PAGE * 0.33);
 
     private NotificationsDTO notificationsDTO;
     private List<NotificationItem> notificationItems = new ArrayList<>();
@@ -101,6 +102,7 @@ public class NotificationFragment extends BaseFragment
         supportedNotificationTypes.add(NotificationType.appointment);
         supportedNotificationTypes.add(NotificationType.pending_forms);
         supportedNotificationTypes.add(NotificationType.payments);
+        supportedNotificationTypes.add(NotificationType.pending_survey);
         supportedNotificationTypes.add(NotificationType.secure_message);
         setHasOptionsMenu(true);
         Bundle args = getArguments();
@@ -275,7 +277,7 @@ public class NotificationFragment extends BaseFragment
 
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("page", String.valueOf(currentPage + 1));
-        queryMap.put("limit", String.valueOf(paging.getResultsPerPage()));
+        queryMap.put("limit", String.valueOf(ITEMS_PER_PAGE));
 
         TransitionDTO refreshTransition = notificationsDTO.getMetadata().getLinks().getNotifications();
         getWorkflowServiceHelper().execute(refreshTransition, getRefreshCallback(refresh), queryMap);
@@ -408,13 +410,6 @@ public class NotificationFragment extends BaseFragment
                         && notificationItem.getPayload().getPracticeName() == null) {
                     //Prevent showing old notifications without pending form data
                     continue;
-                }
-
-                if (notificationType.equals(NotificationType.payments)) {
-                    String eventName = notificationItem.getMetadata().getEvent().getPayload().getEventName();
-                    if (eventName != null && eventName.contains("patient_statement_create")) {//TODO remove this once we can support patient statement notifications
-                        continue;
-                    }
                 }
                 filteredList.add(notificationItem);
             } else {

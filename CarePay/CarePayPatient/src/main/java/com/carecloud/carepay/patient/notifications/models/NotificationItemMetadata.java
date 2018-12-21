@@ -30,10 +30,17 @@ public class NotificationItemMetadata {
     @SerializedName("updated_dt")
     @Expose
     private String updatedDt;
+    @SerializedName("patient_id")
+    @Expose
+    private String patientId;
 
     @SerializedName("notification_type")
     @Expose
     private NotificationType notificationType;
+
+    @SerializedName("notification_subtype")
+    @Expose
+    private String notificationSubtype;
 
     @SerializedName("event")
     @Expose
@@ -95,12 +102,28 @@ public class NotificationItemMetadata {
         this.updatedDt = updatedDt;
     }
 
+    public String getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
+    }
+
     public NotificationType getNotificationType() {
         return notificationType;
     }
 
     public void setNotificationType(NotificationType notificationType) {
         this.notificationType = notificationType;
+    }
+
+    public String getNotificationSubtype() {
+        return notificationSubtype;
+    }
+
+    public void setNotificationSubtype(String notificationSubtype) {
+        this.notificationSubtype = notificationSubtype;
     }
 
     public Event getEvent() {

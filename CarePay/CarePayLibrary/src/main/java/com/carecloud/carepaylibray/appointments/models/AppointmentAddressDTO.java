@@ -39,162 +39,126 @@ public class AppointmentAddressDTO {
     private String stateName;
 
     /**
-     * 
-     * @return
-     *     The line1
+     * @return The line1
      */
     public String getLine1() {
         return line1;
     }
 
     /**
-     * 
-     * @param line1
-     *     The line1
+     * @param line1 The line1
      */
     public void setLine1(String line1) {
         this.line1 = line1;
     }
 
     /**
-     * 
-     * @return
-     *     The line2
+     * @return The line2
      */
     public String getLine2() {
         return line2;
     }
 
     /**
-     * 
-     * @param line2
-     *     The line2
+     * @param line2 The line2
      */
     public void setLine2(String line2) {
         this.line2 = line2;
     }
 
     /**
-     * 
-     * @return
-     *     The line3
+     * @return The line3
      */
     public Object getLine3() {
         return line3;
     }
 
     /**
-     * 
-     * @param line3
-     *     The line3
+     * @param line3 The line3
      */
     public void setLine3(String line3) {
         this.line3 = line3;
     }
 
     /**
-     * 
-     * @return
-     *     The city
+     * @return The city
      */
     public String getCity() {
         return city;
     }
 
     /**
-     * 
-     * @param city
-     *     The city
+     * @param city The city
      */
     public void setCity(String city) {
         this.city = city;
     }
 
     /**
-     * 
-     * @return
-     *     The zipCode
+     * @return The zipCode
      */
     public String getZipCode() {
         return zipCode;
     }
 
     /**
-     * 
-     * @param zipCode
-     *     The zip_code
+     * @param zipCode The zip_code
      */
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
     }
 
     /**
-     * 
-     * @return
-     *     The countyName
+     * @return The countyName
      */
     public Object getCountyName() {
         return countyName;
     }
 
     /**
-     * 
-     * @param countyName
-     *     The county_name
+     * @param countyName The county_name
      */
     public void setCountyName(String countyName) {
         this.countyName = countyName;
     }
 
     /**
-     * 
-     * @return
-     *     The latitude
+     * @return The latitude
      */
     public Double getLatitude() {
         return latitude;
     }
 
     /**
-     * 
-     * @param latitude
-     *     The latitude
+     * @param latitude The latitude
      */
     public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
     /**
-     * 
-     * @return
-     *     The longitude
+     * @return The longitude
      */
     public Double getLongitude() {
         return longitude;
     }
 
     /**
-     * 
-     * @param longitude
-     *     The longitude
+     * @param longitude The longitude
      */
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
     /**
-     * 
-     * @return
-     *     The stateName
+     * @return The stateName
      */
     public String getStateName() {
         return stateName;
     }
 
     /**
-     * 
-     * @param stateName
-     *     The state_name
+     * @param stateName The state_name
      */
     public void setStateName(String stateName) {
         this.stateName = stateName;
@@ -202,6 +166,7 @@ public class AppointmentAddressDTO {
 
     /**
      * Returns full address.
+     *
      * @return Full address
      */
     public String getPlaceAddressString() {
@@ -212,6 +177,15 @@ public class AppointmentAddressDTO {
                 + (StringUtil.isNullOrEmpty(stateName) ? "" : stateName + " ")
                 + (StringUtil.isNullOrEmpty(zipCode) ? "" : zipCode + " ")
                 + (countyName == null ? "" : countyName);
+    }
+
+    public String geAddressStringWithShortZipWOCounty() {
+        return (StringUtil.isNullOrEmpty(line1) ? "" : line1 + ", ")
+                + (StringUtil.isNullOrEmpty(line2) ? "" : line2 + ", ")
+                + (StringUtil.isNullOrEmpty(city) ? "" : city + ", ")
+                + (line3 == null ? "" : line3 + ", ")
+                + (StringUtil.isNullOrEmpty(stateName) ? "" : stateName + ", ")
+                + (StringUtil.isNullOrEmpty(zipCode) ? "" : zipCode.substring(0, 5) + " ");
     }
 
     @Override

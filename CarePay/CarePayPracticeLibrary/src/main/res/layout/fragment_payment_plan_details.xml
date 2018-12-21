@@ -48,10 +48,11 @@
                         android:src="@drawable/icn_placeholder_user_profile_png"
                         android:textColor="@color/lightSlateGray"
                         android:textSize="@dimen/text_size_38"
+                        tools:text="JP"
                         app:customAssetFont="gotham_rounded_medium" />
 
                     <ImageView
-                        android:id="@+id/patient_profile_photo"
+                        android:id="@+id/practiceImageView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_alignParentStart="true"

@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class PagingDto {
 
-    @SerializedName("paging")
+    @SerializedName(value = "paging", alternate = "payload")
     private Paging paging = new Paging();
 
     public Paging getPaging() {

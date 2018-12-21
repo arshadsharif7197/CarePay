@@ -117,13 +117,14 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                         view.findViewById(R.id.avTextView).setVisibility(View.VISIBLE);
                     }
                 });
-        ((TextView) view.findViewById(R.id.patient_full_name)).setText(name + " " + lastName);
-        ((TextView) view.findViewById(R.id.payment_details_total_paid)).setText(amountBalanceLabel + ": " + totalAmount);
+        ((TextView) view.findViewById(R.id.patient_full_name)).setText(String.format("%s %s", name, lastName));
+        ((TextView) view.findViewById(R.id.payment_details_total_paid))
+                .setText(String.format("%s: %s", amountBalanceLabel, totalAmount));
         ((TextView) view.findViewById(R.id.avTextView))
                 .setText(StringUtil.getShortName(name + " " + lastName));
 
 
-        payNowButton.setText(Label.getLabel("payment_details_pay_now"));
+        payNowButton.setText(Label.getLabel("payment_pay_total_button"));
         RecyclerView paymentDetailsRecyclerView = ((RecyclerView) view.findViewById(R.id.payment_receipt_details_view));
         paymentDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 

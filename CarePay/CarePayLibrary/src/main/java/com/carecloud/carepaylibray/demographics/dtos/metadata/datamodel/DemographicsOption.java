@@ -34,7 +34,7 @@ public class DemographicsOption {
     }
 
     public String getLabel() {
-        return label.length() > 2 ? StringUtil.captialize(label) : label;
+        return label != null && label.length() > 2 ? StringUtil.captialize(label) : label;
     }
 
     public void setLabel(String label) {

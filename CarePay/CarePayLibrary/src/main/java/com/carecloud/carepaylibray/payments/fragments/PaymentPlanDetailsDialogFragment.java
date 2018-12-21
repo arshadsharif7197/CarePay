@@ -21,6 +21,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.text.NumberFormat;
@@ -82,23 +83,35 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
         PaymentPlanPayloadDTO planPayload = paymentPlanDTO.getPayload();
         UserPracticeDTO userPracticeDTO = callback.getPracticeInfo(paymentsModel);
 
-        TextView installmentDetail = (TextView) view.findViewById(R.id.planInstallmentDetail);
+        TextView installmentDetail = view.findViewById(R.id.planInstallmentDetail);
         installmentDetail.setText(currencyFormatter.format(planPayload.getPaymentPlanDetails().getAmount()));
 
-        TextView installmentFrequency = (TextView) view.findViewById(R.id.planInstallmentFrequency);
+        TextView installmentFrequency = view.findViewById(R.id.planInstallmentFrequency);
         installmentFrequency.setText(planPayload.getPaymentPlanDetails().getFrequencyString());
 
         String practiceName = userPracticeDTO.getPracticeName();
-        TextView practiceNameText = (TextView) view.findViewById(R.id.practice_name);
+        TextView practiceNameText = view.findViewById(R.id.practice_name);
         practiceNameText.setText(practiceName);
-        TextView practiceInitials = (TextView) view.findViewById(R.id.avTextView);
+        TextView practiceInitials = view.findViewById(R.id.avTextView);
         practiceInitials.setText(StringUtil.getShortName(practiceName));
+
+        UserPracticeDTO practice = paymentReceiptModel.getPaymentPayload()
+                .getUserPractice(paymentPlanDTO.getMetadata().getPracticeId());
+        if(!StringUtil.isNullOrEmpty(practice.getPracticePhoto())){
+            PicassoHelper.get().loadImage(getContext(), (ImageView) view.findViewById(R.id.practiceImageView),
+                    practiceInitials, practice.getPracticePhoto());
+        }
+
+        TextView planName = view.findViewById(R.id.paymentPlanNameTextView);
+        planName.setText(paymentPlanDTO.getPayload().getDescription());
+
+
 
         String paymentsMadeOf = Label.getLabel("payment_plan_payments_made_value");
         int paymentCount = planPayload.getPaymentPlanDetails().getFilteredHistory().size();
         int installmentTotal = planPayload.getPaymentPlanDetails().getInstallments();
         int oneTimePayments = paymentPlanDTO.getPayload().getPaymentPlanDetails()
-                .getPaymentPlanHistoryList().size() - paymentCount;
+                .getOneTimePayments().size();
         StringBuilder paymentsMadeBuilder = new StringBuilder().append(String.format(paymentsMadeOf, paymentCount, installmentTotal));
         if(oneTimePayments > 0){
             paymentsMadeBuilder.append(" + ")
@@ -106,24 +119,24 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
                     .append(" ")
                     .append(Label.getLabel("payment_history_detail_extra"));
         }
-        TextView installmentCount = (TextView) view.findViewById(R.id.paymentsInstallmentsCount);
+        TextView installmentCount = view.findViewById(R.id.paymentsInstallmentsCount);
         installmentCount.setText(paymentsMadeBuilder.toString());
 
-        TextView nextInstallment = (TextView) view.findViewById(R.id.nexyPaymentDate);
+        TextView nextInstallment = view.findViewById(R.id.nexyPaymentDate);
         nextInstallment.setText(getNextDate(planPayload));
 
         double totalAmount = planPayload.getAmount();
-        TextView planTotal = (TextView) view.findViewById(R.id.transaction_total);
+        TextView planTotal = view.findViewById(R.id.transaction_total);
         planTotal.setText(currencyFormatter.format(totalAmount));
 
         double amountPaid = planPayload.getAmountPaid();
-        TextView balance = (TextView) view.findViewById(R.id.planBalance);
+        TextView balance = view.findViewById(R.id.planBalance);
         balance.setText(currencyFormatter.format(totalAmount - amountPaid));
 
-        ProgressBar planProgress = (ProgressBar) view.findViewById(R.id.paymentPlanProgress);
+        ProgressBar planProgress = view.findViewById(R.id.paymentPlanProgress);
         planProgress.setProgress(planPayload.getPaymentPlanProgress());
 
-        ImageView dialogCloseHeader = (ImageView) view.findViewById(R.id.dialog_close_header);
+        ImageView dialogCloseHeader = view.findViewById(R.id.dialog_close_header);
         if (dialogCloseHeader != null) {
             dialogCloseHeader.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -156,7 +169,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
         if (scheduledPayment != null) {
             View scheduledPaymentLayout = view.findViewById(R.id.scheduledPaymentLayout);
             scheduledPaymentLayout.setVisibility(View.VISIBLE);
-            TextView scheduledPaymentMessage = (TextView) view.findViewById(R.id.scheduledPaymentMessage);
+            TextView scheduledPaymentMessage = view.findViewById(R.id.scheduledPaymentMessage);
             DateUtil.getInstance().setDateRaw(scheduledPayment.getPayload().getPaymentDate());
             String message = String.format(Label.getLabel("payment.oneTimePayment.scheduled.details"),
                     StringUtil.getFormattedBalanceAmount(scheduledPayment.getPayload().getAmount()),

@@ -1,30 +1,16 @@
 package com.carecloud.carepay.patient.appointments.adapters;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayUtil;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
-import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
-import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
-import com.carecloud.carepaylibray.utils.StringUtil;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -36,26 +22,9 @@ import java.util.Set;
  * Created by lmenendez on 5/2/17
  */
 
-public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentListAdapter.ViewHolder> {
-    private static final int VIEW_TYPE_HEADER = 1;
-    private static final int VIEW_TYPE_APPOINTMENT = 2;
-    private final Map<String, Set<String>> enabledPracticeLocations;
-
-    public interface SelectAppointmentCallback {
-        void onItemTapped(AppointmentDTO appointmentDTO);
-
-        void onCheckoutTapped(AppointmentDTO appointmentDTO);
-
-        String getPracticeId(String appointmentId);
-    }
-
-    private Context context;
+public class AppointmentListAdapter extends BaseAppointmentAdapter {
     private SelectAppointmentCallback callback;
     private List<AppointmentDTO> appointmentItems;
-
-    private List<AppointmentDTO> sortedAppointments = new ArrayList<>();
-
-    private List<UserPracticeDTO> userPracticeDTOs;
 
     /**
      * Constructor
@@ -78,30 +47,9 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
     }
 
     @Override
-    public int getItemViewType(int position) {
-        AppointmentDTO appointmentDTO = sortedAppointments.get(position);
-        if (appointmentDTO.getPayload().getDisplayStyle() == AppointmentDisplayStyle.HEADER) {
-            return VIEW_TYPE_HEADER;
-        }
-        return VIEW_TYPE_APPOINTMENT;
-    }
-
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view;
-        if (viewType == VIEW_TYPE_HEADER) {
-            view = inflater.inflate(R.layout.appointment_list_header, parent, false);
-        } else {
-            view = inflater.inflate(R.layout.item_appointment, parent, false);
-        }
-        return new ViewHolder(view);
-    }
-
-    @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         AppointmentDTO appointmentDTO = sortedAppointments.get(position);
-        AppointmentsPayloadDTO appointmentsPayload = sortedAppointments.get(position).getPayload();
+        AppointmentsPayloadDTO appointmentsPayload = appointmentDTO.getPayload();
 
         //Header
         if (getItemViewType(position) == VIEW_TYPE_HEADER) {
@@ -112,147 +60,13 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
         //cleanup
         cleanupViews(holder);
 
-        //Appointment
-        ProviderDTO provider = appointmentsPayload.getProvider();
-        if (!StringUtil.isNullOrEmpty(provider.getName())) {
-            holder.initials.setText(StringUtil.getShortName(provider.getName()));
-        }
-        holder.doctorName.setText(StringUtil.getLabelForView(provider.getName()));
-        holder.doctorType.setText(StringUtil.getLabelForView(provider.getSpecialty().getName()));
-
-        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentsPayload.getStartTime());
-        AppointmentDisplayStyle style = appointmentsPayload.getDisplayStyle();
-
         boolean isBreezePractice = isBreezePractice(appointmentDTO.getMetadata().getPracticeId());
-        Set<String> enabledLocations = enabledPracticeLocations.get(appointmentDTO.getMetadata().getPracticeId());
+        Set<String> enabledLocations = enabledPracticeLocations.get(appointmentDTO.getMetadata()
+                .getPracticeId());
+        boolean shouldShowCheckoutButton = shouldShowCheckOutButton(appointmentDTO, enabledLocations,
+                isBreezePractice);
 
-        switch (style) {
-            case CHECKED_IN: {
-                if (shouldShowCheckOutButton(appointmentDTO, enabledLocations, isBreezePractice)) {
-                    holder.checkOutButton.setVisibility(View.VISIBLE);
-                    holder.checkOutButton.setClickable(true);
-                }
-                holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.emerald));
-                holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
-                holder.initials.setBackgroundResource(R.drawable.round_list_tv_green);
-                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_checked_in);
-                break;
-            }
-            case PENDING: {
-                holder.todayTimeLayout.setVisibility(View.VISIBLE);
-                holder.todayTimeTextView.setText(dateUtil.getTime12Hour());
-                holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.emerald));
-                holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.emerald));
-                holder.initials.setTextColor(ContextCompat.getColor(context, R.color.emerald));
-                holder.initials.setBackgroundResource(R.drawable.round_list_tv_green_border);
-                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_upcoming);
-                break;
-            }
-            case REQUESTED: {
-                holder.todayTimeLayout.setVisibility(View.VISIBLE);
-                holder.todayTimeTextView.setText(dateUtil.getTime12Hour());
-                holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.lightning_yellow));
-                holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.lightning_yellow));
-                holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
-                holder.initials.setBackgroundResource(R.drawable.round_list_tv_orange);
-                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_pending);
-                holder.cellAvatar.setVisibility(View.VISIBLE);
-                break;
-            }
-            case MISSED: {
-                holder.todayTimeMessage.setVisibility(View.VISIBLE);
-                holder.todayTimeMessage.setText(Label.getLabel("missed_appointments_heading"));
-                holder.todayTimeLayout.setVisibility(View.VISIBLE);
-                holder.todayTimeTextView.setText(dateUtil.getTime12Hour());
-                holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.remove_red));
-                holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.remove_red));
-                holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
-                holder.initials.setBackgroundResource(R.drawable.round_list_tv_red);
-                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_missed);
-                holder.cellAvatar.setVisibility(View.VISIBLE);
-                break;
-            }
-            case CANCELED: {
-                holder.todayTimeMessage.setVisibility(View.VISIBLE);
-                holder.todayTimeMessage.setText(Label.getLabel("appointment_canceled"));
-                holder.todayTimeLayout.setVisibility(View.VISIBLE);
-                holder.todayTimeTextView.setText(dateUtil.getTime12Hour());
-                holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.pastel_blue));
-                holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.pastel_blue));
-                holder.initials.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
-                holder.initials.setBackgroundResource(R.drawable.round_list_tv);
-                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_canceled);
-                holder.cellAvatar.setVisibility(View.VISIBLE);
-                break;
-            }
-            case PENDING_UPCOMING: {
-                holder.upcomingDateLayout.setVisibility(View.VISIBLE);
-                holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
-                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDayOrdinal());
-                holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
-                holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.grayRound));
-                holder.initials.setTextColor(ContextCompat.getColor(context, R.color.emerald));
-                holder.initials.setBackgroundResource(R.drawable.round_list_tv_green_border);
-                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_upcoming);
-                break;
-            }
-            case REQUESTED_UPCOMING: {
-                holder.upcomingDateLayout.setVisibility(View.VISIBLE);
-                holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
-                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDayOrdinal());
-                holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
-                holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.lightning_yellow));
-                holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
-                holder.initials.setBackgroundResource(R.drawable.round_list_tv_orange);
-                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_pending);
-                holder.cellAvatar.setVisibility(View.VISIBLE);
-                break;
-            }
-            case CANCELED_UPCOMING: {
-                holder.upcomingDateLayout.setVisibility(View.VISIBLE);
-                holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
-                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDayOrdinal());
-                holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
-                holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.pastel_blue));
-                holder.initials.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
-                holder.initials.setBackgroundResource(R.drawable.round_list_tv);
-                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_canceled);
-                holder.cellAvatar.setVisibility(View.VISIBLE);
-                break;
-            }
-            case CHECKED_OUT: {
-                holder.checkedOutLabel.setVisibility(View.VISIBLE);
-                holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
-                holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
-                holder.initials.setBackgroundResource(R.drawable.round_tv);
-                holder.initials.setVisibility(View.VISIBLE);
-                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_checked_out);
-                break;
-            }
-            default: {
-                cleanupViews(holder);
-            }
-        }
-
-        int size = context.getResources().getDimensionPixelSize(R.dimen.payment_details_dialog_icon_size);
-        Picasso.with(context).load(appointmentsPayload.getProvider().getPhoto())
-                .resize(size, size)
-                .centerCrop()
-                .transform(new CircleImageTransform())
-                .into(holder.profileImage, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        holder.profileImage.setVisibility(View.VISIBLE);
-                        holder.initials.setVisibility(View.GONE);
-                        holder.cellAvatar.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onError() {
-                        holder.profileImage.setVisibility(View.GONE);
-                        holder.initials.setVisibility(View.VISIBLE);
-                    }
-                });
+        bindView(holder, appointmentsPayload, shouldShowCheckoutButton);
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -271,12 +85,6 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
             }
         });
 
-
-    }
-
-    @Override
-    public int getItemCount() {
-        return sortedAppointments.size();
     }
 
     /**
@@ -290,33 +98,19 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
         notifyDataSetChanged();
     }
 
-    private boolean shouldShowCheckOutButton(AppointmentDTO appointmentDTO,
-                                             Set<String> enabledLocations,
-                                             boolean isBreezePractice) {
-        boolean isTheLocationWithBreezeEnabled = enabledLocations == null;
-        if (enabledLocations != null) {
-            for (String locationId : enabledLocations) {
-                if (locationId.equals(appointmentDTO.getPayload().getLocation().getGuid())) {
-                    isTheLocationWithBreezeEnabled = true;
-                    break;
-                }
-            }
-        }
-
-        return isBreezePractice && isTheLocationWithBreezeEnabled && appointmentDTO.getPayload().canCheckOut();
-    }
-
     private void sortAppointments() {
         Collections.sort(appointmentItems, new Comparator<AppointmentDTO>() {
             @Override
             public int compare(AppointmentDTO left, AppointmentDTO right) {
-                AppointmentDisplayStyle leftStyle = getDisplayStyle(left);
-                AppointmentDisplayStyle rightStyle = getDisplayStyle(right);
+                AppointmentDisplayStyle leftStyle = getDisplayStyle(left.getPayload());
+                AppointmentDisplayStyle rightStyle = getDisplayStyle(right.getPayload());
 
                 Date leftDate = DateUtil.getInstance().setDateRaw(left.getPayload().getStartTime()).getDate();
                 Date rightDate = DateUtil.getInstance().setDateRaw(right.getPayload().getStartTime()).getDate();
 
-                if (leftStyle == AppointmentDisplayStyle.CHECKED_IN || rightStyle == AppointmentDisplayStyle.CHECKED_IN) {//Check-in should go on top
+                //Check-in should go on top
+                if (leftStyle == AppointmentDisplayStyle.CHECKED_IN
+                        || rightStyle == AppointmentDisplayStyle.CHECKED_IN) {
                     if (leftStyle != rightStyle) {
                         if (leftStyle == AppointmentDisplayStyle.CHECKED_IN) {//left should come first
                             return -1;
@@ -345,8 +139,10 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
         AppointmentDTO headerTemplate;
 
         for (AppointmentDTO appointmentDTO : appointmentItems) {
-            if (appointmentDTO.getPayload().getDisplayStyle() == null) {//required here to handle the case where user has only 1 appt and it was not run through comparator
-                appointmentDTO.getPayload().setDisplayStyle(AppointmentDisplayUtil.determineDisplayStyle(appointmentDTO));
+            //required here to handle the case where user has only 1 appt and it was not run through comparator
+            if (appointmentDTO.getPayload().getDisplayStyle() == null) {
+                appointmentDTO.getPayload().setDisplayStyle(AppointmentDisplayUtil
+                        .determineDisplayStyle(appointmentDTO.getPayload()));
             }
 
             //check if we need to add a checked in header
@@ -359,7 +155,8 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
             }
 
             //check if we need a today header
-            if (!todayHeader && appointmentDTO.getPayload().getDisplayStyle() != AppointmentDisplayStyle.CHECKED_IN && appointmentDTO.getPayload().isAppointmentToday()) {
+            if (!todayHeader && appointmentDTO.getPayload().getDisplayStyle()
+                    != AppointmentDisplayStyle.CHECKED_IN && appointmentDTO.getPayload().isAppointmentToday()) {
                 headerTemplate = new AppointmentDTO();
                 headerTemplate.getPayload().setDisplayStyle(AppointmentDisplayStyle.HEADER);
                 headerTemplate.getPayload().setId(Label.getLabel("today_appointments_heading"));
@@ -368,7 +165,8 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
             }
 
             //check if we need an upcoming header
-            if (!upcomingHeader && appointmentDTO.getPayload().getDisplayStyle() != AppointmentDisplayStyle.CHECKED_IN && !appointmentDTO.getPayload().isAppointmentToday()) {
+            if (!upcomingHeader && appointmentDTO.getPayload().getDisplayStyle() != AppointmentDisplayStyle.CHECKED_IN
+                    && !appointmentDTO.getPayload().isAppointmentToday()) {
                 headerTemplate = new AppointmentDTO();
                 headerTemplate.getPayload().setDisplayStyle(AppointmentDisplayStyle.HEADER);
                 headerTemplate.getPayload().setId(Label.getLabel("upcoming_appointments_heading"));
@@ -380,96 +178,13 @@ public class AppointmentListAdapter extends RecyclerView.Adapter<AppointmentList
         }
     }
 
-    private AppointmentDisplayStyle getDisplayStyle(AppointmentDTO appointmentDTO) {
-        AppointmentDisplayStyle displayStyle = appointmentDTO.getPayload().getDisplayStyle();
-        if (displayStyle == null) {
-            displayStyle = AppointmentDisplayUtil.determineDisplayStyle(appointmentDTO);
-            appointmentDTO.getPayload().setDisplayStyle(displayStyle);
-        }
-        return displayStyle;
+    public interface SelectAppointmentCallback {
+        void onItemTapped(AppointmentDTO appointmentDTO);
+
+        void onCheckoutTapped(AppointmentDTO appointmentDTO);
+
+        String getPracticeId(String appointmentId);
     }
 
-
-    private void cleanupViews(ViewHolder holder) {
-        holder.checkOutButton.setVisibility(View.GONE);
-        holder.checkedOutLabel.setVisibility(View.GONE);
-        holder.todayTimeLayout.setVisibility(View.GONE);
-        holder.upcomingDateLayout.setVisibility(View.GONE);
-        holder.todayTimeMessage.setVisibility(View.GONE);
-        holder.cellAvatar.setVisibility(View.GONE);
-        holder.initials.setVisibility(View.VISIBLE);
-        holder.itemView.setOnClickListener(null);//need to remove this for header just in case
-    }
-
-    private boolean isBreezePractice(String practiceId) {
-        if (practiceId == null) {
-            return false;
-        }
-        for (UserPracticeDTO userPracticeDTO : userPracticeDTOs) {
-            if (userPracticeDTO.getPracticeId() != null && userPracticeDTO.getPracticeId().equals(practiceId)) {
-                return userPracticeDTO.isBreezePractice();
-            }
-        }
-        return false;
-    }
-
-    class ViewHolder extends RecyclerView.ViewHolder {
-        TextView sectionHeaderTitle;
-
-        ImageView cellAvatar;
-        ImageView profileImage;
-        TextView initials;
-        TextView doctorName;
-        TextView doctorType;
-
-        View todayTimeLayout;
-        TextView todayTimeTextView;
-        TextView todayTimeMessage;
-
-        View upcomingDateLayout;
-        TextView upcomingDateTextView;
-        TextView upcomingMonthTextView;
-        TextView upcomingTimeTextView;
-
-        Button checkOutButton;
-        TextView checkedOutLabel;
-
-        View listItemDivider;
-
-        ViewHolder(View itemView) {
-            super(itemView);
-            //Header view
-            sectionHeaderTitle = (TextView) itemView.findViewById(R.id.appointments_section_header_title);
-            if (sectionHeaderTitle != null) {//skip looking up all the other views which will be null anyway
-                return;
-            }
-
-            //Appointment Views
-            cellAvatar = (ImageView) itemView.findViewById(R.id.cellAvatarImageView);
-            profileImage = (ImageView) itemView.findViewById(R.id.providerPicImageView);
-            initials = (TextView) itemView.findViewById(R.id.avatarTextView);
-            doctorName = (TextView) itemView.findViewById(R.id.doctor_name);
-            doctorType = (TextView) itemView.findViewById(R.id.doctor_type);
-
-            // Today
-            todayTimeLayout = itemView.findViewById(R.id.todayTimeLayout);
-            todayTimeTextView = (TextView) itemView.findViewById(R.id.todayTimeTextView);
-            todayTimeMessage = (TextView) itemView.findViewById(R.id.todayTimeMessage);
-
-            // Upcoming
-            upcomingDateLayout = itemView.findViewById(R.id.upcomingDateLayout);
-            upcomingDateTextView = (TextView) itemView.findViewById(R.id.upcomingDateTextView);
-            upcomingMonthTextView = (TextView) itemView.findViewById(R.id.upcomingMonthTextView);
-            upcomingTimeTextView = (TextView) itemView.findViewById(R.id.upcomingTimeTextView);
-
-            //Check-Out
-            checkOutButton = (Button) itemView.findViewById(R.id.check_out_button);
-            checkedOutLabel = (TextView) itemView.findViewById(R.id.checked_out_label);
-
-            listItemDivider = itemView.findViewById(R.id.appointment_list_item_divider);
-
-        }
-
-    }
 
 }

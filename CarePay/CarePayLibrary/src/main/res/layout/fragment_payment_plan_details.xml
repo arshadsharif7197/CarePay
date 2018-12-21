@@ -76,8 +76,8 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_below="@+id/header_layout"
+                android:layout_alignParentBottom="true"
                 android:background="@color/white" />
 
             <LinearLayout
@@ -91,26 +91,34 @@
                     android:id="@+id/avTextView"
                     android:layout_width="@dimen/payment_details_dialog_icon_size"
                     android:layout_height="@dimen/payment_details_dialog_icon_size"
-                    android:layout_marginEnd="@dimen/dimen_10dp"
                     android:layout_marginStart="@dimen/dimen_10dp"
+                    android:layout_marginEnd="@dimen/dimen_10dp"
                     android:background="@drawable/round_list_tv"
                     android:gravity="center_vertical|center_horizontal"
                     android:src="@drawable/icn_placeholder_user_profile_png"
                     android:textColor="@color/lightSlateGray"
                     app:customAssetFont="gotham_rounded_medium" />
 
+                <ImageView
+                    android:id="@+id/practiceImageView"
+                    android:visibility="gone"
+                    android:layout_width="@dimen/payment_details_dialog_icon_size"
+                    android:layout_height="@dimen/payment_details_dialog_icon_size"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:layout_marginEnd="@dimen/dimen_10dp"
+                    android:gravity="center_vertical|center_horizontal"/>
+
                 <ProgressBar
                     android:id="@+id/paymentPlanProgress"
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="@dimen/payment_details_dialog_icon_size"
                     android:layout_height="@dimen/payment_details_dialog_icon_size"
-                    android:layout_marginEnd="@dimen/dimen_10dp"
                     android:layout_marginStart="@dimen/dimen_10dp"
+                    android:layout_marginEnd="@dimen/dimen_10dp"
                     android:indeterminate="false"
                     android:max="100"
                     android:progress="25"
                     android:progressDrawable="@drawable/payment_plan_progress" />
-
 
             </LinearLayout>
 
@@ -120,20 +128,36 @@
             android:id="@+id/practice_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_14dp"
             android:layout_marginTop="@dimen/dimen_16dp"
+            android:layout_marginEnd="@dimen/dimen_14dp"
             android:gravity="center"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_20"
             app:customAssetFont="proxima_nova_semi_bold"
-            breeze:textKey="payment_receipt_title" />
+            breeze:textKey="payment_receipt_title"
+            tools:text="Practice Name" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/paymentPlanNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_14dp"
+            android:layout_marginEnd="@dimen/dimen_14dp"
+            android:gravity="center"
+            android:textColor="@color/optional_gray"
+            android:textSize="@dimen/text_size_16"
+            app:customAssetFont="proxima_nova_semi_bold"
+            breeze:textKey="payment_receipt_title"
+            tools:text="Payment Plan Name" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginBottom="@dimen/dimen_15dp"
-            android:layout_marginEnd="@dimen/dimen_20dp"
             android:layout_marginStart="@dimen/dimen_20dp"
             android:layout_marginTop="@dimen/dimen_15dp"
+            android:layout_marginEnd="@dimen/dimen_20dp"
+            android:layout_marginBottom="@dimen/dimen_15dp"
             android:background="@color/light_gray_dialog" />
 
         <LinearLayout
@@ -141,18 +165,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingBottom="@dimen/dimen_10dp"
-            android:paddingEnd="@dimen/dimen_50dp"
             android:paddingStart="@dimen/dimen_50dp"
             android:paddingTop="@dimen/dimen_10dp"
+            android:paddingEnd="@dimen/dimen_50dp"
+            android:paddingBottom="@dimen/dimen_10dp"
             android:visibility="visible">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/editPlanButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/dimen_5dp"
                 android:layout_marginStart="@dimen/dimen_5dp"
+                android:layout_marginEnd="@dimen/dimen_5dp"
                 android:background="@drawable/button_default_background"
                 android:foreground="?android:selectableItemBackground"
                 android:gravity="center"
@@ -161,8 +185,8 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_12sp"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="payment_plan_edit"
-                tools:text="Edit Plan" />
+                breeze:textKey="payment_plan_edit_button"
+                tools:text="Edit Payment Plan" />
 
         </LinearLayout>
 
@@ -170,10 +194,10 @@
             android:id="@+id/scheduledPaymentLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dimen_4dp"
-            android:layout_marginEnd="@dimen/dimen_14dp"
             android:layout_marginStart="@dimen/dimen_14dp"
             android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginEnd="@dimen/dimen_14dp"
+            android:layout_marginBottom="@dimen/dimen_4dp"
             android:background="@drawable/round_border"
             android:gravity="center_vertical"
             android:orientation="horizontal"
