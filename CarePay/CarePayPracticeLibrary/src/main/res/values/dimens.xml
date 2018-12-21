@@ -181,8 +181,6 @@
     <dimen name="officeNewsContainerHorizontalPadding">20dp</dimen>
     <dimen name="officeNewsHorizontalPadding">5dp</dimen>
 
-    <!--Signature view dialog-->
-
     <!--Provider lists-->
     <dimen name="provider_list_title_margin">34dp</dimen>
     <dimen name="provider_no_list_margin">72dp</dimen>
@@ -546,6 +544,7 @@
     <dimen name="providerPlaceAddressTextSize">14sp</dimen>
     <dimen name="visitTypeContainerTopMargin">25dp</dimen>
     <dimen name="reasonTypeValueTextSize">17sp</dimen>
+    <dimen name="reasonForVisitPadding">14dp</dimen>
 
     <!--Check In Screen-->
     <dimen name="checkInShadowEndMargin">-25dp</dimen>

@@ -408,6 +408,7 @@
     <dimen name="providerPlaceAddressTextSize">14sp</dimen>
     <dimen name="visitTypeContainerTopMargin">25dp</dimen>
     <dimen name="reasonTypeValueTextSize">17sp</dimen>
+    <dimen name="reasonForVisitPadding">14dp</dimen>
 
     <!--Check In Screen-->
     <dimen name="checkInShadowEndMargin">-25dp</dimen>
