@@ -290,6 +290,7 @@
     <dimen name="apt_available_hours_list_padding">16dp</dimen>
     <dimen name="apt_available_hours_list_header_padding_top">26dp</dimen>
     <dimen name="apt_available_hours_date_picker_padding">18dp</dimen>
+    <dimen name="availableHourListHeaderTextSize">14sp</dimen>
 
     <dimen name="apt_popup_parent_padding">14dp</dimen>
     <dimen name="apt_popup_icon_margin">8dp</dimen>
@@ -480,5 +481,6 @@
     <dimen name="visitTypeContainerVerticalPadding">15dp</dimen>
     <dimen name="reasonForVisitTopMargin">10dp</dimen>
     <dimen name="nextAppointmentProviderImageSize">80dp</dimen>
+    <dimen name="availableHourItemTextSize">14sp</dimen>
 
 </resources>
