@@ -53,7 +53,7 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
     private static final int TYPE_SENT = 111;
     private static final int TYPE_RECEIVED = 222;
 
-    public static final String[] FORMAT_IMAGE = {"png", "jpg", "jpeg", "gif", "tif", "tiff", "bmp"};
+    public static final String[] FORMAT_IMAGE = {"png", "image/png", "jpg", "image/jpg", "jpeg", "image/jpeg", "gif", "image/gif", "tif", "image/tif", "tiff", "image/tiff",  "bmp", "image/bmp"};
 
     private static final String USER_TYPE_PROVIDER = "provider";
     private static final String USER_TYPE_STAFF = "user";
