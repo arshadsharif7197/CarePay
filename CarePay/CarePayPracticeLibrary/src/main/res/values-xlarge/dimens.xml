@@ -263,7 +263,7 @@
     <!--Confirm Dialog-->
     <dimen name="confirmDialogWidth">400dp</dimen>
     <dimen name="confirmDialogHorizontalMargin">26dp</dimen>
-    <dimen name="confirmDialogTitleTextSize">36sp</dimen>
+    <dimen name="confirmDialogTitleTextSize">30sp</dimen>
     <dimen name="confirmDialogTitlePadding">30dp</dimen>
     <dimen name="confirmDialogSubtitleTextSize">20sp</dimen>
     <dimen name="confirmDialogButtonsContainerPadding">10dp</dimen>
