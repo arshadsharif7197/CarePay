@@ -612,7 +612,7 @@ public class WorkflowServiceHelper {
 
 
     private static @NonNull String capitalizeMessage(String message) {
-        if(message == null){
+        if(message == null || message.length() == 0){
             return "";
         }
         return message.substring(0,1).toUpperCase() + message.substring(1);

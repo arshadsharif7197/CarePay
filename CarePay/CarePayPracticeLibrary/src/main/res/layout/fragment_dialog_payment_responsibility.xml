@@ -195,8 +195,8 @@
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22sp"
-                breeze:textKey="payment_details_pay_now"
-                tools:text="Pay Now"
+                breeze:textKey="payment_pay_total_button"
+                tools:text="Pay Total"
                 app:customAssetFont="gotham_rounded_medium"/>
         </LinearLayout>
 

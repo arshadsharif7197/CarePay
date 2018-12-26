@@ -32,7 +32,6 @@ import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicEmergencyContactSection;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
@@ -152,6 +151,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
     private void setUpView(View view) {
         DemographicPayloadDTO demographicPayload = dto.getPayload().getDemographics().getPayload();
         PatientModel emergencyContact = demographicPayload.getEmergencyContact();
+        DemographicEmergencyContactSection emergencyContactSection = dto.getMetadata().getNewDataModel().getDemographic().getEmergencyContact();
 
         saveButton = (Button) view.findViewById(R.id.saveButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -179,122 +179,77 @@ public class EmergencyContactFragment extends BaseDialogFragment {
 
         parentScrollView = view.findViewById(R.id.scrollView);
 
-        firstNameInputLayout = (TextInputLayout) view
-                .findViewById(R.id.firstNameInputLayout);
-        firstNameEditText = (EditText) view.findViewById(R.id.firstNameEditText);
-        firstNameEditText.setOnFocusChangeListener(SystemUtil
-                .getHintFocusChangeListener(firstNameInputLayout, null));
-        firstNameEditText.setText(emergencyContact.getFirstName());
-        firstNameEditText.getOnFocusChangeListener().onFocusChange(firstNameEditText,
-                !StringUtil.isNullOrEmpty(firstNameEditText.getText().toString().trim()));
-        firstNameEditText.addTextChangedListener(getValidateRequiredEmptyTextWatcher(firstNameInputLayout));
+        firstNameInputLayout = view.findViewById(R.id.firstNameInputLayout);
+        firstNameEditText = view.findViewById(R.id.firstNameEditText);
+        setupDemographicField(firstNameEditText, firstNameInputLayout,
+                emergencyContact.getFirstName(),
+                emergencyContactSection.getProperties().getFirstName().isRequired() || true,
+                view.findViewById(R.id.firstNameRequired), null);
 
-        TextInputLayout middleNameInputLayout = (TextInputLayout) view
-                .findViewById(R.id.middleNameInputLayout);
-        middleNameEditText = (EditText) view.findViewById(R.id.middleNameEditText);
-        middleNameEditText.setOnFocusChangeListener(SystemUtil
-                .getHintFocusChangeListener(middleNameInputLayout, null));
-        middleNameEditText.setText(emergencyContact.getMiddleName());
-        middleNameEditText.getOnFocusChangeListener().onFocusChange(middleNameEditText,
-                !StringUtil.isNullOrEmpty(middleNameEditText.getText().toString().trim()));
+        TextInputLayout middleNameInputLayout = view.findViewById(R.id.middleNameInputLayout);
+        middleNameEditText = view.findViewById(R.id.middleNameEditText);
+        setupDemographicField(middleNameEditText, middleNameInputLayout,
+                emergencyContact.getMiddleName(),
+                emergencyContactSection.getProperties().getMiddleName().isRequired(),
+                view.findViewById(R.id.middleNameRequired), null);
 
-        DemographicDataModel dataModel = dto.getMetadata().getNewDataModel();
-        boolean middleNameRequired = dataModel.getDemographic().getEmergencyContact().getProperties()
-                .getMiddleName().isRequired();
-        if (middleNameRequired) {
-            middleNameEditText.addTextChangedListener(getValidateRequiredEmptyTextWatcher(middleNameInputLayout));
-        } else {
-            View optionalView = view.findViewById(R.id.middleNameOptionalTextView);
-            middleNameEditText.addTextChangedListener(getValidateOptionalEmptyTextWatcher(optionalView));
-            optionalView.setVisibility(StringUtil
-                    .isNullOrEmpty(emergencyContact.getMiddleName()) ? View.VISIBLE : View.GONE);
-        }
+        lastNameInputLayout = view.findViewById(R.id.lastNameInputLayout);
+        lastNameEditText = view.findViewById(R.id.lastNameEditText);
+        setupDemographicField(lastNameEditText, lastNameInputLayout,
+                emergencyContact.getLastName(),
+                emergencyContactSection.getProperties().getLastName().isRequired() || true,
+                view.findViewById(R.id.lastNameRequired), null);
 
-        lastNameInputLayout = (TextInputLayout) view
-                .findViewById(R.id.lastNameInputLayout);
-        lastNameEditText = (EditText) view.findViewById(R.id.lastNameEditText);
-        lastNameEditText.setOnFocusChangeListener(SystemUtil
-                .getHintFocusChangeListener(lastNameInputLayout, null));
-        lastNameEditText.setText(emergencyContact.getLastName());
-        lastNameEditText.getOnFocusChangeListener().onFocusChange(lastNameEditText,
-                !StringUtil.isNullOrEmpty(lastNameEditText.getText().toString().trim()));
-        lastNameEditText.addTextChangedListener(getValidateRequiredEmptyTextWatcher(lastNameInputLayout));
 
-        primaryPhoneTextInputLayout = (TextInputLayout) view
-                .findViewById(R.id.primaryPhoneTextInputLayout);
-        primaryPhoneEditText = (EditText) view.findViewById(R.id.primaryPhoneEditText);
+        primaryPhoneTextInputLayout = view.findViewById(R.id.primaryPhoneTextInputLayout);
+        primaryPhoneEditText = view.findViewById(R.id.primaryPhoneEditText);
+        setupDemographicField(primaryPhoneEditText, primaryPhoneTextInputLayout,
+                StringUtil.formatPhoneNumber(emergencyContact.getPhoneNumber()),
+                emergencyContactSection.getProperties().getPrimaryPhoneNumber().isRequired() || true,
+                view.findViewById(R.id.phoneNumberRequired), null);
         primaryPhoneEditText.addTextChangedListener(phoneInputFormatter);
-        primaryPhoneEditText.setOnFocusChangeListener(SystemUtil
-                .getHintFocusChangeListener(primaryPhoneTextInputLayout, null));
-        primaryPhoneEditText.setText(StringUtil.formatPhoneNumber(emergencyContact.getPhoneNumber()));
-
-        primaryPhoneEditText.getOnFocusChangeListener().onFocusChange(primaryPhoneEditText,
-                !StringUtil.isNullOrEmpty(primaryPhoneEditText.getText().toString().trim()));
-        primaryPhoneEditText.addTextChangedListener(getValidateRequiredEmptyTextWatcher(primaryPhoneTextInputLayout));
         primaryPhoneEditText.setOnClickListener(selectEndOnClick);
 
-        secondaryPhoneTextInputLayout = (TextInputLayout) view
-                .findViewById(R.id.secondaryPhoneTextInputLayout);
-        secondaryPhoneEditText = (EditText) view.findViewById(R.id.secondaryPhoneEditText);
+        secondaryPhoneTextInputLayout = view.findViewById(R.id.secondaryPhoneTextInputLayout);
+        secondaryPhoneEditText = view.findViewById(R.id.secondaryPhoneEditText);
+        setupDemographicField(secondaryPhoneEditText, secondaryPhoneTextInputLayout,
+                StringUtil.formatPhoneNumber(emergencyContact.getSecondaryPhoneNumber()),
+                emergencyContactSection.getProperties().getSecondaryPhoneNumber().isRequired(),
+                view.findViewById(R.id.secondaryPhoneRequired), null);
         secondaryPhoneEditText.addTextChangedListener(phoneInputFormatter);
-        secondaryPhoneEditText.setOnFocusChangeListener(SystemUtil
-                .getHintFocusChangeListener(secondaryPhoneTextInputLayout, null));
-        secondaryPhoneEditText.setText(StringUtil.formatPhoneNumber(emergencyContact.getSecondaryPhoneNumber()));
-
-        secondaryPhoneEditText.getOnFocusChangeListener().onFocusChange(secondaryPhoneEditText,
-                !StringUtil.isNullOrEmpty(secondaryPhoneEditText.getText().toString().trim()));
-        boolean secondaryPhoneRequired = dataModel.getDemographic().getEmergencyContact().getProperties()
-                .getSecondaryPhoneNumber().isRequired();
-        if (secondaryPhoneRequired) {
-            secondaryPhoneEditText
-                    .addTextChangedListener(getValidateRequiredEmptyTextWatcher(secondaryPhoneTextInputLayout));
-        } else {
-            View optionalView = view.findViewById(R.id.secondaryPhoneOptionalTextView);
-            secondaryPhoneEditText.addTextChangedListener(getValidateOptionalEmptyTextWatcher(optionalView));
-            optionalView.setVisibility(StringUtil
-                    .isNullOrEmpty(secondaryPhoneEditText.getText().toString()) ? View.VISIBLE : View.GONE);
-        }
         secondaryPhoneEditText.setOnClickListener(selectEndOnClick);
 
-        TextInputLayout address2TextInputLayout = (TextInputLayout) view
-                .findViewById(R.id.address2TextInputLayout);
-        addressEditText2 = (EditText) view.findViewById(R.id.addressEditText2);
-        addressEditText2.setOnFocusChangeListener(SystemUtil
-                .getHintFocusChangeListener(address2TextInputLayout, null));
-        addressEditText2.setText(emergencyContact.getAddress().getAddress2());
-        addressEditText2.getOnFocusChangeListener().onFocusChange(addressEditText2,
-                !StringUtil.isNullOrEmpty(addressEditText2.getText().toString().trim()));
-        addressEditText2.addTextChangedListener(getValidateOptionalEmptyTextWatcher(view
-                .findViewById(R.id.demogrAddressOptionalLabel)));
+        TextInputLayout address2TextInputLayout = view.findViewById(R.id.address2TextInputLayout);
+        addressEditText2 = view.findViewById(R.id.addressEditText2);
+        setupDemographicField(addressEditText2, address2TextInputLayout,
+                emergencyContact.getAddress().getAddress2(),
+                emergencyContactSection.getProperties().getAddress().getProperties().getAddress2().isRequired(),
+                view.findViewById(R.id.addressLine2Required), null);
 
-        zipCodeTextInputLayout = (TextInputLayout) view
-                .findViewById(R.id.zipCodeTextInputLayout);
-        zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeTextView);
-        zipCodeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeTextInputLayout,
-                getZipCodeFocusListener(zipCodeEditText)));
-        zipCodeEditText.setText(StringUtil.formatZipCode(emergencyContact.getAddress().getZipcode()));
+        zipCodeTextInputLayout = view.findViewById(R.id.zipCodeTextInputLayout);
+        zipCodeEditText = view.findViewById(R.id.zipCodeTextView);
+        setupDemographicField(zipCodeEditText, zipCodeTextInputLayout,
+                emergencyContact.getAddress().getZipcode(),
+                emergencyContactSection.getProperties().getAddress().getProperties().getZipcode().isRequired(),
+                view.findViewById(R.id.zipCodeRequired), getZipCodeFocusListener(zipCodeEditText));
         zipCodeEditText.addTextChangedListener(zipInputFormatter);
-        zipCodeEditText.getOnFocusChangeListener().onFocusChange(zipCodeEditText,
-                !StringUtil.isNullOrEmpty(zipCodeEditText.getText().toString().trim()));
 
-        cityTextInputLayout = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
-        cityEditText = (EditText) view.findViewById(R.id.cityTextView);
-        cityEditText.setOnFocusChangeListener(SystemUtil
-                .getHintFocusChangeListener(cityTextInputLayout, null));
-        cityEditText.setText(emergencyContact.getAddress().getCity());
-        cityEditText.getOnFocusChangeListener().onFocusChange(cityEditText,
-                !StringUtil.isNullOrEmpty(cityEditText.getText().toString().trim()));
-        cityEditText.addTextChangedListener(getEmptyValidatorWatcher(cityTextInputLayout, true));
+        cityTextInputLayout = view.findViewById(R.id.cityTextInputLayout);
+        cityEditText = view.findViewById(R.id.cityTextView);
+        setupDemographicField(cityEditText, cityTextInputLayout,
+                emergencyContact.getAddress().getCity(),
+                emergencyContactSection.getProperties().getAddress().getProperties().getCity().isRequired(),
+                view.findViewById(R.id.cityRequired), null);
 
-        stateTextInputLayout = (TextInputLayout) view
-                .findViewById(R.id.stateTextInputLayout);
-        stateEditText = (EditText) view.findViewById(R.id.stateTextView);
-        stateEditText.setOnFocusChangeListener(SystemUtil
-                .getHintFocusChangeListener(stateTextInputLayout, null));
-        stateEditText.setText(emergencyContact.getAddress().getState());
+        stateTextInputLayout = view.findViewById(R.id.stateTextInputLayout);
+        stateEditText = view.findViewById(R.id.stateTextView);
+        setupDemographicField(stateEditText, stateTextInputLayout,
+                emergencyContact.getAddress().getState(),
+                emergencyContactSection.getProperties().getAddress().getProperties().getState().isRequired(),
+                view.findViewById(R.id.stateRequired), null);
         stateEditText.setOnClickListener(
-                getOptionsListener(dataModel.getDemographic().getAddress().getProperties()
-                                .getState().getOptions(),
+                getOptionsListener(emergencyContactSection.getProperties().getAddress()
+                                .getProperties().getState().getOptions(),
                         new CheckInDemographicsBaseFragment.OnOptionSelectedListener() {
                             @Override
                             public void onOptionSelected(DemographicsOption option) {
@@ -302,36 +257,27 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                             }
                         },
                         Label.getLabel("demographics_documents_title_select_state")));
-        stateEditText.getOnFocusChangeListener().onFocusChange(stateEditText,
-                !StringUtil.isNullOrEmpty(stateEditText.getText().toString().trim()));
-        stateEditText.addTextChangedListener(getEmptyValidatorWatcher(stateTextInputLayout, true));
 
-        emailInputLayout = (TextInputLayout) view.findViewById(R.id.emailInputLayout);
-        emailEditText = (EditText) view.findViewById(R.id.emailEditText);
-        emailEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(emailInputLayout, null));
-        emailEditText.setText(emergencyContact.getEmail());
-        emailEditText.getOnFocusChangeListener().onFocusChange(emailEditText,
-                !StringUtil.isNullOrEmpty(emailEditText.getText().toString().trim()));
-        emailEditText.addTextChangedListener(getEmptyValidatorWatcher(emailInputLayout, true));
+        emailInputLayout = view.findViewById(R.id.emailInputLayout);
+        emailEditText = view.findViewById(R.id.emailEditText);
+        setupDemographicField(emailEditText, emailInputLayout,
+                emergencyContact.getEmail(),
+                emergencyContactSection.getProperties().getEmailAddress().isRequired(),
+                view.findViewById(R.id.emailRequired), null);
 
-        dateBirthTextInputLayout = (TextInputLayout) view.findViewById(R.id.dateOfBirthInputLayout);
-        dateOfBirthEditText = (EditText) view.findViewById(R.id.dateOfBirthEditText);
-        dateOfBirthEditText.setOnFocusChangeListener(SystemUtil
-                .getHintFocusChangeListener(dateBirthTextInputLayout, null));
-        String dateString = emergencyContact.getFormattedDateOfBirth();
-        dateOfBirthEditText.setText(dateString);
+        dateBirthTextInputLayout = view.findViewById(R.id.dateOfBirthInputLayout);
+        dateOfBirthEditText = view.findViewById(R.id.dateOfBirthEditText);
+        setupDemographicField(dateOfBirthEditText, dateBirthTextInputLayout,
+                emergencyContact.getFormattedDateOfBirth(),
+                emergencyContactSection.getProperties().getDateOfBirth().isRequired(),
+                view.findViewById(R.id.dobRequired), null);
         dateOfBirthEditText.addTextChangedListener(dateInputFormatter);
-        dateOfBirthEditText.getOnFocusChangeListener().onFocusChange(dateOfBirthEditText,
-                !StringUtil.isNullOrEmpty(dateString));
         dateOfBirthEditText.setOnClickListener(selectEndOnClick);
 
-        TextInputLayout genderInputLayout = (TextInputLayout) view.findViewById(R.id.genderInputLayout);
-        genderEditText = (EditText) view.findViewById(R.id.genderEditText);
-        genderEditText.setOnFocusChangeListener(SystemUtil
-                .getHintFocusChangeListener(genderInputLayout, null));
+        TextInputLayout genderInputLayout = view.findViewById(R.id.genderInputLayout);
+        genderEditText = view.findViewById(R.id.genderEditText);
         genderEditText.setOnClickListener(
-                getOptionsListener(dataModel.getDemographic()
-                                .getPersonalDetails().getProperties().getGender().getOptions(),
+                getOptionsListener(emergencyContactSection.getProperties().getGender().getOptions(),
                         new CheckInDemographicsBaseFragment.OnOptionSelectedListener() {
                             @Override
                             public void onOptionSelected(DemographicsOption option) {
@@ -342,23 +288,16 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                             }
                         },
                         Label.getLabel("demographics_review_gender")));
-        initSelectableInput(genderEditText, selectedGender, emergencyContact.getGender(), null,
-                dataModel.getDemographic().getPersonalDetails().getProperties().getGender().getOptions());
-        genderEditText.getOnFocusChangeListener().onFocusChange(genderEditText,
-                !StringUtil.isNullOrEmpty(emergencyContact.getGender()));
-//        if(StringUtil.isNullOrEmpty(selectedGender.getLabel())){
-//            String chooseLabel = Label.getLabel("demographics_choose");
-//            genderEditText.setText(chooseLabel);
-//        }
+        initSelectableInput(genderEditText, genderInputLayout,
+                selectedGender, emergencyContact.getGender(),
+                view.findViewById(R.id.genderRequiredLabel),
+                emergencyContactSection.getProperties().getGender().isRequired(),
+                emergencyContactSection.getProperties().getGender().getOptions());
 
-        ecRelationshipInputLayout = (TextInputLayout) view
-                .findViewById(R.id.emergencyContactRelationshipInputLayout);
-        ecRelationshipEditText = (EditText) view.findViewById(R.id.emergencyContactRelationshipEditText);
-        ecRelationshipEditText.setOnFocusChangeListener(SystemUtil
-                .getHintFocusChangeListener(ecRelationshipInputLayout, null));
+        ecRelationshipInputLayout = view.findViewById(R.id.emergencyContactRelationshipInputLayout);
+        ecRelationshipEditText = view.findViewById(R.id.emergencyContactRelationshipEditText);
         ecRelationshipEditText.setOnClickListener(
-                getOptionsListener(dataModel.getDemographic()
-                                .getEmergencyContact().getProperties().getRelationshipType().getOptions(),
+                getOptionsListener(emergencyContactSection.getProperties().getRelationshipType().getOptions(),
                         new CheckInDemographicsBaseFragment.OnOptionSelectedListener() {
                             @Override
                             public void onOptionSelected(DemographicsOption option) {
@@ -372,20 +311,18 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                             }
                         },
                         Label.getLabel("demographics_emergency_contact_relationship")));
-        initSelectableInput(ecRelationshipEditText, selectedRelationship, emergencyContact
-                .getEmergencyContactRelationship(), null, dataModel.getDemographic().getEmergencyContact()
-                .getProperties().getRelationshipType().getOptions());
-        ecRelationshipEditText.getOnFocusChangeListener().onFocusChange(ecRelationshipEditText,
-                !StringUtil.isNullOrEmpty(emergencyContact.getEmergencyContactRelationship()));
-//        if(StringUtil.isNullOrEmpty(selectedRelationship.getLabel())){
-//            String chooseLabel = Label.getLabel("demographics_choose");
-//            ecRelationshipEditText.setText(chooseLabel);
-//        }
+        initSelectableInput(ecRelationshipEditText, ecRelationshipInputLayout,
+                selectedRelationship, emergencyContact.getEmergencyContactRelationship(),
+                view.findViewById(R.id.emergencyContactRelationshipRequired),
+                emergencyContactSection.getProperties().getRelationshipType().isRequired() || true,
+                emergencyContactSection.getProperties().getRelationshipType().getOptions());
 
-        address1TextInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
-        addressEditText = (EditText) view.findViewById(R.id.addressEditText);
-        addressEditText.setOnFocusChangeListener(SystemUtil
-                .getHintFocusChangeListener(address1TextInputLayout, null));
+        address1TextInputLayout = view.findViewById(R.id.address1TextInputLayout);
+        addressEditText = view.findViewById(R.id.addressEditText);
+        setupDemographicField(addressEditText, address1TextInputLayout,
+                emergencyContact.getAddress().getAddress1(),
+                emergencyContactSection.getProperties().getAddress().getProperties().getAddress1().isRequired(),
+                view.findViewById(R.id.addressLine1Required), null);
         addressEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
@@ -414,30 +351,44 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                 checkIfEnableButton(false);
             }
         });
-        addressEditText.setText(emergencyContact.getAddress().getAddress1());
-        addressEditText.getOnFocusChangeListener()
-                .onFocusChange(addressEditText, !StringUtil.isNullOrEmpty(addressEditText
-                        .getText().toString()));
-
-        view.findViewById(R.id.additionalInfoOptionalTextView).setVisibility(View.VISIBLE);
-        view.findViewById(R.id.addressInfoOptionalTextView).setVisibility(View.VISIBLE);
 
         checkIfEnableButton(false);
     }
 
-    protected void initSelectableInput(TextView textView, DemographicsOption storeOption,
-                                       String storedName, View optional, List<DemographicsOption> options) {
+    private void setupDemographicField(EditText editText, TextInputLayout inputLayout, String value, boolean isRequired, View requiredView, View.OnFocusChangeListener additionalFocusListener) {
+        editText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(inputLayout, additionalFocusListener));
+        editText.setText(value);
+        boolean hasValue = !StringUtil.isNullOrEmpty(editText.getText().toString().trim());
+        editText.getOnFocusChangeListener().onFocusChange(editText, hasValue);
+
+        if (isRequired) {
+            editText.addTextChangedListener(getValidateRequiredEmptyTextWatcher(inputLayout));
+        }
+        if (isRequired && requiredView != null) {
+            requiredView.setVisibility(hasValue ? View.GONE : View.VISIBLE);
+            editText.addTextChangedListener(getValidateOptionalEmptyTextWatcher(requiredView));
+        }
+    }
+
+
+    private void initSelectableInput(EditText editText, TextInputLayout inputLayout,
+                                     DemographicsOption storeOption, String storedName,
+                                     View requiredView, boolean isRequired,
+                                     List<DemographicsOption> options) {
+        editText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(inputLayout, null));
         String key = storeOption.getName();
         if (StringUtil.isNullOrEmpty(key)) {
             key = storedName;
         }
         storeOption = getOptionByKey(options, key, storeOption);
-        if (!StringUtil.isNullOrEmpty(storedName)) {
-            textView.setText(storeOption.getLabel());
-        }else if (optional != null) {
-            optional.setVisibility(View.VISIBLE);
+        boolean hasValue = !StringUtil.isNullOrEmpty(storedName);
+        if (hasValue) {
+            editText.setText(storeOption.getLabel());
         }
-
+        if (isRequired && requiredView != null && !hasValue) {
+            requiredView.setVisibility(View.VISIBLE);
+        }
+        editText.getOnFocusChangeListener().onFocusChange(editText, hasValue);
     }
 
     private DemographicsOption getOptionByKey(List<DemographicsOption> options,

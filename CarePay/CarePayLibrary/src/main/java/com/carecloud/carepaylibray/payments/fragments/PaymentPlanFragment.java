@@ -268,6 +268,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         } else {
             frequencyCodeEditText.setCompoundDrawables(null, null, null, null);
         }
+        frequencyCodeEditText.setEnabled(frequencyOptions.size() > 1);
 
         installmentsEditText = (EditText) view.findViewById(R.id.paymentMonthCount);
         installmentsInputLayout = (CarePayTextInputLayout) view

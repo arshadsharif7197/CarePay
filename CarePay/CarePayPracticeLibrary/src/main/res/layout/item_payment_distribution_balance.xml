@@ -9,7 +9,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_81dp"
+        android:layout_height="@dimen/distributionItemHeight"
         android:background="@color/light_gray">
 
         <LinearLayout
@@ -52,7 +52,7 @@
                 android:background="@color/white"
                 android:gravity="start|center_vertical"
                 android:orientation="vertical"
-                android:padding="@dimen/dimen_8dp">
+                android:padding="@dimen/distributionCellPadding">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/payment_detail_description"
@@ -62,7 +62,7 @@
                     android:gravity="start"
                     android:maxLines="2"
                     android:textColor="@color/Feldgrau"
-                    android:textSize="@dimen/text_size_16sp"
+                    android:textSize="@dimen/distributionItemTextSize"
                     app:customAssetFont="proxima_nova_regular"
                     tools:text="Co-pay" />
 
@@ -74,7 +74,7 @@
                     android:gravity="start"
                     android:maxLines="2"
                     android:textColor="@color/lemonGreen"
-                    android:textSize="@dimen/text_size_13"
+                    android:textSize="@dimen/distributionPlanInfoTextSize"
                     android:visibility="gone"
                     app:customAssetFont="proxima_nova_semi_bold"
                     tools:text="$15 is on a payment plan" />
@@ -91,7 +91,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:background="@color/white"
-                android:padding="@dimen/dimen_8dp">
+                android:padding="@dimen/distributionCellPadding">
 
                 <FrameLayout
                     android:layout_width="wrap_content"
@@ -100,8 +100,8 @@
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/provider_short_name"
-                        android:layout_width="@dimen/dimen_50dp"
-                        android:layout_height="@dimen/dimen_50dp"
+                        android:layout_width="@dimen/distributionItemShortNameSize"
+                        android:layout_height="@dimen/distributionItemShortNameSize"
                         android:layout_gravity="center"
                         android:background="@drawable/round_list_tv_dark"
                         android:src="@drawable/icn_placeholder_user_profile_png"
@@ -127,10 +127,10 @@
                     android:ellipsize="end"
                     android:gravity="start|center_vertical"
                     android:maxLines="2"
-                    android:paddingEnd="@dimen/dimen_8dp"
-                    android:paddingStart="@dimen/dimen_8dp"
+                    android:paddingEnd="@dimen/distributionCellPadding"
+                    android:paddingStart="@dimen/distributionCellPadding"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/text_size_16sp"
+                    android:textSize="@dimen/distributionItemTextSize"
                     app:customAssetFont="proxima_nova_regular"
                     tools:text="Dr. Nina Simone" />
 
@@ -153,8 +153,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:background="@color/white"
-                android:padding="@dimen/dimen_8dp">
-
+                android:padding="@dimen/distributionCellPadding">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -173,10 +172,10 @@
                     android:ellipsize="end"
                     android:gravity="start|center_vertical"
                     android:maxLines="2"
-                    android:paddingEnd="@dimen/dimen_8dp"
-                    android:paddingStart="@dimen/dimen_8dp"
+                    android:paddingEnd="@dimen/distributionCellPadding"
+                    android:paddingStart="@dimen/distributionCellPadding"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/text_size_16sp"
+                    android:textSize="@dimen/distributionItemTextSize"
                     app:customAssetFont="proxima_nova_regular"
                     tools:text="Miami, FL" />
 
@@ -204,15 +203,13 @@
                 android:gravity="center"
                 android:inputType="numberDecimal"
                 android:maxLines="2"
-                android:padding="@dimen/dimen_8dp"
+                android:padding="@dimen/distributionCellPadding"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_20"
+                android:textSize="@dimen/distributionItemAmountTextSize"
                 app:customAssetFont="proxima_nova_semi_bold"
                 tools:text="$55.00" />
 
-
         </LinearLayout>
-
 
     </FrameLayout>
 

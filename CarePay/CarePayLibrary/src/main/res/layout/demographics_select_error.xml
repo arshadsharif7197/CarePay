@@ -7,14 +7,14 @@
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/dimen_30dp"
+        android:layout_height="@dimen/demographicErrorImageHeight"
         android:layout_gravity="center_vertical"
         android:src="@drawable/icn_notification_error_red"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"/>
 
     <View
-        android:layout_width="@dimen/dimen_22dp"
+        android:layout_width="@dimen/demographicErrorViewWidth"
         android:layout_height="@dimen/dimen_1dp"
         android:background="@color/remove_red"
         android:layout_gravity="center_vertical"/>

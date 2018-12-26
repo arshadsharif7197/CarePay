@@ -1,7 +1,6 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,13 +119,13 @@ public abstract class PartialPaymentBaseDialogFragment extends BaseDialogFragmen
                 }
             }
             if (numberStr.length() < 5) {
-                amountTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 80);
+                amountTextView.setTextSize(getResources().getDimension(R.dimen.amountCalculatorEntryTextSizeBig));
             } else if (numberStr.length() < 7) {
-                amountTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 65);
+                amountTextView.setTextSize(getResources().getDimension(R.dimen.amountCalculatorEntryTextSize65));
             } else if (numberStr.length() < 10) {
-                amountTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 50);
+                amountTextView.setTextSize(getResources().getDimension(R.dimen.amountCalculatorEntryTextSize50));
             }
-            
+
             updateLayout();
         }
     };

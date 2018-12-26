@@ -10,12 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsAddressSection;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
@@ -25,7 +23,6 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadR
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.utils.AddressUtil;
-import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
@@ -38,7 +35,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
     private DemographicAddressPayloadDTO demographicAddressPayloadDTO;
     private EditText cityEditText;
-    private TextView stateEditText;
+    private EditText stateEditText;
     private DemographicsOption selectedState = new DemographicsOption();
 
 
@@ -75,21 +72,22 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
         DemographicPayloadDTO demographicPayload = demographicDTO.getPayload().getDemographics().getPayload();
         DemographicsAddressSection addressSection = dataModel.getDemographic().getAddress();
 
-        TextInputLayout address2InputLayout = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
-        final EditText address2EditText = (EditText) view.findViewById(R.id.addressEditText2Id);
+        TextInputLayout address2InputLayout = view.findViewById(R.id.address2TextInputLayout);
+        final EditText address2EditText = view.findViewById(R.id.addressEditText2Id);
         setUpField(address2InputLayout, address2EditText,
                 addressSection.getProperties().getAddress2().isDisplayed(),
                 demographicPayload.getAddress().getAddress2(),
                 addressSection.getProperties().getAddress2().isRequired(),
-                view.findViewById(R.id.demogrAddressOptionalLabel));
+                view.findViewById(R.id.addressLine2Required));
         address2EditText.setEnabled(!StringUtil.isNullOrEmpty(demographicPayload.getAddress().getAddress1()));
 
-        final TextInputLayout addressInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
-        final EditText addressEditText = (EditText) view.findViewById(R.id.addressEditTextId);
+        final TextInputLayout addressInputLayout = view.findViewById(R.id.address1TextInputLayout);
+        final EditText addressEditText = view.findViewById(R.id.addressEditTextId);
         setUpField(addressInputLayout, addressEditText,
                 addressSection.getProperties().getAddress1().isDisplayed(),
                 demographicPayload.getAddress().getAddress1(),
-                addressSection.getProperties().getAddress1().isRequired(), null);
+                addressSection.getProperties().getAddress1().isRequired(),
+                view.findViewById(R.id.addressLine1Required));
         addressEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
@@ -114,41 +112,45 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
             }
         });
 
-        TextInputLayout zipCodeInputLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
-        EditText zipCode = (EditText) view.findViewById(R.id.zipCodeId);
+        TextInputLayout zipCodeInputLayout = view.findViewById(R.id.zipCodeTextInputLayout);
+        EditText zipCode = view.findViewById(R.id.zipCodeId);
         setUpField(zipCodeInputLayout, zipCode,
                 addressSection.getProperties().getZipcode().isDisplayed(),
                 StringUtil.formatZipCode(demographicPayload.getAddress().getZipcode()),
-                addressSection.getProperties().getZipcode().isRequired(), null);
+                addressSection.getProperties().getZipcode().isRequired(),
+                view.findViewById(R.id.zipCodeRequired));
         zipCode.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeInputLayout, getZipCodeFocusListener(zipCode)));
         zipCode.addTextChangedListener(zipInputFormatter);
 
 
-        TextInputLayout cityInputLayout = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
-        cityEditText = (EditText) view.findViewById(R.id.cityId);
-        cityEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(cityInputLayout, null));
-        setVisibility(cityInputLayout, addressSection.getProperties().getCity().isDisplayed());
-        cityEditText.setText(StringUtil.captialize(demographicPayload.getAddress().getCity()));
-        cityEditText.getOnFocusChangeListener().onFocusChange(cityEditText,
-                !StringUtil.isNullOrEmpty(cityEditText.getText().toString().trim()));
-        if (addressSection.getProperties().getCity().isRequired()) {
-            cityEditText.addTextChangedListener(getValidateEmptyTextWatcher(cityInputLayout));
-        }
+        TextInputLayout cityInputLayout = view.findViewById(R.id.cityTextInputLayout);
+        cityEditText = view.findViewById(R.id.cityId);
+        setUpField(cityInputLayout, cityEditText,
+                addressSection.getProperties().getCity().isDisplayed(),
+                demographicPayload.getAddress().getCity(),
+                addressSection.getProperties().getCity().isRequired(),
+                view.findViewById(R.id.cityRequired));
 
 
-        TextInputLayout stateInputLayout = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
-        stateEditText = (EditText) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView);
-        stateEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(stateInputLayout, null));
-        setVisibility(stateInputLayout, addressSection.getProperties().getState().isDisplayed());
+        TextInputLayout stateInputLayout = view.findViewById(R.id.stateTextInputLayout);
+        stateEditText = view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView);
+        String state = demographicPayload.getAddress().getState();
+        setUpField(stateInputLayout, stateEditText,
+                addressSection.getProperties().getState().isDisplayed(),
+                state,
+                addressSection.getProperties().getState().isRequired(),
+                view.findViewById(R.id.stateRequired));
         stateEditText.setOnClickListener(
                 getSelectOptionsListener(addressSection.getProperties().getState().getOptions(),
-                        getDefaultOnOptionsSelectedListener(stateEditText, selectedState, null),
+                        getDefaultOnOptionsSelectedListener(stateEditText, selectedState,
+                                view.findViewById(R.id.stateRequired)),
                         Label.getLabel("demographics_documents_title_select_state")));
 
-        String state = demographicPayload.getAddress().getState();
-        initSelectableInput(stateEditText, selectedState, state, null,
+        initSelectableInput(stateEditText, selectedState, state,
+                view.findViewById(R.id.stateRequired),
                 addressSection.getProperties().getState().getOptions());
-        stateEditText.getOnFocusChangeListener().onFocusChange(stateEditText, true);
+        stateEditText.getOnFocusChangeListener().onFocusChange(stateEditText,
+                !StringUtil.isNullOrEmpty(stateEditText.getText().toString().trim()));
     }
 
     private void initialiseUIFields(View view) {
@@ -217,13 +219,13 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                             .getAddress2().isRequired(), address2Value, R.id.address2Container,
                     R.id.address2TextInputLayout, isUserAction())) return false;
 
-            String zipCodeValue = ((EditText) view.findViewById(R.id.zipCodeId)).getText().toString();
+            EditText zipCode = view.findViewById(R.id.zipCodeId);
+            String zipCodeValue = zipCode.getText().toString();
             if (validateField(view, dataModel.getDemographic().getAddress().getProperties()
                             .getZipcode().isRequired(), zipCodeValue, R.id.zipCodeContainer,
                     R.id.zipCodeTextInputLayout, isUserAction())) return false;
 
-            TextInputLayout zipLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
-            EditText zipCode = (EditText) view.findViewById(R.id.zipCodeId);
+            TextInputLayout zipLayout = view.findViewById(R.id.zipCodeTextInputLayout);
             if (zipLayout.getVisibility() == View.VISIBLE &&
                     !StringUtil.isNullOrEmpty(zipCode.getText().toString().trim()) &&
                     !ValidationHelper.isValidString(zipCode.getText().toString().trim(), ValidationHelper.ZIP_CODE_PATTERN)) {
@@ -238,12 +240,12 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
 
             String cityValue = ((EditText) view.findViewById(R.id.cityId)).getText().toString();
             if (validateField(view, dataModel.getDemographic().getAddress().getProperties()
-                            .getCity().isRequired(), cityValue, R.id.cityAndStateContainer,
+                            .getCity().isRequired(), cityValue, R.id.cityContainer,
                     R.id.cityTextInputLayout, isUserAction())) return false;
 
             String stateValue = selectedState.getName();
             if (validateField(view, dataModel.getDemographic().getAddress().getProperties()
-                            .getState().isRequired(), stateValue, R.id.cityAndStateContainer,
+                            .getState().isRequired(), stateValue, R.id.stateContainer,
                     R.id.stateTextInputLayout, isUserAction())) return false;
 
             return true;

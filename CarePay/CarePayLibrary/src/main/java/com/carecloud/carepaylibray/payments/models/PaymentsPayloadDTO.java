@@ -707,4 +707,13 @@ public class PaymentsPayloadDTO implements Serializable {
                 return false;
         }
     }
+
+    public UserPracticeDTO getUserPractice(String practiceId) {
+        for(UserPracticeDTO userPracticeDTO : userPractices){
+            if(userPracticeDTO.getPracticeId().equals(practiceId)){
+                return userPracticeDTO;
+            }
+        }
+        return null;
+    }
 }

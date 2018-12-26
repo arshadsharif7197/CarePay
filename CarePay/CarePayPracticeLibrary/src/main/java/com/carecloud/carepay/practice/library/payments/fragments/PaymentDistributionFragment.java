@@ -54,8 +54,8 @@ import com.carecloud.carepaylibray.retail.models.RetailItemPayload;
 import com.carecloud.carepaylibray.retail.models.RetailLineItemMetadata;
 import com.carecloud.carepaylibray.retail.models.RetailOrderItem;
 import com.carecloud.carepaylibray.retail.models.RetailPostModelOrder;
-import com.carecloud.carepaylibray.retail.models.RetailProductsModel;
 import com.carecloud.carepaylibray.retail.models.RetailSelectedOption;
+import com.carecloud.carepaylibray.retail.models.RetailProductsModel;
 import com.carecloud.carepaylibray.utils.BounceHelper;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -161,7 +161,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
     @Override
     public void onViewCreated(View view, Bundle icicle) {
-
         setupButtons(view);
 
         balanceTextView = view.findViewById(R.id.balance_value);
@@ -304,9 +303,11 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             public void onClick(View view) {
                 if (paymentsPickerWindow.isShowing()) {
                     paymentsPickerWindow.dismiss();
+                    view.setSelected(false);
                 } else {
+                    clearPickers();
                     int offset = view.getWidth() / 2 - paymentsPickerWindow.getWidth() / 2;
-                    paymentsPickerWindow.showAsDropDown(view, offset, 0);
+                    paymentsPickerWindow.showAsDropDown(view, offset, 3);
                     view.setSelected(true);
                 }
             }
@@ -362,7 +363,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
                     .get(0).getBalances().get(0).getPayload().get(0).getDetails()) {
                 String balanceItemId = String.valueOf(balanceItem.getId());
                 balanceItem.setAmountInPaymentPlan(0.0);
-                for (PaymentPlanDTO paymentPlan : paymentsModel.getPaymentPayload().getPatientPaymentPlans()) {
+                for (PaymentPlanDTO paymentPlan : paymentsModel.getPaymentPayload().getActivePlans(null)) {
                     for (PaymentPlanLineItem lineItem : paymentPlan.getPayload().getLineItems()) {
                         if (balanceItemId.equals(lineItem.getTypeId())) {
                             if (balanceItem.getAmountInPaymentPlan() > 0.0) {
@@ -662,11 +663,14 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
     @Override
     public void pickProvider(View view, BalanceItemDTO balanceItem) {
+        boolean isShowing = providerPickerWindow.isShowing();
         clearPickers();
         clearLastSwipeView();
-        int offset = view.getWidth() / 2 - providerPickerWindow.getWidth() / 2;
-        providerPickerWindow.setBalanceItemDTO(balanceItem);
-        providerPickerWindow.showAsDropDown(view, offset, 10);
+        if (!isShowing) {
+            int offset = view.getWidth() / 2 - providerPickerWindow.getWidth() / 2;
+            providerPickerWindow.setBalanceItemDTO(balanceItem);
+            providerPickerWindow.showAsDropDown(view, offset, 10);
+        }
     }
 
     @Override
@@ -677,11 +681,14 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
     @Override
     public void pickLocation(View view, BalanceItemDTO balanceItem) {
+        boolean isShowing = locationPickerWindow.isShowing();
         clearPickers();
         clearLastSwipeView();
-        int offset = view.getWidth() / 2 - locationPickerWindow.getWidth() / 2;
-        locationPickerWindow.setBalanceItemDTO(balanceItem);
-        locationPickerWindow.showAsDropDown(view, offset, 10);
+        if (!isShowing) {
+            int offset = view.getWidth() / 2 - locationPickerWindow.getWidth() / 2;
+            locationPickerWindow.setBalanceItemDTO(balanceItem);
+            locationPickerWindow.showAsDropDown(view, offset, 10);
+        }
     }
 
     @Override

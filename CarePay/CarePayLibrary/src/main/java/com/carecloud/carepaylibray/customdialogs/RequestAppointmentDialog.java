@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.interfaces.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
+import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 
@@ -26,6 +28,7 @@ import java.util.Locale;
 public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
 
     private final AppointmentsSlotsDTO appointmentSlot;
+    private final ProviderDTO provider;
     private Context context;
     private VisitTypeDTO visitTypeDTO;
 
@@ -37,15 +40,19 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
      * @param context          activity context
      * @param appointmentDTO   appointment model
      * @param appointmentsSlot The appointment slot
+     * @param provider
      */
-    public RequestAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
+    public RequestAppointmentDialog(Context context,
+                                    AppointmentDTO appointmentDTO,
                                     AppointmentsSlotsDTO appointmentsSlot,
-                                    VisitTypeDTO visitTypeDTO) {
+                                    VisitTypeDTO visitTypeDTO,
+                                    ProviderDTO provider) {
 
         super(context, appointmentDTO, true);
         this.context = context;
         this.appointmentSlot = appointmentsSlot;
         this.visitTypeDTO = visitTypeDTO;
+        this.provider = provider;
         setupCallback();
     }
 
@@ -86,7 +93,6 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         String visitReason = visitTypeDTO.getName();
         reasonTextView.setText(visitReason);
 
-        final EditText reasonForVisitEditText = childActionView.findViewById(R.id.reasonForVisitEditText);
 
         View prepaidLayout = childActionView.findViewById(R.id.prepaymentLayout);
         if (visitTypeDTO.getAmount() > 0) {
@@ -98,6 +104,7 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
             prepaidLayout.setVisibility(View.GONE);
         }
 
+        final EditText reasonForVisitEditText = childActionView.findViewById(R.id.reasonForVisitEditText);
         appointmentRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,6 +115,9 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         });
 
         ((ViewGroup) getAddActionChildView()).addView(childActionView);
+
+        ImageView appointUserPicImageView = findViewById(R.id.appointUserPicImageView);
+        loadImage(appointUserPicImageView, provider.getPhoto());
 
         final ScrollView scrollContainer = findViewById(R.id.containerScrollView);
         scrollContainer.post(new Runnable() {

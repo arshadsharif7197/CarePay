@@ -8,8 +8,8 @@
     <LinearLayout
         android:layout_width="@dimen/provider_card_width"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/dimen_18dp"
         android:layout_marginStart="@dimen/dimen_18dp"
+        android:layout_marginEnd="@dimen/dimen_18dp"
         android:background="@drawable/card_shadow"
         android:orientation="vertical">
 
@@ -34,6 +34,15 @@
                 android:textColor="@color/lightSlateGray"
                 android:textSize="@dimen/text_size_24sp"
                 app:customAssetFont="gotham_rounded_medium" />
+
+            <ImageView
+                android:id="@+id/providerPicImageView"
+                android:layout_width="@dimen/provider_card_avatar_size"
+                android:layout_height="@dimen/provider_card_avatar_size"
+                android:layout_alignParentBottom="true"
+                android:visibility="gone"
+                android:layout_centerHorizontal="true" />
+
         </RelativeLayout>
 
         <LinearLayout
@@ -64,9 +73,9 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_1dp"
-                android:layout_marginEnd="@dimen/dimen_24dp"
                 android:layout_marginStart="@dimen/dimen_24dp"
                 android:layout_marginTop="@dimen/dimen_21dp"
+                android:layout_marginEnd="@dimen/dimen_24dp"
                 android:background="@color/light_gray" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -84,8 +93,8 @@
                 android:id="@+id/provider_place_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/provider_card_address_margin"
                 android:layout_marginStart="@dimen/provider_card_address_margin"
+                android:layout_marginEnd="@dimen/provider_card_address_margin"
                 android:gravity="center"
                 android:maxLines="2"
                 android:textColor="@color/lightSlateGray"
@@ -96,15 +105,15 @@
                 android:id="@+id/provider_schedule_appointment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dimen_24dp"
-                android:layout_marginEnd="@dimen/dimen_24dp"
                 android:layout_marginStart="@dimen/dimen_24dp"
                 android:layout_marginTop="29dp"
+                android:layout_marginEnd="@dimen/dimen_24dp"
+                android:layout_marginBottom="@dimen/dimen_24dp"
                 android:background="@drawable/bg_yellow_overlay"
+                android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22sp"
-                android:textAllCaps="false"
-                app:customAssetFont="gotham_rounded_medium"/>
+                app:customAssetFont="gotham_rounded_medium" />
         </LinearLayout>
     </LinearLayout>
 
@@ -114,8 +123,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="-30dp"
-        android:paddingEnd="@dimen/dimen_18dp"
         android:paddingStart="@dimen/dimen_18dp"
+        android:paddingEnd="@dimen/dimen_18dp"
         android:src="@drawable/home_shadow"
         android:visibility="gone" />
 </LinearLayout>
