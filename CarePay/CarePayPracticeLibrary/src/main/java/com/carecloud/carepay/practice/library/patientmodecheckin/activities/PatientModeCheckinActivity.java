@@ -149,7 +149,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             }
         }
 
-        final TextView languageSwitch = (TextView) findViewById(R.id.languageSpinner);
+        final TextView languageSwitch = findViewById(R.id.languageSpinner);
         final View languageContainer = findViewById(R.id.languageContainer);
         languageSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,7 +162,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
         headers.put("username", getApplicationPreferences().getUserName());
         headers.put("username_patient", getApplicationPreferences().getPatientId());
-        RecyclerView languageList = (RecyclerView) findViewById(R.id.languageList);
+        RecyclerView languageList = findViewById(R.id.languageList);
         LanguageAdapter languageAdapter = new LanguageAdapter(presenter.getLanguages(), selectedLanguage);
         languageList.setAdapter(languageAdapter);
         languageList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -321,7 +321,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     private void initializeLeftNavigation() {
-        TextView title = (TextView) findViewById(R.id.checkInLeftNavigationTitle);
+        TextView title = findViewById(R.id.checkInLeftNavigationTitle);
         if (title != null) {
             title.setText(Label.getLabel("practice_checkin_header_label"));
         }
@@ -682,8 +682,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     public void updateCheckInFlow(CheckinFlowState flowState, int totalPages, int currentPage) {
         for (int i = 0; i < checkInFlowViews.length; i++) {
             View flowView = checkInFlowViews[i];
-            CarePayTextView section = (CarePayTextView) flowView.findViewById(R.id.checkin_flow_title);
-            TextView progress = (TextView) flowView.findViewById(R.id.checkin_flow_progress);
+            CarePayTextView section = flowView.findViewById(R.id.checkin_flow_title);
+            TextView progressTextView = flowView.findViewById(R.id.checkin_flow_progress);
 
             if (flowState.ordinal() == i) {
                 if (section.getFontAttribute() == CustomAssetStyleable.GOTHAM_ROUNDED_LIGHT) {
@@ -691,10 +691,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 }
                 section.setSelected(true);
                 section.setEnabled(true);
-                if (totalPages > 0) {
+                if (totalPages > 1) {
                     String progressLabel = currentPage + " " + Label.getLabel("of") + " " + totalPages;
-                    progress.setVisibility(View.VISIBLE);
-                    progress.setText(progressLabel);
+                    progressTextView.setVisibility(View.VISIBLE);
+                    progressTextView.setText(progressLabel);
                 }
             } else {
                 if (section.getFontAttribute() == CustomAssetStyleable.GOTHAM_ROUNDED_BOLD) {
@@ -704,7 +704,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                     section.setEnabled(false);
                 }
                 section.setSelected(false);
-                progress.setVisibility(View.GONE);
+                progressTextView.setVisibility(View.GONE);
             }
         }
     }
