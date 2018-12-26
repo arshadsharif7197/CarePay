@@ -1383,6 +1383,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment
                 .newInstance(Label.getLabel("payment.cancelPaymentPlan.confirmDialog.title.cancelPaymentPlanTitle"),
                         Label.getLabel("payment.cancelPaymentPlan.confirmDialog.message.cancelPaymentPlanMessage"));
+        confirmDialogFragment.setNegativeAction(true);
         confirmDialogFragment.setCallback(confirmationCallback);
         String tag = confirmDialogFragment.getClass().getName();
         confirmDialogFragment.show(ft, tag);

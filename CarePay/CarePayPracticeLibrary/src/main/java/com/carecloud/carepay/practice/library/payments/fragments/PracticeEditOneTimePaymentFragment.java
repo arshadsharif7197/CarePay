@@ -88,14 +88,14 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
                 ContextCompat.getDrawable(getContext(), R.drawable.icon_drop_down), null);
 
         numberStr = String.valueOf(scheduledPaymentModel.getPayload().getAmount());
-        char last = numberStr.charAt(numberStr.length()-1);
+        char last = numberStr.charAt(numberStr.length() - 1);
         int decimal = numberStr.indexOf('.');
-        while(last == '0' || last == '.'){
-            if(numberStr.length() <= decimal){
+        while (last == '0' || last == '.') {
+            if (numberStr.length() <= decimal) {
                 break;
             }
-            numberStr = numberStr.substring(0, numberStr.length()-1);
-            last = numberStr.charAt(numberStr.length()-1);
+            numberStr = numberStr.substring(0, numberStr.length() - 1);
+            last = numberStr.charAt(numberStr.length() - 1);
 
         }
         amountTextView = (EditText) findViewById(R.id.enter_amount_text);
@@ -124,6 +124,7 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
                 Label.getLabel("button_no"),
                 Label.getLabel("button_yes"));
         confirmDialogFragment.setCallback(confirmDeleteCallback);
+        confirmDialogFragment.setNegativeAction(true);
         confirmDialogFragment.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {

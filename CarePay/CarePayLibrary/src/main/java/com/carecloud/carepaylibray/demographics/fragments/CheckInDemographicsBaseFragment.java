@@ -196,13 +196,13 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     protected void initSelectableInput(TextView textView, DemographicsOption storeOption,
                                        String storedName, View optional, List<DemographicsOption> options) {
         String key = storeOption.getName();
-        if (StringUtil.isNullOrEmpty(key)){
+        if (StringUtil.isNullOrEmpty(key)) {
             key = storedName;
         }
         storeOption = getOptionByKey(options, key, storeOption);
         if (!StringUtil.isNullOrEmpty(storedName)) {
             textView.setText(storeOption.getLabel());
-        }else if (optional != null) {
+        } else if (optional != null) {
             optional.setVisibility(View.VISIBLE);
         }
 
@@ -258,7 +258,8 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             if (checkinFlowCallback.getCurrentStep() >= checkinFlowCallback.getTotalSteps()) {
-                if (NavigationStateConstants.PATIENT_HOME.equals(workflowDTO.getState())) {
+                if (NavigationStateConstants.PATIENT_HOME.equals(workflowDTO.getState())
+                        || NavigationStateConstants.APPOINTMENTS.equals(workflowDTO.getState())) {
                     onUpdate(checkinFlowCallback, workflowDTO);
                 } else {
                     checkinFlowCallback.setCurrentStep(checkinFlowCallback.getCurrentStep() + 1);

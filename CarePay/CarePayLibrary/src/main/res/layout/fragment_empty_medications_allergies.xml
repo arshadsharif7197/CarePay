@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar_title_only"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/dimen_30dp"
+        android:paddingEnd="@dimen/dimen_17dp"
+        android:paddingStart="@dimen/dimen_17dp"
+        android:paddingTop="@dimen/dimen_30dp">
+
+        <ImageView
+            android:id="@+id/headerIconImageView"
+            android:layout_width="@dimen/dimen_150dp"
+            android:layout_height="@dimen/dimen_150dp"
+            android:layout_marginTop="@dimen/dimen_30dp"
+            android:src="@drawable/icon_medication"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/empty_message"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/dimen_30dp"
+            android:layout_weight="1"
+            android:gravity="center_horizontal|top"
+            android:paddingEnd="@dimen/dimen_60dp"
+            android:paddingStart="@dimen/dimen_60dp"
+            android:textColor="@color/optional_gray"
+            android:textSize="@dimen/text_size_20"
+            app:customAssetFont="proxima_nova_regular"
+            tools:text="Are you taking any medications?"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/button_yes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_green_selector"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_13"
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textKey="yes"
+            tools:text="yes"/>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/button_no"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_15dp"
+            android:background="@drawable/button_red_background"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_13"
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textKey="no"
+            tools:text="no"/>
+
+    </LinearLayout>
+
+</LinearLayout>

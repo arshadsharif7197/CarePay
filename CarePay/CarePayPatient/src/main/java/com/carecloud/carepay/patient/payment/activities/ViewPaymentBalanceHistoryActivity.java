@@ -73,12 +73,12 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.gms.wallet.MaskedWallet;
 
-import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_BALANCES;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_BALANCES;
 
 /**
  * Created by jorge on 29/12/16
@@ -785,6 +785,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                         Label.getLabel("payment.cancelPaymentPlan.confirmDialog.message.cancelPaymentPlanMessage"),
                         Label.getLabel("no"),
                         Label.getLabel("yes"));
+        fragment.setNegativeAction(true);
         fragment.setCallback(confirmationCallback);
         fragment.show(getSupportFragmentManager().beginTransaction(), fragment.getClass().getName());
     }
