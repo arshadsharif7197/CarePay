@@ -92,6 +92,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     private boolean startCancelationFeePayment = false;
     private String cancellationReasonString;
 
+    private ScheduleAppointmentRequestDTO scheduleAppointmentRequestDTO;
+    private double prepayAmount;
+
     public PatientAppointmentPresenter(AppointmentViewHandler viewHandler,
                                        AppointmentsResultModel appointmentsResultModel,
                                        PaymentsModel paymentsModel) {
@@ -221,7 +224,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         queryMap.put("practice_mgmt", practiceMgmt);
         queryMap.put("practice_id", practiceId);
 
-        ScheduleAppointmentRequestDTO scheduleAppointmentRequestDTO = new ScheduleAppointmentRequestDTO();
+        scheduleAppointmentRequestDTO = new ScheduleAppointmentRequestDTO();
         ScheduleAppointmentRequestDTO.Appointment appointment = scheduleAppointmentRequestDTO.getAppointment();
         appointment.setStartTime(appointmentSlot.getStartTime());
         appointment.setEndTime(appointmentSlot.getEndTime());
@@ -236,9 +239,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
         appointment.getPatient().setId(patientId);
 
-        double amount = selectedVisitTypeDTO.getAmount();
-        if (amount > 0 && paymentsModel != null) {
-            startPrepaymentProcess(scheduleAppointmentRequestDTO, appointmentSlot, amount);
+        prepayAmount = selectedVisitTypeDTO.getAmount();
+        if (prepayAmount > 0 && paymentsModel != null) {
+            startPrepaymentProcess(scheduleAppointmentRequestDTO, appointmentSlot, prepayAmount);
         } else {
             Gson gson = new Gson();
             TransitionDTO transitionDTO = appointmentsResultModel.getMetadata()
@@ -255,6 +258,27 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void onAppointmentRequestSuccess() {
+        //log appt scheduled to mixpanel
+        String[] params = {getString(R.string.param_appointment_type),
+                getString(R.string.param_practice_id),
+                getString(R.string.param_practice_name),
+                getString(R.string.param_provider_id),
+                getString(R.string.param_patient_id),
+                getString(R.string.param_location_id),
+                getString(R.string.param_payment_made),
+                getString(R.string.param_reason_visit)};
+        String[] values = {selectedVisitTypeDTO.getName(),
+                practiceId,
+                practiceName,
+                scheduleAppointmentRequestDTO.getAppointment().getProviderGuid(),
+                patientId,
+                scheduleAppointmentRequestDTO.getAppointment().getLocationGuid(),
+                String.valueOf(prepayAmount),//todo check if sending amount or boolean
+                scheduleAppointmentRequestDTO.getAppointment().getComments()
+        };
+        MixPanelUtil.logEvent(getString(R.string.event_appointment_requested), params, values);
+        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
+
         viewHandler.confirmAppointment(true,
                 getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests());
     }
@@ -545,11 +569,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             viewHandler.hideProgressDialog();
-            //log appt scheduled to mixpanel
-            String[] params = {getString(R.string.param_appointment_type), getString(R.string.param_practice_id), getString(R.string.param_practice_name)};
-            String[] values = {selectedVisitTypeDTO.getName(), practiceId, practiceName};
-            MixPanelUtil.logEvent(getString(R.string.event_appointment_requested), params, values);
-            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
             onAppointmentRequestSuccess();
         }
 
