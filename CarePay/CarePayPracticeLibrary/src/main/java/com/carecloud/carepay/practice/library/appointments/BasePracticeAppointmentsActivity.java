@@ -438,14 +438,14 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
                 //make sure this is the last item in case we need to null it out to prevent it from sending
                 getString(R.string.param_payment_made)
         };
-        String[] values = {visitTypeDTO.getName(),
+        Object[] values = {visitTypeDTO.getName(),
                 getApplicationMode().getUserPracticeDTO().getPracticeId(),
                 getApplicationMode().getUserPracticeDTO().getPracticeName(),
                 scheduleAppointmentRequestDTO.getAppointment().getProviderGuid(),
                 patientModel.getPatientId(),
                 scheduleAppointmentRequestDTO.getAppointment().getLocationGuid(),
                 scheduleAppointmentRequestDTO.getAppointment().getComments(),
-                String.valueOf(prepayAmount)
+                prepayAmount
         };
         if(prepayAmount <= 0D){
             params[params.length-1] = null;

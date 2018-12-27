@@ -270,14 +270,14 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                 //make sure this is the last item in case we need to null it out to prevent it from sending
                 getString(R.string.param_payment_made)
         };
-        String[] values = {selectedVisitTypeDTO.getName(),
+        Object[] values = {selectedVisitTypeDTO.getName(),
                 practiceId,
                 practiceName,
                 scheduleAppointmentRequestDTO.getAppointment().getProviderGuid(),
                 patientId,
                 scheduleAppointmentRequestDTO.getAppointment().getLocationGuid(),
                 scheduleAppointmentRequestDTO.getAppointment().getComments(),
-                String.valueOf(prepayAmount)
+                prepayAmount
         };
         if (prepayAmount <= 0) {
             params[params.length - 1] = null;

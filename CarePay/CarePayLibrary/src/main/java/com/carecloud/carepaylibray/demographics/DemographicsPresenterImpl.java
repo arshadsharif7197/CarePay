@@ -130,8 +130,26 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         startCheckIn = true;
         boolean isResume = true;
         boolean isGuest = !ValidationHelper.isValidEmail(((ISession) demographicsView.getContext()).getAppAuthorizationHelper().getCurrUser());
-        String[] params = {getString(R.string.param_practice_id), getString(R.string.param_appointment_id), getString(R.string.param_appointment_type), getString(R.string.param_is_guest)};
-        Object[] values = {getAppointment().getMetadata().getPracticeId(), getAppointmentId(), getAppointment().getPayload().getVisitType().getName(), isGuest};
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_appointment_id),
+                getString(R.string.param_appointment_type),
+                getString(R.string.param_is_guest),
+                getString(R.string.param_provider_id),
+                getString(R.string.param_patient_id),
+                getString(R.string.param_location_id),
+                getString(R.string.param_setting_id_available),
+                getString(R.string.param_setting_insurance_available)
+        };
+        Object[] values = {getAppointment().getMetadata().getPracticeId(),
+                getAppointmentId(),
+                getAppointment().getPayload().getVisitType().getName(),
+                isGuest,
+                getAppointment().getPayload().getProvider().getGuid(),
+                getAppointment().getMetadata().getPatientId(),
+                getAppointment().getPayload().getLocation().getGuid(),
+                demographicDTO.getPayload().getCheckinSettings().shouldShowIdentityDocs(),
+                demographicDTO.getPayload().getCheckinSettings().shouldShowHealthInsurance()
+        };
         switch (workflowDTO.getState()) {
             case NavigationStateConstants.CONSENT_FORMS:
                 navigateToConsentForms(workflowDTO);

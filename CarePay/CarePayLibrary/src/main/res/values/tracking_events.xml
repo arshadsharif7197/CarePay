@@ -93,6 +93,8 @@
     <string name="param_location_id">Location Id</string>
     <string name="param_payment_made">Payment made</string>
     <string name="param_reason_visit">Reason for visit used</string>
+    <string name="param_setting_id_available">Identity document upload available</string>
+    <string name="param_setting_insurance_available">Insurance photo upload available</string>
 
 
     <!--Incremental Properties-->
