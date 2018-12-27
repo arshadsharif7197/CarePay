@@ -340,11 +340,17 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
             String[] params = {getString(R.string.param_practice_id),
                     getString(R.string.param_appointment_id),
                     getString(R.string.param_appointment_type),
-                    getString(R.string.param_is_guest)};
+                    getString(R.string.param_is_guest),
+                    getString(R.string.param_provider_id),
+                    getString(R.string.param_location_id)
+            };
             Object[] values = {getAppointment().getMetadata().getPracticeId(),
                     getAppointmentId(),
                     getAppointment().getPayload().getVisitType().getName(),
-                    false};
+                    false,
+                    getAppointment().getPayload().getProvider().getGuid(),
+                    getAppointment().getPayload().getLocation().getGuid()
+            };
             MixPanelUtil.logEvent(getString(R.string.event_checkin_completed), params, values);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_checkin_completed), 1);
             MixPanelUtil.endTimer(getString(R.string.timer_checkin));
