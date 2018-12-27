@@ -54,6 +54,7 @@
     <string name="event_paymentplan_onetime_payment">One-Time Payment Started</string>
     <string name="event_retail_started">Launch Retail Store</string>
     <string name="event_retail_checkout">Start Retail Checkout</string>
+    <string name="event_qr_code">QR Code</string>
 
 
     <!--Parameters-->
