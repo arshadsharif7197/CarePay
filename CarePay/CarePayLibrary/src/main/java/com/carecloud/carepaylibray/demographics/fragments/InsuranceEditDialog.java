@@ -690,7 +690,28 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         List<DemographicInsurancePhotoDTO> photos = demographicInsurancePayloadDTO.getInsurancePhotos();
         if (frontInsurancePhotoDTO != null || backInsurancePhotoDTO != null) {
             //Log new Insurance Doc
-            MixPanelUtil.logEvent(getString(R.string.event_add_insurance_doc), getString(R.string.param_is_checkin), isCheckin);
+            CheckinFlowCallback checkinFlowCallback = null;
+            if(callback instanceof CheckinFlowCallback){
+                checkinFlowCallback = (CheckinFlowCallback) callback;
+            }
+            if(checkinFlowCallback != null) {
+                String[] params = {getString(R.string.param_is_checkin),
+                        getString(R.string.param_practice_id),
+                        getString(R.string.param_provider_id),
+                        getString(R.string.param_location_id),
+                        getString(R.string.param_appointment_id)
+                };
+                Object[] values = {isCheckin,
+                        checkinFlowCallback.getAppointment().getMetadata().getPracticeId(),
+                        checkinFlowCallback.getAppointment().getPayload().getProvider().getGuid(),
+                        checkinFlowCallback.getAppointment().getPayload().getLocation().getGuid(),
+                        checkinFlowCallback.getAppointment().getMetadata().getAppointmentId()
+                };
+                MixPanelUtil.logEvent(getString(R.string.event_add_insurance_doc), params, values);
+            } else {
+                MixPanelUtil.logEvent(getString(R.string.event_add_insurance_doc),
+                        getString(R.string.param_is_checkin), isCheckin);
+            }
         }
 
         if (frontInsurancePhotoDTO != null) {
