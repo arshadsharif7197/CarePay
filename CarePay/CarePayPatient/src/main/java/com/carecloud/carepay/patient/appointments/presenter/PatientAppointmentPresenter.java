@@ -94,6 +94,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     private ScheduleAppointmentRequestDTO scheduleAppointmentRequestDTO;
     private double prepayAmount;
+    private AppointmentDTO cancelAppointmentDTO;
 
     public PatientAppointmentPresenter(AppointmentViewHandler viewHandler,
                                        AppointmentsResultModel appointmentsResultModel,
@@ -265,17 +266,22 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                 getString(R.string.param_provider_id),
                 getString(R.string.param_patient_id),
                 getString(R.string.param_location_id),
-                getString(R.string.param_payment_made),
-                getString(R.string.param_reason_visit)};
+                getString(R.string.param_reason_visit),
+                //make sure this is the last item in case we need to null it out to prevent it from sending
+                getString(R.string.param_payment_made)
+        };
         String[] values = {selectedVisitTypeDTO.getName(),
                 practiceId,
                 practiceName,
                 scheduleAppointmentRequestDTO.getAppointment().getProviderGuid(),
                 patientId,
                 scheduleAppointmentRequestDTO.getAppointment().getLocationGuid(),
-                String.valueOf(prepayAmount),//todo check if sending amount or boolean
-                scheduleAppointmentRequestDTO.getAppointment().getComments()
+                scheduleAppointmentRequestDTO.getAppointment().getComments(),
+                String.valueOf(prepayAmount)
         };
+        if (prepayAmount <= 0) {
+            params[params.length - 1] = null;
+        }
         MixPanelUtil.logEvent(getString(R.string.event_appointment_requested), params, values);
         MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
 
@@ -454,6 +460,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                                                                              int cancellationReason,
                                                                              String cancellationReasonComment) {
                         cancellationReasonString = cancellationReasonComment;
+                        cancelAppointmentDTO = appointmentDTO;
                         if (cancellationFee == null) {
                             onCancelAppointment(appointmentDTO, cancellationReason, cancellationReasonComment);
                         } else {
@@ -519,11 +526,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             viewHandler.hideProgressDialog();
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_cancellation_success_message_HTML"));
             viewHandler.refreshAppointments();
-            //log appt cancelation to mixpanel
-            String[] params = {getString(R.string.param_appointment_cancel_reason), getString(R.string.param_practice_id), getString(R.string.param_practice_name)};
-            Object[] values = {cancellationReasonString, practiceId, practiceName};
-            MixPanelUtil.logEvent(getString(R.string.event_appointment_cancelled), params, values);
-            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_cancelled), 1);
+            logApptCancelMixpanel();
         }
 
         @Override
@@ -783,11 +786,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         if (startCancelationFeePayment) {
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_cancellation_success_message_HTML"));
             viewHandler.confirmAppointment(false, false);
-            //log appt cancelation to mixpanel
-            String[] params = {getString(R.string.param_appointment_cancel_reason), getString(R.string.param_practice_id), getString(R.string.param_practice_name)};
-            Object[] values = {cancellationReasonString, practiceId, practiceName};
-            MixPanelUtil.logEvent(getString(R.string.event_appointment_cancelled), params, values);
-            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_cancelled), 1);
+            logApptCancelMixpanel();
         } else {
             onAppointmentRequestSuccess();
         }
@@ -809,5 +808,28 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     private String getString(int id) {
         return getContext().getString(id);
+    }
+
+    private void logApptCancelMixpanel(){
+        //log appt cancellation to mixpanel
+        String[] params = {getString(R.string.param_appointment_cancel_reason),
+                getString(R.string.param_practice_id),
+                getString(R.string.param_practice_name),
+                getString(R.string.param_provider_id),
+                getString(R.string.param_patient_id),
+                getString(R.string.param_location_id),
+                getString(R.string.param_appointment_type)
+        };
+        Object[] values = {
+                cancellationReasonString,
+                practiceId,
+                practiceName,
+                cancelAppointmentDTO.getPayload().getProvider().getGuid(),
+                patientId,
+                cancelAppointmentDTO.getPayload().getLocation().getGuid(),
+                cancelAppointmentDTO.getPayload().getVisitType().getName()
+        };
+        MixPanelUtil.logEvent(getString(R.string.event_appointment_cancelled), params, values);
+        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_cancelled), 1);
     }
 }

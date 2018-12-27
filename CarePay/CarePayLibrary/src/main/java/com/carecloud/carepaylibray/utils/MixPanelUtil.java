@@ -61,7 +61,9 @@ public class MixPanelUtil {
             int min = Math.min(parameters.length, values.length);
             JSONObject object = new JSONObject();
             for(int i=0; i<min; i++) {
-                object.put(parameters[i], values[i]);
+                if(parameters[i] != null) {
+                    object.put(parameters[i], values[i]);
+                }
             }
             if(!isDebug && mixpanel!=null) {
                 mixpanel.track(eventName, object);
