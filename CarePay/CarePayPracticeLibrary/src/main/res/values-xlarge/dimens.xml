@@ -608,4 +608,24 @@
     <dimen name="paymentPlanAddToExistingButtonHotizontalPadding">45dp</dimen>
     <dimen name="paymentPlanHeaderPlanTotalHeight">100dp</dimen>
 
+    <!--Patient Payment Plan Detail-->
+    <dimen name="headerImagesTopMargin">26dp</dimen>
+    <dimen name="patientPaymentPlanDetailPracticeNameTextSize">34sp</dimen>
+    <dimen name="patientPaymentPlanDetailNameTextSize">18sp</dimen>
+    <dimen name="patientPaymentPlanDetailPadding">4dp</dimen>
+    <dimen name="responsibilityContainerHorizontalPadding">24dp</dimen>
+    <dimen name="responsibilityContainerVerticalPadding">19dp</dimen>
+    <dimen name="paymentPlanInstallmentDetailTextSize">24sp</dimen>
+    <dimen name="editPlanButtonTextSize">12sp</dimen>
+    <dimen name="editPlanButtonHorizontalPadding">30dp</dimen>
+    <dimen name="editPlanButtonVerticalPadding">10dp</dimen>
+    <dimen name="scheduledPaymentLayoutHorizontalMargin">20dp</dimen>
+    <dimen name="scheduledPaymentLayoutBottomMargin">4dp</dimen>
+    <dimen name="scheduledPaymentLayoutPadding">15dp</dimen>
+    <dimen name="scheduledPaymentMessageTextSize">16sp</dimen>
+    <dimen name="scheduledPaymentImageMargin">10dp</dimen>
+    <dimen name="paymentPlanDetailLabelTextSize">24sp</dimen>
+    <dimen name="paymentPlanDetailValueTextSize">17sp</dimen>
+    <dimen name="paymentPlanDetailVerticalPadding">24dp</dimen>
+
 </resources>
