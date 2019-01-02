@@ -607,4 +607,13 @@
     <dimen name="patientResponsibilityBalanceVerticalPadding">10dp</dimen>
     <dimen name="patientResponsibilityDetailsTopPadding">10dp</dimen>
 
+    <!--Patient Payment Plan-->
+    <dimen name="patientPaymentPlanHeaderMargin">5dp</dimen>
+    <dimen name="paymentPlanHeaderMessageTextSize">13sp</dimen>
+    <dimen name="paymentPlanHeaderPlanTotalTextSize">60sp</dimen>
+    <dimen name="paymentPlanParametersTextSize">10sp</dimen>
+    <dimen name="paymentPlanAddToExistingButtonTextSize">9sp</dimen>
+    <dimen name="paymentPlanAddToExistingButtonHotizontalPadding">30dp</dimen>
+    <dimen name="paymentPlanHeaderPlanTotalHeight">70dp</dimen>
+
 </resources>
