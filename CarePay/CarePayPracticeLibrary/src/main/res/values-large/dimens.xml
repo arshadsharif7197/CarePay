@@ -600,4 +600,11 @@
     <dimen name="appointmentCardFooterHorizontalPadding">10dp</dimen>
     <dimen name="appointmentCardFooterBottomPadding">10dp</dimen>
 
+    <!--Patient Responsibility Fragment-->
+    <dimen name="patientResponsibilityPatientFullNameTextSize">24sp</dimen>
+    <dimen name="patientResponsibilityProviderNameTextSize">14sp</dimen>
+    <dimen name="patientResponsibilityBalanceTextSize">18sp</dimen>
+    <dimen name="patientResponsibilityBalanceVerticalPadding">10dp</dimen>
+    <dimen name="patientResponsibilityDetailsTopPadding">10dp</dimen>
+
 </resources>

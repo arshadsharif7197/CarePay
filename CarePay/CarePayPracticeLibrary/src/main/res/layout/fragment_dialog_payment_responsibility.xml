@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -34,19 +33,18 @@
         </RelativeLayout>
     </LinearLayout>
 
-
     <RelativeLayout
         android:layout_width="@dimen/appointment_detail_dialog_width"
-        android:layout_height="@dimen/dialog_height"
-        android:layout_marginEnd="@dimen/dimen_26dp"
-        android:layout_marginStart="@dimen/dimen_26dp">
+        android:layout_height="@dimen/commonPracticeDialogHeight"
+        android:layout_marginStart="@dimen/dimen_26dp"
+        android:layout_marginEnd="@dimen/dimen_26dp">
 
         <RelativeLayout
             android:id="@+id/profile_image_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dialog_header_height"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true">
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true">
 
             <ImageView
                 android:id="@+id/profile_bg_image"
@@ -93,7 +91,7 @@
                     android:gravity="center"
                     android:padding="4dp"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_34sp"
+                    android:textSize="@dimen/patientResponsibilityPatientFullNameTextSize"
                     app:customAssetFont="proxima_nova_semi_bold" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -102,7 +100,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textColor="@color/glitter"
-                    android:textSize="@dimen/text_size_18sp"
+                    android:textSize="@dimen/patientResponsibilityProviderNameTextSize"
                     app:customAssetFont="proxima_nova_regular" />
             </LinearLayout>
         </RelativeLayout>
@@ -114,10 +112,11 @@
             android:layout_below="@id/profile_image_layout"
             android:background="@color/popup_background"
             android:gravity="center"
-            android:paddingBottom="@dimen/dimen_19dp"
-            android:paddingTop="@dimen/dimen_19dp"
+            android:paddingTop="@dimen/patientResponsibilityBalanceVerticalPadding"
+            android:paddingBottom="@dimen/patientResponsibilityBalanceVerticalPadding"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_24sp"
+            android:textSize="@dimen/patientResponsibilityBalanceTextSize"
+            tools:text="Balance: $1525.23"
             app:customAssetFont="proxima_nova_semi_bold" />
 
         <FrameLayout
@@ -132,11 +131,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                android:paddingTop="@dimen/dimen_30dp" />
+                android:paddingTop="@dimen/patientResponsibilityDetailsTopPadding" />
 
-            <include layout="@layout/patient_balance_empty"
-                     android:id="@+id/empty_balance_layout"
-                     android:visibility="gone" />
+            <include
+                android:id="@+id/empty_balance_layout"
+                layout="@layout/patient_balance_empty"
+                android:visibility="gone" />
 
         </FrameLayout>
 
@@ -154,50 +154,49 @@
             android:layout_alignParentBottom="true"
             android:background="@drawable/patient_mode_dialog_body_bg"
             android:orientation="horizontal"
-            android:padding="@dimen/dimen_10dp">
+            android:padding="@dimen/distributionButtonContainersPadding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/payment_plan_button"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/dimen_48dp"
-                android:layout_marginEnd="@dimen/dimen_5dp"
+                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:layout_weight="1"
                 android:background="@drawable/blue_border_rounded_button_selector"
                 android:textAllCaps="false"
                 android:textColor="@color/primary_color_enabled_selector"
-                android:textSize="@dimen/text_size_22sp"
+                android:textSize="@dimen/respons_button_text_size"
+                app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="payment_create_plan"
-                tools:text="Create Plan"
-                app:customAssetFont="gotham_rounded_medium"/>
+                tools:text="Create Plan" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/partial_pay_button"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/dimen_48dp"
-                android:layout_marginEnd="@dimen/dimen_5dp"
-                android:layout_marginStart="@dimen/dimen_5dp"
+                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:layout_weight="1"
                 android:background="@drawable/primary_rounded_button_selector"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_22sp"
+                android:textSize="@dimen/respons_button_text_size"
+                app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="payment_partial_payment_text"
-                tools:text="Pay Partial"
-                app:customAssetFont="gotham_rounded_medium"/>
+                tools:text="Pay Partial" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/payment_pay_button"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/dimen_48dp"
-                android:layout_marginStart="@dimen/dimen_5dp"
+                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:layout_weight="1"
                 android:background="@drawable/green_rounded_button_selector"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_22sp"
+                android:textSize="@dimen/respons_button_text_size"
+                app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="payment_pay_total_button"
-                tools:text="Pay Total"
-                app:customAssetFont="gotham_rounded_medium"/>
+                tools:text="Pay Total" />
         </LinearLayout>
 
     </RelativeLayout>
