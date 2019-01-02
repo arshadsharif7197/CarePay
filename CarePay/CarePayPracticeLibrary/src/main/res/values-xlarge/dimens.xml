@@ -67,6 +67,7 @@
     <dimen name="officeNewsContainerVerticalPadding">10dp</dimen>
     <dimen name="officeNewsContainerHorizontalPadding">20dp</dimen>
     <dimen name="officeNewsHorizontalPadding">5dp</dimen>
+    <dimen name="officeNewsListVerticalPadding">20dp</dimen>
 
     <!--CheckIn Practice Mode-->
     <dimen name="checkInPanelWidth">1600dp</dimen>

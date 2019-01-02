@@ -179,6 +179,7 @@
     <dimen name="officeNewsContainerVerticalPadding">10dp</dimen>
     <dimen name="officeNewsContainerHorizontalPadding">20dp</dimen>
     <dimen name="officeNewsHorizontalPadding">5dp</dimen>
+    <dimen name="officeNewsListVerticalPadding">20dp</dimen>
 
     <!--Provider lists-->
     <dimen name="provider_card_width">380dp</dimen>

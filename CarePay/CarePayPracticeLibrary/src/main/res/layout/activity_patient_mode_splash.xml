@@ -91,6 +91,7 @@
             tools:text="Welcome to Lisa Learn!"
             android:maxLines="4"
             android:textColor="@color/white"
+            android:padding="@dimen/dimen_5dp"
             android:textSize="@dimen/patientSplashWelcomeTitleTextSize"
             app:customAssetFont="gotham_rounded_medium" />
     </LinearLayout>

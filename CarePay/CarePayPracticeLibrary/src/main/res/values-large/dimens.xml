@@ -58,14 +58,14 @@
     <dimen name="home_shadow_width">600dp</dimen>
     <dimen name="home_shadow_margin_top">-15dp</dimen>
     <dimen name="home_main_margin_top">10dp</dimen>
-    <dimen name="officeNewsHeaderTopMargin">15dp</dimen>
+    <dimen name="officeNewsHeaderTopMargin">10dp</dimen>
     <dimen name="officeNewsItemWidth">240dp</dimen>
     <dimen name="officeNewListItemTextSize">16sp</dimen>
     <dimen name="home_button_font_size">18sp</dimen>
     <dimen name="home_alert_font_size">14sp</dimen>
     <dimen name="home_alert_checkin_number_wrapper_height">30dp</dimen>
     <dimen name="home_alert_checkin_number_wrapper_width">30dp</dimen>
-    <dimen name="officeNewsHeaderTextSize">22sp</dimen>
+    <dimen name="officeNewsHeaderTextSize">18sp</dimen>
     <dimen name="updateAlertContainerPadding">10dp</dimen>
     <dimen name="updateAlertImageEndMargin">10dp</dimen>
     <dimen name="updateAlertTitleTextSize">15sp</dimen>
@@ -75,6 +75,7 @@
     <dimen name="officeNewsContainerVerticalPadding">5dp</dimen>
     <dimen name="officeNewsContainerHorizontalPadding">10dp</dimen>
     <dimen name="officeNewsHorizontalPadding">2dp</dimen>
+    <dimen name="officeNewsListVerticalPadding">10dp</dimen>
 
     <!--CheckIn Practice Mode-->
     <dimen name="checkInPanelWidth">1200dp</dimen>
@@ -547,7 +548,7 @@
 
     <!--Patient Splash Screen-->
     <dimen name="patientSplashPracticeLogoSize">170dp</dimen>
-    <dimen name="patientSplashWelcomeTitleTextSize">26sp</dimen>
+    <dimen name="patientSplashWelcomeTitleTextSize">25sp</dimen>
     <dimen name="patientSplashButtonWidth">200dp</dimen>
     <dimen name="patientSplashButtonHeight">40dp</dimen>
     <dimen name="patientSplashButtonTextSize">16sp</dimen>
