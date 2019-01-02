@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/screen_background"
-    android:paddingBottom="@dimen/dimen_25dp"
+    android:paddingBottom="@dimen/patientModePaymentBottomPadding"
     tools:context=".payments.PatientModePaymentsActivity"
     tools:ignore="MissingPrefix">
 
@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:paddingTop="@dimen/dimen_34dp"
+        android:paddingTop="@dimen/logoImageTopPadding"
         android:scaleType="fitXY"
         android:src="?practiceLogoDrawable" />
 
@@ -31,9 +31,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/logoImageView"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/dimen_50dp"
+        android:layout_marginTop="@dimen/patientModePaymentTitleTopMargin"
         android:textColor="@color/white"
-        android:textSize="@dimen/text_size_36sp"
+        android:textSize="@dimen/patientModePaymentTitleTextSize"
         app:customAssetFont="gotham_rounded_medium"
         breeze:textKey="no_payment_title"
         tools:text="Select a pending payment" />
@@ -44,9 +44,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/title"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_marginTop="@dimen/patientModePaymentSubTitleTopMargin"
         android:textColor="@color/confirm_pin_sub_title"
-        android:textSize="@dimen/text_size_22sp"
+        android:textSize="@dimen/patientModePaymentSubTitleTextSize"
         app:customAssetFont="proxima_nova_regular"
         breeze:textKey="no_payment_description"
         tools:text="We'll list all your pending payments here" />
@@ -67,8 +67,8 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/btnHome"
         android:layout_below="@+id/appointmentProgressBar"
-        android:paddingBottom="@dimen/dimen_10dp"
-        android:paddingTop="@dimen/dimen_10dp">
+        android:paddingTop="@dimen/dimen_10dp"
+        android:paddingBottom="@dimen/dimen_10dp">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/appointmentsRecyclerView"

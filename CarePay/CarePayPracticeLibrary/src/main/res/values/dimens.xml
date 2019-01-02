@@ -181,20 +181,21 @@
     <dimen name="officeNewsHorizontalPadding">5dp</dimen>
 
     <!--Provider lists-->
+    <dimen name="provider_card_width">380dp</dimen>
+    <dimen name="providerCardHorizontalMargin">18dp</dimen>
+    <dimen name="appointment_card_header_height">220dp</dimen>
+    <dimen name="providerPaymentAmountHeight">150dp</dimen>
+    <dimen name="provider_card_avatar_size">100dp</dimen>
+    <dimen name="appointment_card_footer_height">208dp</dimen>
     <dimen name="provider_list_title_margin">34dp</dimen>
     <dimen name="provider_no_list_margin">72dp</dimen>
-    <dimen name="provider_card_width">380dp</dimen>
     <dimen name="provider_card_header_height">150dp</dimen>
-    <dimen name="provider_card_avatar_size">100dp</dimen>
     <dimen name="provider_card_address_margin">110dp</dimen>
     <dimen name="provider_card_place_margin">19dp</dimen>
 
     <!--Appointment list-->
-    <dimen name="appointment_card_header_height">220dp</dimen>
     <dimen name="appointment_card_date_view_height">170dp</dimen>
-    <dimen name="appointment_card_footer_height">208dp</dimen>
     <dimen name="appointment_card_checked_in_button_margin">56dp</dimen>
-
     <dimen name="appointment_summary_provider_image_margin">-50dp</dimen>
 
     <!--Practice Payment-->
@@ -697,5 +698,19 @@
     <dimen name="howToCheckInTitleBottomMargin">30dp</dimen>
     <dimen name="howToCheckInOptionPadding">15dp</dimen>
     <dimen name="howToCheckInOptionTextSize">28sp</dimen>
+
+    <!--Patient Mode Payment Screen-->
+    <dimen name="patientModePaymentTitleTopMargin">50dp</dimen>
+    <dimen name="patientModePaymentTitleTextSize">36sp</dimen>
+    <dimen name="patientModePaymentSubTitleTopMargin">20dp</dimen>
+    <dimen name="patientModePaymentSubTitleTextSize">22sp</dimen>
+    <dimen name="logoImageTopPadding">34dp</dimen>
+    <dimen name="patientModePaymentBottomPadding">25dp</dimen>
+    <dimen name="providerLocationNameTextSize">24sp</dimen>
+    <dimen name="paymentAmountTextSize">50sp</dimen>
+    <dimen name="paymentAmountTopPadding">28dp</dimen>
+    <dimen name="planInstallmentFrequencyTextSize">20sp</dimen>
+    <dimen name="appointmentCardFooterHorizontalPadding">20dp</dimen>
+    <dimen name="appointmentCardFooterBottomPadding">20dp</dimen>
 
 </resources>

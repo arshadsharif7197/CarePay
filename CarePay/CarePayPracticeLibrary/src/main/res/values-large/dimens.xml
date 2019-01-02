@@ -573,4 +573,31 @@
     <dimen name="howToCheckInOptionPadding">10dp</dimen>
     <dimen name="howToCheckInOptionTextSize">20sp</dimen>
 
+    <!--Patient Mode Payment Screen-->
+    <dimen name="patientModePaymentTitleTopMargin">26dp</dimen>
+    <dimen name="patientModePaymentTitleTextSize">24sp</dimen>
+    <dimen name="patientModePaymentSubTitleTopMargin">10dp</dimen>
+    <dimen name="patientModePaymentSubTitleTextSize">18sp</dimen>
+    <dimen name="logoImageTopPadding">20dp</dimen>
+    <dimen name="patientModePaymentBottomPadding">10dp</dimen>
+
+    <!--Provider lists-->
+    <dimen name="provider_card_width">240dp</dimen>
+    <dimen name="providerCardHorizontalMargin">9dp</dimen>
+    <dimen name="appointment_card_header_height">140dp</dimen>
+    <dimen name="provider_card_avatar_size">70dp</dimen>
+    <dimen name="providerPaymentAmountHeight">110dp</dimen>
+    <dimen name="appointment_card_footer_height">160dp</dimen>
+    <dimen name="providerLocationNameTextSize">18sp</dimen>
+    <dimen name="provider_list_title_margin">34dp</dimen>
+    <dimen name="provider_no_list_margin">72dp</dimen>
+    <dimen name="provider_card_header_height">150dp</dimen>
+    <dimen name="provider_card_address_margin">110dp</dimen>
+    <dimen name="provider_card_place_margin">19dp</dimen>
+    <dimen name="paymentAmountTextSize">34sp</dimen>
+    <dimen name="paymentAmountTopPadding">16dp</dimen>
+    <dimen name="planInstallmentFrequencyTextSize">14sp</dimen>
+    <dimen name="appointmentCardFooterHorizontalPadding">10dp</dimen>
+    <dimen name="appointmentCardFooterBottomPadding">10dp</dimen>
+
 </resources>
