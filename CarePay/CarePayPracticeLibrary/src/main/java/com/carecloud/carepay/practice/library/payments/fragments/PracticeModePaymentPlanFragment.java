@@ -194,7 +194,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         for (BalanceItemDTO balanceItem : balanceItems) {
             String balanceItemId = String.valueOf(balanceItem.getId());
             balanceItem.setAmountInPaymentPlan(0.0);
-            for (PaymentPlanDTO paymentPlan : paymentsModel.getPaymentPayload().getPatientPaymentPlans()) {
+            for (PaymentPlanDTO paymentPlan : paymentsModel.getPaymentPayload().getActivePlans(practiceId)) {
                 for (PaymentPlanLineItem lineItem : paymentPlan.getPayload().getLineItems()) {
                     if (balanceItemId.equals(lineItem.getTypeId())) {
                         if (balanceItem.getAmountInPaymentPlan() > 0.0) {
