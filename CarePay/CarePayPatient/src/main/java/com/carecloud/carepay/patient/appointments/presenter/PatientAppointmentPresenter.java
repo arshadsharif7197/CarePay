@@ -483,7 +483,17 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                                     .newInstance(paymentsModel, Double.parseDouble(cancellationFee.getAmount()));
                             viewHandler.navigateToFragment(prepaymentFragment, true);
 
-                            MixPanelUtil.logEvent(getString(R.string.event_payment_cancellation_started));
+                            String[] params = {getString(R.string.param_payment_amount),
+                                    getString(R.string.param_provider_id),
+                                    getString(R.string.param_practice_id),
+                                    getString(R.string.param_location_id)
+                            };
+                            Object[] values = {cancellationFee.getAmount(),
+                                    appointmentDTO.getPayload().getProvider().getGuid(),
+                                    appointmentDTO.getMetadata().getPracticeId(),
+                                    appointmentDTO.getPayload().getLocation().getGuid()
+                            };
+                            MixPanelUtil.logEvent(getString(R.string.event_payment_cancellation_started), params, values);
                         }
                     }
                 }).show();
@@ -810,7 +820,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         return getContext().getString(id);
     }
 
-    private void logApptCancelMixpanel(){
+    private void logApptCancelMixpanel() {
         //log appt cancellation to mixpanel
         String[] params = {getString(R.string.param_appointment_cancel_reason),
                 getString(R.string.param_practice_id),
