@@ -95,6 +95,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     private boolean shouldAddBackStack = false;
     private boolean paymentStarted = false;
+    private boolean completedPaymentPlan = false;
 
     private Fragment androidPayTargetFragment;
 
@@ -254,7 +255,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         header.put("transition", "true");
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata()
                 .getPaymentsTransitions().getContinueTransition();
-        getWorkflowServiceHelper().execute(transitionDTO, continueCallback, queryMap, header);
+        getWorkflowServiceHelper().execute(transitionDTO, getContinueCallback(false), queryMap, header);
 
         MixPanelUtil.logEvent(getString(R.string.event_payment_skipped));
     }
@@ -461,7 +462,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
         TransitionDTO continueTransition = paymentsModel.getPaymentsMetadata()
                 .getPaymentsTransitions().getContinueTransition();
-        getWorkflowServiceHelper().execute(continueTransition, continueCallback, queryMap, header);
+        getWorkflowServiceHelper().execute(continueTransition, getContinueCallback(true), queryMap, header);
 
     }
 
@@ -526,7 +527,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
             TransitionDTO continueTransition = paymentsModel.getPaymentsMetadata()
                     .getPaymentsTransitions().getContinueTransition();
-            getWorkflowServiceHelper().execute(continueTransition, continueCallback, queryMap, header);
+            getWorkflowServiceHelper().execute(continueTransition, getContinueCallback(true), queryMap, header);
         } else {
             PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO,
                     getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO));
@@ -570,12 +571,25 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     }
 
     @Override
-    public void completeCheckout() {
+    public void completeCheckout(boolean paymentMade, boolean surveyAvailable, boolean paymentPlanCreated) {
         //Log Check-out Completed
         if (getAppointment() != null) {
-            String[] params = {getString(R.string.param_practice_id), getString(R.string.param_appointment_id), getString(R.string.param_appointment_type), getString(R.string.param_is_guest)};
-            Object[] values = {getAppointment().getMetadata().getPracticeId(), getAppointmentId(),
-                    getAppointment().getPayload().getVisitType().getName(), false};
+            String[] params = {getString(R.string.param_practice_id),
+                    getString(R.string.param_appointment_id),
+                    getString(R.string.param_appointment_type),
+                    getString(R.string.param_is_guest),
+                    getString(R.string.param_payment_made),
+                    getString(R.string.param_survey_available),
+                    getString(R.string.param_payment_plan_created)
+            };
+            Object[] values = {getAppointment().getMetadata().getPracticeId(),
+                    getAppointmentId(),
+                    getAppointment().getPayload().getVisitType().getName(),
+                    false,
+                    paymentMade,
+                    surveyAvailable,
+                    paymentPlanCreated
+            };
             MixPanelUtil.logEvent(getString(R.string.event_checkout_completed), params, values);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_checkout_completed), 1);
             MixPanelUtil.endTimer(getString(R.string.timer_checkout));
@@ -587,33 +601,35 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         navigateToWorkflow(workflowDTO);
     }
 
-    WorkflowServiceCallback continueCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            paymentStarted = false;
-            hideProgressDialog();
-            boolean expectsResult = false;
-            if (workflowDTO.getState().equals(NavigationStateConstants.SURVEYS_CHECKOUT)) {
-                expectsResult = true;
+    WorkflowServiceCallback getContinueCallback(final boolean paymentMade) {
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
             }
-            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, expectsResult,
-                    SurveyActivity.FLAG_SURVEY_FLOW, getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO));
 
-            completeCheckout();
-        }
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                paymentStarted = false;
+                hideProgressDialog();
+                boolean expectsResult = false;
+                if (workflowDTO.getState().equals(NavigationStateConstants.SURVEYS_CHECKOUT)) {
+                    expectsResult = true;
+                }
+                PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, expectsResult,
+                        SurveyActivity.FLAG_SURVEY_FLOW, getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO));
 
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            showErrorNotification(exceptionMessage);
-            Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
+                completeCheckout(paymentMade, expectsResult, completedPaymentPlan);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+                Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
+            }
+        };
+    }
 
     @Override
     public void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDTO,
@@ -713,11 +729,17 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
+            completedPaymentPlan = true;
             Bundle info = new Bundle();
             if (getAppointment() != null) {
                 DtoHelper.bundleDto(info, getAppointment());
             }
             PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, info);
+
+            boolean surveyAvailable = NavigationStateConstants.SURVEYS_CHECKOUT.equals(workflowDTO.getState());
+            if (!workflowDTO.getState().contains("checkout") || surveyAvailable) {
+                completeCheckout(false, surveyAvailable, completedPaymentPlan);
+            }
         }
 
         @Override

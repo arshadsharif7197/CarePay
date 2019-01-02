@@ -91,6 +91,7 @@ import com.carecloud.carepaylibray.translation.TranslatableFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.gson.Gson;
 import com.squareup.timessquare.CalendarPickerView;
 
@@ -121,6 +122,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     private WorkflowDTO paymentConfirmationWorkflow;
     private boolean paymentStarted = false;
+    private boolean completedPaymentPlan = false;
 
     private boolean isUserInteraction = false;
 
@@ -725,6 +727,10 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         Intent intent = new Intent(this, CompleteCheckActivity.class);
         intent.putExtra(CarePayConstants.EXTRA_BUNDLE, extra);
         startActivity(intent);
+
+        completeCheckout(paymentConfirmationWorkflow != null,
+                surveyDTO.getPayload().getSurvey() != null,
+                completedPaymentPlan);
     }
 
     @Override
@@ -750,11 +756,26 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void completeCheckout() {
+    public void completeCheckout(boolean paymentMade, boolean surveyAvailable, boolean paymentPlanCreated) {
         //Log Check-out Completed
+        boolean isGuest = !ValidationHelper.isValidEmail(getAppAuthorizationHelper().getCurrUser());
         if (getAppointment() != null) {
-            String[] params = {getString(R.string.param_practice_id), getString(R.string.param_appointment_id), getString(R.string.param_appointment_type), getString(R.string.param_is_guest)};
-            Object[] values = {getAppointment().getMetadata().getPracticeId(), getAppointmentId(), getAppointment().getPayload().getVisitType().getName(), false};
+            String[] params = {getString(R.string.param_practice_id),
+                    getString(R.string.param_appointment_id),
+                    getString(R.string.param_appointment_type),
+                    getString(R.string.param_is_guest),
+                    getString(R.string.param_payment_made),
+                    getString(R.string.param_survey_available),
+                    getString(R.string.param_payment_plan_created)
+            };
+            Object[] values = {getAppointment().getMetadata().getPracticeId(),
+                    getAppointmentId(),
+                    getAppointment().getPayload().getVisitType().getName(),
+                    isGuest,
+                    paymentMade,
+                    surveyAvailable,
+                    paymentPlanCreated
+            };
             MixPanelUtil.logEvent(getString(R.string.event_checkout_completed), params, values);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_checkout_completed), 1);
             MixPanelUtil.endTimer(getString(R.string.timer_checkout));
@@ -1032,6 +1053,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
+                completedPaymentPlan = true;
                 if (NavigationStateConstants.PATIENT_PAY_CHECKOUT.equals(workflowDTO.getState())) {
                     if (!hasDisplayedConfirm) {
                         //need to display payments again, so we need to display this payment plan confirmation first
@@ -1082,7 +1104,9 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                     completeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(completeIntent);
 
-                    completeCheckout();
+                    completeCheckout(paymentConfirmationWorkflow != null,
+                            NavigationStateConstants.SURVEYS_CHECKOUT.equals(workflowDTO.getState()),
+                            completedPaymentPlan);
 
                 }
             }
@@ -1109,6 +1133,10 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             hideProgressDialog();
             isCashPayment = true;
             showAllDone(workflowDTO);
+
+            completeCheckout(false,
+                    NavigationStateConstants.SURVEYS_CHECKOUT.equals(workflowDTO.getState()),
+                    completedPaymentPlan);
         }
 
         @Override

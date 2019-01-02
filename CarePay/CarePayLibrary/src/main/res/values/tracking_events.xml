@@ -97,6 +97,8 @@
     <string name="param_setting_id_available">Identity document upload available</string>
     <string name="param_setting_insurance_available">Insurance photo upload available</string>
     <string name="param_meds_photo">Took photo of med list</string>
+    <string name="param_survey_available">Survey available</string>
+    <string name="param_payment_plan_created">Payment plan created</string>
 
 
     <!--Incremental Properties-->

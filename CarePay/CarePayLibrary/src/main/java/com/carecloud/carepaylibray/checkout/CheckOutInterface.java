@@ -30,7 +30,7 @@ public interface CheckOutInterface extends AppointmentPrepaymentCallback, Fragme
 
     void showChooseProviderFragment();
 
-    void completeCheckout();
+    void completeCheckout(boolean paymentMade, boolean surveyAvailable, boolean paymentPlanCreated);
 
     void startSurveyFlow(WorkflowDTO workflowDTO);
 }
