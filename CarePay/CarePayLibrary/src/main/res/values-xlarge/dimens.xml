@@ -17,5 +17,4 @@
     <dimen name="availableHourListHeaderTextSize">14sp</dimen>
     <dimen name="apt_available_hours_list_row_padding">15dp</dimen>
     <dimen name="availableHourItemTextSize">14sp</dimen>
-
 </resources>

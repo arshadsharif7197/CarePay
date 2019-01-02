@@ -49,9 +49,9 @@
     <dimen name="respons_button_text_size">14sp</dimen>
 
     <!--Main-->
-    <dimen name="mainTitleHeaderMarginTop">8dp</dimen>
-    <dimen name="mainLayoutContainerHorizontalMargin">10dp</dimen>
-    <dimen name="mainLayoutContainerTopMargin">100dp</dimen>
+    <dimen name="mainTitleHeaderMarginTop">10dp</dimen>
+    <dimen name="mainLayoutContainerHorizontalMargin">20dp</dimen>
+    <dimen name="mainLayoutContainerTopMargin">140dp</dimen>
     <dimen name="home_button_width">210dp</dimen>
     <dimen name="home_button_height">170dp</dimen>
     <dimen name="homeItemVerticalPadding">20dp</dimen>
@@ -152,6 +152,18 @@
     <dimen name="paymentDetailAmountTextSize">12sp</dimen>
     <dimen name="paymentDetailDateTextSize">10sp</dimen>
 
+    <!--Survey Flow-->
+    <dimen name="questionNumberTextSize">15sp</dimen>
+    <dimen name="questionTextSize">24sp</dimen>
+    <dimen name="checkImageVerticalMargin">40dp</dimen>
+    <dimen name="checkImageSize">120dp</dimen>
+    <dimen name="successMessageTextSize">26sp</dimen>
+    <dimen name="successMessageBottomMargin">20dp</dimen>
+    <dimen name="divider1Width">400dp</dimen>
+    <dimen name="negativeContainerTopMargin">40dp</dimen>
+    <dimen name="surveyFeedbackButtonWidth">300dp</dimen>
+    <dimen name="checkoutMessageTextSize">30sp</dimen>
+
     <!--Payments Activity-->
     <dimen name="paymentPatientNameTextSize">18sp</dimen>
     <dimen name="findPatientButtonRightMargin">35dp</dimen>
@@ -234,18 +246,6 @@
     <dimen name="lastPaymentTextSize">12sp</dimen>
     <dimen name="payment_method_parent_layout_padding">@dimen/dashboardLabelStartMargin</dimen>
     <dimen name="paymentPlanNameTextSize">12sp</dimen>
-
-    <!--Survey Flow-->
-    <dimen name="questionNumberTextSize">15sp</dimen>
-    <dimen name="questionTextSize">24sp</dimen>
-    <dimen name="checkImageVerticalMargin">40dp</dimen>
-    <dimen name="checkImageSize">120dp</dimen>
-    <dimen name="successMessageTextSize">26sp</dimen>
-    <dimen name="successMessageBottomMargin">20dp</dimen>
-    <dimen name="divider1Width">400dp</dimen>
-    <dimen name="negativeContainerTopMargin">40dp</dimen>
-    <dimen name="surveyFeedbackButtonWidth">300dp</dimen>
-    <dimen name="checkoutMessageTextSize">30sp</dimen>
 
     <!--Payment Plan Detail-->
     <dimen name="paymentPlanDetailSectionHorizontalMargin">10dp</dimen>
@@ -521,7 +521,9 @@
     <dimen name="medicationListTopPadding">10dp</dimen>
     <dimen name="medicationAllergyItemTextSize">10sp</dimen>
     <dimen name="medicationAllergyItemMargin">10dp</dimen>
-    <dimen name="medicationAllergyItemVerticalPadding">2dp</dimen>
+    <dimen name="medicationAllergyItemVerticalPadding">4dp</dimen>
+    <dimen name="medicationAllergyItemRemoveButtonWidth">60dp</dimen>
+    <dimen name="medicationAllergyStrikeMargin">13dp</dimen>
     <dimen name="responsTotalLabelTopMargin">20dp</dimen>
     <dimen name="responsibilityListTopMargin">15dp</dimen>
     <dimen name="paymentMethodItemMargin">8dp</dimen>

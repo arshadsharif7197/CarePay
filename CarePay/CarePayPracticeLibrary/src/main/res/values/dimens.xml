@@ -166,7 +166,7 @@
     <dimen name="mainLayoutContainerHorizontalMargin">30dp</dimen>
     <dimen name="mainLayoutContainerTopMargin">170dp</dimen>
     <dimen name="homeItemVerticalPadding">40dp</dimen>
-    <dimen name="officeNewsHeaderTopMargin">25dp</dimen>
+    <dimen name="officeNewsHeaderTopMargin">60dp</dimen>
     <dimen name="officeNewsItemWidth">300dp</dimen>
     <dimen name="officeNewListItemTextSize">20sp</dimen>
     <dimen name="officeNewsHeaderTextSize">26sp</dimen>
@@ -280,18 +280,6 @@
     <dimen name="pickItemVerticalPadding">8dp</dimen>
     <dimen name="lineItemDetailButtonTextSize">13sp</dimen>
 
-    <!--Payments Activity-->
-    <dimen name="paymentPatientNameTextSize">24sp</dimen>
-    <dimen name="findPatientButtonRightMargin">50dp</dimen>
-    <dimen name="mainScreensTitleTextSize">22sp</dimen>
-    <dimen name="paymentContainerBottomMargin">10dp</dimen>
-    <dimen name="paymentContainerHorizontalMargin">120dp</dimen>
-    <dimen name="changeDateHorizontalPadding">20dp</dimen>
-    <dimen name="changeDateVerticalPadding">10dp</dimen>
-    <dimen name="listPatientsMarginTop">20dp</dimen>
-    <dimen name="patientItemHorizontalMargin">10dp</dimen>
-    <dimen name="paymentContainerTopMargin">19dp</dimen>
-
     <!--Dots Menu-->
     <dimen name="dotSize">3dp</dimen>
     <dimen name="dotHorizontalMargin">12dp</dimen>
@@ -372,6 +360,18 @@
     <dimen name="negativeContainerTopMargin">40dp</dimen>
     <dimen name="surveyFeedbackButtonWidth">300dp</dimen>
     <dimen name="checkoutMessageTextSize">40sp</dimen>
+
+    <!--Payments Activity-->
+    <dimen name="paymentPatientNameTextSize">24sp</dimen>
+    <dimen name="findPatientButtonRightMargin">50dp</dimen>
+    <dimen name="mainScreensTitleTextSize">22sp</dimen>
+    <dimen name="paymentContainerBottomMargin">10dp</dimen>
+    <dimen name="paymentContainerHorizontalMargin">120dp</dimen>
+    <dimen name="changeDateHorizontalPadding">20dp</dimen>
+    <dimen name="changeDateVerticalPadding">10dp</dimen>
+    <dimen name="listPatientsMarginTop">20dp</dimen>
+    <dimen name="patientItemHorizontalMargin">10dp</dimen>
+    <dimen name="paymentContainerTopMargin">19dp</dimen>
 
     <!--Payment Plan Detail-->
     <dimen name="paymentPlanDetailSectionHorizontalMargin">15dp</dimen>
@@ -641,6 +641,8 @@
     <dimen name="noAllergiesCheckBoxPadding">10dp</dimen>
     <dimen name="allergyTitleTextSize">17sp</dimen>
     <dimen name="allergyTitlePadding">10dp</dimen>
+    <dimen name="medicationAllergyItemRemoveButtonWidth">80dp</dimen>
+    <dimen name="medicationAllergyStrikeMargin">17dp</dimen>
     <dimen name="emptyMedicationPhotoLayoutTopMargin">20dp</dimen>
     <dimen name="medicationListHorizontalPadding">30dp</dimen>
     <dimen name="medicationListTopPadding">10dp</dimen>
