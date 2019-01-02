@@ -55,6 +55,9 @@
     <string name="event_retail_started">Launch Retail Store</string>
     <string name="event_retail_checkout">Start Retail Checkout</string>
     <string name="event_qr_code">QR Code</string>
+    <string name="event_change_name">Change Name clicked</string>
+    <string name="event_change_email">Change Email clicked</string>
+    <string name="event_change_password">Change Password Clicked</string>
 
 
     <!--Parameters-->

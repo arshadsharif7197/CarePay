@@ -29,6 +29,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadD
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadResponseDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -214,6 +215,9 @@ public class UpdateNameFragment extends DemographicsBaseSettingsFragment {
             ApplicationPreferences.getInstance().setUserFullName(StringUtil
                     .getCapitalizedUserName(personalDetails.getFirstName(), personalDetails.getLastName()));
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
+
+            MixPanelUtil.logEvent(getString(R.string.event_change_name));
+
             getActivity().onBackPressed();
         }
 
