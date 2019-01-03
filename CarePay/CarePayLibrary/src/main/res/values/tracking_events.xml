@@ -58,6 +58,9 @@
     <string name="event_retail_checkout">Start Retail Checkout</string>
     <string name="event_qr_code">QR Code</string>
     <string name="event_payment_skipped">Pay Later Selected</string>
+    <string name="event_survey_started">Survey Started</string>
+    <string name="event_survey_canceled">Survey Cancelled</string>
+    <string name="event_survey_completed">Survey Completed</string>
 
 
     <!--Parameters-->
@@ -102,6 +105,8 @@
     <string name="param_meds_photo">Took photo of med list</string>
     <string name="param_survey_available">Survey available</string>
     <string name="param_payment_plan_created">Payment plan created</string>
+    <string name="param_survey_rating">Rating Given</string>
+    <string name="param_survey_access">Access Mode</string>
 
 
     <!--Incremental Properties-->
@@ -154,5 +159,7 @@
     <string name="payment_credit_card">Credit Card</string>
     <string name="login_password">Password</string>
     <string name="login_touch">Touch ID</string>
+    <string name="survey_access_mode_checkout">Check out</string>
+    <string name="survey_access_mode_standard">Standard</string>
 
 </resources>

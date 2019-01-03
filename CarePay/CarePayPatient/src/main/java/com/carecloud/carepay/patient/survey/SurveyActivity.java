@@ -11,17 +11,19 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BackPressedFragmentInterface;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepaylibray.survey.model.SurveyDTO;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
+import com.carecloud.carepaylibray.survey.model.SurveyDTO;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,6 +49,7 @@ public class SurveyActivity extends BasePatientActivity implements FragmentActiv
             if (surveyDto.getPayload().getSurvey().getResponses() == null ||
                     surveyDto.getPayload().getSurvey().getResponses().isEmpty()) {
                 replaceFragment(SurveyFragment.newInstance(patientId, comesFromNotifications), false);
+                logSurveyEvent(getString(R.string.event_survey_started));
             } else {
                 surveyDto.getPayload().getSurvey().setAlreadyFilled();
                 replaceFragment(SurveyResultFragment.newInstance(patientId, comesFromNotifications), false);
@@ -72,6 +75,7 @@ public class SurveyActivity extends BasePatientActivity implements FragmentActiv
             fragment.setCallback(new ConfirmationCallback() {
                 @Override
                 public void onConfirm() {
+                    logSurveyEvent(getString(R.string.event_survey_canceled));
                     if (comesFromNotifications) {
                         finish();
                     } else {
@@ -138,5 +142,24 @@ public class SurveyActivity extends BasePatientActivity implements FragmentActiv
     @Override
     public DTO getDto() {
         return surveyDto;
+    }
+
+    private void logSurveyEvent(String event) {
+        AppointmentDTO appointmentDTO = surveyDto.getPayload().getSurvey().getAppointment();
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_provider_id),
+                getString(R.string.param_location_id),
+                getString(R.string.param_is_guest),
+                getString(R.string.param_survey_access)
+        };
+        Object[] values = {surveyDto.getPayload().getSurvey().getMetadata().getPracticeId(),
+                appointmentDTO.getPayload().getProvider().getGuid(),
+                appointmentDTO.getPayload().getLocation().getGuid(),
+                false,
+                comesFromNotifications ?
+                        getString(R.string.survey_access_mode_standard) :
+                        getString(R.string.survey_access_mode_checkout)
+        };
+        MixPanelUtil.logEvent(event, params, values);
     }
 }

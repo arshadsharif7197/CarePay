@@ -18,11 +18,13 @@ import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.survey.model.SurveyDTO;
 import com.carecloud.carepaylibray.survey.model.SurveyModel;
 import com.carecloud.carepaylibray.survey.model.SurveyQuestionDTO;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -169,6 +171,7 @@ public class SurveyResultFragment extends BaseFragment {
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
+                logSurveyCompleted();
                 if (!showFeedBackLayout || survey.isZeroAnswers()) {
                     showOkButton(workflowDTO);
                 } else {
@@ -218,4 +221,24 @@ public class SurveyResultFragment extends BaseFragment {
         }
         return surveyResponse;
     }
+
+    private void logSurveyCompleted() {
+        AppointmentDTO appointmentDTO = surveyDto.getPayload().getSurvey().getAppointment();
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_provider_id),
+                getString(R.string.param_location_id),
+                getString(R.string.param_is_guest),
+                getString(R.string.param_survey_rating),
+                getString(R.string.param_survey_access)
+        };
+        Object[] values = {surveyDto.getPayload().getSurvey().getMetadata().getPracticeId(),
+                appointmentDTO.getPayload().getProvider().getGuid(),
+                appointmentDTO.getPayload().getLocation().getGuid(),
+                false,
+                getRateAverage(surveyDto.getPayload().getSurvey()),
+                getString(R.string.survey_access_mode_checkout)
+        };
+        MixPanelUtil.logEvent(getString(R.string.event_survey_completed), params, values);
+    }
+
 }
