@@ -594,7 +594,12 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getContinueTransition();
         getWorkflowServiceHelper().execute(transitionDTO, continueCallback, queryMap, header);
 
-        MixPanelUtil.logEvent(getString(R.string.event_payment_skipped));
+        double amount = 0D;
+        for(PendingBalancePayloadDTO balancePayloadDTO : pendingBalanceDTO.getPayload()){
+            amount += balancePayloadDTO.getAmount();
+        }
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_skipped), getString(R.string.param_balance_amount), amount);
     }
 
     @Override

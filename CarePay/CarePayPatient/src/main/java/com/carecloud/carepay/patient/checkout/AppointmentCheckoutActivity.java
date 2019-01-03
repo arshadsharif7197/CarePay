@@ -257,7 +257,12 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
                 .getPaymentsTransitions().getContinueTransition();
         getWorkflowServiceHelper().execute(transitionDTO, getContinueCallback(false), queryMap, header);
 
-        MixPanelUtil.logEvent(getString(R.string.event_payment_skipped));
+        double amount = 0D;
+        for(PendingBalancePayloadDTO balancePayloadDTO : pendingBalanceDTO.getPayload()){
+            amount += balancePayloadDTO.getAmount();
+        }
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_skipped), getString(R.string.param_balance_amount), amount);
     }
 
     @Override

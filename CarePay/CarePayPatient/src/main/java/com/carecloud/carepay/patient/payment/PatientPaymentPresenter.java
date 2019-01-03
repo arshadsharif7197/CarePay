@@ -122,7 +122,12 @@ public class PatientPaymentPresenter extends PaymentPresenter
     public void onPayLaterClicked(PendingBalanceDTO pendingBalanceDTO) {
         viewHandler.exitPaymentProcess(true);
 
-        MixPanelUtil.logEvent(getString(R.string.event_payment_skipped));
+        double amount = 0D;
+        for(PendingBalancePayloadDTO balancePayloadDTO : pendingBalanceDTO.getPayload()){
+            amount += balancePayloadDTO.getAmount();
+        }
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_skipped), getString(R.string.param_balance_amount), amount);
     }
 
     @Override
