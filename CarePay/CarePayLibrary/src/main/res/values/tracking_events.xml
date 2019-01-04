@@ -124,6 +124,7 @@
     <string name="count_prepayments_completed">Total Pre-Payments Made</string>
     <string name="count_payments_scheduled">Total Scheduled Payments Scheduled</string>
     <string name="count_scheduled_payments_deleted">Total Scheduled Payments Deleted</string>
+
     <string name="total_payments_amount">Total Payments Amount</string>
 
 
