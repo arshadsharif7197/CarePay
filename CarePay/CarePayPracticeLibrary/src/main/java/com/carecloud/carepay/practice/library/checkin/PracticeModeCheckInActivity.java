@@ -1041,13 +1041,17 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         });
         displayDialogFragment(fragment, false);
 
-        String[] params = {getString(com.carecloud.carepaylibrary.R.string.param_practice_id),
-                getString(com.carecloud.carepaylibrary.R.string.param_payment_plan_id),
-                getString(com.carecloud.carepaylibrary.R.string.param_payment_plan_amount)};
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_payment_plan_id),
+                getString(R.string.param_payment_plan_amount),
+                getString(R.string.param_patient_id)
+        };
         Object[] values = {
                 paymentPlanDTO.getMetadata().getPracticeId(),
                 paymentPlanDTO.getMetadata().getPaymentPlanId(),
-                paymentPlanDTO.getPayload().getAmount()};
+                paymentPlanDTO.getPayload().getAmount(),
+                paymentPlanDTO.getMetadata().getPatientId()
+        };
         MixPanelUtil.logEvent(getString(R.string.event_paymentplan_onetime_payment), params, values);
     }
 
