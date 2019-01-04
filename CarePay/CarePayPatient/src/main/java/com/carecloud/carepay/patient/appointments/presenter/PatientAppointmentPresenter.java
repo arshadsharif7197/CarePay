@@ -642,7 +642,18 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                 .newInstance(paymentsModel, amount);
         viewHandler.navigateToFragment(prepaymentFragment, true);
 
-        MixPanelUtil.logEvent(getString(R.string.event_payment_start_prepayment));
+        String[] params = {getString(R.string.param_payment_amount),
+                getString(R.string.param_provider_id),
+                getString(R.string.param_practice_id),
+                getString(R.string.param_location_id)
+        };
+        Object[] values = {amount,
+                scheduleAppointmentRequestDTO.getAppointment().getProviderGuid(),
+                practiceId,
+                scheduleAppointmentRequestDTO.getAppointment().getLocationGuid()
+        };
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_start_prepayment), params, values);
     }
 
     @Override
