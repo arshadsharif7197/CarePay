@@ -608,7 +608,9 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                 .newInstance(paymentsModel, owedAmount);
         displayDialogFragment(dialog, false);
 
-        MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment));
+        MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment),
+                getString(R.string.param_practice_id),
+                selectedBalance.getMetadata().getPracticeId());
     }
 
     @Override

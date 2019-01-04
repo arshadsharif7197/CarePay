@@ -223,7 +223,14 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         replaceFragment(PatientPaymentMethodFragment
                 .newInstance(paymentsModel, amount, false), true);
         displayToolbar(false, toolBarTitle);
-        MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment));
+        String[] params = {getString(R.string.param_balance_amount),
+                getString(R.string.param_practice_id)
+        };
+
+        Object[] values = {amount,
+                selectedBalancesItem.getMetadata().getPracticeId()
+        };
+        MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment), params, values);
     }
 
     @Override

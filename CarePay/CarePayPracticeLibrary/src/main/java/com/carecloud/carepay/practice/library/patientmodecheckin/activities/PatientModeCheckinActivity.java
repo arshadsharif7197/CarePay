@@ -383,7 +383,9 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 .newInstance(paymentDTO, owedAmount);
         displayDialogFragment(dialog, false);
 
-        MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment));
+        MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment),
+                getString(R.string.param_practice_id),
+                selectedBalance.getMetadata().getPracticeId());
     }
 
     @Override
@@ -392,7 +394,13 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 .newInstance(paymentsModel, amount);
         displayDialogFragment(fragment, false);
 
-        MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment));
+        String[] params = {getString(R.string.param_balance_amount),
+                getString(R.string.param_practice_id)
+        };
+        Object[] values = {amount,
+                paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getPracticeId()
+        };
+        MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment), params, values);
     }
 
     @Override

@@ -5,12 +5,10 @@
     <string name="event_updated_notifications">Updated Notification Settings</string>
     <string name="event_help_clicked">Help Button Clicked</string>
     <string name="event_message_reply">Message Sent</string>
-    <string name="event_payment_make_full_payment">Full Payment Selected</string>
-    <string name="event_payment_make_partial_payment">Partial Payment Selected</string>
     <string name="event_retail_ended">Left Retail Store</string>
     <string name="event_change_name">Change Name clicked</string>
     <string name="event_change_email">Change Email clicked</string>
-    <string name="event_change_password">Change Password Clicked</string>
+    <string name="event_change_password">Change Password clicked</string>
 
 
     <!--Parameter Events-->
@@ -61,6 +59,8 @@
     <string name="event_survey_started">Survey Started</string>
     <string name="event_survey_canceled">Survey Cancelled</string>
     <string name="event_survey_completed">Survey Completed</string>
+    <string name="event_payment_make_full_payment">Full Payment Selected</string>
+    <string name="event_payment_make_partial_payment">Partial Payment Selected</string>
 
 
     <!--Parameters-->
@@ -101,7 +101,7 @@
     <string name="param_payment_made">Payment made</string>
     <string name="param_reason_visit">Reason for visit used</string>
     <string name="param_setting_id_available">Identity document upload available</string>
-    <string name="param_setting_insurance_available">Insurance photo upload available</string>
+    <string name="param_setting_insurance_available">Insurance available</string>
     <string name="param_meds_photo">Took photo of med list</string>
     <string name="param_survey_available">Survey available</string>
     <string name="param_payment_plan_created">Payment plan created</string>
