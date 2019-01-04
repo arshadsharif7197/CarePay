@@ -222,8 +222,10 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
             case MODE_EDIT:
                 MixPanelUtil.logEvent(getString(R.string.event_paymentplan_edited), params, values);
                 break;
-            case MODE_ADD:
             case MODE_CREATE:
+                MixPanelUtil.logEvent(getString(R.string.event_paymentplan_submitted), params, values);
+                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payment_plans_created), 1);
+            case MODE_ADD:
             default:
                 MixPanelUtil.logEvent(getString(R.string.event_paymentplan_submitted), params, values);
         }

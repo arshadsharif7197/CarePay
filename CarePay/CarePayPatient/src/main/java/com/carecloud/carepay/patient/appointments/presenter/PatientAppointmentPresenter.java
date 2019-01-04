@@ -728,6 +728,11 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                     .newInstance(workflowDTO, paymentType,
                             Label.getLabel("add_appointment_back_to_appointments_button"));
             viewHandler.displayDialogFragment(confirmationFragment, false);
+
+            if(paymentType.equals(Label.getLabel("appointment.confirmationScreen.type.label.paymentType"))){
+                //this is a prepayment
+                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_prepayments_completed), 1);
+            }
         }
     }
 

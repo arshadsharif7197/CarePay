@@ -41,6 +41,7 @@ public class SurveyResultFragment extends BaseFragment {
     private SurveyDTO surveyDto;
     private boolean showFeedBackLayout;
     private EditText feedbackEditText;
+    private float average;
 
 
     public static SurveyResultFragment newInstance() {
@@ -62,7 +63,7 @@ public class SurveyResultFragment extends BaseFragment {
         super.onCreate(icicle);
         surveyDto = (SurveyDTO) callback.getDto();
         SurveyModel surveyModel = surveyDto.getPayload().getSurvey();
-        float average = getRateAverage(surveyModel);
+        average = getRateAverage(surveyModel);
         if (average >= surveyDto.getPayload().getSurveySettings().getSatisfiedRate()
                 || surveyModel.isZeroAnswers()) {
             sendResponse(surveyModel, false);
@@ -235,10 +236,17 @@ public class SurveyResultFragment extends BaseFragment {
                 appointmentDTO.getPayload().getProvider().getGuid(),
                 appointmentDTO.getPayload().getLocation().getGuid(),
                 false,
-                getRateAverage(surveyDto.getPayload().getSurvey()),
+                average,
                 getString(R.string.survey_access_mode_checkout)
         };
         MixPanelUtil.logEvent(getString(R.string.event_survey_completed), params, values);
+        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_surveys_completed), 1);
+        if(average >= surveyDto.getPayload().getSurveySettings().getSatisfiedRate()
+                || surveyDto.getPayload().getSurvey().isZeroAnswers()){
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_satisfied_surveys), 1);
+        }else{
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_unsatisfied_surveys), 1);
+        }
     }
 
 }

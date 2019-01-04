@@ -547,6 +547,9 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             } else {
                 paymentConfirmationWorkflow = workflowDTO;
                 completePaymentProcess(workflowDTO);
+
+                //this is a prepayment
+                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_prepayments_completed), 1);
             }
         }
     }

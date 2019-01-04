@@ -57,6 +57,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
     private EditText feedbackEditText;
     private Button submitButton;
     private boolean comesFromNotification;
+    private float average;
 
     public static SurveyResultFragment newInstance(String patientId, boolean comesFromNotifications) {
         Bundle args = new Bundle();
@@ -83,7 +84,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         comesFromNotification = getArguments().getBoolean(CarePayConstants.NOTIFICATIONS_FLOW);
         surveyDto = (SurveyDTO) callback.getDto();
         SurveyModel surveyModel = surveyDto.getPayload().getSurvey();
-        float average = getRateAverage(surveyModel);
+        average = getRateAverage(surveyModel);
         if (!surveyModel.isAlreadyFilled()) {
             if (average >= surveyDto.getPayload().getSurveySettings().getSatisfiedRate()
                     || surveyModel.isZeroAnswers()) {
@@ -441,12 +442,19 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
                 appointmentDTO.getPayload().getProvider().getGuid(),
                 appointmentDTO.getPayload().getLocation().getGuid(),
                 false,
-                getRateAverage(surveyDto.getPayload().getSurvey()),
+                average,
                 comesFromNotification ?
                         getString(R.string.survey_access_mode_standard) :
                         getString(R.string.survey_access_mode_checkout)
         };
         MixPanelUtil.logEvent(getString(R.string.event_survey_completed), params, values);
+        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_surveys_completed), 1);
+        if(average >= surveyDto.getPayload().getSurveySettings().getSatisfiedRate()
+                || surveyDto.getPayload().getSurvey().isZeroAnswers()){
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_satisfied_surveys), 1);
+        }else{
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_unsatisfied_surveys), 1);
+        }
     }
 
 }

@@ -115,6 +115,15 @@
     <string name="count_checkin_completed">Total Check-ins Completed</string>
     <string name="count_checkout_completed">Total Check-outs Completed</string>
     <string name="count_payments_completed">Total Payments Made</string>
+    <string name="count_surveys_completed">Total Surveys Completed</string>
+    <string name="count_satisfied_surveys">Total Satisfied Surveys Completed</string>
+    <string name="count_unsatisfied_surveys">Total Unsatisfied Surveys Completed</string>
+    <string name="count_payment_plans_created">Total Payment Plans Created</string>
+    <string name="count_payment_plans_cancelled">Total Payment Plans Cancelled</string>
+    <string name="count_one_time_payments_completed">Total One-Time Payments Made</string>
+    <string name="count_prepayments_completed">Total Pre-Payments Made</string>
+    <string name="count_payments_scheduled">Total Scheduled Payments Scheduled</string>
+    <string name="count_scheduled_payments_deleted">Total Scheduled Payments Deleted</string>
     <string name="total_payments_amount">Total Payments Amount</string>
 
 
@@ -133,7 +142,7 @@
     <string name="people_has_insurance_doc">Has Insurance Document</string>
     <string name="people_enabled_push">Has Push Notifications Enabled</string>
     <string name="people_enabled_email">Has Email Notifications Enabled</string>
-    <string name="people_enabled_sms">Has SMS Notifications Enabled</string>
+    <string name="people_enabled_sms">Has Text Notifications Enabled</string>
 
 
     <!--Enum Values-->

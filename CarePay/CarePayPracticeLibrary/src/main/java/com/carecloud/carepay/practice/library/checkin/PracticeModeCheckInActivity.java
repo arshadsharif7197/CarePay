@@ -1153,6 +1153,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
                 DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
         showSuccessToast(message);
 
+        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payments_scheduled), 1);
     }
 
     @Override
@@ -1165,6 +1166,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
                         .setDateRaw(scheduledPaymentPayload.getPaymentDate())
                         .toStringWithFormatMmSlashDdSlashYyyy()));
         completePaymentProcess(workflowDTO);
+
+        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_scheduled_payments_deleted), 1);
     }
 
     @Override
@@ -1186,6 +1189,10 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
             PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
                     .newInstance(workflowDTO, isOneTimePayment);
             displayDialogFragment(confirmationFragment, false);
+
+            if(isOneTimePayment){
+                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_one_time_payments_completed), 1);
+            }
         }
     }
 

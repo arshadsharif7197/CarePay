@@ -652,6 +652,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                 DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
         showSuccessToast(message);
 
+        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payments_scheduled), 1);
+
     }
 
     @Override
@@ -665,6 +667,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                         .setDateRaw(scheduledPaymentPayload.getPaymentDate())
                         .toStringWithFormatMmSlashDdSlashYyyy()));
         completePaymentProcess(workflowDTO);
+
+        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_scheduled_payments_deleted), 1);
     }
 
     @Override
@@ -687,6 +691,10 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
             PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
                     .newInstance(workflowDTO, isOneTimePayment);
             displayDialogFragment(confirmationFragment, false);
+
+            if(isOneTimePayment){
+                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_one_time_payments_completed), 1);
+            }
         }
     }
 

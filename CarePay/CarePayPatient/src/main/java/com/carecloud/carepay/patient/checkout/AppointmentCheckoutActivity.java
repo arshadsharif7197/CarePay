@@ -455,6 +455,9 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
                 getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment.newInstance(workflowDTO);
                 displayDialogFragment(confirmationFragment, false);
+
+                //this is a prepayment
+                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_prepayments_completed), 1);
             }
         }
     }
