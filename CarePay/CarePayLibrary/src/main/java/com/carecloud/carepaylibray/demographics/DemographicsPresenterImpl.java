@@ -172,12 +172,14 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             default:
                 navigateToDemographicFragment(currentDemographicStep);
 
-                if (currentDemographicStep == 1) {
+                if (currentDemographicStep == PERSONAL_INFO) {
                     isResume = false;
                     //Log Check-in Started
                     if (getAppointment() != null) {
                         MixPanelUtil.logEvent(getString(R.string.event_checkin_started), params, values);
                     }
+
+                    MixPanelUtil.startTimer(getString(R.string.timer_demographics));
                 }
                 break;
         }
@@ -221,6 +223,8 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     public void navigateToConsentForms(WorkflowDTO workflowDTO) {
         FormsFragment fragment = FormsFragment.newInstance(workflowDTO);
         navigateToFragment(fragment, true);
+
+        MixPanelUtil.startTimer(getString(R.string.timer_consent_forms));
     }
 
     @Override
@@ -231,6 +235,8 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         IntakeFormsFragment fragment = new IntakeFormsFragment();
         fragment.setArguments(bundle);
         navigateToFragment(fragment, true);
+
+        MixPanelUtil.startTimer(getString(R.string.timer_intake_forms));
     }
 
     @Override
@@ -262,9 +268,11 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         }
         navigateToFragment(fragment, true);
 
-        if(!checkEmpty){
+        if (!checkEmpty) {
             showMedicationAllergySearchFragment(MedicationAllergySearchFragment.MEDICATION_ITEM);
         }
+
+        MixPanelUtil.startTimer(getString(R.string.timer_medications));
     }
 
     @Override
@@ -280,9 +288,11 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         }
         navigateToFragment(fragment, true);
 
-        if(!checkEmpty){
+        if (!checkEmpty) {
             showMedicationAllergySearchFragment(MedicationAllergySearchFragment.ALLERGY_ITEM);
         }
+
+        MixPanelUtil.startTimer(getString(R.string.timer_allergies));
     }
 
     @Override
@@ -442,6 +452,12 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             fragment.setArguments(args);
 
             navigateToFragment(fragment, currentDemographicStep != 1);
+        }
+
+        if (step == IDENTITY) {
+            MixPanelUtil.startTimer(getString(R.string.timer_identification_docs));
+        } else if (step == INSURANCE){
+            MixPanelUtil.startTimer(getString(R.string.timer_health_insurance));
         }
     }
 

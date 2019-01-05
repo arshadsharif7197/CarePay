@@ -449,12 +449,13 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         };
         MixPanelUtil.logEvent(getString(R.string.event_survey_completed), params, values);
         MixPanelUtil.incrementPeopleProperty(getString(R.string.count_surveys_completed), 1);
-        if(average >= surveyDto.getPayload().getSurveySettings().getSatisfiedRate()
-                || surveyDto.getPayload().getSurvey().isZeroAnswers()){
+        if (average >= surveyDto.getPayload().getSurveySettings().getSatisfiedRate()
+                || surveyDto.getPayload().getSurvey().isZeroAnswers()) {
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_satisfied_surveys), 1);
-        }else{
+        } else {
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_unsatisfied_surveys), 1);
         }
+        MixPanelUtil.endTimer(getString(R.string.timer_survey));
     }
 
 }

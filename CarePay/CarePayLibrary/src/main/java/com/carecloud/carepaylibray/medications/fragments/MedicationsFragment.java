@@ -397,7 +397,6 @@ public class MedicationsFragment extends BaseCheckinFragment implements
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            onUpdate(callback, workflowDTO);
 
             List<MedicationsObject> modifiedMeds = getAllModifiedMedications();
             if (!modifiedMeds.isEmpty() || (hasPhoto() && !StringUtil.isNullOrEmpty(photoPath))) {
@@ -411,6 +410,9 @@ public class MedicationsFragment extends BaseCheckinFragment implements
                 MixPanelUtil.logEvent(getString(R.string.event_updated_meds), params, values);
             }
 
+            MixPanelUtil.endTimer(getString(R.string.timer_medications));
+
+            onUpdate(callback, workflowDTO);
         }
 
         @Override

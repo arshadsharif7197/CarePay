@@ -172,6 +172,8 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     private void showNextAppointmentFragment(String appointmentId) {
         replaceFragment(NextAppointmentFragment.newInstance(appointmentId), shouldAddBackStack);
+
+        MixPanelUtil.startTimer(getString(R.string.timer_next_appt));
     }
 
     private void showResponsibilityFragment() {
@@ -179,6 +181,8 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         replaceFragment(ResponsibilityFragment
                 .newInstance(paymentsModel, null, false,
                         Label.getLabel("checkout_responsibility_title")), shouldAddBackStack);
+
+        MixPanelUtil.startTimer(getString(R.string.timer_payment_checkout));
     }
 
     @Override
@@ -258,7 +262,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         getWorkflowServiceHelper().execute(transitionDTO, getContinueCallback(false), queryMap, header);
 
         double amount = 0D;
-        for(PendingBalancePayloadDTO balancePayloadDTO : pendingBalanceDTO.getPayload()){
+        for (PendingBalancePayloadDTO balancePayloadDTO : pendingBalanceDTO.getPayload()) {
             amount += balancePayloadDTO.getAmount();
         }
 
@@ -274,7 +278,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
                 getString(R.string.param_practice_id)
         };
         Object[] values = {amount,
-            paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getPracticeId()
+                paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getPracticeId()
         };
         MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment), params, values);
     }
@@ -609,6 +613,9 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
             MixPanelUtil.logEvent(getString(R.string.event_checkout_completed), params, values);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_checkout_completed), 1);
             MixPanelUtil.endTimer(getString(R.string.timer_checkout));
+            if (paymentMade) {
+                MixPanelUtil.endTimer(getString(R.string.timer_payment_checkout));
+            }
         }
     }
 

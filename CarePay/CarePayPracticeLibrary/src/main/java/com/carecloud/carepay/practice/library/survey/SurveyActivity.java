@@ -228,6 +228,10 @@ public class SurveyActivity extends BasePracticeActivity implements FragmentActi
                 getString(R.string.survey_access_mode_checkout)
         };
         MixPanelUtil.logEvent(event, params, values);
+
+        if (getString(R.string.event_survey_started).equals(event)) {
+            MixPanelUtil.startTimer(getString(R.string.timer_survey));
+        }
     }
 
 }

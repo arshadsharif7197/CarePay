@@ -36,6 +36,7 @@ import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
 import com.carecloud.carepaylibray.translation.TranslatableFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -314,6 +315,7 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
                 hideProgressDialog();
                 if(appointmentMade){
                     onAppointmentRequestSuccess();
+                    MixPanelUtil.endTimer(getString(R.string.timer_next_appt));
                 }
                 String state = workflowDTO.getState();
                 if (NavigationStateConstants.APPOINTMENTS.equals(state)

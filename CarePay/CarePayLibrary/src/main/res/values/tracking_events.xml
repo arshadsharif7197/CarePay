@@ -131,6 +131,18 @@
     <!--Incremental Properties-->
     <string name="timer_checkin">Check-in Time</string>
     <string name="timer_checkout">Check-out Time</string>
+    <string name="timer_shopping">Shopping Session Time</string>
+    <string name="timer_survey">Survey Time</string>
+    <string name="timer_medications">Check-in Medications Time</string>
+    <string name="timer_allergies">Check-in Allergies Time</string>
+    <string name="timer_demographics">Check-in Demographics Time</string>
+    <string name="timer_consent_forms">Check-in Patient Forms Time</string>
+    <string name="timer_intake_forms">Check-in Intake Forms Time</string>
+    <string name="timer_identification_docs">Check-in Identification Time</string>
+    <string name="timer_health_insurance">Check-in Health Insurance Time</string>
+    <string name="timer_next_appt">Check-out Next Appointment Time</string>
+    <string name="timer_payment_checkout">Check-out Payment Time</string>
+
 
 
     <!--People Properties-->

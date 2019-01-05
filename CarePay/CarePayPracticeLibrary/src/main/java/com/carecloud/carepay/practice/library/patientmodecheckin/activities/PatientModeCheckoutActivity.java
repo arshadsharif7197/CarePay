@@ -306,6 +306,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     private void showNextAppointmentFragment(String appointmentId) {
         addFragment(NextAppointmentFragment.newInstance(appointmentId), true);
+
+        MixPanelUtil.startTimer(getString(R.string.timer_next_appt));
     }
 
     private void showResponsibilityFragment() {
@@ -316,6 +318,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         responsibilityFragment.setArguments(bundle);
 
         replaceFragment(responsibilityFragment, true);
+
+        MixPanelUtil.startTimer(getString(R.string.timer_payment_checkout));
     }
 
     @Override
@@ -598,7 +602,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         getWorkflowServiceHelper().execute(transitionDTO, continueCallback, queryMap, header);
 
         double amount = 0D;
-        for(PendingBalancePayloadDTO balancePayloadDTO : pendingBalanceDTO.getPayload()){
+        for (PendingBalancePayloadDTO balancePayloadDTO : pendingBalanceDTO.getPayload()) {
             amount += balancePayloadDTO.getAmount();
         }
 
@@ -789,6 +793,9 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             MixPanelUtil.logEvent(getString(R.string.event_checkout_completed), params, values);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_checkout_completed), 1);
             MixPanelUtil.endTimer(getString(R.string.timer_checkout));
+            if (paymentMade) {
+                MixPanelUtil.endTimer(getString(R.string.timer_payment_checkout));
+            }
         }
     }
 

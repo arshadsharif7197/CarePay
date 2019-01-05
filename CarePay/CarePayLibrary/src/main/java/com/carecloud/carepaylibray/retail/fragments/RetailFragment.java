@@ -177,6 +177,7 @@ public class RetailFragment extends BaseFragment {
         Object[] values = {retailPractice.getPracticeId(), retailPractice.getStore().getStoreId()};
 
         MixPanelUtil.logEvent(getString(R.string.event_retail_started), params, values);
+        MixPanelUtil.startTimer(getString(R.string.timer_shopping));
     }
 
     private void initToolbar(View view) {
@@ -251,7 +252,7 @@ public class RetailFragment extends BaseFragment {
             }
             if (loadedReturnUrl) {
                 webView.clearHistory();
-                if(url.contains("#!/~/orderConfirmation")){//shopping session complete here
+                if (url.contains("#!/~/orderConfirmation")) {//shopping session complete here
                     loadedReturnUrl = false;//to allow continue shopping after a payment was made
                     launchUrl = null;//reset launch url at this point
                 }
@@ -314,6 +315,7 @@ public class RetailFragment extends BaseFragment {
             shoppingWebView.goBack();
             return true;
         }
+        MixPanelUtil.endTimer(getString(R.string.timer_shopping));
         return false;
     }
 
@@ -329,7 +331,7 @@ public class RetailFragment extends BaseFragment {
                 refreshLayout.setRefreshing(false);
                 RetailModel retailModel = DtoHelper.getConvertedDTO(RetailModel.class, workflowDTO);
                 retailPractice = retailModel.getPayload().getRetailPracticeList().get(0);
-                if(!skipUrlLoading){
+                if (!skipUrlLoading) {
                     shoppingWebView.loadUrl(followUpUrl);
                 }
             }
