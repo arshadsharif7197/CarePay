@@ -169,6 +169,9 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
      * @return label
      */
     public static String getPaymentMethod(IntegratedPatientPaymentPayload patientPaymentPayload) {
+        if(patientPaymentPayload.getPaymentMethod() == null){
+            return Label.getLabel("payment_method_creditcard");
+        }
         switch (patientPaymentPayload.getPaymentMethod().getPaymentMethodType()) {
             case PAYMENT_METHOD_ACCOUNT:
                 return Label.getLabel("payment_method_account");
