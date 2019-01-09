@@ -135,15 +135,17 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
             }
         });
 
-        attachmentInput = view.findViewById(R.id.attachmentEditText);
-
-        View uploadButton = view.findViewById(R.id.upload_button);
-        uploadButton.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener selectFileListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 selectFile();
             }
-        });
+        };
+        attachmentInput = view.findViewById(R.id.attachmentEditText);
+        attachmentInput.setOnClickListener(selectFileListener);
+
+        View uploadButton = view.findViewById(R.id.upload_button);
+        uploadButton.setOnClickListener(selectFileListener);
 
         clearAttachmentButton = view.findViewById(R.id.clearBtn);
         clearAttachmentButton.setOnClickListener(new View.OnClickListener() {
@@ -305,7 +307,9 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
                     attachmentPostModel = new AttachmentPostModel();
                     attachmentPostModel.setNodeId(uploadModel.getNodeId());
                     attachmentPostModel.setDescription(file.getName());
-                    attachmentPostModel.setFormat(MimeTypeMap.getFileExtensionFromUrl(file.getAbsolutePath()));
+                    attachmentPostModel.setFormat(MimeTypeMap.getSingleton()
+                            .getMimeTypeFromExtension(MimeTypeMap
+                                    .getFileExtensionFromUrl(file.getAbsolutePath())));
 
                     attachmentFile = null;
                     postNewMessage(provider, subjectInput.getText().toString(), messageInput.getText().toString());

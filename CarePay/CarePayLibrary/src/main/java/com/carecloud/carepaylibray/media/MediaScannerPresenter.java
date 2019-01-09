@@ -49,6 +49,27 @@ public class MediaScannerPresenter {
     private static final String ACTION_CANCEL = "demographics_cancel_label";
     private static final String ACTION_FILE = "demographics_select_file_option";
 
+    private static final String[] SUPPORTED_MIME_TYPES = {
+            "application/json",
+            "application/pdf",
+            "application/xml",
+            "application/zip",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "application/vnd.ms-excel",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.template",
+            "application/vnd.ms-powerpoint",
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            "application/vnd.openxmlformats-officedocument.presentationml.template",
+            "text/plain",
+            "text/html",
+            "text/csv",
+            "image/jpeg",
+            "image/png",
+            "image/gif",
+            "image/tiff"
+    };
 
     public static int captureViewId;
 
@@ -301,12 +322,10 @@ public class MediaScannerPresenter {
             return;
         }
 
-        String[] mimeTypes = {"image/jpeg", "image/png", "application/pdf", "application/zip",
-                "application/msword", "application/vnd.ms-excel", "text/plain", "text/csv"};
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("*/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, SUPPORTED_MIME_TYPES);
 
         mediaViewInterface.handleStartActivityForResult(intent, REQUEST_CODE_FILE);
 

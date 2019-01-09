@@ -12,9 +12,13 @@ import android.text.Html;
 import android.text.Spanned;
 import android.text.style.StrikethroughSpan;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -53,12 +57,13 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
     private static final int TYPE_SENT = 111;
     private static final int TYPE_RECEIVED = 222;
 
-    public static final String[] FORMAT_IMAGE = {"png", "image/png", "jpg", "image/jpg", "jpeg", "image/jpeg", "gif", "image/gif", "tif", "image/tif", "tiff", "image/tiff",  "bmp", "image/bmp"};
+    public static final String[] FORMAT_IMAGE = {"png", "image/png", "jpg", "image/jpg", "jpeg", "image/jpeg", "gif", "image/gif", "tif", "image/tif", "tiff", "image/tiff", "bmp", "image/bmp"};
 
     private static final String USER_TYPE_PROVIDER = "provider";
     private static final String USER_TYPE_STAFF = "user";
 
     private Context context;
+    private ConversationCallback callback;
     private List<Messages.Reply> messages;
     private String userId;
     private final MessagingMetadataDTO messagingMetadata;
@@ -72,9 +77,11 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
      * @param messages messages list
      * @param userId   current user id
      */
-    public MessagesConversationAdapter(Context context, List<Messages.Reply> messages,
+    public MessagesConversationAdapter(Context context, ConversationCallback callback,
+                                       List<Messages.Reply> messages,
                                        String userId, MessagingMetadataDTO messagingMetadata) {
         this.context = context;
+        this.callback = callback;
         this.messages = messages;
         this.userId = userId;
         this.messagingMetadata = messagingMetadata;
@@ -159,6 +166,13 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
             //currently only supporting one attachment
             MessageAttachment attachment = message.getAttachments().get(0);
             String attachmentFormat = attachment.getDocument().getDocumentFormat();
+            if (attachmentFormat.contains("/")) {
+                attachmentFormat = MimeTypeMap.getSingleton().getExtensionFromMimeType(attachmentFormat);
+            }
+
+            holder.fileAttachmentExtension.setText(attachmentFormat);
+            holder.fileAttachmentName.setText(attachment.getDocument().getName());
+
             if (ArrayUtils.contains(FORMAT_IMAGE, attachmentFormat)) {
                 TransitionDTO fetchAttachment = messagingMetadata.getLinks().getFetchAttachment();
 
@@ -187,15 +201,53 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
                             @Override
                             public void onError() {
                                 holder.imageAttachment.setVisibility(View.GONE);
+                                holder.fileAttachmentLayout.setVisibility(View.VISIBLE);
                             }
                         });
             } else {
                 holder.fileAttachmentLayout.setVisibility(View.VISIBLE);
-                holder.fileAttachmentExtension.setText(attachmentFormat);
-                holder.fileAttachmentName.setText(attachment.getDocument().getName());
             }
 
+            holder.fileAttachmentLayout.setOnLongClickListener(getDownloadListener(attachment, attachmentFormat));
+            holder.imageAttachment.setOnLongClickListener(getDownloadListener(attachment, attachmentFormat));
+
         }
+    }
+
+    private View.OnLongClickListener getDownloadListener(final MessageAttachment attachment, final String attachmentFormat){
+        return new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                view.startActionMode(new ActionMode.Callback() {
+                    @Override
+                    public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+                        actionMode.setTitle(attachment.getDocument().getName());
+                        actionMode.getMenuInflater().inflate(R.menu.messages_action_menu, menu);
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+                        if(menuItem.getItemId()== R.id.menu_download){
+                            callback.downloadAttachment(attachment, attachmentFormat);
+                        }
+                        actionMode.finish();
+                        return true;
+                    }
+
+                    @Override
+                    public void onDestroyActionMode(ActionMode actionMode) {
+
+                    }
+                });
+                return true;
+            }
+        };
     }
 
     @Override
@@ -293,6 +345,10 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
             fileAttachmentName = itemView.findViewById(R.id.attachmentName);
             imageAttachment = itemView.findViewById(R.id.attachmentImage);
         }
+    }
+
+    public interface ConversationCallback {
+        void downloadAttachment(MessageAttachment attachment, String attachmentFormat);
     }
 
     private class ConversationTagHandler implements Html.TagHandler {
