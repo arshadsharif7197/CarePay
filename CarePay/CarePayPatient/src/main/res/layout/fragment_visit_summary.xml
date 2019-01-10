@@ -179,7 +179,7 @@
                         android:drawableEnd="@drawable/language_item_back"
                         android:focusable="true"
                         android:foreground="?android:attr/selectableItemBackground"
-                        android:text="XML"
+                        android:text="CCD"
                         android:textColor="@color/slateGray"
                         android:textSize="@dimen/textview_default_textsize"
                         app:customAssetFont="proxima_nova_regular" />
