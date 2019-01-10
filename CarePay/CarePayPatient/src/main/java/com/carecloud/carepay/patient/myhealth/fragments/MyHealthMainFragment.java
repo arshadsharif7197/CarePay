@@ -23,6 +23,7 @@ import com.carecloud.carepay.patient.myhealth.dtos.MedicationDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthProviderDto;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
+import com.carecloud.carepay.patient.visitsummary.VisitSummaryDialogFragment;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 
@@ -84,6 +85,17 @@ public class MyHealthMainFragment extends BaseFragment {
         setUpAllergiesRecyclerView(view);
         setUpMedicationsRecyclerView(view);
         setUpLabsRecyclerView(view);
+        setUpVisitSummaryButton(view);
+    }
+
+    private void setUpVisitSummaryButton(View view) {
+        TextView visitSummaryButton = view.findViewById(R.id.visitSummaryButton);
+        visitSummaryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.displayDialogFragment(VisitSummaryDialogFragment.newInstance(), true);
+            }
+        });
     }
 
     private void setUpLabsRecyclerView(View view) {

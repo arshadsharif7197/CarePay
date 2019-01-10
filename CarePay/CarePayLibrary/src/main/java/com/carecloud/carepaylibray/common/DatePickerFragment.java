@@ -23,6 +23,7 @@ import java.util.Date;
  */
 public class DatePickerFragment extends DialogFragment {
 
+    private static final int DEFAULT_FLAG = 0;
     private DateRangePickerDialogListener listener;
     private String dialogTitle;
     private Date startDate;
@@ -31,25 +32,37 @@ public class DatePickerFragment extends DialogFragment {
     private Button applyDateButton;
     private CalendarPickerView calendarPickerView;
     private FragmentActivityInterface callback;
+    private int flag;
 
     public interface DateRangePickerDialogListener {
-        void onDateSelected(Date selectedDate);
+        void onDateSelected(Date selectedDate, int flag);
     }
 
     public static DatePickerFragment newInstance(String dialogTitle,
                                                  Date startDate,
                                                  Date endDate,
                                                  DateRangePickerDialogListener callback) {
-        // Supply inputs as an argument
+
+
+        return newInstance(dialogTitle, startDate, endDate, callback, DEFAULT_FLAG);
+    }
+
+
+
+    public static DatePickerFragment newInstance(String dialogTitle,
+                                                 Date startDate,
+                                                 Date endDate,
+                                                 DateRangePickerDialogListener callback,
+                                                 int flag) {
         Bundle args = new Bundle();
         args.putString("dialogTitle", dialogTitle);
         args.putSerializable("startDate", startDate);
         args.putSerializable("endDate", endDate);
+        args.putInt("flag", flag);
 
         DatePickerFragment dialog = new DatePickerFragment();
         dialog.setArguments(args);
         dialog.setListener(callback);
-
         return dialog;
     }
 
@@ -71,6 +84,7 @@ public class DatePickerFragment extends DialogFragment {
         dialogTitle = arguments.getString("dialogTitle");
         startDate = (Date) arguments.getSerializable("startDate");
         endDate = (Date) arguments.getSerializable("endDate");
+        flag = arguments.getInt("flag");
     }
 
     @Nullable
@@ -94,13 +108,12 @@ public class DatePickerFragment extends DialogFragment {
      * @param view used as view component
      */
     private void inflateToolbar(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.add_appointment_toolbar);
+        Toolbar toolbar = view.findViewById(R.id.add_appointment_toolbar);
         toolbar.setTitle("");
 
         Drawable closeIcon = ContextCompat.getDrawable(getActivity(),
                 R.drawable.icn_patient_mode_nav_close);
         toolbar.setNavigationIcon(closeIcon);
-//        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         Date today = new Date();
         View todayButton = toolbar.findViewById(R.id.today_button);
@@ -122,7 +135,7 @@ public class DatePickerFragment extends DialogFragment {
     }
 
     private void initCalendarView(View view) {
-        calendarPickerView = (CalendarPickerView) view.findViewById(R.id.calendarView);
+        calendarPickerView = view.findViewById(R.id.calendarView);
         calendarPickerView.init(startDate, endDate)
                 .inMode(CalendarPickerView.SelectionMode.SINGLE);
         calendarPickerView.setOnDateSelectedListener(new CalendarPickerView.OnDateSelectedListener() {
@@ -150,16 +163,16 @@ public class DatePickerFragment extends DialogFragment {
         calendarPickerView.init(startDate, endDate)
                 .withSelectedDate(today)
                 .inMode(CalendarPickerView.SelectionMode.SINGLE);
+        selectedDate = calendarPickerView.getSelectedDate();
         applyDateButton.setEnabled(true);
     }
 
     protected void initButtons(View view) {
-        applyDateButton = (Button)
-                view.findViewById(R.id.applyDateRangeButton);
+        applyDateButton = view.findViewById(R.id.applyDateRangeButton);
         applyDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onDateSelected(selectedDate);
+                listener.onDateSelected(selectedDate, flag);
                 dismiss();
             }
         });

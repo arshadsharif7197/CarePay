@@ -158,21 +158,26 @@
         <item name="android:fontFamily">ProximaNova-Regular</item>
     </style>
 
-    <style name="EditTextStyle" parent="Base.Widget.AppCompat.EditText">
+    <style name="InputLayoutEditTextStyle" parent="Base.Widget.AppCompat.EditText">
         <item name="android:textColor">@color/primary_color_enabled_selector</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/textview_default_textsize</item>
         <item name="android:maxLines">1</item>
+        <item name="android:paddingBottom">@dimen/dimen_10dp</item>
+        <item name="android:paddingTop">@dimen/dimen_10dp</item>
         <item name="android:fontFamily">proximanova_regular</item>
         <item name="android:singleLine">true</item>
-        <item name="android:paddingStart">@dimen/input_text_layout_start_margin</item>
-        <item name="android:paddingBottom">@dimen/edit_padding_15</item>
-        <item name="android:paddingTop">@dimen/edit_padding_15</item>
-        <item name="android:paddingEnd">@dimen/edit_padding_15</item>
         <item name="colorControlNormal">@color/light_gray</item>
         <item name="colorControlActivated">@color/light_gray</item>
         <item name="colorControlHighlight">@color/light_gray</item>
+    </style>
+
+    <style name="EditTextStyle" parent="InputLayoutEditTextStyle">
+        <item name="android:paddingStart">@dimen/input_text_layout_start_margin</item>
+        <item name="android:paddingEnd">@dimen/edit_padding_15</item>
+        <item name="android:paddingBottom">@dimen/edit_padding_15</item>
+        <item name="android:paddingTop">@dimen/edit_padding_15</item>
     </style>
 
     <style name="CityEditTextStyle" parent="EditTextStyle">

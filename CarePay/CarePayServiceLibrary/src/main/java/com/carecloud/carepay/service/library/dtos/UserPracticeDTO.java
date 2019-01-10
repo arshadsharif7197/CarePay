@@ -1,6 +1,7 @@
 package com.carecloud.carepay.service.library.dtos;
 
 
+import com.carecloud.carepay.service.library.base.OptionNameInterface;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * Created by Jahirul Bhuiyan on 10/27/2016
  */
 
-public class UserPracticeDTO {
+public class UserPracticeDTO implements OptionNameInterface {
 
     @SerializedName("practice_mgmt")
     @Expose
@@ -200,5 +201,10 @@ public class UserPracticeDTO {
 
     public void setLocations(List<AvailableLocationDTO> locations) {
         this.locations = locations;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return practiceName;
     }
 }
