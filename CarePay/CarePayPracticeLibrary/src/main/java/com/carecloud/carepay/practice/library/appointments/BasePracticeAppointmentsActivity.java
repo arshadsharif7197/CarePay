@@ -146,7 +146,9 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         appointment.setStartTime(appointmentSlot.getStartTime());
         appointment.setEndTime(appointmentSlot.getEndTime());
         appointment.setLocationId(appointmentSlot.getLocation().getId());
+        appointment.setLocationGuid(appointmentSlot.getLocation().getGuid());
         appointment.setProviderId(appointmentResourcesDTO.getResource().getProvider().getId());
+        appointment.setProviderGuid(appointmentResourcesDTO.getResource().getProvider().getGuid());
         appointment.setVisitReasonId(visitTypeDTO.getId());
         appointment.setResourceId(appointmentResourcesDTO.getResource().getId());
         appointment.setComplaint(reasonForVisit);
