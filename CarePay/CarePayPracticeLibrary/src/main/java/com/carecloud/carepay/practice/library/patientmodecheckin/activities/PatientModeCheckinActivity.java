@@ -65,7 +65,9 @@ import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.interfaces.IcicleInterface;
 import com.carecloud.carepaylibray.media.MediaResultListener;
+import com.carecloud.carepaylibray.medications.fragments.AllergiesFragment;
 import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
+import com.carecloud.carepaylibray.medications.fragments.MedicationsFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanTermsFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
@@ -863,7 +865,9 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             currentStep = getString(R.string.step_health_insurance);
         } else if (currentFragment instanceof FormsFragment) {
             currentStep = getString(R.string.step_consent_forms);
-        } else if (currentFragment instanceof MedicationsAllergyFragment) {
+        } else if (currentFragment instanceof MedicationsAllergyFragment ||
+                currentFragment instanceof AllergiesFragment ||
+                currentFragment instanceof MedicationsFragment) {
             currentStep = getString(R.string.step_medications);
         } else if (currentFragment instanceof IntakeFormsFragment) {
             currentStep = getString(R.string.step_intake);
