@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.carecloud.carepay.service.library.constants.HttpConstants;
-import com.carecloud.carepaylibrary.BuildConfig;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -18,7 +17,7 @@ import org.json.JSONObject;
 
 public class MixPanelUtil {
 
-    private static boolean isDebug = BuildConfig.DEBUG;
+    private static boolean isDebug = false;//BuildConfig.DEBUG;
 
     private static MixpanelAPI mixpanel = HttpConstants.getMixpanelAPI();
 

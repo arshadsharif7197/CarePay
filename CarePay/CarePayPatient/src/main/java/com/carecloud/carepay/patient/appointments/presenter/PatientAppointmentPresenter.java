@@ -36,6 +36,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
+import com.carecloud.carepaylibray.appointments.models.CancellationReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
@@ -459,8 +460,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                     public void onCancelReasonAppointmentDialogCancelClicked(AppointmentDTO appointmentDTO,
                                                                              int cancellationReason,
                                                                              String cancellationReasonComment) {
-                        cancellationReasonString = cancellationReasonComment;
+                        cancellationReasonString = getCancelReason(cancellationReason, cancellationReasonComment);
                         cancelAppointmentDTO = appointmentDTO;
+                        practiceName = getPracticeInfo(appointmentDTO).getPracticeName();
                         if (cancellationFee == null) {
                             onCancelAppointment(appointmentDTO, cancellationReason, cancellationReasonComment);
                         } else {
@@ -497,6 +499,16 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                         }
                     }
                 }).show();
+    }
+
+    private String getCancelReason(int cancellationReasonId, String cancellationReasonComment){
+        for(CancellationReasonDTO cancellationReason : appointmentsResultModel.getPayload().getCancellationReasons()){
+            if (cancellationReason.getAppointmentCancellationReason().getId().equals(cancellationReasonId)){
+                return cancellationReason.getAppointmentCancellationReason().getName() +
+                        (StringUtil.isNullOrEmpty(cancellationReasonComment) ? "" : (" " + cancellationReasonComment));
+            }
+        }
+        return null;
     }
 
     private AppointmentCancellationFee getCancellationFee(AppointmentDTO appointmentDTO) {
