@@ -60,6 +60,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.FileDownloadUtil;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -408,6 +409,32 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             }
         }
         return appointmentsSettingsList.get(0);
+    }
+
+    @Override
+    public void callVisitSummaryService(AppointmentDTO appointment, WorkflowServiceCallback callback) {
+        TransitionDTO transition = appointmentsResultModel.getMetadata().getLinks().getVisitSummary();
+        JsonObject body = new JsonObject();
+        body.addProperty("appointment_id", appointment.getPayload().getId());
+        body.addProperty("format", "pdf");
+        viewHandler.getWorkflowServiceHelper().execute(transition, callback, body.toString());
+    }
+
+    @Override
+    public void callVisitSummaryStatusService(String jobId, String practiceMgmt, WorkflowServiceCallback callback) {
+        TransitionDTO transition = appointmentsResultModel.getMetadata().getLinks().getVisitSummaryStatus();
+        HashMap<String, String> query = new HashMap<>();
+        query.put("job_id", jobId);
+        query.put("practice_mgmt", practiceMgmt);
+        viewHandler.getWorkflowServiceHelper().execute(transition, callback, query);
+    }
+
+    @Override
+    public long downloadVisitSummaryFile(String jobId, String practiceMgmt, String title) {
+        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getLinks().getVisitSummaryStatus();
+        String url = String.format("%s?%s=%s&%s=%s", transitionDTO.getUrl(), "job_id",
+                jobId, "practice_mgmt", practiceMgmt);
+        return FileDownloadUtil.downloadPdf(getContext(), url, title, ".pdf", "Visit Summary");
     }
 
     @Override

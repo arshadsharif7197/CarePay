@@ -1,16 +1,22 @@
 package com.carecloud.carepaylibray.utils;
 
 import android.app.DownloadManager;
+import android.content.ActivityNotFoundException;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseActivity;
 
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -37,15 +43,15 @@ public class FileDownloadUtil {
         return downloadManager.enqueue(request);
     }
 
-    public static long downloadFile(Context context, @NonNull String url, @NonNull String filename, @NonNull String extension, String description, Map<String, String> headers){
+    public static long downloadFile(Context context, @NonNull String url, @NonNull String filename, @NonNull String extension, String description, Map<String, String> headers) {
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
 
-        if(!filename.contains(extension)){
+        if (!filename.contains(extension)) {
             filename = filename + "." + extension;
         }
         request.setTitle(filename);
 
-        if(description != null) {
+        if (description != null) {
             request.setDescription(description);
         }
 
@@ -57,7 +63,7 @@ public class FileDownloadUtil {
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename);
 
-        if(headers != null) {
+        if (headers != null) {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
                 request.addRequestHeader(entry.getKey(), entry.getValue());
             }
@@ -65,11 +71,36 @@ public class FileDownloadUtil {
         request.addRequestHeader("Accept", mimeType);
 
         DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-        if(downloadManager != null) {
+        if (downloadManager != null) {
             return downloadManager.enqueue(request);
         } else {
             Toast.makeText(context, Label.getLabel("connection_error_message"), Toast.LENGTH_SHORT).show();
             return -1;
         }
+    }
+
+    public static void openDownloadedAttachment(final Context context, Uri attachmentUri, final String attachmentMimeType) {
+        if (attachmentUri != null) {
+            // Get Content Uri.
+            if (ContentResolver.SCHEME_FILE.equals(attachmentUri.getScheme())) {
+                // FileUri - Convert it to contentUri.
+                File file = new File(attachmentUri.getPath());
+                attachmentUri = FileProvider.getUriForFile(context,
+                        "com.carecloud.carepay.patient.provider", file);
+            }
+
+            Intent openAttachmentIntent = new Intent(Intent.ACTION_VIEW);
+            openAttachmentIntent.setDataAndType(attachmentUri, attachmentMimeType);
+            openAttachmentIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            try {
+                context.startActivity(openAttachmentIntent);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(context, context.getString(R.string.alert_title_server_error), Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    public static void openDownloadDirectory(Context context) {
+        context.startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));
     }
 }

@@ -1,10 +1,16 @@
 package com.carecloud.carepay.patient.appointments.fragments;
 
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +20,9 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
+import com.carecloud.carepay.patient.visitsummary.dto.VisitSummaryDTO;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -27,9 +35,12 @@ import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.QueueDTO;
 import com.carecloud.carepaylibray.appointments.models.QueueStatusPayloadDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.base.BaseActivity;
+import com.carecloud.carepaylibray.customcomponents.CarePayProgressButton;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.FileDownloadUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.picasso.Callback;
@@ -68,10 +79,12 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private TextView queueStatus;
     private View actionsLayout;
     private Button leftButton;
-    private Button rightButton;
+    private CarePayProgressButton rightButton;
 
     private boolean isBreezePractice = true;
     private boolean isRescheduleEnabled = true;
+    private Handler statusHandler;
+    private long enqueueId;
 
 
     /**
@@ -334,6 +347,9 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     appointmentStatus.setVisibility(View.VISIBLE);
                     appointmentStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.grayRound));
                     appointmentStatus.setText(Label.getLabel("appointment_checked_out_label"));
+                    if (isAPastAppointment()) {
+                        showVisitSummaryButton();
+                    }
                     break;
                 }
                 default: {
@@ -343,6 +359,10 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         }
     }
 
+    private boolean isAPastAppointment() {
+        return !appointmentDTO.getPayload().isAppointmentToday();
+    }
+
     private void showCheckoutButton(Set<String> enabledLocations) {
         if (isLocationWithBreezeEnabled(enabledLocations)
                 && appointmentDTO.getPayload().canCheckOut()) {
@@ -350,6 +370,18 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
             leftButton.setVisibility(View.VISIBLE);
             leftButton.setText(Label.getLabel("appointment_request_checkout_now"));
             leftButton.setOnClickListener(checkOutClick);
+        }
+    }
+
+    private void showVisitSummaryButton() {
+        String status = appointmentDTO.getPayload().getAppointmentStatus().getCode();
+        if (status.equals(CarePayConstants.BILLED) || status.equals(CarePayConstants.MANUALLY_BILLED)) {
+            appointmentStatus.setVisibility(View.GONE);
+            actionsLayout.setVisibility(View.VISIBLE);
+            rightButton.setVisibility(View.VISIBLE);
+            rightButton.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.button_selector));
+            rightButton.setText(Label.getLabel("visitSummary.appointments.button.label.visitSummary"));
+            rightButton.setOnClickListener(visitSummaryClick);
         }
     }
 
@@ -516,6 +548,70 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         }
     };
 
+    private View.OnClickListener visitSummaryClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            callback.callVisitSummaryService(appointmentDTO, new WorkflowServiceCallback() {
+                @Override
+                public void onPreExecute() {
+                    ((BaseActivity) getActivity()).showProgressDialog();
+                }
+
+                @Override
+                public void onPostExecute(WorkflowDTO workflowDTO) {
+                    VisitSummaryDTO visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
+                    ((BaseActivity) getActivity()).hideProgressDialog();
+                    rightButton.setEnabled(false);
+                    rightButton.setProgressEnabled(true);
+                    rightButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.processing"));
+                    callVisitSummaryStatusService(visitSummaryDTO.getPayload().getVisitSummaryRequest().getJobId());
+                }
+
+                @Override
+                public void onFailure(String exceptionMessage) {
+                    ((BaseActivity) getActivity()).hideProgressDialog();
+                }
+            });
+        }
+    };
+
+    private void callVisitSummaryStatusService(final String jobId) {
+        callback.callVisitSummaryStatusService(jobId, appointmentDTO.getMetadata().getPracticeMgmt(),
+                new WorkflowServiceCallback() {
+
+                    @Override
+                    public void onPreExecute() {
+
+                    }
+
+                    @Override
+                    public void onPostExecute(WorkflowDTO workflowDTO) {
+                        VisitSummaryDTO visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
+                        String status = visitSummaryDTO.getPayload().getVisitSummary().getStatus();
+                        if (status.equals("queued") || status.equals("working")) {
+                            statusHandler = new Handler();
+                            statusHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    callVisitSummaryStatusService(jobId);
+                                }
+                            }, 5000);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(String exceptionMessage) {
+                        Log.e("OkHttp", exceptionMessage);
+                        String title = String.format("%s - %s",
+                                appointmentDTO.getPayload().getProvider().getFullName(),
+                                DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime())
+                                        .toStringWithFormatMmDashDdDashYyyy());
+                        enqueueId = callback.downloadVisitSummaryFile(jobId,
+                                appointmentDTO.getMetadata().getPracticeMgmt(), title);
+                    }
+                });
+    }
+
     private View.OnClickListener scanClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -532,4 +628,57 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         }
     };
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        getActivity().registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+    }
+
+    @Override
+    public void onStop() {
+        getActivity().unregisterReceiver(receiver);
+        if (statusHandler != null) {
+            statusHandler.removeCallbacksAndMessages(null);
+        }
+        if (enqueueId > 0) {
+            DownloadManager dm = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+            dm.remove(enqueueId);
+        }
+        super.onStop();
+    }
+
+    BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(final Context context, Intent intent) {
+            String action = intent.getAction();
+            if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
+                DownloadManager.Query query = new DownloadManager.Query();
+                DownloadManager dm = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+
+                query.setFilterById(enqueueId);
+                final Cursor cursor = dm.query(query);
+                if (cursor.moveToFirst()) {
+                    int columnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
+//                    int reasonIndex = cursor.getColumnIndex(DownloadManager.COLUMN_REASON);
+                    if (DownloadManager.STATUS_SUCCESSFUL == cursor.getInt(columnIndex)) {
+                        rightButton.setEnabled(true);
+                        rightButton.setProgressEnabled(false);
+                        rightButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.openFile"));
+                        rightButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String downloadLocalUri = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+                                if (downloadLocalUri != null) {
+                                    String downloadMimeType = cursor.getString(cursor
+                                            .getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE));
+                                    FileDownloadUtil.openDownloadedAttachment(context, Uri.parse(downloadLocalUri), downloadMimeType);
+                                }
+                            }
+                        });
+                        enqueueId = -1;
+                    }
+                }
+            }
+        }
+    };
 }

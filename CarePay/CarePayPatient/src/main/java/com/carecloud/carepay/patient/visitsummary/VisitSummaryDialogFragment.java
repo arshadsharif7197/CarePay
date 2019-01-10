@@ -2,9 +2,7 @@ package com.carecloud.carepay.patient.visitsummary;
 
 
 import android.app.DownloadManager;
-import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,7 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -30,7 +27,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
@@ -56,7 +52,6 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.gson.JsonObject;
 
-import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -145,7 +140,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                                     if (downloadLocalUri != null) {
                                         String downloadMimeType = cursor.getString(cursor
                                                 .getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE));
-                                        openDownloadedAttachment(context, Uri.parse(downloadLocalUri), downloadMimeType);
+                                        FileDownloadUtil.openDownloadedAttachment(context, Uri.parse(downloadLocalUri), downloadMimeType);
                                     }
                                 }
                             });
@@ -154,7 +149,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                             exportButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));
+                                    FileDownloadUtil.openDownloadDirectory(getContext());
                                 }
                             });
                         }
@@ -168,27 +163,6 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
             }
         }
     };
-
-    private void openDownloadedAttachment(final Context context, Uri attachmentUri, final String attachmentMimeType) {
-        if (attachmentUri != null) {
-            // Get Content Uri.
-            if (ContentResolver.SCHEME_FILE.equals(attachmentUri.getScheme())) {
-                // FileUri - Convert it to contentUri.
-                File file = new File(attachmentUri.getPath());
-                attachmentUri = FileProvider.getUriForFile(getContext(),
-                        "com.carecloud.carepay.patient.provider", file);
-            }
-
-            Intent openAttachmentIntent = new Intent(Intent.ACTION_VIEW);
-            openAttachmentIntent.setDataAndType(attachmentUri, attachmentMimeType);
-            openAttachmentIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            try {
-                context.startActivity(openAttachmentIntent);
-            } catch (ActivityNotFoundException e) {
-                Toast.makeText(context, context.getString(R.string.alert_title_server_error), Toast.LENGTH_LONG).show();
-            }
-        }
-    }
 
     @Override
     public void onStart() {
