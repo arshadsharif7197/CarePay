@@ -150,7 +150,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                                 }
                             });
                         } else {
-                            exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.openFile"));
+                            exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.openDirectory"));
                             exportButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
