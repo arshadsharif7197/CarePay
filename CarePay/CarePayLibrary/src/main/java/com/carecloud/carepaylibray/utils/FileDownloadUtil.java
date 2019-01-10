@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class FileDownloadUtil {
 
-    public static void downloadPdf(Context context, String url, String title,
+    public static long downloadPdf(Context context, String url, String title,
                                    String fileExtension, String description) {
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         request.setTitle(title + fileExtension);
@@ -34,10 +34,10 @@ public class FileDownloadUtil {
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, title + fileExtension);
 
         DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-        downloadManager.enqueue(request);
+        return downloadManager.enqueue(request);
     }
 
-    public static void downloadFile(Context context, @NonNull String url, @NonNull String filename, @NonNull String extension, String description, Map<String, String> headers){
+    public static long downloadFile(Context context, @NonNull String url, @NonNull String filename, @NonNull String extension, String description, Map<String, String> headers){
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
 
         if(!filename.contains(extension)){
@@ -66,9 +66,10 @@ public class FileDownloadUtil {
 
         DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         if(downloadManager != null) {
-            downloadManager.enqueue(request);
+            return downloadManager.enqueue(request);
         } else {
             Toast.makeText(context, Label.getLabel("connection_error_message"), Toast.LENGTH_SHORT).show();
+            return -1;
         }
     }
 }

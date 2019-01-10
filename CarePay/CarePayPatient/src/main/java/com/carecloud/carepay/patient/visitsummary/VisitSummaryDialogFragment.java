@@ -37,6 +37,7 @@ import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.myhealth.dtos.PatientDto;
 import com.carecloud.carepay.patient.visitsummary.dto.VisitSummaryDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -49,7 +50,7 @@ import com.carecloud.carepaylibray.customcomponents.CarePayProgressButton;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.PdfUtil;
+import com.carecloud.carepaylibray.utils.FileDownloadUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
@@ -60,6 +61,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author pjohnson on 1/3/19.
@@ -81,6 +83,8 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
     private RadioButton xmlOption;
     private CarePayProgressButton exportButton;
     private long enqueueId;
+    private Handler handler;
+    private String format;
 
     public static VisitSummaryDialogFragment newInstance() {
         return new VisitSummaryDialogFragment();
@@ -128,30 +132,35 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                 final Cursor cursor = dm.query(query);
                 if (cursor.moveToFirst()) {
                     int columnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
-                    int reasonIndex = cursor.getColumnIndex(DownloadManager.COLUMN_REASON);
+//                    int reasonIndex = cursor.getColumnIndex(DownloadManager.COLUMN_REASON);
                     if (DownloadManager.STATUS_SUCCESSFUL == cursor.getInt(columnIndex)) {
-                        Toast.makeText(getContext(), "STATUS_SUCCESSFUL", Toast.LENGTH_LONG).show();
                         exportButton.setEnabled(true);
                         exportButton.setProgressEnabled(false);
-                        exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.openFile"));
-                        exportButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                String downloadLocalUri = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
-                                if (downloadLocalUri != null) {
-                                    String downloadMimeType = cursor.getString(cursor
-                                            .getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE));
-                                    openDownloadedAttachment(context, Uri.parse(downloadLocalUri), downloadMimeType);
+                        if (format.equals("pdf")) {
+                            exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.openFile"));
+                            exportButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    String downloadLocalUri = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+                                    if (downloadLocalUri != null) {
+                                        String downloadMimeType = cursor.getString(cursor
+                                                .getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE));
+                                        openDownloadedAttachment(context, Uri.parse(downloadLocalUri), downloadMimeType);
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        } else {
+                            exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.openFile"));
+                            exportButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));
+                                }
+                            });
+                        }
                         enqueueId = -1;
                     } else if (DownloadManager.STATUS_PAUSED == cursor.getInt(columnIndex)) {
-//                            && DownloadManager.PAUSED_WAITING_TO_RETRY == cursor.getInt(reasonIndex)) {
-                        Log.e("DownloadManager", "STATUS_PAUSED");
-                        Toast.makeText(getContext(), "STATUS_FAILED", Toast.LENGTH_LONG).show();
-//                        exportButton.setEnabled(false);
-//                        exportButton.setProgressEnabled(true);
+                        //TODO: test if this can occur
                     } else {
                         Log.e("DownloadManager", "Status: " + cursor.getInt(columnIndex));
                     }
@@ -193,6 +202,9 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         if (enqueueId > 0) {
             DownloadManager dm = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
             dm.remove(enqueueId);
+        }
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
         }
         super.onStop();
     }
@@ -395,7 +407,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         query.addProperty("practice_id", selectedPractice.getPracticeId());
         query.addProperty("patient_id", getPatientGuid(selectedPractice));
         query.addProperty("send_unsecured", encryptedCheckBox.isChecked());
-        final String format = pdfOption.isChecked() ? "pdf" : "xml";
+        format = pdfOption.isChecked() ? "pdf" : "xml";
         query.addProperty("format", pdfOption.isChecked() ? "pdf" : "xml");
         if (!StringUtil.isNullOrEmpty(emailEditText.getText().toString())) {
             query.addProperty("email", emailEditText.getText().toString());
@@ -417,7 +429,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                 exportButton.setEnabled(false);
                 exportButton.setProgressEnabled(true);
                 exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.processing"));
-                callForStatus(visitSummaryDTO.getPayload().getVisitSummaryRequest().getJobId(), selectedPractice,format);
+                callForStatus(visitSummaryDTO.getPayload().getVisitSummaryRequest().getJobId(), selectedPractice, format);
             }
 
             @Override
@@ -444,7 +456,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                 VisitSummaryDTO visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
                 String status = visitSummaryDTO.getPayload().getVisitSummary().getStatus();
                 if (status.equals("queued") || status.equals("working")) {
-                    final Handler handler = new Handler();
+                    handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -460,16 +472,23 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                 downloadFile(jobId, selectedPractice, format);
             }
         }, query);
-//
     }
 
     private void downloadFile(String jobId, UserPracticeDTO selectedPractice, String format) {
         TransitionDTO transitionDTO = myHealthDto.getMetadata().getLinks().getVisitSummaryStatus();
         String url = String.format("%s?%s=%s&%s=%s", transitionDTO.getUrl(), "job_id",
                 jobId, "practice_mgmt", selectedPractice.getPracticeMgmt());
-        //TODO: COMMENTED JUST FOR THE MERGE
-//        enqueueId = PdfUtil.downloadPdf(getContext(), url, selectedPractice.getPracticeName(),
-//                "." + format, "Visit Summary");
+        if (format.equals("pdf")) {
+            enqueueId = FileDownloadUtil.downloadPdf(getContext(), url, selectedPractice.getPracticeName(),
+                    "." + format, "Visit Summary");
+        } else {
+            Map<String, String> headers = new HashMap<>();
+            headers.put("x-api-key", HttpConstants.getApiStartKey());
+            headers.put("username", getAppAuthorizationHelper().getCurrUser());
+            headers.put("Authorization", getAppAuthorizationHelper().getIdToken());
+            enqueueId = FileDownloadUtil.downloadFile(getContext(), url, selectedPractice.getPracticeName(),
+                    format, "Visit Summary", headers);
+        }
     }
 
     private String getPatientGuid(UserPracticeDTO selectedPractice) {
