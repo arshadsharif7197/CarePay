@@ -34,6 +34,12 @@
         </item> <!-- color of the underlying bar when no focus -->
         <item name="colorControlActivated">@color/light_gray
         </item> <!-- hint and underlying bar when focus -->
+
+        <!--Action Bar Control-->
+        <item name="windowActionModeOverlay">true</item>
+        <item name="actionModeStyle">@style/ActionModeStyle</item>
+        <item name="actionMenuTextColor">@color/white</item>
+        <item name="actionModeCloseDrawable">@drawable/icn_nav_back</item>
     </style>
 
 
@@ -986,4 +992,15 @@
         <item name="colorControlNormal">@color/colorPrimary</item>
         <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
+
+    <style name="ActionModeStyle" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="background">@color/colorPrimaryDark</item>
+        <item name="titleTextStyle">@style/ActionModeTitleStyle</item>
+        <item name="closeItemLayout">@layout/actionbar_close_item</item>
+    </style>
+
+    <style name="ActionModeTitleStyle" parent="TextAppearance.AppCompat.Widget.ActionMode.Title">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 </resources>
