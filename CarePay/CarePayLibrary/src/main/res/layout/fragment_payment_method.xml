@@ -46,7 +46,7 @@
             android:background="@drawable/pay_google_background_dark"
             android:src="@drawable/pay_google_button_dark"
             android:scaleType="fitCenter"
-            android:visibility="visible"/>
+            android:visibility="gone"/>
 
 
         <FrameLayout
