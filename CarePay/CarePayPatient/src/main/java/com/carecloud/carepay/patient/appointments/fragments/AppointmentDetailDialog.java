@@ -20,17 +20,22 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
+import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.visitsummary.dto.VisitSummaryDTO;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayUtil;
 import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentDialogFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
+import com.carecloud.carepaylibray.appointments.models.PortalSetting;
+import com.carecloud.carepaylibray.appointments.models.PortalSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.QueueDTO;
 import com.carecloud.carepaylibray.appointments.models.QueueStatusPayloadDTO;
@@ -374,8 +379,28 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     }
 
     private void showVisitSummaryButton() {
-        String status = appointmentDTO.getPayload().getAppointmentStatus().getCode();
-        if (status.equals(CarePayConstants.BILLED) || status.equals(CarePayConstants.MANUALLY_BILLED)) {
+        String code = appointmentDTO.getPayload().getAppointmentStatus().getOriginalCode();
+        AppointmentsResultModel appointmentModelDto = ((PatientAppointmentPresenter) callback).getMainAppointmentDto();
+        boolean isVisitSummaryEnabled = false;
+        for (UserPracticeDTO userPracticeDTO : appointmentModelDto.getPayload().getUserPractices()) {
+            if (userPracticeDTO.isVisitSummaryEnabled()) {
+                for (PortalSettingDTO portalSettingDTO : appointmentModelDto.getPayload().getPortalSettings()) {
+                    if (userPracticeDTO.getPracticeId().equals(portalSettingDTO.getMetadata().getPracticeId())) {
+                        for (PortalSetting portalSetting : portalSettingDTO.getPayload()) {
+                            if (portalSetting.getName().toLowerCase().equals("visit summary")
+                                    && portalSetting.getStatus().toLowerCase().equals("a")) {
+                                isVisitSummaryEnabled = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (isVisitSummaryEnabled) break;
+                }
+            }
+            if (isVisitSummaryEnabled) break;
+        }
+        if ((code.equals(CarePayConstants.BILLED) || code.equals(CarePayConstants.MANUALLY_BILLED)
+                && isVisitSummaryEnabled)) {
             appointmentStatus.setVisibility(View.GONE);
             actionsLayout.setVisibility(View.VISIBLE);
             rightButton.setVisibility(View.VISIBLE);

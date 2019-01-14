@@ -58,6 +58,9 @@ public class UserPracticeDTO implements OptionNameInterface {
     @SerializedName("locations")
     @Expose
     private List<AvailableLocationDTO> locations;
+    @SerializedName("visit_summary_enabled")
+    @Expose
+    private boolean visitSummaryEnabled = false;
 
     /**
      * @return The prefix
@@ -201,6 +204,14 @@ public class UserPracticeDTO implements OptionNameInterface {
 
     public void setLocations(List<AvailableLocationDTO> locations) {
         this.locations = locations;
+    }
+
+    public boolean isVisitSummaryEnabled() {
+        return visitSummaryEnabled;
+    }
+
+    public void setVisitSummaryEnabled(boolean visitSummaryEnabled) {
+        this.visitSummaryEnabled = visitSummaryEnabled;
     }
 
     @Override

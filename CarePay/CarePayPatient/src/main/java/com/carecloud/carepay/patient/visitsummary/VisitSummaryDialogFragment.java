@@ -39,6 +39,8 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
+import com.carecloud.carepaylibray.appointments.models.PortalSetting;
+import com.carecloud.carepaylibray.appointments.models.PortalSettingDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.common.DatePickerFragment;
@@ -52,6 +54,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -196,8 +199,9 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
 
         final TextView practiceTextView = view.findViewById(R.id.practiceTextView);
         TextInputLayout practiceTextInputLayout = view.findViewById(R.id.practiceTextInputLayout);
-        if (myHealthDto.getPayload().getPracticeInformation().size() == 1) {
-            selectedPractice = myHealthDto.getPayload().getPracticeInformation().get(0);
+        final List<UserPracticeDTO> practices = filterPractices(myHealthDto.getPayload().getPracticeInformation());
+        if (practices.size() == 1) {
+            selectedPractice = practices.get(0);
             practiceTextView.setText(selectedPractice.getPracticeName());
         } else {
             practiceTextView.setOnFocusChangeListener(SystemUtil
@@ -205,7 +209,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
             practiceTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showChooseDialog(getContext(), myHealthDto.getPayload().getPracticeInformation(),
+                    showChooseDialog(getContext(), practices,
                             Label.getLabel("visitSummary.createVisitSummary.choosePracticeDialog.title.choose"),
                             new OnOptionSelectedListener() {
                                 @Override
@@ -266,6 +270,26 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         });
 
         encryptedCheckBox = view.findViewById(R.id.encryptedCheckBox);
+    }
+
+    private List<UserPracticeDTO> filterPractices(List<UserPracticeDTO> practiceInformation) {
+        List<UserPracticeDTO> filteredPractices = new ArrayList<>();
+        for (UserPracticeDTO userPracticeDTO : practiceInformation) {
+            if (userPracticeDTO.isVisitSummaryEnabled()) {
+                for (PortalSettingDTO portalSettingDTO : myHealthDto.getPayload().getPortalSettings()) {
+                    if (userPracticeDTO.getPracticeId().equals(portalSettingDTO.getMetadata().getPracticeId())) {
+                        for (PortalSetting portalSetting : portalSettingDTO.getPayload()) {
+                            if (portalSetting.getName().toLowerCase().equals("visit summary")
+                                    && portalSetting.getStatus().toLowerCase().equals("a")) {
+                                filteredPractices.add(userPracticeDTO);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return filteredPractices;
     }
 
     private void enableExportButton() {
@@ -381,6 +405,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         query.addProperty("practice_id", selectedPractice.getPracticeId());
         query.addProperty("patient_id", getPatientGuid(selectedPractice));
         query.addProperty("send_unsecured", encryptedCheckBox.isChecked());
+        query.addProperty("practice_mgmt", selectedPractice.getPracticeMgmt());
         format = pdfOption.isChecked() ? "pdf" : "xml";
         query.addProperty("format", pdfOption.isChecked() ? "pdf" : "xml");
         if (!StringUtil.isNullOrEmpty(emailEditText.getText().toString())) {
@@ -409,6 +434,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
             @Override
             public void onFailure(String exceptionMessage) {
                 ((BaseActivity) getActivity()).hideProgressDialog();
+                ((BaseActivity) getActivity()).showErrorNotification(exceptionMessage);
             }
         }, query.toString());
     }

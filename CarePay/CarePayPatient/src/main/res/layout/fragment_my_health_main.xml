@@ -487,6 +487,7 @@
             android:id="@+id/visitSummaryButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_5dp"
             android:background="@drawable/button_default_background"
             android:foreground="?android:selectableItemBackground"
             android:gravity="center"
