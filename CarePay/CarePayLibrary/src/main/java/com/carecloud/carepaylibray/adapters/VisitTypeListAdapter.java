@@ -71,6 +71,8 @@ public class VisitTypeListAdapter extends RecyclerView.Adapter<VisitTypeListAdap
             holder.amount.setVisibility(View.GONE);
         }
 
+        holder.videoType.setVisibility(visitTypeDTO.hasVideoOption() ? View.VISIBLE : View.GONE);
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,12 +104,14 @@ public class VisitTypeListAdapter extends RecyclerView.Adapter<VisitTypeListAdap
         TextView type;
         TextView amount;
         ImageView notificationPaymentImage;
+        View videoType;
 
         ViewHolder(View itemView) {
             super(itemView);
-            type = (TextView) itemView.findViewById(R.id.visitTypeListItem);
-            amount = (TextView) itemView.findViewById(R.id.prepaymentAmount);
-            notificationPaymentImage = (ImageView) itemView.findViewById(R.id.notificationPaymentImage);
+            type = itemView.findViewById(R.id.visitTypeListItem);
+            amount = itemView.findViewById(R.id.prepaymentAmount);
+            notificationPaymentImage = itemView.findViewById(R.id.notificationPaymentImage);
+            videoType = itemView.findViewById(R.id.visit_type_video);
         }
     }
 }

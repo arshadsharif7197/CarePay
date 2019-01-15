@@ -22,6 +22,9 @@ public class VisitTypeDTO {
     @SerializedName("amount")
     @Expose
     private double amount;
+    @SerializedName("video_option")
+    @Expose
+    private boolean videoOption = false;
 
     /**
      * Visit type getter id
@@ -83,5 +86,13 @@ public class VisitTypeDTO {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public boolean hasVideoOption() {
+        return videoOption;
+    }
+
+    public void setVideoOption(boolean videoOption) {
+        this.videoOption = videoOption;
     }
 }
