@@ -84,6 +84,7 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
         holder.cellAvatar.setVisibility(View.GONE);
         holder.initials.setVisibility(View.VISIBLE);
         holder.itemView.setOnClickListener(null);//need to remove this for header just in case
+        holder.videoVisitIndicator.setVisibility(View.GONE);
     }
 
     protected void bindView(final ViewHolder holder, AppointmentsPayloadDTO appointmentsPayload,
@@ -101,7 +102,9 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
 
         switch (style) {
             case CHECKED_IN: {
-                if (shouldShowCheckoutButton) {
+                if (appointmentsPayload.canStartVideoVisit()){
+                    holder.videoVisitIndicator.setVisibility(View.VISIBLE);
+                } else if (shouldShowCheckoutButton) {
                     holder.checkOutButton.setVisibility(View.VISIBLE);
                     holder.checkOutButton.setClickable(true);
                 }
@@ -285,38 +288,42 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
 
         Button checkOutButton;
         TextView checkedOutLabel;
+        ImageView videoVisitIndicator;
 
         View listItemDivider;
 
         ViewHolder(View itemView) {
             super(itemView);
             //Header view
-            sectionHeaderTitle = (TextView) itemView.findViewById(R.id.appointments_section_header_title);
+            sectionHeaderTitle = itemView.findViewById(R.id.appointments_section_header_title);
             if (sectionHeaderTitle != null) {//skip looking up all the other views which will be null anyway
                 return;
             }
 
             //Appointment Views
-            cellAvatar = (ImageView) itemView.findViewById(R.id.cellAvatarImageView);
-            profileImage = (ImageView) itemView.findViewById(R.id.providerPicImageView);
-            initials = (TextView) itemView.findViewById(R.id.avatarTextView);
-            doctorName = (TextView) itemView.findViewById(R.id.doctor_name);
-            doctorType = (TextView) itemView.findViewById(R.id.doctor_type);
+            cellAvatar = itemView.findViewById(R.id.cellAvatarImageView);
+            profileImage = itemView.findViewById(R.id.providerPicImageView);
+            initials = itemView.findViewById(R.id.avatarTextView);
+            doctorName = itemView.findViewById(R.id.doctor_name);
+            doctorType = itemView.findViewById(R.id.doctor_type);
 
             // Today
             todayTimeLayout = itemView.findViewById(R.id.todayTimeLayout);
-            todayTimeTextView = (TextView) itemView.findViewById(R.id.todayTimeTextView);
-            todayTimeMessage = (TextView) itemView.findViewById(R.id.todayTimeMessage);
+            todayTimeTextView = itemView.findViewById(R.id.todayTimeTextView);
+            todayTimeMessage = itemView.findViewById(R.id.todayTimeMessage);
 
             // Upcoming
             upcomingDateLayout = itemView.findViewById(R.id.upcomingDateLayout);
-            upcomingDateTextView = (TextView) itemView.findViewById(R.id.upcomingDateTextView);
-            upcomingMonthTextView = (TextView) itemView.findViewById(R.id.upcomingMonthTextView);
-            upcomingTimeTextView = (TextView) itemView.findViewById(R.id.upcomingTimeTextView);
+            upcomingDateTextView = itemView.findViewById(R.id.upcomingDateTextView);
+            upcomingMonthTextView = itemView.findViewById(R.id.upcomingMonthTextView);
+            upcomingTimeTextView = itemView.findViewById(R.id.upcomingTimeTextView);
 
             //Check-Out
-            checkOutButton = (Button) itemView.findViewById(R.id.check_out_button);
-            checkedOutLabel = (TextView) itemView.findViewById(R.id.checked_out_label);
+            checkOutButton = itemView.findViewById(R.id.check_out_button);
+            checkedOutLabel = itemView.findViewById(R.id.checked_out_label);
+
+            //Video Visit
+            videoVisitIndicator = itemView.findViewById(R.id.visit_type_video);
 
             listItemDivider = itemView.findViewById(R.id.appointment_list_item_divider);
 

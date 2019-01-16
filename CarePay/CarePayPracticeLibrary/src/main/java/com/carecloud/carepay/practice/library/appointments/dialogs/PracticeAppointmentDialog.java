@@ -72,10 +72,10 @@ public class PracticeAppointmentDialog extends BasePracticeDialogFragment {
     }
 
     /**
-     * @param style          dialog style to determine buttons and colors
-     * @param appointmentDTO appointment information
+     * @param style           dialog style to determine buttons and colors
+     * @param appointmentDTO  appointment information
      * @param authPermissions auth permissions
-     * @param callback       listener
+     * @param callback        listener
      * @return instance of PracticeAppointmentDialog
      */
     public static PracticeAppointmentDialog newInstance(AppointmentDisplayStyle style,
@@ -155,6 +155,10 @@ public class PracticeAppointmentDialog extends BasePracticeDialogFragment {
         setTextViewById(R.id.appointment_visit_type, StringUtil.captialize(appointmentPayloadDTO.getVisitType().getName()));
         setTextViewById(R.id.appointment_visit_type_label, Label.getLabel("visit_type_heading"));
 
+        View videoVisitIndicator = findViewById(R.id.visit_type_video);
+        videoVisitIndicator.setVisibility(appointmentPayloadDTO.getVisitType().hasVideoOption() ?
+                View.VISIBLE : View.GONE);
+
         initializeButtons();
     }
 
@@ -184,7 +188,11 @@ public class PracticeAppointmentDialog extends BasePracticeDialogFragment {
                 headerColor = R.color.dark_blue;
                 timeColor = R.color.colorPrimary;
                 leftActionLabel = Label.getLabel("cancel_appointment_short_label");
-                rightActionLabel = Label.getLabel("start_checkin_label");
+                if(appointmentDTO.getPayload().getVisitType().hasVideoOption()){
+                    rightActionLabel = "Video";//TODO VideoVisit switch to label
+                }else {
+                    rightActionLabel = Label.getLabel("start_checkin_label");
+                }
                 middleActionLabel = Label.getLabel("adhoc_show_forms_button_label");
                 break;
             case REQUESTED:
@@ -197,7 +205,11 @@ public class PracticeAppointmentDialog extends BasePracticeDialogFragment {
                 headerColor = R.color.dark_blue;
                 timeColor = R.color.colorPrimary;
                 leftActionLabel = Label.getLabel("cancel_appointment_short_label");
-                rightActionLabel = Label.getLabel("start_checkout_label");
+                if(appointmentDTO.getPayload().getVisitType().hasVideoOption()){
+                    rightActionLabel = "Video";//TODO VideoVisit switch to label
+                }else {
+                    rightActionLabel = Label.getLabel("start_checkout_label");
+                }
                 middleActionLabel = Label.getLabel("adhoc_show_forms_button_label");
                 break;
             default:
@@ -239,16 +251,16 @@ public class PracticeAppointmentDialog extends BasePracticeDialogFragment {
         });
 
 
-        switch (style){
+        switch (style) {
             case REQUESTED:
-                if(!authPermissions.canAcceptAppointmentRequest) {
+                if (!authPermissions.canAcceptAppointmentRequest) {
                     enableById(R.id.button_left_action, false);
                     enableById(R.id.button_right_action, false);
                 }
                 break;
             case PENDING:
             case CHECKED_IN:
-                if(!authPermissions.canCancelAppointment) {
+                if (!authPermissions.canCancelAppointment) {
                     enableById(R.id.button_left_action, false);
                 }
                 break;

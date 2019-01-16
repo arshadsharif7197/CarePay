@@ -579,6 +579,11 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         getWorkflowServiceHelper().execute(transitionDTO, allAppointmentsServiceCallback, queryMap);
     }
 
+    @Override
+    public void startVideoVisit(AppointmentDTO appointmentDTO) {
+        //TODO VideoVisit start video
+    }
+
     private String getFormattedDate(Date date) {
         DateUtil dateUtil = DateUtil.getInstance();
 
@@ -635,6 +640,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     public void onRightActionTapped(AppointmentDTO appointmentDTO) {
         if (appointmentDTO.getPayload().getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
             confirmAppointment(appointmentDTO);
+        } else if (appointmentDTO.getPayload().getVisitType().hasVideoOption()) {
+            startVideoVisit(appointmentDTO);
         } else if (appointmentDTO.getPayload().canCheckIn()) {
             launchPatientModeCheckin(appointmentDTO);
         } else if (appointmentDTO.getPayload().canCheckOut()) {

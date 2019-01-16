@@ -753,4 +753,16 @@ public class AppointmentsPayloadDTO {
         }
         return false;
     }
+
+    public boolean canStartVideoVisit(){
+        Date apptStartDate = DateUtil.getInstance().setDateRaw(getStartTime()).getDate();
+        Date currentDate = DateUtil.getInstance().setToCurrent().getDate();
+        return getVisitType().hasVideoOption() &&
+                isAppointmentToday() &&
+                ((!hasAppointmentStarted() &&
+                        DateUtil.getSecondsElapsed(apptStartDate, currentDate) <
+                                CarePayConstants.VIDEO_START_OFFSET_SECONDS) ||
+                        hasAppointmentStarted());
+    }
+
 }

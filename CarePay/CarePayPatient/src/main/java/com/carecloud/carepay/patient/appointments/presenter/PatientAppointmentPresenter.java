@@ -269,6 +269,11 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         return getPracticeSettings();
     }
 
+    @Override
+    public void startVideoVisit(AppointmentDTO appointmentDTO) {
+        //TODO VideoVisit start video
+    }
+
     public AppointmentsResultModel getMainAppointmentDto() {
         return appointmentsResultModel;
     }

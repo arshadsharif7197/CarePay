@@ -148,12 +148,21 @@
 
             <com.carecloud.carepaylibray.customcomponents.AutoResizeTextView
                 android:id="@+id/appointment_visit_type"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="@dimen/visitTypeValueHeight"
+                android:layout_weight="1"
                 android:gravity="end"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/visitTypeValueTextSize"
                 app:customAssetFont="proxima_nova_regular" />
+
+            <ImageView
+                android:id="@+id/visit_type_video"
+                android:layout_width="@dimen/dimen_30dp"
+                android:layout_height="@dimen/dimen_30dp"
+                android:src="@drawable/icn_play_video_button"
+                android:tint="@color/colorPrimary"
+                android:visibility="gone"/>
 
         </LinearLayout>
 
