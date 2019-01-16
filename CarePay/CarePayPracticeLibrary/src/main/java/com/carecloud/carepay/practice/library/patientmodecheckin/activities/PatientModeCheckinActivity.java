@@ -53,21 +53,10 @@ import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
-import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
-import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
-import com.carecloud.carepaylibray.demographics.fragments.FormsFragment;
-import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
-import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment;
-import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
-import com.carecloud.carepaylibray.demographics.fragments.IntakeFormsFragment;
-import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.interfaces.IcicleInterface;
 import com.carecloud.carepaylibray.media.MediaResultListener;
-import com.carecloud.carepaylibray.medications.fragments.AllergiesFragment;
-import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
-import com.carecloud.carepaylibray.medications.fragments.MedicationsFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanTermsFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
@@ -311,8 +300,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                         @Override
                         public void onConfirm() {
                             setResult(CarePayConstants.HOME_PRESSED);
+                            presenter.logCheckinCancelled();
                             finish();
-                            logCheckinCancelled();
                         }
                     });
                     String tag = confirmDialogFragment.getClass().getName();
@@ -847,35 +836,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_checkin_completed), 1);
             MixPanelUtil.endTimer(getString(R.string.timer_checkin));
         }
-    }
-
-    private void logCheckinCancelled() {
-        Fragment currentFragment = presenter.getCurrentFragment();
-        String currentStep = null;
-        if (currentFragment instanceof PersonalInfoFragment) {
-            currentStep = getString(R.string.step_personal_info);
-        } else if (currentFragment instanceof AddressFragment) {
-            currentStep = getString(R.string.step_address);
-        } else if (currentFragment instanceof DemographicsFragment) {
-            currentStep = getString(R.string.step_demographics);
-        } else if (currentFragment instanceof IdentificationFragment) {
-            currentStep = getString(R.string.step_identity);
-        } else if (currentFragment instanceof HealthInsuranceFragment ||
-                currentFragment instanceof InsuranceEditDialog) {
-            currentStep = getString(R.string.step_health_insurance);
-        } else if (currentFragment instanceof FormsFragment) {
-            currentStep = getString(R.string.step_consent_forms);
-        } else if (currentFragment instanceof MedicationsAllergyFragment ||
-                currentFragment instanceof AllergiesFragment ||
-                currentFragment instanceof MedicationsFragment) {
-            currentStep = getString(R.string.step_medications);
-        } else if (currentFragment instanceof IntakeFormsFragment) {
-            currentStep = getString(R.string.step_intake);
-        }
-        if (currentStep != null) {
-            MixPanelUtil.logEvent(getString(R.string.event_checkin_cancelled), getString(R.string.param_last_completed_step), currentStep);
-        }
-
     }
 
     @Override

@@ -88,6 +88,13 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             currentDemographicStep = savedInstanceState.getInt(SAVED_STEP_KEY, 1);
         }
 
+        //patient mode will call this manually to allow it to properly init patient user
+        if (!isPatientMode) {
+            initWorkflow();
+        }
+    }
+
+    protected void initWorkflow() {
         WorkflowDTO workflowDTO = demographicsView.getConvertedDTO(WorkflowDTO.class);
         displayFragment(workflowDTO);
 
@@ -456,7 +463,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
 
         if (step == IDENTITY) {
             MixPanelUtil.startTimer(getString(R.string.timer_identification_docs));
-        } else if (step == INSURANCE){
+        } else if (step == INSURANCE) {
             MixPanelUtil.startTimer(getString(R.string.timer_health_insurance));
         }
     }
