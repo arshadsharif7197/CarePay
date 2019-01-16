@@ -1,15 +1,20 @@
 package com.carecloud.carepay.patient.appointments.fragments;
 
+import android.Manifest;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.PermissionChecker;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +26,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
+import com.carecloud.carepay.patient.visitsummary.VisitSummaryDialogFragment;
 import com.carecloud.carepay.patient.visitsummary.dto.VisitSummaryDTO;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -61,6 +67,7 @@ import java.util.Set;
 public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private static final String KEY_BREEZE_PRACTICE = "is_breeze_practice";
     private static final String KEY_RESCHEDULE_ENABLED = "isRescheduleEnabled";
+    private static final int MY_PERMISSIONS_VS_WRITE_EXTERNAL_STORAGE = 10;
 
     private AppointmentDTO appointmentDTO;
 
@@ -90,6 +97,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private boolean isRescheduleEnabled = true;
     private Handler statusHandler;
     private long enqueueId;
+    private int retryIntent = 0;
 
 
     /**
@@ -379,7 +387,6 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     }
 
     private void showVisitSummaryButton() {
-        String code = appointmentDTO.getPayload().getAppointmentStatus().getOriginalCode();
         AppointmentsResultModel appointmentModelDto = ((PatientAppointmentPresenter) callback).getMainAppointmentDto();
         boolean isVisitSummaryEnabled = false;
         for (UserPracticeDTO userPracticeDTO : appointmentModelDto.getPayload().getUserPractices()) {
@@ -399,7 +406,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
             }
             if (isVisitSummaryEnabled) break;
         }
-        if ((code.equals(CarePayConstants.BILLED) || code.equals(CarePayConstants.MANUALLY_BILLED)
+        String code = appointmentDTO.getPayload().getAppointmentStatus().getOriginalCode();
+        if ((CarePayConstants.BILLED.equals(code) || CarePayConstants.MANUALLY_BILLED.equals(code)
                 && isVisitSummaryEnabled)) {
             appointmentStatus.setVisibility(View.GONE);
             actionsLayout.setVisibility(View.VISIBLE);
@@ -576,29 +584,39 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private View.OnClickListener visitSummaryClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            callback.callVisitSummaryService(appointmentDTO, new WorkflowServiceCallback() {
-                @Override
-                public void onPreExecute() {
-                    ((BaseActivity) getActivity()).showProgressDialog();
-                }
-
-                @Override
-                public void onPostExecute(WorkflowDTO workflowDTO) {
-                    VisitSummaryDTO visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
-                    ((BaseActivity) getActivity()).hideProgressDialog();
-                    rightButton.setEnabled(false);
-                    rightButton.setProgressEnabled(true);
-                    rightButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.processing"));
-                    callVisitSummaryStatusService(visitSummaryDTO.getPayload().getVisitSummaryRequest().getJobId());
-                }
-
-                @Override
-                public void onFailure(String exceptionMessage) {
-                    ((BaseActivity) getActivity()).hideProgressDialog();
-                }
-            });
+            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PermissionChecker.PERMISSION_GRANTED && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_VS_WRITE_EXTERNAL_STORAGE);
+            } else {
+                callVisitSummaryService();
+            }
         }
     };
+
+    private void callVisitSummaryService() {
+        callback.callVisitSummaryService(appointmentDTO, new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                ((BaseActivity) getActivity()).showProgressDialog();
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                VisitSummaryDTO visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
+                ((BaseActivity) getActivity()).hideProgressDialog();
+                rightButton.setEnabled(false);
+                rightButton.setProgressEnabled(true);
+                rightButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.processing"));
+                callVisitSummaryStatusService(visitSummaryDTO.getPayload().getVisitSummaryRequest().getJobId());
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                ((BaseActivity) getActivity()).hideProgressDialog();
+            }
+        });
+    }
 
     private void callVisitSummaryStatusService(final String jobId) {
         callback.callVisitSummaryStatusService(jobId, appointmentDTO.getMetadata().getPracticeMgmt(),
@@ -613,14 +631,21 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     public void onPostExecute(WorkflowDTO workflowDTO) {
                         VisitSummaryDTO visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
                         String status = visitSummaryDTO.getPayload().getVisitSummary().getStatus();
-                        if (status.equals("queued") || status.equals("working")) {
+                        if (retryIntent > VisitSummaryDialogFragment.MAX_NUMBER_RETRIES) {
+                            retryIntent = 0;
+                            rightButton.setEnabled(true);
+                            rightButton.setProgressEnabled(false);
+                            rightButton.setText(Label.getLabel("visitSummary.appointments.button.label.visitSummary"));
+                            showErrorNotification(Label.getLabel("practice_patient_settings_intake_forms_print_status_error"));
+                        } else if (status.equals("queued") || status.equals("working")) {
+                            retryIntent++;
                             statusHandler = new Handler();
                             statusHandler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     callVisitSummaryStatusService(jobId);
                                 }
-                            }, 5000);
+                            }, VisitSummaryDialogFragment.RETRY_TIME);
                         }
                     }
 
@@ -706,4 +731,14 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
             }
         }
     };
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_PERMISSIONS_VS_WRITE_EXTERNAL_STORAGE
+                && (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+            callVisitSummaryService();
+        }
+    }
 }

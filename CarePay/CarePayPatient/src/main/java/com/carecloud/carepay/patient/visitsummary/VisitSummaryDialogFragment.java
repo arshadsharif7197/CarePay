@@ -1,18 +1,24 @@
 package com.carecloud.carepay.patient.visitsummary;
 
 
+import android.Manifest;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -68,6 +74,9 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
 
     private static final int FROM_DATE = 100;
     private static final int TO_DATE = 101;
+    public static final long RETRY_TIME = 10000;
+    private static final int MY_PERMISSIONS_VS_WRITE_EXTERNAL_STORAGE = 10;
+    public static final int MAX_NUMBER_RETRIES = 6;
     private FragmentActivityInterface callback;
     private MyHealthDto myHealthDto;
     private UserPracticeDTO selectedPractice;
@@ -83,6 +92,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
     private long enqueueId;
     private Handler handler;
     private String format;
+    private int retryIntent = 0;
 
     public static VisitSummaryDialogFragment newInstance() {
         return new VisitSummaryDialogFragment();
@@ -139,16 +149,19 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                             exportButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    String downloadLocalUri = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+                                    String downloadLocalUri = cursor
+                                            .getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
                                     if (downloadLocalUri != null) {
                                         String downloadMimeType = cursor.getString(cursor
                                                 .getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE));
-                                        FileDownloadUtil.openDownloadedAttachment(context, Uri.parse(downloadLocalUri), downloadMimeType);
+                                        FileDownloadUtil
+                                                .openDownloadedAttachment(context, Uri.parse(downloadLocalUri), downloadMimeType);
                                     }
                                 }
                             });
                         } else {
-                            exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.openDirectory"));
+                            exportButton.setText(Label
+                                    .getLabel("visitSummary.createVisitSummary.button.label.openDirectory"));
                             exportButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -264,7 +277,13 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
             @Override
             public void onClick(View v) {
                 if (formIsValid()) {
-                    callVisitSummaryService(selectedPractice);
+                    if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            != PermissionChecker.PERMISSION_GRANTED && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                MY_PERMISSIONS_VS_WRITE_EXTERNAL_STORAGE);
+                    } else {
+                        callVisitSummaryService(selectedPractice);
+                    }
                 }
             }
         });
@@ -349,7 +368,6 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                             }
                         },
                         flag);
-//        SystemUtil.hideSoftKeyboard(getContext(), getCurrentFocus());
         callback.displayDialogFragment(fragment, true);
     }
 
@@ -455,14 +473,21 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 VisitSummaryDTO visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
                 String status = visitSummaryDTO.getPayload().getVisitSummary().getStatus();
-                if (status.equals("queued") || status.equals("working")) {
+                if (retryIntent > MAX_NUMBER_RETRIES) {
+                    retryIntent = 0;
+                    exportButton.setEnabled(true);
+                    exportButton.setProgressEnabled(false);
+                    exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.export"));
+                    showErrorNotification(Label.getLabel("practice_patient_settings_intake_forms_print_status_error"));
+                } else if (status.equals("queued") || status.equals("working")) {
+                    retryIntent++;
                     handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             callForStatus(jobId, selectedPractice, format);
                         }
-                    }, 5000);
+                    }, RETRY_TIME);
                 }
             }
 
@@ -505,6 +530,15 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
     public void onDetach() {
         super.onDetach();
         callback = null;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_PERMISSIONS_VS_WRITE_EXTERNAL_STORAGE
+                && (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+            callVisitSummaryService(selectedPractice);
+        }
     }
 
     public interface OnOptionSelectedListener {
