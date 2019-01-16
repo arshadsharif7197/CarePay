@@ -138,30 +138,12 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             WorkflowDTO workflowDTO = getConvertedDTO(WorkflowDTO.class);
             initDto(workflowDTO);
 
-            if (getAppointment() != null) {
-                //Log Check-out Started
-                String[] params = {getString(R.string.param_practice_id),
-                        getString(R.string.param_appointment_id),
-                        getString(R.string.param_appointment_type),
-                        getString(R.string.param_is_guest),
-                        getString(R.string.param_provider_id),
-                        getString(R.string.param_location_id)
-                };
-                Object[] values = {getAppointment().getMetadata().getPracticeId(),
-                        getAppointmentId(),
-                        getAppointment().getPayload().getVisitType().getName(),
-                        false,
-                        getAppointment().getPayload().getProvider().getGuid(),
-                        getAppointment().getPayload().getLocation().getGuid()
-                };
-                MixPanelUtil.logEvent(getString(R.string.event_checkout_started), params, values);
-                MixPanelUtil.startTimer(getString(R.string.timer_checkout));
-            }
         }
         initAppMode();
         setContentView(R.layout.activity_patient_checkout);
         initViews();
         initializeLanguageSpinner();
+        logCheckoutStarted();
     }
 
     @Override
@@ -1013,6 +995,29 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             currentStep = getString(R.string.step_checkout_forms);
         }
         MixPanelUtil.logEvent(getString(R.string.event_checkout_cancelled), getString(R.string.param_last_completed_step), currentStep);
+    }
+
+    private void logCheckoutStarted(){
+        if (getAppointment() != null) {
+            //Log Check-out Started
+            boolean isGuest = !ValidationHelper.isValidEmail(getAppAuthorizationHelper().getCurrUser());
+            String[] params = {getString(R.string.param_practice_id),
+                    getString(R.string.param_appointment_id),
+                    getString(R.string.param_appointment_type),
+                    getString(R.string.param_is_guest),
+                    getString(R.string.param_provider_id),
+                    getString(R.string.param_location_id)
+            };
+            Object[] values = {getAppointment().getMetadata().getPracticeId(),
+                    getAppointmentId(),
+                    getAppointment().getPayload().getVisitType().getName(),
+                    isGuest,
+                    getAppointment().getPayload().getProvider().getGuid(),
+                    getAppointment().getPayload().getLocation().getGuid()
+            };
+            MixPanelUtil.logEvent(getString(R.string.event_checkout_started), params, values);
+            MixPanelUtil.startTimer(getString(R.string.timer_checkout));
+        }
     }
 
     @Override
