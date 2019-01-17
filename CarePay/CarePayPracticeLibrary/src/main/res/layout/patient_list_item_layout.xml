@@ -98,6 +98,16 @@
             card_view:customAssetFont="proxima_nova_semi_bold"
             tools:text="05:35 PM" />
 
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/visit_type_video"
+            android:layout_width="@dimen/dimen_24dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="@dimen/dimen_12dp"
+            android:src="@drawable/icn_video_visit"
+            android:visibility="gone"/>
+
     </RelativeLayout>
 
 </LinearLayout>

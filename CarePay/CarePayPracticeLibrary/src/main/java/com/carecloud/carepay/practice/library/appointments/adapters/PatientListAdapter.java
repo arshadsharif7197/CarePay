@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
@@ -134,6 +135,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         holder.bind(patient, tapListener);
         holder.setTimeView(patient);
         holder.itemView.setContentDescription(patient.name);
+        holder.videoVisitIndicator.setVisibility(patient.isVideoVisit ? View.VISIBLE : View.GONE);
 
         if (!TextUtils.isEmpty(patient.photoUrl)) {
             Picasso.with(context).load(patient.photoUrl)
@@ -384,12 +386,13 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     class CardViewHolder extends RecyclerView.ViewHolder {
 
-        CarePayTextView initials;
-        CarePayTextView name;
-        CarePayTextView provider;
-        CarePayTextView balance;
-        CarePayTextView timeTextView;
+        TextView initials;
+        TextView name;
+        TextView provider;
+        TextView balance;
+        TextView timeTextView;
         ImageView profilePicture;
+        View videoVisitIndicator;
 
         /**
          * Constructor.
@@ -398,12 +401,13 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
          */
         CardViewHolder(View view) {
             super(view);
-            initials = (CarePayTextView) view.findViewById(R.id.patient_short_name);
-            name = (CarePayTextView) view.findViewById(R.id.patient_name_text_view);
-            provider = (CarePayTextView) view.findViewById(R.id.provider_name_text_view);
-            balance = (CarePayTextView) view.findViewById(R.id.amount_text_view);
-            timeTextView = (CarePayTextView) view.findViewById(R.id.timeTextView);
-            profilePicture = (ImageView) view.findViewById(R.id.patient_pic_image_view);
+            initials = view.findViewById(R.id.patient_short_name);
+            name = view.findViewById(R.id.patient_name_text_view);
+            provider = view.findViewById(R.id.provider_name_text_view);
+            balance = view.findViewById(R.id.amount_text_view);
+            timeTextView = view.findViewById(R.id.timeTextView);
+            profilePicture = view.findViewById(R.id.patient_pic_image_view);
+            videoVisitIndicator = view.findViewById(R.id.visit_type_video);
         }
 
         void bind(final CardViewPatient patient, final OnItemTappedListener tapListener) {

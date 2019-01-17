@@ -16,10 +16,9 @@
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/reasonTypeTextView"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_14dp"
-            android:layout_weight="0.3"
             android:gravity="start|center_vertical"
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/apt_available_hours_list_row_text"
@@ -27,17 +26,30 @@
             breeze:textKey="visit_type_heading"
             tools:text="Visit Type" />
 
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/visit_type_video"
+            android:layout_width="@dimen/dimen_24dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icn_video_visit"
+            android:tint="@color/textview_default_textcolor"
+            android:visibility="gone"/>
+
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/reasonTextView"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dimen_14dp"
-            android:layout_weight="0.7"
             android:gravity="end|center_vertical"
             android:textColor="@color/textview_default_textcolor"
             android:textSize="@dimen/text_size_14"
             app:customAssetFont="proxima_nova_semi_bold"
             tools:text="Follow-Up" />
+
     </LinearLayout>
 
     <View

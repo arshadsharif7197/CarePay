@@ -189,7 +189,7 @@ public class PracticeAppointmentDialog extends BasePracticeDialogFragment {
                 timeColor = R.color.colorPrimary;
                 leftActionLabel = Label.getLabel("cancel_appointment_short_label");
                 if(appointmentDTO.getPayload().getVisitType().hasVideoOption()){
-                    rightActionLabel = "Video";//TODO VideoVisit switch to label
+                    rightActionLabel = Label.getLabel("appointment_video_visit_start_short");
                 }else {
                     rightActionLabel = Label.getLabel("start_checkin_label");
                 }
@@ -206,7 +206,7 @@ public class PracticeAppointmentDialog extends BasePracticeDialogFragment {
                 timeColor = R.color.colorPrimary;
                 leftActionLabel = Label.getLabel("cancel_appointment_short_label");
                 if(appointmentDTO.getPayload().getVisitType().hasVideoOption()){
-                    rightActionLabel = "Video";//TODO VideoVisit switch to label
+                    rightActionLabel = Label.getLabel("appointment_video_visit_start_short");
                 }else {
                     rightActionLabel = Label.getLabel("start_checkout_label");
                 }

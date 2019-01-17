@@ -3,7 +3,6 @@ package com.carecloud.carepaylibray.appointments.models;
 
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.adhoc.AdhocFormsPatientModeInfo;
-import com.carecloud.carepaylibray.base.models.Paging;
 import com.carecloud.carepaylibray.base.models.PagingDto;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
@@ -96,6 +95,9 @@ public class AppointmentPayloadModel implements Serializable {
     @SerializedName("appointment_page_details")
     @Expose
     private List<PagingDto> pagingInfo = new ArrayList<>();
+    @SerializedName("video_visit")
+    @Expose
+    private VideoVisitModel videoVisitModel = new VideoVisitModel();
 
     /**
      * @return languages
@@ -357,5 +359,13 @@ public class AppointmentPayloadModel implements Serializable {
 
     public void setPagingInfo(List<PagingDto> pagingInfo) {
         this.pagingInfo = pagingInfo;
+    }
+
+    public VideoVisitModel getVideoVisitModel() {
+        return videoVisitModel;
+    }
+
+    public void setVideoVisitModel(VideoVisitModel videoVisitModel) {
+        this.videoVisitModel = videoVisitModel;
     }
 }

@@ -46,13 +46,12 @@
             android:tint="@color/light_gray"
             android:visibility="gone" />
 
-        <ImageView
+        <android.support.v7.widget.AppCompatImageView
             android:id="@+id/visit_type_video"
-            android:layout_width="@dimen/dimen_30dp"
-            android:layout_height="@dimen/dimen_30dp"
+            android:layout_width="@dimen/dimen_24dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/icn_play_video_button"
-            android:tint="@color/colorPrimary"
+            android:src="@drawable/icn_video_visit"
             android:visibility="gone"/>
 
     </LinearLayout>

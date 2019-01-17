@@ -104,6 +104,9 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
             prepaidLayout.setVisibility(View.GONE);
         }
 
+        View videoVisitIndicator = childActionView.findViewById(R.id.visit_type_video);
+        videoVisitIndicator.setVisibility(visitTypeDTO.hasVideoOption() ? View.VISIBLE : View.GONE);
+
         final EditText reasonForVisitEditText = childActionView.findViewById(R.id.reasonForVisitEditText);
         appointmentRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override

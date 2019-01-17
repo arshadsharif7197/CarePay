@@ -1,6 +1,8 @@
 package com.carecloud.carepay.practice.library.appointments;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -581,7 +583,14 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void startVideoVisit(AppointmentDTO appointmentDTO) {
-        //TODO VideoVisit start video
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
+        queryMap.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
+        queryMap.put("patient_id", appointmentDTO.getMetadata().getPatientId());
+        queryMap.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
+
+        TransitionDTO videoVisitTransition = checkInDTO.getMetadata().getLinks().getVideoVisit();
+        getWorkflowServiceHelper().execute(videoVisitTransition, startVideoVisitCallback, queryMap);
     }
 
     private String getFormattedDate(Date date) {
@@ -805,4 +814,33 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     public void onCashSelected(PaymentsModel paymentsModel) {
         //TODO handle this from practice mode
     }
+
+    private WorkflowServiceCallback startVideoVisitCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            AppointmentsResultModel appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
+            String url = appointmentsResultModel.getPayload().getVideoVisitModel().getPayload().getVisitUrl();
+
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
+
+            if(intent.resolveActivity(getContext().getPackageManager()) != null){
+                startActivityForResult(intent, 555);
+            }
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
+            showErrorNotification(exceptionMessage);
+        }
+    };
+
 }

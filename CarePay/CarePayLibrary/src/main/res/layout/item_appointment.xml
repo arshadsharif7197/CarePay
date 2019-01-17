@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -198,14 +199,30 @@
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="appointment_checked_out_label"/>
 
-        <ImageView
+        <LinearLayout
             android:id="@+id/visit_type_video"
-            android:layout_width="@dimen/dimen_30dp"
-            android:layout_height="@dimen/dimen_30dp"
-            android:src="@drawable/icn_play_video_button"
-            android:tint="@color/colorPrimary"
-            android:visibility="gone"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:gravity="end">
 
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/optional_gray"
+                android:textSize="@dimen/text_size_11"
+                android:textAllCaps="false"
+                app:customAssetFont="proxima_nova_regular"
+                breeze:textKey="appointment_video_visit_indicator"
+                tools:text="Video Visit"/>
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="@dimen/dimen_24dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icn_video_visit"/>
+
+        </LinearLayout>
     </LinearLayout>
 
     <View

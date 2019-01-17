@@ -245,7 +245,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                             !appointmentDTO.getPayload().isAppointmentOver()) {
                         actionsLayout.setVisibility(View.VISIBLE);
                         leftButton.setVisibility(View.VISIBLE);
-                        leftButton.setText("Start Video Visit");//TODO VideoVisit move to label
+                        leftButton.setText(Label.getLabel("appointment_video_visit_start"));
                         leftButton.setOnClickListener(startVideoVisitClick);
                         leftButton.setEnabled(appointmentDTO.getPayload().canStartVideoVisit());
                     } else if (appointmentDTO.getPayload().isAppointmentToday()
