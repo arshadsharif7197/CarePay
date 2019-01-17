@@ -20,7 +20,7 @@ import java.util.Locale;
 /**
  * Created by pjohnson on 13/03/17
  */
-
+@Deprecated
 public class VisitTypeListAdapter extends RecyclerView.Adapter<VisitTypeListAdapter.ViewHolder> {
 
     public interface VisitTypeSelectionCallback {

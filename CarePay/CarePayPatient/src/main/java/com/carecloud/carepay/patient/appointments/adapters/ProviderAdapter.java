@@ -21,6 +21,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+@Deprecated
 public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.ProviderViewHolder> {
 
     private Context context;

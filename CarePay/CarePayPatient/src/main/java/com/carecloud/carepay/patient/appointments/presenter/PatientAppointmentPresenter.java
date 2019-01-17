@@ -8,12 +8,13 @@ import android.util.Log;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
+import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
+import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentFragment;
 import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentFeeDialog;
 import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentDateRangeFragment;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentDetailDialog;
 import com.carecloud.carepay.patient.appointments.fragments.AvailableHoursFragment;
-import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragment;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
@@ -100,9 +101,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void newAppointment() {
-        ChooseProviderFragment fragment = ChooseProviderFragment.newInstance(appointmentsResultModel,
-                null, null);
-        viewHandler.navigateToFragment(fragment, true);
+        CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
+//        ChooseProviderFragment fragment = ChooseProviderFragment.newInstance(appointmentsResultModel, null, null);
+        ((AppointmentsActivity) viewHandler).addFragment(fragment, true);
     }
 
     @Override

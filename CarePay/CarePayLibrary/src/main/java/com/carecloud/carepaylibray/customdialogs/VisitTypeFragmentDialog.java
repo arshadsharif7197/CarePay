@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+@Deprecated
 public class VisitTypeFragmentDialog extends BaseAppointmentDialogFragment
         implements VisitTypeListAdapter.VisitTypeSelectionCallback {
 

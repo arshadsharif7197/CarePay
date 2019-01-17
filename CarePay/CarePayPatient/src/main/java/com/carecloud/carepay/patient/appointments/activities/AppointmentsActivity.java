@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentFragmentInterface;
+import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentInterface;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentTabHostFragment;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
@@ -19,10 +21,14 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
+import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -30,7 +36,8 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AppointmentsActivity extends MenuPatientActivity implements AppointmentViewHandler {
+public class AppointmentsActivity extends MenuPatientActivity implements AppointmentViewHandler,
+        CreateAppointmentInterface {
 
     private AppointmentsResultModel appointmentsResultModel;
     private PaymentsModel paymentsModel;
@@ -179,8 +186,50 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         SystemUtil.showSuccessToast(getContext(), appointmentRequestSuccessMessage);
     }
 
-    private void replaceFragment(Fragment fragment, boolean addToStack) {
+    @Override
+    public void addFragment(Fragment fragment, boolean addToBackStack) {
+        addFragment(R.id.container_main, fragment, addToBackStack);
+    }
+
+    @Override
+    public void replaceFragment(Fragment fragment, boolean addToStack) {
         replaceFragment(R.id.container_main, fragment, addToStack);
     }
 
+    @Override
+    public DTO getDto() {
+        return appointmentsResultModel;
+    }
+
+    @Override
+    public void showFragment(Fragment fragment) {
+        addFragment(fragment, true);
+    }
+
+    @Override
+    public void setResourceProvider(AppointmentResourcesItemDTO resource) {
+        getSupportFragmentManager().popBackStackImmediate();
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container_main);
+        if (fragment instanceof CreateAppointmentFragmentInterface) {
+            ((CreateAppointmentFragmentInterface) fragment).setResourceProvider(resource);
+        }
+    }
+
+    @Override
+    public void setVisitType(VisitTypeDTO visitTypeDTO) {
+        getSupportFragmentManager().popBackStackImmediate();
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container_main);
+        if (fragment instanceof CreateAppointmentFragmentInterface) {
+            ((CreateAppointmentFragmentInterface) fragment).setVisitType(visitTypeDTO);
+        }
+    }
+
+    @Override
+    public void setLocation(LocationDTO locationDTO) {
+        getSupportFragmentManager().popBackStackImmediate();
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container_main);
+        if (fragment instanceof CreateAppointmentFragmentInterface) {
+            ((CreateAppointmentFragmentInterface) fragment).setLocation(locationDTO);
+        }
+    }
 }

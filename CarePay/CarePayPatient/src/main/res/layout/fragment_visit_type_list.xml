@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <include
+        android:id="@+id/toolbar_layout"
+        layout="@layout/toolbar_responsibility" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/visitTypeRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar_layout" />
+
+    <RelativeLayout
+        android:id="@+id/emptyStateScreen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/add_appointment_toolbar"
+        android:visibility="gone">
+
+        <View
+            android:id="@+id/placeHolder"
+            android:layout_width="@dimen/dimen_1dp"
+            android:layout_height="@dimen/dimen_1dp"
+            android:layout_centerInParent="true" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/placeHolder"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:padding="@dimen/dimen_10dp"
+            android:textColor="@color/charcoal"
+            android:textSize="@dimen/text_size_21"
+            app:customAssetFont="gotham_rounded_book"
+            breeze:textKey="appointment.visitType.message.label.emptyScreenTitle"
+            tools:text="No visit types available" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/placeHolder"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:paddingStart="@dimen/dimen_25dp"
+            android:paddingEnd="@dimen/dimen_25dp"
+            android:textColor="@color/cadet_gray"
+            android:textSize="@dimen/text_size_14"
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textKey="appointment.visitType.message.label.emptyScreenSubTitle"
+            tools:text="There are currently no visit types available to schedule an appointment with" />
+
+    </RelativeLayout>
+</RelativeLayout>

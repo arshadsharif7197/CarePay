@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Model for appointment resources.
  */
+@Deprecated
 public class AppointmentResourcesDTO {
 
     @SerializedName("resource")
