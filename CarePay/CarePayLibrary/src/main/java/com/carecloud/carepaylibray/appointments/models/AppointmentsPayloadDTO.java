@@ -117,6 +117,7 @@ public class AppointmentsPayloadDTO {
     private AppointmentResourceDTO resource = new AppointmentResourceDTO();
 
     private AppointmentDisplayStyle displayStyle;
+    private String reasonForVisit;
 
     /**
      * @return The id
@@ -752,5 +753,13 @@ public class AppointmentsPayloadDTO {
             }
         }
         return false;
+    }
+
+    public void setReasonForVisit(String reasonForVisit) {
+        this.reasonForVisit = reasonForVisit;
+    }
+
+    public String getReasonForVisit() {
+        return reasonForVisit;
     }
 }

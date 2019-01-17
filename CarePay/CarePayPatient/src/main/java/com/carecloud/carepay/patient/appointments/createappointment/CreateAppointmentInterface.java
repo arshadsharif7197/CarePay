@@ -2,10 +2,9 @@ package com.carecloud.carepay.patient.appointments.createappointment;
 
 import android.support.v4.app.Fragment;
 
-import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
-import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 
@@ -22,4 +21,10 @@ public interface CreateAppointmentInterface extends FragmentActivityInterface {
     void setVisitType(VisitTypeDTO visitTypeDTO);
 
     void setLocation(LocationDTO locationDTO);
+
+    void showAvailabilityHourFragment();
+
+    void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO);
+
+    void refreshAppointmentsList();
 }

@@ -26,6 +26,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+@Deprecated
 public class BaseDoctorInfoDialog extends Dialog implements View.OnClickListener {
 
     private static final String LOG_TAG = BaseDoctorInfoDialog.class.getSimpleName();

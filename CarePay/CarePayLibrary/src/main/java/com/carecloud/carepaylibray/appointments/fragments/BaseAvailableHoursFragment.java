@@ -50,7 +50,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
+@Deprecated
 public abstract class BaseAvailableHoursFragment extends BaseAppointmentDialogFragment
         implements FilterableAvailableHoursAdapter.SelectAppointmentTimeSlotCallback,
         AvailableLocationsAdapter.SelectLocationCallback {

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar_layout"
+        layout="@layout/add_appointment_toolbar" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/prepaymentMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar_layout"
+        android:background="@color/colorPrimaryDark"
+        android:gravity="center"
+        android:padding="@dimen/dimen_10dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_15"
+        android:visibility="gone"
+        app:customAssetFont="proxima_nova_semi_bold"
+        tools:text="Required Prepayment: $49.00" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/availableHoursRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/prepaymentMessage"
+        android:paddingLeft="@dimen/apt_available_hours_list_padding"
+        android:paddingRight="@dimen/apt_available_hours_list_padding" />
+
+    <include
+        android:id="@+id/no_appointment_layout"
+        layout="@layout/no_appointment_layout"
+        android:layout_below="@id/prepaymentMessage" />
+
+</RelativeLayout>

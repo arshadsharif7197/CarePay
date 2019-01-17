@@ -25,6 +25,7 @@ import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler
 import java.text.NumberFormat;
 import java.util.Locale;
 
+@Deprecated
 public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
 
     private final AppointmentsSlotsDTO appointmentSlot;
@@ -82,8 +83,8 @@ public class RequestAppointmentDialog extends BaseDoctorInfoDialog {
         View childActionView = inflater.inflate(R.layout.dialog_request_appointment, null);
 
         boolean autoScheduleAppointments = callback.getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests();
-        View view = findViewById(R.id.appointDialogButtonLayout);
-        view.setVisibility(View.VISIBLE);
+        View appointDialogButtonLayout = findViewById(R.id.appointDialogButtonLayout);
+        appointDialogButtonLayout.setVisibility(View.VISIBLE);
         Button appointmentRequestButton = findViewById(R.id.requestAppointmentButton);
         appointmentRequestButton.setText(Label.getLabel(autoScheduleAppointments ?
                 "appointments_schedule_button" : "appointments_request_heading"));

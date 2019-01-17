@@ -19,6 +19,7 @@ public class AppointmentsSlotsDTO implements Serializable {
 
     @Expose(serialize = false)
     private LocationDTO location;
+    private transient boolean header;
 
     /**
      * Gets start time.
@@ -57,7 +58,6 @@ public class AppointmentsSlotsDTO implements Serializable {
     }
 
     /**
-     *
      * @param location appointment Location
      */
     public void setLocation(LocationDTO location) {
@@ -65,10 +65,17 @@ public class AppointmentsSlotsDTO implements Serializable {
     }
 
     /**
-     *
      * @return appointment Location
      */
     public LocationDTO getLocation() {
         return location;
+    }
+
+    public boolean isHeader() {
+        return header;
+    }
+
+    public void setHeader(boolean header) {
+        this.header = header;
     }
 }

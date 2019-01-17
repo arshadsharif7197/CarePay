@@ -13,6 +13,7 @@ public class ResourcesToScheduleDTO {
     @SerializedName("practice")
     @Expose
     private UserPracticeDTO practice = new UserPracticeDTO();
+    //TODO: Delete this
     @SerializedName("resources_")
     @Expose
     private List<AppointmentResourcesDTO> resources = new ArrayList<>();

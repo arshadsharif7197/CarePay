@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentFragmentInterface;
 import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentInterface;
+import com.carecloud.carepay.patient.appointments.createappointment.availablehours.AvailabilityHourFragment;
+import com.carecloud.carepay.patient.appointments.createappointment.requestappointment.RequestAppointmentFragment;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentTabHostFragment;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
@@ -21,6 +23,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
@@ -131,13 +134,14 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
     @Override
     public void onBackPressed() {// sign-out from Cognito
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStackImmediate();
-            if (getSupportFragmentManager().getBackStackEntryCount() < 1) {
+            if (getSupportFragmentManager().getBackStackEntryCount() <= 0) {
                 displayToolbar(true, null);
+                getSupportActionBar().setElevation(0);
                 toolbarHidden = false;
             }
         } else {
@@ -231,5 +235,22 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         if (fragment instanceof CreateAppointmentFragmentInterface) {
             ((CreateAppointmentFragmentInterface) fragment).setLocation(locationDTO);
         }
+    }
+
+    @Override
+    public void showAvailabilityHourFragment() {
+        addFragment(AvailabilityHourFragment.newInstance(), true);
+    }
+
+    @Override
+    public void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO) {
+        RequestAppointmentFragment.newInstance(appointmentDTO).show(getSupportFragmentManager(), "confirmation");
+    }
+
+    @Override
+    public void refreshAppointmentsList() {
+        getSupportFragmentManager().popBackStackImmediate();
+        getSupportFragmentManager().popBackStackImmediate();
+        callAppointmentService();
     }
 }

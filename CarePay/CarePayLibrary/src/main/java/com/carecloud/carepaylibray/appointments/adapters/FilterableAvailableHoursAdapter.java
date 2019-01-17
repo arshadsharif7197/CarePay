@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * Created by lmenendez on 4/21/17.
  */
-
+@Deprecated
 public class FilterableAvailableHoursAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int CELL_HEADER = 0;
     private static final int CELL_CARD = 1;

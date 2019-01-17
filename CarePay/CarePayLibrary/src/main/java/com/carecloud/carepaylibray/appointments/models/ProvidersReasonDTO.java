@@ -16,59 +16,55 @@ public class ProvidersReasonDTO {
     @SerializedName("description")
     @Expose
     private String description;
+    private transient double amount;
 
     /**
-     * 
-     * @return
-     *     The id
+     * @return The id
      */
     public Integer getId() {
         return id;
     }
 
     /**
-     * 
-     * @param id
-     *     The id
+     * @param id The id
      */
     public void setId(Integer id) {
         this.id = id;
     }
 
     /**
-     * 
-     * @return
-     *     The name
+     * @return The name
      */
     public String getName() {
         return StringUtil.getLabelForView(name);
     }
 
     /**
-     * 
-     * @param name
-     *     The name
+     * @param name The name
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * 
-     * @return
-     *     The description
+     * @return The description
      */
     public String getDescription() {
         return StringUtil.getLabelForView(description);
     }
 
     /**
-     * 
-     * @param description
-     *     The description
+     * @param description The description
      */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
 }

@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,20 +19,27 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.adapters.PracticesAdapter;
+import com.carecloud.carepay.patient.appointments.createappointment.location.LocationListFragment;
 import com.carecloud.carepay.patient.appointments.createappointment.provider.ProviderListFragment;
 import com.carecloud.carepay.patient.appointments.createappointment.visitType.VisitTypeListFragment;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.text.NumberFormat;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author pjohnson on 1/15/19.
@@ -123,6 +131,46 @@ public class CreateAppointmentFragment extends BaseFragment implements CreateApp
         visitTypeContainer = view.findViewById(R.id.visitTypeContainer);
         locationContainer = view.findViewById(R.id.locationContainer);
         checkAvailabilityButton = view.findViewById(R.id.checkAvailabilityButton);
+        checkAvailabilityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callAvailabilityService();
+            }
+        });
+    }
+
+    private void callAvailabilityService() {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", selectedPractice.getPracticeMgmt());
+        queryMap.put("practice_id", selectedPractice.getPracticeId());
+        queryMap.put("visit_reason_id", String.valueOf(selectedVisitType.getId()));
+        queryMap.put("resource_ids", String.valueOf(selectedResource.getId()));
+        queryMap.put("location_ids", String.valueOf(selectedLocation.getId()));
+        TransitionDTO transitionDTO = appointmentsModelDto.getMetadata().getLinks().getAppointmentAvailability();
+        getWorkflowServiceHelper().execute(transitionDTO, new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                AppointmentsResultModel availabilityDto = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
+                availabilityDto.getPayload().getAppointmentAvailability().getPayload().get(0)
+                        .getResource().getProvider().setPhoto(selectedResource.getProvider().getPhoto());
+                availabilityDto.getPayload().getAppointmentAvailability().getPayload().get(0).getVisitReason().setAmount(selectedVisitType.getAmount());
+                appointmentsModelDto.getPayload().setAppointmentAvailability(availabilityDto.getPayload().getAppointmentAvailability());
+                callback.showAvailabilityHourFragment();
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+                Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+            }
+        }, queryMap);
     }
 
     private void setUpToolbar(View view) {
@@ -260,7 +308,7 @@ public class CreateAppointmentFragment extends BaseFragment implements CreateApp
         subTitleTextView.setText(subtitle);
         if (StringUtil.isNullOrEmpty(subtitle)) {
             subTitleTextView.setVisibility(View.GONE);
-        }else{
+        } else {
             subTitleTextView.setVisibility(View.VISIBLE);
         }
         TextView shortNameTextView = view.findViewById(R.id.shortNameTextView);

@@ -119,6 +119,9 @@ public class ProviderListFragment extends BaseFragment {
                         .getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
                 if (resourcesDto.getPayload().getResourcesToSchedule().get(0).getResourcesV2().size() > 0) {
                     showResources(resourcesDto.getPayload().getResourcesToSchedule().get(0).getResourcesV2());
+                }else{
+                    getView().findViewById(R.id.providers_recycler_view).setVisibility(View.GONE);
+                    getView().findViewById(R.id.emptyStateScreen).setVisibility(View.VISIBLE);
                 }
             }
 

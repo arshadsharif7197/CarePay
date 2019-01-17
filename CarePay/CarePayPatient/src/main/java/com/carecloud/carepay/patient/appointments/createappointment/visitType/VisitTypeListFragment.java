@@ -135,6 +135,9 @@ public class VisitTypeListFragment extends BaseFragment {
                         .getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
                 if (resourcesDto.getPayload().getResourcesToSchedule().get(0).getVisitReasons().size() > 0) {
                     showVisitTypes(resourcesDto.getPayload().getResourcesToSchedule().get(0).getVisitReasons());
+                } else {
+                    getView().findViewById(R.id.visitTypeRecyclerView).setVisibility(View.GONE);
+                    getView().findViewById(R.id.emptyStateScreen).setVisibility(View.VISIBLE);
                 }
             }
 

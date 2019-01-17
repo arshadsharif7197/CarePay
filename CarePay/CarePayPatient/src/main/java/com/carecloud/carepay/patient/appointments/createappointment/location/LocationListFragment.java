@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.appointments.createappointment;
+package com.carecloud.carepay.patient.appointments.createappointment.location;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.appointments.createappointment.location.LocationAdapter;
+import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentInterface;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
@@ -134,6 +134,9 @@ public class LocationListFragment extends BaseFragment {
                         .getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
                 if (resourcesDto.getPayload().getResourcesToSchedule().get(0).getLocations().size() > 0) {
                     showLocations(resourcesDto.getPayload().getResourcesToSchedule().get(0).getLocations());
+                } else {
+                    getView().findViewById(R.id.locationRecyclerView).setVisibility(View.GONE);
+                    getView().findViewById(R.id.emptyStateScreen).setVisibility(View.VISIBLE);
                 }
             }
 
