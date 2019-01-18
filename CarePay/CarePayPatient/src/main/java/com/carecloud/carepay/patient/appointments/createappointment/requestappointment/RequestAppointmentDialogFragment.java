@@ -24,9 +24,9 @@ import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDataDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
@@ -38,6 +38,7 @@ import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -51,16 +52,18 @@ import java.util.Map;
 /**
  * @author pjohnson on 1/17/19.
  */
-public class RequestAppointmentFragment extends BaseDialogFragment {
+public class RequestAppointmentDialogFragment extends BaseDialogFragment {
 
     private CreateAppointmentInterface callback;
     private AppointmentsResultModel appointmentModelDto;
     private AppointmentDTO appointmentDto;
+    private UserPracticeDTO selectedPractice;
+    private boolean autoScheduleAppointments;
 
-    public static RequestAppointmentFragment newInstance(AppointmentDTO appointmentDTO) {
+    public static RequestAppointmentDialogFragment newInstance(AppointmentDTO appointmentDTO) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, appointmentDTO);
-        RequestAppointmentFragment fragment = new RequestAppointmentFragment();
+        RequestAppointmentDialogFragment fragment = new RequestAppointmentDialogFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -86,6 +89,8 @@ public class RequestAppointmentFragment extends BaseDialogFragment {
         super.onCreate(icicle);
         appointmentModelDto = (AppointmentsResultModel) callback.getDto();
         appointmentDto = DtoHelper.getConvertedDTO(AppointmentDTO.class, getArguments());
+        selectedPractice = getPractice(appointmentModelDto.getPayload().getAppointmentAvailability()
+                .getMetadata().getPracticeId());
     }
 
     @Nullable
@@ -163,7 +168,7 @@ public class RequestAppointmentFragment extends BaseDialogFragment {
                     .setImageDrawable(originalIcon);
         }
 
-        boolean autoScheduleAppointments = getAppointmentSettings(appointmentModelDto.getPayload()
+        autoScheduleAppointments = getAppointmentSettings(appointmentModelDto.getPayload()
                 .getAppointmentAvailability().getMetadata().getPracticeId())
                 .getRequests().getAutomaticallyApproveRequests();
 
@@ -197,7 +202,6 @@ public class RequestAppointmentFragment extends BaseDialogFragment {
             }
         });
 
-
         ImageView appointUserPicImageView = view.findViewById(R.id.appointUserPicImageView);
         ProviderDTO provider = appointmentDto.getPayload().getProvider();
         PicassoHelper.get().loadImage(getContext(), appointUserPicImageView, null, provider.getPhoto());
@@ -212,10 +216,9 @@ public class RequestAppointmentFragment extends BaseDialogFragment {
     }
 
     private void requestAppointment(AppointmentDTO appointmentDto) {
-        AppointmentAvailabilityDataDTO availabilityDataDTO = appointmentModelDto.getPayload().getAppointmentAvailability();
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("practice_mgmt", availabilityDataDTO.getMetadata().getPracticeMgmt());
-        queryMap.put("practice_id", availabilityDataDTO.getMetadata().getPracticeId());
+        queryMap.put("practice_mgmt", selectedPractice.getPracticeMgmt());
+        queryMap.put("practice_id", selectedPractice.getPracticeId());
 
         ScheduleAppointmentRequestDTO appointmentRequestDto = new ScheduleAppointmentRequestDTO();
         ScheduleAppointmentRequestDTO.Appointment appointment = appointmentRequestDto.getAppointment();
@@ -229,7 +232,7 @@ public class RequestAppointmentFragment extends BaseDialogFragment {
         appointment.setResourceId(appointmentDto.getPayload().getResource().getId());
         appointment.setComplaint(appointmentDto.getPayload().getReasonForVisit());
         appointment.setComments(appointmentDto.getPayload().getReasonForVisit());
-        appointment.getPatient().setId(getPatientId(availabilityDataDTO.getMetadata().getPracticeId()));
+        appointment.getPatient().setId(getPatientId(selectedPractice.getPracticeId()));
 
         double amount = appointmentDto.getPayload().getVisitType().getAmount();
         if (amount > 0) {
@@ -239,7 +242,8 @@ public class RequestAppointmentFragment extends BaseDialogFragment {
         }
     }
 
-    private void callRequestAppointmentService(Map<String, String> queryMap, ScheduleAppointmentRequestDTO appointmentRequestDto) {
+    private void callRequestAppointmentService(Map<String, String> queryMap,
+                                               final ScheduleAppointmentRequestDTO appointmentRequestDto) {
         Gson gson = new Gson();
         TransitionDTO transitionDTO = appointmentModelDto.getMetadata().getTransitions().getMakeAppointment();
         getWorkflowServiceHelper().execute(transitionDTO, new WorkflowServiceCallback() {
@@ -252,6 +256,11 @@ public class RequestAppointmentFragment extends BaseDialogFragment {
                     public void onPostExecute(WorkflowDTO workflowDTO) {
                         hideProgressDialog();
                         callback.refreshAppointmentsList();
+                        String appointmentRequestSuccessMessage = Label.getLabel(autoScheduleAppointments ?
+                                "appointment_schedule_success_message_HTML" :
+                                "appointment_request_success_message_HTML");
+                        SystemUtil.showSuccessToast(getContext(), appointmentRequestSuccessMessage);
+                        logMixPanelEvent(appointmentDto);
                         dismiss();
                     }
 
@@ -267,6 +276,24 @@ public class RequestAppointmentFragment extends BaseDialogFragment {
                 gson.toJson(appointmentRequestDto), queryMap);
     }
 
+    private void logMixPanelEvent(AppointmentDTO appointmentRequestDto) {
+        String[] params = {getString(R.string.param_appointment_type), getString(R.string.param_practice_id),
+                getString(R.string.param_practice_name)};
+        String[] values = {appointmentRequestDto.getPayload().getVisitType().getName(),
+                selectedPractice.getPracticeId(), selectedPractice.getPracticeName()};
+        MixPanelUtil.logEvent(getString(R.string.event_appointment_requested), params, values);
+        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
+    }
+
+    private UserPracticeDTO getPractice(String practiceId) {
+        for (UserPracticeDTO practiceDTO : appointmentModelDto.getPayload().getUserPractices()) {
+            if (practiceId.equals(practiceDTO.getPracticeId())) {
+                return practiceDTO;
+            }
+        }
+        return null;
+    }
+
     private String getPatientId(String practiceId) {
         PracticePatientIdsDTO[] practicePatientIdArray = ApplicationPreferences.getInstance()
                 .getObjectFromSharedPreferences(CarePayConstants.KEY_PRACTICE_PATIENT_IDS,
@@ -280,7 +307,8 @@ public class RequestAppointmentFragment extends BaseDialogFragment {
     }
 
     private void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDto, double amount) {
-
+        callback.startPrepaymentProcess(appointmentRequestDto, amount, selectedPractice.getPracticeId());
+        dismiss();
     }
 
     private void onMapView(final String address) {

@@ -13,7 +13,8 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentFragmentInterface;
 import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentInterface;
 import com.carecloud.carepay.patient.appointments.createappointment.availablehours.AvailabilityHourFragment;
-import com.carecloud.carepay.patient.appointments.createappointment.requestappointment.RequestAppointmentFragment;
+import com.carecloud.carepay.patient.appointments.createappointment.calendar.DateRangeInterface;
+import com.carecloud.carepay.patient.appointments.createappointment.requestappointment.RequestAppointmentDialogFragment;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentTabHostFragment;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
@@ -26,7 +27,9 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
+import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
@@ -36,6 +39,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -244,7 +248,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
     @Override
     public void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO) {
-        RequestAppointmentFragment.newInstance(appointmentDTO).show(getSupportFragmentManager(), "confirmation");
+        RequestAppointmentDialogFragment.newInstance(appointmentDTO).show(getSupportFragmentManager(), "confirmation");
     }
 
     @Override
@@ -252,5 +256,25 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         getSupportFragmentManager().popBackStackImmediate();
         getSupportFragmentManager().popBackStackImmediate();
         callAppointmentService();
+    }
+
+    @Override
+    public void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDto,
+                                       double amount,
+                                       String practiceId) {
+        AppointmentsSlotsDTO slot = new AppointmentsSlotsDTO();
+        slot.setStartTime(appointmentRequestDto.getAppointment().getStartTime());
+        slot.setEndTime(appointmentRequestDto.getAppointment().getEndTime());
+        presenter.setPracticeId(practiceId);
+        presenter.startPrepaymentProcess(appointmentRequestDto, slot, amount);
+    }
+
+    @Override
+    public void setDateRange(Date newStartDate, Date newEndDate) {
+        getSupportFragmentManager().popBackStackImmediate();
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container_main);
+        if (fragment instanceof DateRangeInterface) {
+            ((DateRangeInterface) fragment).setDateRange(newStartDate, newEndDate);
+        }
     }
 }

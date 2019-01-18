@@ -105,7 +105,7 @@ public class LocationListFragment extends BaseFragment {
             }
         });
         TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
-        title.setText(Label.getLabel("createAppointment.visitTypeList.title.label.visitType"));
+        title.setText(Label.getLabel("payment_choose_location"));
         callback.displayToolbar(false, null);
     }
 

@@ -1,9 +1,10 @@
 
 package com.carecloud.carepaylibray.appointments.models;
 
+import android.support.annotation.NonNull;
+
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.adhoc.AdhocFormsPatientModeInfo;
-import com.carecloud.carepaylibray.base.models.Paging;
 import com.carecloud.carepaylibray.base.models.PagingDto;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
@@ -357,5 +358,14 @@ public class AppointmentPayloadModel implements Serializable {
 
     public void setPagingInfo(List<PagingDto> pagingInfo) {
         this.pagingInfo = pagingInfo;
+    }
+
+    public UserPracticeDTO getPractice(@NonNull String practiceId) {
+        for (UserPracticeDTO practice : getUserPractices()) {
+            if (practice.getPracticeId().equals(practiceId)) {
+                return practice;
+            }
+        }
+        return null;
     }
 }

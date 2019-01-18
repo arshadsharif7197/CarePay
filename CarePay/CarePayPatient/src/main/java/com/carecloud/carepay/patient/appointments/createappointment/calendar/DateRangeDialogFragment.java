@@ -1,6 +1,5 @@
-package com.carecloud.carepay.patient.appointments.fragments;
+package com.carecloud.carepay.patient.appointments.createappointment.calendar;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -14,16 +13,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentFragment;
-import com.carecloud.carepaylibray.appointments.interfaces.DateRangeInterface;
-import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
-import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
-import com.google.gson.Gson;
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.squareup.timessquare.CalendarPickerView;
 
 import java.util.ArrayList;
@@ -34,39 +27,29 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by arpit_jain1 on 10/10/2016.
- * Custom Calendar Fragment
+ * @author pjohnson on 1/17/19.
  */
-@Deprecated
-public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
+public class DateRangeDialogFragment extends BaseDialogFragment {
 
-    private CalendarPickerView calendarPickerView;
-    private Button applyDateRangeButton;
     private Date previousStartDate;
     private Date previousEndDate;
-    private Date newStartDate;
     private Date newEndDate;
-    private VisitTypeDTO selectedVisitTypeDTO;
-    private AppointmentResourcesItemDTO selectedResourcesDTO;
-    private AppointmentsResultModel resourcesToScheduleDTO;
-
+    private Date newStartDate;
+    private CalendarPickerView calendarPickerView;
+    private Button applyDateRangeButton;
     private DateRangeInterface callback;
 
-    public static AppointmentDateRangeFragment newInstance(AppointmentsResultModel appointmentsResultModel,
-                                                           Date startDate,
-                                                           Date endDate,
-                                                           AppointmentResourcesItemDTO appointmentResource,
-                                                           VisitTypeDTO visitTypeDTO) {
+    public static DateRangeDialogFragment newInstance(Date startDate, Date endDate) {
         Bundle args = new Bundle();
-        Gson gson = new Gson();
+        DateRangeDialogFragment fragment = new DateRangeDialogFragment();
+        if (startDate == null) {
+            startDate = new Date();
+        }
         args.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE, startDate);
+        if (endDate == null) {
+            endDate = new Date();
+        }
         args.putSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE, endDate);
-        args.putString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE, gson.toJson(appointmentResource));
-        args.putString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE, gson.toJson(visitTypeDTO));
-        args.putString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE,
-                gson.toJson(appointmentsResultModel));
-
-        AppointmentDateRangeFragment fragment = new AppointmentDateRangeFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -74,77 +57,42 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        attachCallback(context);
-    }
-
-    @Override
-    protected void attachCallback(Context context) {
-        try {
-            if (context instanceof AppointmentViewHandler) {
-                callback = ((AppointmentViewHandler) context).getAppointmentPresenter();
-            } else {
-                callback = (DateRangeInterface) context;
-            }
-        } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached context must implement AppointmentNavigationCallback");
+        if (context instanceof DateRangeInterface) {
+            callback = (DateRangeInterface) context;
+        } else {
+            throw new ClassCastException("context must implement DateRangeInterface.");
         }
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (callback == null) {
-            attachCallback(getContext());
-        }
+    public void onDetach() {
+        callback = null;
+        super.onDetach();
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    public void onCreate(Bundle icicle) {
+        super.onCreate(icicle);
         Bundle bundle = getArguments();
-        if (bundle != null) {
-            previousStartDate = (Date)
-                    bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE);
-            previousEndDate = (Date)
-                    bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE);
-
-            Gson gson = new Gson();
-            String appointmentInfoString;
-            appointmentInfoString = bundle.getString(CarePayConstants.ADD_APPOINTMENT_VISIT_TYPE_BUNDLE);
-            selectedVisitTypeDTO = gson.fromJson(appointmentInfoString, VisitTypeDTO.class);
-
-            appointmentInfoString = bundle.getString(CarePayConstants.ADD_APPOINTMENT_PROVIDERS_BUNDLE);
-            selectedResourcesDTO = gson.fromJson(appointmentInfoString, AppointmentResourcesItemDTO.class);
-
-            appointmentInfoString = bundle
-                    .getString(CarePayConstants.ADD_APPOINTMENT_RESOURCE_TO_SCHEDULE_BUNDLE);
-            resourcesToScheduleDTO = gson.fromJson(appointmentInfoString, AppointmentsResultModel.class);
-        }
+        previousStartDate = (Date)
+                bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_START_DATE_BUNDLE);
+        previousEndDate = (Date)
+                bundle.getSerializable(CarePayConstants.ADD_APPOINTMENT_CALENDAR_END_DATE_BUNDLE);
     }
 
-    @SuppressLint("DefaultLocale")
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_appointment_date_range, container, false);
-
-        /*inflate toolbar*/
-        hideDefaultActionBar();
-        inflateToolbar(view);
-
-        /*inflate and initialize custom calendar view*/
-        initCalendarView(view);
-
-        return view;
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_appointment_date_range, container, false);
     }
 
-    /**
-     * Method to inflate toolbar to UI
-     *
-     * @param view used as view component
-     */
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        inflateToolbar(view);
+        initCalendarView(view);
+    }
+
     private void inflateToolbar(View view) {
         Toolbar toolbar = view.findViewById(R.id.add_appointment_toolbar);
         toolbar.setTitle("");
@@ -156,15 +104,14 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
 
         View todayButton = toolbar.findViewById(R.id.today_button);
         todayButton.setOnClickListener(todayButtonClickListener);
-
-        toolbar.setNavigationOnClickListener(navigationOnClickListener);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
     }
 
-    /**
-     * Method to inflate and initialize custom calendar view
-     *
-     * @param view used as view component
-     */
     private void initCalendarView(View view) {
         calendarPickerView = view.findViewById(R.id.calendarView);
         if (previousStartDate != null && previousEndDate != null) {
@@ -191,33 +138,25 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
         calendarPickerView.setOnDateSelectedListener(onDateSelectListener);
 
         applyDateRangeButton = view.findViewById(R.id.applyDateRangeButton);
-        applyDateRangeButton.setOnClickListener(applyButtonClickListener);
+        applyDateRangeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (newEndDate == null) {
+                    newEndDate = newStartDate;
+                }
+                callback.setDateRange(newStartDate, newEndDate);
+                dismiss();
+            }
+        });
         applyDateRangeButton.setEnabled(false);
     }
 
-    /**
-     * Method to return Calendar instance for next six months
-     */
     private Calendar getNextSixMonthCalendar() {
         final Calendar nextSixMonths = Calendar.getInstance();
         nextSixMonths.add(Calendar.MONTH, 5);
         return nextSixMonths;
     }
 
-    /**
-     * Click listener for navigation icon on toolbar
-     */
-    View.OnClickListener navigationOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            callback.onDateRangeSelected(previousStartDate, previousEndDate, selectedVisitTypeDTO,
-                    selectedResourcesDTO, resourcesToScheduleDTO);
-        }
-    };
-
-    /**
-     * Click listener for calendar dates
-     */
     CalendarPickerView.OnDateSelectedListener onDateSelectListener =
             new CalendarPickerView.OnDateSelectedListener() {
                 @Override
@@ -256,9 +195,7 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
                 }
             };
 
-    /**
-     * Click listener for today button on toolbar
-     */
+
     View.OnClickListener todayButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -277,23 +214,6 @@ public class AppointmentDateRangeFragment extends BaseAppointmentFragment {
         }
     };
 
-    /*
-     *   Click listener for apply button
-     */
-    View.OnClickListener applyButtonClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (newEndDate == null) {
-                newEndDate = newStartDate;
-            }
-            callback.onDateRangeSelected(newStartDate, newEndDate, selectedVisitTypeDTO,
-                    selectedResourcesDTO, resourcesToScheduleDTO);
-        }
-    };
-
-    /**
-     * Method to remove selected date
-     */
     void clearSelectedDate() {
         /*removing previously selected dates*/
         newStartDate = null;

@@ -19,7 +19,7 @@ import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.util.Date;
-
+@Deprecated
 public class AvailableHoursFragment extends BaseAvailableHoursFragment {
 
 

@@ -64,6 +64,20 @@ public class CreateAppointmentFragment extends BaseFragment implements CreateApp
         return new CreateAppointmentFragment();
     }
 
+    public static CreateAppointmentFragment newInstance(UserPracticeDTO userPracticeDTO,
+                                                        AppointmentResourcesItemDTO selectedResource,
+                                                        VisitTypeDTO selectedVisitTypeDTO,
+                                                        LocationDTO selectedLocation) {
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, userPracticeDTO);
+        DtoHelper.bundleDto(args, selectedResource);
+        DtoHelper.bundleDto(args, selectedVisitTypeDTO);
+        DtoHelper.bundleDto(args, selectedLocation);
+        CreateAppointmentFragment fragment = new CreateAppointmentFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -84,7 +98,16 @@ public class CreateAppointmentFragment extends BaseFragment implements CreateApp
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         appointmentsModelDto = (AppointmentsResultModel) callback.getDto();
-        selectedPractice = appointmentsModelDto.getPayload().getUserPractices().get(0);
+        Bundle args = getArguments();
+        if (args != null) {
+            UserPracticeDTO practice = DtoHelper.getConvertedDTO(UserPracticeDTO.class, args);
+            selectedPractice = appointmentsModelDto.getPayload().getPractice(practice.getPracticeId());
+            selectedResource = DtoHelper.getConvertedDTO(AppointmentResourcesItemDTO.class, args);
+            selectedVisitType = DtoHelper.getConvertedDTO(VisitTypeDTO.class, args);
+            selectedLocation = DtoHelper.getConvertedDTO(LocationDTO.class, args);
+        } else {
+            selectedPractice = appointmentsModelDto.getPayload().getUserPractices().get(0);
+        }
     }
 
     @Nullable
@@ -137,6 +160,12 @@ public class CreateAppointmentFragment extends BaseFragment implements CreateApp
                 callAvailabilityService();
             }
         });
+
+        if (getArguments() != null) {
+            setResourceProvider(selectedResource);
+            setVisitType(selectedVisitType);
+            setLocation(selectedLocation);
+        }
     }
 
     private void callAvailabilityService() {
@@ -213,20 +242,24 @@ public class CreateAppointmentFragment extends BaseFragment implements CreateApp
 
     private void showPracticeList(View view) {
         RecyclerView practicesRecyclerView = view.findViewById(R.id.practicesRecyclerView);
-        practicesRecyclerView.setVisibility(View.VISIBLE);
-        practicesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
-                LinearLayoutManager.HORIZONTAL, false));
-        PracticesAdapter adapter = new PracticesAdapter(appointmentsModelDto.getPayload().getUserPractices());
-        adapter.setCallback(new PracticesAdapter.PracticeSelectInterface() {
-            @Override
-            public void onPracticeSelected(UserPracticeDTO userPracticeDTO) {
-                if (!selectedPractice.getPracticeId().equals(userPracticeDTO.getPracticeId())) {
-                    resetForm();
+        if (appointmentsModelDto.getPayload().getUserPractices().size() > 1) {
+            practicesRecyclerView.setVisibility(View.VISIBLE);
+            practicesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
+                    LinearLayoutManager.HORIZONTAL, false));
+            PracticesAdapter adapter = new PracticesAdapter(appointmentsModelDto.getPayload().getUserPractices());
+            adapter.setCallback(new PracticesAdapter.PracticeSelectInterface() {
+                @Override
+                public void onPracticeSelected(UserPracticeDTO userPracticeDTO) {
+                    if (!selectedPractice.getPracticeId().equals(userPracticeDTO.getPracticeId())) {
+                        resetForm();
+                    }
+                    selectedPractice = userPracticeDTO;
                 }
-                selectedPractice = userPracticeDTO;
-            }
-        });
-        practicesRecyclerView.setAdapter(adapter);
+            });
+            practicesRecyclerView.setAdapter(adapter);
+        } else {
+            practicesRecyclerView.setVisibility(View.GONE);
+        }
     }
 
     private void resetForm() {

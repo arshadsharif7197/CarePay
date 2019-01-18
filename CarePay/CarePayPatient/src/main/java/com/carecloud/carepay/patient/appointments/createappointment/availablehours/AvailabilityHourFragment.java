@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,13 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentInterface;
+import com.carecloud.carepay.patient.appointments.createappointment.calendar.DateRangeDialogFragment;
+import com.carecloud.carepay.patient.appointments.createappointment.calendar.DateRangeInterface;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDataDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourceDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
@@ -25,21 +32,23 @@ import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProvidersReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
-import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author pjohnson on 1/16/19.
  */
-public class AvailabilityHourFragment extends BaseFragment {
+public class AvailabilityHourFragment extends BaseFragment implements DateRangeInterface {
 
     private CreateAppointmentInterface callback;
     private AppointmentsResultModel appointmentModelDto;
@@ -48,6 +57,9 @@ public class AvailabilityHourFragment extends BaseFragment {
     private LocationDTO selectedLocation;
     private String today = Label.getLabel("today_label");
     private String tomorrow = Label.getLabel("add_appointment_tomorrow");
+    private Date endDate;
+    private Date startDate;
+    private TextView toolbarTitle;
 
     public static AvailabilityHourFragment newInstance() {
         Bundle args = new Bundle();
@@ -86,7 +98,9 @@ public class AvailabilityHourFragment extends BaseFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_availability_hours_list, container, false);
     }
 
@@ -95,7 +109,10 @@ public class AvailabilityHourFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         setUpToolbar(view);
         setUpPrepaymentMessage(view);
+        setUpTimeSlotsList(view);
+    }
 
+    private void setUpTimeSlotsList(View view) {
         View noAppointmentLayout = view.findViewById(R.id.no_appointment_layout);
         RecyclerView availableHoursRecyclerView = view.findViewById(R.id.availableHoursRecyclerView);
         if (appointmentModelDto.getPayload().getAppointmentAvailability().getPayload().get(0).getSlots().size() > 0) {
@@ -148,9 +165,23 @@ public class AvailabilityHourFragment extends BaseFragment {
                 getActivity().onBackPressed();
             }
         });
-        TextView title = toolbar.findViewById(R.id.add_appointment_toolbar_title);
-        title.setText(Label.getLabel("createAppointment.visitTypeList.title.label.visitType"));
+        toolbarTitle = toolbar.findViewById(R.id.add_appointment_toolbar_title);
+        toolbarTitle.setText(Label.getLabel("today_label"));
         callback.displayToolbar(false, null);
+
+        TextView titleOther = toolbar.findViewById(R.id.add_appointment_toolbar_other);
+        titleOther.setText(Label.getLabel("appointment_select_range_button"));
+        titleOther.setVisibility(View.VISIBLE);
+        titleOther.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectDateRange();
+            }
+        });
+    }
+
+    private void selectDateRange() {
+        callback.addFragment(DateRangeDialogFragment.newInstance(startDate, endDate), true);
     }
 
     private void setUpPrepaymentMessage(View view) {
@@ -214,5 +245,71 @@ public class AvailabilityHourFragment extends BaseFragment {
             slotsWithHeaders.add(slot);
         }
         return slotsWithHeaders;
+    }
+
+    @Override
+    public void setDateRange(Date newStartDate, Date newEndDate) {
+        startDate = newStartDate;
+        endDate = newEndDate;
+        toolbarTitle.setText(getToolbarTitle(startDate, endDate));
+        callAvailabilityService();
+    }
+
+    private String getToolbarTitle(Date startDate, Date endDate) {
+        String today = Label.getLabel("today_label");
+        String tomorrow = Label.getLabel("add_appointment_tomorrow");
+        String thisMonth = Label.getLabel("this_month_label");
+        String nextDay = Label.getLabel("next_days_label");
+
+        return DateUtil.getFormattedDate(startDate, endDate, today, tomorrow,
+                thisMonth, nextDay, false);
+    }
+
+    private void callAvailabilityService() {
+        final AppointmentAvailabilityDataDTO availabilityDataDTO = appointmentModelDto.getPayload()
+                .getAppointmentAvailability();
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", availabilityDataDTO.getMetadata().getPracticeMgmt());
+        queryMap.put("practice_id", availabilityDataDTO.getMetadata().getPracticeId());
+        queryMap.put("visit_reason_id", String.valueOf(availabilityDataDTO.getPayload().get(0).getVisitReason().getId()));
+        queryMap.put("resource_ids", String.valueOf(selectedResource.getId()));
+        queryMap.put("location_ids", String.valueOf(selectedLocation.getId()));
+        if (startDate != null) {
+            DateUtil.getInstance().setDate(startDate);
+            queryMap.put("start_date", DateUtil.getInstance().toStringWithFormatYyyyDashMmDashDd());
+        }
+        if (endDate != null) {
+            DateUtil.getInstance().setDate(endDate);
+            queryMap.put("end_date", DateUtil.getInstance().toStringWithFormatYyyyDashMmDashDd());
+        }
+        TransitionDTO transitionDTO = appointmentModelDto.getMetadata().getLinks().getAppointmentAvailability();
+        getWorkflowServiceHelper().execute(transitionDTO, new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                AppointmentsResultModel availabilityDto = DtoHelper
+                        .getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
+                availabilityDto.getPayload().getAppointmentAvailability().getPayload().get(0)
+                        .getResource().getProvider().setPhoto(selectedResource.getProvider().getPhoto());
+                availabilityDto.getPayload().getAppointmentAvailability().getPayload().get(0)
+                        .getVisitReason().setAmount(availabilityDataDTO.getPayload().get(0)
+                        .getVisitReason().getAmount());
+                appointmentModelDto.getPayload().setAppointmentAvailability(availabilityDto.getPayload()
+                        .getAppointmentAvailability());
+                setUpTimeSlotsList(getView());
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+                Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+            }
+        }, queryMap);
     }
 }
