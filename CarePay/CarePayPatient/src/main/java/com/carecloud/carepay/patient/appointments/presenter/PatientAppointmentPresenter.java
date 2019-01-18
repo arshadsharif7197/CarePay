@@ -257,6 +257,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     public void onAppointmentRequestSuccess() {
         viewHandler.confirmAppointment(true,
                 getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests());
+        appointmentDTO = null;//clear this
     }
 
     @Override
@@ -434,6 +435,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                             onCancelAppointment(appointmentDTO, cancellationReason, cancellationReasonComment);
                         } else {
                             startCancelationFeePayment = true;
+                            PatientAppointmentPresenter.this.appointmentDTO = appointmentDTO;
                             IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
                             postModel.setAmount(Double.parseDouble(cancellationFee.getAmount()));
                             IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
@@ -449,7 +451,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                             paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
 
                             PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
-                                    .newInstance(paymentsModel, Double.parseDouble(cancellationFee.getAmount()));
+                                    .newInstance(paymentsModel, Double.parseDouble(cancellationFee.getAmount()),
+                                            Label.getLabel("appointment_cancellation_fee_title"));
                             viewHandler.navigateToFragment(prepaymentFragment, true);
 
                             MixPanelUtil.logEvent(getString(R.string.event_payment_cancellation_started));
@@ -607,7 +610,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
-                .newInstance(paymentsModel, amount);
+                .newInstance(paymentsModel, amount, Label.getLabel("appointments_prepayment_title"));
         viewHandler.navigateToFragment(prepaymentFragment, true);
 
         MixPanelUtil.logEvent(getString(R.string.event_payment_start_prepayment));
@@ -647,13 +650,16 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     @Nullable
     @Override
     public String getAppointmentId() {
+        if(appointmentDTO != null){
+            return appointmentDTO.getPayload().getId();
+        }
         return null;
     }
 
     @Nullable
     @Override
     public AppointmentDTO getAppointment() {
-        return null;
+        return appointmentDTO;
     }
 
     @Override
@@ -690,8 +696,10 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void showPaymentPendingConfirmation(PaymentsModel paymentsModel) {
-        new CustomMessageToast(getContext(), Label.getLabel("payments_external_pending"), CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
-        onAppointmentRequestSuccess();
+        new CustomMessageToast(getContext(), Label.getLabel("payment_queued_patient"), CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
+        viewHandler.confirmAppointment(false,
+                getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests());
+        appointmentDTO = null;//clear this
     }
 
     @Override

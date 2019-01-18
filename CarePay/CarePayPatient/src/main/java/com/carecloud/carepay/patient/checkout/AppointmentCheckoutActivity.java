@@ -630,7 +630,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
                 .getMetadata().getTransitions().getMakePayment());
         paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
         PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
-                .newInstance(paymentsModel, amount);
+                .newInstance(paymentsModel, amount, Label.getLabel("appointments_prepayment_title"));
         addFragment(prepaymentFragment, true);
 
         MixPanelUtil.logEvent(getString(R.string.event_payment_start_prepayment));

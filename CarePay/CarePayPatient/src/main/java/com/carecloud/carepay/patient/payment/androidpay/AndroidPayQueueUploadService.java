@@ -57,6 +57,10 @@ public class AndroidPayQueueUploadService extends IntentService {
             }
 
             TransitionDTO transitionDTO = gson.fromJson(queueRecord.getQueueTransition(), TransitionDTO.class);
+            if(transitionDTO.getUrl() == null){
+                queueRecord.delete();
+                continue;
+            }
             boolean isSubmitted = executeWebCall(transitionDTO, jsonBody, queryMap, queueRecord.getUsername());
             if(isSubmitted){
                 queueRecord.delete();

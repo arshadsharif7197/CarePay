@@ -360,8 +360,9 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
             postModel.setPapiPaymentMethod(papiPaymentMethod);
 
             IntegratedPaymentMetadata postModelMetadata = postModel.getMetadata();
-            postModelMetadata.setAppointmentId(callback.getAppointmentId());
-
+            if(StringUtil.isNullOrEmpty(postModel.getMetadata().getAppointmentId())) {
+                postModelMetadata.setAppointmentId(callback.getAppointmentId());
+            }
             postPayment(gson.toJson(postModel), rawResponse);
         } catch (JsonSyntaxException jsx) {
             logPaymentFail("Unable to parse Payment", true, rawResponse, jsx.getMessage());
