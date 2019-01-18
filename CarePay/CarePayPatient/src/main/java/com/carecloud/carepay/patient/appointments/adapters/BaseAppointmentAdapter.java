@@ -288,7 +288,7 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
 
         Button checkOutButton;
         TextView checkedOutLabel;
-        ImageView videoVisitIndicator;
+        View videoVisitIndicator;
 
         View listItemDivider;
 
