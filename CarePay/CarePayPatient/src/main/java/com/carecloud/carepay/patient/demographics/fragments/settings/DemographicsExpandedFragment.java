@@ -176,13 +176,13 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
 
         setUpDemographicField(view, StringUtil.captialize(demographicPayload.getPersonalDetails().getPreferredName()).trim(),
                 personalInfoSection.getProperties().getPreferredName(), R.id.preferredNameContainer,
-                R.id.preferredNameInputLayout, R.id.preferredName, R.id.preferredNameOptional, null, null);
+                R.id.preferredNameInputLayout, R.id.preferredName, R.id.preferredNameRequired, null, null);
 
         setUpDemographicField(view, StringUtil.formatSocialSecurityNumber(demographicPayload
                         .getPersonalDetails().getSocialSecurityNumber()),
                 personalInfoSection.getProperties().getSocialSecurityNumber(),
                 R.id.socialSecurityContainer, R.id.socialSecurityInputLayout,
-                R.id.socialSecurityNumber, R.id.socialSecurityOptional, null, null);
+                R.id.socialSecurityNumber, R.id.socialSecurityRequired, null, null);
         EditText socialSecurityNumber = (EditText) view.findViewById(R.id.socialSecurityNumber);
         socialSecurityNumber.addTextChangedListener(ssnInputFormatter);
         if (!dataModel.getDemographic().getPersonalDetails().getProperties().getSocialSecurityNumber().isRequired()) {
@@ -192,31 +192,31 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
 
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getEmailAddress(),
                 personalInfoSection.getProperties().getEmailAddress(), R.id.emailContainer, R.id.emailInputLayout,
-                R.id.email, R.id.emailOptional, null, null);
+                R.id.email, R.id.emailRequired, null, null);
         view.findViewById(R.id.email).setVisibility(View.GONE);
 
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getPreferredLanguage(),
                 personalInfoSection.getProperties().getPreferredLanguage(),
                 R.id.preferredLanguageDemographicsLayout, R.id.preferredLanguageInputLayout,
-                R.id.preferredLanguageEditText, R.id.preferredLanguageOptional, selectedPreferredLanguage,
+                R.id.preferredLanguageEditText, R.id.preferredLanguageRequired, selectedPreferredLanguage,
                 Label.getLabel("demographics_preferred_language"));
 
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getDriversLicenseNumber(),
                 personalInfoSection.getProperties().getDriversLicenseNumber(),
                 R.id.driverLicenseContainer, R.id.driverLicenseInputLayout,
-                R.id.driverLicense, R.id.driverLicenseOptional, null, null);
+                R.id.driverLicense, R.id.driverLicenseRequired, null, null);
 
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getDriversLicenseState(),
                 personalInfoSection.getProperties().getDriversLicenseState(),
                 R.id.driverLicenseStateDemographicsLayout, R.id.driverLicenseStateInputLayout,
-                R.id.driverLicenseStateEditText, R.id.driverLicenseStateOptional, selectedDriverLicenseState,
+                R.id.driverLicenseStateEditText, R.id.driverLicenseStateRequired, selectedDriverLicenseState,
                 Label.getLabel("demographics_driver_license_state"));
 
         setUpDemographicField(view, StringUtil
                         .formatPhoneNumber(demographicPayload.getPersonalDetails().getSecondaryPhoneNumber()),
                 personalInfoSection.getProperties().getSecondaryPhoneNumber(),
                 R.id.secondaryPhoneDemographicsLayout, R.id.secondaryPhoneInputLayout,
-                R.id.secondaryPhone, R.id.secondaryPhoneOptional, null, null);
+                R.id.secondaryPhone, R.id.secondaryPhoneRequired, null, null);
         EditText secondaryPhoneEditText = (EditText) view.findViewById(R.id.secondaryPhone);
         secondaryPhoneEditText.addTextChangedListener(phoneInputFormatter);
         if (!dataModel.getDemographic().getPersonalDetails().getProperties().getSecondaryPhoneNumber().isRequired()) {
@@ -227,19 +227,19 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getSecondaryPhoneNumberType(),
                 personalInfoSection.getProperties().getSecondaryPhoneNumberType(),
                 R.id.secondaryPhoneTypeDemographicsLayout, R.id.secondaryPhoneTypeInputLayout,
-                R.id.secondaryPhoneTypeEditText, R.id.secondaryPhoneTypeOptional, selectedSecondaryPhoneType,
+                R.id.secondaryPhoneTypeEditText, R.id.secondaryPhoneTypeRequired, selectedSecondaryPhoneType,
                 Label.getLabel("demographics_secondary_phone_type"));
 
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getPreferredContact(),
                 personalInfoSection.getProperties().getPreferredContact(),
                 R.id.preferredContactMethodDemographicsLayout, R.id.preferredContactMethodInputLayout,
-                R.id.preferredContactMethodEditText, R.id.contactMethodOptional, selectedContactMethod,
+                R.id.preferredContactMethodEditText, R.id.contactMethodRequired, selectedContactMethod,
                 Label.getLabel("demographics_preferred_contact_method"));
 
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getMaritalStatus(),
                 personalInfoSection.getProperties().getMaritalStatus(),
                 R.id.maritalStatusDemographicsLayout, R.id.maritalStatusInputLayout,
-                R.id.maritalStatusEditText, R.id.maritalStatusOptional, selectedMaritalStatus,
+                R.id.maritalStatusEditText, R.id.maritalStatusRequired, selectedMaritalStatus,
                 Label.getLabel("demographics_marital_status"));
 
         //hide referral source
@@ -254,7 +254,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         this.primaryPhysician = primaryPhysician;
         setUpPhysicianField(view, primaryPhysician, physicianMetadata,
                 R.id.primaryPhysicianDemographicsLayout, R.id.primaryPhysicianInputLayout,
-                R.id.primaryPhysicianEditText, R.id.primaryPhysicianOptional, SearchPhysicianFragment.PRIMARY_PHYSICIAN);
+                R.id.primaryPhysicianEditText, R.id.primaryPhysicianRequired, SearchPhysicianFragment.PRIMARY_PHYSICIAN);
     }
 
     private void setUpReferringPhysician(View view, PhysicianDto referringPhysician,
@@ -262,7 +262,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         this.referringPhysician = referringPhysician;
         setUpPhysicianField(view, referringPhysician, physicianMetadata,
                 R.id.referringPhysicianDemographicsLayout, R.id.referringPhysicianInputLayout,
-                R.id.referringPhysicianEditText, R.id.referringPhysicianOptional, SearchPhysicianFragment.REFERRING_PHYSICIAN);
+                R.id.referringPhysicianEditText, R.id.referringPhysicianRequired, SearchPhysicianFragment.REFERRING_PHYSICIAN);
     }
 
     protected void setUpPhysicianField(View view, final PhysicianDto physician,
@@ -302,7 +302,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         }
         emergencyContactEditText.getOnFocusChangeListener().onFocusChange(emergencyContactEditText,
                 !StringUtil.isNullOrEmpty(emergencyContactEditText.getText().toString().trim()));
-        view.findViewById(R.id.emergencyContactOptionalLabel)
+        view.findViewById(R.id.emergencyContactRequiredLabel)
                 .setVisibility(!emergencyContactSection.isRequired()
                         && StringUtil.isNullOrEmpty(emergencyContactEditText.getText().toString())
                         ? View.VISIBLE : View.GONE);
@@ -320,7 +320,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                                DemographicEmploymentInfoSection employmentInfoSection) {
 
         final EditText employmentStatusEditText = (EditText) view.findViewById(R.id.employmentStatusEditText);
-        final View employmentStatusOptional = view.findViewById(R.id.employmentStatusOptional);
+        final View employmentStatusRequired = view.findViewById(R.id.employmentStatusRequired);
 
         employmentStatusEditText.setOnClickListener(
                 getSelectOptionsListener(employmentInfoSection.getProperties().getEmploymentStatus().getOptions(),
@@ -328,7 +328,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                             @Override
                             public void onOptionSelected(DemographicsOption option) {
                                 employmentStatusEditText.setText(option.getLabel());
-                                employmentStatusOptional.setVisibility(View.GONE);
+                                employmentStatusRequired.setVisibility(View.GONE);
 
                                 selectedEmploymentStatus.setLabel(option.getLabel());
                                 selectedEmploymentStatus.setName(option.getName());
@@ -355,10 +355,10 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
 
         if (!employmentInfoSection.getProperties().getEmploymentStatus().isRequired()
                 && StringUtil.isNullOrEmpty(employmentStatus)) {
-            employmentStatusOptional.setVisibility(View.VISIBLE);
+            employmentStatusRequired.setVisibility(View.VISIBLE);
         }
         if (!employmentInfoSection.isRequired()) {
-            view.findViewById(R.id.employmentInfoOptionalTextView).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.employmentInfoRequiredTextView).setVisibility(View.VISIBLE);
 //            view.findViewById(R.id.employmentInfoContainer).setVisibility(View.GONE);
         }
 

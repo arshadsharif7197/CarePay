@@ -8,7 +8,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/genderDemographicsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -38,10 +38,10 @@
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
         <include
-            android:id="@+id/genderOptionalLabel"
-            layout="@layout/layout_optional_text_view" />
+            android:id="@+id/genderRequiredLabel"
+            layout="@layout/layout_required_text_view" />
 
-    </FrameLayout>
+    </RelativeLayout>
 
     <FrameLayout
         android:id="@+id/raceDemographicsLayout"
@@ -73,8 +73,8 @@
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
         <include
-            android:id="@+id/raceOptionalLabel"
-            layout="@layout/layout_optional_text_view" />
+            android:id="@+id/raceRequiredLabel"
+            layout="@layout/layout_required_text_view" />
 
     </FrameLayout>
 
@@ -108,8 +108,8 @@
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
         <include
-            android:id="@+id/secondaryRaceOptional"
-            layout="@layout/layout_optional_text_view" />
+            android:id="@+id/secondaryRaceRequired"
+            layout="@layout/layout_required_text_view" />
 
     </FrameLayout>
 
@@ -143,8 +143,8 @@
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
         <include
-            android:id="@+id/ethnicityOptional"
-            layout="@layout/layout_optional_text_view" />
+            android:id="@+id/ethnicityRequired"
+            layout="@layout/layout_required_text_view" />
 
     </FrameLayout>
 </LinearLayout>

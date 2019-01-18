@@ -35,13 +35,11 @@ import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
 import com.carecloud.carepaylibray.translation.TranslatableFragment;
-import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -172,7 +170,8 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
 
         visitTypeTextInputLayout = view.findViewById(R.id.visitTypeTextInputLayout);
         visitTypeTextView = view.findViewById(R.id.visitTypeTextView);
-        visitTypeTextView.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(visitTypeTextInputLayout, null));
+        visitTypeTextView.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(visitTypeTextInputLayout, null));
         visitTypeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -184,7 +183,8 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
 
         visitTimeTextInputLayout = view.findViewById(R.id.visitTimeTextInputLayout);
         visitTimeTextView = view.findViewById(R.id.visitTimeTextView);
-        visitTimeTextView.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(visitTimeTextInputLayout, null));
+        visitTimeTextView.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(visitTimeTextInputLayout, null));
         visitTimeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -219,25 +219,9 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
         final ImageView providerPicImageView = view.findViewById(R.id.providerPicImageView);
         final TextView providerInitials = view.findViewById(R.id.providerInitials);
         providerInitials.setText(StringUtil.getShortName(provider.getName()));
-        int size = getResources().getDimensionPixelSize(R.dimen.nextAppointmentProviderImageSize);
-        Picasso.with(getContext()).load(provider.getPhoto())
-                .resize(size,size)
-                .centerCrop()
-                .transform(new CircleImageTransform())
-                .into(providerPicImageView, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        providerPicImageView.setVisibility(View.VISIBLE);
-                        providerInitials.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onError() {
-                        providerPicImageView.setVisibility(View.GONE);
-                        providerInitials.setVisibility(View.VISIBLE);
-                    }
-                });
-
+        if (!StringUtil.isNullOrEmpty(provider.getPhoto())) {
+            PicassoHelper.get().loadImage(getContext(), providerPicImageView, providerInitials, provider.getPhoto());
+        }
         providerMessage = (TextView) findViewById(R.id.providerMessage);
         setDefaultMessage();
     }

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar_layout"
     style="@style/CustomToolbarStyle"
+    android:layout_height="@dimen/toolbarLayoutHeight"
     android:background="@color/transparent_apt"
     android:paddingBottom="@dimen/toolbar_vertical_padding"
     android:paddingTop="@dimen/toolbar_vertical_padding">
@@ -12,6 +13,7 @@
         style="@style/ResponsibilityToolbarTextStyle"
         android:layout_width="match_parent"
         android:gravity="center"
+        android:textSize="@dimen/toolbarTitleTextSize"
         android:visibility="visible"
         app:customAssetFont="gotham_rounded_medium" />
 

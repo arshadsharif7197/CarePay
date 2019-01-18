@@ -98,7 +98,6 @@
                     android:layout_width="@dimen/nextAppointmentProviderImageSize"
                     android:layout_height="@dimen/nextAppointmentProviderImageSize"
                     android:layout_centerHorizontal="true"
-                    android:scaleType="center"
                     android:src="@drawable/icn_placeholder_user_profile_png" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView

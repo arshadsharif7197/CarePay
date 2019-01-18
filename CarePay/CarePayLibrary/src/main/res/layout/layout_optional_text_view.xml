@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.carecloud.carepaylibray.customcomponents.CarePayTextView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.carecloud.carepaylibray.customcomponents.CarePayTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/DemographicsOptionalLabelStyle"
     android:layout_gravity="center_vertical|end"
-    android:layout_marginEnd="@dimen/dimen_38dp"
+    android:layout_marginEnd="@dimen/optionalLabelRightMargin"
+    android:visibility="gone"
     app:customAssetFont="proxima_nova_semi_bold"
     breeze:textKey="demographics_details_optional_hint"
     tools:showIn="@layout/fragment_base_demographics"
-    tools:text="Optional" />
+    tools:text="Optional"/>

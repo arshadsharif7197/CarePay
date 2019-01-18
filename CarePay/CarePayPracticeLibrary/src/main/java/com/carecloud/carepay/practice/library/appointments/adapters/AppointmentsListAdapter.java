@@ -3,7 +3,6 @@ package com.carecloud.carepay.practice.library.appointments.adapters;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,11 +21,9 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
-import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -226,26 +223,9 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
             shortName.setText(StringUtil.getShortName(provider.getName()));
 
             String photoUrl = provider.getPhoto();
-            if (TextUtils.isEmpty(photoUrl)) {
-                setPhotoView(photoUrl);
-                System.out.println(provider.getName() + " - " + photoUrl);
+            if (!StringUtil.isNullOrEmpty(photoUrl)) {
+                PicassoHelper.get().loadImage(context, profileImage, null, photoUrl);
             }
-        }
-
-        private void setPhotoView(String photoUrl) {
-            Callback callback = new Callback() {
-                @Override
-                public void onSuccess() {
-                    profileImage.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onError() {
-                }
-            };
-
-            Picasso.with(context).load(photoUrl).transform(new CircleImageTransform())
-                    .resize(58, 58).into(profileImage, callback);
         }
 
         private void setCheckInButton(AppointmentDTO appointmentDTO, int position) {
@@ -267,7 +247,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
             });
             if (appointmentNavigationType == Defs.NAVIGATE_CHECKOUT) {
                 startCheckIn.setVisibility(isLocationWithBreezeEnabled(appointmentDTO.getPayload())
-                        && appointmentDTO.getPayload().canCheckOut()? View.VISIBLE : View.GONE);
+                        && appointmentDTO.getPayload().canCheckOut() ? View.VISIBLE : View.GONE);
             }
         }
 
