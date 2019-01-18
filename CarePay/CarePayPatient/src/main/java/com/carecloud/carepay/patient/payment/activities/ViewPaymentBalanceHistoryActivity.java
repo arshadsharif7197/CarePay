@@ -73,12 +73,12 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.gms.wallet.MaskedWallet;
 
+import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_BALANCES;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_BALANCES;
 
 /**
  * Created by jorge on 29/12/16
@@ -340,7 +340,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void showPaymentPendingConfirmation(PaymentsModel paymentsModel) {
-        new CustomMessageToast(this, Label.getLabel("payments_external_pending"),
+        new CustomMessageToast(this, Label.getLabel("payment_queued_patient"),
                 CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
         initFragments();
     }

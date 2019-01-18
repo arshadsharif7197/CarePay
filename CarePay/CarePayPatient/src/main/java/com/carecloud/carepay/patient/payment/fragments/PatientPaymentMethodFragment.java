@@ -288,7 +288,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
 
         @Override
         public void onFailure(String exceptionMessage) {
-
+            Log.d(TAG, exceptionMessage);
         }
     };
 
@@ -360,7 +360,8 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
             postModel.setPapiPaymentMethod(papiPaymentMethod);
 
             IntegratedPaymentMetadata postModelMetadata = postModel.getMetadata();
-            if(StringUtil.isNullOrEmpty(postModel.getMetadata().getAppointmentId())) {
+            if(StringUtil.isNullOrEmpty(postModel.getMetadata().getAppointmentId()) &&
+                    postModel.getMetadata().getAppointmentRequestDTO() == null) {
                 postModelMetadata.setAppointmentId(callback.getAppointmentId());
             }
             postPayment(gson.toJson(postModel), rawResponse);

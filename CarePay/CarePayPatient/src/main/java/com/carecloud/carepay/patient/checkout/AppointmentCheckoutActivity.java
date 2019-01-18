@@ -129,6 +129,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
             case PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_FULL_WALLET:
+            case PaymentConstants.REQUEST_CODE_GOOGLE_PAYMENT:
                 forwardAndroidPayResult(requestCode, resultCode, data);
                 break;
             default:
@@ -145,6 +146,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     public void initDto(WorkflowDTO workflowDTO) {
         if (NavigationStateConstants.PATIENT_APP_CHECKOUT.equals(workflowDTO.getState())) {
             appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
+            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             showNextAppointmentFragment(appointmentId);
         } else if (NavigationStateConstants.PATIENT_PAY_CHECKOUT.equals(workflowDTO.getState())) {
             paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
@@ -437,7 +439,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     @Override
     public void showPaymentPendingConfirmation(PaymentsModel paymentsModel) {
-        new CustomMessageToast(this, Label.getLabel("payments_external_pending"),
+        new CustomMessageToast(this, Label.getLabel("payment_queued_patient"),
                 CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
 
         UserPracticeDTO userPracticeDTO = getPracticeInfo(paymentsModel);
@@ -619,7 +621,9 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         postModel.addLineItem(paymentLineItem);
         postModel.getMetadata().setAppointmentRequestDTO(appointmentRequestDTO.getAppointment());
 
-        paymentsModel = new PaymentsModel();
+        if (paymentsModel == null) {
+            paymentsModel = new PaymentsModel();
+        }
         paymentsModel.getPaymentPayload().setPaymentSettings(appointmentsResultModel.getPayload()
                 .getPaymentSettings());
         paymentsModel.getPaymentPayload().setMerchantServices(appointmentsResultModel.getPayload()
