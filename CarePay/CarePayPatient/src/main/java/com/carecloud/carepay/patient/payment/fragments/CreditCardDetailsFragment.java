@@ -270,10 +270,8 @@ public class CreditCardDetailsFragment extends BaseFragment {
                         .setPatientCreditCards(removeCreditCardResponseDTO.getPayload().getPatientCreditCards());
                 callback.onCreditCardOperation(demographicsSettingsDTO);
                 SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
-                getActivity().onBackPressed();
-
                 MixPanelUtil.logEvent(getString(R.string.event_updated_credit_cards), getString(R.string.param_is_payment), false);
-
+                getActivity().onBackPressed();
             } catch (Exception e) {
                 Log.e(TAG, "Credit Card onPostExecute" + e.getMessage());
                 showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
