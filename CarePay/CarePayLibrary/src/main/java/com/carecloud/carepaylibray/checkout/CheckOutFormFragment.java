@@ -177,7 +177,7 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
 
             boolean surveyAvailable = NavigationStateConstants.SURVEYS_CHECKOUT.equals(workflowDTO.getState());
             if (!workflowDTO.getState().contains("checkout") || surveyAvailable) {
-                callback.completeCheckout(false, surveyAvailable, false);
+                callback.completeCheckout(false, 0D, surveyAvailable, false);
             }
         }
 

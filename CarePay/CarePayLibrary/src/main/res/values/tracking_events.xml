@@ -107,6 +107,7 @@
     <string name="param_payment_plan_created">Payment plan created</string>
     <string name="param_survey_rating">Rating Given</string>
     <string name="param_survey_access">Access Mode</string>
+    <string name="param_partial_pay_available">Partial Payment available</string>
 
 
     <!--Incremental Properties-->
