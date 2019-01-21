@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.payments;
 
 import android.content.Intent;
+import android.os.Handler;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.models.IntegratedPaymentQueueRecord;
@@ -48,6 +49,7 @@ public class CloverPaymentAdapter {
     private PaymentConfirmationInterface callback;
     private UserPracticeDTO practiceInfo;
     private String userId;
+    private Handler handler;
 
     /**
      * Constructor
@@ -61,6 +63,7 @@ public class CloverPaymentAdapter {
         this.callback = callback;
         practiceInfo = paymentsModel.getPaymentPayload().getUserPractices().get(0);
         userId = activity.getApplicationMode().getUserPracticeDTO().getUserId();
+        handler = new Handler();
     }
 
     /**
@@ -91,56 +94,6 @@ public class CloverPaymentAdapter {
      */
     public void setCloverPayment(IntegratedPaymentPostModel postModel) {
         initCloverPayment(postModel);
-
-//        Intent intent = new Intent();
-//        intent.setAction(CarePayConstants.CLOVER_PAYMENT_INTENT);
-//
-//        double paymentAmount = postModel.getAmount();
-//        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, paymentAmount);
-//
-//        if(appointmentId != null) {
-//            intent.putExtra(CarePayConstants.APPOINTMENT_ID, appointmentId);
-//        }
-//
-//        Gson gson = new Gson();
-//        String paymentTransitionString = gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment());
-//        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_TRANSITION, paymentTransitionString);
-//
-//        String queueTransitionString = gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getQueuePayment());
-//        intent.putExtra(CarePayConstants.CLOVER_QUEUE_PAYMENT_TRANSITION, queueTransitionString);
-//
-//
-//        String paymentMetadata = gson.toJson(paymentsModel.getPaymentPayload().getPatientBalances().get(0));
-//        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_METADATA, paymentMetadata);
-//
-//        if (postModel.getAmount() > 0) {
-//            String paymentPostModelString = gson.toJson(postModel);
-//            intent.putExtra(CarePayConstants.CLOVER_PAYMENT_POST_MODEL, paymentPostModelString);
-//        }
-//
-//        List<PaymentLineItem> paymentLineItems = new ArrayList<>();
-//        for (IntegratedPaymentLineItem lineItem : postModel.getLineItems()) {
-//            PaymentLineItem paymentLineItem = new PaymentLineItem();
-//            paymentLineItem.setAmount(lineItem.getAmount());
-//            paymentLineItem.setDescription(lineItem.getDescription());
-//
-//            PaymentLineItemMetadata metadata = new PaymentLineItemMetadata();
-//            metadata.setPatientID(paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getMetadata().getPatientId());
-//            metadata.setPracticeID(paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getMetadata().getPracticeId());
-//            metadata.setLocationID(lineItem.getLocationID());
-//            metadata.setProviderID(lineItem.getProviderID());
-//            paymentLineItem.setMetadata(metadata);
-//
-//            paymentLineItems.add(paymentLineItem);
-//
-//        }
-//        intent.putExtra(CarePayConstants.CLOVER_PAYMENT_LINE_ITEMS, gson.toJson(paymentLineItems));
-//        activity.startActivityForResult(intent, CarePayConstants.CLOVER_PAYMENT_INTENT_REQUEST_CODE, new Bundle());
-//
-//        String[] params = {activity.getString(R.string.param_payment_amount), activity.getString(R.string.param_payment_type)};
-//        Object[] values = {postModel.getAmount(), activity.getString(R.string.payment_clover)};
-//        MixPanelUtil.logEvent(activity.getString(R.string.event_payment_started), params, values);
-//
     }
 
     private void initCloverPayment(IntegratedPaymentPostModel postModel){
@@ -242,18 +195,33 @@ public class CloverPaymentAdapter {
         }
 
         @Override
-        public void onPaymentCanceled(String paymentRequestId, String message) {
-            activity.showErrorNotification(message);
+        public void onPaymentCanceled(String paymentRequestId, final String message) {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    activity.showErrorNotification(message);
+                }
+            }, 500);
         }
 
         @Override
-        public void onPaymentFailed(String paymentRequestId, String message) {
-            activity.showErrorNotification(message);
+        public void onPaymentFailed(String paymentRequestId, final String message) {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    activity.showErrorNotification(message);
+                }
+            }, 500);
         }
 
         @Override
-        public void onConnectionFailed(String message) {
-            activity.showErrorNotification(message);
+        public void onConnectionFailed(final String message) {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    activity.showErrorNotification(message);
+                }
+            }, 500);
         }
     };
 

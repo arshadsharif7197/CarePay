@@ -585,6 +585,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                     UpdatePatientBalancesDTO.class);
         }
         hidePaymentDistributionFragment(updatePatientBalance);
+        onRangeSelected(new Date(), new Date());
     }
 
     private void hidePaymentDistributionFragment(UpdatePatientBalancesDTO updatePatientBalance) {
