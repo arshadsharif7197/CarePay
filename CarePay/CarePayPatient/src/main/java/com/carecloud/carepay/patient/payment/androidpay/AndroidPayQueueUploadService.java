@@ -16,7 +16,6 @@ import com.carecloud.carepaylibray.utils.EncryptionUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,8 +90,8 @@ public class AndroidPayQueueUploadService extends IntentService {
         try {
             Response<WorkflowDTO> response = call.execute();
             return response.isSuccessful();
-        }catch (IOException ioe){
-            ioe.printStackTrace();
+        }catch (Exception ex){
+            ex.printStackTrace();
             return false;
         }
     }

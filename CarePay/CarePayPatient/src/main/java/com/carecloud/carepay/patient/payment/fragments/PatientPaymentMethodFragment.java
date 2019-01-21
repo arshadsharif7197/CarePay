@@ -30,7 +30,9 @@ import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
 import com.carecloud.carepaylibray.payments.models.PapiAccountsDTO;
+import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentCardData;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
@@ -376,7 +378,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         if (userPracticeDTO != null) {
             queries.put("practice_mgmt", userPracticeDTO.getPracticeMgmt());
             queries.put("practice_id", userPracticeDTO.getPracticeId());
-            queries.put("patient_id", userPracticeDTO.getPatientId());
+            queries.put("patient_id", getPatientId(userPracticeDTO.getPracticeId()));
         } else {
             PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
             queries.put("practice_mgmt", metadata.getPracticeMgmt());
@@ -445,7 +447,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         if (userPracticeDTO != null) {
             patientId = userPracticeDTO.getPracticeMgmt();
             practiceId = userPracticeDTO.getPracticeId();
-            practiceMgmt = userPracticeDTO.getPatientId();
+            practiceMgmt = getPatientId(userPracticeDTO.getPracticeId());
         } else {
             PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
             patientId = metadata.getPracticeMgmt();
@@ -544,4 +546,14 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         getContext().startService(intent);
     }
 
+    private String getPatientId(String practiceId){
+        for(PatientBalanceDTO balanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()){
+            for(PendingBalanceDTO pendingBalanceDTO : balanceDTO.getBalances()){
+                if(pendingBalanceDTO.getMetadata().getPracticeId().equals(practiceId)){
+                  return pendingBalanceDTO.getMetadata().getPatientId();
+                }
+            }
+        }
+        return null;
+    }
 }
