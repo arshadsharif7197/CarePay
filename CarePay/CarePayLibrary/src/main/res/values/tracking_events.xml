@@ -168,7 +168,8 @@
     <string name="step_identity">Identity</string>
     <string name="step_health_insurance">Health Insurance</string>
     <string name="step_consent_forms">Consent Forms</string>
-    <string name="step_medications">Medications &amp; Allergies</string>
+    <string name="step_medications">Medications</string>
+    <string name="step_allegies">Allergies</string>
     <string name="step_intake">Intake Forms</string>
     <string name="step_payment">Payment</string>
     <string name="step_appointment">Next Appointment</string>

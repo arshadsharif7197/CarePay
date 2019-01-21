@@ -26,6 +26,7 @@ import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.IntakeFormsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
 import com.carecloud.carepaylibray.medications.fragments.AllergiesFragment;
+import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragment;
 import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
 import com.carecloud.carepaylibray.medications.fragments.MedicationsFragment;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
@@ -194,9 +195,16 @@ public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl 
         } else if (currentFragment instanceof FormsFragment) {
             currentStep = demographicsView.getContext().getString(R.string.step_consent_forms);
         } else if (currentFragment instanceof MedicationsAllergyFragment ||
-                currentFragment instanceof AllergiesFragment ||
-                currentFragment instanceof MedicationsFragment) {
+                currentFragment instanceof MedicationsFragment ||
+                (currentFragment instanceof MedicationsAllergiesEmptyFragment &&
+                        ((MedicationsAllergiesEmptyFragment) currentFragment).getSelectedMode() ==
+                                MedicationsAllergiesEmptyFragment.MEDICATION_MODE)) {
             currentStep = demographicsView.getContext().getString(R.string.step_medications);
+        } else if (currentFragment instanceof AllergiesFragment ||
+                (currentFragment instanceof MedicationsAllergiesEmptyFragment &&
+                        ((MedicationsAllergiesEmptyFragment) currentFragment).getSelectedMode() ==
+                                MedicationsAllergiesEmptyFragment.ALLERGY_MODE)) {
+            currentStep = demographicsView.getContext().getString(R.string.step_allegies);
         } else if (currentFragment instanceof IntakeFormsFragment) {
             currentStep = demographicsView.getContext().getString(R.string.step_intake);
         }
