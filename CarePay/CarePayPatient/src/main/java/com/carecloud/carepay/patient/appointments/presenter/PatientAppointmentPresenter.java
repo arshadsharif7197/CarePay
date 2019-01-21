@@ -273,7 +273,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         };
         Object[] values = {selectedVisitTypeDTO.getName(),
                 practiceId,
-                practiceName,
+                getPracticeInfo(practiceId).getPracticeName(),
                 scheduleAppointmentRequestDTO.getAppointment().getProviderGuid(),
                 patientId,
                 scheduleAppointmentRequestDTO.getAppointment().getLocationGuid(),
@@ -765,6 +765,33 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     private UserPracticeDTO getPracticeInfo(AppointmentDTO appointmentDTO) {
+        for (UserPracticeDTO userPracticeDTO : appointmentsResultModel.getPayload().getUserPractices()) {
+            if (userPracticeDTO.getPracticeId() != null && userPracticeDTO.getPracticeId().equals(practiceId)) {
+                return userPracticeDTO;
+            }
+        }
+        UserPracticeDTO userPracticeDTO = new UserPracticeDTO();
+        for (UserPracticeDTO resourcesPracticeDTO : appointmentsResultModel
+                .getPayload().getUserPractices()) {
+            if (resourcesPracticeDTO.getPracticeId().equals(practiceId)) {
+                userPracticeDTO.setPracticeMgmt(resourcesPracticeDTO.getPracticeMgmt());
+                userPracticeDTO.setPracticeId(resourcesPracticeDTO.getPracticeId());
+                userPracticeDTO.setPracticeName(resourcesPracticeDTO.getPracticeName());
+                userPracticeDTO.setPracticePhoto(resourcesPracticeDTO.getPracticePhoto());
+                userPracticeDTO.setPatientId(patientId);
+
+                return userPracticeDTO;
+            }
+        }
+
+        userPracticeDTO.setPatientId(patientId);
+        userPracticeDTO.setPracticeId(practiceId);
+        userPracticeDTO.setPracticeMgmt(practiceMgmt);
+
+        return userPracticeDTO;
+    }
+
+    private UserPracticeDTO getPracticeInfo(String practiceId) {
         for (UserPracticeDTO userPracticeDTO : appointmentsResultModel.getPayload().getUserPractices()) {
             if (userPracticeDTO.getPracticeId() != null && userPracticeDTO.getPracticeId().equals(practiceId)) {
                 return userPracticeDTO;
