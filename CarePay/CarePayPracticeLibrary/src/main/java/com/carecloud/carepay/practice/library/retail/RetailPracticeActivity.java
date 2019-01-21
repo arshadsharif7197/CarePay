@@ -31,6 +31,7 @@ import com.carecloud.carepaylibray.retail.fragments.RetailFragment;
 import com.carecloud.carepaylibray.retail.interfaces.RetailInterface;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -277,5 +278,13 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
     @Override
     public void onCashSelected(PaymentsModel paymentsModel) {
         //Not implemented
+    }
+
+    @Override
+    public void onStop() {
+        if (retailModel != null && !retailModel.getPayload().getRetailPracticeList().isEmpty()) {
+            MixPanelUtil.logEvent(getString(R.string.event_retail_ended));
+        }
+        super.onStop();
     }
 }
