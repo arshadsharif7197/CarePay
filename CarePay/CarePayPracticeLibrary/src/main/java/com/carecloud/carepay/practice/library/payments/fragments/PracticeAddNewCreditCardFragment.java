@@ -48,9 +48,9 @@ public class PracticeAddNewCreditCardFragment extends AddNewCreditCardFragment {
             CloverPaymentAdapter cloverPaymentAdapter = new CloverPaymentAdapter((BaseActivity) getActivity(), paymentsModel, callback.getAppointmentId(), callback);
             IntegratedPaymentPostModel paymentPostModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
             if (paymentPostModel == null) {
-                cloverPaymentAdapter.setCloverPayment(amountToMakePayment);
+                cloverPaymentAdapter.setCloverConnectorPayment(amountToMakePayment);
             } else {
-                cloverPaymentAdapter.setCloverPayment(paymentPostModel);
+                cloverPaymentAdapter.setCloverConnectorPayment(paymentPostModel);
             }
 
             if (getDialog() != null) {
