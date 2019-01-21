@@ -14,6 +14,7 @@ public class IntegratedPaymentQueueRecord extends SugarRecord {
     private String queueTransition;
     private String deepstreamId;
     private String username;
+    private boolean recordOnly;
 
     public IntegratedPaymentQueueRecord(){
 
@@ -66,5 +67,13 @@ public class IntegratedPaymentQueueRecord extends SugarRecord {
 
     public void setDeepstreamId(String deepstreamId) {
         this.deepstreamId = deepstreamId;
+    }
+
+    public boolean isRecordOnly() {
+        return recordOnly;
+    }
+
+    public void setRecordOnly(boolean recordOnly) {
+        this.recordOnly = recordOnly;
     }
 }

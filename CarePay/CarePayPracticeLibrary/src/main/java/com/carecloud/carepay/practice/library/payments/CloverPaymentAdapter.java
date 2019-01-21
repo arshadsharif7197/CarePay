@@ -42,6 +42,7 @@ import java.util.Map;
  */
 
 public class CloverPaymentAdapter {
+    public static final int POST_SHAMROCK_RETRY_MAX = 3;
 
     private PaymentsModel paymentsModel;
     private BaseActivity activity;
@@ -50,6 +51,8 @@ public class CloverPaymentAdapter {
     private UserPracticeDTO practiceInfo;
     private String userId;
     private Handler handler;
+
+    private int retryCount = 0;
 
     /**
      * Constructor
@@ -232,14 +235,14 @@ public class CloverPaymentAdapter {
         RestCallServiceHelper restCallServiceHelper = new RestCallServiceHelper(activity.getAppAuthorizationHelper(), activity.getApplicationMode());
         restCallServiceHelper.executeRequest(RestDef.POST,
                 HttpConstants.getPaymentsUrl(),
-                getPostPaymentCallback(paymentRequestId),
+                getPostShamrockPaymentCallback(paymentRequestId, paymentPayload),
                 null,
                 headerMap,
                 new Gson().toJson(paymentPayload),
                 "carepay", "payments");
     }
 
-    private RestCallServiceCallback getPostPaymentCallback(final String paymentRequestId) {
+    private RestCallServiceCallback getPostShamrockPaymentCallback(final String paymentRequestId, final JsonElement paymentPayload) {
         return new RestCallServiceCallback() {
             @Override
             public void onPreExecute() {
@@ -255,7 +258,13 @@ public class CloverPaymentAdapter {
             @Override
             public void onFailure(String errorMessage) {
                 activity.hideProgressDialog();
-                activity.showErrorNotification(errorMessage);
+                if(shouldRetryShamrock(errorMessage)){
+                    postPaymentRequest(paymentRequestId, paymentPayload);
+                }else {
+                    activity.showErrorNotification(errorMessage);
+                    queuePayment(paymentRequestId, false);
+                }
+                retryCount++;
             }
         };
     }
@@ -286,7 +295,7 @@ public class CloverPaymentAdapter {
             public void onFailure(String exceptionMessage) {
                 activity.hideProgressDialog();
 
-                queuePayment(paymentRequestId);
+                queuePayment(paymentRequestId, true);
 
                 Gson gson = new Gson();
                 IntegratedPatientPaymentPayload patientPaymentPayload = gson.fromJson(recordObject, IntegratedPatientPaymentPayload.class);
@@ -299,13 +308,14 @@ public class CloverPaymentAdapter {
         };
     }
 
-    private void queuePayment(String paymentRequestId) {
+    private void queuePayment(String paymentRequestId, boolean recordOnly) {
         IntegratedPaymentQueueRecord paymentQueueRecord = new IntegratedPaymentQueueRecord();
         paymentQueueRecord.setPracticeID(practiceInfo.getPracticeId());
         paymentQueueRecord.setPracticeMgmt(practiceInfo.getPracticeMgmt());
         paymentQueueRecord.setPatientID(practiceInfo.getPatientId());
         paymentQueueRecord.setDeepstreamId(paymentRequestId);
         paymentQueueRecord.setUsername(userId);
+        paymentQueueRecord.setRecordOnly(recordOnly);
 
         Gson gson = new Gson();
         paymentQueueRecord.setQueueTransition(gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getQueuePayment()));
@@ -315,6 +325,10 @@ public class CloverPaymentAdapter {
         Intent intent = new Intent(activity, IntegratedPaymentsQueueUploadService.class);
         activity.startService(intent);
 
+    }
+
+    private boolean shouldRetryShamrock(String errorMessage){
+        return !errorMessage.contains("payment request has already been completed") && retryCount < POST_SHAMROCK_RETRY_MAX;
     }
 
 }
