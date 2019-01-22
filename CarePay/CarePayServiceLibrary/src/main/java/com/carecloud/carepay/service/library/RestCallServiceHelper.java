@@ -12,6 +12,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 import java.io.File;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -289,7 +290,7 @@ public class RestCallServiceHelper {
         }
 
         String contentType = null;
-        String extension = MimeTypeMap.getFileExtensionFromUrl(file.getAbsolutePath());
+        String extension = MimeTypeMap.getFileExtensionFromUrl(URLEncoder.encode(file.getAbsolutePath()).replace("+", "%20"));
         if(extension != null){
             contentType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
         }
