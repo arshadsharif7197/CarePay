@@ -1,10 +1,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:breeze="http://schemas.carecloud.com/breeze"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:breeze="http://schemas.carecloud.com/breeze"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <ImageView
         android:id="@+id/dialog_close_header"
@@ -14,7 +14,7 @@
         android:layout_marginBottom="@dimen/apt_dl_margin_bottom"
         android:gravity="start"
         android:src="@drawable/icn_patient_mode_nav_close"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -56,84 +56,75 @@
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                     android:id="@+id/practiceTextInputLayout"
-                    style="@style/TextInputLayoutStyle"
+                    style="@style/SigninSignupTextInputStyle"
                     app:customAssetFont="proxima_nova_semi_bold"
                     app:hintTextAppearance="@style/FloatingLabelStyle">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                         android:id="@+id/practiceTextView"
-                        style="@style/InputLayoutEditTextStyle"
-                        android:background="@null"
+                        style="@style/SigninSignupEditStyle"
                         android:cursorVisible="false"
                         android:drawableEnd="@drawable/icon_drop_down"
                         android:editable="false"
                         android:focusableInTouchMode="false"
                         android:imeOptions="actionNext"
-                        app:customAssetFont="proxima_nova_semi_bold"
+                        android:paddingEnd="@dimen/dimen_10dp"
+                        android:paddingStart="@dimen/dimen_10dp"
+                        app:customAssetFont="proxima_nova_regular"
                         breeze:hintKey="visitSummary.createVisitSummary.field.hint.practice"/>
 
                 </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/light_gray"/>
-
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                     android:id="@+id/dateFromTextInputLayout"
-                    style="@style/TextInputLayoutStyle"
+                    style="@style/SigninSignupTextInputStyle"
                     app:customAssetFont="proxima_nova_semi_bold"
                     app:hintTextAppearance="@style/FloatingLabelStyle">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                         android:id="@+id/dateFromTextView"
-                        style="@style/InputLayoutEditTextStyle"
-                        android:background="@null"
+                        style="@style/SigninSignupEditStyle"
                         android:cursorVisible="false"
                         android:drawableEnd="@drawable/icon_drop_down"
                         android:editable="false"
                         android:focusableInTouchMode="false"
                         android:imeOptions="actionNext"
-                        app:customAssetFont="proxima_nova_semi_bold"
+                        android:paddingEnd="@dimen/dimen_10dp"
+                        android:paddingStart="@dimen/dimen_10dp"
+                        app:customAssetFont="proxima_nova_regular"
+                        app:hintTextAppearance="@style/FloatingLabelStyle"
                         breeze:hintKey="visitSummary.createVisitSummary.field.hint.dateFrom"/>
 
                 </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/light_gray"/>
-
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                     android:id="@+id/dateToTextInputLayout"
-                    style="@style/TextInputLayoutStyle"
+                    style="@style/SigninSignupTextInputStyle"
                     app:customAssetFont="proxima_nova_semi_bold"
                     app:hintTextAppearance="@style/FloatingLabelStyle">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                         android:id="@+id/dateToTextView"
-                        style="@style/InputLayoutEditTextStyle"
-                        android:background="@null"
+                        style="@style/SigninSignupEditStyle"
                         android:cursorVisible="false"
                         android:drawableEnd="@drawable/icon_drop_down"
                         android:editable="false"
                         android:enabled="false"
                         android:focusableInTouchMode="false"
                         android:imeOptions="actionNext"
-                        app:customAssetFont="proxima_nova_semi_bold"
+                        android:paddingEnd="@dimen/dimen_10dp"
+                        android:paddingStart="@dimen/dimen_10dp"
+                        app:customAssetFont="proxima_nova_regular"
+                        app:hintTextAppearance="@style/FloatingLabelStyle"
                         breeze:hintKey="visitSummary.createVisitSummary.field.hint.dateTo"/>
 
                 </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/light_gray"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/visitSummaryExportAsLabelBottomMargin"
+                    android:layout_marginStart="@dimen/dimen_3dp"
                     android:layout_marginTop="@dimen/visitSummaryExportAsLabelTopMargin"
                     android:gravity="start|center_vertical"
                     android:textAllCaps="true"
@@ -158,6 +149,8 @@
                         android:drawableEnd="@drawable/language_item_back"
                         android:focusable="true"
                         android:foreground="?android:attr/selectableItemBackground"
+                        android:paddingEnd="@dimen/dimen_10dp"
+                        android:paddingStart="@dimen/dimen_10dp"
                         android:text="PDF"
                         android:textColor="@color/slateGray"
                         android:textSize="@dimen/textview_default_textsize"
@@ -166,7 +159,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/light_gray"/>
+                        android:background="@color/optional_gray"/>
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayRadioButton
                         android:id="@+id/xmlOption"
@@ -179,6 +172,8 @@
                         android:drawableEnd="@drawable/language_item_back"
                         android:focusable="true"
                         android:foreground="?android:attr/selectableItemBackground"
+                        android:paddingEnd="@dimen/dimen_10dp"
+                        android:paddingStart="@dimen/dimen_10dp"
                         android:text="CCD"
                         android:textColor="@color/slateGray"
                         android:textSize="@dimen/textview_default_textsize"
@@ -187,7 +182,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/light_gray"/>
+                        android:background="@color/optional_gray"/>
 
                 </RadioGroup>
 
@@ -195,6 +190,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/visitSummaryExportAsLabelBottomMargin"
+                    android:layout_marginStart="@dimen/dimen_3dp"
                     android:layout_marginTop="@dimen/visitSummaryExportAsLabelTopMargin"
                     android:gravity="start|center_vertical"
                     android:textAllCaps="true"
@@ -206,16 +202,17 @@
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                     android:id="@+id/emailTextInputLayout"
-                    style="@style/TextInputLayoutStyle"
+                    style="@style/SigninSignupTextInputStyle"
                     app:customAssetFont="proxima_nova_semi_bold"
                     app:hintTextAppearance="@style/FloatingLabelStyle">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                         android:id="@+id/emailEditText"
-                        style="@style/InputLayoutEditTextStyle"
-                        android:background="@null"
+                        style="@style/SigninSignupEditStyle"
                         android:imeOptions="actionNext"
-                        app:customAssetFont="proxima_nova_semi_bold"
+                        android:paddingEnd="@dimen/dimen_10dp"
+                        android:paddingStart="@dimen/dimen_10dp"
+                        app:customAssetFont="proxima_nova_regular"
                         breeze:hintKey="visitSummary.createVisitSummary.field.hint.email"/>
 
                 </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
@@ -240,7 +237,10 @@
                         android:background="@null"
                         android:button="@null"
                         android:drawableEnd="@drawable/cell_checkbox"
-                        app:customAssetFont="proxima_nova_semi_bold"
+                        android:paddingEnd="@dimen/dimen_10dp"
+                        android:paddingStart="@dimen/dimen_10dp"
+                        android:textSize="@dimen/textview_default_textsize"
+                        app:customAssetFont="proxima_nova_regular"
                         breeze:textKey="visitSummary.createVisitSummary.field.label.unencrypted"
                         tools:text="Send unencrypted"/>
 
@@ -248,11 +248,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/encryptedCheckBox"
+                        android:paddingEnd="@dimen/dimen_10dp"
+                        android:paddingStart="@dimen/dimen_10dp"
                         android:textColor="@color/remove_red"
                         android:textSize="@dimen/text_size_11"
-                        tools:text="This is NOT recommeded"
+                        app:customAssetFont="proxima_nova_regular"
                         breeze:textKey="visitSummary.createVisitSummary.field.alert.unencrypted"
-                        app:customAssetFont="proxima_nova_regular"/>
+                        tools:text="This is NOT recommeded"/>
                 </RelativeLayout>
 
                 <View

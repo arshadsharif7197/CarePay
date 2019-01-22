@@ -219,6 +219,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         if (practices.size() == 1) {
             selectedPractice = practices.get(0);
             practiceTextView.setText(selectedPractice.getPracticeName());
+            practiceTextView.getOnFocusChangeListener().onFocusChange(practiceTextView, true);
         } else {
             practiceTextView.setOnFocusChangeListener(SystemUtil
                     .getHintFocusChangeListener(practiceTextInputLayout, null));
@@ -232,6 +233,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                                 public void onOptionSelected(String option, int index) {
                                     selectedPractice = practices.get(index);
                                     practiceTextView.setText(selectedPractice.getPracticeName());
+                                    practiceTextView.getOnFocusChangeListener().onFocusChange(practiceTextView, true);
                                     enableExportButton();
                                 }
                             });
@@ -239,6 +241,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
             });
         }
 
+        TextInputLayout dateFromTextInputLayout = view.findViewById(R.id.dateFromTextInputLayout);
         dateFromTextView = view.findViewById(R.id.dateFromTextView);
         dateFromTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -246,7 +249,9 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                 showCalendar(FROM_DATE);
             }
         });
+        dateFromTextView.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(dateFromTextInputLayout, null));
 
+        TextInputLayout dateToTextInputLayout = view.findViewById(R.id.dateToTextInputLayout);
         dateToTextView = view.findViewById(R.id.dateToTextView);
         dateToTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -254,7 +259,9 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                 showCalendar(TO_DATE);
             }
         });
+        dateToTextView.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(dateToTextInputLayout, null));
 
+        TextInputLayout emailTextInputLayout = view.findViewById(R.id.emailTextInputLayout);
         emailEditText = view.findViewById(R.id.emailEditText);
         emailEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -272,6 +279,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                 enableExportButton();
             }
         });
+        emailEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(emailTextInputLayout, null));
 
         CompoundButton.OnCheckedChangeListener optionListener = new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -362,7 +370,9 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                                         fromDate = selectedDate;
                                         dateFromTextView.setText(DateUtil.getInstance().setDate(fromDate)
                                                 .toStringWithFormatMmSlashDdSlashYyyy());
+                                        dateFromTextView.getOnFocusChangeListener().onFocusChange(dateFromTextView, true);
                                         dateToTextView.setText("");
+                                        dateToTextView.getOnFocusChangeListener().onFocusChange(dateToTextView, false);
                                         toDate = null;
                                         dateToTextView.setEnabled(true);
                                     }
@@ -371,6 +381,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                                         toDate = selectedDate;
                                         dateToTextView.setText(DateUtil.getInstance().setDate(toDate)
                                                 .toStringWithFormatMmSlashDdSlashYyyy());
+                                        dateToTextView.getOnFocusChangeListener().onFocusChange(dateToTextView, true);
                                     }
                                 }
                                 enableExportButton();
