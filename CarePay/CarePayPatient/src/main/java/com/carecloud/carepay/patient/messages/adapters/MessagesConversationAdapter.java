@@ -194,19 +194,24 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
                         .load(uri)
                         .centerCrop()
                         .resize(400, 400)
+                        .placeholder(R.drawable.bg_glitter_rounded)
                         .transform(new RoundedCornersTransformation(14, 10))
                         .into(holder.imageAttachment, new Callback() {
                             @Override
                             public void onSuccess() {
                                 holder.imageAttachment.setVisibility(View.VISIBLE);
+                                holder.attachmentProgress.setVisibility(View.GONE);
                             }
 
                             @Override
                             public void onError() {
                                 holder.imageAttachment.setVisibility(View.GONE);
                                 holder.fileAttachmentLayout.setVisibility(View.VISIBLE);
+                                holder.attachmentProgress.setVisibility(View.GONE);
                             }
                         });
+                holder.imageAttachment.setVisibility(View.VISIBLE);
+                holder.attachmentProgress.setVisibility(View.VISIBLE);
             } else {
                 holder.fileAttachmentLayout.setVisibility(View.VISIBLE);
             }
@@ -332,6 +337,7 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
         TextView fileAttachmentExtension;
         TextView fileAttachmentName;
         ImageView imageAttachment;
+        View attachmentProgress;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -347,6 +353,7 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
             fileAttachmentExtension = itemView.findViewById(R.id.attachmentExtension);
             fileAttachmentName = itemView.findViewById(R.id.attachmentName);
             imageAttachment = itemView.findViewById(R.id.attachmentImage);
+            attachmentProgress = itemView.findViewById(R.id.attachmentProgress);
         }
     }
 
