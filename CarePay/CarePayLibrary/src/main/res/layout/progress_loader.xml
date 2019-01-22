@@ -5,6 +5,5 @@
     android:layout_height="@dimen/dimen_40dp"
     android:layout_gravity="center"
     android:indeterminateDrawable="@drawable/progress_loader"
-    android:paddingBottom="@dimen/dimen_10dp"
     android:visibility="gone" />
 

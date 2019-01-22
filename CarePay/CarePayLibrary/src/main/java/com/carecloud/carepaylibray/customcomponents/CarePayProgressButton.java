@@ -39,7 +39,7 @@ public class CarePayProgressButton extends CarePayButton {
             if (progress != null) {
                 progress.setVisibility(VISIBLE);
                 textHolder = getText();
-//                setText(null);
+                setText(null);
             }
 
         } else if (textHolder != null) {

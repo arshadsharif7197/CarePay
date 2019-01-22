@@ -37,7 +37,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_16"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="visitSummary.myHealth.button.label.createVisitSummary" />
+                breeze:textKey="visitSummary.myHealth.button.label.createVisitSummary"/>
 
         </LinearLayout>
 
@@ -49,10 +49,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:paddingStart="@dimen/commonHorizontalPadding"
-                android:paddingTop="@dimen/commonVerticalPadding"
+                android:paddingBottom="@dimen/commonVerticalPadding"
                 android:paddingEnd="@dimen/commonHorizontalPadding"
-                android:paddingBottom="@dimen/commonVerticalPadding">
+                android:paddingStart="@dimen/commonHorizontalPadding"
+                android:paddingTop="@dimen/commonVerticalPadding">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                     android:id="@+id/practiceTextInputLayout"
@@ -70,14 +70,14 @@
                         android:focusableInTouchMode="false"
                         android:imeOptions="actionNext"
                         app:customAssetFont="proxima_nova_semi_bold"
-                        breeze:hintKey="visitSummary.createVisitSummary.field.hint.practice" />
+                        breeze:hintKey="visitSummary.createVisitSummary.field.hint.practice"/>
 
                 </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/light_gray" />
+                    android:background="@color/light_gray"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                     android:id="@+id/dateFromTextInputLayout"
@@ -95,14 +95,14 @@
                         android:focusableInTouchMode="false"
                         android:imeOptions="actionNext"
                         app:customAssetFont="proxima_nova_semi_bold"
-                        breeze:hintKey="visitSummary.createVisitSummary.field.hint.dateFrom" />
+                        breeze:hintKey="visitSummary.createVisitSummary.field.hint.dateFrom"/>
 
                 </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/light_gray" />
+                    android:background="@color/light_gray"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                     android:id="@+id/dateToTextInputLayout"
@@ -121,26 +121,27 @@
                         android:focusableInTouchMode="false"
                         android:imeOptions="actionNext"
                         app:customAssetFont="proxima_nova_semi_bold"
-                        breeze:hintKey="visitSummary.createVisitSummary.field.hint.dateTo" />
+                        breeze:hintKey="visitSummary.createVisitSummary.field.hint.dateTo"/>
 
                 </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/light_gray" />
+                    android:background="@color/light_gray"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/visitSummaryExportAsLabelTopMargin"
                     android:layout_marginBottom="@dimen/visitSummaryExportAsLabelBottomMargin"
+                    android:layout_marginTop="@dimen/visitSummaryExportAsLabelTopMargin"
                     android:gravity="start|center_vertical"
-                    android:textColor="@color/payne_gray"
+                    android:textAllCaps="true"
+                    android:textColor="@color/cadet_gray"
                     android:textSize="@dimen/textview_default_textsize"
                     app:customAssetFont="proxima_nova_semi_bold"
                     breeze:textKey="visitSummary.createVisitSummary.label.text.exportAs"
-                    tools:text="Export As" />
+                    tools:text="Export As"/>
 
                 <RadioGroup
                     android:layout_width="match_parent"
@@ -153,7 +154,6 @@
                         android:layout_gravity="center"
                         android:background="@color/white"
                         android:button="@null"
-                        android:checked="true"
                         android:clickable="true"
                         android:drawableEnd="@drawable/language_item_back"
                         android:focusable="true"
@@ -161,12 +161,12 @@
                         android:text="PDF"
                         android:textColor="@color/slateGray"
                         android:textSize="@dimen/textview_default_textsize"
-                        app:customAssetFont="proxima_nova_regular" />
+                        app:customAssetFont="proxima_nova_regular"/>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/light_gray" />
+                        android:background="@color/light_gray"/>
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayRadioButton
                         android:id="@+id/xmlOption"
@@ -182,26 +182,27 @@
                         android:text="CCD"
                         android:textColor="@color/slateGray"
                         android:textSize="@dimen/textview_default_textsize"
-                        app:customAssetFont="proxima_nova_regular" />
+                        app:customAssetFont="proxima_nova_regular"/>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/light_gray" />
+                        android:background="@color/light_gray"/>
 
                 </RadioGroup>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/visitSummaryExportAsLabelTopMargin"
                     android:layout_marginBottom="@dimen/visitSummaryExportAsLabelBottomMargin"
+                    android:layout_marginTop="@dimen/visitSummaryExportAsLabelTopMargin"
                     android:gravity="start|center_vertical"
-                    android:textColor="@color/payne_gray"
+                    android:textAllCaps="true"
+                    android:textColor="@color/cadet_gray"
                     android:textSize="@dimen/textview_default_textsize"
                     app:customAssetFont="proxima_nova_semi_bold"
                     breeze:textKey="visitSummary.createVisitSummary.label.text.sendTo"
-                    tools:text="Send To" />
+                    tools:text="Send To"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                     android:id="@+id/emailTextInputLayout"
@@ -215,42 +216,59 @@
                         android:background="@null"
                         android:imeOptions="actionNext"
                         app:customAssetFont="proxima_nova_semi_bold"
-                        breeze:hintKey="visitSummary.createVisitSummary.field.hint.email" />
+                        breeze:hintKey="visitSummary.createVisitSummary.field.hint.email"/>
 
                 </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/light_gray" />
+                    android:background="@color/light_gray"/>
 
-                <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
-                    android:id="@+id/encryptedCheckBox"
-                    style="@style/PaymentMethodLabelStyle"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/encryptedCheckBoxVerticalMargin"
                     android:layout_marginBottom="@dimen/encryptedCheckBoxVerticalMargin"
-                    android:background="@null"
-                    android:button="@null"
-                    android:drawableEnd="@drawable/cell_checkbox"
-                    app:customAssetFont="proxima_nova_semi_bold"
-                    breeze:textKey="visitSummary.createVisitSummary.field.label.unencrypted" />
+                    android:layout_marginTop="@dimen/encryptedCheckBoxVerticalMargin">
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
+                        android:id="@+id/encryptedCheckBox"
+                        style="@style/PaymentMethodLabelStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:background="@null"
+                        android:button="@null"
+                        android:drawableEnd="@drawable/cell_checkbox"
+                        app:customAssetFont="proxima_nova_semi_bold"
+                        breeze:textKey="visitSummary.createVisitSummary.field.label.unencrypted"
+                        tools:text="Send unencrypted"/>
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/encryptedCheckBox"
+                        android:textColor="@color/remove_red"
+                        android:textSize="@dimen/text_size_11"
+                        tools:text="This is NOT recommeded"
+                        breeze:textKey="visitSummary.createVisitSummary.field.alert.unencrypted"
+                        app:customAssetFont="proxima_nova_regular"/>
+                </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/light_gray" />
+                    android:background="@color/light_gray"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/visitSummaryExportButtonTopMargin">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayProgressButton
                         android:id="@+id/exportButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/visitSummaryExportButtonTopMargin"
                         android:background="@drawable/button_selector"
                         android:enabled="false"
                         android:foreground="?selectableItemBackground"
@@ -258,21 +276,13 @@
                         android:textColor="@color/white"
                         android:textSize="16sp"
                         app:customAssetFont="gotham_rounded_medium"
-                        breeze:textKey="visitSummary.createVisitSummary.button.label.export" />
-
-                    <View
-                        android:id="@+id/fakeView"
-                        android:layout_width="@dimen/dimen_1dp"
-                        android:layout_height="@dimen/dimen_1dp"
-                        android:layout_centerInParent="true" />
+                        breeze:textKey="visitSummary.createVisitSummary.button.label.export"/>
 
                     <include
                         layout="@layout/progress_loader"
-                        android:layout_width="@dimen/dimen_40dp"
-                        android:layout_height="@dimen/dimen_40dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginStart="@dimen/dimen_80dp"
-                        android:layout_toEndOf="@id/fakeView"/>
+                        android:layout_width="@dimen/dimen_20dp"
+                        android:layout_height="@dimen/dimen_20dp"
+                        android:layout_centerInParent="true"/>
 
                 </RelativeLayout>
 

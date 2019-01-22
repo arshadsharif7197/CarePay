@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -93,6 +94,8 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
     private Handler handler;
     private String format;
     private int retryIntent = 0;
+
+    private boolean isExporting = false;
 
     public static VisitSummaryDialogFragment newInstance() {
         return new VisitSummaryDialogFragment();
@@ -227,7 +230,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                             new OnOptionSelectedListener() {
                                 @Override
                                 public void onOptionSelected(String option, int index) {
-                                    selectedPractice = myHealthDto.getPayload().getPracticeInformation().get(index);
+                                    selectedPractice = practices.get(index);
                                     practiceTextView.setText(selectedPractice.getPracticeName());
                                     enableExportButton();
                                 }
@@ -269,24 +272,20 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                 enableExportButton();
             }
         });
+
+        CompoundButton.OnCheckedChangeListener optionListener = new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                enableExportButton();
+            }
+        };
         pdfOption = view.findViewById(R.id.pdfOption);
         xmlOption = view.findViewById(R.id.xmlOption);
+        pdfOption.setOnCheckedChangeListener(optionListener);
+        xmlOption.setOnCheckedChangeListener(optionListener);
 
         exportButton = view.findViewById(R.id.exportButton);
-        exportButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (formIsValid()) {
-                    if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                            != PermissionChecker.PERMISSION_GRANTED && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
-                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                MY_PERMISSIONS_VS_WRITE_EXTERNAL_STORAGE);
-                    } else {
-                        callVisitSummaryService(selectedPractice);
-                    }
-                }
-            }
-        });
+        exportButton.setOnClickListener(exportSummaryListener);
 
         encryptedCheckBox = view.findViewById(R.id.encryptedCheckBox);
     }
@@ -312,7 +311,11 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
     }
 
     private void enableExportButton() {
+        boolean wasEnabled = exportButton.isEnabled();
         exportButton.setEnabled(formIsValid());
+        if(!wasEnabled && exportButton.isEnabled()) {
+            resetExportButton();
+        }
     }
 
     private boolean formIsValid() {
@@ -329,7 +332,12 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         if (!StringUtil.isNullOrEmpty(email) && !ValidationHelper.isValidEmail(email)) {
             return false;
         }
-        return true;
+        return (pdfOption.isChecked() || xmlOption.isChecked()) && !isExporting;
+    }
+
+    private void resetExportButton(){
+        exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.export"));
+        exportButton.setOnClickListener(exportSummaryListener);
     }
 
     private void showCalendar(int flag) {
@@ -337,13 +345,14 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         if (flag == TO_DATE) {
             calendar.setTimeInMillis(fromDate.getTime());
         } else {
-            calendar.add(Calendar.YEAR, -3);
+            calendar.set(1900, 1,1);
         }
         Calendar dueCal = Calendar.getInstance();
         dueCal.add(Calendar.DATE, 1);
         DatePickerFragment fragment = DatePickerFragment
                 .newInstance(Label.getLabel("payment.oneTimePayment.input.label.date"),
                         calendar.getTime(),
+                        dueCal.getTime(),
                         dueCal.getTime(),
                         new DatePickerFragment.DateRangePickerDialogListener() {
                             @Override
@@ -443,9 +452,10 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 VisitSummaryDTO visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
                 ((BaseActivity) getActivity()).hideProgressDialog();
+                isExporting = true;
                 exportButton.setEnabled(false);
-                exportButton.setProgressEnabled(true);
                 exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.processing"));
+                exportButton.setProgressEnabled(true);
                 callForStatus(visitSummaryDTO.getPayload().getVisitSummaryRequest().getJobId(), selectedPractice, format);
             }
 
@@ -475,6 +485,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                 String status = visitSummaryDTO.getPayload().getVisitSummary().getStatus();
                 if (retryIntent > MAX_NUMBER_RETRIES) {
                     retryIntent = 0;
+                    isExporting =false;
                     exportButton.setEnabled(true);
                     exportButton.setProgressEnabled(false);
                     exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.export"));
@@ -495,6 +506,9 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
             public void onFailure(String exceptionMessage) {
                 Log.e("OkHttp", exceptionMessage);
                 downloadFile(jobId, selectedPractice, format);
+                isExporting = false;
+                exportButton.setProgressEnabled(false);
+                exportButton.setEnabled(formIsValid());
             }
         }, query);
     }
@@ -526,6 +540,21 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         return patientGuid;
     }
 
+    private View.OnClickListener exportSummaryListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (formIsValid()) {
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PermissionChecker.PERMISSION_GRANTED && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            MY_PERMISSIONS_VS_WRITE_EXTERNAL_STORAGE);
+                } else {
+                    callVisitSummaryService(selectedPractice);
+                }
+            }
+        }
+    };
+
     @Override
     public void onDetach() {
         super.onDetach();
@@ -543,5 +572,11 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
 
     public interface OnOptionSelectedListener {
         void onOptionSelected(String option, int index);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        resetExportButton();
     }
 }
