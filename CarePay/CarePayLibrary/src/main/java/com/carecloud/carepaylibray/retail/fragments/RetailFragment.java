@@ -315,7 +315,6 @@ public class RetailFragment extends BaseFragment {
             shoppingWebView.goBack();
             return true;
         }
-        MixPanelUtil.endTimer(getString(R.string.timer_shopping));
         return false;
     }
 
