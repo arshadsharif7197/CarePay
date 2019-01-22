@@ -293,6 +293,14 @@ public class RestCallServiceHelper {
         if(extension != null){
             contentType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
         }
+        if(contentType == null && "json".equals(extension)){
+            contentType = "application/json";
+        }
+        if(contentType == null){
+            callback.onFailure("Unable to determine content type for file upload!");
+            return;
+        }
+
         RequestBody requestBody = RequestBody.create(MediaType.parse(contentType), file);
         MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
 

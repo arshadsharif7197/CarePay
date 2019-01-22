@@ -166,8 +166,11 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
             //currently only supporting one attachment
             MessageAttachment attachment = message.getAttachments().get(0);
             String attachmentFormat = attachment.getDocument().getDocumentFormat();
-            if (attachmentFormat.contains("/")) {
+            if (attachmentFormat != null && attachmentFormat.contains("/")) {
                 attachmentFormat = MimeTypeMap.getSingleton().getExtensionFromMimeType(attachmentFormat);
+            }
+            if(attachmentFormat == null){
+                attachmentFormat = MimeTypeMap.getFileExtensionFromUrl(attachment.getDocument().getName());
             }
 
             holder.fileAttachmentExtension.setText(attachmentFormat);
