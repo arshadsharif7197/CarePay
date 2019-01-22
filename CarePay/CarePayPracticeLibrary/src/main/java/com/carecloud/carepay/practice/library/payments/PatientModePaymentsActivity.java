@@ -348,7 +348,9 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
 
     @Override
     public void onMiddleActionTapped(PaymentsModel paymentsModel, double amount) {
-        onPartialPaymentClicked(amount, null);
+        PendingBalanceDTO pendingBalanceDTO = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances()
+                .get(0);
+        onPartialPaymentClicked(amount, pendingBalanceDTO);
     }
 
     @Override

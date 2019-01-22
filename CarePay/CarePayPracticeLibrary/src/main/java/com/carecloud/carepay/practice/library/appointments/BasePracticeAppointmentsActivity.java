@@ -353,8 +353,17 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         PracticePaymentMethodPrepaymentFragment prepaymentFragment = PracticePaymentMethodPrepaymentFragment
                 .newInstance(paymentsModel, amount);
         displayDialogFragment(prepaymentFragment, true);
-
-        MixPanelUtil.logEvent(getString(R.string.event_payment_start_prepayment));
+        String[] params = {getString(R.string.param_payment_amount),
+                getString(R.string.param_practice_id),
+                getString(R.string.param_provider_id),
+                getString(R.string.param_location_id),
+        };
+        Object[] values = {paymentsModel.getPaymentPayload().getPaymentPostModel().getLineItems().get(0).getAmount(),
+                getApplicationMode().getUserPracticeDTO().getPracticeId(),
+                paymentsModel.getPaymentPayload().getPaymentPostModel().getLineItems().get(0).getProviderID(),
+                paymentsModel.getPaymentPayload().getPaymentPostModel().getLineItems().get(0).getLocationID(),
+        };
+        MixPanelUtil.logEvent(getString(R.string.event_payment_start_prepayment), params, values);
     }
 
     @Override
