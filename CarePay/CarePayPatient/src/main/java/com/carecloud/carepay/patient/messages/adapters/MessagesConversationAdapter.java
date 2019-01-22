@@ -34,6 +34,7 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.LinkMovementCallbackMethod;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.PicassoHelper;
+import com.carecloud.carepaylibray.utils.PicassoRoundedCornersExifTransformation;
 import com.carecloud.carepaylibray.utils.ReLinkify;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.android.gms.common.util.ArrayUtils;
@@ -45,8 +46,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 /**
  * Created by lmenendez on 7/5/17
@@ -192,10 +191,8 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
                 PicassoHelper.setHeaders(headers);
                 PicassoHelper.getPicassoInstance(context)
                         .load(uri)
-                        .centerCrop()
-                        .resize(400, 400)
                         .placeholder(R.drawable.bg_glitter_rounded)
-                        .transform(new RoundedCornersTransformation(14, 10))
+                        .transform(new PicassoRoundedCornersExifTransformation(14, 10))
                         .into(holder.imageAttachment, new Callback() {
                             @Override
                             public void onSuccess() {
