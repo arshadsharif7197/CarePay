@@ -443,6 +443,9 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         } else if (appointmentPayloadDTO.canCheckOut()) {
             dialogStyle = AppointmentDisplayStyle.CHECKED_IN;
 
+        } else if (appointmentPayloadDTO.isAppointmentOver() && appointmentPayloadDTO.getAppointmentStatus().getCode().equals(CarePayConstants.PENDING)) {
+            dialogStyle = AppointmentDisplayStyle.MISSED;
+
         } else if (appointmentPayloadDTO.isAppointmentOver() || appointmentPayloadDTO.isAppointmentFinished()) {
             //todo finished appt options, Doing nothing for now
 
