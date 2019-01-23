@@ -52,6 +52,7 @@ import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.FileDownloadUtil;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.picasso.Callback;
@@ -670,6 +671,20 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         @Override
         public void onClick(View view) {
             callback.onCheckInOfficeStarted(appointmentDTO);
+            //log event to mixpanel
+            String[] params = {getString(R.string.param_appointment_type),
+                    getString(R.string.param_practice_id),
+                    getString(R.string.param_provider_id),
+                    getString(R.string.param_location_id),
+                    getString(R.string.param_patient_id)
+            };
+            Object[] values = {appointmentDTO.getPayload().getVisitType().getName(),
+                    appointmentDTO.getMetadata().getPracticeId(),
+                    appointmentDTO.getPayload().getProvider().getGuid(),
+                    appointmentDTO.getPayload().getLocation().getGuid(),
+                    appointmentDTO.getMetadata().getPatientId()
+            };
+            MixPanelUtil.logEvent(getString(R.string.event_qr_code), params, values);
             dismiss();
         }
     };

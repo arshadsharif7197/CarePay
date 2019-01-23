@@ -123,6 +123,7 @@ public class RetailActivity extends MenuPatientActivity implements RetailPatient
     public void onStop() {
         if (retailModel != null && !retailModel.getPayload().getRetailPracticeList().isEmpty()) {
             MixPanelUtil.logEvent(getString(R.string.event_retail_ended));
+            MixPanelUtil.endTimer(getString(R.string.timer_shopping));
         }
         super.onStop();
     }
