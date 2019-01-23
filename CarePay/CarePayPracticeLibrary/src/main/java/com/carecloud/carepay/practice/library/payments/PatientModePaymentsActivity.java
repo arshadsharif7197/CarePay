@@ -209,7 +209,9 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
                 .newInstance(paymentResultModel, owedAmount);
         displayDialogFragment(dialog, false);
 
-        MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment));
+        MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment),
+                getString(R.string.param_practice_id),
+                selectedBalance.getMetadata().getPracticeId());
     }
 
     @Override
@@ -219,7 +221,13 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
                 .newInstance(paymentsModel, amount);
         displayDialogFragment(fragment, false);
 
-        MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment));
+        String[] params = {getString(R.string.param_balance_amount),
+                getString(R.string.param_practice_id)
+        };
+        Object[] values = {amount,
+                paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getPracticeId()
+        };
+        MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment), params, values);
     }
 
     @Override
@@ -340,7 +348,9 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
 
     @Override
     public void onMiddleActionTapped(PaymentsModel paymentsModel, double amount) {
-        onPartialPaymentClicked(amount, null);
+        PendingBalanceDTO pendingBalanceDTO = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances()
+                .get(0);
+        onPartialPaymentClicked(amount, pendingBalanceDTO);
     }
 
     @Override
@@ -554,11 +564,15 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
 
         String[] params = {getString(R.string.param_practice_id),
                 getString(R.string.param_payment_plan_id),
-                getString(R.string.param_payment_plan_amount)};
+                getString(R.string.param_payment_plan_payment),
+                getString(R.string.param_patient_id)
+        };
         Object[] values = {
                 paymentPlanDTO.getMetadata().getPracticeId(),
                 paymentPlanDTO.getMetadata().getPaymentPlanId(),
-                paymentPlanDTO.getPayload().getAmount()};
+                paymentsModel.getPaymentPayload().getPaymentPostModel().getAmount(),
+                paymentPlanDTO.getMetadata().getPatientId()
+        };
         MixPanelUtil.logEvent(getString(R.string.event_paymentplan_onetime_payment), params, values);
     }
 
@@ -659,6 +673,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
                 DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
         showSuccessToast(message);
 
+        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payments_scheduled), 1);
     }
 
     @Override
@@ -671,6 +686,8 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
                         .setDateRaw(scheduledPaymentPayload.getPaymentDate())
                         .toStringWithFormatMmSlashDdSlashYyyy()));
         completePaymentProcess(workflowDTO);
+
+        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_scheduled_payments_deleted), 1);
     }
 
     @Override
@@ -690,6 +707,10 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
             PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
                     .newInstance(workflowDTO, isOneTimePayment);
             displayDialogFragment(confirmationFragment, false);
+
+            if(isOneTimePayment){
+                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_one_time_payments_completed), 1);
+            }
         }
     }
 

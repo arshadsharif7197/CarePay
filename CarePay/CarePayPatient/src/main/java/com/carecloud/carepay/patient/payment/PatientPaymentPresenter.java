@@ -77,14 +77,22 @@ public class PatientPaymentPresenter extends PaymentPresenter
     public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
         new PartialPaymentDialog(viewHandler.getContext(), paymentsModel, selectedBalance).show();
 
-        MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment));
+        MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment),
+                getString(R.string.param_practice_id),
+                selectedBalance.getMetadata().getPracticeId());
     }
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         viewHandler.navigateToFragment(PatientPaymentMethodFragment.newInstance(paymentsModel, amount, false), true);
 
-        MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment));
+        String[] params = {getString(R.string.param_balance_amount),
+                getString(R.string.param_practice_id)
+        };
+        Object[] values = {amount,
+                paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getPracticeId()
+        };
+        MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment), params, values);
     }
 
     @Override
@@ -122,7 +130,12 @@ public class PatientPaymentPresenter extends PaymentPresenter
     public void onPayLaterClicked(PendingBalanceDTO pendingBalanceDTO) {
         viewHandler.exitPaymentProcess(true);
 
-        MixPanelUtil.logEvent(getString(R.string.event_payment_skipped));
+        double amount = 0D;
+        for(PendingBalancePayloadDTO balancePayloadDTO : pendingBalanceDTO.getPayload()){
+            amount += balancePayloadDTO.getAmount();
+        }
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_skipped), getString(R.string.param_balance_amount), amount);
     }
 
     @Override

@@ -77,6 +77,9 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     private PaymentsModel paymentsModel;
     private PatientModel patientModel;
 
+    private ScheduleAppointmentRequestDTO scheduleAppointmentRequestDTO;
+    private double prepayAmount;
+
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -98,6 +101,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         }
 
         onAppointmentRequestSuccess();
+        logAppointmentRequestedMixpanel();
     }
 
     @Override
@@ -137,12 +141,14 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
 
 
-        ScheduleAppointmentRequestDTO scheduleAppointmentRequestDTO = new ScheduleAppointmentRequestDTO();
+        scheduleAppointmentRequestDTO = new ScheduleAppointmentRequestDTO();
         ScheduleAppointmentRequestDTO.Appointment appointment = scheduleAppointmentRequestDTO.getAppointment();
         appointment.setStartTime(appointmentSlot.getStartTime());
         appointment.setEndTime(appointmentSlot.getEndTime());
         appointment.setLocationId(appointmentSlot.getLocation().getId());
+        appointment.setLocationGuid(appointmentSlot.getLocation().getGuid());
         appointment.setProviderId(appointmentResourcesDTO.getResource().getProvider().getId());
+        appointment.setProviderGuid(appointmentResourcesDTO.getResource().getProvider().getGuid());
         appointment.setVisitReasonId(visitTypeDTO.getId());
         appointment.setResourceId(appointmentResourcesDTO.getResource().getId());
         appointment.setComplaint(reasonForVisit);
@@ -150,9 +156,9 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
         appointment.getPatient().setId(patientModel.getPatientId());
 
-        double amount = visitTypeDTO.getAmount();
-        if (amount > 0 && paymentsModel != null) {
-            startPrepaymentProcess(scheduleAppointmentRequestDTO, appointmentSlot, amount);
+        prepayAmount = visitTypeDTO.getAmount();
+        if (prepayAmount > 0 && paymentsModel != null) {
+            startPrepaymentProcess(scheduleAppointmentRequestDTO, appointmentSlot, prepayAmount);
         } else {
             Gson gson = new Gson();
             getWorkflowServiceHelper().execute(getMakeAppointmentTransition(),
@@ -176,21 +182,6 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             showAppointmentConfirmation();
-
-            ApplicationMode.ApplicationType applicationType = getApplicationMode().getApplicationType();
-            String[] params = {getString(R.string.param_appointment_type),
-                    getString(R.string.param_practice_id),
-                    getString(R.string.param_practice_name),
-                    getString(R.string.param_patient_id)};
-            String[] values = {visitTypeDTO.getName(),
-                    getApplicationMode().getUserPracticeDTO().getPracticeId(),
-                    getApplicationMode().getUserPracticeDTO().getPracticeName(),
-                    patientModel.getPatientId()};
-            MixPanelUtil.logEvent(getString(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
-                    R.string.event_appointment_requested : R.string.event_appointment_scheduled), params, values);
-            if (applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
-            }
         }
 
         @Override
@@ -362,8 +353,17 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         PracticePaymentMethodPrepaymentFragment prepaymentFragment = PracticePaymentMethodPrepaymentFragment
                 .newInstance(paymentsModel, amount);
         displayDialogFragment(prepaymentFragment, true);
-
-        MixPanelUtil.logEvent(getString(R.string.event_payment_start_prepayment));
+        String[] params = {getString(R.string.param_payment_amount),
+                getString(R.string.param_practice_id),
+                getString(R.string.param_provider_id),
+                getString(R.string.param_location_id),
+        };
+        Object[] values = {paymentsModel.getPaymentPayload().getPaymentPostModel().getLineItems().get(0).getAmount(),
+                getApplicationMode().getUserPracticeDTO().getPracticeId(),
+                paymentsModel.getPaymentPayload().getPaymentPostModel().getLineItems().get(0).getProviderID(),
+                paymentsModel.getPaymentPayload().getPaymentPostModel().getLineItems().get(0).getLocationID(),
+        };
+        MixPanelUtil.logEvent(getString(R.string.event_payment_start_prepayment), params, values);
     }
 
     @Override
@@ -416,6 +416,9 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
                     .newInstance(workflowDTO, Label.getLabel("appointment.confirmationScreen.type.label.paymentType"),
                             Label.getLabel("add_appointment_back_to_appointments_button"));
             displayDialogFragment(confirmationFragment, false);
+
+            //this is a prepayment
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_prepayments_completed), 1);
         }
     }
 
@@ -429,6 +432,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     @Override
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
         onAppointmentRequestSuccess();
+        logAppointmentRequestedMixpanel();
     }
 
     @Override
@@ -436,4 +440,35 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         onHoursAndLocationSelected(appointmentSlot, null);
     }
 
+    private void logAppointmentRequestedMixpanel() {
+        ApplicationMode.ApplicationType applicationType = getApplicationMode().getApplicationType();
+        String[] params = {getString(R.string.param_appointment_type),
+                getString(R.string.param_practice_id),
+                getString(R.string.param_practice_name),
+                getString(R.string.param_provider_id),
+                getString(R.string.param_patient_id),
+                getString(R.string.param_location_id),
+                getString(R.string.param_reason_visit),
+                //make sure this is the last item in case we need to null it out to prevent it from sending
+                getString(R.string.param_payment_made)
+        };
+        Object[] values = {visitTypeDTO.getName(),
+                getApplicationMode().getUserPracticeDTO().getPracticeId(),
+                getApplicationMode().getUserPracticeDTO().getPracticeName(),
+                scheduleAppointmentRequestDTO.getAppointment().getProviderGuid(),
+                patientModel.getPatientId(),
+                scheduleAppointmentRequestDTO.getAppointment().getLocationGuid(),
+                scheduleAppointmentRequestDTO.getAppointment().getComments(),
+                prepayAmount
+        };
+        if(prepayAmount <= 0D){
+            params[params.length-1] = null;
+        }
+        MixPanelUtil.logEvent(getString(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
+                R.string.event_appointment_requested : R.string.event_appointment_scheduled), params, values);
+        if (applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
+        }
+
+    }
 }

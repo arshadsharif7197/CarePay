@@ -23,13 +23,13 @@ import com.carecloud.carepaylibray.media.MediaViewInterface;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 
-import java.util.List;
-
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_DTO;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_BACK;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_FRONT;
+
+import java.util.List;
 
 
 public class IdentificationFragment extends CheckInDemographicsBaseFragment implements MediaViewInterface {
@@ -125,7 +125,19 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
         if ((hasFrontImage && base64FrontImage != null) ||
                 (hasBackImage && base64BackImage != null)) {
             //Log new Identity Doc
-            MixPanelUtil.logEvent(getString(R.string.event_add_identity_doc), getString(R.string.param_is_checkin), true);
+            String[] params = {getString(R.string.param_is_checkin),
+                    getString(R.string.param_practice_id),
+                    getString(R.string.param_provider_id),
+                    getString(R.string.param_location_id),
+                    getString(R.string.param_appointment_id)
+            };
+            Object[] values = {true,
+                    checkinFlowCallback.getAppointment().getMetadata().getPracticeId(),
+                    checkinFlowCallback.getAppointment().getPayload().getProvider().getGuid(),
+                    checkinFlowCallback.getAppointment().getPayload().getLocation().getGuid(),
+                    checkinFlowCallback.getAppointment().getMetadata().getAppointmentId()
+            };
+            MixPanelUtil.logEvent(getString(R.string.event_add_identity_doc), params, values);
         }
 
         if (hasFrontImage && base64FrontImage != null) {

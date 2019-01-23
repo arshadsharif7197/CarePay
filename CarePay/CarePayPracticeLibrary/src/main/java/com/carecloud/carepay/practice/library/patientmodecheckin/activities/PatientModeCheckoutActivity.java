@@ -79,6 +79,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
@@ -91,6 +92,7 @@ import com.carecloud.carepaylibray.translation.TranslatableFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.gson.Gson;
 import com.squareup.timessquare.CalendarPickerView;
 
@@ -121,6 +123,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     private WorkflowDTO paymentConfirmationWorkflow;
     private boolean paymentStarted = false;
+    private boolean completedPaymentPlan = false;
 
     private boolean isUserInteraction = false;
 
@@ -136,18 +139,12 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             WorkflowDTO workflowDTO = getConvertedDTO(WorkflowDTO.class);
             initDto(workflowDTO);
 
-            if (getAppointment() != null) {
-                //Log Check-out Started
-                String[] params = {getString(R.string.param_practice_id), getString(R.string.param_appointment_id), getString(R.string.param_appointment_type), getString(R.string.param_is_guest)};
-                Object[] values = {getAppointment().getMetadata().getPracticeId(), getAppointmentId(), getAppointment().getPayload().getVisitType().getName(), false};
-                MixPanelUtil.logEvent(getString(R.string.event_checkout_started), params, values);
-                MixPanelUtil.startTimer(getString(R.string.timer_checkout));
-            }
         }
         initAppMode();
         setContentView(R.layout.activity_patient_checkout);
         initViews();
         initializeLanguageSpinner();
+        logCheckoutStarted();
     }
 
     @Override
@@ -292,6 +289,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     private void showNextAppointmentFragment(String appointmentId) {
         addFragment(NextAppointmentFragment.newInstance(appointmentId), true);
+
+        MixPanelUtil.startTimer(getString(R.string.timer_next_appt));
     }
 
     private void showResponsibilityFragment() {
@@ -302,6 +301,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         responsibilityFragment.setArguments(bundle);
 
         replaceFragment(responsibilityFragment, true);
+
+        MixPanelUtil.startTimer(getString(R.string.timer_payment_checkout));
     }
 
     @Override
@@ -533,6 +534,9 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             } else {
                 paymentConfirmationWorkflow = workflowDTO;
                 completePaymentProcess(workflowDTO);
+
+                //this is a prepayment
+                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_prepayments_completed), 1);
             }
         }
     }
@@ -580,7 +584,12 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getContinueTransition();
         getWorkflowServiceHelper().execute(transitionDTO, continueCallback, queryMap, header);
 
-        MixPanelUtil.logEvent(getString(R.string.event_payment_skipped));
+        double amount = 0D;
+        for (PendingBalancePayloadDTO balancePayloadDTO : pendingBalanceDTO.getPayload()) {
+            amount += balancePayloadDTO.getAmount();
+        }
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_skipped), getString(R.string.param_balance_amount), amount);
     }
 
     @Override
@@ -589,7 +598,9 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                 .newInstance(paymentsModel, owedAmount);
         displayDialogFragment(dialog, false);
 
-        MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment));
+        MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment),
+                getString(R.string.param_practice_id),
+                selectedBalance.getMetadata().getPracticeId());
     }
 
     @Override
@@ -713,6 +724,11 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         Intent intent = new Intent(this, CompleteCheckActivity.class);
         intent.putExtra(CarePayConstants.EXTRA_BUNDLE, extra);
         startActivity(intent);
+
+        completeCheckout(paymentConfirmationWorkflow != null,
+                getPaymentAmount(paymentConfirmationWorkflow),
+                surveyDTO.getPayload().getSurvey() != null,
+                completedPaymentPlan);
     }
 
     @Override
@@ -738,14 +754,36 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void completeCheckout() {
+    public void completeCheckout(boolean paymentMade, double paymentAmount, boolean surveyAvailable, boolean paymentPlanCreated) {
         //Log Check-out Completed
+        boolean isGuest = !ValidationHelper.isValidEmail(getAppAuthorizationHelper().getCurrUser());
         if (getAppointment() != null) {
-            String[] params = {getString(R.string.param_practice_id), getString(R.string.param_appointment_id), getString(R.string.param_appointment_type), getString(R.string.param_is_guest)};
-            Object[] values = {getAppointment().getMetadata().getPracticeId(), getAppointmentId(), getAppointment().getPayload().getVisitType().getName(), false};
+            String[] params = {getString(R.string.param_practice_id),
+                    getString(R.string.param_appointment_id),
+                    getString(R.string.param_appointment_type),
+                    getString(R.string.param_is_guest),
+                    getString(R.string.param_payment_made),
+                    getString(R.string.param_survey_available),
+                    getString(R.string.param_payment_plan_created),
+                    getString(R.string.param_payment_amount),
+                    getString(R.string.param_partial_pay_available)
+            };
+            Object[] values = {getAppointment().getMetadata().getPracticeId(),
+                    getAppointmentId(),
+                    getAppointment().getPayload().getVisitType().getName(),
+                    isGuest,
+                    paymentMade,
+                    surveyAvailable,
+                    paymentAmount,
+                    getPaymentSettings(getAppointment().getMetadata().getPracticeId())
+                            .getPayload().getRegularPayments().isAllowPartialPayments()
+            };
             MixPanelUtil.logEvent(getString(R.string.event_checkout_completed), params, values);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_checkout_completed), 1);
             MixPanelUtil.endTimer(getString(R.string.timer_checkout));
+            if (paymentMade) {
+                MixPanelUtil.endTimer(getString(R.string.timer_payment_checkout));
+            }
         }
     }
 
@@ -965,6 +1003,29 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         MixPanelUtil.logEvent(getString(R.string.event_checkout_cancelled), getString(R.string.param_last_completed_step), currentStep);
     }
 
+    private void logCheckoutStarted(){
+        if (getAppointment() != null) {
+            //Log Check-out Started
+            boolean isGuest = !ValidationHelper.isValidEmail(getAppAuthorizationHelper().getCurrUser());
+            String[] params = {getString(R.string.param_practice_id),
+                    getString(R.string.param_appointment_id),
+                    getString(R.string.param_appointment_type),
+                    getString(R.string.param_is_guest),
+                    getString(R.string.param_provider_id),
+                    getString(R.string.param_location_id)
+            };
+            Object[] values = {getAppointment().getMetadata().getPracticeId(),
+                    getAppointmentId(),
+                    getAppointment().getPayload().getVisitType().getName(),
+                    isGuest,
+                    getAppointment().getPayload().getProvider().getGuid(),
+                    getAppointment().getPayload().getLocation().getGuid()
+            };
+            MixPanelUtil.logEvent(getString(R.string.event_checkout_started), params, values);
+            MixPanelUtil.startTimer(getString(R.string.timer_checkout));
+        }
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -1020,6 +1081,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
+                completedPaymentPlan = true;
                 if (NavigationStateConstants.PATIENT_PAY_CHECKOUT.equals(workflowDTO.getState())) {
                     if (!hasDisplayedConfirm) {
                         //need to display payments again, so we need to display this payment plan confirmation first
@@ -1070,7 +1132,10 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                     completeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(completeIntent);
 
-                    completeCheckout();
+                    completeCheckout(paymentConfirmationWorkflow != null,
+                            getPaymentAmount(paymentConfirmationWorkflow),
+                            NavigationStateConstants.SURVEYS_CHECKOUT.equals(workflowDTO.getState()),
+                            completedPaymentPlan);
 
                 }
             }
@@ -1086,6 +1151,14 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         };
     }
 
+    private double getPaymentAmount(WorkflowDTO paymentConfirmationWorkflow){
+        if(paymentConfirmationWorkflow != null) {
+            PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, paymentConfirmationWorkflow);
+            return paymentsModel.getPaymentPayload().getPatientPayments().getPayload().getAmount();
+        }
+        return 0D;
+    }
+
     private WorkflowServiceCallback cashPaymentCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -1097,6 +1170,10 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             hideProgressDialog();
             isCashPayment = true;
             showAllDone(workflowDTO);
+
+            completeCheckout(false, 0D,
+                    NavigationStateConstants.SURVEYS_CHECKOUT.equals(workflowDTO.getState()),
+                    completedPaymentPlan);
         }
 
         @Override
@@ -1105,5 +1182,14 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             showErrorNotification(exceptionMessage);
         }
     };
+
+    private PaymentsPayloadSettingsDTO getPaymentSettings(String practiceId){
+        for(PaymentsPayloadSettingsDTO settingsDTO : appointmentsResultModel.getPayload().getPaymentSettings()){
+            if(settingsDTO.getMetadata().getPracticeId().equals(practiceId)){
+                return settingsDTO;
+            }
+        }
+        return new PaymentsPayloadSettingsDTO();
+    }
 
 }

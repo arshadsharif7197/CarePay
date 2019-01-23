@@ -88,6 +88,13 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             currentDemographicStep = savedInstanceState.getInt(SAVED_STEP_KEY, 1);
         }
 
+        //patient mode will call this manually to allow it to properly init patient user
+        if (!isPatientMode) {
+            initWorkflow();
+        }
+    }
+
+    protected void initWorkflow() {
         WorkflowDTO workflowDTO = demographicsView.getConvertedDTO(WorkflowDTO.class);
         displayFragment(workflowDTO);
 
@@ -130,8 +137,26 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         startCheckIn = true;
         boolean isResume = true;
         boolean isGuest = !ValidationHelper.isValidEmail(((ISession) demographicsView.getContext()).getAppAuthorizationHelper().getCurrUser());
-        String[] params = {getString(R.string.param_practice_id), getString(R.string.param_appointment_id), getString(R.string.param_appointment_type), getString(R.string.param_is_guest)};
-        Object[] values = {getAppointment().getMetadata().getPracticeId(), getAppointmentId(), getAppointment().getPayload().getVisitType().getName(), isGuest};
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_appointment_id),
+                getString(R.string.param_appointment_type),
+                getString(R.string.param_is_guest),
+                getString(R.string.param_provider_id),
+                getString(R.string.param_patient_id),
+                getString(R.string.param_location_id),
+                getString(R.string.param_setting_id_available),
+                getString(R.string.param_setting_insurance_available)
+        };
+        Object[] values = {getAppointment().getMetadata().getPracticeId(),
+                getAppointmentId(),
+                getAppointment().getPayload().getVisitType().getName(),
+                isGuest,
+                getAppointment().getPayload().getProvider().getGuid(),
+                getAppointment().getMetadata().getPatientId(),
+                getAppointment().getPayload().getLocation().getGuid(),
+                demographicDTO.getPayload().getCheckinSettings().shouldShowIdentityDocs(),
+                demographicDTO.getPayload().getCheckinSettings().shouldShowHealthInsurance()
+        };
         switch (workflowDTO.getState()) {
             case NavigationStateConstants.CONSENT_FORMS:
                 navigateToConsentForms(workflowDTO);
@@ -154,12 +179,14 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             default:
                 navigateToDemographicFragment(currentDemographicStep);
 
-                if (currentDemographicStep == 1) {
+                if (currentDemographicStep == PERSONAL_INFO) {
                     isResume = false;
                     //Log Check-in Started
                     if (getAppointment() != null) {
                         MixPanelUtil.logEvent(getString(R.string.event_checkin_started), params, values);
                     }
+
+                    MixPanelUtil.startTimer(getString(R.string.timer_demographics));
                 }
                 break;
         }
@@ -203,6 +230,8 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     public void navigateToConsentForms(WorkflowDTO workflowDTO) {
         FormsFragment fragment = FormsFragment.newInstance(workflowDTO);
         navigateToFragment(fragment, true);
+
+        MixPanelUtil.startTimer(getString(R.string.timer_consent_forms));
     }
 
     @Override
@@ -213,6 +242,8 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         IntakeFormsFragment fragment = new IntakeFormsFragment();
         fragment.setArguments(bundle);
         navigateToFragment(fragment, true);
+
+        MixPanelUtil.startTimer(getString(R.string.timer_intake_forms));
     }
 
     @Override
@@ -244,9 +275,11 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         }
         navigateToFragment(fragment, true);
 
-        if(!checkEmpty){
+        if (!checkEmpty) {
             showMedicationAllergySearchFragment(MedicationAllergySearchFragment.MEDICATION_ITEM);
         }
+
+        MixPanelUtil.startTimer(getString(R.string.timer_medications));
     }
 
     @Override
@@ -262,9 +295,11 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         }
         navigateToFragment(fragment, true);
 
-        if(!checkEmpty){
+        if (!checkEmpty) {
             showMedicationAllergySearchFragment(MedicationAllergySearchFragment.ALLERGY_ITEM);
         }
+
+        MixPanelUtil.startTimer(getString(R.string.timer_allergies));
     }
 
     @Override
@@ -424,6 +459,12 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
             fragment.setArguments(args);
 
             navigateToFragment(fragment, currentDemographicStep != 1);
+        }
+
+        if (step == IDENTITY) {
+            MixPanelUtil.startTimer(getString(R.string.timer_identification_docs));
+        } else if (step == INSURANCE) {
+            MixPanelUtil.startTimer(getString(R.string.timer_health_insurance));
         }
     }
 

@@ -36,6 +36,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
+import com.carecloud.carepaylibray.appointments.models.CancellationReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
@@ -92,6 +93,10 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     private boolean startCancelationFeePayment = false;
     private String cancellationReasonString;
+
+    private ScheduleAppointmentRequestDTO scheduleAppointmentRequestDTO;
+    private double prepayAmount;
+    private AppointmentDTO cancelAppointmentDTO;
 
     public PatientAppointmentPresenter(AppointmentViewHandler viewHandler,
                                        AppointmentsResultModel appointmentsResultModel,
@@ -222,7 +227,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         queryMap.put("practice_mgmt", practiceMgmt);
         queryMap.put("practice_id", practiceId);
 
-        ScheduleAppointmentRequestDTO scheduleAppointmentRequestDTO = new ScheduleAppointmentRequestDTO();
+        scheduleAppointmentRequestDTO = new ScheduleAppointmentRequestDTO();
         ScheduleAppointmentRequestDTO.Appointment appointment = scheduleAppointmentRequestDTO.getAppointment();
         appointment.setStartTime(appointmentSlot.getStartTime());
         appointment.setEndTime(appointmentSlot.getEndTime());
@@ -237,9 +242,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
         appointment.getPatient().setId(patientId);
 
-        double amount = selectedVisitTypeDTO.getAmount();
-        if (amount > 0 && paymentsModel != null) {
-            startPrepaymentProcess(scheduleAppointmentRequestDTO, appointmentSlot, amount);
+        prepayAmount = selectedVisitTypeDTO.getAmount();
+        if (prepayAmount > 0 && paymentsModel != null) {
+            startPrepaymentProcess(scheduleAppointmentRequestDTO, appointmentSlot, prepayAmount);
         } else {
             Gson gson = new Gson();
             TransitionDTO transitionDTO = appointmentsResultModel.getMetadata()
@@ -256,6 +261,32 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void onAppointmentRequestSuccess() {
+        //log appt scheduled to mixpanel
+        String[] params = {getString(R.string.param_appointment_type),
+                getString(R.string.param_practice_id),
+                getString(R.string.param_practice_name),
+                getString(R.string.param_provider_id),
+                getString(R.string.param_patient_id),
+                getString(R.string.param_location_id),
+                getString(R.string.param_reason_visit),
+                //make sure this is the last item in case we need to null it out to prevent it from sending
+                getString(R.string.param_payment_made)
+        };
+        Object[] values = {selectedVisitTypeDTO.getName(),
+                practiceId,
+                getPracticeInfo(practiceId).getPracticeName(),
+                scheduleAppointmentRequestDTO.getAppointment().getProviderGuid(),
+                patientId,
+                scheduleAppointmentRequestDTO.getAppointment().getLocationGuid(),
+                scheduleAppointmentRequestDTO.getAppointment().getComments(),
+                prepayAmount
+        };
+        if (prepayAmount <= 0) {
+            params[params.length - 1] = null;
+        }
+        MixPanelUtil.logEvent(getString(R.string.event_appointment_requested), params, values);
+        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
+
         viewHandler.confirmAppointment(true,
                 getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests());
         appointmentDTO = null;//clear this
@@ -457,7 +488,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                     public void onCancelReasonAppointmentDialogCancelClicked(AppointmentDTO appointmentDTO,
                                                                              int cancellationReason,
                                                                              String cancellationReasonComment) {
-                        cancellationReasonString = cancellationReasonComment;
+                        cancellationReasonString = getCancelReason(cancellationReason, cancellationReasonComment);
+                        cancelAppointmentDTO = appointmentDTO;
+                        practiceName = getPracticeInfo(appointmentDTO).getPracticeName();
                         if (cancellationFee == null) {
                             onCancelAppointment(appointmentDTO, cancellationReason, cancellationReasonComment);
                         } else {
@@ -482,10 +515,30 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                                             Label.getLabel("appointment_cancellation_fee_title"));
                             viewHandler.navigateToFragment(prepaymentFragment, true);
 
-                            MixPanelUtil.logEvent(getString(R.string.event_payment_cancellation_started));
+                            String[] params = {getString(R.string.param_payment_amount),
+                                    getString(R.string.param_provider_id),
+                                    getString(R.string.param_practice_id),
+                                    getString(R.string.param_location_id)
+                            };
+                            Object[] values = {cancellationFee.getAmount(),
+                                    appointmentDTO.getPayload().getProvider().getGuid(),
+                                    appointmentDTO.getMetadata().getPracticeId(),
+                                    appointmentDTO.getPayload().getLocation().getGuid()
+                            };
+                            MixPanelUtil.logEvent(getString(R.string.event_payment_cancellation_started), params, values);
                         }
                     }
                 }).show();
+    }
+
+    private String getCancelReason(int cancellationReasonId, String cancellationReasonComment){
+        for(CancellationReasonDTO cancellationReason : appointmentsResultModel.getPayload().getCancellationReasons()){
+            if (cancellationReason.getAppointmentCancellationReason().getId().equals(cancellationReasonId)){
+                return cancellationReason.getAppointmentCancellationReason().getName() +
+                        (StringUtil.isNullOrEmpty(cancellationReasonComment) ? "" : (" " + cancellationReasonComment));
+            }
+        }
+        return null;
     }
 
     private AppointmentCancellationFee getCancellationFee(AppointmentDTO appointmentDTO) {
@@ -525,11 +578,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             viewHandler.hideProgressDialog();
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_cancellation_success_message_HTML"));
             viewHandler.refreshAppointments();
-            //log appt cancelation to mixpanel
-            String[] params = {getString(R.string.param_appointment_cancel_reason), getString(R.string.param_practice_id), getString(R.string.param_practice_name)};
-            Object[] values = {cancellationReasonString, practiceId, practiceName};
-            MixPanelUtil.logEvent(getString(R.string.event_appointment_cancelled), params, values);
-            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_cancelled), 1);
+            logApptCancelMixpanel();
         }
 
         @Override
@@ -575,11 +624,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             viewHandler.hideProgressDialog();
-            //log appt scheduled to mixpanel
-            String[] params = {getString(R.string.param_appointment_type), getString(R.string.param_practice_id), getString(R.string.param_practice_name)};
-            String[] values = {selectedVisitTypeDTO.getName(), practiceId, practiceName};
-            MixPanelUtil.logEvent(getString(R.string.event_appointment_requested), params, values);
-            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
             onAppointmentRequestSuccess();
         }
 
@@ -640,7 +684,18 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                 .newInstance(paymentsModel, amount, Label.getLabel("appointments_prepayment_title"));
         viewHandler.navigateToFragment(prepaymentFragment, true);
 
-        MixPanelUtil.logEvent(getString(R.string.event_payment_start_prepayment));
+        String[] params = {getString(R.string.param_payment_amount),
+                getString(R.string.param_provider_id),
+                getString(R.string.param_practice_id),
+                getString(R.string.param_location_id)
+        };
+        Object[] values = {amount,
+                scheduleAppointmentRequestDTO.getAppointment().getProviderGuid(),
+                practiceId,
+                scheduleAppointmentRequestDTO.getAppointment().getLocationGuid()
+        };
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_start_prepayment), params, values);
     }
 
     @Override
@@ -718,6 +773,11 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                     .newInstance(workflowDTO, paymentType,
                             Label.getLabel("add_appointment_back_to_appointments_button"));
             viewHandler.displayDialogFragment(confirmationFragment, false);
+
+            if(paymentType.equals(Label.getLabel("appointment.confirmationScreen.type.label.paymentType"))){
+                //this is a prepayment
+                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_prepayments_completed), 1);
+            }
         }
     }
 
@@ -740,6 +800,33 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     private UserPracticeDTO getPracticeInfo(AppointmentDTO appointmentDTO) {
+        for (UserPracticeDTO userPracticeDTO : appointmentsResultModel.getPayload().getUserPractices()) {
+            if (userPracticeDTO.getPracticeId() != null && userPracticeDTO.getPracticeId().equals(practiceId)) {
+                return userPracticeDTO;
+            }
+        }
+        UserPracticeDTO userPracticeDTO = new UserPracticeDTO();
+        for (UserPracticeDTO resourcesPracticeDTO : appointmentsResultModel
+                .getPayload().getUserPractices()) {
+            if (resourcesPracticeDTO.getPracticeId().equals(practiceId)) {
+                userPracticeDTO.setPracticeMgmt(resourcesPracticeDTO.getPracticeMgmt());
+                userPracticeDTO.setPracticeId(resourcesPracticeDTO.getPracticeId());
+                userPracticeDTO.setPracticeName(resourcesPracticeDTO.getPracticeName());
+                userPracticeDTO.setPracticePhoto(resourcesPracticeDTO.getPracticePhoto());
+                userPracticeDTO.setPatientId(patientId);
+
+                return userPracticeDTO;
+            }
+        }
+
+        userPracticeDTO.setPatientId(patientId);
+        userPracticeDTO.setPracticeId(practiceId);
+        userPracticeDTO.setPracticeMgmt(practiceMgmt);
+
+        return userPracticeDTO;
+    }
+
+    private UserPracticeDTO getPracticeInfo(String practiceId) {
         for (UserPracticeDTO userPracticeDTO : appointmentsResultModel.getPayload().getUserPractices()) {
             if (userPracticeDTO.getPracticeId() != null && userPracticeDTO.getPracticeId().equals(practiceId)) {
                 return userPracticeDTO;
@@ -799,11 +886,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         if (startCancelationFeePayment) {
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_cancellation_success_message_HTML"));
             viewHandler.confirmAppointment(false, false);
-            //log appt cancelation to mixpanel
-            String[] params = {getString(R.string.param_appointment_cancel_reason), getString(R.string.param_practice_id), getString(R.string.param_practice_name)};
-            Object[] values = {cancellationReasonString, practiceId, practiceName};
-            MixPanelUtil.logEvent(getString(R.string.event_appointment_cancelled), params, values);
-            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_cancelled), 1);
+            logApptCancelMixpanel();
         } else {
             onAppointmentRequestSuccess();
         }
@@ -825,5 +908,28 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     private String getString(int id) {
         return getContext().getString(id);
+    }
+
+    private void logApptCancelMixpanel() {
+        //log appt cancellation to mixpanel
+        String[] params = {getString(R.string.param_appointment_cancel_reason),
+                getString(R.string.param_practice_id),
+                getString(R.string.param_practice_name),
+                getString(R.string.param_provider_id),
+                getString(R.string.param_patient_id),
+                getString(R.string.param_location_id),
+                getString(R.string.param_appointment_type)
+        };
+        Object[] values = {
+                cancellationReasonString,
+                practiceId,
+                practiceName,
+                cancelAppointmentDTO.getPayload().getProvider().getGuid(),
+                patientId,
+                cancelAppointmentDTO.getPayload().getLocation().getGuid(),
+                cancelAppointmentDTO.getPayload().getVisitType().getName()
+        };
+        MixPanelUtil.logEvent(getString(R.string.event_appointment_cancelled), params, values);
+        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_cancelled), 1);
     }
 }

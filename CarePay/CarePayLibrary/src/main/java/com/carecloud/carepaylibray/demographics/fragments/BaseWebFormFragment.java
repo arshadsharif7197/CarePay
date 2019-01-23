@@ -225,7 +225,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
     }
 
     protected void loadFormUrl(String formString, String function) {
-        if(!isAdded()){
+        if (!isAdded()) {
             hideProgressDialog();
             return;
         }
@@ -419,6 +419,12 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
                 String[] params = {getString(R.string.param_forms_count), getString(R.string.param_forms_type)};
                 Object[] values = {totalForms, formTypes};
                 MixPanelUtil.logEvent(getString(R.string.event_checkin_forms), params, values);
+
+                if (getString(R.string.forms_type_consent).equals(formTypes)) {
+                    MixPanelUtil.endTimer(getString(R.string.timer_consent_forms));
+                } else if (getString(R.string.forms_type_intake).equals(formTypes)) {
+                    MixPanelUtil.endTimer(getString(R.string.timer_intake_forms));
+                }
             }
 
             @Override

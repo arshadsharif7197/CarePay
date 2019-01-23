@@ -5,10 +5,10 @@
     <string name="event_updated_notifications">Updated Notification Settings</string>
     <string name="event_help_clicked">Help Button Clicked</string>
     <string name="event_message_reply">Message Sent</string>
-    <string name="event_payment_make_full_payment">Full Payment Selected</string>
-    <string name="event_payment_make_partial_payment">Partial Payment Selected</string>
-    <string name="event_payment_skipped">Pay Later Selected</string>
     <string name="event_retail_ended">Left Retail Store</string>
+    <string name="event_change_name">Change Name clicked</string>
+    <string name="event_change_email">Change Email clicked</string>
+    <string name="event_change_password">Change Password clicked</string>
 
 
     <!--Parameter Events-->
@@ -54,6 +54,13 @@
     <string name="event_paymentplan_onetime_payment">One-Time Payment Started</string>
     <string name="event_retail_started">Launch Retail Store</string>
     <string name="event_retail_checkout">Start Retail Checkout</string>
+    <string name="event_qr_code">QR Code</string>
+    <string name="event_payment_skipped">Pay Later Selected</string>
+    <string name="event_survey_started">Survey Started</string>
+    <string name="event_survey_canceled">Survey Cancelled</string>
+    <string name="event_survey_completed">Survey Completed</string>
+    <string name="event_payment_make_full_payment">Full Payment Selected</string>
+    <string name="event_payment_make_partial_payment">Partial Payment Selected</string>
 
 
     <!--Parameters-->
@@ -90,6 +97,17 @@
     <string name="param_store_id">Store Id</string>
     <string name="param_order_id">Order Id</string>
     <string name="param_order_amount">Order Amount</string>
+    <string name="param_location_id">Location Id</string>
+    <string name="param_payment_made">Payment made</string>
+    <string name="param_reason_visit">Reason for visit used</string>
+    <string name="param_setting_id_available">Identity document upload available</string>
+    <string name="param_setting_insurance_available">Insurance available</string>
+    <string name="param_meds_photo">Took photo of med list</string>
+    <string name="param_survey_available">Survey available</string>
+    <string name="param_payment_plan_created">Payment plan created</string>
+    <string name="param_survey_rating">Rating Given</string>
+    <string name="param_survey_access">Access Mode</string>
+    <string name="param_partial_pay_available">Partial Payment available</string>
 
 
     <!--Incremental Properties-->
@@ -98,12 +116,34 @@
     <string name="count_checkin_completed">Total Check-ins Completed</string>
     <string name="count_checkout_completed">Total Check-outs Completed</string>
     <string name="count_payments_completed">Total Payments Made</string>
+    <string name="count_surveys_completed">Total Surveys Completed</string>
+    <string name="count_satisfied_surveys">Total Satisfied Surveys Completed</string>
+    <string name="count_unsatisfied_surveys">Total Unsatisfied Surveys Completed</string>
+    <string name="count_payment_plans_created">Total Payment Plans Created</string>
+    <string name="count_payment_plans_cancelled">Total Payment Plans Cancelled</string>
+    <string name="count_one_time_payments_completed">Total One-Time Payments Made</string>
+    <string name="count_prepayments_completed">Total Pre-Payments Made</string>
+    <string name="count_payments_scheduled">Total Scheduled Payments Scheduled</string>
+    <string name="count_scheduled_payments_deleted">Total Scheduled Payments Deleted</string>
+
     <string name="total_payments_amount">Total Payments Amount</string>
 
 
     <!--Incremental Properties-->
     <string name="timer_checkin">Check-in Time</string>
     <string name="timer_checkout">Check-out Time</string>
+    <string name="timer_shopping">Shopping Session Time</string>
+    <string name="timer_survey">Survey Time</string>
+    <string name="timer_medications">Check-in Medications Time</string>
+    <string name="timer_allergies">Check-in Allergies Time</string>
+    <string name="timer_demographics">Check-in Demographics Time</string>
+    <string name="timer_consent_forms">Check-in Patient Forms Time</string>
+    <string name="timer_intake_forms">Check-in Intake Forms Time</string>
+    <string name="timer_identification_docs">Check-in Identification Time</string>
+    <string name="timer_health_insurance">Check-in Health Insurance Time</string>
+    <string name="timer_next_appt">Check-out Next Appointment Time</string>
+    <string name="timer_payment_checkout">Check-out Payment Time</string>
+
 
 
     <!--People Properties-->
@@ -116,7 +156,7 @@
     <string name="people_has_insurance_doc">Has Insurance Document</string>
     <string name="people_enabled_push">Has Push Notifications Enabled</string>
     <string name="people_enabled_email">Has Email Notifications Enabled</string>
-    <string name="people_enabled_sms">Has SMS Notifications Enabled</string>
+    <string name="people_enabled_sms">Has Text Notifications Enabled</string>
 
 
     <!--Enum Values-->
@@ -128,7 +168,8 @@
     <string name="step_identity">Identity</string>
     <string name="step_health_insurance">Health Insurance</string>
     <string name="step_consent_forms">Consent Forms</string>
-    <string name="step_medications">Medications &amp; Allergies</string>
+    <string name="step_medications">Medications</string>
+    <string name="step_allegies">Allergies</string>
     <string name="step_intake">Intake Forms</string>
     <string name="step_payment">Payment</string>
     <string name="step_appointment">Next Appointment</string>
@@ -142,5 +183,7 @@
     <string name="payment_credit_card">Credit Card</string>
     <string name="login_password">Password</string>
     <string name="login_touch">Touch ID</string>
+    <string name="survey_access_mode_checkout">Check out</string>
+    <string name="survey_access_mode_standard">Standard</string>
 
 </resources>
