@@ -97,21 +97,26 @@ public class FindPatientDialog extends Dialog {
 
             @Override
             public boolean onKey(View view, int keyCode, KeyEvent event) {
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN)
+                        && (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     // Hide keyboard
-                    InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager manager = (InputMethodManager) context
+                            .getSystemService(Context.INPUT_METHOD_SERVICE);
                     manager.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
                     Map<String, String> queryMap = new HashMap<>();
-                    queryMap.put("practice_mgmt", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
-                    queryMap.put("practice_id", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeId());
+                    queryMap.put("practice_mgmt", ((ISession) context).getApplicationMode()
+                            .getUserPracticeDTO().getPracticeMgmt());
+                    queryMap.put("practice_id", ((ISession) context).getApplicationMode()
+                            .getUserPracticeDTO().getPracticeId());
 
                     query = ((CarePayEditText) view).getText().toString().toUpperCase();
                     JsonArray postModel = new JsonArray();
                     postModel.add(query);
                     String postBody = postModel.toString();
 
-                    ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, findPatientCallback, postBody, queryMap);
+                    ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, findPatientCallback,
+                            postBody, queryMap);
                     return true;
                 }
                 return false;
@@ -141,7 +146,8 @@ public class FindPatientDialog extends Dialog {
                     JsonArray postModel = new JsonArray();
                     postModel.add(query);
                     String postBody = postModel.toString();
-                    ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, findPatientCallback, postBody);
+                    ((ISession) context).getWorkflowServiceHelper()
+                            .execute(transitionDTO, findPatientCallback, postBody);
                 }
             }
         };

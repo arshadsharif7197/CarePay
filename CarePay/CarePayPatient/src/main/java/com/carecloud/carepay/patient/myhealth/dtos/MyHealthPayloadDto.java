@@ -2,9 +2,8 @@ package com.carecloud.carepay.patient.myhealth.dtos;
 
 import com.carecloud.carepay.patient.patientsplash.dtos.OptionsDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepaylibray.appointments.models.PortalSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
-import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -35,6 +34,9 @@ public class MyHealthPayloadDto {
     @SerializedName("practice_information")
     @Expose
     private List<UserPracticeDTO> practiceInformation = new ArrayList<>();
+    @SerializedName("portal_settings")
+    @Expose
+    private List<PortalSettingDTO> portalSettings = new ArrayList<>();
 
     public List<OptionsDTO> getLanguages() {
         return languages;
@@ -82,5 +84,13 @@ public class MyHealthPayloadDto {
 
     public void setPracticeInformation(List<UserPracticeDTO> practiceInformation) {
         this.practiceInformation = practiceInformation;
+    }
+
+    public List<PortalSettingDTO> getPortalSettings() {
+        return portalSettings;
+    }
+
+    public void setPortalSettings(List<PortalSettingDTO> portalSettings) {
+        this.portalSettings = portalSettings;
     }
 }

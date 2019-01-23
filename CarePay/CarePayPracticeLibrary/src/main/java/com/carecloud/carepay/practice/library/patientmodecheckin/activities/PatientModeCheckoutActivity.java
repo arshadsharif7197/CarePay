@@ -675,7 +675,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
             WorkFlowRecord workFlowRecord = new WorkFlowRecord(paymentConfirmationWorkflow);
             workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
-            extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save());
+            extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save(getContext()));
         } else if (isCashPayment) {
             extra.putBoolean(CarePayConstants.EXTRA_PAYMENT_CASH, isCashPayment);
 
@@ -685,12 +685,12 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
             WorkFlowRecord workFlowRecord = new WorkFlowRecord(paymentWorkflow);
             workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
-            extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save());
+            extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save(getContext()));
         } else {
             WorkflowDTO appointmentWorkflowDTO = getAppointmentWorkflowDto(workflowDTO);
             WorkFlowRecord workFlowRecord = new WorkFlowRecord(appointmentWorkflowDTO);
             workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
-            extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save());
+            extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save(getContext()));
         }
 
         appointmentsResultModel.getMetadata().getLinks().setPinpad(practiceAppointmentDTO
@@ -707,7 +707,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         if (surveyDTO.getPayload().getSurvey() != null) {
             WorkFlowRecord workFlowRecord = new WorkFlowRecord(workflowDTO);
             workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
-            extra.putLong(SurveyDTO.class.getSimpleName(), workFlowRecord.save());
+            extra.putLong(SurveyDTO.class.getSimpleName(), workFlowRecord.save(getContext()));
         }
         extra.putBoolean("isCheckOut", true);
         Intent intent = new Intent(this, CompleteCheckActivity.class);
@@ -1040,7 +1040,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                     workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
 
                     Bundle extra = new Bundle();
-                    extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save());
+                    extra.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save(getContext()));
                     extra.putBoolean(CarePayConstants.EXTRA_HAS_PAYMENT, true);
                     extra.putInt(CarePayConstants.EXTRA_CONFIRMATION_MODE, mode);
 
@@ -1059,7 +1059,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                     if (surveyDTO.getPayload().getSurvey() != null) {
                         WorkFlowRecord surveyWorkflowRecord = new WorkFlowRecord(workflowDTO);
                         surveyWorkflowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
-                        extra.putLong(SurveyDTO.class.getSimpleName(), surveyWorkflowRecord.save());
+                        extra.putLong(SurveyDTO.class.getSimpleName(), surveyWorkflowRecord.save(getContext()));
                     }
 
                     //get the appointment transitions from the Demo payload

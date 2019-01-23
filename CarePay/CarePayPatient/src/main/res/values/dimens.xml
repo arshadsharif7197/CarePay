@@ -6,4 +6,12 @@
     <dimen name="menuItemBadeTextSize">13sp</dimen>
     <dimen name="shimmerTextHeight">20dp</dimen>
     <dimen name="shimmerSubTextHeight">15dp</dimen>
+
+    <!--Common-->
+    <dimen name="commonHorizontalPadding">16dp</dimen>
+    <dimen name="commonVerticalPadding">16dp</dimen>
+    <dimen name="visitSummaryExportAsLabelTopMargin">15dp</dimen>
+    <dimen name="visitSummaryExportAsLabelBottomMargin">10dp</dimen>
+    <dimen name="visitSummaryExportButtonTopMargin">15dp</dimen>
+    <dimen name="encryptedCheckBoxVerticalMargin">10dp</dimen>
 </resources>

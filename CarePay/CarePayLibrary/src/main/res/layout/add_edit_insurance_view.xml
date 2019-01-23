@@ -39,8 +39,8 @@
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
         <include
-            android:id="@+id/healthInsuranceProviderOptional"
-            layout="@layout/layout_optional_text_view" />
+            android:id="@+id/healthInsuranceProviderRequired"
+            layout="@layout/layout_required_text_view" />
 
     </FrameLayout>
 
@@ -70,8 +70,8 @@
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
         <include
-            android:id="@+id/healthInsuranceProviderOptional"
-            layout="@layout/layout_optional_text_view" />
+            android:id="@+id/healthInsuranceProviderRequired"
+            layout="@layout/layout_required_text_view" />
 
     </FrameLayout>
 
@@ -105,8 +105,8 @@
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
         <include
-            android:id="@+id/healthInsurancePlanOptional"
-            layout="@layout/layout_optional_text_view" />
+            android:id="@+id/healthInsurancePlanRequired"
+            layout="@layout/layout_required_text_view" />
 
     </FrameLayout>
 
@@ -184,8 +184,8 @@
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
         <include
-            android:id="@+id/healthInsuranceTypeOptional"
-            layout="@layout/layout_optional_text_view" />
+            android:id="@+id/healthInsuranceTypeRequired"
+            layout="@layout/layout_required_text_view" />
 
     </FrameLayout>
 
@@ -219,8 +219,8 @@
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
         <include
-            android:id="@+id/healthInsuranceRelationshipOptional"
-            layout="@layout/layout_optional_text_view" />
+            android:id="@+id/healthInsuranceRelationshipRequired"
+            layout="@layout/layout_required_text_view" />
 
     </FrameLayout>
 
@@ -251,6 +251,10 @@
                 tools:hint="Policy Holder First Name" />
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+        <include
+            android:id="@+id/healthInsuranceFirstNameRequired"
+            layout="@layout/layout_required_text_view" />
 
     </FrameLayout>
 
@@ -283,6 +287,10 @@
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
+        <include
+            android:id="@+id/healthInsuranceLastNameRequired"
+            layout="@layout/layout_required_text_view" />
+
     </FrameLayout>
 
     <FrameLayout
@@ -310,6 +318,10 @@
                 tools:hint="Date of Birth" />
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+        <include
+            android:id="@+id/healthInsuranceDateOfBirthRequired"
+            layout="@layout/layout_required_text_view" />
 
     </FrameLayout>
 
@@ -343,8 +355,8 @@
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
         <include
-            android:id="@+id/healthInsuranceGenderOptional"
-            layout="@layout/layout_optional_text_view" />
+            android:id="@+id/healthInsuranceGenderRequired"
+            layout="@layout/layout_required_text_view" />
 
     </FrameLayout>
 

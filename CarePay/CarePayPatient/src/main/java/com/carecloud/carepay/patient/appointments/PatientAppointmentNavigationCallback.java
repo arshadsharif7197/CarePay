@@ -28,4 +28,10 @@ public interface PatientAppointmentNavigationCallback extends AppointmentNavigat
     void getQueueStatus(AppointmentDTO appointmentDTO, WorkflowServiceCallback callback);
 
     AppointmentsSettingDTO getPracticeSettings();
+
+    void callVisitSummaryService(AppointmentDTO appointment, WorkflowServiceCallback callback);
+
+    void callVisitSummaryStatusService(String jobId, String practiceMgmt, WorkflowServiceCallback callback);
+
+    long downloadVisitSummaryFile(String jobId, String practiceMgmt, String title);
 }

@@ -100,18 +100,18 @@
 
     <style name="DemographicsReviewEditTextStyle" parent="SigninSignupEditStyle">
         <item name="android:paddingStart">@dimen/dimen_5dp</item>
-        <item name="android:textSize">@dimen/text_size_24sp</item>
+        <item name="android:textSize">@dimen/formEditTextTextSize</item>
         <item name="android:textColorHint">@color/pastel_blue</item>
     </style>
 
     <style name="DemographicsReviewLabelStyle" parent="DemographicsDocsLabelStyle">
         <item name="android:paddingStart">0dp</item>
-        <item name="android:textSize">@dimen/text_size_24sp</item>
+        <item name="android:textSize">@dimen/DemographicsReviewLabelStyleTextSize</item>
     </style>
 
     <style name="DemographicsReviewClickableStyle" parent="DemographicsDocsClickableTextStyle">
         <item name="android:layout_marginStart">0dp</item>
-        <item name="android:textSize">@dimen/text_size_17sp</item>
+        <item name="android:textSize">@dimen/DemographicsReviewClickableStyleTextSize</item>
         <item name="android:gravity">end</item>
     </style>
 
@@ -126,4 +126,17 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+    <style name="EditTextStyle" parent="Base.Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/primary_color_enabled_selector</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textview_default_textsize</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:fontFamily">proximanova_regular</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:padding">@dimen/ediTextPadding</item>
+        <item name="colorControlNormal">@color/light_gray</item>
+        <item name="colorControlActivated">@color/light_gray</item>
+        <item name="colorControlHighlight">@color/light_gray</item>
+    </style>
 </resources>

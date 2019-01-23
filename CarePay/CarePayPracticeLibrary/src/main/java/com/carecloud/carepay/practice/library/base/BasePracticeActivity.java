@@ -23,8 +23,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class BasePracticeActivity extends BaseActivity
-        implements IConfirmPracticeAppPin {
+public abstract class BasePracticeActivity extends BaseActivity implements IConfirmPracticeAppPin {
 
     private long lastFullScreenSet;
 
@@ -39,15 +38,15 @@ public abstract class BasePracticeActivity extends BaseActivity
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
-        if(getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             final View rootView = findViewById(android.R.id.content);
             rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
                     long now = System.currentTimeMillis();
-                    if(now - lastFullScreenSet > 1000) {
+                    if (now - lastFullScreenSet > 1000) {
                         Log.d("Base", "Display Full Screen");
                         onProgressDialogCancel();
                         lastFullScreenSet = now;
@@ -175,14 +174,14 @@ public abstract class BasePracticeActivity extends BaseActivity
      * @param callback     an additional callback
      */
     public void changeLanguage(TransitionDTO transition, String languageCode, Map<String, String> headers,
-                                  SimpleCallback callback) {
+                               SimpleCallback callback) {
         Map<String, String> query = new HashMap<>();
         query.put("language", languageCode);
         getWorkflowServiceHelper().execute(transition, getLanguageCallback(callback), null, query, headers);
     }
 
     @Override
-    protected void onProgressDialogCancel(){
+    protected void onProgressDialogCancel() {
         setSystemUiVisibility();
         setNavigationBarVisibility();
     }

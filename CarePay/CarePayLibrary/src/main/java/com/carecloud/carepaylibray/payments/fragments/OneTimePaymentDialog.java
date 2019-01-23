@@ -185,7 +185,7 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
                         dueCal.getTime(),
                         new DatePickerFragment.DateRangePickerDialogListener() {
                             @Override
-                            public void onDateSelected(Date selectedDate) {
+                            public void onDateSelected(Date selectedDate, int flag) {
                                 setSelectedDate(selectedDate);
                             }
                         });

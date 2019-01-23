@@ -34,6 +34,12 @@
         </item> <!-- color of the underlying bar when no focus -->
         <item name="colorControlActivated">@color/light_gray
         </item> <!-- hint and underlying bar when focus -->
+
+        <!--Action Bar Control-->
+        <item name="windowActionModeOverlay">true</item>
+        <item name="actionModeStyle">@style/ActionModeStyle</item>
+        <item name="actionMenuTextColor">@color/white</item>
+        <item name="actionModeCloseDrawable">@drawable/icn_nav_back</item>
     </style>
 
 
@@ -158,21 +164,26 @@
         <item name="android:fontFamily">ProximaNova-Regular</item>
     </style>
 
-    <style name="EditTextStyle" parent="Base.Widget.AppCompat.EditText">
+    <style name="InputLayoutEditTextStyle" parent="Base.Widget.AppCompat.EditText">
         <item name="android:textColor">@color/primary_color_enabled_selector</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/textview_default_textsize</item>
         <item name="android:maxLines">1</item>
+        <item name="android:paddingBottom">@dimen/dimen_10dp</item>
+        <item name="android:paddingTop">@dimen/dimen_10dp</item>
         <item name="android:fontFamily">proximanova_regular</item>
         <item name="android:singleLine">true</item>
-        <item name="android:paddingStart">@dimen/input_text_layout_start_margin</item>
-        <item name="android:paddingBottom">@dimen/edit_padding_15</item>
-        <item name="android:paddingTop">@dimen/edit_padding_15</item>
-        <item name="android:paddingEnd">@dimen/edit_padding_15</item>
         <item name="colorControlNormal">@color/light_gray</item>
         <item name="colorControlActivated">@color/light_gray</item>
         <item name="colorControlHighlight">@color/light_gray</item>
+    </style>
+
+    <style name="EditTextStyle" parent="InputLayoutEditTextStyle">
+        <item name="android:paddingStart">@dimen/input_text_layout_start_margin</item>
+        <item name="android:paddingEnd">@dimen/edit_padding_15</item>
+        <item name="android:paddingBottom">@dimen/edit_padding_15</item>
+        <item name="android:paddingTop">@dimen/edit_padding_15</item>
     </style>
 
     <style name="CityEditTextStyle" parent="EditTextStyle">
@@ -372,9 +383,8 @@
         <item name="android:background">@drawable/button_gray_border</item>
         <item name="android:padding">@dimen/dimen_3dp</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:textSize">@dimen/text_size_9sp</item>
+        <item name="android:textSize">@dimen/optionalLabelTextSize</item>
         <item name="android:textColor">@color/optional_gray</item>
-        <item name="android:visibility">gone</item>
     </style>
 
     <style name="DemographicsRequiredLabelStyle" parent="android:Widget.TextView">
@@ -982,4 +992,15 @@
         <item name="colorControlNormal">@color/colorPrimary</item>
         <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
+
+    <style name="ActionModeStyle" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="background">@color/colorPrimaryDark</item>
+        <item name="titleTextStyle">@style/ActionModeTitleStyle</item>
+        <item name="closeItemLayout">@layout/actionbar_close_item</item>
+    </style>
+
+    <style name="ActionModeTitleStyle" parent="TextAppearance.AppCompat.Widget.ActionMode.Title">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 </resources>

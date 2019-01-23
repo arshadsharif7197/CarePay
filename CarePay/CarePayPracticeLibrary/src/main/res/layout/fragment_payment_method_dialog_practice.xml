@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:layout_width="wrap_content"
@@ -43,8 +42,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/patient_mode_dialog_header_bg"
-            android:padding="@dimen/dimen_10dp">
+            android:background="@drawable/patient_mode_dialog_header_bg">
 
             <include
                 android:id="@+id/toolbar_layout"
@@ -61,20 +59,18 @@
             android:indeterminate="true"
             android:visibility="gone" />
 
-
         <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_1dp"
+            android:layout_height="@dimen/separatorHeight"
             android:background="@color/dark_gray"
             android:paddingRight="2dp" />
-
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:minHeight="@dimen/list_dialog_min_height_small"
             android:background="@color/white"
+            android:minHeight="@dimen/list_dialog_min_height_small"
             android:paddingTop="@dimen/dimen_20dp">
 
             <ListView
@@ -133,7 +129,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/patient_mode_dialog_body_bg"
-            android:padding="@dimen/dimen_10dp">
+            android:padding="@dimen/distributionButtonContainersPadding">
 
             <FrameLayout
                 android:id="@+id/swipeCreditCardNowLayout"
@@ -145,11 +141,11 @@
                     android:id="@+id/swipeCreditCarNowButton"
                     style="@style/BreezeButtonStyleDark"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/dimen_10dp"
+                    android:layout_height="@dimen/commonButtonHeight"
+                    android:layout_margin="@dimen/distributionButtonContainersPadding"
                     android:background="@drawable/emerald_rounded_button_selector"
-                    breeze:textKey="payment_clover_swipe_now_button_label"
-                    app:customAssetFont="gotham_rounded_medium" />
+                    app:customAssetFont="gotham_rounded_medium"
+                    breeze:textKey="payment_clover_swipe_now_button_label" />
 
             </FrameLayout>
         </FrameLayout>

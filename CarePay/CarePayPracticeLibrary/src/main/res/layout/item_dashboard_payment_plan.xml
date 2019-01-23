@@ -6,21 +6,21 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingEnd="@dimen/dimen_15dp"
-    android:paddingStart="@dimen/dimen_15dp">
+    android:paddingEnd="@dimen/dashboardLabelStartMargin"
+    android:paddingStart="@dimen/dashboardLabelStartMargin">
 
     <FrameLayout
         android:id="@+id/progress_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginEnd="@dimen/dimen_10dp">
+        android:layout_marginEnd="@dimen/itemDashboardProgressBarRightMargin">
 
         <ProgressBar
             android:id="@+id/paymentPlanProgressBar"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="@dimen/dimen_60dp"
-            android:layout_height="@dimen/dimen_60dp"
+            android:layout_width="@dimen/itemDashboardProgressBarSize"
+            android:layout_height="@dimen/itemDashboardProgressBarSize"
             android:indeterminate="false"
             android:max="100"
             android:progress="25"
@@ -28,11 +28,11 @@
 
         <ImageView
             android:id="@+id/scheduledPaymentIndicator"
-            android:layout_width="@dimen/dimen_30dp"
+            android:layout_width="@dimen/itemDashboardScheduledPaymentIndicatorSize"
             android:layout_height="@dimen/dimen_30dp"
             android:layout_gravity="center"
             android:src="@drawable/icn_pending"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
     </FrameLayout>
 
@@ -43,15 +43,15 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_60dp"
-            android:layout_marginBottom="@dimen/dimen_10dp"
-            android:layout_marginTop="@dimen/dimen_10dp">
+            android:layout_height="@dimen/itemDashboardBarHeight"
+            android:layout_marginBottom="@dimen/itemDashboardBarVerticalMargin"
+            android:layout_marginTop="@dimen/itemDashboardBarVerticalMargin">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_gravity="center_vertical"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -60,7 +60,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="start"
                     android:textColor="@color/textview_default_textcolor"
-                    android:textSize="@dimen/text_size_20sp"
+                    android:textSize="@dimen/itemDashboardTotalAmountTextSize"
                     app:customAssetFont="gotham_rounded_medium"
                     tools:text="$400.00" />
 
@@ -68,11 +68,11 @@
                     android:id="@+id/nameTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
                     android:gravity="start"
                     android:maxLines="1"
-                    android:ellipsize="end"
                     android:textColor="@color/lightSlateGray"
-                    android:textSize="@dimen/text_size_15"
+                    android:textSize="@dimen/itemDashboardNameTextSize"
                     app:customAssetFont="proxima_nova_regular"
                     tools:text="Payment Plan Name that is super long and does not fit on a line" />
 
@@ -82,8 +82,8 @@
                 android:id="@+id/periodicAmountTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_10dp"
                 android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/itemDashboardFieldMargin"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/textview_default_textsize"
                 app:customAssetFont="gotham_rounded_medium"
@@ -92,46 +92,41 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/detailsButton"
                 style="@style/BreezeButtonStyleDark"
-                android:layout_width="@dimen/dimen_130dp"
+                android:layout_width="@dimen/itemDashboardButtonWidth"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/dimen_15dp"
+                android:layout_marginStart="@dimen/itemDashboardFieldMargin"
                 android:background="@drawable/blue_border_rounded_button_selector"
-                android:paddingTop="@dimen/dimen_8dp"
-                android:paddingBottom="@dimen/dimen_8dp"
+                android:paddingBottom="@dimen/itemDashboardButtonVerticalPadding"
+                android:paddingTop="@dimen/itemDashboardButtonVerticalPadding"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_15"
+                android:textSize="@dimen/itemDashboardButtonTextSize"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="payment.paymentPlanDashboard.item.button.detail"
                 tools:text="Details" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/addBalanceButton"
-                android:layout_width="@dimen/dimen_130dp"
+                android:layout_width="@dimen/itemDashboardButtonWidth"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/dimen_15dp"
+                android:layout_marginStart="@dimen/itemDashboardFieldMargin"
                 android:background="@drawable/bg_yellow_overlay"
                 android:gravity="center"
-                android:paddingTop="@dimen/dimen_8dp"
-                android:paddingBottom="@dimen/dimen_8dp"
+                android:paddingBottom="@dimen/itemDashboardButtonVerticalPadding"
+                android:paddingTop="@dimen/itemDashboardButtonVerticalPadding"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_15"
+                android:textSize="@dimen/itemDashboardButtonTextSize"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="payment.paymentPlanDashboard.item.button.addBalance"
                 tools:text="Add Balance" />
-
-
-
 
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_1dp"
-            android:layout_alignParentBottom="true"
-            android:layout_toEndOf="@id/progress_layout"
             android:background="@color/divider_color" />
 
     </LinearLayout>

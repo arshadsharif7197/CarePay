@@ -60,6 +60,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.FileDownloadUtil;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -211,7 +212,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         appointmentDTO.setPayload(payloadDTO);
 
         final RequestAppointmentDialog requestAppointmentDialog = new RequestAppointmentDialog(getContext(),
-                appointmentDTO, appointmentsSlot, selectedVisitTypeDTO);
+                appointmentDTO, appointmentsSlot, selectedVisitTypeDTO, appointmentDTO.getPayload().getProvider());
         requestAppointmentDialog.show();
     }
 
@@ -257,6 +258,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     public void onAppointmentRequestSuccess() {
         viewHandler.confirmAppointment(true,
                 getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests());
+        appointmentDTO = null;//clear this
     }
 
     @Override
@@ -411,6 +413,32 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     @Override
+    public void callVisitSummaryService(AppointmentDTO appointment, WorkflowServiceCallback callback) {
+        TransitionDTO transition = appointmentsResultModel.getMetadata().getLinks().getVisitSummary();
+        JsonObject body = new JsonObject();
+        body.addProperty("appointment_id", appointment.getPayload().getId());
+        body.addProperty("format", "pdf");
+        viewHandler.getWorkflowServiceHelper().execute(transition, callback, body.toString());
+    }
+
+    @Override
+    public void callVisitSummaryStatusService(String jobId, String practiceMgmt, WorkflowServiceCallback callback) {
+        TransitionDTO transition = appointmentsResultModel.getMetadata().getLinks().getVisitSummaryStatus();
+        HashMap<String, String> query = new HashMap<>();
+        query.put("job_id", jobId);
+        query.put("practice_mgmt", practiceMgmt);
+        viewHandler.getWorkflowServiceHelper().execute(transition, callback, query);
+    }
+
+    @Override
+    public long downloadVisitSummaryFile(String jobId, String practiceMgmt, String title) {
+        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getLinks().getVisitSummaryStatus();
+        String url = String.format("%s?%s=%s&%s=%s", transitionDTO.getUrl(), "job_id",
+                jobId, "practice_mgmt", practiceMgmt);
+        return FileDownloadUtil.downloadPdf(getContext(), url, title, ".pdf", "Visit Summary");
+    }
+
+    @Override
     public void displayAppointmentDetails(AppointmentDTO appointmentDTO) {
         practiceId = appointmentDTO.getMetadata().getPracticeId();
         practiceMgmt = appointmentDTO.getMetadata().getPracticeMgmt();
@@ -434,6 +462,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                             onCancelAppointment(appointmentDTO, cancellationReason, cancellationReasonComment);
                         } else {
                             startCancelationFeePayment = true;
+                            PatientAppointmentPresenter.this.appointmentDTO = appointmentDTO;
                             IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
                             postModel.setAmount(Double.parseDouble(cancellationFee.getAmount()));
                             IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
@@ -449,7 +478,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                             paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
 
                             PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
-                                    .newInstance(paymentsModel, Double.parseDouble(cancellationFee.getAmount()));
+                                    .newInstance(paymentsModel, Double.parseDouble(cancellationFee.getAmount()),
+                                            Label.getLabel("appointment_cancellation_fee_title"));
                             viewHandler.navigateToFragment(prepaymentFragment, true);
 
                             MixPanelUtil.logEvent(getString(R.string.event_payment_cancellation_started));
@@ -607,7 +637,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
-                .newInstance(paymentsModel, amount);
+                .newInstance(paymentsModel, amount, Label.getLabel("appointments_prepayment_title"));
         viewHandler.navigateToFragment(prepaymentFragment, true);
 
         MixPanelUtil.logEvent(getString(R.string.event_payment_start_prepayment));
@@ -647,13 +677,16 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     @Nullable
     @Override
     public String getAppointmentId() {
+        if(appointmentDTO != null){
+            return appointmentDTO.getPayload().getId();
+        }
         return null;
     }
 
     @Nullable
     @Override
     public AppointmentDTO getAppointment() {
-        return null;
+        return appointmentDTO;
     }
 
     @Override
@@ -690,8 +723,10 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void showPaymentPendingConfirmation(PaymentsModel paymentsModel) {
-        new CustomMessageToast(getContext(), Label.getLabel("payments_external_pending"), CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
-        onAppointmentRequestSuccess();
+        new CustomMessageToast(getContext(), Label.getLabel("payment_queued_patient"), CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
+        viewHandler.confirmAppointment(false,
+                getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests());
+        appointmentDTO = null;//clear this
     }
 
     @Override

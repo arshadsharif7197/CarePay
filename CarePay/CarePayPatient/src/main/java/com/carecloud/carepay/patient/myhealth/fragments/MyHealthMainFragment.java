@@ -23,6 +23,10 @@ import com.carecloud.carepay.patient.myhealth.dtos.MedicationDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthProviderDto;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
+import com.carecloud.carepay.patient.visitsummary.VisitSummaryDialogFragment;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepaylibray.appointments.models.PortalSetting;
+import com.carecloud.carepaylibray.appointments.models.PortalSettingDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 
@@ -84,6 +88,36 @@ public class MyHealthMainFragment extends BaseFragment {
         setUpAllergiesRecyclerView(view);
         setUpMedicationsRecyclerView(view);
         setUpLabsRecyclerView(view);
+        setUpVisitSummaryButton(view);
+    }
+
+    private void setUpVisitSummaryButton(View view) {
+        boolean isVisitSummaryEnabled = false;
+        for (UserPracticeDTO userPracticeDTO : myHealthDto.getPayload().getPracticeInformation()) {
+            if (userPracticeDTO.isVisitSummaryEnabled()) {
+                for (PortalSettingDTO portalSettingDTO : myHealthDto.getPayload().getPortalSettings()) {
+                    if (userPracticeDTO.getPracticeId().equals(portalSettingDTO.getMetadata().getPracticeId())) {
+                        for (PortalSetting portalSetting : portalSettingDTO.getPayload()) {
+                            if (portalSetting.getName().toLowerCase().equals("visit summary")
+                                    && portalSetting.getStatus().toLowerCase().equals("a")) {
+                                isVisitSummaryEnabled = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (isVisitSummaryEnabled) break;
+                }
+            }
+            if (isVisitSummaryEnabled) break;
+        }
+        TextView visitSummaryButton = view.findViewById(R.id.visitSummaryButton);
+        visitSummaryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.displayDialogFragment(VisitSummaryDialogFragment.newInstance(), true);
+            }
+        });
+        visitSummaryButton.setVisibility(isVisitSummaryEnabled ? View.VISIBLE : View.GONE);
     }
 
     private void setUpLabsRecyclerView(View view) {
@@ -99,12 +133,12 @@ public class MyHealthMainFragment extends BaseFragment {
                     return false;
                 }
             };
-            RecyclerView labsRecyclerView = (RecyclerView) view.findViewById(R.id.labsRecyclerView);
+            RecyclerView labsRecyclerView = view.findViewById(R.id.labsRecyclerView);
             labsRecyclerView.setLayoutManager(linearLayout);
             LabsRecyclerViewAdapter labsAdapter = new LabsRecyclerViewAdapter(labs, MAX_ITEMS_TO_SHOW);
             labsAdapter.setCallback(callback);
             labsRecyclerView.setAdapter(labsAdapter);
-            TextView seeAll = (TextView) view.findViewById(R.id.labsSeeAllTextView);
+            TextView seeAll = view.findViewById(R.id.labsSeeAllTextView);
             if (labs.size() <= MAX_ITEMS_TO_SHOW) {
                 seeAll.setVisibility(View.GONE);
             } else {
@@ -133,14 +167,14 @@ public class MyHealthMainFragment extends BaseFragment {
                     return false;
                 }
             };
-            RecyclerView medicationsRecyclerView = (RecyclerView) view.findViewById(R.id.medicationsRecyclerView);
+            RecyclerView medicationsRecyclerView = view.findViewById(R.id.medicationsRecyclerView);
             medicationsRecyclerView.setLayoutManager(linearLayout);
             MedicationsRecyclerViewAdapter medicationsAdapter = new MedicationsRecyclerViewAdapter(
                     medications, MAX_ITEMS_TO_SHOW);
             medicationsAdapter.setCallback(callback);
             medicationsRecyclerView.setAdapter(medicationsAdapter);
 
-            TextView seeAll = (TextView) view.findViewById(R.id.medicationsSeeAllTextView);
+            TextView seeAll = view.findViewById(R.id.medicationsSeeAllTextView);
             if (medications.size() <= MAX_ITEMS_TO_SHOW) {
                 seeAll.setVisibility(View.GONE);
             } else {
@@ -169,14 +203,14 @@ public class MyHealthMainFragment extends BaseFragment {
                     return false;
                 }
             };
-            RecyclerView allergiesRecyclerView = (RecyclerView) view.findViewById(R.id.allergiesRecyclerView);
+            RecyclerView allergiesRecyclerView = view.findViewById(R.id.allergiesRecyclerView);
             allergiesRecyclerView.setLayoutManager(linearLayout);
             AllergiesRecyclerViewAdapter allergiesAdapter = new AllergiesRecyclerViewAdapter(allergies,
                     MAX_ITEMS_TO_SHOW);
             allergiesAdapter.setCallback(callback);
             allergiesRecyclerView.setAdapter(allergiesAdapter);
 
-            TextView seeAll = (TextView) view.findViewById(R.id.allergiesSeeAllTextView);
+            TextView seeAll = view.findViewById(R.id.allergiesSeeAllTextView);
             if (allergies.size() <= MAX_ITEMS_TO_SHOW) {
                 seeAll.setVisibility(View.GONE);
             } else {
@@ -205,13 +239,13 @@ public class MyHealthMainFragment extends BaseFragment {
                     return false;
                 }
             };
-            RecyclerView conditionsRecyclerView = (RecyclerView) view.findViewById(R.id.conditionsRecyclerView);
+            RecyclerView conditionsRecyclerView = view.findViewById(R.id.conditionsRecyclerView);
             conditionsRecyclerView.setLayoutManager(linearLayout);
             ConditionsRecyclerViewAdapter conditionsAdapter = new ConditionsRecyclerViewAdapter(
                     assertions, MAX_ITEMS_TO_SHOW);
             conditionsRecyclerView.setAdapter(conditionsAdapter);
 
-            TextView seeAll = (TextView) view.findViewById(R.id.conditionsSeeAllTextView);
+            TextView seeAll = view.findViewById(R.id.conditionsSeeAllTextView);
             if (assertions.size() <= MAX_ITEMS_TO_SHOW) {
                 seeAll.setVisibility(View.GONE);
             } else {
@@ -240,14 +274,14 @@ public class MyHealthMainFragment extends BaseFragment {
                     return false;
                 }
             };
-            RecyclerView careTeamRecyclerView = (RecyclerView) view.findViewById(R.id.careTeamRecyclerView);
+            RecyclerView careTeamRecyclerView = view.findViewById(R.id.careTeamRecyclerView);
             careTeamRecyclerView.setLayoutManager(linearLayout);
             CareTeamRecyclerViewAdapter careTeamAdapter = new CareTeamRecyclerViewAdapter(
                     providers, MAX_ITEMS_TO_SHOW);
             careTeamAdapter.setCallback(callback);
             careTeamRecyclerView.setAdapter(careTeamAdapter);
 
-            TextView seeAll = (TextView) view.findViewById(R.id.careTeamSeeAllTextView);
+            TextView seeAll = view.findViewById(R.id.careTeamSeeAllTextView);
             if (providers.size() <= MAX_ITEMS_TO_SHOW) {
                 seeAll.setVisibility(View.GONE);
             } else {

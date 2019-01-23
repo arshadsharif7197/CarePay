@@ -11,6 +11,8 @@ public class PatientDto {
 
     @SerializedName("id")
     private Integer id;
+    @SerializedName("guid")
+    private String guid;
     @SerializedName("first_name")
     private String firstName;
     @SerializedName("last_name")
@@ -44,6 +46,14 @@ public class PatientDto {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getGuid() {
+        return guid;
+    }
+
+    public void setGuid(String guid) {
+        this.guid = guid;
     }
 
     public String getFirstName() {

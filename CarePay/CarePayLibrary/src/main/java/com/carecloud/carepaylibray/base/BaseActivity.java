@@ -248,7 +248,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         Gson gson = new Gson();
         try {
             long id = (Long) rawWorkflowDTO;
-            WorkflowDTO workflowDTO = new WorkflowDTO(WorkFlowRecord.findById(WorkFlowRecord.class, id));
+            WorkflowDTO workflowDTO = new WorkflowDTO(WorkFlowRecord.findById(getContext(), id));
 
             if (dtoClass.equals(WorkflowDTO.class)) {
                 return Primitives.wrap(dtoClass).cast(workflowDTO);

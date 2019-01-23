@@ -53,8 +53,6 @@ public class CarePayButton extends AppCompatButton {
         super(context, attrs);
         this.context = context;
         init(attrs);
-
-
     }
 
     /**
@@ -115,7 +113,7 @@ public class CarePayButton extends AppCompatButton {
         setFont();
     }
 
-    private void setFont(){
+    private void setFont() {
         String assetFontName = "";
         switch (fontAttribute) {
             case GOTHAM_ROUNDED_BOLD: {
