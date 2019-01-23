@@ -387,28 +387,9 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     }
 
     private void showVisitSummaryButton() {
-        AppointmentsResultModel appointmentModelDto = ((PatientAppointmentPresenter) callback).getMainAppointmentDto();
-        boolean isVisitSummaryEnabled = false;
-        for (UserPracticeDTO userPracticeDTO : appointmentModelDto.getPayload().getUserPractices()) {
-            if (userPracticeDTO.isVisitSummaryEnabled()) {
-                for (PortalSettingDTO portalSettingDTO : appointmentModelDto.getPayload().getPortalSettings()) {
-                    if (userPracticeDTO.getPracticeId().equals(portalSettingDTO.getMetadata().getPracticeId())) {
-                        for (PortalSetting portalSetting : portalSettingDTO.getPayload()) {
-                            if (portalSetting.getName().toLowerCase().equals("visit summary")
-                                    && portalSetting.getStatus().toLowerCase().equals("a")) {
-                                isVisitSummaryEnabled = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (isVisitSummaryEnabled) break;
-                }
-            }
-            if (isVisitSummaryEnabled) break;
-        }
         String code = appointmentDTO.getPayload().getAppointmentStatus().getOriginalCode();
-        if ((CarePayConstants.BILLED.equals(code) || CarePayConstants.MANUALLY_BILLED.equals(code)
-                && isVisitSummaryEnabled)) {
+        if ((CarePayConstants.BILLED.equals(code) || CarePayConstants.MANUALLY_BILLED.equals(code))
+                && shouldShowVisitSummary()) {
             appointmentStatus.setVisibility(View.GONE);
             actionsLayout.setVisibility(View.VISIBLE);
             rightButton.setVisibility(View.VISIBLE);
@@ -416,6 +397,29 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
             rightButton.setText(Label.getLabel("visitSummary.appointments.button.label.visitSummary"));
             rightButton.setOnClickListener(visitSummaryClick);
         }
+    }
+
+    private boolean shouldShowVisitSummary(){
+        AppointmentsResultModel appointmentModelDto = ((PatientAppointmentPresenter) callback).getMainAppointmentDto();
+        UserPracticeDTO appointmentPractice= null;
+        for (UserPracticeDTO userPracticeDTO : appointmentModelDto.getPayload().getUserPractices()) {
+            if(userPracticeDTO.getPracticeId().equals(appointmentDTO.getMetadata().getPracticeId())) {
+                appointmentPractice = userPracticeDTO;
+            }
+        }
+        if(appointmentPractice != null && appointmentPractice.isVisitSummaryEnabled()) {
+            for (PortalSettingDTO portalSettingDTO : appointmentModelDto.getPayload().getPortalSettings()) {
+                if (appointmentPractice.getPracticeId().equals(portalSettingDTO.getMetadata().getPracticeId())) {
+                    for (PortalSetting portalSetting : portalSettingDTO.getPayload()) {
+                        if (portalSetting.getName().toLowerCase().equals("visit summary")) {
+                            return portalSetting.getStatus().toLowerCase().equals("a");
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        return false;
     }
 
     private boolean shouldShowCancelButton(Set<String> enabledLocations) {
