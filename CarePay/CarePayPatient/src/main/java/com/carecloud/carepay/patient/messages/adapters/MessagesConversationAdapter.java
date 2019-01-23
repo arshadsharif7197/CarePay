@@ -192,7 +192,7 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
                 PicassoHelper.getPicassoInstance(context)
                         .load(uri)
                         .placeholder(R.drawable.bg_glitter_rounded)
-                        .transform(new PicassoRoundedCornersExifTransformation(14, 10))
+                        .transform(new PicassoRoundedCornersExifTransformation(14, 10, uri.toString(), headers))
                         .into(holder.imageAttachment, new Callback() {
                             @Override
                             public void onSuccess() {
