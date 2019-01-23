@@ -13,6 +13,9 @@ public class PapiBankAccountMetadataDTO {
     @SerializedName("js_security_key")
     @Expose
     private String jsSecurityKey;
+    @SerializedName("mid")
+    @Expose
+    private String mid;
 
     /**
      * Gets ein.
@@ -66,5 +69,13 @@ public class PapiBankAccountMetadataDTO {
      */
     public void setJsSecurityKey(String jsSecurityKey) {
         this.jsSecurityKey = jsSecurityKey;
+    }
+
+    public String getMid() {
+        return mid;
+    }
+
+    public void setMid(String mid) {
+        this.mid = mid;
     }
 }

@@ -206,7 +206,7 @@ public class PatientPaymentPresenter extends PaymentPresenter
 
     @Override
     public void showPaymentPendingConfirmation(PaymentsModel paymentsModel) {
-        new CustomMessageToast(viewHandler.getContext(), Label.getLabel("payments_external_pending"), CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
+        new CustomMessageToast(viewHandler.getContext(), Label.getLabel("payment_queued_patient"), CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
         viewHandler.exitPaymentProcess(false);
     }
 
