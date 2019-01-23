@@ -1,6 +1,7 @@
 package com.carecloud.carepay.service.library;
 
 import android.support.annotation.NonNull;
+import android.webkit.MimeTypeMap;
 
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -10,11 +11,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -244,7 +248,7 @@ public class RestCallServiceHelper {
         if (authQueryParams) {
             queryMap = getAuthQueryParams(queryMap, authTokenName);
         }
-        if(jsonBody != null && jsonBody.length() == 0){
+        if (jsonBody != null && jsonBody.length() == 0) {
             jsonBody = null;
         }
         Call<JsonElement> requestCall = getServiceCall(method, baseUrl, urlPath, fullHeaders, headerMap, queryMap, jsonBody, fieldMap, requestBody);
@@ -264,6 +268,59 @@ public class RestCallServiceHelper {
             }
         });
 
+    }
+
+    public void executeRequest(@RestDef.RestMethod String method,
+                               @NonNull String baseUrl,
+                               @NonNull final RestCallServiceCallback callback,
+                               boolean fullHeaders,
+                               boolean authQueryParams,
+                               String authTokenName,
+                               Map<String, String> queryMap,
+                               Map<String, String> headerMap,
+                               @NonNull File file,
+                               String... pathParams){
+
+        callback.onPreExecute();
+
+        if(!method.equals(RestDef.POST)){
+            callback.onFailure("Only POST method is allowed for Uploading File");
+            return;
+        }
+
+        String contentType = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(file.getAbsolutePath());
+        if(extension != null){
+            contentType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse(contentType), file);
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
+
+        String urlPath = geturlPath(pathParams);
+        if (authQueryParams) {
+            queryMap = getAuthQueryParams(queryMap, authTokenName);
+        }
+        if (fullHeaders) {
+            headerMap = getFullHeaders(headerMap);
+        }
+
+        RestCallService restCallService = RestServiceGenerator.getInstance().createService(RestCallService.class, headerMap, baseUrl);
+        Call<JsonElement> requestCall = restCallService.executePost(urlPath, queryMap, filePart);
+        requestCall.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                if (response.isSuccessful()) {
+                    callback.onPostExecute(response.body());
+                } else {
+                    callback.onFailure(parseError(response, "data", "error", "message"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonElement> call, Throwable throwable) {
+                callback.onFailure(throwable.getMessage());
+            }
+        });
     }
 
     private Map<String, String> getAuthHeaders() {

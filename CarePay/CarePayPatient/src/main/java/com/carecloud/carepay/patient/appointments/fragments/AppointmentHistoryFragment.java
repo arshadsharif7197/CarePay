@@ -24,6 +24,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.models.Paging;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -225,7 +226,7 @@ public class AppointmentHistoryFragment extends BaseFragment
                         }
                         isPaging = false;
                         adapter.setLoading(false);
-                        if (showShimmerLayout) {
+                        if (showShimmerLayout && ((BaseActivity) getActivity()).isVisible()) {
                             hideShimmerEffect();
                         }
                         showErrorNotification(exceptionMessage);

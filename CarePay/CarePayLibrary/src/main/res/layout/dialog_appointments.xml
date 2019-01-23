@@ -343,21 +343,33 @@
                         app:customAssetFont="proxima_nova_regular"
                         tools:text="Button 1" />
 
-
-                    <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                        android:id="@+id/appointment_button_right"
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="@dimen/dimen_48dp"
                         android:layout_marginStart="@dimen/dimen_10dp"
                         android:layout_marginEnd="@dimen/dimen_10dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/button_green_selector"
-                        android:textAllCaps="true"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_13"
-                        android:visibility="gone"
-                        app:customAssetFont="proxima_nova_regular"
-                        tools:text="Button 1" />
+                        android:layout_weight="1">
+
+                        <com.carecloud.carepaylibray.customcomponents.CarePayProgressButton
+                            android:id="@+id/appointment_button_right"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/button_green_selector"
+                            android:textAllCaps="true"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_13"
+                            android:visibility="gone"
+                            app:customAssetFont="proxima_nova_regular"
+                            tools:text="Button 1" />
+
+                        <include
+                            layout="@layout/progress_loader"
+                            android:layout_width="@dimen/dimen_30dp"
+                            android:layout_height="@dimen/dimen_30dp"
+                            android:layout_centerInParent="true"/>
+
+                    </RelativeLayout>
+
                 </LinearLayout>
 
             </LinearLayout>
