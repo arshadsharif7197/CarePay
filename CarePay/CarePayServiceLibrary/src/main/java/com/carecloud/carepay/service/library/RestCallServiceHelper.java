@@ -12,6 +12,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 import java.io.File;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -289,10 +290,18 @@ public class RestCallServiceHelper {
         }
 
         String contentType = null;
-        String extension = MimeTypeMap.getFileExtensionFromUrl(file.getAbsolutePath());
+        String extension = MimeTypeMap.getFileExtensionFromUrl(URLEncoder.encode(file.getAbsolutePath()).replace("+", "%20"));
         if(extension != null){
             contentType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
         }
+        if(contentType == null && "json".equals(extension)){
+            contentType = "application/json";
+        }
+        if(contentType == null){
+            callback.onFailure("Unable to determine content type for file upload!");
+            return;
+        }
+
         RequestBody requestBody = RequestBody.create(MediaType.parse(contentType), file);
         MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
 

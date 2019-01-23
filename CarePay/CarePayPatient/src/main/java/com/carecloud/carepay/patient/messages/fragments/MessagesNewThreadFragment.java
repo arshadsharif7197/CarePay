@@ -45,6 +45,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.JsonElement;
 
 import java.io.File;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -304,12 +305,15 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
                 Log.d(MessagesNewThreadFragment.class.getName(), jsonElement != null ? jsonElement.toString() : "no data");
                 if (jsonElement != null && jsonElement.isJsonObject()) {
                     AttachmentUploadModel uploadModel = DtoHelper.getConvertedDTO(AttachmentUploadModel.class, jsonElement.getAsJsonObject());
+                    String extension = MimeTypeMap.getFileExtensionFromUrl(URLEncoder.encode(file.getAbsolutePath()).replace("+", "%20"));
                     attachmentPostModel = new AttachmentPostModel();
                     attachmentPostModel.setNodeId(uploadModel.getNodeId());
                     attachmentPostModel.setDescription(file.getName());
                     attachmentPostModel.setFormat(MimeTypeMap.getSingleton()
-                            .getMimeTypeFromExtension(MimeTypeMap
-                                    .getFileExtensionFromUrl(file.getAbsolutePath())));
+                            .getMimeTypeFromExtension(extension));
+                    if(attachmentPostModel.getFormat() == null && "json".equals(extension)){
+                        attachmentPostModel.setFormat("application/json");
+                    }
 
                     attachmentFile = null;
                     postNewMessage(provider, subjectInput.getText().toString(), messageInput.getText().toString());

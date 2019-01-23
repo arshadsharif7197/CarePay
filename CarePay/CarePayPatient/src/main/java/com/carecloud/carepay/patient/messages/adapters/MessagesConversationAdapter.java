@@ -34,6 +34,7 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.LinkMovementCallbackMethod;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.PicassoHelper;
+import com.carecloud.carepaylibray.utils.PicassoRoundedCornersExifTransformation;
 import com.carecloud.carepaylibray.utils.ReLinkify;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.android.gms.common.util.ArrayUtils;
@@ -45,8 +46,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 /**
  * Created by lmenendez on 7/5/17
@@ -166,8 +165,11 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
             //currently only supporting one attachment
             MessageAttachment attachment = message.getAttachments().get(0);
             String attachmentFormat = attachment.getDocument().getDocumentFormat();
-            if (attachmentFormat.contains("/")) {
+            if (attachmentFormat != null && attachmentFormat.contains("/")) {
                 attachmentFormat = MimeTypeMap.getSingleton().getExtensionFromMimeType(attachmentFormat);
+            }
+            if(attachmentFormat == null){
+                attachmentFormat = MimeTypeMap.getFileExtensionFromUrl(attachment.getDocument().getName());
             }
 
             holder.fileAttachmentExtension.setText(attachmentFormat);
@@ -189,21 +191,24 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
                 PicassoHelper.setHeaders(headers);
                 PicassoHelper.getPicassoInstance(context)
                         .load(uri)
-                        .centerCrop()
-                        .resize(400, 400)
-                        .transform(new RoundedCornersTransformation(14, 10))
+                        .placeholder(R.drawable.bg_glitter_rounded)
+                        .transform(new PicassoRoundedCornersExifTransformation(14, 10, uri.toString(), headers))
                         .into(holder.imageAttachment, new Callback() {
                             @Override
                             public void onSuccess() {
                                 holder.imageAttachment.setVisibility(View.VISIBLE);
+                                holder.attachmentProgress.setVisibility(View.GONE);
                             }
 
                             @Override
                             public void onError() {
                                 holder.imageAttachment.setVisibility(View.GONE);
                                 holder.fileAttachmentLayout.setVisibility(View.VISIBLE);
+                                holder.attachmentProgress.setVisibility(View.GONE);
                             }
                         });
+                holder.imageAttachment.setVisibility(View.VISIBLE);
+                holder.attachmentProgress.setVisibility(View.VISIBLE);
             } else {
                 holder.fileAttachmentLayout.setVisibility(View.VISIBLE);
             }
@@ -329,6 +334,7 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
         TextView fileAttachmentExtension;
         TextView fileAttachmentName;
         ImageView imageAttachment;
+        View attachmentProgress;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -344,6 +350,7 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
             fileAttachmentExtension = itemView.findViewById(R.id.attachmentExtension);
             fileAttachmentName = itemView.findViewById(R.id.attachmentName);
             imageAttachment = itemView.findViewById(R.id.attachmentImage);
+            attachmentProgress = itemView.findViewById(R.id.attachmentProgress);
         }
     }
 
