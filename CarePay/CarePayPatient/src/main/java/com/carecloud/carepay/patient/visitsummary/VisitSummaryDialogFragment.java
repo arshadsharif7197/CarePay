@@ -216,13 +216,13 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         final TextView practiceTextView = view.findViewById(R.id.practiceTextView);
         TextInputLayout practiceTextInputLayout = view.findViewById(R.id.practiceTextInputLayout);
         final List<UserPracticeDTO> practices = filterPractices(myHealthDto.getPayload().getPracticeInformation());
+        practiceTextView.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(practiceTextInputLayout, null));
         if (practices.size() == 1) {
             selectedPractice = practices.get(0);
             practiceTextView.setText(selectedPractice.getPracticeName());
             practiceTextView.getOnFocusChangeListener().onFocusChange(practiceTextView, true);
         } else {
-            practiceTextView.setOnFocusChangeListener(SystemUtil
-                    .getHintFocusChangeListener(practiceTextInputLayout, null));
             practiceTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
