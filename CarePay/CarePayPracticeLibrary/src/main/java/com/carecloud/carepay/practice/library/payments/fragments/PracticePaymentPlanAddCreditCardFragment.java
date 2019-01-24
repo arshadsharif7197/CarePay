@@ -123,6 +123,10 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
         } else {
             swipeCardButton.setVisibility(View.GONE);
         }
+
+        //temp fix for hiding this until we can handle it properly for one-time payment TODO: CLOVERPAY remove this
+        swipeCardButton.setVisibility(View.GONE);
+
     }
 
     @Override

@@ -140,6 +140,9 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
             swipeCreditCardNowLayout.setVisibility(View.GONE);
         }
 
+        //temp fix for hiding this until we can handle it properly for one-time payment TODO: CLOVERPAY remove this
+        swipeCreditCardNowLayout.setVisibility(View.GONE);
+
         View closeButton = view.findViewById(R.id.closeViewLayout);
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
