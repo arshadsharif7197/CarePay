@@ -146,7 +146,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
 //                    int reasonIndex = cursor.getColumnIndex(DownloadManager.COLUMN_REASON);
                     if (DownloadManager.STATUS_SUCCESSFUL == cursor.getInt(columnIndex)) {
                         exportButton.setEnabled(true);
-                        exportButton.setProgressEnabled(false);
+//                        exportButton.setProgressEnabled(false);
                         if (format.equals("pdf")) {
                             exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.openFile"));
                             exportButton.setOnClickListener(new View.OnClickListener() {
@@ -466,7 +466,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                 isExporting = true;
                 exportButton.setEnabled(false);
                 exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.processing"));
-                exportButton.setProgressEnabled(true);
+//                exportButton.setProgressEnabled(true);
                 callForStatus(visitSummaryDTO.getPayload().getVisitSummaryRequest().getJobId(), selectedPractice, format);
             }
 
@@ -498,7 +498,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                     retryIntent = 0;
                     isExporting =false;
                     exportButton.setEnabled(true);
-                    exportButton.setProgressEnabled(false);
+//                    exportButton.setProgressEnabled(false);
                     exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.export"));
                     showErrorNotification(Label.getLabel("practice_patient_settings_intake_forms_print_status_error"));
                 } else if (status.equals("queued") || status.equals("working")) {
@@ -518,7 +518,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                 Log.e("OkHttp", exceptionMessage);
                 downloadFile(jobId, selectedPractice, format);
                 isExporting = false;
-                exportButton.setProgressEnabled(false);
+//                exportButton.setProgressEnabled(false);
                 exportButton.setEnabled(formIsValid());
             }
         }, query);

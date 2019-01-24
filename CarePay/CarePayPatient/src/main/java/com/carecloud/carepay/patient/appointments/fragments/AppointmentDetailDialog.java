@@ -611,8 +611,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                 VisitSummaryDTO visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
                 ((BaseActivity) getActivity()).hideProgressDialog();
                 rightButton.setEnabled(false);
-                rightButton.setProgressEnabled(true);
                 rightButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.processing"));
+//                rightButton.setProgressEnabled(true);
                 callVisitSummaryStatusService(visitSummaryDTO.getPayload().getVisitSummaryRequest().getJobId());
             }
 
@@ -639,7 +639,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                         if (retryIntent > VisitSummaryDialogFragment.MAX_NUMBER_RETRIES) {
                             retryIntent = 0;
                             rightButton.setEnabled(true);
-                            rightButton.setProgressEnabled(false);
+//                            rightButton.setProgressEnabled(false);
                             rightButton.setText(Label.getLabel("visitSummary.appointments.button.label.visitSummary"));
                             showErrorNotification(Label.getLabel("practice_patient_settings_intake_forms_print_status_error"));
                         } else if (status.equals("queued") || status.equals("working")) {
@@ -731,7 +731,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
 //                    int reasonIndex = cursor.getColumnIndex(DownloadManager.COLUMN_REASON);
                     if (DownloadManager.STATUS_SUCCESSFUL == cursor.getInt(columnIndex)) {
                         rightButton.setEnabled(true);
-                        rightButton.setProgressEnabled(false);
+//                        rightButton.setProgressEnabled(false);
                         rightButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.openFile"));
                         rightButton.setOnClickListener(new View.OnClickListener() {
                             @Override
