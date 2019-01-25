@@ -42,6 +42,7 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.Demograp
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -257,7 +258,14 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
+            if (checkinFlowCallback.getCurrentStep() == CheckinFlowCallback.IDENTITY) {
+                MixPanelUtil.endTimer(getString(R.string.timer_identification_docs));
+            }else if (checkinFlowCallback.getCurrentStep() == CheckinFlowCallback.INSURANCE) {
+                MixPanelUtil.endTimer(getString(R.string.timer_health_insurance));
+            }
+
             if (checkinFlowCallback.getCurrentStep() >= checkinFlowCallback.getTotalSteps()) {
+                MixPanelUtil.endTimer(getString(R.string.timer_demographics));
                 if (NavigationStateConstants.PATIENT_HOME.equals(workflowDTO.getState())
                         || NavigationStateConstants.APPOINTMENTS.equals(workflowDTO.getState())) {
                     onUpdate(checkinFlowCallback, workflowDTO);
@@ -268,6 +276,8 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             } else {
                 DemographicDTO demographicDTO = new Gson().fromJson(workflowDTO.toString(), DemographicDTO.class);
                 checkinFlowCallback.applyChangesAndNavTo(demographicDTO, checkinFlowCallback.getCurrentStep() + 1);
+
+
             }
 
         }
@@ -647,7 +657,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             editText.addTextChangedListener(getRequiredViewTextWatcher(requiredView));
         }
 
-        if(requiredView != null) {
+        if (requiredView != null) {
             if (!StringUtil.isNullOrEmpty(value)) {
                 requiredView.setVisibility(View.GONE);
             } else if (isRequired) {

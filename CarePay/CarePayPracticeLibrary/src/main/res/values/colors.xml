@@ -32,4 +32,5 @@
     <color name="patient_mode_action_bar">@color/colorPrimaryDark</color>
     <color name="practice_mode_counter_background">@color/dark_blue</color>
     <color name="practice_mode_counter_text">@color/soft_sky</color>
+    <color name="addNewCreditCardTextColorField">#B0BEC5</color>
 </resources>

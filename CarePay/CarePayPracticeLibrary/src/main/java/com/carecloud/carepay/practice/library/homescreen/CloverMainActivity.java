@@ -640,7 +640,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            ;
             if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
                 Bundle extra = new Bundle();
                 extra.putBoolean(CarePayConstants.LOGIN_OPTION_QR, getApplicationPreferences().getAppointmentNavigationOption() != Defs.NAVIGATE_APPOINTMENT);

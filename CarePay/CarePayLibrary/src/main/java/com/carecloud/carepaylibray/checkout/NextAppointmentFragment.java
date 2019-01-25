@@ -36,6 +36,7 @@ import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
 import com.carecloud.carepaylibray.translation.TranslatableFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -250,7 +251,7 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
         header.put("transition", "true");
         TransitionDTO transitionDTO = appointmentsResultModel.getMetadata()
                 .getTransitions().getContinueTransition();
-        getWorkflowServiceHelper().execute(transitionDTO, continueCallback, queryMap, header);
+        getWorkflowServiceHelper().execute(transitionDTO, getContinueCallback(false), queryMap, header);
     }
 
     private void scheduleAppointment() {
@@ -287,40 +288,10 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
             TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions()
                     .getMakeAppointment();
             Gson gson = new Gson();
-            getWorkflowServiceHelper().execute(transitionDTO, makeAppointmentCallback,
+            getWorkflowServiceHelper().execute(transitionDTO, getContinueCallback(true),
                     gson.toJson(scheduleAppointmentRequestDTO), queryMap, header);
         }
     }
-
-    private WorkflowServiceCallback makeAppointmentCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            onAppointmentRequestSuccess();
-            String state = workflowDTO.getState();
-            if (NavigationStateConstants.APPOINTMENTS.equals(state)
-                    || NavigationStateConstants.PATIENT_HOME.equals(state)) {
-                callback.showAllDone(workflowDTO);
-            } else if (NavigationStateConstants.SURVEYS_CHECKOUT.equals(state)) {
-                callback.startSurveyFlow(workflowDTO);
-            } else {
-                callback.navigateToWorkflow(workflowDTO);
-            }
-            if (!workflowDTO.getState().contains("checkout")) {
-                callback.completeCheckout();
-            }
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            onFailureCallback(exceptionMessage);
-        }
-    };
 
     private void onAppointmentRequestSuccess() {
         getFragmentManager().popBackStack();
@@ -332,34 +303,42 @@ public class NextAppointmentFragment extends BaseFragment implements NextAppoint
         SystemUtil.showSuccessToast(getContext(), appointmentRequestSuccessMessage);
     }
 
-    WorkflowServiceCallback continueCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            String state = workflowDTO.getState();
-            if (NavigationStateConstants.APPOINTMENTS.equals(state)
-                    || NavigationStateConstants.PATIENT_HOME.equals(state)) {
-                callback.showAllDone(workflowDTO);
-            } else if (NavigationStateConstants.SURVEYS_CHECKOUT.equals(state)) {
-                callback.startSurveyFlow(workflowDTO);
-            } else {
-                callback.navigateToWorkflow(workflowDTO);
+    WorkflowServiceCallback getContinueCallback(final boolean appointmentMade) {
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
             }
-            if (!workflowDTO.getState().contains("checkout")) {
-                callback.completeCheckout();
-            }
-        }
 
-        @Override
-        public void onFailure(String exceptionMessage) {
-            onFailureCallback(exceptionMessage);
-        }
-    };
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                if(appointmentMade){
+                    onAppointmentRequestSuccess();
+                    MixPanelUtil.endTimer(getString(R.string.timer_next_appt));
+                }
+                String state = workflowDTO.getState();
+                if (NavigationStateConstants.APPOINTMENTS.equals(state)
+                        || NavigationStateConstants.PATIENT_HOME.equals(state)) {
+                    callback.showAllDone(workflowDTO);
+                } else if (NavigationStateConstants.SURVEYS_CHECKOUT.equals(state)) {
+                    callback.startSurveyFlow(workflowDTO);
+                } else {
+                    callback.navigateToWorkflow(workflowDTO);
+                }
+
+                boolean surveyAvailable = NavigationStateConstants.SURVEYS_CHECKOUT.equals(workflowDTO.getState());
+                if (!workflowDTO.getState().contains("checkout") || surveyAvailable) {
+                    callback.completeCheckout(false, 0D, surveyAvailable, false);
+                }
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                onFailureCallback(exceptionMessage);
+            }
+        };
+    }
 
     private void onFailureCallback(String exceptionMessage) {
         hideProgressDialog();

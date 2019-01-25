@@ -244,6 +244,8 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
                 hideProgressDialog();
                 dismiss();
                 callback.onPaymentPlanCanceled(workflowDTO, deletePaymentPlan);
+
+                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payment_plans_cancelled), 1);
             }
 
             @Override

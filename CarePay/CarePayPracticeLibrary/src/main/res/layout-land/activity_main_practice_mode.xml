@@ -317,7 +317,7 @@
         android:layout_marginTop="@dimen/updateAlertContainerTopMargin"
         android:background="@drawable/appointment_dialog_yellow_bg"
         android:padding="@dimen/updateAlertContainerPadding"
-        android:visibility="gone">
+        android:visibility="invisible">
 
         <ImageView
             android:id="@+id/updateAlertImage"

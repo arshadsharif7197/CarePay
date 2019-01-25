@@ -53,19 +53,10 @@ import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
-import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
-import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
-import com.carecloud.carepaylibray.demographics.fragments.FormsFragment;
-import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
-import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment;
-import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
-import com.carecloud.carepaylibray.demographics.fragments.IntakeFormsFragment;
-import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.interfaces.IcicleInterface;
 import com.carecloud.carepaylibray.media.MediaResultListener;
-import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanTermsFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
@@ -149,7 +140,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             }
         }
 
-        final TextView languageSwitch = (TextView) findViewById(R.id.languageSpinner);
+        final TextView languageSwitch = findViewById(R.id.languageSpinner);
         final View languageContainer = findViewById(R.id.languageContainer);
         languageSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,7 +153,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
         headers.put("username", getApplicationPreferences().getUserName());
         headers.put("username_patient", getApplicationPreferences().getPatientId());
-        RecyclerView languageList = (RecyclerView) findViewById(R.id.languageList);
+        RecyclerView languageList = findViewById(R.id.languageList);
         LanguageAdapter languageAdapter = new LanguageAdapter(presenter.getLanguages(), selectedLanguage);
         languageList.setAdapter(languageAdapter);
         languageList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -309,8 +300,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                         @Override
                         public void onConfirm() {
                             setResult(CarePayConstants.HOME_PRESSED);
+                            presenter.logCheckinCancelled();
                             finish();
-                            logCheckinCancelled();
                         }
                     });
                     String tag = confirmDialogFragment.getClass().getName();
@@ -321,7 +312,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     private void initializeLeftNavigation() {
-        TextView title = (TextView) findViewById(R.id.checkInLeftNavigationTitle);
+        TextView title = findViewById(R.id.checkInLeftNavigationTitle);
         if (title != null) {
             title.setText(Label.getLabel("practice_checkin_header_label"));
         }
@@ -383,7 +374,9 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 .newInstance(paymentDTO, owedAmount);
         displayDialogFragment(dialog, false);
 
-        MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment));
+        MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment),
+                getString(R.string.param_practice_id),
+                selectedBalance.getMetadata().getPracticeId());
     }
 
     @Override
@@ -392,7 +385,13 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 .newInstance(paymentsModel, amount);
         displayDialogFragment(fragment, false);
 
-        MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment));
+        String[] params = {getString(R.string.param_balance_amount),
+                getString(R.string.param_practice_id)
+        };
+        Object[] values = {amount,
+                paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getPracticeId()
+        };
+        MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment), params, values);
     }
 
     @Override
@@ -682,8 +681,8 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     public void updateCheckInFlow(CheckinFlowState flowState, int totalPages, int currentPage) {
         for (int i = 0; i < checkInFlowViews.length; i++) {
             View flowView = checkInFlowViews[i];
-            CarePayTextView section = (CarePayTextView) flowView.findViewById(R.id.checkin_flow_title);
-            TextView progress = (TextView) flowView.findViewById(R.id.checkin_flow_progress);
+            CarePayTextView section = flowView.findViewById(R.id.checkin_flow_title);
+            TextView progressTextView = flowView.findViewById(R.id.checkin_flow_progress);
 
             if (flowState.ordinal() == i) {
                 if (section.getFontAttribute() == CustomAssetStyleable.GOTHAM_ROUNDED_LIGHT) {
@@ -691,10 +690,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 }
                 section.setSelected(true);
                 section.setEnabled(true);
-                if (totalPages > 0) {
+                if (totalPages > 1) {
                     String progressLabel = currentPage + " " + Label.getLabel("of") + " " + totalPages;
-                    progress.setVisibility(View.VISIBLE);
-                    progress.setText(progressLabel);
+                    progressTextView.setVisibility(View.VISIBLE);
+                    progressTextView.setText(progressLabel);
                 }
             } else {
                 if (section.getFontAttribute() == CustomAssetStyleable.GOTHAM_ROUNDED_BOLD) {
@@ -704,7 +703,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                     section.setEnabled(false);
                 }
                 section.setSelected(false);
-                progress.setVisibility(View.GONE);
+                progressTextView.setVisibility(View.GONE);
             }
         }
     }
@@ -822,42 +821,21 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             String[] params = {getString(R.string.param_practice_id),
                     getString(R.string.param_appointment_id),
                     getString(R.string.param_appointment_type),
-                    getString(R.string.param_is_guest)};
+                    getString(R.string.param_is_guest),
+                    getString(R.string.param_provider_id),
+                    getString(R.string.param_location_id)
+            };
             Object[] values = {getAppointment().getMetadata().getPracticeId(),
                     getAppointmentId(),
                     getAppointment().getPayload().getVisitType().getName(),
-                    isGuest};
+                    isGuest,
+                    getAppointment().getPayload().getProvider().getGuid(),
+                    getAppointment().getPayload().getLocation().getGuid()
+            };
             MixPanelUtil.logEvent(getString(R.string.event_checkin_completed), params, values);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_checkin_completed), 1);
             MixPanelUtil.endTimer(getString(R.string.timer_checkin));
         }
-    }
-
-    private void logCheckinCancelled() {
-        Fragment currentFragment = presenter.getCurrentFragment();
-        String currentStep = null;
-        if (currentFragment instanceof PersonalInfoFragment) {
-            currentStep = getString(R.string.step_personal_info);
-        } else if (currentFragment instanceof AddressFragment) {
-            currentStep = getString(R.string.step_address);
-        } else if (currentFragment instanceof DemographicsFragment) {
-            currentStep = getString(R.string.step_demographics);
-        } else if (currentFragment instanceof IdentificationFragment) {
-            currentStep = getString(R.string.step_identity);
-        } else if (currentFragment instanceof HealthInsuranceFragment ||
-                currentFragment instanceof InsuranceEditDialog) {
-            currentStep = getString(R.string.step_health_insurance);
-        } else if (currentFragment instanceof FormsFragment) {
-            currentStep = getString(R.string.step_consent_forms);
-        } else if (currentFragment instanceof MedicationsAllergyFragment) {
-            currentStep = getString(R.string.step_medications);
-        } else if (currentFragment instanceof IntakeFormsFragment) {
-            currentStep = getString(R.string.step_intake);
-        }
-        if (currentStep != null) {
-            MixPanelUtil.logEvent(getString(R.string.event_checkin_cancelled), getString(R.string.param_last_completed_step), currentStep);
-        }
-
     }
 
     @Override

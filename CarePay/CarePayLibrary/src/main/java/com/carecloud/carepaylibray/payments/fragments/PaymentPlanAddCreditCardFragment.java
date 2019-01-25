@@ -157,6 +157,7 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
             IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
             postModel.setPapiPaymentMethod(papiPaymentMethod);
             postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
+            amountToMakePayment = postModel.getAmount();
 
             if(paymentDate != null){
                 DateUtil.getInstance().setDate(paymentDate);

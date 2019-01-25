@@ -100,7 +100,7 @@ public class CarePayConstants {
     public static final String TYPE_PAYPAL = "paypal";
     public static final String TYPE_HSA = "hsa";
     public static final String TYPE_FSA = "fsa";
-    public static final String TYPE_ANDROID_PAY = "android_pay";
+    public static final String TYPE_GOOGLE_PAY = "Google Pay";
     public static final String TYPE_PAYMENT_PLAN = "pay_using_payment_plan";
 
     public static final int PAYMENT_PLAN_REQUIRED_BALANCE = 20;

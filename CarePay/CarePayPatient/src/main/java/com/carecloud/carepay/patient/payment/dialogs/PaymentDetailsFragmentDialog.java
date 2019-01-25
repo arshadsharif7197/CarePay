@@ -32,7 +32,7 @@ import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.StatementDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.PdfUtil;
+import com.carecloud.carepaylibray.utils.FileDownloadUtil;
 import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
@@ -102,7 +102,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
 
             UserPracticeDTO practice = paymentReceiptModel.getPaymentPayload()
                     .getUserPractice(selectedBalance.getMetadata().getPracticeId());
-            if(!StringUtil.isNullOrEmpty(practice.getPracticePhoto())){
+            if (!StringUtil.isNullOrEmpty(practice.getPracticePhoto())) {
                 PicassoHelper.get().loadImage(getContext(), (ImageView) view.findViewById(R.id.practiceImageView),
                         view.findViewById(R.id.avTextView), practice.getPracticePhoto());
             }
@@ -248,7 +248,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                         .getPaymentsLinks().getPatientStatements().getUrl(), "statement_id",
                 String.valueOf(statementDTO.getId()));
         String fileName = String.format("%s %s", "Statement - ", selectedBalance.getMetadata().getPracticeName());
-        PdfUtil.downloadPdf(getContext(), url, fileName, ".pdf", statementDTO.getStatementDate());
+        FileDownloadUtil.downloadPdf(getContext(), url, fileName, ".pdf", statementDTO.getStatementDate());
     }
 
     @Override
