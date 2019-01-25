@@ -5,7 +5,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.telephony.PhoneNumberUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +12,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.base.BasePracticeDialogFragment;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.base.models.UserAuthPermissions;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
@@ -28,7 +27,7 @@ import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class PracticeAppointmentDialog extends BasePracticeDialogFragment {
+public class PracticeAppointmentDialog extends BaseDialogFragment {
 
     public static final String COMMA = ",";
 
@@ -41,10 +40,8 @@ public class PracticeAppointmentDialog extends BasePracticeDialogFragment {
     private String leftActionLabel;
     private String rightActionLabel;
     private String middleActionLabel;
-    private String photoUrl;
     private AppointmentDisplayStyle style;
 
-    private View view;
     private View headerView;
 
     public interface PracticeAppointmentDialogListener {
@@ -72,10 +69,10 @@ public class PracticeAppointmentDialog extends BasePracticeDialogFragment {
     }
 
     /**
-     * @param style          dialog style to determine buttons and colors
-     * @param appointmentDTO appointment information
+     * @param style           dialog style to determine buttons and colors
+     * @param appointmentDTO  appointment information
      * @param authPermissions auth permissions
-     * @param callback       listener
+     * @param callback        listener
      * @return instance of PracticeAppointmentDialog
      */
     public static PracticeAppointmentDialog newInstance(AppointmentDisplayStyle style,
@@ -108,13 +105,30 @@ public class PracticeAppointmentDialog extends BasePracticeDialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = super.onCreateView(inflater, container, savedInstanceState);
-
-        return view;
+        return inflater.inflate(R.layout.dialog_practice_appointment, container, false);
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        initializeViews(view);
+        GradientDrawable drawable = (GradientDrawable) headerView.getBackground();
+        drawable.setColor(ContextCompat.getColor(getContext(), headerColor));
+
+        TextView apptTime = view.findViewById(R.id.appointment_start_time);
+        apptTime.setTextColor(ContextCompat.getColor(getContext(), timeColor));
+        (findViewById(R.id.closeViewLayout)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+    }
+
+
     @SuppressWarnings("deprecation")
-    private void initializeViews() {
+    private void initializeViews(View view) {
         setupDialogStyle();
 
         headerView = view.findViewById(R.id.appointment_card_header);
@@ -132,46 +146,30 @@ public class PracticeAppointmentDialog extends BasePracticeDialogFragment {
 
         setTextViewById(R.id.appointment_start_day, appointmentDateStr);
         setTextViewById(R.id.appointment_start_time, DateUtil.getInstance().getTime12Hour());
-
         setTextViewById(R.id.appointment_doctor, appointmentPayloadDTO.getProvider().getName());
 
         PatientModel patientDTO = appointmentDTO.getPayload().getPatient();
-        photoUrl = patientDTO.getProfilePhoto();
-        if (photoUrl != null) {
-            initializeProfilePhotoView();
+        if (!StringUtil.isNullOrEmpty(patientDTO.getProfilePhoto())) {
+            initializeProfilePhotoView(view, patientDTO.getProfilePhoto());
         }
 
-        setTextViewById(R.id.appointment_patient_name, StringUtil.captialize(patientDTO.getFullName()));
-
-        String primaryPhoneNumber = patientDTO.getPrimaryPhoneNumber();
-        if (null == primaryPhoneNumber) {
-            hideViewById(R.id.appointment_patient_phone);
+        String patientNameText;
+        if (StringUtil.isNullOrEmpty(patientDTO.getPrimaryPhoneNumber())) {
+            patientNameText = StringUtil.captialize(patientDTO.getFullName());
         } else {
-            setTextViewById(R.id.appointment_patient_phone, PhoneNumberUtils.formatNumber(primaryPhoneNumber));
+            patientNameText = String.format("%s | %s", StringUtil.captialize(patientDTO.getFullName()),
+                    StringUtil.formatPhoneNumber(patientDTO.getPrimaryPhoneNumber()));
         }
-
+        setTextViewById(R.id.appointment_patient_name, patientNameText);
         setTextViewById(R.id.appointment_short_name, patientDTO.getShortName());
-
         setTextViewById(R.id.appointment_visit_type, StringUtil.captialize(appointmentPayloadDTO.getVisitType().getName()));
         setTextViewById(R.id.appointment_visit_type_label, Label.getLabel("visit_type_heading"));
 
         initializeButtons();
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        initializeViews();
-        GradientDrawable drawable = (GradientDrawable) headerView.getBackground();
-        drawable.setColor(ContextCompat.getColor(getContext(), headerColor));
-
-        TextView apptTime = (TextView) view.findViewById(R.id.appointment_start_time);
-        apptTime.setTextColor(ContextCompat.getColor(getContext(), timeColor));
-    }
-
-    private void initializeProfilePhotoView() {
-        ImageView profileImage = (ImageView) view.findViewById(R.id.appointment_patient_picture_image_view);
+    private void initializeProfilePhotoView(View view, String photoUrl) {
+        ImageView profileImage = view.findViewById(R.id.appointment_patient_picture_image_view);
 
         Picasso.with(getActivity()).load(photoUrl).transform(new CircleImageTransform())
                 .resize(58, 58).into(profileImage);
@@ -239,22 +237,29 @@ public class PracticeAppointmentDialog extends BasePracticeDialogFragment {
         });
 
 
-        switch (style){
+        switch (style) {
             case REQUESTED:
-                if(!authPermissions.canAcceptAppointmentRequest) {
+                if (!authPermissions.canAcceptAppointmentRequest) {
                     enableById(R.id.button_left_action, false);
                     enableById(R.id.button_right_action, false);
                 }
                 break;
             case PENDING:
             case CHECKED_IN:
-                if(!authPermissions.canCancelAppointment) {
+                if (!authPermissions.canCancelAppointment) {
                     enableById(R.id.button_left_action, false);
                 }
                 break;
             default:
                 enableById(R.id.button_left_action, true);
                 enableById(R.id.button_right_action, true);
+        }
+    }
+
+    protected void enableById(int id, boolean enabled) {
+        View view = findViewById(id);
+        if (view != null) {
+            view.setEnabled(enabled);
         }
     }
 
@@ -273,23 +278,16 @@ public class PracticeAppointmentDialog extends BasePracticeDialogFragment {
         this.callback = callback;
     }
 
-    @Override
-    protected String getCancelString() {
-        return null;
+    private TextView setTextViewById(int id, String text) {
+        View view = findViewById(id);
+        if (!(view instanceof TextView)) {
+            return null;
+        }
+
+        TextView textView = (TextView) view;
+        textView.setText(text);
+
+        return textView;
     }
 
-    @Override
-    protected int getCancelImageResource() {
-        return R.drawable.icn_close;
-    }
-
-    @Override
-    protected int getContentLayout() {
-        return R.layout.dialog_practice_appointment;
-    }
-
-    @Override
-    protected boolean getCancelable() {
-        return true;
-    }
 }

@@ -390,6 +390,7 @@
     <dimen name="visitTypeValueHeight">20dp</dimen>
     <dimen name="appointmentSeparatorTopMargin">20dp</dimen>
     <dimen name="appointmentDialogButtonTextSize">16sp</dimen>
+    <dimen name="practiceAppointmentDetailDialogWidth">360dp</dimen>
 
     <!--Cancel Appointment Dialog-->
     <dimen name="cancelAppointmentHorizontalMargin">20dp</dimen>

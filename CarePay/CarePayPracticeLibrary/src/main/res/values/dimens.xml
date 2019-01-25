@@ -364,6 +364,7 @@
     <dimen name="negativeContainerTopMargin">40dp</dimen>
     <dimen name="surveyFeedbackButtonWidth">300dp</dimen>
     <dimen name="checkoutMessageTextSize">40sp</dimen>
+    <dimen name="practiceAppointmentDetailDialogWidth">300dp</dimen>
 
 
     <!--Payment Options Dialog-->
