@@ -18,6 +18,7 @@
     <dimen name="dialog_width">510dp</dimen>
     <dimen name="separatorHeight">1dp</dimen>
     <dimen name="ediTextPadding">15dp</dimen>
+    <dimen name="dialog_height">672dp</dimen>
 
     <!--Language-->
     <dimen name="langSpinnerTextSize">20sp</dimen>
@@ -454,6 +455,16 @@
     <dimen name="checkInToolbarPaddingTop">10dp</dimen>
     <dimen name="checkInDotSize">10dp</dimen>
     <dimen name="checkInDotSpacing">12dp</dimen>
+    <dimen name="checkinPlanTotalHeaderTextHeight">100dp</dimen>
+    <dimen name="checkinPlanTotalHeaderTextSize">90sp</dimen>
+    <dimen name="checkinPlanParametersTextPadding">100dp</dimen>
+    <dimen name="checkinPlanParametersTextSize">16sp</dimen>
+    <dimen name="checkinPlanParametersTextPaddingTopBottom">10dp</dimen>
+    <dimen name="checkinPlanHeaderMessageMargin">10dp</dimen>
+    <dimen name="checkinPlanTitleTextSize">30sp</dimen>
+    <dimen name="checkinPlanFooterButtonHeight">48dp</dimen>
+    <dimen name="checkinPlanFooterButtonMargin">10dp</dimen>
+    <dimen name="checkinPlanMainContainerSidePadding">150dp</dimen>
 
     <!--Next Appointment Screen-->
     <dimen name="nextAppointmentTitleTextSize">30sp</dimen>
@@ -539,5 +550,9 @@
     <dimen name="paymentMethodImageWidth">36dp</dimen>
     <dimen name="paymentMethodItemNamePadding">13dp</dimen>
     <dimen name="paymentMethodItemNameTextSize">22sp</dimen>
+    <dimen name="medicationAllergyHeaderTitleTextSize">21sp</dimen>
+    <dimen name="medicationAllergyHeaderSubtitleTextSize">13sp</dimen>
+    <dimen name="medicationAllergyHeaderSubtitlePadding">80dp</dimen>
+    <dimen name="medicationAllergyButtonTextSize">22sp</dimen>
 
 </resources>
