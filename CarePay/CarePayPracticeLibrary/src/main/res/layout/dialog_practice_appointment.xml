@@ -146,7 +146,7 @@
                 android:textColor="@color/lightSlateGray"
                 android:textSize="@dimen/appointmentDialogPhoneTextSize"
                 android:textStyle="bold"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:customAssetFont="proxima_nova_extra_bold"
                 tools:text="42342342-2342342" />
 
@@ -159,7 +159,7 @@
             android:background="@drawable/grey_bottom_border"
             android:orientation="vertical"
             android:paddingStart="@dimen/visitTypeContainerHorizontalPadding"
-            android:paddingTop="@dimen/dimen_40dp"
+            android:paddingTop="@dimen/visitTypeContainerBottomPadding"
             android:paddingEnd="@dimen/visitTypeContainerHorizontalPadding"
             android:paddingBottom="@dimen/visitTypeContainerBottomPadding">
 
@@ -202,18 +202,13 @@
             android:layout_height="wrap_content"
             android:background="@drawable/patient_mode_dialog_body_bg"
             android:orientation="horizontal"
-            android:paddingStart="@dimen/dimen_5dp"
-            android:paddingTop="@dimen/dimen_20dp"
-            android:paddingEnd="@dimen/dimen_5dp"
-            android:paddingBottom="@dimen/dimen_10dp">
+            android:padding="@dimen/distributionButtonContainersPadding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/button_left_action"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/commonButtonHeight"
-                android:layout_marginStart="@dimen/dimen_5dp"
-                android:layout_marginEnd="@dimen/dimen_5dp"
-                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:layout_weight="1"
                 android:background="@drawable/button_rounded_red"
                 android:gravity="center"
@@ -227,9 +222,7 @@
                 android:id="@+id/button_middle_action"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/commonButtonHeight"
-                android:layout_marginStart="@dimen/dimen_5dp"
-                android:layout_marginEnd="@dimen/dimen_5dp"
-                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:layout_weight="1"
                 android:background="@drawable/bg_primary_overlay"
                 android:gravity="center"
@@ -243,9 +236,7 @@
                 android:id="@+id/button_right_action"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/commonButtonHeight"
-                android:layout_marginStart="@dimen/dimen_5dp"
-                android:layout_marginEnd="@dimen/dimen_5dp"
-                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:layout_weight="1"
                 android:background="@drawable/bg_yellow_overlay"
                 android:gravity="center"
