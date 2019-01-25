@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.adapters.PaymentItemsListAdapter;
 import com.carecloud.carepaylibray.customdialogs.BasePaymentDetailsFragmentDialog;
@@ -31,7 +32,8 @@ import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.StatementDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.PdfUtil;
+import com.carecloud.carepaylibray.utils.FileDownloadUtil;
+import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.text.NumberFormat;
@@ -98,7 +100,14 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
             ((TextView) view.findViewById(R.id.payment_receipt_total_value)).setText(totalAmount);
             ((TextView) view.findViewById(R.id.avTextView)).setText(StringUtil.getShortName(practiceName));
 
-            ImageView dialogCloseHeader = (ImageView) view.findViewById(R.id.dialog_close_header);
+            UserPracticeDTO practice = paymentReceiptModel.getPaymentPayload()
+                    .getUserPractice(selectedBalance.getMetadata().getPracticeId());
+            if (!StringUtil.isNullOrEmpty(practice.getPracticePhoto())) {
+                PicassoHelper.get().loadImage(getContext(), (ImageView) view.findViewById(R.id.practiceImageView),
+                        view.findViewById(R.id.avTextView), practice.getPracticePhoto());
+            }
+
+            ImageView dialogCloseHeader = view.findViewById(R.id.dialog_close_header);
             if (dialogCloseHeader != null) {
                 dialogCloseHeader.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -148,8 +157,8 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
     }
 
     private void setUpDetails(View view) {
-        RecyclerView paymentDetailsRecyclerView = ((RecyclerView) view
-                .findViewById(R.id.payment_receipt_details_view));
+        RecyclerView paymentDetailsRecyclerView = view
+                .findViewById(R.id.payment_receipt_details_view);
         paymentDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         PaymentItemsListAdapter adapter = new PaymentItemsListAdapter(getContext(),
                 paymentPayload.getDetails());
@@ -188,7 +197,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
             }
         });
         if (mustAddToExisting) {
-            TextView paymentPlanTextView = (TextView) paymentPlanContainer.findViewById(R.id.paymentPlanTextView);
+            TextView paymentPlanTextView = paymentPlanContainer.findViewById(R.id.paymentPlanTextView);
             paymentPlanTextView.setText(Label.getLabel("payment_plan_add_existing"));
         }
 
@@ -211,7 +220,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                 shadow.setAlpha(slideOffset);
             }
         });
-        Button consolidatedPaymentButton = (Button) view.findViewById(R.id.consolidatedPaymentButton);
+        Button consolidatedPaymentButton = view.findViewById(R.id.consolidatedPaymentButton);
         consolidatedPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -219,7 +228,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
             }
         });
 
-        Button cancelButton = (Button) view.findViewById(R.id.cancelButton);
+        Button cancelButton = view.findViewById(R.id.cancelButton);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -229,7 +238,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
 
         view.findViewById(R.id.payLaterContainer).setVisibility(View.GONE);
 
-        TextView totalPatientResponsibilityValue = (TextView) view.findViewById(R.id.totalPatientResponsibilityValue);
+        TextView totalPatientResponsibilityValue = view.findViewById(R.id.totalPatientResponsibilityValue);
         totalPatientResponsibilityValue.setText(currencyFormat.format(paymentPayload.getAmount()));
     }
 
@@ -239,7 +248,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                         .getPaymentsLinks().getPatientStatements().getUrl(), "statement_id",
                 String.valueOf(statementDTO.getId()));
         String fileName = String.format("%s %s", "Statement - ", selectedBalance.getMetadata().getPracticeName());
-        PdfUtil.downloadPdf(getContext(), url, fileName, ".pdf", statementDTO.getStatementDate());
+        FileDownloadUtil.downloadPdf(getContext(), url, fileName, ".pdf", statementDTO.getStatementDate());
     }
 
     @Override

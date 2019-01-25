@@ -24,7 +24,6 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsuranc
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter;
-import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -82,7 +81,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
         if (demographicDTO == null) {
 //            demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
         }
-        if (shouldContinue){
+        if (shouldContinue) {
             openNextFragment(demographicDTO);
             shouldContinue = false;
         }
@@ -345,7 +344,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
         }
     }
 
-    public void setShouldContinue(boolean shouldContinue){
+    public void setShouldContinue(boolean shouldContinue) {
         this.shouldContinue = shouldContinue;
     }
 }

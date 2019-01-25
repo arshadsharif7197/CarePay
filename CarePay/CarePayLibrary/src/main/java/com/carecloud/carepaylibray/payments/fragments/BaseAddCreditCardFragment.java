@@ -66,6 +66,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     protected TextInputLayout nameOnCardTextInputLayout;
     protected TextInputLayout creditCardNoTextInput;
     protected TextInputLayout verificationCodeTextInput;
+    protected TextInputLayout expirationDateTextInput;
     protected TextInputLayout address1TextInput;
     protected TextInputLayout address2TextInput;
     protected TextInputLayout zipCodeTextInput;
@@ -77,8 +78,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     protected CarePayTextView cardTypeTextView;
     protected CarePayTextView billingAddressTextView;
     protected EditText verificationCodeEditText;
-    protected TextView expirationDateTextView;
-    protected TextView pickDateTextView;
+    protected EditText expirationDateEditText;
     protected TextView title;
     protected CheckBox saveCardOnFileCheckBox;
     protected CheckBox setAsDefaultCheckBox;
@@ -137,9 +137,8 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View addNewCreditCardView = inflater.inflate(com.carecloud.carepaylibrary.R.layout
-                        .fragment_add_new_credit_card,
-                container, false);
+        View addNewCreditCardView = inflater.inflate(R.layout
+                .fragment_add_new_credit_card, container, false);
 
         setupTitleViews(addNewCreditCardView);
         initializeViews(addNewCreditCardView);
@@ -262,9 +261,9 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     }
 
     private void setupTitleViews(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         if (toolbar != null) {
-            title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
+            title = toolbar.findViewById(R.id.respons_toolbar_title);
             toolbar.setTitle("");
             if (getDialog() == null) {
                 toolbar.setNavigationIcon(R.drawable.icn_nav_back);
@@ -298,29 +297,29 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     }
 
     private void initializeViews(View view) {
-        creditCardNoTextInput = (TextInputLayout) view.findViewById(R.id.creditCardNoTextInputLayout);
-        creditCardNoEditText = (EditText) view.findViewById(R.id.creditCardNoEditText);
+        creditCardNoTextInput = view.findViewById(R.id.creditCardNoTextInputLayout);
+        creditCardNoEditText = view.findViewById(R.id.creditCardNoEditText);
 
-        cardTypeTextView = (CarePayTextView) view.findViewById(R.id.cardTypeTextView);
+        cardTypeTextView = view.findViewById(R.id.cardTypeTextView);
 
-        nameOnCardTextInputLayout = (TextInputLayout) view.findViewById(R.id.nameOnCardTextInputLayout);
-        nameOnCardEditText = (EditText) view.findViewById(R.id.nameOnCardEditText);
+        nameOnCardTextInputLayout = view.findViewById(R.id.nameOnCardTextInputLayout);
+        nameOnCardEditText = view.findViewById(R.id.nameOnCardEditText);
 
-        verificationCodeTextInput = (TextInputLayout) view.findViewById(R.id.verificationCodeTextInputLayout);
-        verificationCodeEditText = (EditText) view.findViewById(R.id.verificationCodeEditText);
+        verificationCodeTextInput = view.findViewById(R.id.verificationCodeTextInputLayout);
+        verificationCodeEditText = view.findViewById(R.id.verificationCodeEditText);
 
-        expirationDateTextView = (TextView) view.findViewById(R.id.expirationDateTextView);
-        pickDateTextView = (TextView) view.findViewById(R.id.pickDateTextView);
-        pickDateTextView.setOnClickListener(pickDateListener);
+        expirationDateTextInput = view.findViewById(R.id.expirationDateInputLayout);
+        expirationDateEditText = view.findViewById(R.id.expirationDateEditText);
+        expirationDateEditText.setOnClickListener(pickDateListener);
 
-        saveCardOnFileCheckBox = (CheckBox) view.findViewById(R.id.saveCardOnFileCheckBox);
+        saveCardOnFileCheckBox = view.findViewById(R.id.saveCardOnFileCheckBox);
         saveCardOnFileCheckBox.setChecked(false);
         saveCardOnFileCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 setAsDefaultCheckBox.setEnabled(isChecked);
                 setAsDefaultCheckBox.setChecked(false);
-                if(isChecked && paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()){
+                if (isChecked && paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
                     setAsDefaultCheckBox.setChecked(true);
                     setAsDefaultCheckBox.setEnabled(false);
                 }
@@ -328,28 +327,28 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
             }
         });
 
-        setAsDefaultCheckBox = (CheckBox) view.findViewById(R.id.setAsDefaultCheckBox);
+        setAsDefaultCheckBox = view.findViewById(R.id.setAsDefaultCheckBox);
         setAsDefaultCheckBox.setEnabled(false);
         setAsDefaultCheckBox.setChecked(false);
 
-        billingAddressTextView = (CarePayTextView) view.findViewById(R.id.billingAddressTextView);
-        useProfileAddressCheckBox = (CheckBox) view.findViewById(R.id.useProfileAddressCheckBox);
+        billingAddressTextView = view.findViewById(R.id.billingAddressTextView);
+        useProfileAddressCheckBox = view.findViewById(R.id.useProfileAddressCheckBox);
         useProfileAddressCheckBox.setOnCheckedChangeListener(useProfileAddressListener);
 
-        address1TextInput = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
-        address1EditText = (EditText) view.findViewById(R.id.addressEditTextId);
+        address1TextInput = view.findViewById(R.id.address1TextInputLayout);
+        address1EditText = view.findViewById(R.id.addressEditTextId);
 
-        address2TextInput = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
-        address2EditText = (EditText) view.findViewById(R.id.addressEditText2Id);
+        address2TextInput = view.findViewById(R.id.address2TextInputLayout);
+        address2EditText = view.findViewById(R.id.addressEditText2Id);
 
-        zipCodeTextInput = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
-        zipCodeEditText = (EditText) view.findViewById(R.id.zipCodeId);
+        zipCodeTextInput = view.findViewById(R.id.zipCodeTextInputLayout);
+        zipCodeEditText = view.findViewById(R.id.zipCodeId);
 
-        cityTextInput = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
-        cityEditText = (EditText) view.findViewById(R.id.cityId);
+        cityTextInput = view.findViewById(R.id.cityTextInputLayout);
+        cityEditText = view.findViewById(R.id.cityId);
 
-        stateTextInput = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
-        stateAutoCompleteTextView = (AutoCompleteTextView) view
+        stateTextInput = view.findViewById(R.id.stateTextInputLayout);
+        stateAutoCompleteTextView = view
                 .findViewById(R.id.addNewCredidCardStateAutoCompleteTextView);
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
@@ -365,7 +364,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
             }
         });
 
-        nextButton = (Button) view.findViewById(R.id.nextButton);
+        nextButton = view.findViewById(R.id.nextButton);
         nextButton.setOnClickListener(nextButtonListener);
 
         setChangeFocusListeners();
@@ -407,7 +406,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         creditCardsPayloadDTO.setCardNumber(getLastFour());
         creditCardsPayloadDTO.setNameOnCard(nameOnCardEditText.getText().toString().trim());
         creditCardsPayloadDTO.setCvv(verificationCodeEditText.getText().toString().trim());
-        String expiryDate = pickDateTextView.getText().toString();
+        String expiryDate = expirationDateEditText.getText().toString();
         expiryDate = expiryDate.substring(0, 2) + expiryDate.substring(expiryDate.length() - 2);
         creditCardsPayloadDTO.setExpireDt(expiryDate);
         creditCardsPayloadDTO.setCardType(CreditCardUtil.getCreditCardType(getCardNumber()));
@@ -499,7 +498,10 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
                 .getHintFocusChangeListener(creditCardNoTextInput, null));
         nameOnCardEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(nameOnCardTextInputLayout, null));
-        verificationCodeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(verificationCodeTextInput, null));
+        expirationDateEditText.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(expirationDateTextInput, null));
+        verificationCodeEditText.setOnFocusChangeListener(SystemUtil
+                .getHintFocusChangeListener(verificationCodeTextInput, null));
         address1EditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(address1TextInput, null));
         address2EditText.setOnFocusChangeListener(SystemUtil
@@ -544,7 +546,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
             public boolean onEditorAction(TextView textView, int action, KeyEvent keyEvent) {
                 if (action == EditorInfo.IME_ACTION_DONE) {
                     verificationCodeEditText.clearFocus();
-                    pickDateTextView.requestFocus();
+                    expirationDateEditText.requestFocus();
                     SystemUtil.hideSoftKeyboard(getActivity());
                     return true;
                 }
@@ -596,14 +598,16 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
 
     @Override
     public void onDateSet(int year, int monthOfYear) {
-        pickDateTextView.setText(DateUtil.getInstance().formatMonthYear(year, monthOfYear));
+        expirationDateEditText.setText(DateUtil.getInstance().formatMonthYear(year, monthOfYear));
+        expirationDateEditText.getOnFocusChangeListener().onFocusChange(expirationDateEditText,
+                !StringUtil.isNullOrEmpty(expirationDateEditText.getText().toString().trim()));
         validateCreditCardDetails();
     }
 
     private void displaySimpleDatePickerDialogFragment() {
         SimpleDatePickerDialogFragment datePickerDialogFragment;
-        if (pickDateTextView.getText().toString().contains("/")) {
-            String[] selectedDate = pickDateTextView.getText().toString().split("/");
+        if (expirationDateEditText.getText().toString().contains("/")) {
+            String[] selectedDate = expirationDateEditText.getText().toString().split("/");
             int month = Integer.parseInt(selectedDate[0]);
             int year = Integer.parseInt(selectedDate[1]);
             datePickerDialogFragment = SimpleDatePickerDialogFragment.getInstance(year, month - 1);
@@ -645,7 +649,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
             return false;
         }
 
-        if (pickDateTextView.getText().toString().contains("/")) {
+        if (expirationDateEditText.getText().toString().contains("/")) {
             nextButton.setEnabled(true);
             nextButton.setClickable(true);
             return true;

@@ -9,28 +9,37 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.payment.androidpay.models.PayeezyAndroidPayResponse;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
-import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
 import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentMetadata;
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
+import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSyntaxException;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lmenendez on 1/23/18
  */
 
-public class PaymentPlanPaymentMethodFragment extends PaymentMethodFragment {
+public class PaymentPlanPaymentMethodFragment extends PatientPaymentMethodFragment {
     public static final String KEY_DATE = "date";
 
     private PaymentPlanCreateInterface callback;
@@ -120,6 +129,13 @@ public class PaymentPlanPaymentMethodFragment extends PaymentMethodFragment {
             DateUtil.getInstance().setDateRaw(dateString);
             paymentDate = DateUtil.getInstance().getDate();
         }
+        if(paymentsModel.getPaymentPayload().getPaymentPostModel() != null) {
+            amountToMakePayment = paymentsModel.getPaymentPayload().getPaymentPostModel().getAmount();
+        }
+        shouldInitAndroidPay = callback instanceof OneTimePaymentInterface &&
+                paymentPlanDTO != null && paymentPlanDTO.getMetadata().getPaymentPlanId() != null &&
+                (paymentDate == null || DateUtil.isToday(paymentDate)
+                && amountToMakePayment > 0D);
     }
 
     @Override
@@ -166,6 +182,45 @@ public class PaymentPlanPaymentMethodFragment extends PaymentMethodFragment {
         UserPracticeDTO userPracticeDTO = callback.getPracticeInfo(paymentsModel);
         return paymentsModel.getPaymentPayload().getPaymentSetting(userPracticeDTO.getPracticeId())
                 .getPayload().getPaymentPlans().getPaymentMethods();
+    }
+
+    protected void processPayment(JsonElement rawResponse, IntegratedPaymentPostModel postModel) {
+        try {
+            Gson gson = new Gson();
+            PayeezyAndroidPayResponse androidPayResponse = gson.fromJson(rawResponse, PayeezyAndroidPayResponse.class);
+
+            PapiPaymentMethod papiPaymentMethod = new PapiPaymentMethod();
+            papiPaymentMethod.setPaymentMethodType(PapiPaymentMethod.PAYMENT_METHOD_NEW_CARD);
+            papiPaymentMethod.setCardData(getCreditCardModel(androidPayResponse));
+
+            postModel.setTransactionResponse(rawResponse.getAsJsonObject());
+            postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_ANDROID);
+            postModel.setPapiPaymentMethod(papiPaymentMethod);
+
+            IntegratedPaymentMetadata postModelMetadata = postModel.getMetadata();
+            postModelMetadata.setAppointmentId(callback.getAppointmentId());
+
+            makePlanPayment(postModel, rawResponse);
+        } catch (JsonSyntaxException jsx) {
+            logPaymentFail("Unable to parse Payment", true, rawResponse, jsx.getMessage());
+        }
+    }
+
+    private void makePlanPayment(IntegratedPaymentPostModel postModel, JsonElement rawResponse) {
+        Map<String, String> queries = new HashMap<>();
+        queries.put("practice_mgmt", paymentPlanDTO.getMetadata().getPracticeMgmt());
+        queries.put("practice_id", paymentPlanDTO.getMetadata().getPracticeId());
+        queries.put("patient_id", paymentPlanDTO.getMetadata().getPatientId());
+        queries.put("payment_plan_id", paymentPlanDTO.getMetadata().getPaymentPlanId());
+
+        Map<String, String> header = new HashMap<>();
+        header.put("transition", "true");
+
+        Gson gson = new Gson();
+        String paymentModelJson = gson.toJson(postModel);
+        TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePlanPayment();
+
+        getWorkflowServiceHelper().execute(transitionDTO, getMakePaymentCallback(rawResponse), paymentModelJson, queries, header);
     }
 
 }

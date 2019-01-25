@@ -45,7 +45,6 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-//        demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
         if (icicle != null) {
             String demographicDtoString = icicle.getString(KEY_DTO);
             if (demographicDtoString != null) {
@@ -123,10 +122,22 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
     private DemographicIdDocPayloadDTO getPostModel() {
         setupImageBase64();
         DemographicIdDocPayloadDTO docPayloadDTO = new DemographicIdDocPayloadDTO();
-        if((hasFrontImage && base64FrontImage != null) ||
-                (hasBackImage && base64BackImage != null)){
+        if ((hasFrontImage && base64FrontImage != null) ||
+                (hasBackImage && base64BackImage != null)) {
             //Log new Identity Doc
-            MixPanelUtil.logEvent(getString(R.string.event_add_identity_doc), getString(R.string.param_is_checkin), true);
+            String[] params = {getString(R.string.param_is_checkin),
+                    getString(R.string.param_practice_id),
+                    getString(R.string.param_provider_id),
+                    getString(R.string.param_location_id),
+                    getString(R.string.param_appointment_id)
+            };
+            Object[] values = {true,
+                    checkinFlowCallback.getAppointment().getMetadata().getPracticeId(),
+                    checkinFlowCallback.getAppointment().getPayload().getProvider().getGuid(),
+                    checkinFlowCallback.getAppointment().getPayload().getLocation().getGuid(),
+                    checkinFlowCallback.getAppointment().getMetadata().getAppointmentId()
+            };
+            MixPanelUtil.logEvent(getString(R.string.event_add_identity_doc), params, values);
         }
 
         if (hasFrontImage && base64FrontImage != null) {

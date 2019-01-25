@@ -4,7 +4,7 @@
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="64dp">
+    android:layout_height="@dimen/adHocFormsListItemHeight">
 
     <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
         android:id="@+id/formCheckBox"
@@ -24,6 +24,7 @@
         android:layout_marginEnd="@dimen/dimen_5dp"
         android:layout_toStartOf="@id/formCheckBox"
         android:textColor="@color/lightning_yellow"
+        android:textSize="@dimen/adHocFormsListItemDateTextSize"
         app:customAssetFont="proxima_nova_semi_bold"
         breeze:textKey="adhoc_forms_never_filled_label"
         tools:text="Never filled" />
@@ -39,13 +40,13 @@
         android:gravity="start"
         android:maxLines="3"
         android:textColor="@color/slateGray"
-        android:textSize="18sp"
+        android:textSize="@dimen/adHocFormsListItemNameTextSize"
         app:customAssetFont="gotham_rounded_medium"
         tools:text="HIPAA waiver" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_1dp"
+        android:layout_height="@dimen/separatorHeight"
         android:layout_alignParentBottom="true"
         android:background="@color/light_gray" />
 

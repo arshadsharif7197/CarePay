@@ -25,9 +25,11 @@ import com.carecloud.carepay.patient.base.BackPressedFragmentInterface;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.survey.model.SocialNetworkLink;
@@ -35,6 +37,7 @@ import com.carecloud.carepaylibray.survey.model.SurveyDTO;
 import com.carecloud.carepaylibray.survey.model.SurveyModel;
 import com.carecloud.carepaylibray.survey.model.SurveyQuestionDTO;
 import com.carecloud.carepaylibray.survey.model.SurveySettings;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -55,6 +58,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
     private EditText feedbackEditText;
     private Button submitButton;
     private boolean comesFromNotification;
+    private float average;
 
     public static SurveyResultFragment newInstance(String patientId, boolean comesFromNotifications) {
         Bundle args = new Bundle();
@@ -81,7 +85,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         comesFromNotification = getArguments().getBoolean(CarePayConstants.NOTIFICATIONS_FLOW);
         surveyDto = (SurveyDTO) callback.getDto();
         SurveyModel surveyModel = surveyDto.getPayload().getSurvey();
-        float average = getRateAverage(surveyModel);
+        average = getRateAverage(surveyModel);
         if (!surveyModel.isAlreadyFilled()) {
             if (average >= surveyDto.getPayload().getSurveySettings().getSatisfiedRate()
                     || surveyModel.isZeroAnswers()) {
@@ -114,12 +118,6 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
             } else {
                 view.findViewById(R.id.socialNetworksLayout).setVisibility(View.VISIBLE);
                 subtitleTextView.setText(Label.getLabel("surveys_click_spread_word"));
-                noThanksButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        finishFlow();
-                    }
-                });
             }
         }
     }
@@ -132,10 +130,6 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
             bundle.putBoolean(CarePayConstants.REFRESH, true);
             PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, bundle);
         }
-    }
-
-    private void finishFlow() {
-        finishFlow(null);
     }
 
     private void showNegativeFeedbackLayout(View view, final SurveyModel surveyModel) {
@@ -202,22 +196,6 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
             subtitleTextView.setVisibility(View.VISIBLE);
         }
         return goBackButton;
-    }
-
-    protected void displaySocialNetworksLinks(View view, SurveyModel survey, WorkflowDTO workflowDTO) {
-        noThanksButton.setVisibility(View.VISIBLE);
-        SurveySettings settings = surveyDto.getPayload().getSurveySettings();
-        if (settings.getNetworkLinks().isEnable()
-                && !settings.getNetworkLinks().getLinks().isEmpty()) {
-            subtitleTextView.setVisibility(View.VISIBLE);
-            createSocialLinkViews(view, settings);
-        } else {
-            view.findViewById(R.id.fakeView).setVisibility(View.VISIBLE);
-            Button goBackButton = manageGoBackButton(view, survey, workflowDTO);
-            subtitleTextView.setVisibility(View.GONE);
-            goBackButton.setText(Label.getLabel("survey.successScreen.button.title.back"));
-            noThanksButton.setVisibility(View.GONE);
-        }
     }
 
     private void showOkButton(final WorkflowDTO workflowDTO) {
@@ -353,13 +331,15 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
+                logSurveyCompleted();
                 if (survey.isZeroAnswers()) {
                     manageGoBackButton(getView(), survey, workflowDTO);
                 } else if (!submitFeedbackButtonPressed) {
                     finishFlow(workflowDTO);
                 } else if (showOkButton) {
                     showOkButton(workflowDTO);
-                } else if (comesFromNotification) {
+                } else if (comesFromNotification
+                        || getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT) {
                     displaySocialNetworksLinks(getView(), survey, workflowDTO);
                 } else {
                     finishCheckOutFlow(workflowDTO);
@@ -374,6 +354,28 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
                 showOkButton(null);
             }
         }, jsonResponse, query, header);
+    }
+
+    protected void displaySocialNetworksLinks(View view, SurveyModel survey, final WorkflowDTO workflowDTO) {
+        noThanksButton.setVisibility(View.VISIBLE);
+        SurveySettings settings = surveyDto.getPayload().getSurveySettings();
+        if (settings.getNetworkLinks().isEnable()
+                && !settings.getNetworkLinks().getLinks().isEmpty()) {
+            subtitleTextView.setVisibility(View.VISIBLE);
+            createSocialLinkViews(view, settings);
+            noThanksButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finishFlow(workflowDTO);
+                }
+            });
+        } else {
+            view.findViewById(R.id.fakeView).setVisibility(View.VISIBLE);
+            Button goBackButton = manageGoBackButton(view, survey, workflowDTO);
+            subtitleTextView.setVisibility(View.GONE);
+            goBackButton.setText(Label.getLabel("survey.successScreen.button.title.back"));
+            noThanksButton.setVisibility(View.GONE);
+        }
     }
 
     private void finishCheckOutFlow(final WorkflowDTO workflowDTO) {
@@ -424,4 +426,34 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         callback = null;
         super.onDetach();
     }
+
+    private void logSurveyCompleted() {
+        AppointmentDTO appointmentDTO = surveyDto.getPayload().getSurvey().getAppointment();
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_provider_id),
+                getString(R.string.param_location_id),
+                getString(R.string.param_is_guest),
+                getString(R.string.param_survey_rating),
+                getString(R.string.param_survey_access)
+        };
+        Object[] values = {surveyDto.getPayload().getSurvey().getMetadata().getPracticeId(),
+                appointmentDTO.getPayload().getProvider().getGuid(),
+                appointmentDTO.getPayload().getLocation().getGuid(),
+                false,
+                average,
+                comesFromNotification ?
+                        getString(R.string.survey_access_mode_standard) :
+                        getString(R.string.survey_access_mode_checkout)
+        };
+        MixPanelUtil.logEvent(getString(R.string.event_survey_completed), params, values);
+        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_surveys_completed), 1);
+        if (average >= surveyDto.getPayload().getSurveySettings().getSatisfiedRate()
+                || surveyDto.getPayload().getSurvey().isZeroAnswers()) {
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_satisfied_surveys), 1);
+        } else {
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_unsatisfied_surveys), 1);
+        }
+        MixPanelUtil.endTimer(getString(R.string.timer_survey));
+    }
+
 }

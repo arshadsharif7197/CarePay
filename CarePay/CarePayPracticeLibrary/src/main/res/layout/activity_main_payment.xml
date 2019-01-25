@@ -36,15 +36,15 @@
         android:textSize="@dimen/text_size_36sp"
         app:customAssetFont="gotham_rounded_medium"
         breeze:textKey="no_payment_title"
-        tools:text="Select a pending payment"/>
+        tools:text="Select a pending payment" />
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title"
-        android:layout_marginTop="@dimen/dimen_20dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dimen_20dp"
         android:textColor="@color/confirm_pin_sub_title"
         android:textSize="@dimen/text_size_22sp"
         app:customAssetFont="proxima_nova_regular"
@@ -65,10 +65,10 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/appointmentProgressBar"
         android:layout_above="@+id/btnHome"
-        android:paddingTop="@dimen/dimen_10dp"
-        android:paddingBottom="@dimen/dimen_10dp">
+        android:layout_below="@+id/appointmentProgressBar"
+        android:paddingBottom="@dimen/dimen_10dp"
+        android:paddingTop="@dimen/dimen_10dp">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/appointmentsRecyclerView"

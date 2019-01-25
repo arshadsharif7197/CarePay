@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.payments.models;
 
+import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.google.gson.annotations.SerializedName;
 
@@ -14,6 +15,10 @@ public class IntegratedPatientPaymentPayload {
 
     @SerializedName("amount")
     private double amount;
+
+    @SerializedName("execution")
+    @IntegratedPaymentPostModel.ExecutionType
+    private String execution;
 
     @SerializedName("line_items")
     private List<IntegratedPatientPaymentLineItem> lineItems = new ArrayList<>();
@@ -107,6 +112,14 @@ public class IntegratedPatientPaymentPayload {
             }
         }
         return total;
+    }
+
+    public @IntegratedPaymentPostModel.ExecutionType String getExecution() {
+        return execution;
+    }
+
+    public void setExecution(@IntegratedPaymentPostModel.ExecutionType String execution) {
+        this.execution = execution;
     }
 
     public class ProcessingError {

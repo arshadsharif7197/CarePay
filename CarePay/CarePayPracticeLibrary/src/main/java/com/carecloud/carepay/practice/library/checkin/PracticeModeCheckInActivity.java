@@ -1041,13 +1041,17 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         });
         displayDialogFragment(fragment, false);
 
-        String[] params = {getString(com.carecloud.carepaylibrary.R.string.param_practice_id),
-                getString(com.carecloud.carepaylibrary.R.string.param_payment_plan_id),
-                getString(com.carecloud.carepaylibrary.R.string.param_payment_plan_amount)};
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_payment_plan_id),
+                getString(R.string.param_payment_plan_amount),
+                getString(R.string.param_patient_id)
+        };
         Object[] values = {
                 paymentPlanDTO.getMetadata().getPracticeId(),
                 paymentPlanDTO.getMetadata().getPaymentPlanId(),
-                paymentPlanDTO.getPayload().getAmount()};
+                paymentPlanDTO.getPayload().getAmount(),
+                paymentPlanDTO.getMetadata().getPatientId()
+        };
         MixPanelUtil.logEvent(getString(R.string.event_paymentplan_onetime_payment), params, values);
     }
 
@@ -1149,6 +1153,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
                 DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
         showSuccessToast(message);
 
+        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payments_scheduled), 1);
     }
 
     @Override
@@ -1161,6 +1166,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
                         .setDateRaw(scheduledPaymentPayload.getPaymentDate())
                         .toStringWithFormatMmSlashDdSlashYyyy()));
         completePaymentProcess(workflowDTO);
+
+        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_scheduled_payments_deleted), 1);
     }
 
     @Override
@@ -1182,6 +1189,10 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
             PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
                     .newInstance(workflowDTO, isOneTimePayment);
             displayDialogFragment(confirmationFragment, false);
+
+            if(isOneTimePayment){
+                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_one_time_payments_completed), 1);
+            }
         }
     }
 
@@ -1343,8 +1354,13 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     }
 
     @Override
-    public void onPaymentPlanCanceled(WorkflowDTO workflowDTO) {
-        showSuccessToast(Label.getLabel("payment.cancelPaymentPlan.success.banner.text"));
+    public void onPaymentPlanCanceled(WorkflowDTO workflowDTO, boolean isDeleted) {
+        String message = Label.getLabel("payment.cancelPaymentPlan.success.banner.text");
+        if (isDeleted) {
+            message = Label.getLabel("payment.deletePaymentPlan.success.banner.text");
+        }
+        showSuccessToast(Label.getLabel(message));
+
         getSupportFragmentManager().popBackStackImmediate(PaymentDistributionFragment.class.getName(),
                 FragmentManager.POP_BACK_STACK_INCLUSIVE);
         Map<String, String> queryMap = new HashMap<>();
@@ -1378,12 +1394,15 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     }
 
     @Override
-    public void showCancelPaymentPlanConfirmDialog(ConfirmationCallback confirmationCallback) {
+    public void showCancelPaymentPlanConfirmDialog(ConfirmationCallback confirmationCallback, boolean isDeletion) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment
-                .newInstance(Label.getLabel("payment.cancelPaymentPlan.confirmDialog.title.cancelPaymentPlanTitle"),
-                        Label.getLabel("payment.cancelPaymentPlan.confirmDialog.message.cancelPaymentPlanMessage"));
-        confirmDialogFragment.setNegativeAction(true);
+        String title = Label.getLabel("payment.cancelPaymentPlan.confirmation.popup.title");
+        String message = Label.getLabel("payment.cancelPaymentPlan.confirmation.popup.message");
+        if (isDeletion) {
+            title = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.title");
+            message = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.message");
+        }
+        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(title, message);
         confirmDialogFragment.setCallback(confirmationCallback);
         String tag = confirmDialogFragment.getClass().getName();
         confirmDialogFragment.show(ft, tag);

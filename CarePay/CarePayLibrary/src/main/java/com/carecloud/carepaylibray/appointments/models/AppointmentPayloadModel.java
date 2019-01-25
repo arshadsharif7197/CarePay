@@ -3,7 +3,6 @@ package com.carecloud.carepaylibray.appointments.models;
 
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.adhoc.AdhocFormsPatientModeInfo;
-import com.carecloud.carepaylibray.base.models.Paging;
 import com.carecloud.carepaylibray.base.models.PagingDto;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;

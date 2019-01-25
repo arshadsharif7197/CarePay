@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
@@ -31,22 +32,23 @@
                 android:nextFocusForward="@+id/reviewgrdemoPhoneNumberEdit"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:hintKey="demographics_review_date_of_birth"
-                tools:hint="Date of Birth" />
+                tools:hint="Date of Birth"/>
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+        <include
+            android:id="@+id/dobRequired"
+            layout="@layout/layout_required_text_view"/>
 
     </FrameLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/phoneNumberContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/reviewdemogrPhoneNumberTextInput"
             style="@style/SigninSignupTextInputStyle"
-            android:layout_width="0dp"
-            android:layout_weight="1"
             app:customAssetFont="proxima_nova_regular"
             app:hintTextAppearance="@style/FloatingLabelStyle">
 
@@ -59,14 +61,23 @@
                 android:maxLength="12"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:hintKey="demographics_phone_number"
-                tools:hint="Phone Number" />
+                tools:hint="Phone Number"/>
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+        <include
+            android:id="@+id/phoneNumberRequired"
+            layout="@layout/layout_required_text_view"/>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/phoneNumberTypeContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/phoneTypeInputLayout"
             style="@style/SigninSignupTextInputStyle"
-            android:layout_width="0dp"
-            android:layout_weight="1"
             android:tag="@string/tag_demographics_error_color"
             android:textColorHint="@color/demographics_color_error"
             app:customAssetFont="proxima_nova_semi_bold"
@@ -84,9 +95,14 @@
                 app:customAssetFont="proxima_nova_regular"
                 app:hintTextAppearance="@style/FloatingLabelStyle"
                 breeze:hintKey="phone_type_label"
-                tools:hint="Phone Type" />
+                tools:hint="Phone Type"/>
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
-    </LinearLayout>
+
+        <include
+            android:id="@+id/phoneNumberTypeRequired"
+            layout="@layout/layout_required_text_view"/>
+
+    </FrameLayout>
 
 </LinearLayout>

@@ -121,6 +121,13 @@ public class WorkflowServiceHelper {
             if(customHeaders.containsKey("Authorization")){
                 headers.remove("Authorization");
             }
+            //this can cause a delegate issue in patient app as of 12.28.18
+            // TODO remove this once delegeate is reimplemented
+            if(applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PATIENT &&
+                    customHeaders.containsKey("username_patient")){
+                customHeaders.remove("username_patient");
+            }
+
             customHeaders.putAll(headers);
 
             return customHeaders;
@@ -612,7 +619,7 @@ public class WorkflowServiceHelper {
 
 
     private static @NonNull String capitalizeMessage(String message) {
-        if(message == null){
+        if(message == null || message.length() == 0){
             return "";
         }
         return message.substring(0,1).toUpperCase() + message.substring(1);

@@ -21,6 +21,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.text.NumberFormat;
@@ -94,8 +95,17 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
         TextView practiceInitials = view.findViewById(R.id.avTextView);
         practiceInitials.setText(StringUtil.getShortName(practiceName));
 
+        UserPracticeDTO practice = paymentReceiptModel.getPaymentPayload()
+                .getUserPractice(paymentPlanDTO.getMetadata().getPracticeId());
+        if(!StringUtil.isNullOrEmpty(practice.getPracticePhoto())){
+            PicassoHelper.get().loadImage(getContext(), (ImageView) view.findViewById(R.id.practiceImageView),
+                    practiceInitials, practice.getPracticePhoto());
+        }
+
         TextView planName = view.findViewById(R.id.paymentPlanNameTextView);
         planName.setText(paymentPlanDTO.getPayload().getDescription());
+
+
 
         String paymentsMadeOf = Label.getLabel("payment_plan_payments_made_value");
         int paymentCount = planPayload.getPaymentPlanDetails().getFilteredHistory().size();

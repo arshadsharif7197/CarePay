@@ -123,6 +123,7 @@ public class RetailActivity extends MenuPatientActivity implements RetailPatient
     public void onStop() {
         if (retailModel != null && !retailModel.getPayload().getRetailPracticeList().isEmpty()) {
             MixPanelUtil.logEvent(getString(R.string.event_retail_ended));
+            MixPanelUtil.endTimer(getString(R.string.timer_shopping));
         }
         super.onStop();
     }
@@ -271,7 +272,7 @@ public class RetailActivity extends MenuPatientActivity implements RetailPatient
 
     @Override
     public void showPaymentPendingConfirmation(PaymentsModel paymentsModel) {
-        new CustomMessageToast(this, Label.getLabel("payments_external_pending"),
+        new CustomMessageToast(this, Label.getLabel("payment_queued_patient"),
                 CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
     }
 

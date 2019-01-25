@@ -6,13 +6,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -21,7 +25,6 @@ public class ProvidersListAdapter extends RecyclerView.Adapter<ProvidersListAdap
     private Context context;
     private OnProviderListItemClickListener listener;
     private List<AppointmentResourcesDTO> providersArrayList;
-    private AppointmentsResultModel appointmentsResultModel;
 
     /**
      * This will create a list of appointments
@@ -37,7 +40,6 @@ public class ProvidersListAdapter extends RecyclerView.Adapter<ProvidersListAdap
         this.context = context;
         this.listener = listener;
         this.providersArrayList = providersArrayList;
-        this.appointmentsResultModel = appointmentInfo;
     }
 
     @Override
@@ -62,6 +64,27 @@ public class ProvidersListAdapter extends RecyclerView.Adapter<ProvidersListAdap
                 listener.onProviderListItemClickListener(holder.getAdapterPosition());
             }
         });
+
+        loadImage(holder.providerPicImageView, resource.getResource().getProvider().getPhoto());
+    }
+
+    protected void loadImage(final ImageView imageView, String url) {
+        int size = context.getResources().getDimensionPixelSize(R.dimen.provider_card_avatar_size);
+        Picasso.with(context).load(url)
+                .resize(size, size)
+                .centerCrop()
+                .transform(new CircleImageTransform())
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        imageView.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onError() {
+                        imageView.setVisibility(View.GONE);
+                    }
+                });
     }
 
     @Override
@@ -77,17 +100,19 @@ public class ProvidersListAdapter extends RecyclerView.Adapter<ProvidersListAdap
         private CarePayTextView placeName;
         private CarePayTextView address;
         private Button scheduleAppointment;
+        private ImageView providerPicImageView;
 
         ProvidersListViewHolder(View itemView) {
             super(itemView);
 
-            shortName = (CarePayTextView) itemView.findViewById(R.id.provider_short_name);
-            doctorName = (CarePayTextView) itemView.findViewById(R.id.provider_doctor_name);
-            doctorType = (CarePayTextView) itemView.findViewById(R.id.provider_doctor_speciality);
-            placeName = (CarePayTextView) itemView.findViewById(R.id.provider_place_name);
-            address = (CarePayTextView) itemView.findViewById(R.id.provider_place_address);
+            shortName = itemView.findViewById(R.id.provider_short_name);
+            doctorName = itemView.findViewById(R.id.provider_doctor_name);
+            doctorType = itemView.findViewById(R.id.provider_doctor_speciality);
+            placeName = itemView.findViewById(R.id.provider_place_name);
+            address = itemView.findViewById(R.id.provider_place_address);
 
-            scheduleAppointment = (Button) itemView.findViewById(R.id.provider_schedule_appointment);
+            scheduleAppointment = itemView.findViewById(R.id.provider_schedule_appointment);
+            providerPicImageView = itemView.findViewById(R.id.providerPicImageView);
         }
     }
 

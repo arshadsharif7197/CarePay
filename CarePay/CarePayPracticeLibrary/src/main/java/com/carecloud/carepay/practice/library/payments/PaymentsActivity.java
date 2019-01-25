@@ -178,8 +178,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         }
 
         findViewById(R.id.practice_payment_find_patient).setOnClickListener(onFindPatientClick());
-        findViewById(R.id.practice_payment_filter_label).setOnClickListener(onFilterIconClick());
-        findViewById(R.id.practice_payment_go_back).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.filterTextView).setOnClickListener(onFilterIconClick());
+        findViewById(R.id.goBackTextview).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();
@@ -308,11 +308,10 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
             @Override
             public void onClick(View view) {
-                TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getFindPatient();
-
+                TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata()
+                        .getPaymentsLinks().getFindPatient();
                 FindPatientDialog findPatientDialog = new FindPatientDialog(PaymentsActivity.this,
-                        transitionDTO,
-                        Label.getLabel("practice_payments_filter_find_patient_by_name"));
+                        transitionDTO, Label.getLabel("practice_payments_filter_find_patient_by_name"));
                 setFindPatientOnItemClickedListener(findPatientDialog);
                 findPatientDialog.show();
             }
@@ -531,7 +530,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 getString(R.string.param_balance_amount),
                 getString(R.string.param_is_add_existing)};
         Object[] values = {selectedBalance.getMetadata().getPracticeId(),
-                selectedBalance.getPayload().get(0).getAmount(),
+                selectedBalance.getPayload().get(0).getAmount() - selectedBalance.getPayload().get(0).getPaymentPlansAmount(),
                 false};
 
         MixPanelUtil.logEvent(getString(R.string.event_paymentplan_started), params, values);
@@ -884,13 +883,17 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         });
         displayDialogFragment(fragment, false);
 
-        String[] params = {getString(com.carecloud.carepaylibrary.R.string.param_practice_id),
-                getString(com.carecloud.carepaylibrary.R.string.param_payment_plan_id),
-                getString(com.carecloud.carepaylibrary.R.string.param_payment_plan_amount)};
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_payment_plan_id),
+                getString(R.string.param_payment_plan_payment),
+                getString(R.string.param_patient_id)
+        };
         Object[] values = {
                 paymentPlanDTO.getMetadata().getPracticeId(),
                 paymentPlanDTO.getMetadata().getPaymentPlanId(),
-                paymentPlanDTO.getPayload().getAmount()};
+                paymentsModel.getPaymentPayload().getPaymentPostModel().getAmount(),
+                paymentPlanDTO.getMetadata().getPatientId()
+        };
         MixPanelUtil.logEvent(getString(R.string.event_paymentplan_onetime_payment), params, values);
     }
 
@@ -993,6 +996,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
         showSuccessToast(message);
 
+        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payments_scheduled), 1);
     }
 
     @Override
@@ -1005,6 +1009,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                         .setDateRaw(scheduledPaymentPayload.getPaymentDate())
                         .toStringWithFormatMmSlashDdSlashYyyy()));
         completePaymentProcess(workflowDTO);
+
+        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_scheduled_payments_deleted), 1);
     }
 
     @Override
@@ -1028,6 +1034,10 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
                     .newInstance(workflowDTO, isOneTimePayment);
             displayDialogFragment(confirmationFragment, false);
+
+            if(isOneTimePayment){
+                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_one_time_payments_completed), 1);
+            }
         }
     }
 
@@ -1195,20 +1205,27 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void onPaymentPlanCanceled(WorkflowDTO workflowDTO) {
-        showSuccessToast(Label.getLabel("payment.cancelPaymentPlan.success.banner.text"));
+    public void onPaymentPlanCanceled(WorkflowDTO workflowDTO, boolean isDeleted) {
+        String message = Label.getLabel("payment.cancelPaymentPlan.success.banner.text");
+        if (isDeleted) {
+            message = Label.getLabel("payment.deletePaymentPlan.success.banner.text");
+        }
+        showSuccessToast(message);
         getSupportFragmentManager().popBackStackImmediate(PaymentDistributionFragment.class.getName(),
                 FragmentManager.POP_BACK_STACK_INCLUSIVE);
         getPatientBalanceDetails(patientId);
     }
 
     @Override
-    public void showCancelPaymentPlanConfirmDialog(ConfirmationCallback confirmationCallback) {
+    public void showCancelPaymentPlanConfirmDialog(ConfirmationCallback confirmationCallback, boolean isDeleted) {
+        String title = Label.getLabel("payment.cancelPaymentPlan.confirmation.popup.title");
+        String message = Label.getLabel("payment.cancelPaymentPlan.confirmation.popup.message");
+        if (isDeleted) {
+            title = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.title");
+            message = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.message");
+        }
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment
-                .newInstance(Label.getLabel("payment.cancelPaymentPlan.confirmDialog.title.cancelPaymentPlanTitle"),
-                        Label.getLabel("payment.cancelPaymentPlan.confirmDialog.message.cancelPaymentPlanMessage"));
-        confirmDialogFragment.setNegativeAction(true);
+        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(title, message);
         confirmDialogFragment.setCallback(confirmationCallback);
         String tag = confirmDialogFragment.getClass().getName();
         confirmDialogFragment.show(ft, tag);
@@ -1227,6 +1244,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void onAddBalanceToExistingPlan(final PaymentsModel paymentsModel, PaymentPlanDTO paymentPlan) {
+        PendingBalanceDTO selectedBalance = paymentsModel.getPaymentPayload()
+                .getPatientBalances().get(0).getBalances().get(0);
         PracticeModeAddToExistingPaymentPlanFragment fragment = PracticeModeAddToExistingPaymentPlanFragment
                 .newInstance(paymentsModel, paymentPlan);
         fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -1236,6 +1255,14 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             }
         });
         displayDialogFragment(fragment, false);
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_balance_amount),
+                getString(R.string.param_is_add_existing)};
+        Object[] values = {selectedBalance.getMetadata().getPracticeId(),
+                selectedBalance.getPayload().get(0).getAmount() - selectedBalance.getPayload().get(0).getPaymentPlansAmount(),
+                true};
+
+        MixPanelUtil.logEvent(getString(R.string.event_paymentplan_started), params, values);
     }
 
     @Override

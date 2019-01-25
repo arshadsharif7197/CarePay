@@ -55,6 +55,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
 public class PaymentPlanFragment extends BasePaymentDialogFragment
         implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
 
@@ -268,6 +269,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         } else {
             frequencyCodeEditText.setCompoundDrawables(null, null, null, null);
         }
+        frequencyCodeEditText.setEnabled(frequencyOptions.size() > 1);
 
         installmentsEditText = (EditText) view.findViewById(R.id.paymentMonthCount);
         installmentsInputLayout = (CarePayTextInputLayout) view
@@ -512,7 +514,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
 
     protected PaymentSettingsBalanceRangeRule getPaymentPlanSettings(String interval) {
         PaymentsPayloadSettingsDTO settingsDTO = paymentsModel.getPaymentPayload().getPaymentSetting(practiceId);
-        if(settingsDTO == null){
+        if (settingsDTO == null) {
             return null;
         }
         PaymentSettingsBalanceRangeRule temp = null;
@@ -670,12 +672,10 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
                 }
                 return false;
             } else if (amounthPayment < paymentPlanBalanceRules.getMinPaymentRequired().getValue()) {
-                if (isUserInteraction) {
-                    setError(R.id.paymentAmountInputLayout,
-                            String.format(Label.getLabel("payment_plan_min_amount_error"),
-                                    currencyFormatter.format(paymentPlanBalanceRules.getMinPaymentRequired().getValue()))
-                            , isUserInteraction);
-                }
+                setError(R.id.paymentAmountInputLayout,
+                        String.format(Label.getLabel("payment_plan_min_amount_error"),
+                                currencyFormatter.format(paymentPlanBalanceRules.getMinPaymentRequired().getValue()))
+                        , isUserInteraction);
                 return false;
             } else {
                 clearError(R.id.paymentAmountInputLayout);

@@ -1,11 +1,10 @@
 package com.carecloud.carepay.patient.payment.fragments;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,8 +24,10 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.CreditCardBillingInformationDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -96,7 +97,8 @@ public class CreditCardDetailsFragment extends BaseFragment {
             demographicsSettingsDTO = (DemographicDTO) callback.getDto();
 
             String demographicsSettingsDTOString = arguments.getString(CarePayConstants.CREDIT_CARD_BUNDLE);
-            creditCardsPayloadDTO = gson.fromJson(demographicsSettingsDTOString, DemographicsSettingsCreditCardsPayloadDTO.class);
+            creditCardsPayloadDTO = gson.fromJson(demographicsSettingsDTOString,
+                    DemographicsSettingsCreditCardsPayloadDTO.class);
         }
     }
 
@@ -128,7 +130,8 @@ public class CreditCardDetailsFragment extends BaseFragment {
             nameOnCardValue.setText(creditCardsPayloadDTO.getPayload().getNameOnCard());
 
             TextView cardNumberValue = (TextView) view.findViewById(R.id.cardNumberValue);
-            cardNumberValue.setText(getMaskedCardNumber(creditCardsPayloadDTO.getPayload().getCardNumber(), creditCardsPayloadDTO.getPayload().getCardType()));
+            cardNumberValue.setText(getMaskedCardNumber(creditCardsPayloadDTO.getPayload().getCardNumber(),
+                    creditCardsPayloadDTO.getPayload().getCardType()));
 
             TextView expirationDateValue = (TextView) view.findViewById(R.id.expirationDateValue);
             expirationDateValue.setText(creditCardsPayloadDTO.getPayload().getExpireDt());
@@ -138,11 +141,16 @@ public class CreditCardDetailsFragment extends BaseFragment {
             TextView cityValue = (TextView) view.findViewById(R.id.cityValue);
             TextView stateValue = (TextView) view.findViewById(R.id.stateValue);
 
-            CreditCardBillingInformationDTO billingInformationDTO = creditCardsPayloadDTO.getPayload().getBillingInformation();
-            if (StringUtil.isNullOrEmpty(billingInformationDTO.getLine1()) && billingInformationDTO.getSameAsPatient()) {
-                DemographicAddressPayloadDTO addressDTO = demographicsSettingsDTO.getPayload().getDemographics().getPayload().getAddress();
+            CreditCardBillingInformationDTO billingInformationDTO = creditCardsPayloadDTO
+                    .getPayload().getBillingInformation();
+            if (StringUtil.isNullOrEmpty(billingInformationDTO.getLine1())
+                    && billingInformationDTO.getSameAsPatient()) {
+                DemographicAddressPayloadDTO addressDTO = demographicsSettingsDTO.getPayload()
+                        .getDemographics().getPayload().getAddress();
                 if (!StringUtil.isNullOrEmpty(addressDTO.getAddress1())) {
-                    String fullAddress = addressDTO.getAddress1() + (!StringUtil.isNullOrEmpty(addressDTO.getAddress2()) ? addressDTO.getAddress2() : "");
+                    String fullAddress = addressDTO.getAddress1()
+                            + (!StringUtil.isNullOrEmpty(addressDTO.getAddress2())
+                            ? addressDTO.getAddress2() : "");
                     addressValue.setText(fullAddress);
                 }
                 zipcodeValue.setText(addressDTO.getZipcode());
@@ -150,7 +158,9 @@ public class CreditCardDetailsFragment extends BaseFragment {
                 stateValue.setText(addressDTO.getState());
             } else {
                 if (!StringUtil.isNullOrEmpty(billingInformationDTO.getLine1())) {
-                    String fullAddress = billingInformationDTO.getLine1() + (!StringUtil.isNullOrEmpty(billingInformationDTO.getLine2()) ? billingInformationDTO.getLine2() : "");
+                    String fullAddress = billingInformationDTO.getLine1()
+                            + (!StringUtil.isNullOrEmpty(billingInformationDTO.getLine2())
+                            ? billingInformationDTO.getLine2() : "");
                     addressValue.setText(fullAddress);
                 }
                 zipcodeValue.setText(billingInformationDTO.getZip());
@@ -202,7 +212,9 @@ public class CreditCardDetailsFragment extends BaseFragment {
     }
 
     private int maxLength(String cardType) {
-        if (cardType.toLowerCase().contains("amex") || (cardType.toLowerCase().contains("american") && cardType.toLowerCase().contains("express"))) {
+        if (cardType.toLowerCase().contains("amex")
+                || (cardType.toLowerCase().contains("american")
+                && cardType.toLowerCase().contains("express"))) {
             return 15;
         }
         return 16;
@@ -222,7 +234,8 @@ public class CreditCardDetailsFragment extends BaseFragment {
             setAsDefaultPayload.put("is_default", true);
             String body = setAsDefaultPayload.toString();
             TransitionDTO transitionDTO = demographicsSettingsDTO.getMetadata().getTransitions().getUpdateCreditCard();
-            getWorkflowServiceHelper().execute(transitionDTO, creditCardOperationCallback, body, null, getWorkflowServiceHelper().getPreferredLanguageHeader());
+            getWorkflowServiceHelper().execute(transitionDTO, creditCardOperationCallback, body,
+                    null, getWorkflowServiceHelper().getPreferredLanguageHeader());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -234,7 +247,8 @@ public class CreditCardDetailsFragment extends BaseFragment {
             queryMap.put("card_id", creditCardsPayloadDTO.getPayload().getHashCreditCardsId());
 
             TransitionDTO transitionDTO = demographicsSettingsDTO.getMetadata().getTransitions().getDeleteCreditCard();
-            getWorkflowServiceHelper().execute(transitionDTO, creditCardOperationCallback, queryMap, getWorkflowServiceHelper().getPreferredLanguageHeader());
+            getWorkflowServiceHelper().execute(transitionDTO, creditCardOperationCallback, queryMap,
+                    getWorkflowServiceHelper().getPreferredLanguageHeader());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -256,10 +270,8 @@ public class CreditCardDetailsFragment extends BaseFragment {
                         .setPatientCreditCards(removeCreditCardResponseDTO.getPayload().getPatientCreditCards());
                 callback.onCreditCardOperation(demographicsSettingsDTO);
                 SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
-                getActivity().onBackPressed();
-
                 MixPanelUtil.logEvent(getString(R.string.event_updated_credit_cards), getString(R.string.param_is_payment), false);
-
+                getActivity().onBackPressed();
             } catch (Exception e) {
                 Log.e(TAG, "Credit Card onPostExecute" + e.getMessage());
                 showErrorNotification(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
@@ -276,19 +288,17 @@ public class CreditCardDetailsFragment extends BaseFragment {
     };
 
     private void showConfirmRemoveDialog() {
-        new AlertDialog.Builder(getContext())
-                .setMessage("This credit card will be removed?")
-                .setPositiveButton(Label.getLabel("edit_credit_card_remove_label"), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        removeCreditCardRequest();
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .show();
+        String title = Label.getLabel("settings.removeCreditCard.confirmation.label.title");
+        String message = String.format(Label.getLabel("settings.removeCreditCard.confirmation.label.description"),
+                creditCardsPayloadDTO.getPayload().getCardNumber());
+        ConfirmDialogFragment dialogFragment = ConfirmDialogFragment.newInstance(title, message);
+        dialogFragment.setCallback(new ConfirmationCallback() {
+            @Override
+            public void onConfirm() {
+                removeCreditCardRequest();
+            }
+        });
+        FragmentManager fm = getFragmentManager();
+        dialogFragment.show(fm, dialogFragment.getClass().getName());
     }
 }

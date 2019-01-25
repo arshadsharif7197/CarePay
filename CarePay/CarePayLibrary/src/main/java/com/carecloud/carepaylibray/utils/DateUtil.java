@@ -280,8 +280,19 @@ public class DateUtil {
         String ordinal = instance.getOrdinalSuffix(day); // fetch the ordinal
         if (getUserLanguage().equals("en")) {
             //"%s %s%s"
-            return String.format(Locale.getDefault(), Label.getLabel("date_month_literal_day_ordinal_format"),//"%s %s%s"
+            return String.format(Locale.getDefault(), Label.getLabel("date_month_literal_day_ordinal_format"),
                     monthLiteralAbbr, day, ordinal);
+        } else {
+            //"%s de %s"
+            return String.format(Locale.getDefault(), FORMAT_ES_DATE_MONTH_LIT, day, monthLiteralAbbr);
+        }
+    }
+
+    public String getDateAsMonthLiteralDay() {
+        String ordinal = instance.getOrdinalSuffix(day); // fetch the ordinal
+        if (getUserLanguage().equals("en")) {
+            //"%s %s%s"
+            return String.format(Locale.getDefault(), "%s %s", monthLiteralAbbr, day);
         } else {
             //"%s de %s"
             return String.format(Locale.getDefault(), FORMAT_ES_DATE_MONTH_LIT, day, monthLiteralAbbr);
@@ -1296,7 +1307,7 @@ public class DateUtil {
         }
     }
 
-    public String getServerFormat(){
+    public String getServerFormat() {
         return toStringWithFormat(FORMAT_TIMEZONE_EN);
     }
 }

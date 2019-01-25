@@ -2,6 +2,8 @@ package com.carecloud.carepay.patient.messages.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class MessagingPostModel {
 
     @SerializedName("recipient")
@@ -12,6 +14,9 @@ public class MessagingPostModel {
 
     @SerializedName("subject")
     private String subject;
+
+    @SerializedName("attachments")
+    private List<AttachmentPostModel> attachments;
 
     public Messages.Participant getParticipant() {
         return participant;
@@ -35,5 +40,13 @@ public class MessagingPostModel {
 
     public void setSubject(String subject) {
         this.subject = subject;
+    }
+
+    public List<AttachmentPostModel> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<AttachmentPostModel> attachments) {
+        this.attachments = attachments;
     }
 }

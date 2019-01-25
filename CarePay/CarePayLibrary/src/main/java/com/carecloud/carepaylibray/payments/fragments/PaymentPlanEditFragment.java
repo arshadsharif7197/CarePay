@@ -191,10 +191,16 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
             }
         });
         Button cancelPaymentPlanButton = (Button) view.findViewById(R.id.cancelPaymentPlanButton);
+        boolean deletePaymentPlan = false;
+        if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanHistoryList().isEmpty()) {
+            deletePaymentPlan = true;
+            cancelPaymentPlanButton.setText(Label.getLabel("payment.editPaymentPlan.delete.button.label"));
+        }
+        final boolean finalDeletePaymentPlan = deletePaymentPlan;
         cancelPaymentPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showCancelPaymentPlanConfirmDialog();
+                showCancelPaymentPlanConfirmDialog(finalDeletePaymentPlan);
             }
         });
         cancelPaymentPlanButton.setVisibility(canCancelPlan(paymentPlanDTO.getMetadata().getPracticeId())
@@ -204,25 +210,21 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
 
     @Override
     protected void enableCreatePlanButton() {
-        //enable edit button if frequency is disabled since these fields would be locked
-        boolean isEnabled = validateFields(false) || !frequencyOption.isEnabled();
+        boolean isEnabled = validateFields(false) ;
         getActionButton().setSelected(isEnabled);
         getActionButton().setClickable(isEnabled);
-
-//        getActionButton().setEnabled(validateFields(false) ||
-//                !frequencyOption.isEnabled());
     }
 
-    protected void showCancelPaymentPlanConfirmDialog() {
+    protected void showCancelPaymentPlanConfirmDialog(final boolean deletePaymentPlan) {
         callback.showCancelPaymentPlanConfirmDialog(new ConfirmationCallback() {
             @Override
             public void onConfirm() {
-                cancelPaymentPlan();
+                cancelPaymentPlan(deletePaymentPlan);
             }
-        });
+        }, deletePaymentPlan);
     }
 
-    private void cancelPaymentPlan() {
+    private void cancelPaymentPlan(final boolean deletePaymentPlan) {
         TransitionDTO updatePaymentTransition = paymentsModel.getPaymentsMetadata()
                 .getPaymentsTransitions().getDeletePaymentPlan();
         Map<String, String> queryMap = new HashMap<>();
@@ -241,7 +243,9 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
                 dismiss();
-                callback.onPaymentPlanCanceled(workflowDTO);
+                callback.onPaymentPlanCanceled(workflowDTO, deletePaymentPlan);
+
+                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payment_plans_cancelled), 1);
             }
 
             @Override
@@ -620,6 +624,8 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         enableCreatePlanButton();
         if (!option.isEnabled()) {
             stubRangeRules();
+        }
+        if (option.getName().equals(paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode())){
             resetPlanParameters();
         }
     }
@@ -650,6 +656,16 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         int completedInstallments = paymentPlanDTO.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
         boolean parametersModified = installments + completedInstallments != paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments() ||
                 amounthPayment != paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount();
+        if(!parametersModified){
+            //clear any errors in these fields if parameters have not been modified
+            clearError(R.id.paymentMonthCountInputLayout);
+            clearError(R.id.paymentAmountInputLayout);
+        }
+
+        if(!parametersModified){
+            clearError(R.id.paymentMonthCountInputLayout);
+            clearError(R.id.paymentAmountInputLayout);
+        }
 
         return passesStandardValidation && parametersModified || (!metadataUnModified && !parametersModified);
     }

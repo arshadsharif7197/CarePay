@@ -22,37 +22,44 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Created by jorge on 31/12/16
  */
 
 public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAdapter.ViewHolder> {
-    public interface HistoryItemClickListener {
-        void onHistoryItemClicked(PaymentHistoryItem item);
-    }
 
-    private static final int VIEW_TYPE_LOADING = 1;
-
+    private final Map<String, UserPracticeDTO> practiceMap;
     private Context context;
     private HistoryItemClickListener callback;
     private List<PaymentHistoryItem> paymentHistoryItems = new ArrayList<>();
     private List<UserPracticeDTO> userPractices = new ArrayList<>();
-
     private boolean isLoading = false;
     private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
+
+    private static final int VIEW_TYPE_LOADING = 1;
+
+    public interface HistoryItemClickListener {
+        void onHistoryItemClicked(PaymentHistoryItem item);
+    }
+
 
     /**
      * Constructor
      *
      * @param context             context
      * @param paymentHistoryItems payment history
+     * @param practiceMap
      */
-    public PaymentHistoryAdapter(Context context, List<PaymentHistoryItem> paymentHistoryItems, List<UserPracticeDTO> userPractices, HistoryItemClickListener callback) {
+    public PaymentHistoryAdapter(Context context,
+                                 List<PaymentHistoryItem> paymentHistoryItems,
+                                 HistoryItemClickListener callback,
+                                 Map<String, UserPracticeDTO> practiceMap) {
         this.context = context;
         this.paymentHistoryItems = paymentHistoryItems;
-        this.userPractices = userPractices;
         this.callback = callback;
+        this.practiceMap = practiceMap;
     }
 
     @Override
@@ -74,28 +81,28 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
 
         final PaymentHistoryItem item = paymentHistoryItems.get(position);
 
-        holder.image.setVisibility(View.GONE);
-        UserPracticeDTO userPracticeDTO = getUserPractice(item.getMetadata().getPracticeId());
-        if (userPracticeDTO != null) {
-            holder.locationName.setText(userPracticeDTO.getPracticeName());
-            holder.shortName.setText(StringUtil.getShortName(userPracticeDTO.getPracticeName()));
-            Picasso.with(context)
-                    .load(userPracticeDTO.getPracticePhoto())
-                    .resize(60, 60)
-                    .centerCrop()
-                    .transform(new CircleImageTransform())
-                    .into(holder.image, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            holder.image.setVisibility(View.VISIBLE);
-                        }
+        holder.picImageView.setVisibility(View.GONE);
 
-                        @Override
-                        public void onError() {
-                            holder.image.setVisibility(View.GONE);
-                        }
-                    });
-        }
+//        if (userPracticeDTO != null) {
+//            holder.locationName.setText(userPracticeDTO.getPracticeName());
+//            holder.shortName.setText(StringUtil.getShortName(userPracticeDTO.getPracticeName()));
+//            Picasso.with(context)
+//                    .load(userPracticeDTO.getPracticePhoto())
+//                    .resize(60, 60)
+//                    .centerCrop()
+//                    .transform(new CircleImageTransform())
+//                    .into(holder.picImageView, new Callback() {
+//                        @Override
+//                        public void onSuccess() {
+//                            holder.picImageView.setVisibility(View.VISIBLE);
+//                        }
+//
+//                        @Override
+//                        public void onError() {
+//                            holder.picImageView.setVisibility(View.GONE);
+//                        }
+//                    });
+//        }
 
         holder.historyPlanName.setVisibility(View.GONE);
         holder.dateLabel.setVisibility(View.GONE);
@@ -129,6 +136,32 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
                 callback.onHistoryItemClicked(item);
             }
         });
+
+        UserPracticeDTO practiceDTO = practiceMap.get(item.getMetadata().getPracticeId());
+        holder.locationName.setText(practiceDTO.getPracticeName());
+        holder.shortName.setText(StringUtil.getShortName(practiceDTO.getPracticeName()));
+        loadImage(holder, practiceDTO.getPracticePhoto());
+    }
+
+    private void loadImage(final PaymentHistoryAdapter.ViewHolder holder, String photoUrl) {
+        int size = context.getResources().getDimensionPixelSize(R.dimen.payment_details_dialog_icon_size);
+        Picasso.with(context).load(photoUrl)
+                .resize(size, size)
+                .centerCrop()
+                .transform(new CircleImageTransform())
+                .into(holder.picImageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        holder.picImageView.setVisibility(View.VISIBLE);
+                        holder.shortName.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onError() {
+                        holder.picImageView.setVisibility(View.GONE);
+                        holder.shortName.setVisibility(View.VISIBLE);
+                    }
+                });
     }
 
     @Override
@@ -177,22 +210,13 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
         notifyDataSetChanged();
     }
 
-    private UserPracticeDTO getUserPractice(String practiceId) {
-        for (UserPracticeDTO userPracticeDTO : userPractices) {
-            if (userPracticeDTO.getPracticeId() != null && userPracticeDTO.getPracticeId().equals(practiceId)) {
-                return userPracticeDTO;
-            }
-        }
-        return null;
-    }
-
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView shortName;
         private TextView locationName;
         private TextView amount;
         private TextView paymentDate;
-        private ImageView image;
+        private ImageView picImageView;
         private TextView transactionFlag;
         private TextView historyPlanName;
         private TextView dateLabel;
@@ -204,7 +228,7 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
             amount = (TextView) itemView.findViewById(R.id.historyTotalAmount);
             paymentDate = (TextView) itemView.findViewById(R.id.historyDateTextView);
             shortName = (TextView) itemView.findViewById(R.id.historyAvatarTextView);
-            image = (ImageView) itemView.findViewById(R.id.historyImageView);
+            picImageView = (ImageView) itemView.findViewById(R.id.historyImageView);
             transactionFlag = (TextView) itemView.findViewById(R.id.historyTransactionFlag);
             historyPlanName = (TextView) itemView.findViewById(R.id.historyPlanName);
             dateLabel = (TextView) itemView.findViewById(R.id.completedLabel);

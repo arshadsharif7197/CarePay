@@ -29,6 +29,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -172,15 +173,21 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
             }
         });
         Button cancelPaymentPlanButton = (Button) view.findViewById(R.id.cancelPaymentPlanButton);
+        boolean deletePaymentPlan = false;
+        if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanHistoryList().isEmpty()) {
+            deletePaymentPlan = true;
+            cancelPaymentPlanButton.setText(Label.getLabel("payment.editPaymentPlan.delete.button.label"));
+        }
+        final boolean finalDeletePaymentPlan = deletePaymentPlan;
         cancelPaymentPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((PaymentPlanEditInterface) callback).showCancelPaymentPlanConfirmDialog(new ConfirmationCallback() {
                     @Override
                     public void onConfirm() {
-                        cancelPaymentPlan();
+                        cancelPaymentPlan(finalDeletePaymentPlan);
                     }
-                });
+                }, finalDeletePaymentPlan);
             }
         });
 
@@ -206,7 +213,7 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
         return editPaymentPlanButton;
     }
 
-    private void cancelPaymentPlan() {
+    private void cancelPaymentPlan(final boolean isDeleted) {
         TransitionDTO updatePaymentTransition = paymentsModel.getPaymentsMetadata()
                 .getPaymentsTransitions().getDeletePaymentPlan();
         Map<String, String> queryMap = new HashMap<>();
@@ -225,7 +232,9 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
                 dismiss();
-                ((PaymentPlanEditInterface) callback).onPaymentPlanCanceled(workflowDTO);
+                ((PaymentPlanEditInterface) callback).onPaymentPlanCanceled(workflowDTO, isDeleted);
+
+                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payment_plans_cancelled), 1);
             }
 
             @Override

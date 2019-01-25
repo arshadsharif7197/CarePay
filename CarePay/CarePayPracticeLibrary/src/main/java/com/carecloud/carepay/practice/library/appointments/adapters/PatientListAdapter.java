@@ -88,11 +88,9 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public int getItemViewType(int position) {
         final CardViewPatient patient = filteredPatients.get(position);
-
         if (null == patient.raw) {
             return CELL_HEADER;
         }
-
         return CELL_CARD;
     }
 
@@ -109,7 +107,6 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     .inflate(R.layout.patient_list_header_layout, parent, false);
             return new HeaderViewHolder(view);
         }
-
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.patient_list_item_layout, parent, false);
         return new CardViewHolder(view);
@@ -118,10 +115,8 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         final CardViewPatient patient = filteredPatients.get(position);
-
         if (patient.raw == null) {
             bindHeaderViewHolder((HeaderViewHolder) holder, patient);
-
         } else {
             bindCardViewHolder((CardViewHolder) holder, patient);
         }
@@ -166,7 +161,6 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if (filteredPatients != null) {
             return filteredPatients.size();
         }
-
         return 0;
     }
 
@@ -219,7 +213,6 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             if (patient.appointmentStartTime != null
                     && !DateUtil.isSameDay(dateTime, patient.appointmentStartTime)) {
                 dateTime = patient.appointmentStartTime;
-
                 if (countByDay % 2 == 1) {
                     filteredPatients.add(new CardViewPatient());
                 }
@@ -254,7 +247,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.allPatients = new ArrayList<>(appointments.size());
 
         for (AppointmentDTO appointmentDTO : appointments) {
-            if(!appointmentDTO.getPayload().getAppointmentStatus().getCode().equals("C")){
+            if (!appointmentDTO.getPayload().getAppointmentStatus().getCode().equals("C")) {
 
                 // Set profile photo
                 PatientModel patientDTO = appointmentDTO.getPayload().getPatient();

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
@@ -38,6 +39,7 @@ import com.carecloud.carepay.practice.library.homescreen.dtos.PatientHomeScreenT
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenPayloadDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenTransitionsDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLinksDTO;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.Defs;
@@ -115,6 +117,23 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         View checkout = findViewById(R.id.homeCheckoutClickable);
         if (checkout != null) {
             checkout.setOnClickListener(this);
+        }
+
+        View updateAlertContainer = findViewById(R.id.updateAlertContainer);
+        boolean isLatest = ApplicationPreferences.getInstance().isLatestVersion();
+        if (updateAlertContainer != null && !isLatest) {
+            updateAlertContainer.setVisibility(View.VISIBLE);
+            updateAlertContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String appPackageName = getPackageName();
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                    } catch (android.content.ActivityNotFoundException anfe) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                    }
+                }
+            });
         }
 
         changeScreenMode(homeScreenMode);
@@ -238,7 +257,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             boolean showShop = practiceHomeScreenPayloadDTO.getUserPractices().get(0).isRetailEnabled();
             if (showShop) {
                 View shopContainer = findViewById(R.id.homeShopClickable);
-                if(shopContainer != null) {
+                if (shopContainer != null) {
                     shopContainer.setVisibility(View.VISIBLE);
                     shopContainer.setOnClickListener(this);
                     findViewById(R.id.separator).setVisibility(View.VISIBLE);

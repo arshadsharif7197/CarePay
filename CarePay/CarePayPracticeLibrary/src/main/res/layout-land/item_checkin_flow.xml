@@ -10,20 +10,21 @@
         android:id="@+id/checkin_flow_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dimen_10dp"
+        android:layout_marginBottom="@dimen/checkInFlowTitleBottomMargin"
         android:textColor="@color/white_opacity_60"
-        android:textSize="@dimen/text_size_16"
+        android:textSize="@dimen/checkInFlowTitleTextSize"
         app:customAssetFont="gotham_rounded_light" />
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/checkin_flow_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_8dp"
+        android:layout_marginStart="@dimen/checkInFlowProgressStartMargin"
         android:background="@drawable/checkin_counter_forms_bg"
-        android:paddingEnd="@dimen/dimen_10dp"
-        android:paddingStart="@dimen/dimen_10dp"
+        android:paddingEnd="@dimen/checkInFlowProgressHorizontalPadding"
+        android:paddingStart="@dimen/checkInFlowProgressHorizontalPadding"
         android:textColor="@color/white"
+        android:textSize="@dimen/checkInFlowProgressTextSize"
         android:visibility="gone" />
 
 </LinearLayout>
