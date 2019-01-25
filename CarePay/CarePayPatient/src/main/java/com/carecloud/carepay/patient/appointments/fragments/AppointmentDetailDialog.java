@@ -214,9 +214,10 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     });
 
             LocationDTO location = appointmentDTO.getPayload().getLocation();
-            locationName.setText(location.getName());
-            locationAddress.setText(location.getAddress().getPlaceAddressString());
-            mapButton.setEnabled(!StringUtil.isNullOrEmpty(location.getAddress().getPlaceAddressString()));
+            locationName.setText(StringUtil.capitalize(location.getName()));
+            locationAddress.setText(StringUtil
+                    .capitalize(location.getAddress().geAddressStringWithShortZipWOCounty().toLowerCase()));
+            mapButton.setEnabled(!StringUtil.isNullOrEmpty(location.getAddress().geAddressStringWithShortZipWOCounty()));
         }
     }
 
@@ -255,7 +256,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                         }
                         if (isLocationWithBreezeEnabled(enabledLocations)) {
                             leftButton.setVisibility(View.VISIBLE);
-                            leftButton.setText(Label.getLabel("appointments_check_in_at_office"));
+                            leftButton.setText(Label.getLabel("sigin_how_check_in_scan_qr_code"));
                             leftButton.setOnClickListener(scanClick);
                             rightButton.setVisibility(View.VISIBLE);
                             if (appointmentDTO.getPayload().canCheckInNow(callback.getPracticeSettings())) {

@@ -196,22 +196,22 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getGender(),
                 personalInfoSection.getProperties().getGender(), R.id.genderDemographicsLayout,
                 R.id.genderInputLayout, R.id.genderEditText,
-                R.id.genderOptionalLabel, selectedGender, Label.getLabel("demographics_review_gender"));
+                R.id.genderRequiredLabel, selectedGender, Label.getLabel("demographics_review_gender"));
 
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getPrimaryRace(),
                 personalInfoSection.getProperties().getPrimaryRace(), R.id.raceDemographicsLayout,
                 R.id.raceInputLayout, R.id.raceEditText,
-                R.id.raceOptionalLabel, selectedRace, Label.getLabel("demographics_review_race"));
+                R.id.raceRequiredLabel, selectedRace, Label.getLabel("demographics_review_race"));
 
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getSecondaryRace(),
                 personalInfoSection.getProperties().getSecondaryRace(), R.id.secondaryRaceDemographicsLayout,
-                R.id.secondaryRaceInputLayout, R.id.secondaryRaceEditText, R.id.secondaryRaceOptional,
+                R.id.secondaryRaceInputLayout, R.id.secondaryRaceEditText, R.id.secondaryRaceRequired,
                 selectedSecondaryRace, Label.getLabel("demographics_secondary_race"));
 
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getEthnicity(),
                 personalInfoSection.getProperties().getEthnicity(), R.id.ethnicityDemographicsLayout,
                 R.id.ethnicityInputLayout, R.id.ethnicityEditText,
-                R.id.ethnicityOptional, selectedEthnicity, Label.getLabel("demographics_review_ethnicity"));
+                R.id.ethnicityRequired, selectedEthnicity, Label.getLabel("demographics_review_ethnicity"));
     }
 
     private void initAddressInfo(View view, DemographicPayloadDTO demographicPayload) {

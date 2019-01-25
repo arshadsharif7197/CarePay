@@ -20,9 +20,9 @@ public interface PaymentPlanEditInterface extends PaymentPlanCompletedInterface,
 
     void onDismissEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
 
-    void onPaymentPlanCanceled(WorkflowDTO workflowDTO);
+    void onPaymentPlanCanceled(WorkflowDTO workflowDTO, boolean isDeleted);
 
-    void showCancelPaymentPlanConfirmDialog(ConfirmationCallback confirmationCallback);
+    void showCancelPaymentPlanConfirmDialog(ConfirmationCallback confirmationCallback, boolean isGoingToDelete);
 
     void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
 

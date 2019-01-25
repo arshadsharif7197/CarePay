@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
             android:id="@+id/reviewdemogrFirstNameTextInput"
             style="@style/TextInputLayoutStyle"
             android:layout_marginTop="18dp"
@@ -33,6 +33,11 @@
                 breeze:hintKey="demographics_first_name"
                 tools:hint="First Name" />
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+        <include
+            android:id="@+id/firstNameRequired"
+            layout="@layout/layout_required_text_view" />
+
     </FrameLayout>
 
 
@@ -62,9 +67,8 @@
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
         <include
-            android:id="@+id/reviewdemogrMiddleNameOptionalLabel"
-            layout="@layout/layout_optional_text_view"
-            android:visibility="visible" />
+            android:id="@+id/middleNameRequired"
+            layout="@layout/layout_required_text_view"/>
 
     </FrameLayout>
 
@@ -92,6 +96,11 @@
                 tools:hint="Last Name" />
 
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+        <include
+            android:id="@+id/lastNameRequired"
+            layout="@layout/layout_required_text_view" />
+
     </FrameLayout>
 
 </LinearLayout>

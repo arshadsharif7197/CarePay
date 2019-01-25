@@ -47,12 +47,17 @@ public class FilterableAvailableHoursAdapter extends RecyclerView.Adapter<Recycl
 
     /**
      * Constructor
-     * @param context Context
-     * @param allTimeSlots all Appoitnment Slots
+     *
+     * @param context           Context
+     * @param allTimeSlots      all Appoitnment Slots
      * @param selectedLocations Selected Locations
-     * @param callback Selected Slot callback
+     * @param callback          Selected Slot callback
      */
-    public FilterableAvailableHoursAdapter(Context context, List<AppointmentsSlotsDTO> allTimeSlots, Map<String, LocationDTO> selectedLocations, SelectAppointmentTimeSlotCallback callback, LocationMode mode){
+    public FilterableAvailableHoursAdapter(Context context,
+                                           List<AppointmentsSlotsDTO> allTimeSlots,
+                                           Map<String, LocationDTO> selectedLocations,
+                                           SelectAppointmentTimeSlotCallback callback,
+                                           LocationMode mode) {
         this.context = context;
         this.allTimeSlots = allTimeSlots;
         this.selectedLocations = selectedLocations;
@@ -66,7 +71,7 @@ public class FilterableAvailableHoursAdapter extends RecyclerView.Adapter<Recycl
         updateFilteredSlots();
     }
 
-    public void setMode(LocationMode mode){
+    public void setMode(LocationMode mode) {
         this.mode = mode;
     }
 
@@ -88,10 +93,12 @@ public class FilterableAvailableHoursAdapter extends RecyclerView.Adapter<Recycl
         LayoutInflater inflater = LayoutInflater.from(context);
 
         if (viewType == CELL_HEADER) {
-            View availableHoursListHeaderRow = inflater.inflate(R.layout.apt_available_hours_list_header_row, parent, false);
+            View availableHoursListHeaderRow = inflater
+                    .inflate(R.layout.apt_available_hours_list_header_row, parent, false);
             viewHolder = new ViewHolderSectionHeader(availableHoursListHeaderRow);
         } else {
-            View availableHoursListDataRow = inflater.inflate(R.layout.apt_available_hours_list_data_row, parent, false);
+            View availableHoursListDataRow = inflater
+                    .inflate(R.layout.apt_available_hours_list_data_row, parent, false);
             viewHolder = new ViewHolderTimeSlot(availableHoursListDataRow);
         }
         return viewHolder;
@@ -113,7 +120,7 @@ public class FilterableAvailableHoursAdapter extends RecyclerView.Adapter<Recycl
             String time12Hour = DateUtil.getInstance().getTime12Hour();
             vhTimeSlot.getTextView().setText(time12Hour);
             viewHolder.itemView.setContentDescription(time12Hour);
-            
+
             if (selectedLocations.size() == 1 || mode == LocationMode.SINGLE) {
                 //Single location selected no need to show Location in each Slot
                 vhTimeSlot.getTextViewLocation().setVisibility(View.GONE);
@@ -125,7 +132,7 @@ public class FilterableAvailableHoursAdapter extends RecyclerView.Adapter<Recycl
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                     callback.onSelectAppointmentTimeSlot(appointmentSlotItem);
+                    callback.onSelectAppointmentTimeSlot(appointmentSlotItem);
                 }
             });
         }
@@ -139,35 +146,28 @@ public class FilterableAvailableHoursAdapter extends RecyclerView.Adapter<Recycl
     /**
      * Update Slots
      */
-    public void updateFilteredSlots(){
+    public void updateFilteredSlots() {
         filteredTimeSlots.clear();
 
         Date lastDate = new Date(0);
         AppointmentsSlotsDTO headerTemplate;
-        int headerCount = 0;
-        for(AppointmentsSlotsDTO slot : allTimeSlots){
+        for (AppointmentsSlotsDTO slot : allTimeSlots) {
             //Check if this is a filtered Location
-            if(slot.getLocation() == null || (!selectedLocations.isEmpty() && !selectedLocations.containsKey(slot.getLocation().getGuid()))){
+            if (slot.getLocation() == null || (!selectedLocations.isEmpty()
+                    && !selectedLocations.containsKey(slot.getLocation().getGuid()))) {
                 continue;
             }
 
             Date slotDate = DateUtil.getInstance().setDateRaw(slot.getStartTime()).getDate();
-            if(slotDate!=null && !DateUtil.isSameDay(lastDate, slotDate)){
+            if (slotDate != null && !DateUtil.isSameDay(lastDate, slotDate)) {
                 //add this slot object to the list
                 headerTemplate = new AppointmentsSlotsDTO();
                 headerTemplate.setStartTime(DateUtil.getFormattedDate(slotDate, today, tomorrow));
                 filteredTimeSlots.add(headerTemplate);
-                headerCount++;
                 lastDate = slotDate;
             }
-
             filteredTimeSlots.add(slot);
-
         }
-
-//        if(headerCount == 1){
-//            filteredTimeSlots.remove(0);
-//        }
 
         notifyDataSetChanged();
     }
@@ -194,10 +194,6 @@ public class FilterableAvailableHoursAdapter extends RecyclerView.Adapter<Recycl
 
         public TextView getTextViewLocation() {
             return textViewLocation;
-        }
-
-        public void setTextViewLocation(TextView textViewLocation) {
-            this.textViewLocation = textViewLocation;
         }
     }
 

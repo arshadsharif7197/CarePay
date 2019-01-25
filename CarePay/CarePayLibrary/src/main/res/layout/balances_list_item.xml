@@ -12,8 +12,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/apt_dl_image_elevation"
         android:layout_marginTop="@dimen/apt_dl_image_elevation"
+        android:layout_marginBottom="@dimen/apt_dl_image_elevation"
         android:baselineAligned="false"
         android:orientation="horizontal">
 
@@ -32,6 +32,14 @@
                 android:textColor="@color/lightSlateGray"
                 android:textSize="@dimen/apt_dl_text_big"
                 app:customAssetFont="gotham_rounded_medium" />
+
+            <ImageView
+                android:id="@+id/picImageView"
+                android:layout_width="@dimen/dimen_60dp"
+                android:layout_height="@dimen/dimen_60dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_centerInParent="true"
+                android:visibility="gone" />
         </RelativeLayout>
 
         <LinearLayout
@@ -71,8 +79,8 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingEnd="@dimen/default_title_indicator_title_padding"
-            android:paddingStart="0dp">
+            android:paddingStart="0dp"
+            android:paddingEnd="@dimen/default_title_indicator_title_padding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/balancesPayNowTextView"
@@ -80,8 +88,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:paddingEnd="@dimen/default_title_indicator_title_padding"
                 android:paddingStart="0dp"
+                android:paddingEnd="@dimen/default_title_indicator_title_padding"
                 android:textColor="@color/emerald"
                 android:textSize="@dimen/textview_default_textsize"
                 app:customAssetFont="proxima_nova_semi_bold"

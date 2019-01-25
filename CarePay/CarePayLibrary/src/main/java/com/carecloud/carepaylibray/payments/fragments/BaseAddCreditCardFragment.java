@@ -138,8 +138,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View addNewCreditCardView = inflater.inflate(com.carecloud.carepaylibrary.R.layout
-                        .fragment_add_new_credit_card,
-                container, false);
+                .fragment_add_new_credit_card, container, false);
 
         setupTitleViews(addNewCreditCardView);
         initializeViews(addNewCreditCardView);
@@ -320,7 +319,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 setAsDefaultCheckBox.setEnabled(isChecked);
                 setAsDefaultCheckBox.setChecked(false);
-                if(isChecked && paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()){
+                if (isChecked && paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
                     setAsDefaultCheckBox.setChecked(true);
                     setAsDefaultCheckBox.setEnabled(false);
                 }

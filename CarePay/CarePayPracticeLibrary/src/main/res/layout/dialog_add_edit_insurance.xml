@@ -28,10 +28,9 @@
     <RelativeLayout
         android:id="@+id/dialog_content_layout"
         android:layout_width="@dimen/dialog_width"
-        android:layout_height="@dimen/dialog_height"
-        android:layout_marginEnd="@dimen/dimen_26dp"
-        android:layout_marginStart="@dimen/dimen_26dp">
-
+        android:layout_height="@dimen/commonPracticeDialogHeight"
+        android:layout_marginEnd="@dimen/addEditInsuranceMainContainerHorizontalMargin"
+        android:layout_marginStart="@dimen/addEditInsuranceMainContainerHorizontalMargin">
 
         <FrameLayout
             android:id="@+id/insurance_toolbar"
@@ -58,34 +57,32 @@
             android:paddingBottom="@dimen/dimen_10dp"
             android:paddingEnd="@dimen/dimen_24dp"
             android:paddingStart="@dimen/dimen_24dp"
-            android:paddingTop="@dimen/dimen_10dp">
+            android:padding="@dimen/distributionButtonContainersPadding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/remove_insurance_entry"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dimen_3dp"
-                android:layout_marginEnd="@dimen/dimen_5dp"
+                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:layout_weight="0.3"
                 android:background="@drawable/button_rounded_rose"
                 android:padding="@dimen/dimen_10dp"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_22"
+                android:textSize="@dimen/respons_button_text_size"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="demographics_documents_remove" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/save_insurance_changes"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dimen_3dp"
-                android:layout_marginStart="@dimen/dimen_5dp"
+                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:layout_weight="0.7"
                 android:background="@drawable/green_rounded_button_selector_always_click"
                 android:enabled="true"
                 android:padding="@dimen/dimen_10dp"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_22"
+                android:textSize="@dimen/respons_button_text_size"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="demographics_save_changes_button" />
         </LinearLayout>
@@ -97,8 +94,8 @@
             android:layout_above="@id/dialog_add_edit_insurance_bottom_toolbar"
             android:layout_below="@id/insurance_toolbar"
             android:background="@color/white"
-            android:paddingEnd="@dimen/dimen_24dp"
-            android:paddingStart="@dimen/dimen_24dp"
+            android:paddingEnd="@dimen/addEditInsuranceMainContainerHorizontalMargin"
+            android:paddingStart="@dimen/addEditInsuranceMainContainerHorizontalMargin"
             android:scrollbars="none">
 
             <include
