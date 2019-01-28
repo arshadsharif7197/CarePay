@@ -158,6 +158,9 @@ public class CloverPaymentAdapter {
     }
 
     private void initCloverPayment(IntegratedPaymentPostModel postModel){
+        //release old client before each payment to prevent a stale connection or Socket Exception
+        DevicePayment.releasePaymentConnection();
+
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("patient_id", practiceInfo.getPatientId());
 
