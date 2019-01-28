@@ -13,16 +13,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentInterface;
 import com.carecloud.carepay.patient.appointments.createappointment.calendar.DateRangeDialogFragment;
-import com.carecloud.carepay.patient.appointments.createappointment.calendar.DateRangeInterface;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.interfaces.DateCalendarRangeInterface;
+import com.carecloud.carepaylibray.appointments.interfaces.ScheduleAppointmentInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDataDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentResourceDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPrePaymentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
@@ -31,6 +32,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProvidersReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -48,12 +50,12 @@ import java.util.Map;
 /**
  * @author pjohnson on 1/16/19.
  */
-public class AvailabilityHourFragment extends BaseFragment implements DateRangeInterface {
+public class AvailabilityHourFragment extends BaseFragment implements DateCalendarRangeInterface {
 
-    private CreateAppointmentInterface callback;
+    private ScheduleAppointmentInterface callback;
     private AppointmentsResultModel appointmentModelDto;
     private ProvidersReasonDTO selectedProviderReason;
-    private AppointmentResourceDTO selectedResource;
+    private AppointmentResourcesItemDTO selectedResource;
     private LocationDTO selectedLocation;
     private String today = Label.getLabel("today_label");
     private String tomorrow = Label.getLabel("add_appointment_tomorrow");
@@ -71,10 +73,10 @@ public class AvailabilityHourFragment extends BaseFragment implements DateRangeI
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof CreateAppointmentInterface) {
-            callback = (CreateAppointmentInterface) context;
+        if (context instanceof AppointmentViewHandler) {
+            callback = ((AppointmentViewHandler) context).getAppointmentPresenter();
         } else {
-            throw new ClassCastException("context must implement CreateAppointmentInterface.");
+            throw new ClassCastException("context must implement AppointmentViewHandler.");
         }
     }
 
@@ -128,8 +130,12 @@ public class AvailabilityHourFragment extends BaseFragment implements DateRangeI
                         }
                     }));
         } else {
+            availableHoursRecyclerView.setVisibility(View.GONE);
             noAppointmentLayout.setVisibility(View.VISIBLE);
-            noAppointmentLayout.setVisibility(View.GONE);
+            TextView titleTextView = noAppointmentLayout.findViewById(R.id.no_apt_message_title);
+            titleTextView.setText(Label.getLabel("no_appointment_slots_title"));
+            TextView subTitleTextView = noAppointmentLayout.findViewById(R.id.no_apt_message_desc);
+            subTitleTextView.setText(Label.getLabel("no_appointment_slots_message"));
         }
     }
 
@@ -294,6 +300,14 @@ public class AvailabilityHourFragment extends BaseFragment implements DateRangeI
                 hideProgressDialog();
                 AppointmentsResultModel availabilityDto = DtoHelper
                         .getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
+                if (availabilityDto.getPayload().getAppointmentAvailability().getPayload().isEmpty()) {
+                    AppointmentAvailabilityPayloadDTO payload = new AppointmentAvailabilityPayloadDTO();
+                    payload.setLocation(selectedLocation);
+                    payload.setResource(selectedResource);
+                    payload.setVisitReason(selectedProviderReason);
+                    availabilityDto.getPayload().getAppointmentAvailability().getPayload().add(payload);
+                }
+
                 availabilityDto.getPayload().getAppointmentAvailability().getPayload().get(0)
                         .getResource().getProvider().setPhoto(selectedResource.getProvider().getPhoto());
                 availabilityDto.getPayload().getAppointmentAvailability().getPayload().get(0)

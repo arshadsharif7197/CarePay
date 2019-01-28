@@ -19,7 +19,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentInterface;
+import com.carecloud.carepaylibray.appointments.interfaces.ScheduleAppointmentInterface;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -34,6 +34,7 @@ import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -54,7 +55,7 @@ import java.util.Map;
  */
 public class RequestAppointmentDialogFragment extends BaseDialogFragment {
 
-    private CreateAppointmentInterface callback;
+    private ScheduleAppointmentInterface callback;
     private AppointmentsResultModel appointmentModelDto;
     private AppointmentDTO appointmentDto;
     private UserPracticeDTO selectedPractice;
@@ -71,10 +72,10 @@ public class RequestAppointmentDialogFragment extends BaseDialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof CreateAppointmentInterface) {
-            callback = (CreateAppointmentInterface) context;
+        if (context instanceof AppointmentViewHandler) {
+            callback = ((AppointmentViewHandler) context).getAppointmentPresenter();
         } else {
-            throw new ClassCastException("context must implement CreateAppointmentInterface.");
+            throw new ClassCastException("context must implement AppointmentViewHandler.");
         }
     }
 

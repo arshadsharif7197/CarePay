@@ -6,18 +6,17 @@ import android.support.v4.app.Fragment;
 
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.ISession;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 
 /**
  * Created by lmenendez on 5/15/17.
  */
 
-public interface AppointmentViewHandler extends ISession {
+public interface AppointmentViewHandler extends ISession, FragmentActivityInterface {
 
     AppointmentPresenter getAppointmentPresenter();
 
     Context getContext();
-
-    void navigateToFragment(Fragment fragment, boolean addToBackStack);
 
     void displayDialogFragment(DialogFragment fragment, boolean addToBackStack);
 

@@ -1,11 +1,11 @@
-package com.carecloud.carepay.patient.appointments.createappointment.calendar;
+package com.carecloud.carepaylibray.appointments.interfaces;
 
 import java.util.Date;
 
 /**
  * @author pjohnson on 1/17/19.
  */
-public interface DateRangeInterface {
+public interface DateCalendarRangeInterface {
 
     void setDateRange(Date newStartDate, Date newEndDate);
 }

@@ -16,6 +16,8 @@ import android.widget.Toast;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.interfaces.DateCalendarRangeInterface;
+import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.squareup.timessquare.CalendarPickerView;
 
@@ -37,7 +39,7 @@ public class DateRangeDialogFragment extends BaseDialogFragment {
     private Date newStartDate;
     private CalendarPickerView calendarPickerView;
     private Button applyDateRangeButton;
-    private DateRangeInterface callback;
+    private DateCalendarRangeInterface callback;
 
     public static DateRangeDialogFragment newInstance(Date startDate, Date endDate) {
         Bundle args = new Bundle();
@@ -57,10 +59,10 @@ public class DateRangeDialogFragment extends BaseDialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof DateRangeInterface) {
-            callback = (DateRangeInterface) context;
+        if (context instanceof AppointmentViewHandler) {
+            callback = ((AppointmentViewHandler) context).getAppointmentPresenter();
         } else {
-            throw new ClassCastException("context must implement DateRangeInterface.");
+            throw new ClassCastException("context must implement AppointmentViewHandler.");
         }
     }
 

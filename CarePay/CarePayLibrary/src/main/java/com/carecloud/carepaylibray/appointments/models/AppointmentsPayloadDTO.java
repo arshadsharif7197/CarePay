@@ -114,7 +114,7 @@ public class AppointmentsPayloadDTO {
     private ProviderDTO provider = new ProviderDTO();
     @SerializedName("resource")
     @Expose
-    private AppointmentResourceDTO resource = new AppointmentResourceDTO();
+    private AppointmentResourcesItemDTO resource = new AppointmentResourcesItemDTO();
 
     private AppointmentDisplayStyle displayStyle;
     private String reasonForVisit;
@@ -542,14 +542,14 @@ public class AppointmentsPayloadDTO {
     /**
      * @return The resource
      */
-    public AppointmentResourceDTO getResource() {
+    public AppointmentResourcesItemDTO getResource() {
         return resource;
     }
 
     /**
      * @param resource The resource
      */
-    public void setResource(AppointmentResourceDTO resource) {
+    public void setResource(AppointmentResourcesItemDTO resource) {
         this.resource = resource;
     }
 

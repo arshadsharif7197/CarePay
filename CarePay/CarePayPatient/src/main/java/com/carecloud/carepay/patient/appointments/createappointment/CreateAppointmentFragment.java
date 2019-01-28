@@ -22,15 +22,22 @@ import com.carecloud.carepay.patient.appointments.adapters.PracticesAdapter;
 import com.carecloud.carepay.patient.appointments.createappointment.location.LocationListFragment;
 import com.carecloud.carepay.patient.appointments.createappointment.provider.ProviderListFragment;
 import com.carecloud.carepay.patient.appointments.createappointment.visitType.VisitTypeListFragment;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.interfaces.ScheduleAppointmentInterface;
+import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
+import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
+import com.carecloud.carepaylibray.appointments.models.ProvidersReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.PicassoHelper;
@@ -50,7 +57,7 @@ public class CreateAppointmentFragment extends BaseFragment implements CreateApp
     private AppointmentResourcesItemDTO selectedResource;
     private VisitTypeDTO selectedVisitType;
     private LocationDTO selectedLocation;
-    private CreateAppointmentInterface callback;
+    private ScheduleAppointmentInterface callback;
     private AppointmentsResultModel appointmentsModelDto;
     private TextView providersNoDataTextView;
     private TextView visitTypeNoDataTextView;
@@ -81,10 +88,10 @@ public class CreateAppointmentFragment extends BaseFragment implements CreateApp
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof CreateAppointmentInterface) {
-            callback = (CreateAppointmentInterface) context;
+        if (context instanceof AppointmentViewHandler) {
+            callback = ((AppointmentViewHandler) context).getAppointmentPresenter();
         } else {
-            throw new ClassCastException("context must implement CreateAppointmentInterface.");
+            throw new ClassCastException("context must implement AppointmentViewHandler.");
         }
     }
 
@@ -126,6 +133,42 @@ public class CreateAppointmentFragment extends BaseFragment implements CreateApp
         setUpUI(view);
     }
 
+    private void setUpToolbar(View view) {
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
+        toolbar.setNavigationIcon(R.drawable.icn_nav_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
+        TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
+        title.setText(Label.getLabel("appointments_heading"));
+        callback.displayToolbar(false, null);
+    }
+
+    private void showPracticeList(View view) {
+        RecyclerView practicesRecyclerView = view.findViewById(R.id.practicesRecyclerView);
+        if (appointmentsModelDto.getPayload().getUserPractices().size() > 1) {
+            practicesRecyclerView.setVisibility(View.VISIBLE);
+            practicesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
+                    LinearLayoutManager.HORIZONTAL, false));
+            PracticesAdapter adapter = new PracticesAdapter(appointmentsModelDto.getPayload().getUserPractices());
+            adapter.setCallback(new PracticesAdapter.PracticeSelectInterface() {
+                @Override
+                public void onPracticeSelected(UserPracticeDTO userPracticeDTO) {
+                    if (!selectedPractice.getPracticeId().equals(userPracticeDTO.getPracticeId())) {
+                        resetForm();
+                    }
+                    selectedPractice = userPracticeDTO;
+                }
+            });
+            practicesRecyclerView.setAdapter(adapter);
+        } else {
+            practicesRecyclerView.setVisibility(View.GONE);
+        }
+    }
+
     private void setUpUI(View view) {
         providersNoDataTextView = view.findViewById(R.id.providersNoDataTextView);
         providersNoDataTextView.setOnClickListener(new View.OnClickListener() {
@@ -165,6 +208,7 @@ public class CreateAppointmentFragment extends BaseFragment implements CreateApp
             setResourceProvider(selectedResource);
             setVisitType(selectedVisitType);
             setLocation(selectedLocation);
+            view.findViewById(R.id.practicesRecyclerView).setVisibility(View.GONE);
         }
     }
 
@@ -172,6 +216,7 @@ public class CreateAppointmentFragment extends BaseFragment implements CreateApp
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("practice_mgmt", selectedPractice.getPracticeMgmt());
         queryMap.put("practice_id", selectedPractice.getPracticeId());
+        queryMap.put("patient_id", getPatientId(selectedPractice.getPracticeId()));
         queryMap.put("visit_reason_id", String.valueOf(selectedVisitType.getId()));
         queryMap.put("resource_ids", String.valueOf(selectedResource.getId()));
         queryMap.put("location_ids", String.valueOf(selectedLocation.getId()));
@@ -186,10 +231,24 @@ public class CreateAppointmentFragment extends BaseFragment implements CreateApp
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
                 AppointmentsResultModel availabilityDto = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
+                if (availabilityDto.getPayload().getAppointmentAvailability().getPayload().isEmpty()) {
+                    AppointmentAvailabilityPayloadDTO payload = new AppointmentAvailabilityPayloadDTO();
+                    payload.setLocation(selectedLocation);
+                    payload.setResource(selectedResource);
+                    ProvidersReasonDTO reasonDTO = new ProvidersReasonDTO();
+                    reasonDTO.setAmount(selectedVisitType.getAmount());
+                    reasonDTO.setName(selectedVisitType.getName());
+                    reasonDTO.setDescription(selectedVisitType.getDescription());
+                    reasonDTO.setId(selectedVisitType.getId());
+                    payload.setVisitReason(reasonDTO);
+                    availabilityDto.getPayload().getAppointmentAvailability().getPayload().add(payload);
+                }
                 availabilityDto.getPayload().getAppointmentAvailability().getPayload().get(0)
                         .getResource().getProvider().setPhoto(selectedResource.getProvider().getPhoto());
-                availabilityDto.getPayload().getAppointmentAvailability().getPayload().get(0).getVisitReason().setAmount(selectedVisitType.getAmount());
-                appointmentsModelDto.getPayload().setAppointmentAvailability(availabilityDto.getPayload().getAppointmentAvailability());
+                availabilityDto.getPayload().getAppointmentAvailability().getPayload().get(0)
+                        .getVisitReason().setAmount(selectedVisitType.getAmount());
+                appointmentsModelDto.getPayload().setAppointmentAvailability(availabilityDto.getPayload()
+                        .getAppointmentAvailability());
                 callback.showAvailabilityHourFragment();
             }
 
@@ -200,20 +259,6 @@ public class CreateAppointmentFragment extends BaseFragment implements CreateApp
                 Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
             }
         }, queryMap);
-    }
-
-    private void setUpToolbar(View view) {
-        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
-        toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
-        TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
-        title.setText(Label.getLabel("appointments_heading"));
-        callback.displayToolbar(false, null);
     }
 
     private void showLocationList(UserPracticeDTO selectedPractice,
@@ -238,28 +283,6 @@ public class CreateAppointmentFragment extends BaseFragment implements CreateApp
         ProviderListFragment fragment = ProviderListFragment
                 .newInstance(selectedPractice, selectedVisitType, selectedLocation);
         callback.showFragment(fragment);
-    }
-
-    private void showPracticeList(View view) {
-        RecyclerView practicesRecyclerView = view.findViewById(R.id.practicesRecyclerView);
-        if (appointmentsModelDto.getPayload().getUserPractices().size() > 1) {
-            practicesRecyclerView.setVisibility(View.VISIBLE);
-            practicesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
-                    LinearLayoutManager.HORIZONTAL, false));
-            PracticesAdapter adapter = new PracticesAdapter(appointmentsModelDto.getPayload().getUserPractices());
-            adapter.setCallback(new PracticesAdapter.PracticeSelectInterface() {
-                @Override
-                public void onPracticeSelected(UserPracticeDTO userPracticeDTO) {
-                    if (!selectedPractice.getPracticeId().equals(userPracticeDTO.getPracticeId())) {
-                        resetForm();
-                    }
-                    selectedPractice = userPracticeDTO;
-                }
-            });
-            practicesRecyclerView.setAdapter(adapter);
-        } else {
-            practicesRecyclerView.setVisibility(View.GONE);
-        }
     }
 
     private void resetForm() {
@@ -381,5 +404,17 @@ public class CreateAppointmentFragment extends BaseFragment implements CreateApp
         checkAvailabilityButton.setEnabled(selectedResource != null
                 && selectedVisitType != null
                 && selectedLocation != null);
+    }
+
+    private String getPatientId(String practiceId) {
+        PracticePatientIdsDTO[] practicePatientIdArray = ApplicationPreferences.getInstance()
+                .getObjectFromSharedPreferences(CarePayConstants.KEY_PRACTICE_PATIENT_IDS,
+                        PracticePatientIdsDTO[].class);
+        for (PracticePatientIdsDTO practicePatientId : practicePatientIdArray) {
+            if (practicePatientId.getPracticeId().equals(practiceId)) {
+                return practicePatientId.getPatientId();
+            }
+        }
+        return null;
     }
 }
