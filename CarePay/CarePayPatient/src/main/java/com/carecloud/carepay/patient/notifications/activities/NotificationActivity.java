@@ -251,7 +251,7 @@ public class NotificationActivity extends MenuPatientActivity
 
     @Override
     public void refreshAppointments() {
-
+        displayToolbar(true, null);
     }
 
     private void initPresenter(final AppointmentDTO appointmentDTO) {
