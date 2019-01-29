@@ -259,13 +259,13 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             if (checkinFlowCallback.getCurrentStep() == CheckinFlowCallback.IDENTITY) {
-                MixPanelUtil.endTimer(getString(R.string.timer_identification_docs));
+                MixPanelUtil.endTimer(getActivityProxy().getString(R.string.timer_identification_docs));
             }else if (checkinFlowCallback.getCurrentStep() == CheckinFlowCallback.INSURANCE) {
-                MixPanelUtil.endTimer(getString(R.string.timer_health_insurance));
+                MixPanelUtil.endTimer(getActivityProxy().getString(R.string.timer_health_insurance));
             }
 
             if (checkinFlowCallback.getCurrentStep() >= checkinFlowCallback.getTotalSteps()) {
-                MixPanelUtil.endTimer(getString(R.string.timer_demographics));
+                MixPanelUtil.endTimer(getActivityProxy().getString(R.string.timer_demographics));
                 if (NavigationStateConstants.PATIENT_HOME.equals(workflowDTO.getState())
                         || NavigationStateConstants.APPOINTMENTS.equals(workflowDTO.getState())) {
                     onUpdate(checkinFlowCallback, workflowDTO);
