@@ -448,6 +448,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         TransitionDTO transition = appointmentsResultModel.getMetadata().getLinks().getVisitSummary();
         JsonObject body = new JsonObject();
         body.addProperty("appointment_id", appointment.getPayload().getId());
+        body.addProperty("practice_mgmt", appointment.getMetadata().getPracticeMgmt());
+        body.addProperty("practice_id", appointment.getMetadata().getPracticeId());
         body.addProperty("format", "pdf");
         viewHandler.getWorkflowServiceHelper().execute(transition, callback, body.toString());
     }
