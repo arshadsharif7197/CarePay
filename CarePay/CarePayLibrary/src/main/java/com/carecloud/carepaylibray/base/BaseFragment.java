@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.base;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -22,7 +23,7 @@ public abstract class BaseFragment extends Fragment implements ISession {
     private boolean isPracticeAppPatientMode;
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
         isPracticeAppPatientMode = getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE;
@@ -30,13 +31,13 @@ public abstract class BaseFragment extends Fragment implements ISession {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         setLastInteraction(System.currentTimeMillis());
     }
 
-    protected void hideKeyboardOnViewTouch(View view){
-        if(isPracticeAppPatientMode && view!=null){
+    protected void hideKeyboardOnViewTouch(View view) {
+        if (isPracticeAppPatientMode && view != null) {
             view.setSoundEffectsEnabled(false);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -64,47 +65,47 @@ public abstract class BaseFragment extends Fragment implements ISession {
 
     @Override
     public ApplicationPreferences getApplicationPreferences() {
-        return ((ISession) getActivity()).getApplicationPreferences();
+        return ((ISession) getActivityProxy()).getApplicationPreferences();
     }
 
     @Override
     public WorkflowServiceHelper getWorkflowServiceHelper() {
-        return ((ISession) getActivity()).getWorkflowServiceHelper();
+        return ((ISession) getActivityProxy()).getWorkflowServiceHelper();
     }
 
     @Override
     public AppAuthorizationHelper getAppAuthorizationHelper() {
-        return ((IApplicationSession) getActivity()).getAppAuthorizationHelper();
+        return ((IApplicationSession) getActivityProxy()).getAppAuthorizationHelper();
     }
 
     @Override
     public ApplicationMode getApplicationMode() {
-        return ((IApplicationSession) getActivity()).getApplicationMode();
+        return ((IApplicationSession) getActivityProxy()).getApplicationMode();
     }
 
     @Override
-    public void onAtomicRestart(){
-        ((IApplicationSession) getActivity()).onAtomicRestart();
+    public void onAtomicRestart() {
+        ((IApplicationSession) getActivityProxy()).onAtomicRestart();
     }
 
     @Override
-    public void setLastInteraction(long systemTime){
-        ((IApplicationSession) getActivity()).setLastInteraction(systemTime);
+    public void setLastInteraction(long systemTime) {
+        ((IApplicationSession) getActivityProxy()).setLastInteraction(systemTime);
     }
 
     @Override
-    public long getLastInteraction(){
-        return ((IApplicationSession) getActivity()).getLastInteraction();
+    public long getLastInteraction() {
+        return ((IApplicationSession) getActivityProxy()).getLastInteraction();
     }
 
     @Override
     public void setNewRelicInteraction(String interactionName) {
-        ((IApplicationSession) getActivity()).setNewRelicInteraction(interactionName);
+        ((IApplicationSession) getActivityProxy()).setNewRelicInteraction(interactionName);
     }
 
     @Override
     public void showProgressDialog() {
-        ISession session = (ISession) getActivity();
+        ISession session = (ISession) getActivityProxy();
         if (null != session) {
             session.showProgressDialog();
         }
@@ -112,7 +113,7 @@ public abstract class BaseFragment extends Fragment implements ISession {
 
     @Override
     public void hideProgressDialog() {
-        ISession session = (ISession) getActivity();
+        ISession session = (ISession) getActivityProxy();
         if (null != session) {
             session.hideProgressDialog();
         }
@@ -120,7 +121,7 @@ public abstract class BaseFragment extends Fragment implements ISession {
 
     @Override
     public void showErrorNotification(String errorMessage) {
-        ISession session = (ISession) getActivity();
+        ISession session = (ISession) getActivityProxy();
         if (null != session) {
             session.showErrorNotification(errorMessage);
         }
@@ -128,29 +129,29 @@ public abstract class BaseFragment extends Fragment implements ISession {
 
     @Override
     public void hideErrorNotification() {
-        ISession session = (ISession) getActivity();
+        ISession session = (ISession) getActivityProxy();
         if (null != session) {
             session.hideErrorNotification();
         }
     }
 
-    protected void hideDefaultActionBar(){
-        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
-        if(actionBar!=null){
+    protected void hideDefaultActionBar() {
+        ActionBar actionBar = ((AppCompatActivity) getActivityProxy()).getSupportActionBar();
+        if (actionBar != null) {
             actionBar.hide();
         }
     }
 
-    protected void showDefaultActionBar(){
-        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
-        if(actionBar!=null){
+    protected void showDefaultActionBar() {
+        ActionBar actionBar = ((AppCompatActivity) getActivityProxy()).getSupportActionBar();
+        if (actionBar != null) {
             actionBar.show();
         }
     }
 
     @Override
     public void setNavigationBarVisibility() {
-        if(getView() != null) {
+        if (getView() != null) {
             View decorView = getView().getRootView();
             int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -160,5 +161,8 @@ public abstract class BaseFragment extends Fragment implements ISession {
         }
     }
 
+    protected Activity getActivityProxy() {
+        return getActivity();
+    }
 
 }
