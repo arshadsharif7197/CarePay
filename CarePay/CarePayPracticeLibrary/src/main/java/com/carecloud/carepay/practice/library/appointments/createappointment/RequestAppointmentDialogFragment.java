@@ -14,6 +14,7 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 /**
  * @author pjohnson on 1/17/19.
  */
+@Deprecated
 public class RequestAppointmentDialogFragment extends BaseRequestAppointmentDialogFragment {
 
     public static RequestAppointmentDialogFragment newInstance(AppointmentDTO appointmentDTO) {

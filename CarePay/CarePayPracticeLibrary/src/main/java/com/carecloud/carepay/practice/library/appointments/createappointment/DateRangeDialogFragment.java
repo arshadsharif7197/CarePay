@@ -1,17 +1,16 @@
-package com.carecloud.carepay.patient.appointments.createappointment;
+package com.carecloud.carepay.practice.library.appointments.createappointment;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.createappointment.BaseDateRangeDialogFragment;
 
 import java.util.Date;
@@ -46,24 +45,21 @@ public class DateRangeDialogFragment extends BaseDateRangeDialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         inflateToolbar(view);
+        view.findViewById(R.id.todayButton).setOnClickListener(todayButtonClickListener);
     }
 
     private void inflateToolbar(View view) {
-        Toolbar toolbar = view.findViewById(R.id.add_appointment_toolbar);
-        toolbar.setTitle("");
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
+        TextView toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
+        toolbarTitle.setText(Label.getLabel("pick_date_heading"));
 
-        Drawable closeIcon = ContextCompat.getDrawable(getActivity(),
-                R.drawable.icn_patient_mode_nav_close);
-        toolbar.setNavigationIcon(closeIcon);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
-        View todayButton = toolbar.findViewById(R.id.today_button);
-        todayButton.setOnClickListener(todayButtonClickListener);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.closeViewLayout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+                dismiss();
             }
         });
+
+
     }
 }

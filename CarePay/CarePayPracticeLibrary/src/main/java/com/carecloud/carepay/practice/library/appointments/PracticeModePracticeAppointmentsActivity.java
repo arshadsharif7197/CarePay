@@ -2,6 +2,7 @@ package com.carecloud.carepay.practice.library.appointments;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -9,7 +10,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.adhocforms.AdHocFormsListFragment;
 import com.carecloud.carepay.practice.library.appointments.createappointment.AvailabilityHourFragment;
-import com.carecloud.carepay.practice.library.appointments.createappointment.CreateAppointmentFragment;
 import com.carecloud.carepay.practice.library.appointments.dialogs.CancelAppointmentConfirmDialogFragment;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAppointmentDialog;
 import com.carecloud.carepay.practice.library.appointments.dtos.PracticeAppointmentDTO;
@@ -788,7 +788,9 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     @Override
-    public void displayBalanceDetails(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem, PendingBalanceDTO selectedBalance) {
+    public void displayBalanceDetails(PaymentsModel paymentsModel,
+                                      PendingBalancePayloadDTO paymentLineItem,
+                                      PendingBalanceDTO selectedBalance) {
         onDetailItemClick(paymentsModel, paymentLineItem);
     }
 
@@ -809,11 +811,9 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void refreshAppointmentsList() {
-        getSupportFragmentManager().popBackStack();
-        getSupportFragmentManager().popBackStack();
-        getSupportFragmentManager().executePendingTransactions();
-//        getSupportFragmentManager().popBackStackImmediate(AvailabilityHourFragment.class.getName(), 0);
-//        getSupportFragmentManager().executePendingTransactions();
+        getSupportFragmentManager().popBackStackImmediate(AvailabilityHourFragment.class.getName(),
+                FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        getSupportFragmentManager().popBackStackImmediate();
         onAppointmentRequestSuccess();
     }
 }

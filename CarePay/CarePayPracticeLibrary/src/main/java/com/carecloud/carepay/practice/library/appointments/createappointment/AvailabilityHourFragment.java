@@ -61,7 +61,6 @@ public class AvailabilityHourFragment extends BaseAvailabilityHourFragment imple
 
     @Override
     protected void selectDateRange() {
-//        showProgressDialog();
-//        callback.addFragment(DateRangeDialogFragment.newInstance(startDate, endDate), true);
+        callback.showFragment(DateRangeDialogFragment.newInstance(startDate, endDate));
     }
 }

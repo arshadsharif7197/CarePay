@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.createappointment.AvailabilityHourFragment;
@@ -22,6 +23,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.createappointment.CreateAppointmentFragmentInterface;
 import com.carecloud.carepaylibray.appointments.interfaces.AppointmentNavigationCallback;
 import com.carecloud.carepaylibray.appointments.interfaces.AppointmentPrepaymentCallback;
+import com.carecloud.carepaylibray.appointments.interfaces.DateCalendarRangeInterface;
 import com.carecloud.carepaylibray.appointments.interfaces.ScheduleAppointmentInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -434,7 +436,14 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     @Override
     public void showFragment(DialogFragment fragment) {
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
+        String tag = fragment.getClass().getName();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(tag);
+        fragment.show(ft, tag);
     }
 
     @Override
@@ -486,7 +495,11 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     @Override
     public void setDateRange(Date newStartDate, Date newEndDate) {
-
+        Fragment fragment = getSupportFragmentManager()
+                .findFragmentByTag(AvailabilityHourFragment.class.getName());
+        if (fragment instanceof DateCalendarRangeInterface) {
+            ((DateCalendarRangeInterface) fragment).setDateRange(newStartDate, newEndDate);
+        }
     }
 
     @Override

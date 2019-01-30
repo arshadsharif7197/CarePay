@@ -45,11 +45,6 @@ public class VisitTypeListFragment extends BaseVisitTypeListFragment {
         setUpToolbar(view);
     }
 
-    @Override
-    protected void showProgress() {
-        showProgressDialog();
-    }
-
     private void setUpToolbar(View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
