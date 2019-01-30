@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.appointments.createappointment.location;
+package com.carecloud.carepay.practice.library.appointments.createappointment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.createappointment.BaseLocationListFragment;
@@ -47,15 +47,13 @@ public class LocationListFragment extends BaseLocationListFragment {
 
     private void setUpToolbar(View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
-        toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        TextView title = toolbar.findViewById(R.id.toolbar_title);
+        title.setText(Label.getLabel("payment_choose_location"));
+        view.findViewById(R.id.closeViewLayout).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
+            public void onClick(View v) {
+                dismiss();
             }
         });
-        TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
-        title.setText(Label.getLabel("payment_choose_location"));
-        callback.displayToolbar(false, null);
     }
 }

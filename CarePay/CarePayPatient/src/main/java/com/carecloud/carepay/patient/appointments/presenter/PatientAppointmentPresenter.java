@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.appointments.presenter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -10,7 +11,6 @@ import android.util.Log;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
 import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentFragment;
-import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentFragmentInterface;
 import com.carecloud.carepay.patient.appointments.createappointment.availablehours.AvailabilityHourFragment;
 import com.carecloud.carepay.patient.appointments.createappointment.requestappointment.RequestAppointmentDialogFragment;
 import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentFeeDialog;
@@ -31,6 +31,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.createappointment.CreateAppointmentFragmentInterface;
 import com.carecloud.carepaylibray.appointments.interfaces.DateCalendarRangeInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentCancellationFee;
@@ -798,7 +799,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     @Override
-    public void showFragment(Fragment fragment) {
+    public void showFragment(DialogFragment fragment) {
         addFragment(fragment, true);
     }
 

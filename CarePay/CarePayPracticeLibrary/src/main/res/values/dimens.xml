@@ -671,6 +671,7 @@
     <dimen name="paymentMethodImageWidth">36dp</dimen>
     <dimen name="paymentMethodItemNamePadding">13dp</dimen>
     <dimen name="paymentMethodItemNameTextSize">22sp</dimen>
+    <dimen name="createAppointmentImageLabelSize">40dp</dimen>
 
 
 </resources>

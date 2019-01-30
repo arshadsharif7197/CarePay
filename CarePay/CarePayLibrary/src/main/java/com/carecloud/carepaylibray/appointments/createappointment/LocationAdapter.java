@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.appointments.createappointment.location;
+package com.carecloud.carepaylibray.appointments.createappointment;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.carecloud.carepay.patient.R;
+import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 

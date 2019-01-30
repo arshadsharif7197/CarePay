@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.appointments;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,6 +27,7 @@ import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -56,13 +58,13 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_providers_patient);
 
-        appointmentsRecyclerView = (RecyclerView) findViewById(R.id.provider_recycler_view);
+        appointmentsRecyclerView = findViewById(R.id.provider_recycler_view);
         appointmentsRecyclerView.setHasFixedSize(true);
 
-        ProgressBar appointmentProgressBar = (ProgressBar) findViewById(R.id.appointmentProgressBar);
+        ProgressBar appointmentProgressBar = findViewById(R.id.appointmentProgressBar);
         appointmentProgressBar.setVisibility(View.GONE);
 
-        noAppointmentView = (LinearLayout) findViewById(R.id.no_providers_layout);
+        noAppointmentView = findViewById(R.id.no_providers_layout);
         findViewById(R.id.provider_logout).setOnClickListener(this);
         findViewById(R.id.btnHome).setOnClickListener(this);
 
@@ -242,14 +244,14 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
                                            AppointmentAvailabilityDTO availabilityDTO) {
         // Call Request appointment Summary dialog from here
         String cancelString = Label.getLabel("available_hours_back");
-        new PatientModeRequestAppointmentDialog(
-                this,
-                cancelString,
-                appointmentsSlot,
-                appointmentResourcesDTO,
-                visitTypeDTO,
-                this
-        ).show();
+//        new PatientModeRequestAppointmentDialog(
+//                this,
+//                cancelString,
+//                appointmentsSlot,
+//                appointmentResourcesDTO,
+//                visitTypeDTO,
+//                this
+//        ).show();
     }
 
     @Override
@@ -265,5 +267,15 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
     @Override
     public void onDateSelected(Date selectedDate) {
         //Not Implemented
+    }
+
+    @Override
+    public DTO getDto() {
+        return null;
+    }
+
+    @Override
+    public void refreshAppointmentsList() {
+
     }
 }

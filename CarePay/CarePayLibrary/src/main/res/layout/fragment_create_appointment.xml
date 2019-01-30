@@ -91,7 +91,7 @@
                 android:layout_marginTop="@dimen/createAppointmentNoDataVerticalMargin"
                 android:layout_marginEnd="@dimen/createAppointmentMainPadding"
                 android:layout_marginBottom="@dimen/createAppointmentNoDataVerticalMargin"
-                android:background="@drawable/my_health_no_data_background"
+                android:background="@drawable/no_data_background"
                 android:foreground="?selectableItemBackground"
                 android:gravity="center"
                 android:padding="@dimen/createAppointmentNoDataPadding"
@@ -102,7 +102,7 @@
 
             <include
                 android:id="@+id/providerContainer"
-                layout="@layout/layout_create_appointment_ster"
+                layout="@layout/layout_create_appointment_step"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/createAppointmentDataTextViewHeight"
                 android:layout_marginStart="@dimen/dimen_10dp"
@@ -153,7 +153,7 @@
                 android:layout_marginTop="@dimen/createAppointmentNoDataVerticalMargin"
                 android:layout_marginEnd="@dimen/createAppointmentMainPadding"
                 android:layout_marginBottom="@dimen/createAppointmentNoDataVerticalMargin"
-                android:background="@drawable/my_health_no_data_background"
+                android:background="@drawable/no_data_background"
                 android:foreground="?selectableItemBackground"
                 android:gravity="center"
                 android:padding="@dimen/createAppointmentNoDataPadding"
@@ -164,7 +164,7 @@
 
             <include
                 android:id="@+id/visitTypeContainer"
-                layout="@layout/layout_create_appointment_ster"
+                layout="@layout/layout_create_appointment_step"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/createAppointmentDataTextViewHeight"
                 android:layout_marginStart="@dimen/dimen_10dp"
@@ -215,7 +215,7 @@
                 android:layout_marginTop="@dimen/createAppointmentNoDataVerticalMargin"
                 android:layout_marginEnd="@dimen/createAppointmentMainPadding"
                 android:layout_marginBottom="@dimen/createAppointmentNoDataVerticalMargin"
-                android:background="@drawable/my_health_no_data_background"
+                android:background="@drawable/no_data_background"
                 android:foreground="?selectableItemBackground"
                 android:gravity="center"
                 android:padding="@dimen/createAppointmentNoDataPadding"
@@ -226,7 +226,7 @@
 
             <include
                 android:id="@+id/locationContainer"
-                layout="@layout/layout_create_appointment_ster"
+                layout="@layout/layout_create_appointment_step"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/createAppointmentDataTextViewHeight"
                 android:layout_marginStart="@dimen/dimen_10dp"

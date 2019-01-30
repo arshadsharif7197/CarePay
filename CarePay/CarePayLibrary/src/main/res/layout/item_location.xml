@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:paddingLeft="@dimen/list_apt_padding_right"
-    android:paddingRight="@dimen/list_apt_padding_right">
+    android:background="?selectableItemBackground"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,52 +15,55 @@
         android:baselineAligned="false">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/avatarTextView"
+            android:id="@+id/locationInitialsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
             android:layout_gravity="end"
             android:background="@drawable/round_list_tv"
             android:gravity="center_vertical|center_horizontal"
             android:src="@drawable/icn_placeholder_user_profile_png"
             android:textColor="@color/lightSlateGray"
             android:textSize="@dimen/apt_dl_text_big"
+            android:visibility="gone"
             app:customAssetFont="gotham_rounded_medium" />
 
         <ImageView
-            android:id="@+id/providerPicImageView"
+            android:id="@+id/locationPicImageView"
             android:layout_width="@dimen/payment_details_dialog_icon_size"
-            android:layout_height="@dimen/payment_details_dialog_icon_size" />
+            android:layout_height="@dimen/payment_details_dialog_icon_size"
+            android:visibility="gone" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/textview_margin"
-            android:layout_toEndOf="@id/providerPicImageView"
             android:gravity="center_vertical"
             android:orientation="vertical">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/doctor_name"
+                android:id="@+id/locationNameTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="start"
+                android:gravity="start"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/textview_default_textsize"
                 android:textStyle="bold"
-                tools:text="Dr. Ellie Burton"
-                app:customAssetFont="proxima_nova_semi_bold" />
+                app:customAssetFont="proxima_nova_semi_bold"
+                tools:text="Dr. Ellie Burton" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/doctor_type"
+                android:id="@+id/locationAddressTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:gravity="start"
                 android:textColor="@color/lightSlateGray"
                 android:textSize="@dimen/textview_textsize"
-                tools:text="Pulmonology"
-                app:customAssetFont="proxima_nova_regular" />
+                app:customAssetFont="proxima_nova_regular"
+                tools:text="Pulmonology" />
         </LinearLayout>
     </RelativeLayout>
 

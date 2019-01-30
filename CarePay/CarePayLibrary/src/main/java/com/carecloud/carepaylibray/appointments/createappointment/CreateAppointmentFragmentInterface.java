@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.appointments.createappointment;
+package com.carecloud.carepaylibray.appointments.createappointment;
 
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;

@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_10dp"
             android:layout_marginTop="@dimen/dimen_10dp"
-            android:background="@drawable/my_health_no_data_background"
+            android:background="@drawable/no_data_background"
             android:orientation="vertical"
             android:padding="@dimen/dimen_20dp"
             android:visibility="gone">
@@ -168,7 +168,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_10dp"
             android:layout_marginTop="@dimen/dimen_10dp"
-            android:background="@drawable/my_health_no_data_background"
+            android:background="@drawable/no_data_background"
             android:orientation="vertical"
             android:padding="@dimen/dimen_20dp"
             android:visibility="gone">
@@ -262,7 +262,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_10dp"
             android:layout_marginTop="@dimen/dimen_10dp"
-            android:background="@drawable/my_health_no_data_background"
+            android:background="@drawable/no_data_background"
             android:orientation="vertical"
             android:padding="@dimen/dimen_20dp"
             android:visibility="gone">
@@ -356,7 +356,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_10dp"
             android:layout_marginTop="@dimen/dimen_10dp"
-            android:background="@drawable/my_health_no_data_background"
+            android:background="@drawable/no_data_background"
             android:orientation="vertical"
             android:padding="@dimen/dimen_20dp"
             android:visibility="gone">
@@ -450,7 +450,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_10dp"
             android:layout_marginTop="@dimen/dimen_10dp"
-            android:background="@drawable/my_health_no_data_background"
+            android:background="@drawable/no_data_background"
             android:orientation="vertical"
             android:padding="@dimen/dimen_20dp"
             android:visibility="gone">

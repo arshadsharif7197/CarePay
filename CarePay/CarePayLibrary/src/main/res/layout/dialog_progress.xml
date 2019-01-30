@@ -13,14 +13,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/bg_progress_spinner"/>
+            android:src="@drawable/bg_progress_spinner" />
 
         <ProgressBar
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/dimen_8dp"
-        android:indeterminateDrawable="@drawable/progress_indeterminate_custom"
-        android:indeterminate="true"/>
+            android:indeterminate="true"
+            android:indeterminateDrawable="@drawable/progress_indeterminate_custom" />
 
     </FrameLayout>
 

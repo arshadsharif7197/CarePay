@@ -6,16 +6,4 @@
     <dimen name="menuItemBadeTextSize">13sp</dimen>
     <dimen name="shimmerTextHeight">20dp</dimen>
     <dimen name="shimmerSubTextHeight">15dp</dimen>
-    <dimen name="createAppointmentNoDataTextViewHeight">90dp</dimen>
-    <dimen name="createAppointmentHeaderVerticalMargin">10dp</dimen>
-    <dimen name="createAppointmentMainPadding">15dp</dimen>
-    <dimen name="createAppointmentNoDataVerticalMargin">10dp</dimen>
-    <dimen name="createAppointmentNoDataPadding">20dp</dimen>
-    <dimen name="createAppointmentNoDataTextSize">16sp</dimen>
-    <dimen name="createAppointmentHeaderTopMargin">10dp</dimen>
-    <dimen name="itemVisitTypePadding">15dp</dimen>
-    <dimen name="visitTypeItemTextSize">17sp</dimen>
-    <dimen name="visitTypeAlertImageStartMargin">5dp</dimen>
-    <dimen name="visitTypePrepaymentAmountTextSize">14sp</dimen>
-    <dimen name="createAppointmentDataTextViewHeight">100dp</dimen>
 </resources>

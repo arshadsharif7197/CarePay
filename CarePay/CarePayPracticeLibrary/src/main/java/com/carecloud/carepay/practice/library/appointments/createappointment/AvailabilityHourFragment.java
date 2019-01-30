@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.appointments.createappointment.availablehours;
+package com.carecloud.carepay.practice.library.appointments.createappointment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -6,10 +6,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
 
-import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.appointments.createappointment.calendar.DateRangeDialogFragment;
+import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.createappointment.BaseAvailabilityHourFragment;
 import com.carecloud.carepaylibray.appointments.interfaces.DateCalendarRangeInterface;
@@ -38,34 +37,31 @@ public class AvailabilityHourFragment extends BaseAvailabilityHourFragment imple
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUpToolbar(view);
+        Button changeDateRangeButton = view.findViewById(R.id.changeDateRangeButton);
+        changeDateRangeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectDateRange();
+            }
+        });
     }
 
     private void setUpToolbar(View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
-        toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
-        toolbarTitle = toolbar.findViewById(R.id.add_appointment_toolbar_title);
+        toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
         toolbarTitle.setText(Label.getLabel("today_label"));
-        callback.displayToolbar(false, null);
 
-        TextView titleOther = toolbar.findViewById(R.id.add_appointment_toolbar_other);
-        titleOther.setText(Label.getLabel("appointment_select_range_button"));
-        titleOther.setVisibility(View.VISIBLE);
-        titleOther.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.closeViewLayout).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                selectDateRange();
+            public void onClick(View v) {
+                dismiss();
             }
         });
     }
 
     @Override
     protected void selectDateRange() {
-        callback.addFragment(DateRangeDialogFragment.newInstance(startDate, endDate), true);
+//        showProgressDialog();
+//        callback.addFragment(DateRangeDialogFragment.newInstance(startDate, endDate), true);
     }
 }
