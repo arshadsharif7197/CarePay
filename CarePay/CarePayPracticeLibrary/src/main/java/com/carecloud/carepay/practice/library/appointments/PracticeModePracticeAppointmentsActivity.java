@@ -595,11 +595,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     @Override
-    protected TransitionDTO getMakeAppointmentTransition() {
-        return checkInDTO.getMetadata().getTransitions().getMakeAppointment();
-    }
-
-    @Override
     protected LinksDTO getLinks() {
         return checkInDTO.getMetadata().getLinks();
     }

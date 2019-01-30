@@ -23,7 +23,7 @@ public interface PatientAppointmentNavigationCallback extends AppointmentNavigat
 
     void onCheckInOfficeStarted(AppointmentDTO appointmentDTO);
 
-    void onRescheduleAppointment(AppointmentDTO appointmentDTO);
+//    void onRescheduleAppointment(AppointmentDTO appointmentDTO);
 
     void getQueueStatus(AppointmentDTO appointmentDTO, WorkflowServiceCallback callback);
 

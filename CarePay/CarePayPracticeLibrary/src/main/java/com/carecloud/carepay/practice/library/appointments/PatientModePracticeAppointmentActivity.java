@@ -213,11 +213,6 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
     }
 
     @Override
-    protected TransitionDTO getMakeAppointmentTransition() {
-        return appointmentsResultModel.getMetadata().getTransitions().getMakeAppointment();
-    }
-
-    @Override
     public void onAppointmentRequestSuccess() {
         logout();
     }
@@ -242,16 +237,7 @@ public class PatientModePracticeAppointmentActivity extends BasePracticeAppointm
     @Override
     public void onHoursAndLocationSelected(AppointmentsSlotsDTO appointmentsSlot,
                                            AppointmentAvailabilityDTO availabilityDTO) {
-        // Call Request appointment Summary dialog from here
-        String cancelString = Label.getLabel("available_hours_back");
-//        new PatientModeRequestAppointmentDialog(
-//                this,
-//                cancelString,
-//                appointmentsSlot,
-//                appointmentResourcesDTO,
-//                visitTypeDTO,
-//                this
-//        ).show();
+        //TODO: Refactor this (take out Appointment Navigation Interface) after SHMRK-8014
     }
 
     @Override

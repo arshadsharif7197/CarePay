@@ -15,7 +15,6 @@ import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodPrepaymentFragment;
-import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -30,7 +29,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
@@ -48,11 +46,9 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPo
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.timessquare.CalendarPickerView;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by cocampo on 3/13/17
@@ -82,36 +78,10 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         paymentsModel = getConvertedDTO(PaymentsModel.class);
     }
 
-    /**
-     * Shows Confirmation after Appointment Created
-     */
-    public void showAppointmentConfirmation() {
-        if (isVisible()) {
-            ApplicationMode.ApplicationType applicationType = getApplicationMode().getApplicationType();
-            boolean autoScheduleAppointments = getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests();
-
-            SystemUtil.showSuccessToast(getContext(),
-                    Label.getLabel(applicationType == ApplicationMode.ApplicationType.PRACTICE || autoScheduleAppointments ?
-                            "appointment_schedule_success_message_HTML" : "appointment_request_success_message_HTML"));
-        }
-
-        onAppointmentRequestSuccess();
-    }
-
     @Override
     public void onHoursAndLocationSelected(AppointmentsSlotsDTO appointmentsSlot,
                                            AppointmentAvailabilityDTO availabilityDTO) {
-        // Call Request appointment Summary dialog from here
-        String cancelString = Label.getLabel("available_hours_back");
-//        new PracticeModeRequestAppointmentDialog(
-//                this,
-//                cancelString,
-//                appointmentsSlot,
-//                appointmentResourcesDTO,
-//                visitTypeDTO,
-//                this,
-//                patientModel
-//        ).show();
+        //TODO: Refactor this (take out Appointment Navigation Interface) after SHMRK-8014
     }
 
     @Override
@@ -127,75 +97,6 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         onDateRangeSelected(startDate, endDate, visitTypeDTO, appointmentResourcesDTO.getResource(),
                 resourcesToSchedule);
     }
-
-    @Override
-    public void requestAppointment(AppointmentsSlotsDTO appointmentSlot, String reasonForVisit) {
-//        Map<String, String> queryMap = new HashMap<>();
-//        queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
-//        queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
-//
-//
-//        ScheduleAppointmentRequestDTO scheduleAppointmentRequestDTO = new ScheduleAppointmentRequestDTO();
-//        ScheduleAppointmentRequestDTO.Appointment appointment = scheduleAppointmentRequestDTO.getAppointment();
-//        appointment.setStartTime(appointmentSlot.getStartTime());
-//        appointment.setEndTime(appointmentSlot.getEndTime());
-//        appointment.setLocationId(appointmentSlot.getLocation().getId());
-//        appointment.setProviderId(appointmentResourcesDTO.getResource().getProvider().getId());
-//        appointment.setVisitReasonId(visitTypeDTO.getId());
-//        appointment.setResourceId(appointmentResourcesDTO.getResource().getId());
-//        appointment.setComplaint(reasonForVisit);
-//        appointment.setComments(reasonForVisit);
-//
-//        appointment.getPatient().setId(patientModel.getPatientId());
-//
-//        double amount = visitTypeDTO.getAmount();
-//        if (amount > 0 && paymentsModel != null) {
-//            startPrepaymentProcess(scheduleAppointmentRequestDTO, appointmentSlot, amount);
-//        } else {
-//            Gson gson = new Gson();
-//            getWorkflowServiceHelper().execute(getMakeAppointmentTransition(),
-//                    getMakeAppointmentCallback, gson.toJson(scheduleAppointmentRequestDTO), queryMap);
-//        }
-    }
-
-    @Override
-    public void onAppointmentUnconfirmed() {
-//        onDateRangeCancelled();
-    }
-
-//    private WorkflowServiceCallback getMakeAppointmentCallback = new WorkflowServiceCallback() {
-//
-//        @Override
-//        public void onPreExecute() {
-//            showProgressDialog();
-//        }
-//
-//        @Override
-//        public void onPostExecute(WorkflowDTO workflowDTO) {
-//            hideProgressDialog();
-//            showAppointmentConfirmation();
-//
-//            ApplicationMode.ApplicationType applicationType = getApplicationMode().getApplicationType();
-//            String[] params = {getString(R.string.param_appointment_type),
-//                    getString(R.string.param_practice_id),
-//                    getString(R.string.param_practice_name),
-//                    getString(R.string.param_patient_id)};
-//            String[] values = {visitTypeDTO.getName(),
-//                    getApplicationMode().getUserPracticeDTO().getPracticeId(),
-//                    getApplicationMode().getUserPracticeDTO().getPracticeName(),
-//                    patientModel.getPatientId()};
-//            MixPanelUtil.logEvent(getString(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
-//                    R.string.event_appointment_requested : R.string.event_appointment_scheduled), params, values);
-//            if (applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-//                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
-//            }
-//        }
-//
-//        @Override
-//        public void onFailure(String exceptionMessage) {
-//            SystemUtil.doDefaultFailureBehavior((BaseActivity) getContext(), exceptionMessage);
-//        }
-//    };
 
     public PatientModel getPatient() {
         return patientModel;
@@ -213,25 +114,14 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     @Override
     public void rescheduleAppointment(AppointmentDTO appointmentDTO) {
-
+        //Not apply for this flow. Need refactor
     }
 
     @Override
     public void onProviderSelected(AppointmentResourcesDTO appointmentResourcesDTO,
                                    AppointmentsResultModel appointmentsResultModel,
                                    ResourcesToScheduleDTO resourcesToScheduleDTO) {
-//        resourcesToSchedule = appointmentsResultModel;
-//        String tag = VisitTypeFragmentDialog.class.getName();
-//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
-//        if (prev != null) {
-//            ft.remove(prev);
-//        }
-//        ft.addToBackStack(null);
-//
-//        VisitTypeFragmentDialog dialog = VisitTypeFragmentDialog
-//                .newInstance(appointmentResourcesDTO, appointmentsResultModel, getAppointmentsSettings());
-//        dialog.show(ft, tag);
+        //TODO: Refactor this (take out Appointment Navigation Interface) after SHMRK-8014
     }
 
     /**
@@ -243,85 +133,24 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     public void onVisitTypeSelected(VisitTypeDTO visitTypeDTO,
                                     AppointmentResourcesDTO appointmentResourcesDTO,
                                     AppointmentsResultModel appointmentsResultModel) {
-//        this.appointmentResourcesDTO = appointmentResourcesDTO;
-//        this.visitTypeDTO = visitTypeDTO;
-//        PracticeAvailableHoursDialogFragment fragment = PracticeAvailableHoursDialogFragment
-//                .newInstance(appointmentsResultModel, appointmentResourcesDTO.getResource(),
-//                        null, null, visitTypeDTO);
-//        displayDialogFragment(fragment, true);
+        //TODO: Refactor this (take out Appointment Navigation Interface) after SHMRK-8014
     }
 
     @Override
     public void onDateRangeSelected(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO,
                                     AppointmentResourcesItemDTO appointmentResource,
                                     AppointmentsResultModel appointmentsResultModel) {
-//        PracticeAvailableHoursDialogFragment fragment = PracticeAvailableHoursDialogFragment
-//                .newInstance(appointmentsResultModel, appointmentResourcesDTO.getResource(),
-//                        startDate, endDate, visitTypeDTO);
-//        fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
+        //TODO: Refactor this (take out Appointment Navigation Interface) after SHMRK-8014
     }
 
     @Override
     public void selectDateRange(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO,
                                 AppointmentResourcesItemDTO appointmentResource,
                                 AppointmentsResultModel appointmentsResultModel) {
-        DateUtil dateUtil = DateUtil.getInstance().setToCurrent();
-        DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(
-                Label.getLabel("date_range_picker_dialog_title"),
-                Label.getLabel("datepicker_cancel_option"),
-                false,
-                startDate,
-                endDate,
-                dateUtil.getDate(),
-                dateUtil.addDays(92).getDate(),
-                this,
-                CalendarPickerView.SelectionMode.RANGE.name());
-
-        displayDialogFragment(dialog, false);
+        //TODO: Refactor this (take out Appointment Navigation Interface) after SHMRK-8014
     }
-
-//    private WorkflowServiceCallback scheduleResourcesCallback = new WorkflowServiceCallback() {
-//        @Override
-//        public void onPreExecute() {
-//            showProgressDialog();
-//        }
-//
-//        @Override
-//        public void onPostExecute(WorkflowDTO workflowDTO) {
-//            hideProgressDialog();
-//            AppointmentsResultModel resourcesToScheduleModel = DtoHelper
-//                    .getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
-//
-//            if (resourcesToScheduleModel != null && resourcesToScheduleModel.getPayload() != null
-//                    && resourcesToScheduleModel.getPayload().getResourcesToSchedule() != null
-//                    && resourcesToScheduleModel.getPayload().getResourcesToSchedule().size() > 0) {
-//                PracticeChooseProviderDialog fragment = PracticeChooseProviderDialog
-//                        .newInstance(resourcesToScheduleModel,
-//                                Label.getLabel("practice_list_select_a_provider"),
-//                                Label.getLabel("practice_list_continue"));
-//                fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
-//            }
-//        }
-//
-//        @Override
-//        public void onFailure(String exceptionMessage) {
-//            SystemUtil.doDefaultFailureBehavior((BaseActivity) getContext(), exceptionMessage);
-//        }
-//    };
-
-    protected abstract TransitionDTO getMakeAppointmentTransition();
 
     protected abstract LinksDTO getLinks();
-
-    @Override
-    public AppointmentsSettingDTO getAppointmentsSettings() {
-        List<AppointmentsSettingDTO> appointmentsSettingDTOList = appointmentsResultModel
-                .getPayload().getAppointmentsSettings();
-        if (!appointmentsSettingDTOList.isEmpty()) {
-            return appointmentsSettingDTOList.get(0);
-        }
-        return new AppointmentsSettingDTO();
-    }
 
     @Override
     public void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDTO,

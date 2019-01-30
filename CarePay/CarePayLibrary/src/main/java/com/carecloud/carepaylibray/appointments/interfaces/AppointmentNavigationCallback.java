@@ -16,13 +16,13 @@ public interface AppointmentNavigationCallback extends VisitTypeInterface, Avail
 
     void rescheduleAppointment(AppointmentDTO appointmentDTO);
 
-    void requestAppointment(AppointmentsSlotsDTO appointmentSlot, String reasonForVisit);
+//    void requestAppointment(AppointmentsSlotsDTO appointmentSlot, String reasonForVisit);
 
-    void onAppointmentUnconfirmed();
+//    void onAppointmentUnconfirmed();
 
     void onAppointmentRequestSuccess();
 
-    ApplicationMode getApplicationMode();
+//    ApplicationMode getApplicationMode();
 
-    AppointmentsSettingDTO getAppointmentsSettings();
+//    AppointmentsSettingDTO getAppointmentsSettings();
 }
