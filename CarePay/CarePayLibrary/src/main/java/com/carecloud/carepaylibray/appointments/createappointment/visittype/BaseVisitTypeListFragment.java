@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.appointments.createappointment;
+package com.carecloud.carepaylibray.appointments.createappointment.visittype;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -94,7 +94,7 @@ public abstract class BaseVisitTypeListFragment extends BaseDialogFragment {
         getWorkflowServiceHelper().execute(transition, new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
-                showProgress();
+                showProgressDialog();
             }
 
             @Override
@@ -118,8 +118,6 @@ public abstract class BaseVisitTypeListFragment extends BaseDialogFragment {
             }
         }, queryMap);
     }
-
-    protected abstract void showProgress();
 
     private void showVisitTypes(List<VisitTypeDTO> visitTypes) {
         Collections.sort(visitTypes, new Comparator<VisitTypeDTO>() {

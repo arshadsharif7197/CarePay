@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.appointments.createappointment.location;
+package com.carecloud.carepay.patient.appointments.createappointment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,26 +9,26 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepaylibray.appointments.createappointment.visittype.BaseVisitTypeListFragment;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.appointments.createappointment.BaseLocationListFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
-import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 /**
  * @author pjohnson on 1/15/19.
  */
-public class LocationListFragment extends BaseLocationListFragment {
+public class VisitTypeListFragment extends BaseVisitTypeListFragment {
 
-    public static LocationListFragment newInstance(UserPracticeDTO selectedPractice,
-                                                   VisitTypeDTO selectedVisitType,
-                                                   AppointmentResourcesItemDTO selectedProvider) {
+    public static VisitTypeListFragment newInstance(UserPracticeDTO selectedPractice,
+                                                    LocationDTO selectedLocation,
+                                                    AppointmentResourcesItemDTO selectedResource) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, selectedPractice);
-        DtoHelper.bundleDto(args, selectedVisitType);
-        DtoHelper.bundleDto(args, selectedProvider);
-        LocationListFragment fragment = new LocationListFragment();
+        DtoHelper.bundleDto(args, selectedLocation);
+        DtoHelper.bundleDto(args, selectedResource);
+        VisitTypeListFragment fragment = new VisitTypeListFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -36,7 +36,7 @@ public class LocationListFragment extends BaseLocationListFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_location_list, container, false);
+        return inflater.inflate(R.layout.fragment_visit_type_list, container, false);
     }
 
     @Override
@@ -55,7 +55,8 @@ public class LocationListFragment extends BaseLocationListFragment {
             }
         });
         TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
-        title.setText(Label.getLabel("payment_choose_location"));
+        title.setText(Label.getLabel("createAppointment.visitTypeList.title.label.visitType"));
         callback.displayToolbar(false, null);
     }
+
 }

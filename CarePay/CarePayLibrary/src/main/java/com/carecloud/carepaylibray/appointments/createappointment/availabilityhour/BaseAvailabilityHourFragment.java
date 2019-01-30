@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.appointments.createappointment;
+package com.carecloud.carepaylibray.appointments.createappointment.availabilityhour;
 
 import android.content.Context;
 import android.os.Bundle;

@@ -10,7 +10,7 @@ import android.widget.Button;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.appointments.createappointment.BaseAvailabilityHourFragment;
+import com.carecloud.carepaylibray.appointments.createappointment.availabilityhour.BaseAvailabilityHourFragment;
 import com.carecloud.carepaylibray.appointments.interfaces.DateCalendarRangeInterface;
 
 /**

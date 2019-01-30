@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.appointments.createappointment.availablehours;
+package com.carecloud.carepay.patient.appointments.createappointment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,9 +9,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.appointments.createappointment.calendar.DateRangeDialogFragment;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.appointments.createappointment.BaseAvailabilityHourFragment;
+import com.carecloud.carepaylibray.appointments.createappointment.availabilityhour.BaseAvailabilityHourFragment;
 import com.carecloud.carepaylibray.appointments.interfaces.DateCalendarRangeInterface;
 
 /**

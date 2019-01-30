@@ -1,53 +1,34 @@
-package com.carecloud.carepay.patient.appointments.createappointment.provider;
+package com.carecloud.carepay.patient.appointments.createappointment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepaylibray.appointments.createappointment.BaseProviderListFragment;
-import com.carecloud.carepaylibray.appointments.interfaces.ScheduleAppointmentInterface;
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.createappointment.location.BaseLocationListFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
-import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
-import com.carecloud.carepaylibray.base.BaseDialogFragment;
-import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author pjohnson on 1/15/19.
  */
-public class ProviderListFragment extends BaseProviderListFragment {
+public class LocationListFragment extends BaseLocationListFragment {
 
-    public static ProviderListFragment newInstance(UserPracticeDTO selectedPractice,
+    public static LocationListFragment newInstance(UserPracticeDTO selectedPractice,
                                                    VisitTypeDTO selectedVisitType,
-                                                   LocationDTO selectedLocation) {
+                                                   AppointmentResourcesItemDTO selectedProvider) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, selectedPractice);
         DtoHelper.bundleDto(args, selectedVisitType);
-        DtoHelper.bundleDto(args, selectedLocation);
-        ProviderListFragment fragment = new ProviderListFragment();
+        DtoHelper.bundleDto(args, selectedProvider);
+        LocationListFragment fragment = new LocationListFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,7 +36,7 @@ public class ProviderListFragment extends BaseProviderListFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_provider_list, container, false);
+        return inflater.inflate(R.layout.fragment_location_list, container, false);
     }
 
     @Override
@@ -74,7 +55,7 @@ public class ProviderListFragment extends BaseProviderListFragment {
             }
         });
         TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
-        title.setText(Label.getLabel("choose_provider_heading"));
+        title.setText(Label.getLabel("payment_choose_location"));
         callback.displayToolbar(false, null);
     }
 }

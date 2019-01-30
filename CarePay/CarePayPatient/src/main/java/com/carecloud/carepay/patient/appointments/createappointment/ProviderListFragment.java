@@ -1,4 +1,4 @@
-package com.carecloud.carepay.practice.library.appointments.createappointment;
+package com.carecloud.carepay.patient.appointments.createappointment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,27 +8,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.patient.R;
+import com.carecloud.carepaylibray.appointments.createappointment.provider.BaseProviderListFragment;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.appointments.createappointment.location.BaseLocationListFragment;
-import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 /**
  * @author pjohnson on 1/15/19.
  */
-public class LocationListFragment extends BaseLocationListFragment {
+public class ProviderListFragment extends BaseProviderListFragment {
 
-    public static LocationListFragment newInstance(UserPracticeDTO selectedPractice,
+    public static ProviderListFragment newInstance(UserPracticeDTO selectedPractice,
                                                    VisitTypeDTO selectedVisitType,
-                                                   AppointmentResourcesItemDTO selectedProvider) {
+                                                   LocationDTO selectedLocation) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, selectedPractice);
         DtoHelper.bundleDto(args, selectedVisitType);
-        DtoHelper.bundleDto(args, selectedProvider);
-        LocationListFragment fragment = new LocationListFragment();
+        DtoHelper.bundleDto(args, selectedLocation);
+        ProviderListFragment fragment = new ProviderListFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -36,7 +36,7 @@ public class LocationListFragment extends BaseLocationListFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_location_list, container, false);
+        return inflater.inflate(R.layout.fragment_provider_list, container, false);
     }
 
     @Override
@@ -47,13 +47,15 @@ public class LocationListFragment extends BaseLocationListFragment {
 
     private void setUpToolbar(View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
-        TextView title = toolbar.findViewById(R.id.toolbar_title);
-        title.setText(Label.getLabel("payment_choose_location"));
-        view.findViewById(R.id.closeViewLayout).setOnClickListener(new View.OnClickListener() {
+        toolbar.setNavigationIcon(R.drawable.icn_nav_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                dismiss();
+            public void onClick(View view) {
+                getActivity().onBackPressed();
             }
         });
+        TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
+        title.setText(Label.getLabel("choose_provider_heading"));
+        callback.displayToolbar(false, null);
     }
 }

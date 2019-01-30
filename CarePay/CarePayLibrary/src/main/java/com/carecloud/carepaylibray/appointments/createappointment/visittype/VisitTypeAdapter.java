@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.appointments.createappointment;
+package com.carecloud.carepaylibray.appointments.createappointment.visittype;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

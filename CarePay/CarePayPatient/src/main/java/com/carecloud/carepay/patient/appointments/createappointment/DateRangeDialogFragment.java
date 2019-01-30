@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.appointments.createappointment.calendar;
+package com.carecloud.carepay.patient.appointments.createappointment;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;

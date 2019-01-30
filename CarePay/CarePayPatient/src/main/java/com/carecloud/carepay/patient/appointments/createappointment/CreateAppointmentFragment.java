@@ -12,9 +12,6 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.adapters.PracticesAdapter;
-import com.carecloud.carepay.patient.appointments.createappointment.location.LocationListFragment;
-import com.carecloud.carepay.patient.appointments.createappointment.provider.ProviderListFragment;
-import com.carecloud.carepay.patient.appointments.createappointment.visitType.VisitTypeListFragment;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.createappointment.BaseCreateAppointmentFragment;
