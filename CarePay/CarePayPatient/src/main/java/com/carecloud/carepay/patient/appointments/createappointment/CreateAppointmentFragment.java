@@ -75,7 +75,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
 
     private void showPracticeList(View view) {
         RecyclerView practicesRecyclerView = view.findViewById(R.id.practicesRecyclerView);
-        if (appointmentsModelDto.getPayload().getUserPractices().size() > 1) {
+        if (appointmentsModelDto.getPayload().getUserPractices().size() > 1 && !isReschedule) {
             practicesRecyclerView.setVisibility(View.VISIBLE);
             practicesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
                     LinearLayoutManager.HORIZONTAL, false));

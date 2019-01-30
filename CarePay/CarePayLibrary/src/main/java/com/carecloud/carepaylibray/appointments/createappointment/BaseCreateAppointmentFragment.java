@@ -59,7 +59,7 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
     private View visitTypeContainer;
     private View locationContainer;
     private Button checkAvailabilityButton;
-    private boolean isReschedule;
+    protected boolean isReschedule;
 
     @Override
     public void onAttach(Context context) {
