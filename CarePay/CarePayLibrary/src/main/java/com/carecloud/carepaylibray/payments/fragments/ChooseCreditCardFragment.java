@@ -24,6 +24,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.payments.adapter.CreditCardsListAdapter;
 import com.carecloud.carepaylibray.payments.interfaces.ChooseCreditCardInterface;
+import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -350,11 +351,19 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
 
-            String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
-            Object[] values = {amountToMakePayment, getString(R.string.payment_card_on_file)};
-            MixPanelUtil.logEvent(getString(R.string.event_payment_complete), params, values);
-            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payments_completed), 1);
-            MixPanelUtil.incrementPeopleProperty(getString(R.string.total_payments_amount), amountToMakePayment);
+            PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+            IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
+            if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
+                String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
+                Object[] values = {amountToMakePayment, getString(R.string.payment_card_on_file)};
+                MixPanelUtil.logEvent(getString(R.string.event_payment_failed), params, values);
+            } else {
+                String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
+                Object[] values = {amountToMakePayment, getString(R.string.payment_card_on_file)};
+                MixPanelUtil.logEvent(getString(R.string.event_payment_complete), params, values);
+                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payments_completed), 1);
+                MixPanelUtil.incrementPeopleProperty(getString(R.string.total_payments_amount), amountToMakePayment);
+            }
 
             showConfirmation(workflowDTO);
             if (getDialog() != null) {

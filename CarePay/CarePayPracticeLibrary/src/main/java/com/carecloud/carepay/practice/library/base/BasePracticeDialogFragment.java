@@ -24,11 +24,11 @@ public abstract class BasePracticeDialogFragment extends BaseDialogFragment {
         if(closeView != null) {
             closeView.setOnClickListener(this);
         }
-        TextView closeText = (TextView) view.findViewById(R.id.closeTextView);
+        TextView closeText = view.findViewById(R.id.closeTextView);
         if(closeText != null) {
             closeText.setText(getCancelString());
         }
-        ImageView cancelImage = (ImageView) view.findViewById(R.id.cancel_img);
+        ImageView cancelImage = view.findViewById(R.id.cancel_img);
         if(cancelImage != null) {
             cancelImage.setImageResource(getCancelImageResource());
         }

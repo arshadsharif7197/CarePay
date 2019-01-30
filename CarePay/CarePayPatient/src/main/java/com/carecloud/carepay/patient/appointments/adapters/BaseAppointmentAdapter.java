@@ -115,6 +115,8 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
                 break;
             }
             case PENDING: {
+                holder.todayTimeMessage.setVisibility(View.VISIBLE);
+                holder.todayTimeMessage.setText(Label.getLabel("appointment_status_pending"));
                 holder.todayTimeLayout.setVisibility(View.VISIBLE);
                 holder.todayTimeTextView.setText(dateUtil.getTime12Hour());
                 holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.emerald));
@@ -164,7 +166,7 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
             case PENDING_UPCOMING: {
                 holder.upcomingDateLayout.setVisibility(View.VISIBLE);
                 holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
-                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDayOrdinal());
+                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDay());
                 holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
                 holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.grayRound));
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.emerald));
@@ -175,7 +177,7 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
             case REQUESTED_UPCOMING: {
                 holder.upcomingDateLayout.setVisibility(View.VISIBLE);
                 holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
-                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDayOrdinal());
+                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDay());
                 holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
                 holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.lightning_yellow));
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
@@ -187,7 +189,7 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
             case CANCELED_UPCOMING: {
                 holder.upcomingDateLayout.setVisibility(View.VISIBLE);
                 holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
-                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDayOrdinal());
+                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDay());
                 holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
                 holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.pastel_blue));
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
@@ -253,8 +255,8 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
     }
 
     protected boolean shouldShowCheckOutButton(AppointmentDTO appointmentDTO,
-                                             Set<String> enabledLocations,
-                                             boolean isBreezePractice) {
+                                               Set<String> enabledLocations,
+                                               boolean isBreezePractice) {
         boolean isTheLocationWithBreezeEnabled = enabledLocations == null;
         if (enabledLocations != null) {
             for (String locationId : enabledLocations) {

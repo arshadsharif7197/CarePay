@@ -25,6 +25,7 @@ import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.DemographicMetadataDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.transitions.DemographicTransitionsDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
@@ -123,6 +124,9 @@ public class ChangePasswordFragment extends DemographicsBaseSettingsFragment {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
+
+            MixPanelUtil.logEvent(getString(R.string.event_change_password));
+
             getActivity().onBackPressed();
         }
 

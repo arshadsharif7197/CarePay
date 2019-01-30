@@ -37,7 +37,7 @@ import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
-import com.carecloud.carepaylibray.utils.PdfUtil;
+import com.carecloud.carepaylibray.utils.FileDownloadUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -230,8 +230,8 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
             String url = String.format("%s?%s=%s", transitionDTO.getUrl(), "patient_id",
                     String.valueOf(patientDto.getId()));
 
-            PdfUtil.downloadPdf(getContext(), url, patientDto.getFullName(),
-                    ".pdf", "Medical Record");
+            FileDownloadUtil.downloadPdf(getContext(), url, patientDto.getFullName(),
+                    ".pdf", Label.getLabel("my_health_care_team_records"));
             MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewMedicalRecord));
         } else {
             showErrorNotification("Unable to find Patient Record");
@@ -256,7 +256,7 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
     private void prepareLabPdf(final LabDto lab) {
         TransitionDTO getPdfTransition = myHealthDto.getMetadata().getLinks().getLabsPdf();
         String url = String.format("%s?%s=%s", getPdfTransition.getUrl(), "labs_id", lab.getId());
-        PdfUtil.downloadPdf(getContext(), url, lab.getName(), ".pdf", lab.getPractice());
+        FileDownloadUtil.downloadPdf(getContext(), url, lab.getName(), ".pdf", lab.getPractice());
     }
 
 }

@@ -12,6 +12,7 @@
     <dimen name="respons_button_margin_left_right">110dp</dimen>
 
     <dimen name="visit_type_dialog_width">510dp</dimen>
+    <dimen name="practiceAppointmentDetailDialogWidth">600dp</dimen>
     <dimen name="dialog_width">510dp</dimen>
     <dimen name="fragmentDialogPaddingBottom">50dp</dimen>
     <dimen name="fragmentDialogPaddingTop">50dp</dimen>

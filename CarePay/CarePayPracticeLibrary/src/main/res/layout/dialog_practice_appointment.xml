@@ -1,135 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="@dimen/dialog_width"
-    android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="horizontal">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/appointmentDialogHeaderHeight">
+        android:id="@+id/closeViewLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/appointment_card_header_background"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/appointmentDialogVisibleHeaderHeight"
-            android:layout_alignParentTop="true"
-            android:scaleType="centerCrop"
-            android:visibility="gone" />
-
-        <LinearLayout
-            android:id="@+id/appointment_card_header"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/appointmentDialogVisibleHeaderHeight"
-            android:background="@drawable/patient_mode_dialog_header_bg"
-            android:orientation="vertical">
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/appointment_start_day"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/appointmentDialogStartDateTopMargin"
-                android:gravity="center_horizontal"
-                android:textColor="@color/white"
-                android:textSize="@dimen/appointmentDialogStartDateTextSize"
-                android:textStyle="bold"
-                app:customAssetFont="proxima_nova_semi_bold"
-                tools:text="Today, Aug 1st" />
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/appointment_start_time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:textColor="@color/white"
-                android:textSize="@dimen/appointmentDialogStartTimeTextSize"
-                android:textStyle="bold"
-                app:customAssetFont="gotham_rounded_bold" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/appointmentDialogHeaderBlanckSpaceHeight"
-            android:layout_alignParentBottom="true"
-            android:background="@color/white" />
-
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/appointment_short_name"
-            android:layout_width="@dimen/appointmentDialogShortNameSize"
-            android:layout_height="@dimen/appointmentDialogShortNameSize"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/round_list_tv"
-            android:gravity="center"
-            android:src="@drawable/icn_placeholder_user_profile_png"
-            android:textColor="@color/lightSlateGray"
-            android:textSize="@dimen/appointmentDialogShortNameTextSize"
-            app:customAssetFont="gotham_rounded_medium" />
+            android:id="@+id/button_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/dialog_button_bg" />
 
         <ImageView
-            android:id="@+id/appointment_patient_picture_image_view"
-            android:layout_width="@dimen/appointmentDialogShortNameSize"
-            android:layout_height="@dimen/appointmentDialogShortNameSize"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:visibility="gone" />
+            android:id="@+id/cancel_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/icn_close" />
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/practiceAppointmentDetailDialogWidth"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/white"
+        android:layout_marginStart="@dimen/dimen_26dp"
+        android:layout_marginEnd="@dimen/dimen_26dp"
         android:orientation="vertical">
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/appointment_patient_name"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/appointmentDialogHeaderHeight">
+
+            <ImageView
+                android:id="@+id/appointment_card_header_background"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/appointmentDialogVisibleHeaderHeight"
+                android:layout_alignParentTop="true"
+                android:scaleType="centerCrop"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/appointment_card_header"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/appointmentDialogVisibleHeaderHeight"
+                android:background="@drawable/patient_mode_dialog_header_bg"
+                android:orientation="vertical">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/appointment_start_day"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/appointmentDialogStartDateTopMargin"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/appointmentDialogStartDateTextSize"
+                    android:textStyle="bold"
+                    app:customAssetFont="proxima_nova_semi_bold"
+                    tools:text="Today, Aug 1st" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/appointment_start_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/appointmentDialogStartTimeTextSize"
+                    android:textStyle="bold"
+                    app:customAssetFont="gotham_rounded_bold" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/appointmentDialogHeaderBlanckSpaceHeight"
+                android:layout_alignParentBottom="true"
+                android:background="@color/white" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/appointment_short_name"
+                android:layout_width="@dimen/appointmentDialogShortNameSize"
+                android:layout_height="@dimen/appointmentDialogShortNameSize"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/round_list_tv"
+                android:gravity="center"
+                android:src="@drawable/icn_placeholder_user_profile_png"
+                android:textColor="@color/lightSlateGray"
+                android:textSize="@dimen/appointmentDialogShortNameTextSize"
+                app:customAssetFont="gotham_rounded_medium" />
+
+            <ImageView
+                android:id="@+id/appointment_patient_picture_image_view"
+                android:layout_width="@dimen/appointmentDialogShortNameSize"
+                android:layout_height="@dimen/appointmentDialogShortNameSize"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/appointmentDialogPatientNameTopMargin"
-            android:gravity="center"
-            android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/appointmentDialogPatientNameTextSize"
-            app:customAssetFont="proxima_nova_semi_bold" />
+            android:layout_gravity="center_horizontal"
+            android:background="@color/white"
+            android:orientation="vertical">
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/appointment_doctor"
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/appointment_patient_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/appointmentDialogPatientNameTopMargin"
+                android:gravity="center"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/appointmentDialogPatientNameTextSize"
+                app:customAssetFont="proxima_nova_semi_bold"
+                tools:text="Pablo Johnson" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/appointment_doctor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/lightSlateGray"
+                android:textSize="@dimen/appointmentDialogDoctorTextSize"
+                app:customAssetFont="proxima_nova_regular"
+                tools:text="Dr. Homero Simpson" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/appointment_patient_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/appointmentDialogPhoneHorizontalMargin"
+                android:layout_marginTop="@dimen/appointmentDialogPhoneTopMargin"
+                android:layout_marginEnd="@dimen/appointmentDialogPhoneHorizontalMargin"
+                android:layout_marginBottom="@dimen/appointmentDialogPhoneBottomMargin"
+                android:gravity="center"
+                android:paddingTop="@dimen/appointmentDialogPhoneVerticalPadding"
+                android:paddingBottom="@dimen/appointmentDialogPhoneVerticalPadding"
+                android:textColor="@color/lightSlateGray"
+                android:textSize="@dimen/appointmentDialogPhoneTextSize"
+                android:textStyle="bold"
+                android:visibility="visible"
+                app:customAssetFont="proxima_nova_extra_bold"
+                tools:text="42342342-2342342" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/visitTypeContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="@color/lightSlateGray"
-            android:textSize="@dimen/appointmentDialogDoctorTextSize"
-            app:customAssetFont="proxima_nova_regular" />
-
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/appointment_patient_phone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/appointmentDialogPhoneHorizontalMargin"
-            android:layout_marginTop="@dimen/appointmentDialogPhoneTopMargin"
-            android:layout_marginEnd="@dimen/appointmentDialogPhoneHorizontalMargin"
-            android:layout_marginBottom="@dimen/appointmentDialogPhoneBottomMargin"
-            android:background="@drawable/dialog_phone_bg"
-            android:gravity="center"
-            android:paddingTop="@dimen/appointmentDialogPhoneVerticalPadding"
-            android:paddingBottom="@dimen/appointmentDialogPhoneVerticalPadding"
-            android:textColor="@color/lightSlateGray"
-            android:textSize="@dimen/appointmentDialogPhoneTextSize"
-            android:textStyle="bold"
-            app:customAssetFont="proxima_nova_extra_bold" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/visitTypeContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/grey_bottom_border"
-        android:orientation="vertical"
-        android:paddingStart="@dimen/visitTypeContainerHorizontalPadding"
-        android:paddingEnd="@dimen/visitTypeContainerHorizontalPadding"
-        android:paddingBottom="@dimen/visitTypeContainerBottomPadding">
+            android:background="@drawable/grey_bottom_border"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/visitTypeContainerHorizontalPadding"
+            android:paddingTop="@dimen/visitTypeContainerBottomPadding"
+            android:paddingEnd="@dimen/visitTypeContainerHorizontalPadding"
+            android:paddingBottom="@dimen/visitTypeContainerBottomPadding">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -172,63 +204,78 @@
                 tools:text="Virtual Consult"
                 app:customAssetFont="proxima_nova_regular" />
 
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_1dp"
+                android:layout_marginTop="@dimen/appointmentSeparatorTopMargin"
+                android:background="@color/light_gray" />
+
         </LinearLayout>
 
-        <View
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_1dp"
-            android:layout_marginTop="@dimen/appointmentSeparatorTopMargin"
-            android:background="@color/light_gray" />
+            android:layout_height="wrap_content"
+            android:background="@drawable/patient_mode_dialog_body_bg"
+            android:orientation="horizontal"
+            android:padding="@dimen/distributionButtonContainersPadding">
 
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/button_left_action"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
+                android:layout_weight="1"
+                android:background="@drawable/button_rounded_red"
+                android:gravity="center"
+                android:padding="@dimen/dimen_5dp"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/appointmentDialogButtonTextSize"
+                app:customAssetFont="gotham_rounded_medium" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/button_middle_action"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
+                android:layout_weight="1"
+                android:background="@drawable/bg_primary_overlay"
+                android:gravity="center"
+                android:padding="@dimen/dimen_5dp"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/appointmentDialogButtonTextSize"
+                app:customAssetFont="gotham_rounded_medium" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/button_right_action"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
+                android:layout_weight="1"
+                android:background="@drawable/bg_yellow_overlay"
+                android:gravity="center"
+                android:padding="@dimen/dimen_5dp"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/appointmentDialogButtonTextSize"
+                app:customAssetFont="gotham_rounded_medium" />
+        </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/patient_mode_dialog_body_bg"
-        android:orientation="horizontal"
-        android:padding="@dimen/distributionButtonContainersPadding">
+        android:visibility="invisible">
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayButton
-            android:id="@+id/button_left_action"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/commonButtonHeight"
-            android:layout_margin="@dimen/distributionButtonContainersPadding"
-            android:layout_weight="1"
-            android:background="@drawable/button_rounded_red"
-            android:gravity="center"
-            android:padding="@dimen/dimen_5dp"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="@dimen/appointmentDialogButtonTextSize"
-            app:customAssetFont="gotham_rounded_medium" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/dialog_button_bg" />
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayButton
-            android:id="@+id/button_middle_action"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/commonButtonHeight"
-            android:layout_margin="@dimen/distributionButtonContainersPadding"
-            android:layout_weight="1"
-            android:background="@drawable/bg_primary_overlay"
-            android:gravity="center"
-            android:padding="@dimen/dimen_5dp"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="@dimen/appointmentDialogButtonTextSize"
-            app:customAssetFont="gotham_rounded_medium" />
+    </RelativeLayout>
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayButton
-            android:id="@+id/button_right_action"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/commonButtonHeight"
-            android:layout_margin="@dimen/distributionButtonContainersPadding"
-            android:layout_weight="1"
-            android:background="@drawable/bg_yellow_overlay"
-            android:gravity="center"
-            android:padding="@dimen/dimen_5dp"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="@dimen/appointmentDialogButtonTextSize"
-            app:customAssetFont="gotham_rounded_medium" />
-    </LinearLayout>
 </LinearLayout>

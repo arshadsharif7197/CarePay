@@ -31,6 +31,7 @@ import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsPayloadDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
@@ -246,6 +247,9 @@ public class UpdateEmailFragment extends BaseFragment {
             getAppAuthorizationHelper().setAuthorizationTokens(updatedSettings.getPayload().getCognito().getAuthenticationTokens());
             getAppAuthorizationHelper().setUser(newEmail);
             getWorkflowServiceHelper().setAppAuthorizationHelper(getAppAuthorizationHelper());
+
+            MixPanelUtil.logEvent(getString(R.string.event_change_email));
+
             getActivity().onBackPressed();
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
         }

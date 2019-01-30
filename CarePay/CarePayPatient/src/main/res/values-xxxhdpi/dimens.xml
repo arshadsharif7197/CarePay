@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--Common-->
+    <dimen name="commonHorizontalPadding">16dp</dimen>
+    <dimen name="commonVerticalPadding">16dp</dimen>
+    <dimen name="visitSummaryExportAsLabelTopMargin">15dp</dimen>
+    <dimen name="visitSummaryExportAsLabelBottomMargin">10dp</dimen>
+    <dimen name="visitSummaryExportButtonTopMargin">15dp</dimen>
+    <dimen name="encryptedCheckBoxVerticalMargin">10dp</dimen>
+</resources>

@@ -81,7 +81,7 @@ public class AppointmentHistoricAdapter extends BaseAppointmentAdapter {
             case MISSED:
                 holder.upcomingDateLayout.setVisibility(View.VISIBLE);
                 holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
-                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDayOrdinal());
+                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDay());
                 holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
                 holder.todayTimeMessage.setVisibility(View.GONE);
                 holder.todayTimeLayout.setVisibility(View.GONE);
@@ -96,7 +96,7 @@ public class AppointmentHistoricAdapter extends BaseAppointmentAdapter {
                 holder.checkedOutLabel.setVisibility(View.GONE);
                 holder.upcomingDateLayout.setVisibility(View.VISIBLE);
                 holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
-                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDayOrdinal());
+                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDay());
                 holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
         }
     }

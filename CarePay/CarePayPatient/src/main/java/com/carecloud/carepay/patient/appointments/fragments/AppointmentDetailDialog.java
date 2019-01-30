@@ -1,10 +1,21 @@
 package com.carecloud.carepay.patient.appointments.fragments;
 
+import android.Manifest;
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.PermissionChecker;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,22 +25,34 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
+import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
+import com.carecloud.carepay.patient.visitsummary.VisitSummaryDialogFragment;
+import com.carecloud.carepay.patient.visitsummary.dto.VisitSummaryDTO;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayUtil;
 import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentDialogFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
+import com.carecloud.carepaylibray.appointments.models.PortalSetting;
+import com.carecloud.carepaylibray.appointments.models.PortalSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.QueueDTO;
 import com.carecloud.carepaylibray.appointments.models.QueueStatusPayloadDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.base.BaseActivity;
+import com.carecloud.carepaylibray.customcomponents.CarePayProgressButton;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.FileDownloadUtil;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.picasso.Callback;
@@ -45,6 +68,7 @@ import java.util.Set;
 public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private static final String KEY_BREEZE_PRACTICE = "is_breeze_practice";
     private static final String KEY_RESCHEDULE_ENABLED = "isRescheduleEnabled";
+    private static final int MY_PERMISSIONS_VS_WRITE_EXTERNAL_STORAGE = 10;
 
     private AppointmentDTO appointmentDTO;
 
@@ -68,11 +92,14 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private TextView queueStatus;
     private View actionsLayout;
     private Button leftButton;
-    private Button rightButton;
+    private CarePayProgressButton rightButton;
     private View videoVisitIndicator;
 
     private boolean isBreezePractice = true;
     private boolean isRescheduleEnabled = true;
+    private Handler statusHandler;
+    private long enqueueId;
+    private int retryIntent = 0;
 
 
     /**
@@ -350,6 +377,9 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     appointmentStatus.setVisibility(View.VISIBLE);
                     appointmentStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.grayRound));
                     appointmentStatus.setText(Label.getLabel("appointment_checked_out_label"));
+                    if (isAPastAppointment()) {
+                        showVisitSummaryButton();
+                    }
                     break;
                 }
                 default: {
@@ -357,6 +387,10 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                 }
             }
         }
+    }
+
+    private boolean isAPastAppointment() {
+        return !appointmentDTO.getPayload().isAppointmentToday();
     }
 
     private void showCheckoutButton(Set<String> enabledLocations) {
@@ -367,6 +401,42 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
             leftButton.setText(Label.getLabel("appointment_request_checkout_now"));
             leftButton.setOnClickListener(checkOutClick);
         }
+    }
+
+    private void showVisitSummaryButton() {
+        String code = appointmentDTO.getPayload().getAppointmentStatus().getOriginalCode();
+        if ((CarePayConstants.BILLED.equals(code) || CarePayConstants.MANUALLY_BILLED.equals(code))
+                && shouldShowVisitSummary()) {
+            appointmentStatus.setVisibility(View.GONE);
+            actionsLayout.setVisibility(View.VISIBLE);
+            rightButton.setVisibility(View.VISIBLE);
+            rightButton.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.button_selector));
+            rightButton.setText(Label.getLabel("visitSummary.appointments.button.label.visitSummary"));
+            rightButton.setOnClickListener(visitSummaryClick);
+        }
+    }
+
+    private boolean shouldShowVisitSummary(){
+        AppointmentsResultModel appointmentModelDto = ((PatientAppointmentPresenter) callback).getMainAppointmentDto();
+        UserPracticeDTO appointmentPractice= null;
+        for (UserPracticeDTO userPracticeDTO : appointmentModelDto.getPayload().getUserPractices()) {
+            if(userPracticeDTO.getPracticeId().equals(appointmentDTO.getMetadata().getPracticeId())) {
+                appointmentPractice = userPracticeDTO;
+            }
+        }
+        if(appointmentPractice != null && appointmentPractice.isVisitSummaryEnabled()) {
+            for (PortalSettingDTO portalSettingDTO : appointmentModelDto.getPayload().getPortalSettings()) {
+                if (appointmentPractice.getPracticeId().equals(portalSettingDTO.getMetadata().getPracticeId())) {
+                    for (PortalSetting portalSetting : portalSettingDTO.getPayload()) {
+                        if (portalSetting.getName().toLowerCase().equals("visit summary")) {
+                            return portalSetting.getStatus().toLowerCase().equals("a");
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        return false;
     }
 
     private boolean shouldShowCancelButton(Set<String> enabledLocations) {
@@ -532,10 +602,105 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         }
     };
 
+    private View.OnClickListener visitSummaryClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PermissionChecker.PERMISSION_GRANTED && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_VS_WRITE_EXTERNAL_STORAGE);
+            } else {
+                callVisitSummaryService();
+            }
+        }
+    };
+
+    private void callVisitSummaryService() {
+        callback.callVisitSummaryService(appointmentDTO, new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                ((BaseActivity) getActivity()).showProgressDialog();
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                VisitSummaryDTO visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
+                ((BaseActivity) getActivity()).hideProgressDialog();
+                rightButton.setEnabled(false);
+                rightButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.processing"));
+//                rightButton.setProgressEnabled(true);
+                callVisitSummaryStatusService(visitSummaryDTO.getPayload().getVisitSummaryRequest().getJobId());
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                ((BaseActivity) getActivity()).hideProgressDialog();
+            }
+        });
+    }
+
+    private void callVisitSummaryStatusService(final String jobId) {
+        callback.callVisitSummaryStatusService(jobId, appointmentDTO.getMetadata().getPracticeMgmt(),
+                new WorkflowServiceCallback() {
+
+                    @Override
+                    public void onPreExecute() {
+
+                    }
+
+                    @Override
+                    public void onPostExecute(WorkflowDTO workflowDTO) {
+                        VisitSummaryDTO visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
+                        String status = visitSummaryDTO.getPayload().getVisitSummary().getStatus();
+                        if (retryIntent > VisitSummaryDialogFragment.MAX_NUMBER_RETRIES) {
+                            retryIntent = 0;
+                            rightButton.setEnabled(true);
+//                            rightButton.setProgressEnabled(false);
+                            rightButton.setText(Label.getLabel("visitSummary.appointments.button.label.visitSummary"));
+                            showErrorNotification(Label.getLabel("practice_patient_settings_intake_forms_print_status_error"));
+                        } else if (status.equals("queued") || status.equals("working")) {
+                            retryIntent++;
+                            statusHandler = new Handler();
+                            statusHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    callVisitSummaryStatusService(jobId);
+                                }
+                            }, VisitSummaryDialogFragment.RETRY_TIME);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(String exceptionMessage) {
+                        Log.e("OkHttp", exceptionMessage);
+                        String title = String.format("%s - %s",
+                                appointmentDTO.getPayload().getProvider().getFullName(),
+                                DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime())
+                                        .toStringWithFormatMmDashDdDashYyyy());
+                        enqueueId = callback.downloadVisitSummaryFile(jobId,
+                                appointmentDTO.getMetadata().getPracticeMgmt(), title);
+                    }
+                });
+    }
+
     private View.OnClickListener scanClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             callback.onCheckInOfficeStarted(appointmentDTO);
+            //log event to mixpanel
+            String[] params = {getString(R.string.param_appointment_type),
+                    getString(R.string.param_practice_id),
+                    getString(R.string.param_provider_id),
+                    getString(R.string.param_location_id),
+                    getString(R.string.param_patient_id)
+            };
+            Object[] values = {appointmentDTO.getPayload().getVisitType().getName(),
+                    appointmentDTO.getMetadata().getPracticeId(),
+                    appointmentDTO.getPayload().getProvider().getGuid(),
+                    appointmentDTO.getPayload().getLocation().getGuid(),
+                    appointmentDTO.getMetadata().getPatientId()
+            };
+            MixPanelUtil.logEvent(getString(R.string.event_qr_code), params, values);
             dismiss();
         }
     };
@@ -555,4 +720,67 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         }
     };
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        getActivity().registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+    }
+
+    @Override
+    public void onStop() {
+        getActivity().unregisterReceiver(receiver);
+        if (statusHandler != null) {
+            statusHandler.removeCallbacksAndMessages(null);
+        }
+        if (enqueueId > 0) {
+            DownloadManager dm = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+            dm.remove(enqueueId);
+        }
+        super.onStop();
+    }
+
+    BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(final Context context, Intent intent) {
+            String action = intent.getAction();
+            if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
+                DownloadManager.Query query = new DownloadManager.Query();
+                DownloadManager dm = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+
+                query.setFilterById(enqueueId);
+                final Cursor cursor = dm.query(query);
+                if (cursor.moveToFirst()) {
+                    int columnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
+//                    int reasonIndex = cursor.getColumnIndex(DownloadManager.COLUMN_REASON);
+                    if (DownloadManager.STATUS_SUCCESSFUL == cursor.getInt(columnIndex)) {
+                        rightButton.setEnabled(true);
+//                        rightButton.setProgressEnabled(false);
+                        rightButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.openFile"));
+                        rightButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String downloadLocalUri = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+                                if (downloadLocalUri != null) {
+                                    String downloadMimeType = cursor.getString(cursor
+                                            .getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE));
+                                    FileDownloadUtil.openDownloadedAttachment(context, Uri.parse(downloadLocalUri), downloadMimeType);
+                                }
+                            }
+                        });
+                        enqueueId = -1;
+                    }
+                }
+            }
+        }
+    };
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_PERMISSIONS_VS_WRITE_EXTERNAL_STORAGE
+                && (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+            callVisitSummaryService();
+        }
+    }
 }

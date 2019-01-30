@@ -12,27 +12,40 @@ import android.text.Html;
 import android.text.Spanned;
 import android.text.style.StrikethroughSpan;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.messages.models.MessageAttachment;
 import com.carecloud.carepay.patient.messages.models.Messages;
+import com.carecloud.carepay.patient.messages.models.MessagingMetadataDTO;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.LinkMovementCallbackMethod;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.PicassoHelper;
+import com.carecloud.carepaylibray.utils.PicassoRoundedCornersExifTransformation;
 import com.carecloud.carepaylibray.utils.ReLinkify;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.google.android.gms.common.util.ArrayUtils;
+import com.squareup.picasso.Callback;
 
 import org.xml.sax.XMLReader;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lmenendez on 7/5/17
@@ -43,12 +56,17 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
     private static final int TYPE_SENT = 111;
     private static final int TYPE_RECEIVED = 222;
 
+    public static final String[] FORMAT_IMAGE = {"png", "image/png", "jpg", "image/jpg", "jpeg", "image/jpeg", "gif", "image/gif", "tif", "image/tif", "tiff", "image/tiff", "bmp", "image/bmp"};
+
     private static final String USER_TYPE_PROVIDER = "provider";
     private static final String USER_TYPE_STAFF = "user";
 
     private Context context;
-    private List<Messages.Reply> messages = new ArrayList<>();
+    private ConversationCallback callback;
+    private List<Messages.Reply> messages;
     private String userId;
+    private final MessagingMetadataDTO messagingMetadata;
+    private ISession iSession;
 
 
     /**
@@ -58,10 +76,15 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
      * @param messages messages list
      * @param userId   current user id
      */
-    public MessagesConversationAdapter(Context context, List<Messages.Reply> messages, String userId) {
+    public MessagesConversationAdapter(Context context, ConversationCallback callback,
+                                       List<Messages.Reply> messages,
+                                       String userId, MessagingMetadataDTO messagingMetadata) {
         this.context = context;
+        this.callback = callback;
         this.messages = messages;
         this.userId = userId;
+        this.messagingMetadata = messagingMetadata;
+        this.iSession = (ISession) context;
     }
 
     @Override
@@ -84,7 +107,7 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         Messages.Reply message = messages.get(position);
         Messages.Reply lastMessage = null;
         if (position > 0) {
@@ -135,6 +158,101 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
                 holder.metaView.setVisibility(View.GONE);
             }
         }
+
+        holder.fileAttachmentLayout.setVisibility(View.GONE);
+        holder.imageAttachment.setVisibility(View.GONE);
+        if (!message.getAttachments().isEmpty()) {
+            //currently only supporting one attachment
+            MessageAttachment attachment = message.getAttachments().get(0);
+            String attachmentFormat = attachment.getDocument().getDocumentFormat();
+            if (attachmentFormat != null && attachmentFormat.contains("/")) {
+                attachmentFormat = MimeTypeMap.getSingleton().getExtensionFromMimeType(attachmentFormat);
+            }
+            if(attachmentFormat == null){
+                attachmentFormat = MimeTypeMap.getFileExtensionFromUrl(attachment.getDocument().getName());
+            }
+
+            holder.fileAttachmentExtension.setText(attachmentFormat);
+            holder.fileAttachmentName.setText(attachment.getDocument().getName());
+
+            if (ArrayUtils.contains(FORMAT_IMAGE, attachmentFormat)) {
+                TransitionDTO fetchAttachment = messagingMetadata.getLinks().getFetchAttachment();
+
+                Map<String, String> headers = new HashMap<>();
+                headers.put("x-api-key", HttpConstants.getApiStartKey());
+                headers.put("username", iSession.getAppAuthorizationHelper().getCurrUser());
+                headers.put("Authorization", iSession.getAppAuthorizationHelper().getIdToken());
+
+                Uri uri = Uri.parse(fetchAttachment.getUrl());
+                uri = uri.buildUpon()
+                        .appendQueryParameter("nodeid", attachment.getDocument().getDocumentHandler())
+                        .build();
+
+                PicassoHelper.setHeaders(headers);
+                PicassoHelper.getPicassoInstance(context)
+                        .load(uri)
+                        .placeholder(R.drawable.bg_glitter_rounded)
+                        .transform(new PicassoRoundedCornersExifTransformation(14, 10, uri.toString(), headers))
+                        .into(holder.imageAttachment, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                holder.imageAttachment.setVisibility(View.VISIBLE);
+                                holder.attachmentProgress.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onError() {
+                                holder.imageAttachment.setVisibility(View.GONE);
+                                holder.fileAttachmentLayout.setVisibility(View.VISIBLE);
+                                holder.attachmentProgress.setVisibility(View.GONE);
+                            }
+                        });
+                holder.imageAttachment.setVisibility(View.VISIBLE);
+                holder.attachmentProgress.setVisibility(View.VISIBLE);
+            } else {
+                holder.fileAttachmentLayout.setVisibility(View.VISIBLE);
+            }
+
+            holder.fileAttachmentLayout.setOnLongClickListener(getDownloadListener(attachment, attachmentFormat));
+            holder.imageAttachment.setOnLongClickListener(getDownloadListener(attachment, attachmentFormat));
+
+        }
+    }
+
+    private View.OnLongClickListener getDownloadListener(final MessageAttachment attachment, final String attachmentFormat){
+        return new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                view.startActionMode(new ActionMode.Callback() {
+                    @Override
+                    public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+                        actionMode.setTitle(attachment.getDocument().getName());
+                        actionMode.getMenuInflater().inflate(R.menu.messages_action_menu, menu);
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+                        if(menuItem.getItemId()== R.id.menu_download){
+                            callback.downloadAttachment(attachment, attachmentFormat);
+                        }
+                        actionMode.finish();
+                        return true;
+                    }
+
+                    @Override
+                    public void onDestroyActionMode(ActionMode actionMode) {
+
+                    }
+                });
+                return true;
+            }
+        };
     }
 
     @Override
@@ -212,19 +330,32 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
         TextView participantPosition;
         TextView timeStamp;
         TextView messageText;
+        View fileAttachmentLayout;
+        TextView fileAttachmentExtension;
+        TextView fileAttachmentName;
+        ImageView imageAttachment;
+        View attachmentProgress;
 
         ViewHolder(View itemView) {
             super(itemView);
-            timeHeader = (TextView) itemView.findViewById(R.id.time_header);
-            participantImage = (ImageView) itemView.findViewById(R.id.participant_image);
-            participantInitials = (TextView) itemView.findViewById(R.id.participant_initials);
+            timeHeader = itemView.findViewById(R.id.time_header);
+            participantImage = itemView.findViewById(R.id.participant_image);
+            participantInitials = itemView.findViewById(R.id.participant_initials);
             metaView = itemView.findViewById(R.id.message_metadata);
-            participantName = (TextView) itemView.findViewById(R.id.participant_name);
-            participantPosition = (TextView) itemView.findViewById(R.id.participant_position);
-            timeStamp = (TextView) itemView.findViewById(R.id.time_stamp);
-            messageText = (TextView) itemView.findViewById(R.id.message_text);
-
+            participantName = itemView.findViewById(R.id.participant_name);
+            participantPosition = itemView.findViewById(R.id.participant_position);
+            timeStamp = itemView.findViewById(R.id.time_stamp);
+            messageText = itemView.findViewById(R.id.message_text);
+            fileAttachmentLayout = itemView.findViewById(R.id.attachmentFileLayout);
+            fileAttachmentExtension = itemView.findViewById(R.id.attachmentExtension);
+            fileAttachmentName = itemView.findViewById(R.id.attachmentName);
+            imageAttachment = itemView.findViewById(R.id.attachmentImage);
+            attachmentProgress = itemView.findViewById(R.id.attachmentProgress);
         }
+    }
+
+    public interface ConversationCallback {
+        void downloadAttachment(MessageAttachment attachment, String attachmentFormat);
     }
 
     private class ConversationTagHandler implements Html.TagHandler {
