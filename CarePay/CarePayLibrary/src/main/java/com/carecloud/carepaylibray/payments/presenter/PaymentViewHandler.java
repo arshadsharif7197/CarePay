@@ -22,7 +22,7 @@ public interface PaymentViewHandler {
 
     void displayDialogFragment(DialogFragment fragment, boolean addToBackStack);
 
-    void exitPaymentProcess(boolean cancelled);
+    void exitPaymentProcess(boolean cancelled, boolean paymentPlanCreated, boolean paymentMade);
 
     @Nullable
     String getAppointmentId();

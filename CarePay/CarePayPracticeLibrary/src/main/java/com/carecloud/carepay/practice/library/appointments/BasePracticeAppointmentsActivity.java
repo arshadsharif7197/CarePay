@@ -35,6 +35,7 @@ import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
@@ -48,6 +49,7 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.gson.Gson;
 import com.squareup.timessquare.CalendarPickerView;
 
@@ -442,6 +444,9 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     private void logAppointmentRequestedMixpanel() {
         ApplicationMode.ApplicationType applicationType = getApplicationMode().getApplicationType();
+        boolean isGuest = applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
+                !ValidationHelper.isValidEmail(((ISession) getContext()).getAppAuthorizationHelper().getCurrUser()) : null;
+
         String[] params = {getString(R.string.param_appointment_type),
                 getString(R.string.param_practice_id),
                 getString(R.string.param_practice_name),
@@ -449,6 +454,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
                 getString(R.string.param_patient_id),
                 getString(R.string.param_location_id),
                 getString(R.string.param_reason_visit),
+                getString(R.string.param_is_guest),
                 //make sure this is the last item in case we need to null it out to prevent it from sending
                 getString(R.string.param_payment_made)
         };
@@ -459,6 +465,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
                 patientModel.getPatientId(),
                 scheduleAppointmentRequestDTO.getAppointment().getLocationGuid(),
                 scheduleAppointmentRequestDTO.getAppointment().getComments(),
+                isGuest,
                 prepayAmount
         };
         if(prepayAmount <= 0D){
