@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+           xmlns:app="http://schemas.android.com/apk/res-auto"
+           android:id="@+id/action_mode_close_button"
+           android:layout_width="wrap_content"
+           android:layout_height="match_parent"
+           android:layout_marginEnd="@dimen/dimen_16dp"
+           android:clickable="true"
+           android:focusable="true"
+           android:paddingStart="@dimen/dimen_8dp"
+           android:src="@drawable/icn_patient_mode_nav_close" />

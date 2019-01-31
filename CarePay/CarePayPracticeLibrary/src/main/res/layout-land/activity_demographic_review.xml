@@ -18,8 +18,7 @@
             android:layout_height="match_parent"
             android:layout_weight=".4"
             android:background="@color/left_panel_color"
-            android:paddingStart="@dimen/checkInMainPanelStartPadding"
-            android:paddingEnd="@dimen/checkInMainPanelEndPadding">
+            android:paddingStart="@dimen/checkInMainPanelStartPadding">
 
             <ImageView
                 android:id="@+id/checkinLogo"
@@ -27,7 +26,8 @@
                 android:layout_height="@dimen/checkInBreezeLogoHeight"
                 android:layout_marginTop="@dimen/checkInBreezeLogoTopMargin"
                 android:contentDescription="@string/home_logo"
-                android:src="?practiceLogoDrawable" />
+                android:src="?practiceLogoDrawable"
+                android:visibility="invisible" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/checkInLeftNavigationTitle"
@@ -35,6 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/checkinLogo"
                 android:layout_marginTop="@dimen/checkInLeftMessageTopMargin"
+                android:layout_marginEnd="@dimen/checkInMainPanelEndPadding"
                 android:gravity="start"
                 android:textColor="@color/white"
                 android:textSize="@dimen/checkInMessageTextSize"

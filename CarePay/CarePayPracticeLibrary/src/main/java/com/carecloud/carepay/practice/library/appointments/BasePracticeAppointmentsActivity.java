@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import com.carecloud.carepay.practice.library.R;
@@ -15,6 +14,7 @@ import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodPrepaymentFragment;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -55,6 +55,9 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     protected PaymentsModel paymentsModel;
     private PatientModel patientModel;
+
+    private ScheduleAppointmentRequestDTO scheduleAppointmentRequestDTO;
+    private double prepayAmount;
 
     @Override
     protected void onCreate(Bundle icicle) {
@@ -133,7 +136,6 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         PracticePaymentMethodPrepaymentFragment prepaymentFragment = PracticePaymentMethodPrepaymentFragment
                 .newInstance(paymentsModel, amount);
         showFragment(prepaymentFragment);
-
         MixPanelUtil.logEvent(getString(R.string.event_payment_start_prepayment));
     }
 
@@ -187,6 +189,9 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
                     .newInstance(workflowDTO, Label.getLabel("appointment.confirmationScreen.type.label.paymentType"),
                             Label.getLabel("add_appointment_back_to_appointments_button"));
             displayDialogFragment(confirmationFragment, false);
+
+            //this is a prepayment
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_prepayments_completed), 1);
         }
     }
 
@@ -255,5 +260,36 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     @Override
     public void replaceFragment(Fragment fragment, boolean addToBackStack) {
         //NOT VALID
+    }
+
+    private void logAppointmentRequestedMixpanel() {
+        ApplicationMode.ApplicationType applicationType = getApplicationMode().getApplicationType();
+        String[] params = {getString(R.string.param_appointment_type),
+                getString(R.string.param_practice_id),
+                getString(R.string.param_practice_name),
+                getString(R.string.param_provider_id),
+                getString(R.string.param_patient_id),
+                getString(R.string.param_location_id),
+                getString(R.string.param_reason_visit),
+                //make sure this is the last item in case we need to null it out to prevent it from sending
+                getString(R.string.param_payment_made)
+        };
+        Object[] values = {visitTypeDTO.getName(),
+                getApplicationMode().getUserPracticeDTO().getPracticeId(),
+                getApplicationMode().getUserPracticeDTO().getPracticeName(),
+                scheduleAppointmentRequestDTO.getAppointment().getProviderGuid(),
+                patientModel.getPatientId(),
+                scheduleAppointmentRequestDTO.getAppointment().getLocationGuid(),
+                scheduleAppointmentRequestDTO.getAppointment().getComments(),
+                prepayAmount
+        };
+        if (prepayAmount <= 0D) {
+            params[params.length - 1] = null;
+        }
+        MixPanelUtil.logEvent(getString(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
+                R.string.event_appointment_requested : R.string.event_appointment_scheduled), params, values);
+        if (applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
+        }
     }
 }

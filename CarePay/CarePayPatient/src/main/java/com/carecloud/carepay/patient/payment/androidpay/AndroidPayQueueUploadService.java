@@ -16,7 +16,6 @@ import com.carecloud.carepaylibray.utils.EncryptionUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +56,10 @@ public class AndroidPayQueueUploadService extends IntentService {
             }
 
             TransitionDTO transitionDTO = gson.fromJson(queueRecord.getQueueTransition(), TransitionDTO.class);
+            if(transitionDTO.getUrl() == null){
+                queueRecord.delete();
+                continue;
+            }
             boolean isSubmitted = executeWebCall(transitionDTO, jsonBody, queryMap, queueRecord.getUsername());
             if(isSubmitted){
                 queueRecord.delete();
@@ -87,8 +90,8 @@ public class AndroidPayQueueUploadService extends IntentService {
         try {
             Response<WorkflowDTO> response = call.execute();
             return response.isSuccessful();
-        }catch (IOException ioe){
-            ioe.printStackTrace();
+        }catch (Exception ex){
+            ex.printStackTrace();
             return false;
         }
     }

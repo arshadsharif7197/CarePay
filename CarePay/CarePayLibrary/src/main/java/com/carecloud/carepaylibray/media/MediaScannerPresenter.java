@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +22,12 @@ import com.carecloud.carepaylibray.utils.ImageCaptureHelper;
 import com.carecloud.carepaylibray.utils.PermissionsUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,12 +40,35 @@ public class MediaScannerPresenter {
     public static final int REQUEST_CODE_CAMERA = 0x555;
     public static final int REQUEST_CODE_GALLERY = 0x666;
     public static final int REQUEST_CODE_CAPTURE = 0x777;
+    public static final int REQUEST_CODE_FILE = 0x888;
 
     public static final String DATA_CAPTURED_IMAGE_KEY = "capturedImageKey";
 
     private static final String ACTION_PICTURE = "demographics_take_pic_option";
     private static final String ACTION_GALLERY = "demographics_select_gallery_option";
     private static final String ACTION_CANCEL = "demographics_cancel_label";
+    private static final String ACTION_FILE = "demographics_select_file_option";
+
+    private static final String[] SUPPORTED_MIME_TYPES = {
+            "application/json",
+            "application/pdf",
+            "application/xml",
+            "application/zip",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "application/vnd.ms-excel",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "application/vnd.ms-powerpoint",
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            "text/plain",
+            "text/html",
+            "text/csv",
+            "text/xml",
+            "image/jpeg",
+            "image/png",
+            "image/gif",
+            "image/tiff"
+    };
 
     public static int captureViewId;
 
@@ -52,7 +84,7 @@ public class MediaScannerPresenter {
      *
      * @param context            context
      * @param mediaViewInterface view interface
-     * @param cameraType the camera type
+     * @param cameraType         the camera type
      */
     public MediaScannerPresenter(Context context, MediaViewInterface mediaViewInterface,
                                  CarePayCameraPreview.CameraType cameraType) {
@@ -67,7 +99,7 @@ public class MediaScannerPresenter {
      * @param context            context
      * @param mediaViewInterface view interface
      * @param captureView        view for setting captured image
-     * @param cameraType the camera type
+     * @param cameraType         the camera type
      */
     public MediaScannerPresenter(Context context, MediaViewInterface mediaViewInterface, View captureView,
                                  CarePayCameraPreview.CameraType cameraType) {
@@ -105,6 +137,10 @@ public class MediaScannerPresenter {
         builder.show();
     }
 
+    public void selectFile() {
+        handleFileAction();
+    }
+
     /**
      * Forward permission result handling to presenter
      *
@@ -115,8 +151,12 @@ public class MediaScannerPresenter {
     public void handleRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case PermissionsUtil.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && pendingAction.equals(ACTION_GALLERY)) {
-                    handleGalleryAction();
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (pendingAction.equals(ACTION_GALLERY)) {
+                        handleGalleryAction();
+                    } else if (pendingAction.equals(ACTION_FILE)) {
+                        handleFileAction();
+                    }
                 } else {
                     //code for deny
                     Log.v(LOG_TAG, "read external denied");
@@ -165,6 +205,51 @@ public class MediaScannerPresenter {
                     }
                     if (filePath != null) {
                         mediaViewInterface.setCapturedBitmap(filePath, captureView);
+                    }
+                    return true;
+                }
+                case REQUEST_CODE_FILE: {
+                    String fileName = null;
+                    File outFile = null;
+                    Uri uri = data.getData();
+                    if (uri != null && "content".equals(uri.getScheme())) {
+                        Cursor cursor = context.getContentResolver().query(uri,
+                                new String[]{MediaStore.Files.FileColumns.DISPLAY_NAME},
+                                null, null, null);
+                        if (cursor != null && cursor.moveToFirst()) {
+                            fileName = cursor.getString(0);
+                            cursor.close();
+                        }
+
+
+                        if (fileName != null) {
+                            try {
+                                outFile = new File(context.getCacheDir() + "/" + fileName);
+                                InputStream input = context.getContentResolver().openInputStream(uri);
+                                OutputStream output = new FileOutputStream(outFile);
+                                byte[] bytes = new byte[16384];
+                                int readBytes;
+                                if(input != null) {
+                                    while ((readBytes = input.read(bytes, 0, bytes.length)) != -1) {
+                                        output.write(bytes, 0, readBytes);
+                                    }
+                                    input.close();
+                                }
+                                output.close();
+                            } catch (IOException ioe) {
+                                ioe.printStackTrace();
+                                outFile = null;
+                            }
+                        }
+
+                    }
+
+                    if (fileName == null && uri != null) {
+                        outFile = new File(URI.create(uri.getPath()));
+                    }
+
+                    if (outFile != null && outFile.exists()) {
+                        mediaViewInterface.setCapturedBitmap(outFile.getAbsolutePath(), captureView);
                     }
                     return true;
                 }
@@ -223,6 +308,25 @@ public class MediaScannerPresenter {
         }
 
         mediaViewInterface.handleStartActivityForResult(ImageCaptureHelper.galleryIntent(), REQUEST_CODE_GALLERY);
+
+    }
+
+    private void handleFileAction() {
+        setPendingAction(ACTION_FILE);
+        if (mediaViewInterface.getCallingFragment() != null) {
+            if (!PermissionsUtil.checkPermissionStorage(mediaViewInterface.getCallingFragment())) {
+                return;
+            }
+        } else if (!PermissionsUtil.checkPermissionStorage(context)) {
+            return;
+        }
+
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("*/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, SUPPORTED_MIME_TYPES);
+
+        mediaViewInterface.handleStartActivityForResult(intent, REQUEST_CODE_FILE);
 
     }
 

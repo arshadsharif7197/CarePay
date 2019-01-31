@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel;
 
+import com.carecloud.carepay.service.library.base.OptionNameInterface;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -8,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by lmenendez on 5/16/17
  */
 
-public class DemographicsOption {
+public class DemographicsOption implements OptionNameInterface {
 
     @SerializedName("id")
     @Expose
@@ -47,5 +48,10 @@ public class DemographicsOption {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return name;
     }
 }

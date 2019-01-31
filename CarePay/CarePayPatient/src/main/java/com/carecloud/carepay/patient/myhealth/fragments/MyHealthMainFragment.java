@@ -23,6 +23,10 @@ import com.carecloud.carepay.patient.myhealth.dtos.MedicationDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthProviderDto;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
+import com.carecloud.carepay.patient.visitsummary.VisitSummaryDialogFragment;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepaylibray.appointments.models.PortalSetting;
+import com.carecloud.carepaylibray.appointments.models.PortalSettingDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 
@@ -84,6 +88,36 @@ public class MyHealthMainFragment extends BaseFragment {
         setUpAllergiesRecyclerView(view);
         setUpMedicationsRecyclerView(view);
         setUpLabsRecyclerView(view);
+        setUpVisitSummaryButton(view);
+    }
+
+    private void setUpVisitSummaryButton(View view) {
+        boolean isVisitSummaryEnabled = false;
+        for (UserPracticeDTO userPracticeDTO : myHealthDto.getPayload().getPracticeInformation()) {
+            if (userPracticeDTO.isVisitSummaryEnabled()) {
+                for (PortalSettingDTO portalSettingDTO : myHealthDto.getPayload().getPortalSettings()) {
+                    if (userPracticeDTO.getPracticeId().equals(portalSettingDTO.getMetadata().getPracticeId())) {
+                        for (PortalSetting portalSetting : portalSettingDTO.getPayload()) {
+                            if (portalSetting.getName().toLowerCase().equals("visit summary")
+                                    && portalSetting.getStatus().toLowerCase().equals("a")) {
+                                isVisitSummaryEnabled = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (isVisitSummaryEnabled) break;
+                }
+            }
+            if (isVisitSummaryEnabled) break;
+        }
+        TextView visitSummaryButton = view.findViewById(R.id.visitSummaryButton);
+        visitSummaryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.displayDialogFragment(VisitSummaryDialogFragment.newInstance(), true);
+            }
+        });
+        visitSummaryButton.setVisibility(isVisitSummaryEnabled ? View.VISIBLE : View.GONE);
     }
 
     private void setUpLabsRecyclerView(View view) {

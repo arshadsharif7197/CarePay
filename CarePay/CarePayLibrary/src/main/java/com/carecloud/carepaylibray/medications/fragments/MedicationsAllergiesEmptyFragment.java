@@ -193,4 +193,7 @@ public class MedicationsAllergiesEmptyFragment extends BaseCheckinFragment {
         }
     };
 
+    public int getSelectedMode(){
+        return selectedMode;
+    }
 }

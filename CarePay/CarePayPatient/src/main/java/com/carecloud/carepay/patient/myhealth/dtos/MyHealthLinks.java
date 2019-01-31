@@ -32,6 +32,12 @@ public class MyHealthLinks extends LandingLinks {
     @Expose
     @SerializedName("careteam")
     private TransitionDTO medicalRecord = new TransitionDTO();
+    @Expose
+    @SerializedName("visit_summary")
+    private TransitionDTO visitSummary = new TransitionDTO();
+    @Expose
+    @SerializedName("visit_summary_status")
+    private TransitionDTO visitSummaryStatus = new TransitionDTO();
 
     public TransitionDTO getMedications() {
         return medications;
@@ -87,5 +93,21 @@ public class MyHealthLinks extends LandingLinks {
 
     public void setMedicalRecord(TransitionDTO medicalRecord) {
         this.medicalRecord = medicalRecord;
+    }
+
+    public TransitionDTO getVisitSummary() {
+        return visitSummary;
+    }
+
+    public void setVisitSummary(TransitionDTO visitSummary) {
+        this.visitSummary = visitSummary;
+    }
+
+    public TransitionDTO getVisitSummaryStatus() {
+        return visitSummaryStatus;
+    }
+
+    public void setVisitSummaryStatus(TransitionDTO visitSummaryStatus) {
+        this.visitSummaryStatus = visitSummaryStatus;
     }
 }
