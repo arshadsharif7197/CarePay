@@ -31,6 +31,7 @@ import com.carecloud.carepay.practice.library.customdialog.ChangeModeDialog;
 import com.carecloud.carepay.practice.library.customdialog.ConfirmationPinDialog;
 import com.carecloud.carepay.practice.library.homescreen.adapters.OfficeNewsListAdapter;
 import com.carecloud.carepay.practice.library.homescreen.dialogs.OfficeNewsDetailsDialog;
+import com.carecloud.carepay.practice.library.homescreen.dtos.AppointmentCountsModel;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenAlertsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenAppointmentCountsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenDTO;
@@ -44,6 +45,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.Defs;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
@@ -69,6 +71,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private List<String> modeSwitchOptions = new ArrayList<>();
     private HomeScreenMode homeScreenMode;
     private TextView languageSpinner;
+
+    private Handler handler = new Handler();
 
     private boolean isUserInteraction = false;
 
@@ -296,7 +300,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
                 PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO
                         = gson.fromJson(payloadAsJsonObject, PracticeHomeScreenPayloadDTO.class);
                 setPracticeUser(practiceHomeScreenPayloadDTO);
-                setAppointmentCount(practiceHomeScreenPayloadDTO);
+                setAppointmentCounts(true);
                 setAlertCount(practiceHomeScreenPayloadDTO);
             }
         }
@@ -318,17 +322,48 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         imageView.setLayoutParams(imageViewParams);
     }
 
-    private void setAppointmentCount(PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO) {
-        HomeScreenAppointmentCountsDTO homeScreenAppointmentCountsDTO = practiceHomeScreenPayloadDTO
-                .getAppointmentCounts();
-        if (homeScreenAppointmentCountsDTO != null) {
-            int checkinCounter = homeScreenAppointmentCountsDTO.getCheckingInCount() != null ?
-                    homeScreenAppointmentCountsDTO.getCheckingInCount() : 0;
-            TextView counter = (TextView) findViewById(R.id.checkedInCounterTextview);
+    private void setAppointmentCounts(boolean shouldUpdateNow) {
+        HomeScreenAppointmentCountsDTO appointmentCounts = (HomeScreenAppointmentCountsDTO) getApplicationPreferences().getAppointmentCounts(HomeScreenAppointmentCountsDTO.class);
+        if (appointmentCounts != null) {
+            int checkinCounter = appointmentCounts.getCheckingInCount();
+            TextView counter = findViewById(R.id.checkedInCounterTextview);
             if (counter != null) {
                 counter.setText(String.valueOf(checkinCounter));
             }
         }
+
+        if (shouldUpdateNow) {
+            updateCheckinCounts();
+        } else {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    setAppointmentCounts(false);
+                }
+            }, 1000 * 30);//30s
+        }
+    }
+
+    private void updateCheckinCounts() {
+        JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getLinks();
+        Gson gson = new Gson();
+
+        UserPracticeDTO practiceDTO = getApplicationMode().getUserPracticeDTO();
+        Set<String> locationsSavedFilteredIds = getApplicationPreferences()
+                .getSelectedLocationsIds(practiceDTO.getPracticeId(), practiceDTO.getUserId());
+
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_id", practiceDTO.getPracticeId());
+        queryMap.put("practice_mgmt", practiceDTO.getPracticeMgmt());
+
+        if (locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()) {
+            queryMap.put("location_ids", StringUtil.getListAsCommaDelimitedString(locationsSavedFilteredIds));
+        }
+
+        PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
+        TransitionDTO transitionDTO = transitionsDTO.getAppointmentCounts();
+
+        getWorkflowServiceHelper().execute(transitionDTO, getAppointmentCounts(transitionDTO), queryMap);
     }
 
     private void setAlertCount(PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO) {
@@ -801,6 +836,34 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         }
     };
 
+    private WorkflowServiceCallback getAppointmentCounts(final TransitionDTO transitionDTO) {
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                AppointmentCountsModel countsModel = DtoHelper.getConvertedDTO(AppointmentCountsModel.class, workflowDTO);
+                HomeScreenAppointmentCountsDTO appointmentCounts = countsModel.getAppointmentCountsPayload().getAppointmentCounts();
+                getApplicationPreferences().setAppointmentCounts(appointmentCounts);
+                setAppointmentCounts(false);
+
+                Intent intent = new Intent(CloverMainActivity.this, AppointmentCountUpdateService.class);
+                intent.putExtra(AppointmentCountUpdateService.KEY_TRANSITION, DtoHelper.getStringDTO(transitionDTO));
+                intent.putExtra(AppointmentCountUpdateService.KEY_PRACTICE_ID, getApplicationMode().getUserPracticeDTO().getPracticeId());
+                intent.putExtra(AppointmentCountUpdateService.KEY_PRACTICE_MGMT, getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+                startService(intent);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                //set anyway to trigger future updates
+                setAppointmentCounts(false);
+            }
+        };
+    }
 
     @Override
     public void onBackPressed() {
