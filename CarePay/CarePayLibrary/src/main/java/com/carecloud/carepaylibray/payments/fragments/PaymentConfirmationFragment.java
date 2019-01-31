@@ -109,37 +109,37 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
 
     @Override
     public void onViewCreated(View view, Bundle icicle) {
-        Button okButton = (Button) view.findViewById(R.id.button_ok);
+        Button okButton = view.findViewById(R.id.button_ok);
         okButton.setOnClickListener(dismissPopupListener);
         if (getArguments().getString(KEY_BUTTON_LABEL) != null) {
             okButton.setText(getArguments().getString(KEY_BUTTON_LABEL));
         }
 
-        View closeButton = view.findViewById(R.id.dialog_close_header);
-        if (closeButton != null) {
-            closeButton.setOnClickListener(dismissPopupListener);
-        }
+//        View closeButton = view.findViewById(R.id.dialog_close_header);
+//        if (closeButton != null) {
+//            closeButton.setOnClickListener(dismissPopupListener);
+//        }
 
         if (getArguments().getString(KEY_PAYMENT_TYPE) != null) {
-            TextView typeTextView = (TextView) view.findViewById(R.id.payment_confirm_type_value);
+            TextView typeTextView = view.findViewById(R.id.payment_confirm_type_value);
             typeTextView.setText(getArguments().getString(KEY_PAYMENT_TYPE));
         }
 
 
-        TextView methodTextView = (TextView) view.findViewById(R.id.payment_confirm_method_value);
+        TextView methodTextView = view.findViewById(R.id.payment_confirm_method_value);
         methodTextView.setText(getPaymentMethod(patientPaymentPayload));
 
-        TextView totalTextView = (TextView) view.findViewById(R.id.payment_confirm_total_value);
+        TextView totalTextView = view.findViewById(R.id.payment_confirm_total_value);
         totalTextView.setText(currencyFormatter.format(patientPaymentPayload.getTotalPaid()));
 
-        TextView confirmationTextView = (TextView) view.findViewById(R.id.payment_confirm_value);
+        TextView confirmationTextView = view.findViewById(R.id.payment_confirm_value);
         confirmationTextView.setText(patientPaymentPayload.getConfirmation());
 
         DateUtil dateUtil = DateUtil.getInstance().setToCurrent();
-        TextView date = (TextView) view.findViewById(R.id.payment_confirm_date);
+        TextView date = view.findViewById(R.id.payment_confirm_date);
         date.setText(dateUtil.getDateAsMonthLiteralDayOrdinalYear());
 
-        TextView practice = (TextView) view.findViewById(R.id.payment_confirm_practice_name);
+        TextView practice = view.findViewById(R.id.payment_confirm_practice_name);
         String practiceName = getPracticeName(patientPaymentPayload.getMetadata().getBusinessEntityId());
         practice.setText(practiceName);
 

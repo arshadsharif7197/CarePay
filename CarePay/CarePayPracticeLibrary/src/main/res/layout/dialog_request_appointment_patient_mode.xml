@@ -41,16 +41,16 @@
             android:layout_height="@dimen/contentViewHeaderTitleHeight"
             android:background="@drawable/patient_mode_dialog_header_bg"
             android:gravity="center"
+            android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="@dimen/contentViewHeaderTitleTextSize"
-            android:textAllCaps="false"
             app:customAssetFont="gotham_rounded_medium" />
 
         <RelativeLayout
             android:id="@+id/header"
             android:layout_width="match_parent"
-            android:background="@color/white"
-            android:layout_height="@dimen/appointmentRequestDialogHeaderHeight">
+            android:layout_height="@dimen/appointmentRequestDialogHeaderHeight"
+            android:background="@color/white">
 
             <RelativeLayout
                 android:id="@+id/summary_header_layout"
@@ -78,18 +78,18 @@
                     android:textColor="@color/white_opacity_60"
                     android:textSize="@dimen/appointmentDialogStartTimeTextSize"
                     app:customAssetFont="gotham_rounded_bold"
-                    tools:text="10:15 AM"/>
+                    tools:text="10:15 AM" />
             </RelativeLayout>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/provider_short_name"
                 android:layout_width="@dimen/provider_card_avatar_size"
                 android:layout_height="@dimen/provider_card_avatar_size"
-                android:layout_below="@id/summary_header_layout"
+                android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/appointment_summary_provider_image_margin"
                 android:background="@drawable/round_list_tv"
-                android:gravity="center_vertical|center_horizontal"
+                android:gravity="center"
                 android:src="@drawable/icn_placeholder_user_profile_png"
                 android:textColor="@color/lightSlateGray"
                 android:textSize="@dimen/text_size_40sp"
@@ -100,9 +100,8 @@
                 android:id="@+id/picImageView"
                 android:layout_width="@dimen/provider_card_avatar_size"
                 android:layout_height="@dimen/provider_card_avatar_size"
-                android:layout_below="@id/summary_header_layout"
+                android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/appointment_summary_provider_image_margin"
                 android:visibility="gone" />
 
         </RelativeLayout>

@@ -122,7 +122,7 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.newAppointment();
+//                callback.getnewAppointment();
             }
         });
         Button newAppointmentClassicButton = view.findViewById(R.id.newAppointmentClassicButton);
@@ -130,7 +130,7 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
         newAppointmentClassicButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.newAppointment();
+//                callback.newAppointment();
             }
         });
     }

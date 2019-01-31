@@ -12,7 +12,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 @Deprecated
 public interface AppointmentNavigationCallback extends VisitTypeInterface, AvailableHoursInterface,
         DateRangeInterface, ProviderInterface {
-    void newAppointment();
+//    void newAppointment();
 
     void rescheduleAppointment(AppointmentDTO appointmentDTO);
 

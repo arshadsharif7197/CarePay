@@ -73,12 +73,26 @@
 
         </FrameLayout>
 
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/prepaymentMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/toolbarLayout"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:padding="@dimen/dimen_10dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_15"
+            android:visibility="gone"
+            app:customAssetFont="proxima_nova_semi_bold"
+            tools:text="Required Prepayment: $49.00" />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/availableHoursRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/footer"
-            android:layout_below="@id/toolbarLayout"
+            android:layout_below="@id/prepaymentMessage"
             android:background="@color/white" />
 
         <include

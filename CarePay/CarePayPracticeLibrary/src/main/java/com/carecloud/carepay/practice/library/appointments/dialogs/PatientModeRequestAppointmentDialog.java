@@ -103,6 +103,13 @@ public class PatientModeRequestAppointmentDialog extends BaseRequestAppointmentD
             prepaidLayout.setVisibility(View.GONE);
         }
 
+        view.findViewById(R.id.closeViewLayout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+
         final ScrollView scrollContainer = view.findViewById(R.id.scrollContainer);
         scrollContainer.post(new Runnable() {
             @Override

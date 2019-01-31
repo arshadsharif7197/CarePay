@@ -68,13 +68,6 @@ public class PracticeModeRequestAppointmentDialog extends PatientModeRequestAppo
         view.findViewById(R.id.provider_place_name).setVisibility(View.GONE);
         view.findViewById(R.id.addressSeparator).setVisibility(View.GONE);
 
-        view.findViewById(R.id.closeViewLayout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
-
         ImageView picImageView = view.findViewById(R.id.picImageView);
         PicassoHelper.get().loadImage(getContext(), picImageView, providerImageTextView, patientModel.getProfilePhoto());
     }

@@ -24,7 +24,6 @@ import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInte
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.appointment.DataDTO;
-import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -96,12 +95,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                                        AppointmentsResultModel appointmentsResultModel,
                                        PaymentsModel paymentsModel) {
         super(viewHandler, appointmentsResultModel, paymentsModel);
-    }
-
-    @Override
-    public void newAppointment() {
-        CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
-        viewHandler.addFragment(fragment, true);
     }
 
     @Override

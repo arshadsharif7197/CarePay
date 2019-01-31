@@ -10,7 +10,7 @@ import android.widget.ImageView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
@@ -24,7 +24,7 @@ public class ProvidersListAdapter extends RecyclerView.Adapter<ProvidersListAdap
 
     private Context context;
     private OnProviderListItemClickListener listener;
-    private List<AppointmentResourcesDTO> providersArrayList;
+    private List<AppointmentResourcesItemDTO> providersArrayList;
 
     /**
      * This will create a list of appointments
@@ -33,7 +33,7 @@ public class ProvidersListAdapter extends RecyclerView.Adapter<ProvidersListAdap
      * @param providersArrayList providersArrayList
      * @param listener           listener
      */
-    public ProvidersListAdapter(Context context, List<AppointmentResourcesDTO> providersArrayList,
+    public ProvidersListAdapter(Context context, List<AppointmentResourcesItemDTO> providersArrayList,
                                 AppointmentsResultModel appointmentInfo,
                                 OnProviderListItemClickListener listener) {
 
@@ -51,12 +51,12 @@ public class ProvidersListAdapter extends RecyclerView.Adapter<ProvidersListAdap
 
     @Override
     public void onBindViewHolder(final ProvidersListViewHolder holder, int position) {
-        AppointmentResourcesDTO resource = providersArrayList.get(position);
+        AppointmentResourcesItemDTO resource = providersArrayList.get(position);
 
-        String providerName = resource.getResource().getProvider().getName();
+        String providerName = resource.getProvider().getName();
         holder.shortName.setText(StringUtil.getShortName(providerName));
         holder.doctorName.setText(providerName);
-        holder.doctorType.setText(resource.getResource().getProvider().getSpecialty().getName());
+        holder.doctorType.setText(resource.getProvider().getSpecialty().getName());
         holder.scheduleAppointment.setText(Label.getLabel("provider_list_schedule_appointment_button"));
         holder.scheduleAppointment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +65,7 @@ public class ProvidersListAdapter extends RecyclerView.Adapter<ProvidersListAdap
             }
         });
 
-        loadImage(holder.providerPicImageView, resource.getResource().getProvider().getPhoto());
+        loadImage(holder.providerPicImageView, resource.getProvider().getPhoto());
     }
 
     protected void loadImage(final ImageView imageView, String url) {

@@ -161,12 +161,13 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
                 }
             }
         }
-        return null;
+        //Only valid for patient mode
+        return ApplicationPreferences.getInstance().getPatientId();
     }
 
     private void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDto, double amount) {
-        callback.startPrepaymentProcess(appointmentRequestDto, amount, selectedPractice.getPracticeId());
         dismiss();
+        callback.startPrepaymentProcess(appointmentRequestDto, amount, selectedPractice.getPracticeId());
     }
 
     protected void onMapView(final String address) {

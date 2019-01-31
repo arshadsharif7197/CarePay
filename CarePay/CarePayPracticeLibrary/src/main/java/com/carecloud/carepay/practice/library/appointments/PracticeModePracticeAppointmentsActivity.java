@@ -2,6 +2,7 @@ package com.carecloud.carepay.practice.library.appointments;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
@@ -10,8 +11,10 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.adhocforms.AdHocFormsListFragment;
 import com.carecloud.carepay.practice.library.appointments.createappointment.AvailabilityHourFragment;
+import com.carecloud.carepay.practice.library.appointments.createappointment.CreateAppointmentFragment;
 import com.carecloud.carepay.practice.library.appointments.dialogs.CancelAppointmentConfirmDialogFragment;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAppointmentDialog;
+import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeModeRequestAppointmentDialog;
 import com.carecloud.carepay.practice.library.appointments.dtos.PracticeAppointmentDTO;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
@@ -34,12 +37,14 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
+import com.carecloud.carepaylibray.appointments.createappointment.CreateAppointmentFragmentInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.appointments.models.LinksDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
+import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentDetailInterface;
@@ -564,7 +569,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         dialog.show(getSupportFragmentManager(), tag);
     }
 
-    @Override
     public void onAppointmentRequestSuccess() {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("start_date", getFormattedDate(startDate));
@@ -592,11 +596,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         }
 
         return dateUtil.toStringWithFormatYyyyDashMmDashDd();
-    }
-
-    @Override
-    protected LinksDTO getLinks() {
-        return checkInDTO.getMetadata().getLinks();
     }
 
     @Override
@@ -810,5 +809,37 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                 FragmentManager.POP_BACK_STACK_INCLUSIVE);
         getSupportFragmentManager().popBackStackImmediate();
         onAppointmentRequestSuccess();
+    }
+
+    @Override
+    public void setResourceProvider(AppointmentResourcesItemDTO resource) {
+        Fragment fragment = getSupportFragmentManager()
+                .findFragmentByTag(CreateAppointmentFragment.class.getName());
+        if (fragment instanceof CreateAppointmentFragmentInterface) {
+            ((CreateAppointmentFragmentInterface) fragment).setResourceProvider(resource);
+        }
+    }
+
+    @Override
+    public void setVisitType(VisitTypeDTO visitTypeDTO) {
+        Fragment fragment = getSupportFragmentManager()
+                .findFragmentByTag(CreateAppointmentFragment.class.getName());
+        if (fragment instanceof CreateAppointmentFragmentInterface) {
+            ((CreateAppointmentFragmentInterface) fragment).setVisitType(visitTypeDTO);
+        }
+    }
+
+    @Override
+    public void setLocation(LocationDTO locationDTO) {
+        Fragment fragment = getSupportFragmentManager()
+                .findFragmentByTag(CreateAppointmentFragment.class.getName());
+        if (fragment instanceof CreateAppointmentFragmentInterface) {
+            ((CreateAppointmentFragmentInterface) fragment).setLocation(locationDTO);
+        }
+    }
+
+    @Override
+    public void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO) {
+        showFragment(PracticeModeRequestAppointmentDialog.newInstance(appointmentDTO, getPatient()));
     }
 }

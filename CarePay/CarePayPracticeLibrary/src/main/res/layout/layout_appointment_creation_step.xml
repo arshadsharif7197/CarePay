@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:showIn="@layout/activity_providers_patient">
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/stepTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/createAppointmentStepTitleBottomMargin"
+        android:textColor="@color/white"
+        android:textSize="@dimen/createAppointmentStepTitleTextSize"
+        app:customAssetFont="gotham_rounded_medium"
+        tools:text="Visit Type" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/stepNoDataTextView"
+        android:layout_width="@dimen/createAppointmentStepContainerWidth"
+        android:layout_height="@dimen/createAppointmentStepContainerHeight"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/no_data_background_transparent"
+        android:foreground="?selectableItemBackground"
+        android:gravity="center"
+        android:padding="@dimen/createAppointmentNoDataPadding"
+        android:textColor="@color/light_blue_subtitle"
+        android:textSize="@dimen/createAppointmentNoDataTextSize"
+        app:customAssetFont="proxima_nova_regular"
+        tools:text="Tap to choose a visit type" />
+
+    <RelativeLayout
+        android:id="@+id/stepContainer"
+        android:layout_width="@dimen/createAppointmentStepContainerWidth"
+        android:layout_height="@dimen/createAppointmentStepContainerHeight"
+        android:background="@drawable/background_full_rounded_white"
+        android:visibility="gone">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/appointmentCreationStepHeaderHeight"
+            android:background="@drawable/background_top_rounded_grey" />
+
+        <ImageView
+            android:id="@+id/profilePicImageView"
+            android:layout_width="@dimen/appointmentCreationProfilePicSize"
+            android:layout_height="@dimen/appointmentCreationProfilePicSize"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/appointmentCreationProfileImageVerticalMargin" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/profileShortNameTextView"
+            android:layout_width="@dimen/appointmentCreationProfilePicSize"
+            android:layout_height="@dimen/appointmentCreationProfilePicSize"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/appointmentCreationProfileImageVerticalMargin"
+            android:background="@drawable/round_list_tv"
+            android:src="@drawable/icn_placeholder_user_profile_png"
+            android:textColor="@color/lightSlateGray"
+            android:textSize="@dimen/patientShortNameTextSize"
+            android:visibility="gone"
+            app:customAssetFont="gotham_rounded_medium" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/profilePicImageView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/appointmentCreationStepSubtitleBottomMargin"
+            android:paddingStart="@dimen/dimen_5dp"
+            android:paddingEnd="@dimen/dimen_5dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/appointmentCreationStepTitleTextSize"
+            app:customAssetFont="proxima_nova_semi_bold"
+            tools:text="Dr. Michael Engleman" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/subTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_centerHorizontal="true"
+            android:paddingStart="@dimen/dimen_5dp"
+            android:paddingEnd="@dimen/dimen_5dp"
+            android:textColor="@color/lightSlateGray"
+            android:textSize="@dimen/appointmentCreationStepSubtitleTextSize"
+            app:customAssetFont="proxima_nova_regular"
+            tools:text="Cardiology" />
+
+        <ImageView
+            android:id="@+id/resetImageView"
+            android:layout_width="@dimen/appointmentCreationStepResetImageSize"
+            android:layout_height="@dimen/appointmentCreationStepResetImageSize"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/appointmentCreationStepResetImageBottomMargin"
+            android:src="@drawable/icn_close_grey" />
+
+    </RelativeLayout>
+
+</LinearLayout>
