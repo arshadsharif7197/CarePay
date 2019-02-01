@@ -32,6 +32,7 @@ import com.carecloud.carepay.service.library.RestCallServiceCallback;
 import com.carecloud.carepay.service.library.RestCallServiceHelper;
 import com.carecloud.carepay.service.library.RestDef;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
@@ -93,7 +94,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
 
     private Map<String, IntegratedPaymentDeviceGroup> groupMap = new HashMap<>();
 
-    public static IntegratedPaymentsChooseDeviceFragment newInstance(PaymentsModel paymentsModel, double paymentAmount){
+    public static IntegratedPaymentsChooseDeviceFragment newInstance(PaymentsModel paymentsModel, double paymentAmount) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, paymentAmount);
@@ -104,20 +105,20 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
     }
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
-        try{
+        try {
             callback = (ShamrockPaymentsCallback) context;
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement ShamrockPaymentsCallback");
         }
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
-        if(args != null){
+        if (args != null) {
             paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
             paymentAmount = args.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
             practiceInfo = paymentsModel.getPaymentPayload().getUserPractices().get(0);
@@ -126,12 +127,12 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_payment_choose_device, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         initToolbar(view);
 
         deviceRecycler = (RecyclerView) view.findViewById(R.id.processing_devices_recycler);
@@ -157,7 +158,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         getDeviceGroups();
     }
 
-    private void initToolbar(View view){
+    private void initToolbar(View view) {
         View closeButton = view.findViewById(R.id.closeViewLayout);
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,10 +177,10 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
 
     }
 
-    private void initLocationsMap(){
+    private void initLocationsMap() {
         Integer filterLocationId = null;
         String lastSelectedLocation = getApplicationPreferences().readStringFromSharedPref(KEY_LAST_SELECTED_LOCATION, null);
-        if(lastSelectedLocation == null) {
+        if (lastSelectedLocation == null) {
             String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
             String userId = getApplicationMode().getUserPracticeDTO().getUserId();
             Set<String> locationIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
@@ -192,7 +193,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
             }
         }
 
-        for(LocationDTO locationDTO : paymentsModel.getPaymentPayload().getLocations()){
+        for (LocationDTO locationDTO : paymentsModel.getPaymentPayload().getLocations()) {
             locationsMap.put(locationDTO.getGuid(), locationDTO);
             DemographicsOption option = new DemographicsOption();
             option.setId(locationDTO.getGuid());
@@ -200,30 +201,30 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
             option.setLabel(locationDTO.getName());
             locationsSelectList.add(option);
 
-            if(filterLocationId != null && locationDTO.getId().equals(filterLocationId)){
-               selectedLocation = locationDTO;
+            if (filterLocationId != null && locationDTO.getId().equals(filterLocationId)) {
+                selectedLocation = locationDTO;
             }
         }
 
-        if(lastSelectedLocation != null){
+        if (lastSelectedLocation != null) {
             selectedLocation = locationsMap.get(lastSelectedLocation);
         }
 
-        if(selectedLocation == null){
+        if (selectedLocation == null) {
             selectedLocation = locationsMap.get(locationsSelectList.get(0).getId());
         }
 
     }
 
-    private void initDeviceMap(){
+    private void initDeviceMap() {
         deviceMap.clear();
-        for(Device device : availableDevices){
+        for (Device device : availableDevices) {
             deviceMap.put(device.getDeviceId(), device);
         }
     }
 
-    private void setAdapter(){
-        if(isAdded() && getActivity() != null) {
+    private void setAdapter() {
+        if (isAdded() && getActivity() != null) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -239,16 +240,16 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         }
     }
 
-    private void updateSelectedLocation(){
-        if(selectedLocation != null){
+    private void updateSelectedLocation() {
+        if (selectedLocation != null) {
             selectedLocationText.setText(selectedLocation.getName());
         }
 
         getAvailableDevices();
     }
 
-    private void refreshProcessButton(){
-        if(isAdded() && getActivity() != null) {
+    private void refreshProcessButton() {
+        if (isAdded() && getActivity() != null) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -259,8 +260,8 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
     }
 
     @Override
-    public void showProgressDialog(){
-        if(isAdded() && getActivity() != null) {
+    public void showProgressDialog() {
+        if (isAdded() && getActivity() != null) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -271,8 +272,8 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
     }
 
     @Override
-    public void hideProgressDialog(){
-        if(isAdded() && getActivity() != null) {
+    public void hideProgressDialog() {
+        if (isAdded() && getActivity() != null) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -283,8 +284,8 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
     }
 
     @Override
-    public void dismiss(){
-        if(isAdded() && getActivity() != null) {
+    public void dismiss() {
+        if (isAdded() && getActivity() != null) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -294,9 +295,9 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         }
     }
 
-    private void toggleSelectDevice(final boolean processing){
-        Log.d("Toggle Selectable", "Processing: "+processing);
-        if(isAdded() && getActivity() != null) {
+    private void toggleSelectDevice(final boolean processing) {
+        Log.d("Toggle Selectable", "Processing: " + processing);
+        if (isAdded() && getActivity() != null) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -311,7 +312,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         }
     }
 
-    private void processIntegratedPayment(){
+    private void processIntegratedPayment() {
         IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
 
         ShamrockPaymentsPostModel shamrockPaymentsPostModel = new ShamrockPaymentsPostModel().setIntegratedPaymentPostModel(postModel);
@@ -324,7 +325,12 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         metadata.setPracticeMgmt(practiceInfo.getPracticeMgmt());
         metadata.setPatientId(practiceInfo.getPatientId());
         metadata.setUserId(userId);
-        metadata.setBreezeUserId(getAppAuthorizationHelper().getPatientUser());
+
+        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            metadata.setBreezeUserId(getAppAuthorizationHelper().getPatientUser());
+        } else {
+            metadata.setBreezeUserId(userId);
+        }
 
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("patient_id", practiceInfo.getPatientId());
@@ -403,7 +409,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         listView.setOnItemClickListener(clickListener);
     }
 
-    private void getDeviceGroups(){
+    private void getDeviceGroups() {
         String endpoint = String.format(getString(R.string.carepay_device_groups), paymentsModel.getPaymentPayload().getOrganizationId());
         String url = HttpConstants.getPaymentsUrl();
 
@@ -415,20 +421,20 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
 
     }
 
-    private void getAvailableDevices(){
-        if(selectedLocation == null || groupMap.isEmpty()){
+    private void getAvailableDevices() {
+        if (selectedLocation == null || groupMap.isEmpty()) {
             return;
         }
 
         userId = getApplicationMode().getUserPracticeDTO().getUserId();
         authToken = getAppAuthorizationHelper().getIdToken();
         IntegratedPaymentDeviceGroup deviceGroup = groupMap.get(selectedLocation.getGuid());
-        if(deviceGroup != null) {
+        if (deviceGroup != null) {
             DeviceInfo.listDevices(userId, authToken, deviceGroup.getGroupId(), listDeviceCallback, connectionActionCallback);
         }
     }
 
-    private void onPaymentCompleted(String paymentRequestId, JsonElement recordObject){
+    private void onPaymentCompleted(String paymentRequestId, JsonElement recordObject) {
         releasePaymentRequest(paymentRequestId);
         selectedDevice = null;
         DeviceInfo.releaseAllDevices(userId, authToken);
@@ -437,7 +443,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
 
     }
 
-    private void postCompletedPayment(String paymentRequestId, JsonElement recordObject){
+    private void postCompletedPayment(String paymentRequestId, JsonElement recordObject) {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("patient_id", practiceInfo.getPatientId());
         queryMap.put("deepstream_record_id", paymentRequestId);
@@ -446,7 +452,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         getWorkflowServiceHelper().execute(transitionDTO, getPostPaymentCallback(paymentRequestId, recordObject), queryMap);
     }
 
-    private void queuePayment(String paymentRequestId){
+    private void queuePayment(String paymentRequestId) {
         IntegratedPaymentQueueRecord paymentQueueRecord = new IntegratedPaymentQueueRecord();
         paymentQueueRecord.setPracticeID(practiceInfo.getPracticeId());
         paymentQueueRecord.setPracticeMgmt(practiceInfo.getPracticeMgmt());
@@ -464,7 +470,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
 
     }
 
-    private void releasePaymentRequest(String paymentRequestId){
+    private void releasePaymentRequest(String paymentRequestId) {
         ClientPayment.releasePaymentRequest(userId, authToken, paymentRequestId);
     }
 
@@ -480,8 +486,8 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
             Log.d("Integrated Callback", jsonElement.toString());
             Gson gson = new Gson();
             IntegratedPaymentDeviceGroupPayload payload = gson.fromJson(jsonElement, IntegratedPaymentDeviceGroupPayload.class);
-            if(payload != null){
-                for(IntegratedPaymentDeviceGroup deviceGroup : payload.getDeviceGroupList()){
+            if (payload != null) {
+                for (IntegratedPaymentDeviceGroup deviceGroup : payload.getDeviceGroupList()) {
                     groupMap.put(deviceGroup.getGroupName(), deviceGroup);
                 }
             }
@@ -495,7 +501,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         }
     };
 
-    private WorkflowServiceCallback getPostPaymentCallback(final String paymentRequestId, final JsonElement recordObject){
+    private WorkflowServiceCallback getPostPaymentCallback(final String paymentRequestId, final JsonElement recordObject) {
         return new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
@@ -560,13 +566,13 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         @Override
         public void onConnectionDestroyed(String deviceName) {
             int index = deviceName.indexOf("/");
-            if(index + 1 > deviceName.length()){
+            if (index + 1 > deviceName.length()) {
                 return;
             }
             Device device = deviceMap.get(deviceName.substring(index));
             device.setState(DeviceDef.STATE_OFFLINE);
             setAdapter();
-            if(selectedDevice != null && selectedDevice.getDeviceId().equals(deviceName)){
+            if (selectedDevice != null && selectedDevice.getDeviceId().equals(deviceName)) {
                 selectedDevice = device;
                 refreshProcessButton();
             }
@@ -579,11 +585,11 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
             findDevice.setProcessing(device.isProcessing());
             findDevice.setPaymentRequestId(device.getPaymentRequestId());
             setAdapter();
-            if(selectedDevice != null && selectedDevice.getDeviceId().equals(device.getDeviceId())){
+            if (selectedDevice != null && selectedDevice.getDeviceId().equals(device.getDeviceId())) {
                 selectedDevice = findDevice;
-                if(selectedDevice.getState().equals(DeviceDef.STATE_IN_USE)){
+                if (selectedDevice.getState().equals(DeviceDef.STATE_IN_USE)) {
                     toggleSelectDevice(true);
-                }else{
+                } else {
                     toggleSelectDevice(false);
                 }
                 refreshProcessButton();
@@ -600,7 +606,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
 
         @Override
         public void onPaymentRequestUpdate(String paymentRequestId, PaymentRequest paymentRequest, JsonElement recordObject) {
-            switch (paymentRequest.getState()){
+            switch (paymentRequest.getState()) {
                 default:
                 case StateDef.STATE_ACKNOWLEDGED:
                 case StateDef.STATE_CAPTURED:
