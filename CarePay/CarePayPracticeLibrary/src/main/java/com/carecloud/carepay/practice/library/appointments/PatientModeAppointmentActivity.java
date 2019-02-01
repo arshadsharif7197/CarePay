@@ -220,7 +220,7 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
     }
 
     @Override
-    public void refreshAppointmentsList() {
+    public void appointmentScheduledSuccessfully() {
         getSupportFragmentManager().popBackStackImmediate(AvailabilityHourFragment.class.getName(),
                 FragmentManager.POP_BACK_STACK_INCLUSIVE);
         getSupportFragmentManager().popBackStackImmediate();

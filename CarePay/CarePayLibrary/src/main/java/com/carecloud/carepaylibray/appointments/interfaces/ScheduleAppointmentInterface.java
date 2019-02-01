@@ -28,7 +28,7 @@ public interface ScheduleAppointmentInterface extends FragmentActivityInterface,
 
     void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO);
 
-    void refreshAppointmentsList();
+    void appointmentScheduledSuccessfully();
 
     void rescheduleAppointment(AppointmentDTO appointmentDTO);
 

@@ -558,6 +558,6 @@
     <dimen name="appointmentCreationStepTitleTextSize">20sp</dimen>
     <dimen name="appointmentCreationAvailabilityButtonWidth">500dp</dimen>
     <dimen name="appointmentCreationAvailabilityButtonTextSize">22sp</dimen>
-    <dimen name="appointmentCreationAvailabilityButtonTopMargin">40dp</dimen>
+    <dimen name="appointmentCreationAvailabilityButtonTopMargin">60dp</dimen>
 
 </resources>

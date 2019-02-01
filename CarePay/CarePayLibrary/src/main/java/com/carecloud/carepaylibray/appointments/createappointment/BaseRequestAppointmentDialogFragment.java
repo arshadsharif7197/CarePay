@@ -10,6 +10,7 @@ import android.util.Log;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -116,7 +117,7 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
                                 "appointment_request_success_message_HTML");
                         SystemUtil.showSuccessToast(getContext(), appointmentRequestSuccessMessage);
                         logMixPanelAppointmentRequestedEvent(appointmentDTO);
-                        callback.refreshAppointmentsList();
+                        callback.appointmentScheduledSuccessfully();
                         dismiss();
                     }
 
@@ -133,14 +134,34 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
     }
 
     protected void logMixPanelAppointmentRequestedEvent(AppointmentDTO appointmentRequestDto) {
-        String[] params = {getString(R.string.param_appointment_type), getString(R.string.param_practice_id),
-                getString(R.string.param_practice_name)};
-        String[] values = {appointmentRequestDto.getPayload().getVisitType().getName(),
-                selectedPractice.getPracticeId(), selectedPractice.getPracticeName()};
-        MixPanelUtil.logEvent(getString(R.string.event_appointment_requested), params, values);
-        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
+        String[] params = {getString(R.string.param_appointment_type),
+                getString(R.string.param_practice_id),
+                getString(R.string.param_practice_name),
+                getString(R.string.param_provider_id),
+                getString(R.string.param_patient_id),
+                getString(R.string.param_location_id),
+                getString(R.string.param_reason_visit)
+        };
+        Object[] values = {appointmentDTO.getPayload().getVisitType().getName(),
+                appointmentDTO.getMetadata().getPracticeId(),
+                getPracticeName(selectedPractice.getPracticeId()),
+                appointmentDTO.getPayload().getProvider().getGuid(),
+                appointmentDTO.getMetadata().getPatientId(),
+                appointmentDTO.getPayload().getLocation().getGuid(),
+                appointmentDTO.getPayload().getComments()
+        };
+
+        if (getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE)) {
+            MixPanelUtil.logEvent(getString(R.string.event_appointment_scheduled), params, values);
+        } else {
+            MixPanelUtil.logEvent(getString(R.string.event_appointment_requested), params, values);
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
+        }
     }
 
+    private String getPracticeName(String practiceId) {
+        return appointmentModelDto.getPayload().getPractice(practiceId).getPracticeName();
+    }
 
 
     private UserPracticeDTO getPractice(String practiceId) {

@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -200,8 +201,13 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
         if (patientPaymentPayload.getTotalPaid() <= 0) {
             params[params.length - 1] = null;
         }
-        MixPanelUtil.logEvent(getString(R.string.event_appointment_requested), params, values);
-        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
+
+        if (getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE)) {
+            MixPanelUtil.logEvent(getString(R.string.event_appointment_scheduled), params, values);
+        } else {
+            MixPanelUtil.logEvent(getString(R.string.event_appointment_requested), params, values);
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
+        }
     }
 
 

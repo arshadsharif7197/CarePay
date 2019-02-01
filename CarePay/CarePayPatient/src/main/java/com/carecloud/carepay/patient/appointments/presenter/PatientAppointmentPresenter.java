@@ -760,7 +760,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     @Override
-    public void refreshAppointmentsList() {
+    public void appointmentScheduledSuccessfully() {
         getSupportFragmentManager().popBackStackImmediate();
         getSupportFragmentManager().popBackStackImmediate();
         viewHandler.refreshAppointments();
