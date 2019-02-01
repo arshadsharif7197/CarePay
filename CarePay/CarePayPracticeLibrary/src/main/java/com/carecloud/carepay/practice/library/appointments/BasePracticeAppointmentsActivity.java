@@ -262,34 +262,34 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         //NOT VALID
     }
 
-    private void logAppointmentRequestedMixpanel() {
-        ApplicationMode.ApplicationType applicationType = getApplicationMode().getApplicationType();
-        String[] params = {getString(R.string.param_appointment_type),
-                getString(R.string.param_practice_id),
-                getString(R.string.param_practice_name),
-                getString(R.string.param_provider_id),
-                getString(R.string.param_patient_id),
-                getString(R.string.param_location_id),
-                getString(R.string.param_reason_visit),
-                //make sure this is the last item in case we need to null it out to prevent it from sending
-                getString(R.string.param_payment_made)
-        };
-        Object[] values = {visitTypeDTO.getName(),
-                getApplicationMode().getUserPracticeDTO().getPracticeId(),
-                getApplicationMode().getUserPracticeDTO().getPracticeName(),
-                scheduleAppointmentRequestDTO.getAppointment().getProviderGuid(),
-                patientModel.getPatientId(),
-                scheduleAppointmentRequestDTO.getAppointment().getLocationGuid(),
-                scheduleAppointmentRequestDTO.getAppointment().getComments(),
-                prepayAmount
-        };
-        if (prepayAmount <= 0D) {
-            params[params.length - 1] = null;
-        }
-        MixPanelUtil.logEvent(getString(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
-                R.string.event_appointment_requested : R.string.event_appointment_scheduled), params, values);
-        if (applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
-            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
-        }
-    }
+//    private void logAppointmentRequestedMixpanel() {
+//        ApplicationMode.ApplicationType applicationType = getApplicationMode().getApplicationType();
+//        String[] params = {getString(R.string.param_appointment_type),
+//                getString(R.string.param_practice_id),
+//                getString(R.string.param_practice_name),
+//                getString(R.string.param_provider_id),
+//                getString(R.string.param_patient_id),
+//                getString(R.string.param_location_id),
+//                getString(R.string.param_reason_visit),
+//                //make sure this is the last item in case we need to null it out to prevent it from sending
+//                getString(R.string.param_payment_made)
+//        };
+//        Object[] values = {visitTypeDTO.getName(),
+//                getApplicationMode().getUserPracticeDTO().getPracticeId(),
+//                getApplicationMode().getUserPracticeDTO().getPracticeName(),
+//                scheduleAppointmentRequestDTO.getAppointment().getProviderGuid(),
+//                patientModel.getPatientId(),
+//                scheduleAppointmentRequestDTO.getAppointment().getLocationGuid(),
+//                scheduleAppointmentRequestDTO.getAppointment().getComments(),
+//                prepayAmount
+//        };
+//        if (prepayAmount <= 0D) {
+//            params[params.length - 1] = null;
+//        }
+//        MixPanelUtil.logEvent(getString(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
+//                R.string.event_appointment_requested : R.string.event_appointment_scheduled), params, values);
+//        if (applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+//            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
+//        }
+//    }
 }

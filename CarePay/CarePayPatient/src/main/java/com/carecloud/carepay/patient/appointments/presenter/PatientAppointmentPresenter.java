@@ -38,10 +38,8 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemD
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
-import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.CancellationReasonDTO;
-import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
-import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
@@ -141,35 +139,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void onAppointmentRequestSuccess() {
-        //log appt scheduled to mixpanel
-        String[] params = {getString(R.string.param_appointment_type),
-                getString(R.string.param_practice_id),
-                getString(R.string.param_practice_name),
-                getString(R.string.param_provider_id),
-                getString(R.string.param_patient_id),
-                getString(R.string.param_location_id),
-                getString(R.string.param_reason_visit),
-                //make sure this is the last item in case we need to null it out to prevent it from sending
-                getString(R.string.param_payment_made)
-        };
-        Object[] values = {selectedVisitTypeDTO.getName(),
-                practiceId,
-                getPracticeInfo(practiceId).getPracticeName(),
-                scheduleAppointmentRequestDTO.getAppointment().getProviderGuid(),
-                patientId,
-                scheduleAppointmentRequestDTO.getAppointment().getLocationGuid(),
-                scheduleAppointmentRequestDTO.getAppointment().getComments(),
-                prepayAmount
-        };
-        if (prepayAmount <= 0) {
-            params[params.length - 1] = null;
-        }
-        MixPanelUtil.logEvent(getString(R.string.event_appointment_requested), params, values);
-        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
-
         viewHandler.confirmAppointment(true,
                 getPracticeSettings().getRequests().getAutomaticallyApproveRequests());
-        appointmentDTO = null;//clear this
+        this.appointmentDTO = null;//clear this
     }
 
     public AppointmentsResultModel getMainAppointmentDto() {
@@ -337,6 +309,11 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     @Override
+    public void newAppointment() {
+        viewHandler.newAppointment();
+    }
+
+    @Override
     public void displayAppointmentDetails(AppointmentDTO appointmentDTO) {
         practiceId = appointmentDTO.getMetadata().getPracticeId();
         practiceMgmt = appointmentDTO.getMetadata().getPracticeMgmt();
@@ -397,9 +374,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                 }).show();
     }
 
-    private String getCancelReason(int cancellationReasonId, String cancellationReasonComment){
-        for(CancellationReasonDTO cancellationReason : appointmentsResultModel.getPayload().getCancellationReasons()){
-            if (cancellationReason.getAppointmentCancellationReason().getId().equals(cancellationReasonId)){
+    private String getCancelReason(int cancellationReasonId, String cancellationReasonComment) {
+        for (CancellationReasonDTO cancellationReason : appointmentsResultModel.getPayload().getCancellationReasons()) {
+            if (cancellationReason.getAppointmentCancellationReason().getId().equals(cancellationReasonId)) {
                 return cancellationReason.getAppointmentCancellationReason().getName() +
                         (StringUtil.isNullOrEmpty(cancellationReasonComment) ? "" : (" " + cancellationReasonComment));
             }
@@ -515,21 +492,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
-                .newInstance(paymentsModel, amount,Label.getLabel("appointments_prepayment_title"));
+                .newInstance(paymentsModel, amount, Label.getLabel("appointments_prepayment_title"));
         viewHandler.replaceFragment(prepaymentFragment, true);
-
-        String[] params = {getString(R.string.param_payment_amount),
-                getString(R.string.param_provider_id),
-                getString(R.string.param_practice_id),
-                getString(R.string.param_location_id)
-        };
-        Object[] values = {amount,
-                scheduleAppointmentRequestDTO.getAppointment().getProviderGuid(),
-                practiceId,
-                scheduleAppointmentRequestDTO.getAppointment().getLocationGuid()
-        };
-
-        MixPanelUtil.logEvent(getString(R.string.event_payment_start_prepayment), params, values);
     }
 
     @Override
@@ -566,7 +530,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     @Nullable
     @Override
     public String getAppointmentId() {
-        if(appointmentDTO != null){
+        if (appointmentDTO != null) {
             return appointmentDTO.getPayload().getId();
         }
         return null;
@@ -608,7 +572,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                             Label.getLabel("add_appointment_back_to_appointments_button"));
             viewHandler.displayDialogFragment(confirmationFragment, false);
 
-            if(paymentType.equals(Label.getLabel("appointment.confirmationScreen.type.label.paymentType"))){
+            if (paymentType.equals(Label.getLabel("appointment.confirmationScreen.type.label.paymentType"))) {
                 //this is a prepayment
                 MixPanelUtil.incrementPeopleProperty(getString(R.string.count_prepayments_completed), 1);
             }

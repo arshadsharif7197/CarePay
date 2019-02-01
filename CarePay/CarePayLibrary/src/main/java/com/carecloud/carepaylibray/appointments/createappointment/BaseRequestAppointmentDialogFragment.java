@@ -115,7 +115,7 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
                                 "appointment_schedule_success_message_HTML" :
                                 "appointment_request_success_message_HTML");
                         SystemUtil.showSuccessToast(getContext(), appointmentRequestSuccessMessage);
-                        logMixPanelEvent(appointmentDTO);
+                        logMixPanelAppointmentRequestedEvent(appointmentDTO);
                         callback.refreshAppointmentsList();
                         dismiss();
                     }
@@ -132,7 +132,7 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
                 gson.toJson(appointmentRequestDto), queryMap);
     }
 
-    protected void logMixPanelEvent(AppointmentDTO appointmentRequestDto) {
+    protected void logMixPanelAppointmentRequestedEvent(AppointmentDTO appointmentRequestDto) {
         String[] params = {getString(R.string.param_appointment_type), getString(R.string.param_practice_id),
                 getString(R.string.param_practice_name)};
         String[] values = {appointmentRequestDto.getPayload().getVisitType().getName(),
@@ -140,6 +140,8 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
         MixPanelUtil.logEvent(getString(R.string.event_appointment_requested), params, values);
         MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
     }
+
+
 
     private UserPracticeDTO getPractice(String practiceId) {
         for (UserPracticeDTO practiceDTO : appointmentModelDto.getPayload().getUserPractices()) {
@@ -168,6 +170,22 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
     private void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDto, double amount) {
         dismiss();
         callback.startPrepaymentProcess(appointmentRequestDto, amount, selectedPractice.getPracticeId());
+        logMixPanelPrepaymentAppointmentRequestedEvent(appointmentDTO);
+    }
+
+    private void logMixPanelPrepaymentAppointmentRequestedEvent(AppointmentDTO appointmentDTO) {
+        String[] params = {getString(R.string.param_payment_amount),
+                getString(R.string.param_provider_id),
+                getString(R.string.param_practice_id),
+                getString(R.string.param_location_id)
+        };
+        Object[] values = {appointmentDTO.getPayload().getVisitType().getAmount(),
+                appointmentDTO.getPayload().getProvider().getGuid(),
+                selectedPractice.getPracticeId(),
+                appointmentDTO.getPayload().getLocation().getGuid()
+        };
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_start_prepayment), params, values);
     }
 
     protected void onMapView(final String address) {

@@ -121,7 +121,7 @@ public class PatientModeRequestAppointmentDialog extends BaseRequestAppointmentD
     }
 
     @Override
-    protected void logMixPanelEvent(AppointmentDTO appointmentRequestDto) {
+    protected void logMixPanelAppointmentRequestedEvent(AppointmentDTO appointmentRequestDto) {
         ApplicationMode.ApplicationType applicationType = getApplicationMode().getApplicationType();
         String[] params = {getString(R.string.param_appointment_type),
                 getString(R.string.param_practice_id),

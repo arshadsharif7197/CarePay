@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CarePay.iml" filepath="$PROJECT_DIR$/CarePay.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/CarePay.iml" filepath="$PROJECT_DIR$/.idea/CarePay.iml" />
-      <module fileurl="file://$PROJECT_DIR$/CarePay.iml" filepath="$PROJECT_DIR$/CarePay.iml" />
       <module fileurl="file://$PROJECT_DIR$/CarePayLibrary/CarePayLibrary.iml" filepath="$PROJECT_DIR$/CarePayLibrary/CarePayLibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/CarePayPatient/CarePayPatient.iml" filepath="$PROJECT_DIR$/CarePayPatient/CarePayPatient.iml" />
       <module fileurl="file://$PROJECT_DIR$/CarePayPracticeClover/CarePayPracticeClover.iml" filepath="$PROJECT_DIR$/CarePayPracticeClover/CarePayPracticeClover.iml" />
