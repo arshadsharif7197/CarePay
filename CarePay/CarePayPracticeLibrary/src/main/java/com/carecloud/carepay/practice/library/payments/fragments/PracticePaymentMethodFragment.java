@@ -18,7 +18,9 @@ import com.carecloud.carepay.service.library.RestCallServiceHelper;
 import com.carecloud.carepay.service.library.RestDef;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -104,12 +106,12 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
     }
 
     protected void handleSwipeCard() {
-        CloverPaymentAdapter cloverPaymentAdapter = new CloverPaymentAdapter(getActivity(), paymentsModel, callback.getAppointmentId());
+        CloverPaymentAdapter cloverPaymentAdapter = new CloverPaymentAdapter((BaseActivity) getActivity(), paymentsModel, callback.getAppointmentId(), (PaymentConfirmationInterface) callback);
         IntegratedPaymentPostModel paymentPostModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
         if (paymentPostModel == null) {
-            cloverPaymentAdapter.setCloverPayment(amountToMakePayment);
+            cloverPaymentAdapter.setCloverConnectorPayment(amountToMakePayment);
         } else {
-            cloverPaymentAdapter.setCloverPayment(paymentPostModel);
+            cloverPaymentAdapter.setCloverConnectorPayment(paymentPostModel);
         }
         logPaymentMethodSelection(getString(R.string.payment_clover));
     }

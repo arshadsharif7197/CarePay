@@ -40,7 +40,7 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
     protected PaymentPlanDTO paymentPlanDTO;
     protected LargeAlertDialog.LargeAlertInterface largeAlertInterface;
 
-    private Date paymentDate;
+    protected Date paymentDate;
 
     /**
      * @param paymentsModel        payment model
