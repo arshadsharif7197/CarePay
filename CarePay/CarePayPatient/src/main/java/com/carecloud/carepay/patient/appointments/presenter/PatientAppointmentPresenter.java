@@ -814,6 +814,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     private void logApptCancelMixpanel() {
+        AppointmentCancellationFee cancellationFee = getCancellationFee(cancelAppointmentDTO);
         //log appt cancellation to mixpanel
         String[] params = {getString(R.string.param_appointment_cancel_reason),
                 getString(R.string.param_practice_id),
@@ -821,7 +822,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                 getString(R.string.param_provider_id),
                 getString(R.string.param_patient_id),
                 getString(R.string.param_location_id),
-                getString(R.string.param_appointment_type)
+                getString(R.string.param_appointment_type),
+                getString(R.string.param_payment_amount)
         };
         Object[] values = {
                 cancellationReasonString,
@@ -830,7 +832,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                 cancelAppointmentDTO.getPayload().getProvider().getGuid(),
                 patientId,
                 cancelAppointmentDTO.getPayload().getLocation().getGuid(),
-                cancelAppointmentDTO.getPayload().getVisitType().getName()
+                cancelAppointmentDTO.getPayload().getVisitType().getName(),
+                cancellationFee != null ? cancellationFee.getAmount() : null
         };
         MixPanelUtil.logEvent(getString(R.string.event_appointment_cancelled), params, values);
         MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_cancelled), 1);
