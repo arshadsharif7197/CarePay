@@ -377,13 +377,4 @@ public class PatientPaymentPresenter extends PaymentPresenter
         }
     };
 
-    public PaymentsPayloadSettingsDTO getPaymentSettings(String practiceId){
-        for(PaymentsPayloadSettingsDTO settingsDTO : paymentsModel.getPaymentPayload().getPaymentSettings()){
-            if(settingsDTO.getMetadata().getPracticeId().equals(practiceId)){
-                return settingsDTO;
-            }
-        }
-        return new PaymentsPayloadSettingsDTO();
-    }
-
 }

@@ -59,6 +59,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     private PatientPaymentPresenter paymentPresenter;
     private String paymentWorkflow;
     private MediaResultListener resultListener;
+    private PaymentsModel paymentsModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -224,7 +225,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
      */
     public void getPaymentInformation(String workflowJson) {
         paymentWorkflow = workflowJson;
-        PaymentsModel paymentsModel = initPaymentPresenter(paymentWorkflow);
+        paymentsModel = initPaymentPresenter(paymentWorkflow);
         paymentPresenter.startPaymentProcess(paymentsModel);
     }
 
@@ -375,7 +376,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
                     getAppointment().getPayload().getLocation().getGuid(),
                     paymentMade,
                     paymentPlanCreated,
-                    paymentPresenter.getPaymentSettings(getAppointment().getMetadata().getPracticeId())
+                    paymentsModel.getPaymentPayload().getPaymentSetting(getAppointment().getMetadata().getPracticeId())
                             .getPayload().getRegularPayments().isAllowPartialPayments()
             };
             MixPanelUtil.logEvent(getString(R.string.event_checkin_completed), params, values);
