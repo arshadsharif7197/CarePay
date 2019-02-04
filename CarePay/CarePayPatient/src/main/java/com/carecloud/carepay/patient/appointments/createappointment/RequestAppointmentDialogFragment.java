@@ -52,26 +52,26 @@ public class RequestAppointmentDialogFragment extends BaseRequestAppointmentDial
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime());
-        CarePayTextView dateTextView = view.findViewById(com.carecloud.carepaylibrary.R.id.appointDateTextView);
-        CarePayTextView timeTextView = view.findViewById(com.carecloud.carepaylibrary.R.id.appointTimeTextView);
+        CarePayTextView dateTextView = view.findViewById(R.id.appointDateTextView);
+        CarePayTextView timeTextView = view.findViewById(R.id.appointTimeTextView);
         timeTextView.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinal());
         dateTextView.setText(DateUtil.getInstance().getTime12Hour());
 
-        CarePayTextView shortNameTextView = view.findViewById(com.carecloud.carepaylibrary.R.id.appointShortnameTextView);
+        CarePayTextView shortNameTextView = view.findViewById(R.id.appointShortnameTextView);
         shortNameTextView.setText(StringUtil.getShortName(appointmentDTO.getPayload().getProvider().getName()));
 
-        CarePayTextView nameTextView = view.findViewById(com.carecloud.carepaylibrary.R.id.providerName);
+        CarePayTextView nameTextView = view.findViewById(R.id.providerName);
         nameTextView.setText(appointmentDTO.getPayload().getProvider().getName());
 
-        CarePayTextView typeTextView = view.findViewById(com.carecloud.carepaylibrary.R.id.providerSpecialty);
+        CarePayTextView typeTextView = view.findViewById(R.id.providerSpecialty);
         typeTextView.setText(appointmentDTO.getPayload().getProvider().getSpecialty().getName());
 
         // Appointment Place name
-        final CarePayTextView addressHeaderTextView = view.findViewById(com.carecloud.carepaylibrary.R.id.appointAddressHeaderTextView);
+        final CarePayTextView addressHeaderTextView = view.findViewById(R.id.appointAddressHeaderTextView);
         final String placeName = appointmentDTO.getPayload().getLocation().getName();
         addressHeaderTextView.setText(placeName);
 
-        View dismissView = view.findViewById(com.carecloud.carepaylibrary.R.id.dialogAppointDismiss);
+        View dismissView = view.findViewById(R.id.dialogAppointDismiss);
         if (dismissView != null) {
             dismissView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -82,14 +82,14 @@ public class RequestAppointmentDialogFragment extends BaseRequestAppointmentDial
         }
 
         // Appointment Place address
-        final CarePayTextView addressTextView = view.findViewById(com.carecloud.carepaylibrary.R.id.appointAddressTextView);
+        final CarePayTextView addressTextView = view.findViewById(R.id.appointAddressTextView);
         String placeAddress = null;
         if (appointmentDTO.getPayload().getLocation().getAddress() != null) {
             placeAddress = appointmentDTO.getPayload().getLocation().getAddress().getPlaceAddressString();
             addressTextView.setText(placeAddress);
         }
         final String finalPlaceAddress = placeAddress;
-        view.findViewById(com.carecloud.carepaylibrary.R.id.appointLocationImageView).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.appointLocationImageView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onMapView(finalPlaceAddress);
@@ -99,12 +99,12 @@ public class RequestAppointmentDialogFragment extends BaseRequestAppointmentDial
 
         final String phoneNumber = appointmentDTO.getPayload().getProvider().getPhone();
         if (StringUtil.isNullOrEmpty(phoneNumber)) {
-            Drawable originalIcon = ContextCompat.getDrawable(getContext(), com.carecloud.carepaylibrary.R.drawable.icn_appointment_card_call);
+            Drawable originalIcon = ContextCompat.getDrawable(getContext(), R.drawable.icn_appointment_card_call);
             originalIcon.setAlpha(40);
-            ((ImageView) view.findViewById(com.carecloud.carepaylibrary.R.id.appointDailImageView))
+            ((ImageView) view.findViewById(R.id.appointDailImageView))
                     .setImageDrawable(originalIcon);
         }
-        view.findViewById(com.carecloud.carepaylibrary.R.id.appointDailImageView).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.appointDailImageView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!StringUtil.isNullOrEmpty(phoneNumber)) {
@@ -114,9 +114,9 @@ public class RequestAppointmentDialogFragment extends BaseRequestAppointmentDial
         });
 
         if (StringUtil.isNullOrEmpty(placeAddress)) {
-            Drawable originalIcon = ContextCompat.getDrawable(getContext(), com.carecloud.carepaylibrary.R.drawable.icn_appointment_card_directions);
+            Drawable originalIcon = ContextCompat.getDrawable(getContext(), R.drawable.icn_appointment_card_directions);
             originalIcon.setAlpha(40);
-            ((ImageView) view.findViewById(com.carecloud.carepaylibrary.R.id.appointLocationImageView))
+            ((ImageView) view.findViewById(R.id.appointLocationImageView))
                     .setImageDrawable(originalIcon);
         }
 
@@ -127,28 +127,28 @@ public class RequestAppointmentDialogFragment extends BaseRequestAppointmentDial
             autoScheduleAppointments = settings.getRequests().getAutomaticallyApproveRequests();
         }
 
-        view.findViewById(com.carecloud.carepaylibrary.R.id.appointDialogButtonLayout).setVisibility(View.VISIBLE);
-        Button appointmentRequestButton = view.findViewById(com.carecloud.carepaylibrary.R.id.requestAppointmentButton);
-        appointmentRequestButton.setText(Label.getLabel(autoScheduleAppointments ?
+        view.findViewById(R.id.appointDialogButtonLayout).setVisibility(View.VISIBLE);
+        Button requestAppointmentButton = view.findViewById(R.id.requestAppointmentButton);
+        requestAppointmentButton.setText(Label.getLabel(autoScheduleAppointments ?
                 "appointments_schedule_button" : "appointments_request_heading"));
-        appointmentRequestButton.requestFocus();
+        requestAppointmentButton.requestFocus();
 
-        TextView reasonTextView = view.findViewById(com.carecloud.carepaylibrary.R.id.reasonTextView);
+        TextView reasonTextView = view.findViewById(R.id.reasonTextView);
         VisitTypeDTO visitTypeDTO = appointmentDTO.getPayload().getVisitType();
         String visitReason = visitTypeDTO.getName();
         reasonTextView.setText(visitReason);
-        View prepaidLayout = view.findViewById(com.carecloud.carepaylibrary.R.id.prepaymentLayout);
+        View prepaidLayout = view.findViewById(R.id.prepaymentLayout);
         if (visitTypeDTO.getAmount() > 0) {
             prepaidLayout.setVisibility(View.VISIBLE);
-            TextView prepaidAmount = view.findViewById(com.carecloud.carepaylibrary.R.id.prepaymentAmount);
+            TextView prepaidAmount = view.findViewById(R.id.prepaymentAmount);
             prepaidAmount.setText(NumberFormat.getCurrencyInstance(Locale.US).format(visitTypeDTO.getAmount()));
-            appointmentRequestButton.setText(Label.getLabel("appointments_prepayment_button"));
+            requestAppointmentButton.setText(Label.getLabel("appointments_prepayment_button"));
         } else {
             prepaidLayout.setVisibility(View.GONE);
         }
 
-        final EditText reasonForVisitEditText = view.findViewById(com.carecloud.carepaylibrary.R.id.reasonForVisitEditText);
-        appointmentRequestButton.setOnClickListener(new View.OnClickListener() {
+        final EditText reasonForVisitEditText = view.findViewById(R.id.reasonForVisitEditText);
+        requestAppointmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String reasonForVisit = reasonForVisitEditText.getText().toString();
@@ -157,11 +157,11 @@ public class RequestAppointmentDialogFragment extends BaseRequestAppointmentDial
             }
         });
 
-        ImageView appointUserPicImageView = view.findViewById(com.carecloud.carepaylibrary.R.id.appointUserPicImageView);
+        ImageView appointUserPicImageView = view.findViewById(R.id.appointUserPicImageView);
         ProviderDTO provider = appointmentDTO.getPayload().getProvider();
         PicassoHelper.get().loadImage(getContext(), appointUserPicImageView, null, provider.getPhoto());
 
-        final ScrollView scrollContainer = view.findViewById(com.carecloud.carepaylibrary.R.id.containerScrollView);
+        final ScrollView scrollContainer = view.findViewById(R.id.containerScrollView);
         scrollContainer.post(new Runnable() {
             @Override
             public void run() {

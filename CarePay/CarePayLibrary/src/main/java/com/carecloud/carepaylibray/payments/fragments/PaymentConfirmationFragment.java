@@ -123,10 +123,10 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
             okButton.setText(getArguments().getString(KEY_BUTTON_LABEL));
         }
 
-//        View closeButton = view.findViewById(R.id.dialog_close_header);
-//        if (closeButton != null) {
-//            closeButton.setOnClickListener(dismissPopupListener);
-//        }
+        View closeButton = view.findViewById(R.id.dialog_close_header);
+        if (closeButton != null) {
+            closeButton.setOnClickListener(dismissPopupListener);
+        }
 
         if (getArguments().getString(KEY_PAYMENT_TYPE) != null) {
             TextView typeTextView = view.findViewById(R.id.payment_confirm_type_value);
