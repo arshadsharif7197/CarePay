@@ -17,6 +17,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentCompletedInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -25,6 +26,7 @@ import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.ValidationHelper;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -179,6 +181,9 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
     };
 
     private void logAppointmentScheduledToMixPanel(AppointmentDTO appointmentDTO) {
+        ApplicationMode.ApplicationType applicationType = getApplicationMode().getApplicationType();
+        boolean isGuest = applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
+                !ValidationHelper.isValidEmail(((ISession) getContext()).getAppAuthorizationHelper().getCurrUser()) : null;
         String[] params = {getString(R.string.param_appointment_type),
                 getString(R.string.param_practice_id),
                 getString(R.string.param_practice_name),
@@ -186,6 +191,7 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
                 getString(R.string.param_patient_id),
                 getString(R.string.param_location_id),
                 getString(R.string.param_reason_visit),
+                getString(R.string.param_is_guest),
                 //make sure this is the last item in case we need to null it out to prevent it from sending
                 getString(R.string.param_payment_made)
         };
@@ -196,6 +202,7 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
                 appointmentDTO.getMetadata().getPatientId(),
                 appointmentDTO.getPayload().getLocation().getGuid(),
                 appointmentDTO.getPayload().getComments(),
+                isGuest,
                 patientPaymentPayload.getTotalPaid()
         };
         if (patientPaymentPayload.getTotalPaid() <= 0) {
