@@ -494,5 +494,10 @@
     <dimen name="visitTypeAlertImageStartMargin">5dp</dimen>
     <dimen name="visitTypePrepaymentAmountTextSize">14sp</dimen>
     <dimen name="createAppointmentDataTextViewHeight">100dp</dimen>
+    <dimen name="createAppointmentSectionImageSize">40dp</dimen>
+    <dimen name="nextAppointmentResetFieldImageSize">25dp</dimen>
+    <dimen name="nextAppointmentResetFieldEndMargin">20dp</dimen>
+    <dimen name="nextAppointmentResetFieldBottomMargin">15dp</dimen>
+    <dimen name="nextAppointmentResetFieldPadding">5dp</dimen>
 
 </resources>

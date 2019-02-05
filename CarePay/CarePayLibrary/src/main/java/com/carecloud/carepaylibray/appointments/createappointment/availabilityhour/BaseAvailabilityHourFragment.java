@@ -48,6 +48,9 @@ import java.util.Map;
  */
 public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment implements DateCalendarRangeInterface {
 
+    public static final int SELECT_MODE = 100;
+    public static final int SCHEDULE_MODE = 101;
+
     protected ScheduleAppointmentInterface callback;
     private AppointmentsResultModel appointmentModelDto;
     private ProvidersReasonDTO selectedProviderReason;
@@ -58,6 +61,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
     protected Date endDate;
     protected Date startDate;
     protected TextView toolbarTitle;
+    protected int mode;
 
     @Override
     public void onAttach(Context context) {
@@ -87,13 +91,18 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
                 .getPayload().get(0).getLocation();
         selectedResource = appointmentModelDto.getPayload().getAppointmentAvailability()
                 .getPayload().get(0).getResource();
+        mode = getArguments().getInt("mode");
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUpPrepaymentMessage(view);
-        setUpTimeSlotsList(view);
+        if (mode == SELECT_MODE) {
+            callAvailabilityService();
+        }else{
+            setUpTimeSlotsList(view);
+        }
     }
 
     private void setUpTimeSlotsList(View view) {
@@ -108,7 +117,11 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
                     new AvailabilityHourAdapter.OnTimeSlotListItemClickListener() {
                         @Override
                         public void onTimeSlotListItemClickListener(AppointmentsSlotsDTO slot) {
-                            showAppointmentConfirmationFragment(slot);
+                            if (mode == SCHEDULE_MODE) {
+                                showAppointmentConfirmationFragment(slot);
+                            } else {
+                                callback.setAppointmentSlot(slot);
+                            }
                         }
                     }));
         } else {

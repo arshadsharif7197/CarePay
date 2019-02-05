@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.appointments.createappointment;
 
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 
@@ -13,4 +14,6 @@ public interface CreateAppointmentFragmentInterface {
     void setVisitType(VisitTypeDTO visitType);
 
     void setLocation(LocationDTO locationDTO);
+
+    void setAppointmentSlot(AppointmentsSlotsDTO slot);
 }

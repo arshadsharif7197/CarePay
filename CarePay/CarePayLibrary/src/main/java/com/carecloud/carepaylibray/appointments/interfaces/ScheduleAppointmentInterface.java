@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
@@ -33,4 +34,6 @@ public interface ScheduleAppointmentInterface extends FragmentActivityInterface,
     void rescheduleAppointment(AppointmentDTO appointmentDTO);
 
     void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDto, double amount, String practiceId);
+
+    void setAppointmentSlot(AppointmentsSlotsDTO slot);
 }

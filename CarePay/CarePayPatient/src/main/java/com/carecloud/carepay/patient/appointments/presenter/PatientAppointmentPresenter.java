@@ -83,8 +83,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     private String practiceId;
     private String practiceMgmt;
     private String practiceName;
-    private AppointmentResourcesDTO selectedAppointmentResourcesDTO;
-    private VisitTypeDTO selectedVisitTypeDTO;
     private AppointmentDTO appointmentDTO;
     private AppointmentsSlotsDTO appointmentSlot;
 
@@ -92,9 +90,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     private boolean startCancelationFeePayment = false;
     private String cancellationReasonString;
-
-    private ScheduleAppointmentRequestDTO scheduleAppointmentRequestDTO;
-    private double prepayAmount;
     private AppointmentDTO cancelAppointmentDTO;
 
     public PatientAppointmentPresenter(AppointmentViewHandler viewHandler,
@@ -751,7 +746,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void showAvailabilityHourFragment() {
-        viewHandler.addFragment(AvailabilityHourFragment.newInstance(), true);
+        viewHandler.addFragment(AvailabilityHourFragment.newInstance(AvailabilityHourFragment.SCHEDULE_MODE), true);
     }
 
     @Override
@@ -781,7 +776,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         selectedResource.setId(appointmentDTO.getPayload().getResourceId());
         selectedResource.setProvider(appointmentDTO.getPayload().getProvider());
 
-        selectedVisitTypeDTO = appointmentDTO.getPayload().getVisitType();
+        VisitTypeDTO selectedVisitTypeDTO = appointmentDTO.getPayload().getVisitType();
 
         LocationDTO selectedLocation = appointmentDTO.getPayload().getLocation();
         CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance(userPracticeDTO,
@@ -798,6 +793,11 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         slot.setEndTime(appointmentRequestDto.getAppointment().getEndTime());
         setPracticeId(practiceId);
         startPrepaymentProcess(appointmentRequestDto, slot, amount);
+    }
+
+    @Override
+    public void setAppointmentSlot(AppointmentsSlotsDTO slot) {
+        //NA for this flow
     }
 
     @Override

@@ -41,7 +41,7 @@
             android:textColor="@color/charcoal"
             android:textSize="@dimen/text_size_21"
             app:customAssetFont="gotham_rounded_book"
-            breeze:textKey="appointment.visitType.message.label.emptyScreenTitle"
+            breeze:textKey="appointment.chooseLocation.message.label.emptyScreenTitle"
             tools:text="No locations available" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -55,7 +55,7 @@
             android:textColor="@color/cadet_gray"
             android:textSize="@dimen/text_size_14"
             app:customAssetFont="proxima_nova_regular"
-            breeze:textKey="appointment.visitType.message.label.emptyScreenSubTitle"
+            breeze:textKey="appointment.chooseLocation.message.label.emptyScreenSubTitle"
             tools:text="There are currently no locations available to schedule an appointment with" />
 
     </RelativeLayout>

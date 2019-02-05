@@ -58,8 +58,8 @@
 
                 <ImageView
                     android:id="@+id/providersImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/createAppointmentSectionImageSize"
+                    android:layout_height="@dimen/createAppointmentSectionImageSize"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/dimen_10dp"
@@ -120,8 +120,8 @@
 
                 <ImageView
                     android:id="@+id/visitTypeImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/createAppointmentSectionImageSize"
+                    android:layout_height="@dimen/createAppointmentSectionImageSize"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/dimen_10dp"
@@ -182,8 +182,8 @@
 
                 <ImageView
                     android:id="@+id/locationImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/createAppointmentSectionImageSize"
+                    android:layout_height="@dimen/createAppointmentSectionImageSize"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/dimen_10dp"

@@ -96,8 +96,8 @@ public class VisitTypeFragmentDialog extends BaseAppointmentDialogFragment
         super.onCreate(savedInstanceState);
 
         Bundle arguments = getArguments();
-        model = DtoHelper.getConvertedDTO(AppointmentResourcesDTO.class, arguments);
         appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, arguments);
+        model = DtoHelper.getConvertedDTO(AppointmentResourcesDTO.class, arguments);
         visitTypeList = model.getResource().getVisitReasons();
         appointmentSettings = DtoHelper.getConvertedDTO(AppointmentsSettingDTO.class, arguments);
     }
