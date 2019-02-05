@@ -731,7 +731,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
         VisitTypeDTO selectedVisitType = appointmentDTO.getPayload().getVisitType();
         ProvidersReasonDTO reasonDTO = new ProvidersReasonDTO();
-        reasonDTO.setAmount(getVisitTypeAmount(selectedVisitType.getId()));
+        reasonDTO.setAmount(selectedVisitType.getAmount());
         reasonDTO.setName(selectedVisitType.getName());
         reasonDTO.setDescription(selectedVisitType.getDescription());
         reasonDTO.setId(selectedVisitType.getId());
@@ -747,16 +747,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         appointmentAvailabilityDataDTO.setPayload(payloadList);
         appointmentsResultModel.getPayload().setAppointmentAvailability(appointmentAvailabilityDataDTO);
         showFragment(AvailabilityHourFragment.newInstance(AvailabilityHourFragment.SCHEDULE_MODE));
-    }
-
-    private double getVisitTypeAmount(Integer visitTypeId) {
-        //TODO: uncomment this for 3.22
-//        for (AppointmentsPrePaymentDTO prePaymentDTO : getPracticeSettings().getPrePayments()) {
-//            if (prePaymentDTO.getVisitType() == visitTypeId) {
-//                return prePaymentDTO.getAmount();
-//            }
-//        }
-        return 0;
     }
 
     @Override

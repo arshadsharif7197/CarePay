@@ -166,7 +166,9 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
     private void setUpPrepaymentMessage(View view) {
         TextView prepaymentMessage = view.findViewById(R.id.prepaymentMessage);
         if (prepaymentMessage != null) {
-            double visitTypeAmount = getVisitTypeAmount(selectedProviderReason.getId());
+            //TODO: uncomment this for 3.22
+//            double visitTypeAmount =getVisitTypeAmount(selectedProviderReason.getId());
+            double visitTypeAmount = selectedProviderReason.getAmount();
             if (visitTypeAmount > 0) {
                 String message = Label.getLabel("appointments_prepayment_message")
                         + NumberFormat.getCurrencyInstance(Locale.US).format(visitTypeAmount);
