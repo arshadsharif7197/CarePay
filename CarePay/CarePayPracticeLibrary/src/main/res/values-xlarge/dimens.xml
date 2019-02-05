@@ -250,7 +250,7 @@
     <!--Confirm Dialog-->
     <dimen name="confirmDialogWidth">400dp</dimen>
     <dimen name="confirmDialogHorizontalMargin">26dp</dimen>
-    <dimen name="confirmDialogTitleTextSize">36sp</dimen>
+    <dimen name="confirmDialogTitleTextSize">30sp</dimen>
     <dimen name="confirmDialogTitlePadding">30dp</dimen>
     <dimen name="confirmDialogSubtitleTextSize">20sp</dimen>
     <dimen name="confirmDialogButtonsContainerPadding">10dp</dimen>
@@ -294,8 +294,10 @@
     <dimen name="addNewCreditCardMainSeparatorBottomMargin">24dp</dimen>
     <dimen name="creditCardOptionMargin">10dp</dimen>
     <dimen name="creditCardFieldPadding">10dp</dimen>
+    <dimen name="creditCardFieldBottomPadding">20dp</dimen>
     <dimen name="creditCardFieldTextSize">16sp</dimen>
     <dimen name="payment_pick_date_label_text_size">14sp</dimen>
+    <dimen name="addNewCreditCardTextFieldSize">18sp</dimen>
 
     <!--Payment Plan Confirmation-->
     <dimen name="paymentPlanConfirmationHeaderHorizontalPadding">10dp</dimen>
@@ -366,6 +368,8 @@
     <dimen name="visitTypeValueHeight">25dp</dimen>
     <dimen name="appointmentSeparatorTopMargin">20dp</dimen>
     <dimen name="appointmentDialogButtonTextSize">22sp</dimen>
+    <dimen name="practiceAppointmentDetailDialogWidth">600dp</dimen>
+
 
     <!--Cancel Appointment Dialog-->
     <dimen name="cancelAppointmentHorizontalMargin">26dp</dimen>

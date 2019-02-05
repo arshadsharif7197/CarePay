@@ -29,6 +29,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -232,6 +233,8 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
                 hideProgressDialog();
                 dismiss();
                 ((PaymentPlanEditInterface) callback).onPaymentPlanCanceled(workflowDTO, isDeleted);
+
+                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payment_plans_cancelled), 1);
             }
 
             @Override

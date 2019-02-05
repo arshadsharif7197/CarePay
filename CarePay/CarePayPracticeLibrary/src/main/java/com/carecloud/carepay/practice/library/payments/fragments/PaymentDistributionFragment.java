@@ -2,6 +2,7 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -54,8 +55,8 @@ import com.carecloud.carepaylibray.retail.models.RetailItemPayload;
 import com.carecloud.carepaylibray.retail.models.RetailLineItemMetadata;
 import com.carecloud.carepaylibray.retail.models.RetailOrderItem;
 import com.carecloud.carepaylibray.retail.models.RetailPostModelOrder;
-import com.carecloud.carepaylibray.retail.models.RetailSelectedOption;
 import com.carecloud.carepaylibray.retail.models.RetailProductsModel;
+import com.carecloud.carepaylibray.retail.models.RetailSelectedOption;
 import com.carecloud.carepaylibray.utils.BounceHelper;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -128,6 +129,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     private UserAuthPermissions authPermissions;
 
     private DemographicPayloadDTO patientDemographics;
+
+    private boolean isDialogHidden = false;
 
     @Override
     public void onAttach(Context context) {
@@ -1163,4 +1166,31 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         super.onSaveInstanceState(outState);
         outState.clear();
     }
+
+    @Override
+    public void hideDialog(){
+        super.hideDialog();
+        isDialogHidden = true;
+    }
+
+    @Override
+    public void showDialog(){
+        super.showDialog();
+        isDialogHidden = false;
+    }
+
+    @Override
+    public void onResume(){
+        if(isDialogHidden){
+            hideDialog();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showDialog();
+                }
+            }, 1500);
+        }
+        super.onResume();
+    }
+
 }

@@ -585,8 +585,15 @@ public class MedicationsAllergyFragment extends BaseCheckinFragment implements
             onUpdate(callback, workflowDTO);
 
             List<MedicationsObject> modifiedMeds = getAllModifiedMedications();
-            if (!modifiedMeds.isEmpty()) {
-                MixPanelUtil.logEvent(getString(R.string.event_updated_meds), getString(R.string.param_meds_count), modifiedMeds.size());
+            if (!modifiedMeds.isEmpty() || (hasPhoto() && !StringUtil.isNullOrEmpty(photoPath))) {
+                String[] params = {getString(R.string.param_meds_count),
+                        getString(R.string.param_meds_photo)
+                };
+                Object[] values = {modifiedMeds.size(),
+                        hasPhoto() && !StringUtil.isNullOrEmpty(photoPath)
+                };
+
+                MixPanelUtil.logEvent(getString(R.string.event_updated_meds), params, values);
             }
 
             List<AllergiesObject> modifiedAllergies = getAllModifiedAllergies();

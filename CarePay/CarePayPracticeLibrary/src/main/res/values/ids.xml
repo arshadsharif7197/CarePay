@@ -6,4 +6,5 @@
     <item name="demographicsHeading" type="id"/>
     <item name="payment_plan_parameters" type="id"/>
     <item name="balance_recycler" type="id"/>
+    <item name="dialog_close_header" type="id"/>
 </resources>

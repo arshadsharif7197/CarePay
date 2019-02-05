@@ -29,6 +29,12 @@ public class MessagingMetadataLinksDTO {
     @SerializedName("delete_message")
     private TransitionDTO deleteMessage = new TransitionDTO();
 
+    @SerializedName("upload_attachment")
+    private TransitionDTO uploadAttachment;
+
+    @SerializedName("fetch_attachment")
+    private TransitionDTO fetchAttachment;
+
     public TransitionDTO getSelf() {
         return self;
     }
@@ -91,5 +97,21 @@ public class MessagingMetadataLinksDTO {
 
     public void setDeleteMessage(TransitionDTO deleteMessage) {
         this.deleteMessage = deleteMessage;
+    }
+
+    public TransitionDTO getUploadAttachment() {
+        return uploadAttachment;
+    }
+
+    public void setUploadAttachment(TransitionDTO uploadAttachment) {
+        this.uploadAttachment = uploadAttachment;
+    }
+
+    public TransitionDTO getFetchAttachment() {
+        return fetchAttachment;
+    }
+
+    public void setFetchAttachment(TransitionDTO fetchAttachment) {
+        this.fetchAttachment = fetchAttachment;
     }
 }

@@ -483,4 +483,7 @@
     <dimen name="demographicErrorImageHeight">30dp</dimen>
     <dimen name="demographicErrorViewWidth">22dp</dimen>
 
+    <dimen name="homeButtonIconBottomPadding">30dp</dimen>
+    <dimen name="homeButtonIconStartPadding">30dp</dimen>
+
 </resources>

@@ -52,6 +52,12 @@ public class Messages extends PagingDto {
         @SerializedName("replies")
         private List<Reply> replies = new ArrayList<>();
 
+        @SerializedName("attachments")
+        private List<MessageAttachment> attachments = new ArrayList<>();
+
+        @SerializedName("has_attachments")
+        private boolean hasAttachments = false;
+
         public String getId() {
             return id;
         }
@@ -122,6 +128,22 @@ public class Messages extends PagingDto {
 
         public void setCreatedDate(String createdDate) {
             this.createdDate = createdDate;
+        }
+
+        public List<MessageAttachment> getAttachments() {
+            return attachments;
+        }
+
+        public void setAttachments(List<MessageAttachment> attachments) {
+            this.attachments = attachments;
+        }
+
+        public boolean isHasAttachments() {
+            return hasAttachments;
+        }
+
+        public void setHasAttachments(boolean hasAttachments) {
+            this.hasAttachments = hasAttachments;
         }
     }
 

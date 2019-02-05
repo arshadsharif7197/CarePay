@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -131,7 +132,15 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         //hide swipe card because these cards are not reusable
+        Button swipeCreditCarNowButton = view.findViewById(R.id.swipeCreditCarNowButton);
         View swipeCreditCardNowLayout = view.findViewById(R.id.swipeCreditCardNowLayout);
+        if(swipeCreditCarNowButton.isEnabled() && paymentPlanDTO != null && (paymentDate == null || DateUtil.isToday(paymentDate))) {
+            swipeCreditCardNowLayout.setVisibility(View.VISIBLE);
+        } else {
+            swipeCreditCardNowLayout.setVisibility(View.GONE);
+        }
+
+        //temp fix for hiding this until we can handle it properly for one-time payment TODO: CLOVERPAY remove this
         swipeCreditCardNowLayout.setVisibility(View.GONE);
 
         View closeButton = view.findViewById(R.id.closeViewLayout);

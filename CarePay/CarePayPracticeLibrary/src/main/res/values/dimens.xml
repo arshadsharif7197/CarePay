@@ -362,6 +362,7 @@
     <dimen name="negativeContainerTopMargin">40dp</dimen>
     <dimen name="surveyFeedbackButtonWidth">300dp</dimen>
     <dimen name="checkoutMessageTextSize">40sp</dimen>
+    <dimen name="practiceAppointmentDetailDialogWidth">300dp</dimen>
 
     <!--Payments Activity-->
     <dimen name="paymentPatientNameTextSize">24sp</dimen>
@@ -428,8 +429,10 @@
     <dimen name="addNewCreditCardMainSeparatorBottomMargin">24dp</dimen>
     <dimen name="creditCardOptionMargin">10dp</dimen>
     <dimen name="creditCardFieldPadding">10dp</dimen>
+    <dimen name="creditCardFieldBottomPadding">20dp</dimen>
     <dimen name="creditCardFieldTextSize">16sp</dimen>
     <dimen name="payment_pick_date_label_text_size">14sp</dimen>
+    <dimen name="addNewCreditCardTextFieldSize">18sp</dimen>
 
     <!--Payment Plan Confirmation-->
     <dimen name="paymentPlanConfirmationHeaderHorizontalPadding">10dp</dimen>

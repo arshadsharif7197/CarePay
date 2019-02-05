@@ -132,6 +132,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name="com.carecloud.shamrocksdk.payment.activities.CloverPaymentConnectorActivity"
+                  android:theme="@style/Theme.AppCompat.Translucent"
+                  tools:replace="android:theme"/>
         <service android:name=".CloverQueueUploadService" android:enabled="true" />
     </application>
 

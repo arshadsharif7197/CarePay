@@ -1,8 +1,10 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,6 +30,7 @@ import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +45,8 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     private boolean insuranceTypeRepeated = false;
     private String insuranceTypeRepeatedErrorMessage;
     private boolean shouldContinue = false;
+
+    private WeakReference<FragmentActivity> callingActivityReference;
 
     public interface InsuranceDocumentScannerListener {
         void editInsurance(DemographicDTO demographicDTO, Integer editedIndex, boolean showAsDialog);
@@ -81,10 +86,20 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
         if (demographicDTO == null) {
 //            demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, getArguments());
         }
+        callingActivityReference = new WeakReference<>(getActivity());
         if (shouldContinue) {
             openNextFragment(demographicDTO);
             shouldContinue = false;
         }
+    }
+
+    @Override
+    protected Activity getActivityProxy(){
+        Activity activity = getActivity();
+        if(activity == null && callingActivityReference != null){
+            activity = callingActivityReference.get();
+        }
+        return activity;
     }
 
     @Override

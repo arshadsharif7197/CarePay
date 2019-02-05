@@ -66,7 +66,7 @@ public class SettingAddCreditCardFragment extends BaseAddCreditCardFragment impl
         nextButton.setBackgroundResource(R.drawable.bg_green_selector);
         saveCardOnFileCheckBox.setChecked(true);
         saveCardOnFileCheckBox.setEnabled(false);
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);
 
         if(demographicsSettingsDTO.getPayload().getPatientCreditCards().isEmpty()){

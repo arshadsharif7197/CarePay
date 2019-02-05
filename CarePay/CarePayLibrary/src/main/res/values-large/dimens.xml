@@ -14,4 +14,7 @@
     <dimen name="availableHourListHeaderTextSize">12sp</dimen>
     <dimen name="apt_available_hours_list_row_padding">10dp</dimen>
     <dimen name="availableHourItemTextSize">12sp</dimen>
+
+    <dimen name="homeButtonIconBottomPadding">15dp</dimen>
+    <dimen name="homeButtonIconStartPadding">15dp</dimen>
 </resources>

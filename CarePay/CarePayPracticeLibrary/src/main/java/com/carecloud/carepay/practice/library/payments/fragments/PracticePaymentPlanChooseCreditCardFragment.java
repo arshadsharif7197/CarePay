@@ -8,6 +8,7 @@ import android.widget.Button;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -155,6 +156,19 @@ public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseC
                 }
             }
         });
+
+        boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE) ||
+                HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_2_DEVICE);
+        Button swipeCardButton = view.findViewById(R.id.swipeCreditCarNowButton);
+        if(isCloverDevice && paymentPlanDTO != null && (paymentDate == null || DateUtil.isToday(paymentDate))) {
+            swipeCardButton.setVisibility(View.VISIBLE);
+        } else {
+            swipeCardButton.setVisibility(View.GONE);
+        }
+
+        //temp fix for hiding this until we can handle it properly for one-time payment TODO: CLOVERPAY remove this
+        swipeCardButton.setVisibility(View.GONE);
+
     }
 
     private View.OnClickListener addNewCardButtonListener = new View.OnClickListener() {
@@ -200,6 +214,7 @@ public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseC
                         IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
                         postModel.setPapiPaymentMethod(papiPaymentMethod);
                         postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
+                        amountToMakePayment = postModel.getAmount();
 
                         if(paymentDate != null){
                             DateUtil.getInstance().setDate(paymentDate);
