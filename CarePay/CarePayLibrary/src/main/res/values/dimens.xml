@@ -500,5 +500,10 @@
     <dimen name="nextAppointmentResetFieldBottomMargin">15dp</dimen>
     <dimen name="nextAppointmentResetFieldPadding">5dp</dimen>
     <dimen name="createAppointmentSectionTextSize">22sp</dimen>
+    <dimen name="emptyScreenSubtitleHorizontalPadding">35dp</dimen>
+    <dimen name="emptyScreenSubTitleTextSize">15sp</dimen>
+    <dimen name="emptyScreenTitleTextSize">21sp</dimen>
+    <dimen name="emptyScreenTitlePadding">10dp</dimen>
+    <dimen name="itemProviderVerticalMargin">12dp</dimen>
 
 </resources>

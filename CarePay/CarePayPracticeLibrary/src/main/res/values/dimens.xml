@@ -698,6 +698,8 @@
     <dimen name="createAppointmentTitleTopMargin">36dp</dimen>
     <dimen name="createAppointmentTitleTextSize">36sp</dimen>
     <dimen name="createAppointmentSubTitleTextSize">22sp</dimen>
+    <dimen name="createAppointmentHeaderTopMargin">40dp</dimen>
+    <dimen name="createAppointmentHeaderVerticalMargin">10dp</dimen>
 
 
 </resources>

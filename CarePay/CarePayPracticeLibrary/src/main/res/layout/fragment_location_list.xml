@@ -77,10 +77,11 @@
                 android:layout_above="@id/placeHolder"
                 android:layout_centerInParent="true"
                 android:gravity="center"
-                android:padding="@dimen/dimen_10dp"
+                android:padding="@dimen/emptyScreenTitlePadding"
                 android:textColor="@color/charcoal"
-                android:textSize="@dimen/text_size_21"
-                app:customAssetFont="gotham_rounded_book"
+                android:textSize="@dimen/emptyScreenTitleTextSize"
+                android:textStyle="bold"
+                app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="appointment.visitType.message.label.emptyScreenTitle"
                 tools:text="No locations available" />
 
@@ -90,10 +91,10 @@
                 android:layout_below="@id/placeHolder"
                 android:layout_centerInParent="true"
                 android:gravity="center"
-                android:paddingStart="@dimen/dimen_25dp"
-                android:paddingEnd="@dimen/dimen_25dp"
+                android:paddingStart="@dimen/emptyScreenSubtitleHorizontalPadding"
+                android:paddingEnd="@dimen/emptyScreenSubtitleHorizontalPadding"
                 android:textColor="@color/cadet_gray"
-                android:textSize="@dimen/text_size_14"
+                android:textSize="@dimen/emptyScreenSubTitleTextSize"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="appointment.visitType.message.label.emptyScreenSubTitle"
                 tools:text="There are currently no locations available to schedule an appointment with" />

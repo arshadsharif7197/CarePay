@@ -12,8 +12,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/apt_dl_image_elevation"
-        android:layout_marginBottom="@dimen/apt_dl_image_elevation"
+        android:layout_marginTop="@dimen/itemProviderVerticalMargin"
+        android:layout_marginBottom="@dimen/itemProviderVerticalMargin"
         android:baselineAligned="false">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -69,6 +69,5 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_marginBottom="3dp"
         android:background="@color/divider_color" />
 </LinearLayout>
