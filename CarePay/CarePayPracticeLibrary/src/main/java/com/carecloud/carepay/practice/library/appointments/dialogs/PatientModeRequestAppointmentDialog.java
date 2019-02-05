@@ -16,6 +16,7 @@ import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.createappointment.BaseRequestAppointmentDialogFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -50,7 +51,8 @@ public class PatientModeRequestAppointmentDialog extends BaseRequestAppointmentD
         Button requestAppointmentButton = view.findViewById(R.id.requestAppointmentButton);
         ApplicationMode.ApplicationType applicationType = getApplicationMode().getApplicationType();
         //TODO: fix this on the patient mode ticket
-        boolean autoScheduleAppointments = false;//getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests();
+
+        boolean autoScheduleAppointments = getAutomaticallyApproveRequests();
 
         final EditText reasonForVisitEditText = view.findViewById(R.id.reasonForVisitEditText);
         requestAppointmentButton.setText(Label.getLabel(applicationType == ApplicationMode.ApplicationType.PRACTICE ||
@@ -118,6 +120,15 @@ public class PatientModeRequestAppointmentDialog extends BaseRequestAppointmentD
                 SystemUtil.hideSoftKeyboard(getContext(), view);
             }
         });
+    }
+
+    private boolean getAutomaticallyApproveRequests() {
+        AppointmentsSettingDTO appointmentsSettingDTO = appointmentModelDto.getPayload()
+                .getAppointmentsSetting(appointmentDTO.getMetadata().getPracticeId());
+        if (appointmentsSettingDTO == null) {
+            return false;
+        }
+        return appointmentsSettingDTO.getRequests().getAutomaticallyApproveRequests();
     }
 
     @Override

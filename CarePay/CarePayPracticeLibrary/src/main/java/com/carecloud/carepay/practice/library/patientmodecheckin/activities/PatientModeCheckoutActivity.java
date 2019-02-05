@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,12 +15,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAvailableHoursDialogFragment;
-import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeChooseProviderDialog;
+import com.carecloud.carepay.practice.library.appointments.createappointment.AvailabilityHourFragment;
 import com.carecloud.carepay.practice.library.appointments.dtos.PracticeAppointmentDTO;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
+import com.carecloud.carepay.practice.library.checkout.NextAppointmentFragment;
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckOutFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
@@ -45,19 +46,15 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.createappointment.CreateAppointmentFragmentInterface;
 import com.carecloud.carepaylibray.appointments.interfaces.AppointmentPrepaymentCallback;
-import com.carecloud.carepaylibray.appointments.interfaces.AvailableHoursInterface;
-import com.carecloud.carepaylibray.appointments.interfaces.DateRangeInterface;
-import com.carecloud.carepaylibray.appointments.interfaces.ProviderInterface;
-import com.carecloud.carepaylibray.appointments.interfaces.VisitTypeInterface;
-import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
+import com.carecloud.carepaylibray.appointments.interfaces.DateCalendarRangeInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LinksDTO;
-import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.carecloud.carepaylibray.appointments.models.TransitionsDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
@@ -66,7 +63,6 @@ import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 import com.carecloud.carepaylibray.checkout.BaseNextAppointmentFragment;
 import com.carecloud.carepaylibray.checkout.CheckOutFormFragment;
 import com.carecloud.carepaylibray.checkout.CheckOutInterface;
-import com.carecloud.carepaylibray.checkout.NextAppointmentFragmentInterface;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanTermsFragment;
@@ -89,12 +85,10 @@ import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostMode
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.survey.model.SurveyDTO;
 import com.carecloud.carepaylibray.translation.TranslatableFragment;
-import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.gson.Gson;
-import com.squareup.timessquare.CalendarPickerView;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -104,10 +98,10 @@ import java.util.Map;
  * Created by lmenendez on 6/13/17
  */
 
-public class PatientModeCheckoutActivity extends BasePracticeActivity implements CheckOutInterface, VisitTypeInterface,
-        AvailableHoursInterface, DateRangeInterface, PaymentNavigationCallback,
+public class PatientModeCheckoutActivity extends BasePracticeActivity implements CheckOutInterface,
+        PaymentNavigationCallback,
         PaymentMethodDialogInterface, DateRangePickerDialog.DateRangePickerDialogListener,
-        AppointmentPrepaymentCallback, ProviderInterface,
+        AppointmentPrepaymentCallback,
         PaymentPlanCompletedInterface, PaymentPlanCreateInterface {
 
     private AppointmentsResultModel appointmentsResultModel;
@@ -115,9 +109,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     private String appointmentId;
     private AppointmentDTO selectedAppointment;
     private AppointmentsResultModel resourcesToSchedule;
-
-    private Date startDate;
-    private Date endDate;
 
     private WorkflowDTO paymentConfirmationWorkflow;
     private boolean paymentStarted = false;
@@ -286,8 +277,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     private void showNextAppointmentFragment(String appointmentId) {
-//        addFragment(BaseNextAppointmentFragment.newInstance(appointmentId), true);
-
+        addFragment(NextAppointmentFragment.newInstance(appointmentId), true);
         MixPanelUtil.startTimer(getString(R.string.timer_next_appt));
     }
 
@@ -324,7 +314,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     @Override
     public void onCreditCardSelected(PaymentCreditCardsPayloadDTO papiPaymentMethod) {
-
+        //Not Apply
     }
 
     @Override
@@ -464,20 +454,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onVisitTypeSelected(VisitTypeDTO visitTypeDTO,
-                                    AppointmentResourcesDTO appointmentResourcesDTO,
-                                    AppointmentsResultModel appointmentsResultModel) {
-//        this.visitTypeDTO = visitTypeDTO;
-//        this.appointmentResourcesDTO = appointmentResourcesDTO;
-//        BaseNextAppointmentFragment fragment = (BaseNextAppointmentFragment) getSupportFragmentManager()
-//                .findFragmentByTag(BaseNextAppointmentFragment.class.getCanonicalName());
-//        if ((fragment != null) && fragment.setVisitType(visitTypeDTO, true)) {
-//            showAvailableHoursFragment(null, null, appointmentsResultModel,
-//                    appointmentResourcesDTO.getResource(), visitTypeDTO);
-//        }
-    }
-
-    @Override
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
         if (paymentStarted) {
             PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
@@ -495,19 +471,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         } else {
             showAllDone(workflowDTO);
         }
-    }
-
-    @Override
-    public void onDateRangeSelected(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO,
-                                    AppointmentResourcesItemDTO appointmentResource,
-                                    AppointmentsResultModel appointmentsResultModel) {
-//        if (getSupportFragmentManager().findFragmentByTag(PracticeAvailableHoursDialogFragment.class
-//                .getCanonicalName()) != null) {
-//            getSupportFragmentManager().popBackStack();//close select date fragment
-//            getSupportFragmentManager().popBackStack();//close available hours fragment
-//        }
-//        showAvailableHoursFragment(startDate, endDate, appointmentsResultModel,
-//                appointmentResource, visitTypeDTO);
     }
 
     @Override
@@ -598,35 +561,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment),
                 getString(R.string.param_practice_id),
                 selectedBalance.getMetadata().getPracticeId());
-    }
-
-//    @Override
-//    public void onHoursAndLocationSelected(AppointmentsSlotsDTO appointmentsSlot, AppointmentAvailabilityDTO availabilityDTO) {
-//        BaseNextAppointmentFragment fragment = (BaseNextAppointmentFragment) getSupportFragmentManager()
-//                .findFragmentByTag(BaseNextAppointmentFragment.class.getCanonicalName());
-//        if (fragment != null) {
-//            fragment.setLocationAndTime(appointmentsSlot, true);
-//        }
-//    }
-
-    @Override
-    public void selectDateRange(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO,
-                                AppointmentResourcesItemDTO appointmentResource,
-                                AppointmentsResultModel resourcesToSchedule) {
-        this.resourcesToSchedule = resourcesToSchedule;
-        DateUtil dateUtil = DateUtil.getInstance().setToCurrent();
-        DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(
-                Label.getLabel("date_range_picker_dialog_title"),
-                Label.getLabel("datepicker_cancel_option"),
-                false,
-                startDate,
-                endDate,
-                dateUtil.getDate(),
-                dateUtil.addDays(92).getDate(),
-                this,
-                CalendarPickerView.SelectionMode.RANGE.name());
-
-        displayDialogFragment(dialog, false);
     }
 
     @Override
@@ -791,10 +725,10 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     @Override
     public void onRangeSelected(Date start, Date end) {
-        this.startDate = start;
-        this.endDate = end;
-
-        onDateRangeCancelled();
+//        this.startDate = start;
+//        this.endDate = end;
+//
+//        onDateRangeCancelled();
     }
 
     @Override
@@ -806,40 +740,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     @Override
     public void onDateSelected(Date selectedDate) {
         //Not Implemented
-    }
-
-    WorkflowServiceCallback resourcesToScheduleCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            Gson gson = new Gson();
-            String resourcesToScheduleString = gson.toJson(workflowDTO);
-            AppointmentsResultModel resultModel = gson.fromJson(resourcesToScheduleString,
-                    AppointmentsResultModel.class);
-            appointmentsResultModel.getPayload().setResourcesToSchedule(resultModel.getPayload()
-                    .getResourcesToSchedule());
-            showChooseProviderDialogFragment();
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            showErrorNotification(exceptionMessage);
-            Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
-
-    private void showChooseProviderDialogFragment() {
-        PracticeChooseProviderDialog fragment = PracticeChooseProviderDialog
-                .newInstance(appointmentsResultModel,
-                        Label.getLabel("practice_list_select_a_provider"),
-                        Label.getLabel("practice_list_continue"));
-        fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
     }
 
     WorkflowServiceCallback continueCallback = new WorkflowServiceCallback() {
@@ -946,7 +846,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
         paymentLineItem.setAmount(amount);
         paymentLineItem.setProviderID(appointmentRequestDTO.getAppointment().getProviderGuid());
-        paymentLineItem.setLocationID(appointmentSlot.getLocation().getGuid());
+        paymentLineItem.setLocationID(appointmentRequestDTO.getAppointment().getLocationGuid());
         paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_PREPAYMENT);
         postModel.addLineItem(paymentLineItem);
         postModel.getMetadata().setAppointmentRequestDTO(appointmentRequestDTO.getAppointment());
@@ -975,18 +875,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     }
 
-    @Override
-    public void onProviderSelected(AppointmentResourcesDTO appointmentResourcesDTO,
-                                   AppointmentsResultModel appointmentsResultModel,
-                                   ResourcesToScheduleDTO resourcesToScheduleDTO) {
-        if (getSupportFragmentManager().findFragmentById(R.id.root_layout)
-                instanceof NextAppointmentFragmentInterface) {
-            ((NextAppointmentFragmentInterface) getSupportFragmentManager()
-                    .findFragmentById(R.id.root_layout))
-                    .setSelectedProvider(appointmentResourcesDTO.getResource().getProvider(), true);
-        }
-    }
-
     private void logCheckoutCancelled() {
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.root_layout);
         String currentStep = null;
@@ -1000,7 +888,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         MixPanelUtil.logEvent(getString(R.string.event_checkout_cancelled), getString(R.string.param_last_completed_step), currentStep);
     }
 
-    private void logCheckoutStarted(){
+    private void logCheckoutStarted() {
         if (getAppointment() != null) {
             //Log Check-out Started
             boolean isGuest = !ValidationHelper.isValidEmail(getAppAuthorizationHelper().getCurrUser());
@@ -1148,8 +1036,8 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         };
     }
 
-    private double getPaymentAmount(WorkflowDTO paymentConfirmationWorkflow){
-        if(paymentConfirmationWorkflow != null) {
+    private double getPaymentAmount(WorkflowDTO paymentConfirmationWorkflow) {
+        if (paymentConfirmationWorkflow != null) {
             PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, paymentConfirmationWorkflow);
             return paymentsModel.getPaymentPayload().getPatientPayments().getPayload().getAmount();
         }
@@ -1180,13 +1068,98 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         }
     };
 
-    private PaymentsPayloadSettingsDTO getPaymentSettings(String practiceId){
-        for(PaymentsPayloadSettingsDTO settingsDTO : appointmentsResultModel.getPayload().getPaymentSettings()){
-            if(settingsDTO.getMetadata().getPracticeId().equals(practiceId)){
+    private PaymentsPayloadSettingsDTO getPaymentSettings(String practiceId) {
+        for (PaymentsPayloadSettingsDTO settingsDTO : appointmentsResultModel.getPayload().getPaymentSettings()) {
+            if (settingsDTO.getMetadata().getPracticeId().equals(practiceId)) {
                 return settingsDTO;
             }
         }
         return new PaymentsPayloadSettingsDTO();
     }
 
+    @Override
+    public void showFragment(DialogFragment fragment) {
+        String tag = fragment.getClass().getName();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(tag);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(tag);
+        fragment.show(ft, tag);
+    }
+
+    @Override
+    public void displayToolbar(boolean display, String title) {
+
+    }
+
+    @Override
+    public void setResourceProvider(AppointmentResourcesItemDTO resource) {
+        Fragment fragment = getSupportFragmentManager()
+                .findFragmentByTag(NextAppointmentFragment.class.getName());
+        if (fragment instanceof CreateAppointmentFragmentInterface) {
+            ((CreateAppointmentFragmentInterface) fragment).setResourceProvider(resource);
+        }
+    }
+
+    @Override
+    public void setVisitType(VisitTypeDTO visitTypeDTO) {
+        Fragment fragment = getSupportFragmentManager()
+                .findFragmentByTag(NextAppointmentFragment.class.getName());
+        if (fragment instanceof CreateAppointmentFragmentInterface) {
+            ((CreateAppointmentFragmentInterface) fragment).setVisitType(visitTypeDTO);
+        }
+    }
+
+    @Override
+    public void setLocation(LocationDTO locationDTO) {
+        Fragment fragment = getSupportFragmentManager()
+                .findFragmentByTag(NextAppointmentFragment.class.getName());
+        if (fragment instanceof CreateAppointmentFragmentInterface) {
+            ((CreateAppointmentFragmentInterface) fragment).setLocation(locationDTO);
+        }
+    }
+
+    @Override
+    public void showAvailabilityHourFragment() {
+
+    }
+
+    @Override
+    public void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO) {
+
+    }
+
+    @Override
+    public void appointmentScheduledSuccessfully() {
+
+    }
+
+    @Override
+    public void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDto, double amount, String practiceId) {
+        AppointmentsSlotsDTO slot = new AppointmentsSlotsDTO();
+        slot.setStartTime(appointmentRequestDto.getAppointment().getStartTime());
+        slot.setEndTime(appointmentRequestDto.getAppointment().getEndTime());
+        startPrepaymentProcess(appointmentRequestDto, slot, amount);
+    }
+
+    @Override
+    public void setAppointmentSlot(AppointmentsSlotsDTO slot) {
+        getSupportFragmentManager().popBackStackImmediate();
+        Fragment fragment = getSupportFragmentManager()
+                .findFragmentByTag(NextAppointmentFragment.class.getName());
+        if (fragment instanceof CreateAppointmentFragmentInterface) {
+            ((CreateAppointmentFragmentInterface) fragment).setAppointmentSlot(slot);
+        }
+
+    }
+
+    @Override
+    public void setDateRange(Date newStartDate, Date newEndDate) {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(AvailabilityHourFragment.class.getName());
+        if (fragment instanceof DateCalendarRangeInterface) {
+            ((DateCalendarRangeInterface) fragment).setDateRange(newStartDate, newEndDate);
+        }
+    }
 }

@@ -31,8 +31,6 @@ public interface ScheduleAppointmentInterface extends FragmentActivityInterface,
 
     void appointmentScheduledSuccessfully();
 
-    void rescheduleAppointment(AppointmentDTO appointmentDTO);
-
     void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDto, double amount, String practiceId);
 
     void setAppointmentSlot(AppointmentsSlotsDTO slot);

@@ -18,8 +18,9 @@ import com.carecloud.carepaylibray.appointments.interfaces.DateCalendarRangeInte
  */
 public class AvailabilityHourFragment extends BaseAvailabilityHourFragment implements DateCalendarRangeInterface {
 
-    public static AvailabilityHourFragment newInstance() {
+    public static AvailabilityHourFragment newInstance(int selectMode) {
         Bundle args = new Bundle();
+        args.putInt("mode", selectMode);
         AvailabilityHourFragment fragment = new AvailabilityHourFragment();
         fragment.setArguments(args);
         return fragment;

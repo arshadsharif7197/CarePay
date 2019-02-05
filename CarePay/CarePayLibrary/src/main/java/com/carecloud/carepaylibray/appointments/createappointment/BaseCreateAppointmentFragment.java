@@ -84,9 +84,12 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         super.onCreate(icicle);
         appointmentsModelDto = (AppointmentsResultModel) callback.getDto();
         Bundle args = getArguments();
-        UserPracticeDTO practice = DtoHelper.getConvertedDTO(UserPracticeDTO.class, args);
-        if (practice != null) {
-            isReschedule = true;
+        if (args == null) {
+            args = new Bundle();
+        }
+        isReschedule = args.getBoolean("isReschedule", false);
+        if (isReschedule) {
+            UserPracticeDTO practice = DtoHelper.getConvertedDTO(UserPracticeDTO.class, args);
             selectedPractice = appointmentsModelDto.getPayload().getPractice(practice.getPracticeId());
             selectedResource = DtoHelper.getConvertedDTO(AppointmentResourcesItemDTO.class, args);
             selectedVisitType = DtoHelper.getConvertedDTO(VisitTypeDTO.class, args);

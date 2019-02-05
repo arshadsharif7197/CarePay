@@ -12,18 +12,11 @@ import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 public interface CheckOutInterface extends AppointmentPrepaymentCallback, FragmentActivityInterface,
         ScheduleAppointmentInterface {
 
-//    void showAvailableHoursFragment(Date startDate, Date endDate,
-//                                    AppointmentsResultModel appointmentsResultModel,
-//                                    AppointmentResourcesItemDTO resourcesItemDTO,
-//                                    VisitTypeDTO visitTypeDTO);
-
     void showAllDone(WorkflowDTO workflowDTO);
 
     void navigateToWorkflow(WorkflowDTO workflowDTO);
 
     boolean shouldAllowNavigateBack();
-
-//    void showChooseProviderFragment();
 
     void completeCheckout(boolean paymentMade,
                           double paymentAmount,

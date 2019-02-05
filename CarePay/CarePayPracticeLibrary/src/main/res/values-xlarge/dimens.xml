@@ -547,7 +547,7 @@
     <dimen name="appointmentCreationstepsContainerTopMargin">50dp</dimen>
     <dimen name="appointmentCreationStepContainerHorizontalSize">30dp</dimen>
     <dimen name="createAppointmentStepTitleBottomMargin">20dp</dimen>
-    <dimen name="createAppointmentStepTitleTextSize">22sp</dimen>
+    <dimen name="createAppointmentStepTitleTextSize">26sp</dimen>
     <dimen name="appointmentCreationProfileImageVerticalMargin">10dp</dimen>
     <dimen name="appointmentCreationStepHeaderHeight">55dp</dimen>
     <dimen name="appointmentCreationProfilePicSize">110dp</dimen>
@@ -559,5 +559,9 @@
     <dimen name="appointmentCreationAvailabilityButtonWidth">500dp</dimen>
     <dimen name="appointmentCreationAvailabilityButtonTextSize">22sp</dimen>
     <dimen name="appointmentCreationAvailabilityButtonTopMargin">60dp</dimen>
+    <dimen name="createAppointmentMainContainerTopMargin">40dp</dimen>
+    <dimen name="createAppointmentTitleTopMargin">36dp</dimen>
+    <dimen name="createAppointmentTitleTextSize">36sp</dimen>
+    <dimen name="createAppointmentSubTitleTextSize">22sp</dimen>
 
 </resources>

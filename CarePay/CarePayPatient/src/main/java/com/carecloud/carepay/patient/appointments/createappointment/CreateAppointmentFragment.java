@@ -36,6 +36,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
                                                         VisitTypeDTO selectedVisitTypeDTO,
                                                         LocationDTO selectedLocation) {
         Bundle args = new Bundle();
+        args.putBoolean("isReschedule", true);
         DtoHelper.bundleDto(args, userPracticeDTO);
         DtoHelper.bundleDto(args, selectedResource);
         DtoHelper.bundleDto(args, selectedVisitTypeDTO);

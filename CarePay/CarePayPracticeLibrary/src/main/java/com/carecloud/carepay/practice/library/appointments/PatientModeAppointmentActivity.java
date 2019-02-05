@@ -13,7 +13,6 @@ import com.carecloud.carepay.practice.library.appointments.createappointment.Loc
 import com.carecloud.carepay.practice.library.appointments.createappointment.ProviderListFragment;
 import com.carecloud.carepay.practice.library.appointments.createappointment.VisitTypeListFragment;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PatientModeRequestAppointmentDialog;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -24,22 +23,22 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPa
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProvidersReasonDTO;
-import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
-import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
+import java.text.NumberFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActivity {
@@ -180,7 +179,7 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
         });
         visitTypeCard = visitTypeContainer.findViewById(R.id.stepContainer);
         ImageView profilePicImageView = visitTypeCard.findViewById(R.id.profilePicImageView);
-        profilePicImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_step_visit_type));
+        profilePicImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_visit_type_placeholder));
 
     }
 
@@ -228,6 +227,11 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
     }
 
     @Override
+    public void setAppointmentSlot(AppointmentsSlotsDTO slot) {
+        //Not Apply
+    }
+
+    @Override
     public void setResourceProvider(AppointmentResourcesItemDTO resource) {
         selectedResource = resource;
         providerStepNoDataTextView.setVisibility(View.GONE);
@@ -262,7 +266,12 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
         TextView title = visitTypeCard.findViewById(R.id.title);
         title.setText(visitTypeDTO.getName());
         TextView subtitle = visitTypeCard.findViewById(R.id.subTitle);
-        subtitle.setText(visitTypeDTO.getName());
+        if (visitTypeDTO.getAmount() > 0) {
+            String subtitleText = String.format(Label
+                            .getLabel("createAppointment.visitTypeList.item.label.prepaymentMessage"),
+                    NumberFormat.getCurrencyInstance(Locale.US).format(visitTypeDTO.getAmount()));
+            subtitle.setText(subtitleText);
+        }
         ImageView resetImageView = visitTypeCard.findViewById(R.id.resetImageView);
         resetImageView.setOnClickListener(new View.OnClickListener() {
             @Override

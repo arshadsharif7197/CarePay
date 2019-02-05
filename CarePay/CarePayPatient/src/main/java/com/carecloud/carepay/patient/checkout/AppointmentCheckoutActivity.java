@@ -9,8 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.appointments.fragments.AppointmentDateRangeFragment;
-import com.carecloud.carepay.patient.appointments.fragments.AvailableHoursFragment;
+import com.carecloud.carepay.patient.appointments.createappointment.AvailabilityHourFragment;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
@@ -30,26 +29,17 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.createappointment.CreateAppointmentFragmentInterface;
 import com.carecloud.carepaylibray.appointments.interfaces.AppointmentPrepaymentCallback;
-import com.carecloud.carepaylibray.appointments.interfaces.AvailableHoursInterface;
 import com.carecloud.carepaylibray.appointments.interfaces.DateCalendarRangeInterface;
-import com.carecloud.carepaylibray.appointments.interfaces.DateRangeInterface;
-import com.carecloud.carepaylibray.appointments.interfaces.ProviderInterface;
-import com.carecloud.carepaylibray.appointments.interfaces.VisitTypeInterface;
-import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
-import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
 import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
-import com.carecloud.carepaylibray.checkout.BaseNextAppointmentFragment;
 import com.carecloud.carepaylibray.checkout.CheckOutFormFragment;
 import com.carecloud.carepaylibray.checkout.CheckOutInterface;
-import com.carecloud.carepaylibray.checkout.NextAppointmentFragmentInterface;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.AddExistingPaymentPlanFragment;
@@ -87,8 +77,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AppointmentCheckoutActivity extends BasePatientActivity implements CheckOutInterface,
-        VisitTypeInterface, AvailableHoursInterface, DateRangeInterface, PaymentNavigationCallback,
-        AppointmentPrepaymentCallback, ProviderInterface, PatientPaymentMethodInterface,
+        PaymentNavigationCallback,
+        AppointmentPrepaymentCallback, PatientPaymentMethodInterface,
         PaymentPlanCompletedInterface, PaymentPlanCreateInterface {
 
     private String appointmentId;
@@ -204,54 +194,6 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     @Override
     public void addFragment(Fragment fragment, boolean addToBackStack) {
         addFragment(R.id.fragmentContainer, fragment, addToBackStack);
-    }
-
-    @Override
-    public void onVisitTypeSelected(VisitTypeDTO visitTypeDTO,
-                                    AppointmentResourcesDTO appointmentResourcesDTO,
-                                    AppointmentsResultModel appointmentsResultModel) {
-
-//        NextAppointmentFragmentInterface fragment = (NextAppointmentFragmentInterface) getSupportFragmentManager()
-//                .findFragmentByTag(BaseNextAppointmentFragment.class.getCanonicalName());
-//        if ((fragment != null) && fragment.setVisitType(visitTypeDTO, true)) {
-//            showAvailableHoursFragment(null, null, appointmentsResultModel,
-//                    appointmentResourcesDTO.getResource(), visitTypeDTO);
-//        }
-    }
-
-    @Override
-    public void onDateRangeSelected(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO,
-                                    AppointmentResourcesItemDTO appointmentResource,
-                                    AppointmentsResultModel appointmentsResultModel) {
-        if (getSupportFragmentManager()
-                .findFragmentByTag(AvailableHoursFragment.class.getCanonicalName()) != null) {
-            getSupportFragmentManager().popBackStack();//close select date fragment
-            getSupportFragmentManager().popBackStack();//close available hours fragment
-        }
-        AvailableHoursFragment availableHoursFragment = AvailableHoursFragment
-                .newInstance(appointmentsResultModel, appointmentResource,
-                        startDate, endDate, visitTypeDTO);
-        addFragment(availableHoursFragment, true);
-    }
-
-    @Override
-    public void onHoursAndLocationSelected(AppointmentsSlotsDTO appointmentsSlot,
-                                           AppointmentAvailabilityDTO availabilityDTO) {
-        getSupportFragmentManager().popBackStack();
-        NextAppointmentFragmentInterface fragment = (NextAppointmentFragmentInterface) getSupportFragmentManager()
-                .findFragmentByTag(BaseNextAppointmentFragment.class.getCanonicalName());
-        if (fragment != null) {
-            fragment.setLocationAndTime(appointmentsSlot, true);
-        }
-    }
-
-    @Override
-    public void selectDateRange(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO,
-                                AppointmentResourcesItemDTO appointmentResource,
-                                AppointmentsResultModel appointmentsResultModel) {
-        AppointmentDateRangeFragment fragment = AppointmentDateRangeFragment
-                .newInstance(appointmentsResultModel, startDate, endDate, appointmentResource, visitTypeDTO);
-        replaceFragment(fragment, true);
     }
 
     @Override
@@ -701,22 +643,6 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     }
 
     @Override
-    public void onProviderSelected(AppointmentResourcesDTO appointmentResourcesDTO,
-                                   AppointmentsResultModel appointmentsResultModel,
-                                   ResourcesToScheduleDTO resourcesToScheduleDTO) {
-        getSupportActionBar().show();
-        getSupportFragmentManager().popBackStack();
-        getSupportFragmentManager().executePendingTransactions();
-        if (getSupportFragmentManager().findFragmentById(R.id.fragmentContainer)
-                instanceof NextAppointmentFragmentInterface) {
-            ((NextAppointmentFragmentInterface) getSupportFragmentManager()
-                    .findFragmentById(R.id.fragmentContainer))
-                    .setSelectedProvider(appointmentResourcesDTO.getResource().getProvider(), true);
-        }
-
-    }
-
-    @Override
     public void createWalletFragment(MaskedWallet maskedWallet, Double amount) {
         replaceFragment(AndroidPayDialogFragment.newInstance(maskedWallet, paymentsModel, amount), true);
     }
@@ -843,11 +769,6 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     }
 
     @Override
-    public void rescheduleAppointment(AppointmentDTO appointmentDTO) {
-
-    }
-
-    @Override
     public void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDto, double amount, String practiceId) {
         AppointmentsSlotsDTO slot = new AppointmentsSlotsDTO();
         slot.setStartTime(appointmentRequestDto.getAppointment().getStartTime());
@@ -866,8 +787,8 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     @Override
     public void setDateRange(Date newStartDate, Date newEndDate) {
-        getSupportFragmentManager().popBackStackImmediate();
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+        Fragment fragment = getSupportFragmentManager()
+                .findFragmentByTag(AvailabilityHourFragment.class.getName());
         if (fragment instanceof DateCalendarRangeInterface) {
             ((DateCalendarRangeInterface) fragment).setDateRange(newStartDate, newEndDate);
         }

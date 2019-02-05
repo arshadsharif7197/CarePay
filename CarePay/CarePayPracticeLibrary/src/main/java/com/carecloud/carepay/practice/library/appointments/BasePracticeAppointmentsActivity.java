@@ -90,11 +90,6 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     }
 
     @Override
-    public void rescheduleAppointment(AppointmentDTO appointmentDTO) {
-        //Not apply for this flow. Need refactor
-    }
-
-    @Override
     public void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDTO,
                                        AppointmentsSlotsDTO appointmentSlot, double amount) {
         IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
@@ -225,7 +220,7 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     @Override
     public void showAvailabilityHourFragment() {
-        showFragment(AvailabilityHourFragment.newInstance());
+        showFragment(AvailabilityHourFragment.newInstance(AvailabilityHourFragment.SCHEDULE_MODE));
     }
 
     @Override

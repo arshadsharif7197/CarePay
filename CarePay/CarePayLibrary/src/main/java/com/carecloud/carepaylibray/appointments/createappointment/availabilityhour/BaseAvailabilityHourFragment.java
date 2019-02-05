@@ -62,6 +62,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
     protected Date startDate;
     protected TextView toolbarTitle;
     protected int mode;
+    private boolean alreadyCalled;
 
     @Override
     public void onAttach(Context context) {
@@ -98,10 +99,18 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUpPrepaymentMessage(view);
-        if (mode == SELECT_MODE) {
-            callAvailabilityService();
-        }else{
-            setUpTimeSlotsList(view);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!alreadyCalled) {
+            if (mode == SELECT_MODE) {
+                callAvailabilityService();
+            } else {
+                setUpTimeSlotsList(getView());
+            }
+            alreadyCalled = true;
         }
     }
 

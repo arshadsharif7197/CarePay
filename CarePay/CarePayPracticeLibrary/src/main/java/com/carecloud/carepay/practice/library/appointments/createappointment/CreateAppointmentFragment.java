@@ -14,6 +14,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.createappointment.BaseCreateAppointmentFragment;
 import com.carecloud.carepaylibray.appointments.createappointment.CreateAppointmentFragmentInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
@@ -100,5 +101,10 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
         ProviderListFragment fragment = ProviderListFragment
                 .newInstance(selectedPractice, selectedVisitType, selectedLocation);
         callback.showFragment(fragment);
+    }
+
+    @Override
+    public void setAppointmentSlot(AppointmentsSlotsDTO slot) {
+        //Not Apply
     }
 }

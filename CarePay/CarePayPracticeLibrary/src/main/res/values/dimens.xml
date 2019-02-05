@@ -694,6 +694,10 @@
     <dimen name="appointmentCreationAvailabilityButtonWidth">500dp</dimen>
     <dimen name="appointmentCreationAvailabilityButtonTextSize">22sp</dimen>
     <dimen name="appointmentCreationAvailabilityButtonTopMargin">40dp</dimen>
+    <dimen name="createAppointmentMainContainerTopMargin">40dp</dimen>
+    <dimen name="createAppointmentTitleTopMargin">36dp</dimen>
+    <dimen name="createAppointmentTitleTextSize">36sp</dimen>
+    <dimen name="createAppointmentSubTitleTextSize">22sp</dimen>
 
 
 </resources>

@@ -30,7 +30,6 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.createappointment.CreateAppointmentFragmentInterface;
 import com.carecloud.carepaylibray.appointments.interfaces.DateCalendarRangeInterface;
-import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentCancellationFee;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
@@ -96,47 +95,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                                        AppointmentsResultModel appointmentsResultModel,
                                        PaymentsModel paymentsModel) {
         super(viewHandler, appointmentsResultModel, paymentsModel);
-    }
-
-    @Override
-    public void onProviderSelected(AppointmentResourcesDTO appointmentResourcesDTO,
-                                   AppointmentsResultModel appointmentsResultModel,
-                                   ResourcesToScheduleDTO resourcesToScheduleDTO) {
-        //TODO: Refactor this (take out Appointment Navigation Interface) after SHMRK-8014
-    }
-
-    @Override
-    public void onVisitTypeSelected(VisitTypeDTO visitTypeDTO,
-                                    AppointmentResourcesDTO appointmentResourcesDTO,
-                                    AppointmentsResultModel appointmentsResultModel) {
-        //TODO: Refactor this (take out Appointment Navigation Interface) after SHMRK-8014
-    }
-
-    @Override
-    public void onDateRangeSelected(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO,
-                                    AppointmentResourcesItemDTO appointmentResource,
-                                    AppointmentsResultModel appointmentsResultModel) {
-        //TODO: Refactor this (take out Appointment Navigation Interface) after SHMRK-8014
-    }
-
-    @Override
-    public void selectDateRange(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO,
-                                AppointmentResourcesItemDTO appointmentResource,
-                                AppointmentsResultModel appointmentsResultModel) {
-        //TODO: Refactor this (take out Appointment Navigation Interface) after SHMRK-8014
-    }
-
-    @Override
-    public void onHoursAndLocationSelected(AppointmentsSlotsDTO appointmentsSlot,
-                                           AppointmentAvailabilityDTO availabilityDTO) {
-        //TODO: Refactor this (take out Appointment Navigation Interface) after SHMRK-8014
-    }
-
-    @Override
-    public void onAppointmentRequestSuccess() {
-        viewHandler.confirmAppointment(true,
-                getPracticeSettings().getRequests().getAutomaticallyApproveRequests());
-        this.appointmentDTO = null;//clear this
     }
 
     public AppointmentsResultModel getMainAppointmentDto() {
@@ -466,9 +424,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     @Override
     public void onPaymentDismissed() {
         startCancelationFeePayment = false;
-        if (appointmentDTO != null) {
-            onHoursAndLocationSelected(appointmentSlot, null);
-        } else {
+        if (appointmentDTO == null) {
             viewHandler.refreshAppointments();
         }
     }
@@ -681,7 +637,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             viewHandler.confirmAppointment(false, false);
             logApptCancelMixpanel();
         } else {
-            onAppointmentRequestSuccess();
+            viewHandler.confirmAppointment(true,
+                    getPracticeSettings().getRequests().getAutomaticallyApproveRequests());
+            this.appointmentDTO = null;//clear this
         }
         startCancelationFeePayment = false;
     }

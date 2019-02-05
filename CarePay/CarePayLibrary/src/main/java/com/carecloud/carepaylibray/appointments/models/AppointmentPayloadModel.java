@@ -368,4 +368,13 @@ public class AppointmentPayloadModel implements Serializable {
         }
         return null;
     }
+
+    public AppointmentsSettingDTO getAppointmentsSetting(String practiceId) {
+        for (AppointmentsSettingDTO settingDTO : appointmentsSettings) {
+            if (settingDTO.getPracticeId().equals(practiceId)) {
+                return settingDTO;
+            }
+        }
+        return null;
+    }
 }

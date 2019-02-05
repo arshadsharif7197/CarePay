@@ -76,7 +76,7 @@
                     android:lines="1"
                     android:singleLine="true"
                     android:textColor="@color/myHealthTextColor"
-                    android:textSize="@dimen/text_size_20"
+                    android:textSize="@dimen/createAppointmentSectionTextSize"
                     app:customAssetFont="gotham_rounded_medium"
                     breeze:textKey="add_appointment_provider"
                     tools:text="Provider" />
@@ -138,7 +138,7 @@
                     android:lines="1"
                     android:singleLine="true"
                     android:textColor="@color/myHealthTextColor"
-                    android:textSize="@dimen/text_size_20"
+                    android:textSize="@dimen/createAppointmentSectionTextSize"
                     app:customAssetFont="gotham_rounded_medium"
                     breeze:textKey="add_appointment_visit_type"
                     tools:text="Visit Type" />
@@ -200,7 +200,7 @@
                     android:lines="1"
                     android:singleLine="true"
                     android:textColor="@color/myHealthTextColor"
-                    android:textSize="@dimen/text_size_20"
+                    android:textSize="@dimen/createAppointmentSectionTextSize"
                     app:customAssetFont="gotham_rounded_medium"
                     breeze:textKey="add_appointment_location"
                     tools:text="Visit Type" />

@@ -43,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/provider_title_layout"
-        android:layout_marginTop="@dimen/dimen_40dp">
+        android:layout_marginTop="@dimen/createAppointmentMainContainerTopMargin">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,10 +55,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/dimen_36dp"
+                android:layout_marginTop="@dimen/createAppointmentTitleTopMargin"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_36sp"
+                android:textSize="@dimen/createAppointmentTitleTextSize"
                 app:customAssetFont="gotham_rounded_medium"
+                tools:text="Create Appointment"
                 breeze:textKey="patientMode.appointmentCreation.title.label.create" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -67,7 +68,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_22sp"
+                android:textSize="@dimen/createAppointmentSubTitleTextSize"
+                tools:text="Create Appointment subheader"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="patientMode.appointmentCreation.subTitle.label.filters" />
 
@@ -111,7 +113,7 @@
                 android:background="@drawable/bg_blue_overlay"
                 android:enabled="false"
                 android:gravity="center"
-                android:textColor="@color/white"
+                android:textColor="@color/white_text_selector"
                 android:textSize="@dimen/appointmentCreationAvailabilityButtonTextSize"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="patientMode.appointmentCreation.availabilityButton.label.available" />

@@ -486,7 +486,9 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
             visitTimeResetImage.setVisibility(View.GONE);
             visitTimeTextView.setText(null);
             selectedTimeSlot = null;
-            visitTimeTextView.setCompoundDrawables(null, null, null, null);
+            visitTimeTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                    getResources().getDrawable(R.drawable.icon_drop_down), null);
+            setHint(visitTimeTextView, visitTimeTextInputLayout, null);
         }
         visitTimeTextView.setEnabled(enabled);
     }

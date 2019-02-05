@@ -181,9 +181,8 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
     };
 
     private void logAppointmentScheduledToMixPanel(AppointmentDTO appointmentDTO) {
-        ApplicationMode.ApplicationType applicationType = getApplicationMode().getApplicationType();
-        boolean isGuest = applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
-                !ValidationHelper.isValidEmail(((ISession) getContext()).getAppAuthorizationHelper().getCurrUser()) : null;
+        boolean isGuest = getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)
+                && !ValidationHelper.isValidEmail(((ISession) getContext()).getAppAuthorizationHelper().getCurrUser());
         String[] params = {getString(R.string.param_appointment_type),
                 getString(R.string.param_practice_id),
                 getString(R.string.param_practice_name),
