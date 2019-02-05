@@ -35,6 +35,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPa
 import com.carecloud.carepaylibray.appointments.models.AppointmentCancellationFee;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPrePaymentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
@@ -730,7 +731,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
         VisitTypeDTO selectedVisitType = appointmentDTO.getPayload().getVisitType();
         ProvidersReasonDTO reasonDTO = new ProvidersReasonDTO();
-        reasonDTO.setAmount(selectedVisitType.getAmount());
+        reasonDTO.setAmount(getVisitTypeAmount(selectedVisitType.getId()));
         reasonDTO.setName(selectedVisitType.getName());
         reasonDTO.setDescription(selectedVisitType.getDescription());
         reasonDTO.setId(selectedVisitType.getId());
@@ -746,6 +747,16 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         appointmentAvailabilityDataDTO.setPayload(payloadList);
         appointmentsResultModel.getPayload().setAppointmentAvailability(appointmentAvailabilityDataDTO);
         showFragment(AvailabilityHourFragment.newInstance(AvailabilityHourFragment.SCHEDULE_MODE));
+    }
+
+    private double getVisitTypeAmount(Integer visitTypeId) {
+        //TODO: uncomment this for 3.22
+//        for (AppointmentsPrePaymentDTO prePaymentDTO : getPracticeSettings().getPrePayments()) {
+//            if (prePaymentDTO.getVisitType() == visitTypeId) {
+//                return prePaymentDTO.getAmount();
+//            }
+//        }
+        return 0;
     }
 
     @Override
