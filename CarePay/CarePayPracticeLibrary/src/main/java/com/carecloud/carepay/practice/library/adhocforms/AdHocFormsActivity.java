@@ -29,6 +29,7 @@ import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 
 import java.util.ArrayList;
@@ -39,10 +40,12 @@ import java.util.Map;
 public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFormsInterface {
 
     private AdHocFormsModel adhocFormsModel;
+    private SelectedAdHocForms selectedAdHocForms;
     private ArrayList<PracticeForm> forms;
     private AdHocRecyclerViewAdapter adapter;
 
     private boolean isUserInteraction = false;
+    private String patientId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +54,19 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
         setContentView(R.layout.activity_ad_hoc_forms);
         adhocFormsModel = getConvertedDTO(AdHocFormsModel.class);
         Bundle bundle = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
-        SelectedAdHocForms selectedAdHocForms = (SelectedAdHocForms) bundle.getSerializable(CarePayConstants.SELECTED_FORMS);
+        selectedAdHocForms = (SelectedAdHocForms) bundle.getSerializable(CarePayConstants.SELECTED_FORMS);
 
         switchToPatientMode();
+        patientId = adhocFormsModel.getPayload().getAdhocFormsPatientModeInfo().getMetadata().getPatientId();
 
+        initView();
+
+        if (savedInstanceState == null) {
+            addFragment(AdHocFormFragment.newInstance(), false);
+        }
+    }
+
+    private void initView() {
         forms = new ArrayList<>();
         if (selectedAdHocForms != null) {
             for (String uuid : selectedAdHocForms.getForms()) {
@@ -83,11 +95,11 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
             }
         };
         findViewById(R.id.goBackImageView).setOnClickListener(goBackClicListener);
-        findViewById(R.id.goBackTextView).setOnClickListener(goBackClicListener);
+
+        TextView backTextView = findViewById(R.id.goBackTextView);
+        backTextView.setText(Label.getLabel("demographics_back_text"));
+        backTextView.setOnClickListener(goBackClicListener);
         initializeLanguageSpinner();
-        if (savedInstanceState == null) {
-            addFragment(AdHocFormFragment.newInstance(), false);
-        }
     }
 
     @Override
@@ -138,10 +150,41 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
                     return;
                 }
                 changeLanguage(adhocFormsModel.getMetadata().getLinks().getLanguage(),
-                        language.getCode().toLowerCase(), headers);
+                        language.getCode().toLowerCase(), headers, new SimpleCallback() {
+                            @Override
+                            public void callback() {
+                                refreshSelfDto();
+                            }
+                        });
 
             }
         });
+    }
+
+    private void refreshSelfDto() {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("patient_id", patientId);
+        TransitionDTO self = adhocFormsModel.getMetadata().getLinks().getSelf();
+        getWorkflowServiceHelper().execute(self, new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                adhocFormsModel = DtoHelper.getConvertedDTO(AdHocFormsModel.class, workflowDTO);
+                initView();
+                addFragment(AdHocFormFragment.newInstance(), false);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+            }
+        }, queryMap);
     }
 
     private void showPinDialog() {
