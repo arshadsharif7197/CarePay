@@ -174,7 +174,7 @@ public class SurveyResultFragment extends BaseFragment {
                 hideProgressDialog();
                 logSurveyCompleted();
                 if (!showFeedBackLayout || survey.isZeroAnswers()) {
-                    showOkButton(workflowDTO);
+                    showDoneButton(workflowDTO);
                 } else {
                     PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
                 }
@@ -189,10 +189,10 @@ public class SurveyResultFragment extends BaseFragment {
         }, jsonResponse, query, header);
     }
 
-    private void showOkButton(final WorkflowDTO workflowDTO) {
-        TextView okButton = getView().findViewById(R.id.okButton);
-        okButton.setVisibility(View.VISIBLE);
-        okButton.setOnClickListener(new View.OnClickListener() {
+    private void showDoneButton(final WorkflowDTO workflowDTO) {
+        TextView doneButton = getView().findViewById(R.id.okButton);
+        doneButton.setVisibility(View.VISIBLE);
+        doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
