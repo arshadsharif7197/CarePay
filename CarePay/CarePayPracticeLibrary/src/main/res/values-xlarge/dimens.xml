@@ -39,6 +39,7 @@
     <dimen name="signInButtonHeight">48dp</dimen>
     <dimen name="signInButtonMarginTop">30dp</dimen>
     <dimen name="signInButtonTextSize">22sp</dimen>
+    <dimen name="signinHeaderTextSize">36sp</dimen>
 
     <!-- Home Screen -->
     <dimen name="mainTitleHeaderMarginTop">30dp</dimen>

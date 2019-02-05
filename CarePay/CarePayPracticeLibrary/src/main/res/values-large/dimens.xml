@@ -47,6 +47,7 @@
     <dimen name="practice_item_margin">3dp</dimen>
     <dimen name="practice_item_text_size">14sp</dimen>
     <dimen name="respons_button_text_size">14sp</dimen>
+    <dimen name="signinHeaderTextSize">27sp</dimen>
 
     <!--Main-->
     <dimen name="mainTitleHeaderMarginTop">10dp</dimen>

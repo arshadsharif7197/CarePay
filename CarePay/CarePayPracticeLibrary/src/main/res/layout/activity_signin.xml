@@ -89,6 +89,17 @@
         android:paddingBottom="@dimen/dimen_20dp"
         android:paddingTop="@dimen/dimen_20dp">
 
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@id/mainLayout"
+            android:textSize="@dimen/signinHeaderTextSize"
+            android:layout_marginBottom="20dp"
+            android:textColor="@color/white"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="welcome_signin_text"/>
+
         <RelativeLayout
             android:id="@+id/mainLayout"
             android:layout_width="@dimen/signin_main_width"
