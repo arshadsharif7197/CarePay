@@ -755,10 +755,6 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     }
 
     @Override
-    public void showAvailabilityHourFragment() {
-    }
-
-    @Override
     public void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO) {
 
     }

@@ -97,6 +97,11 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
         }
     }
 
+    @Override
+    protected void showAvailabilityFragment() {
+        callback.showFragment(AvailabilityHourFragment.newInstance(AvailabilityHourFragment.SCHEDULE_MODE));
+    }
+
     protected void showLocationList(UserPracticeDTO selectedPractice,
                                     AppointmentResourcesItemDTO selectedProvider,
                                     VisitTypeDTO selectedVisitType) {

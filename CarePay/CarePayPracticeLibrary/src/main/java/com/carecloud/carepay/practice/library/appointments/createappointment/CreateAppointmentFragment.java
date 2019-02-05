@@ -67,6 +67,11 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
         setUpToolbar(view);
     }
 
+    @Override
+    protected void showAvailabilityFragment() {
+        callback.showFragment(AvailabilityHourFragment.newInstance(AvailabilityHourFragment.SCHEDULE_MODE));
+    }
+
     private void setUpToolbar(View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         TextView title = toolbar.findViewById(R.id.toolbar_title);

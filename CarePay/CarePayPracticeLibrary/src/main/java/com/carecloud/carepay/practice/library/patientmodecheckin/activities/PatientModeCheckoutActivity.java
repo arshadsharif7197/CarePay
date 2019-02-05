@@ -1122,11 +1122,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void showAvailabilityHourFragment() {
-
-    }
-
-    @Override
     public void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO) {
 
     }

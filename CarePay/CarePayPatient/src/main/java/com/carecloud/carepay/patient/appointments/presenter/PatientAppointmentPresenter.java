@@ -11,7 +11,6 @@ import android.util.Log;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
 import com.carecloud.carepay.patient.appointments.createappointment.AvailabilityHourFragment;
-import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentFragment;
 import com.carecloud.carepay.patient.appointments.createappointment.RequestAppointmentDialogFragment;
 import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentFeeDialog;
 import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
@@ -30,16 +29,18 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.createappointment.CreateAppointmentFragmentInterface;
 import com.carecloud.carepaylibray.appointments.interfaces.DateCalendarRangeInterface;
+import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDataDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityMetadataDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentCancellationFee;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.CancellationReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
-import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
+import com.carecloud.carepaylibray.appointments.models.ProvidersReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
@@ -67,6 +68,7 @@ import com.google.android.gms.wallet.MaskedWallet;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -703,11 +705,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     @Override
-    public void showAvailabilityHourFragment() {
-        viewHandler.addFragment(AvailabilityHourFragment.newInstance(AvailabilityHourFragment.SCHEDULE_MODE), true);
-    }
-
-    @Override
     public void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO) {
         RequestAppointmentDialogFragment.newInstance(appointmentDTO).show(getSupportFragmentManager(), "confirmation");
     }
@@ -723,23 +720,32 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     public void rescheduleAppointment(AppointmentDTO appointmentDTO) {
         this.appointmentDTO = appointmentDTO;
 
-        practiceId = appointmentDTO.getMetadata().getPracticeId();
-        practiceMgmt = appointmentDTO.getMetadata().getPracticeMgmt();
-        patientId = appointmentDTO.getMetadata().getPatientId();
-
-        UserPracticeDTO userPracticeDTO = new UserPracticeDTO();
-        userPracticeDTO.setPracticeId(practiceId);
+        AppointmentAvailabilityPayloadDTO payload = new AppointmentAvailabilityPayloadDTO();
+        payload.setLocation(appointmentDTO.getPayload().getLocation());
 
         AppointmentResourcesItemDTO selectedResource = new AppointmentResourcesItemDTO();
         selectedResource.setId(appointmentDTO.getPayload().getResourceId());
         selectedResource.setProvider(appointmentDTO.getPayload().getProvider());
+        payload.setResource(selectedResource);
 
-        VisitTypeDTO selectedVisitTypeDTO = appointmentDTO.getPayload().getVisitType();
+        VisitTypeDTO selectedVisitType = appointmentDTO.getPayload().getVisitType();
+        ProvidersReasonDTO reasonDTO = new ProvidersReasonDTO();
+        reasonDTO.setAmount(selectedVisitType.getAmount());
+        reasonDTO.setName(selectedVisitType.getName());
+        reasonDTO.setDescription(selectedVisitType.getDescription());
+        reasonDTO.setId(selectedVisitType.getId());
+        payload.setVisitReason(reasonDTO);
 
-        LocationDTO selectedLocation = appointmentDTO.getPayload().getLocation();
-        CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance(userPracticeDTO,
-                selectedResource, selectedVisitTypeDTO, selectedLocation);
-        viewHandler.addFragment(fragment, true);
+        AppointmentAvailabilityDataDTO appointmentAvailabilityDataDTO = new AppointmentAvailabilityDataDTO();
+        ArrayList<AppointmentAvailabilityPayloadDTO> payloadList = new ArrayList<>();
+        payloadList.add(payload);
+        AppointmentAvailabilityMetadataDTO metadataDTO = new AppointmentAvailabilityMetadataDTO();
+        metadataDTO.setPracticeId(appointmentDTO.getMetadata().getPracticeId());
+        metadataDTO.setPracticeMgmt(appointmentDTO.getMetadata().getPracticeMgmt());
+        appointmentAvailabilityDataDTO.setMetadata(metadataDTO);
+        appointmentAvailabilityDataDTO.setPayload(payloadList);
+        appointmentsResultModel.getPayload().setAppointmentAvailability(appointmentAvailabilityDataDTO);
+        showFragment(AvailabilityHourFragment.newInstance(AvailabilityHourFragment.SCHEDULE_MODE));
     }
 
     @Override

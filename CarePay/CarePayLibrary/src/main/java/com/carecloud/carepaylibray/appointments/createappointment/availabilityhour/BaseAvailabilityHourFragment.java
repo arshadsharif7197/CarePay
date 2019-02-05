@@ -105,12 +105,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
     public void onStart() {
         super.onStart();
         if (!alreadyCalled) {
-            if (mode == SELECT_MODE) {
-                callAvailabilityService();
-            } else {
-                setUpTimeSlotsList(getView());
-            }
-            alreadyCalled = true;
+            callAvailabilityService();
         }
     }
 

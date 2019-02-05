@@ -21,6 +21,8 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.interfaces.ScheduleAppointmentInterface;
+import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDataDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityMetadataDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
@@ -35,6 +37,7 @@ import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -149,53 +152,28 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
     }
 
     protected void callAvailabilityService() {
-        Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("practice_mgmt", selectedPractice.getPracticeMgmt());
-        queryMap.put("practice_id", selectedPractice.getPracticeId());
-        queryMap.put("patient_id", patientId != null ? patientId : getPatientId(selectedPractice.getPracticeId()));
-        queryMap.put("visit_reason_id", String.valueOf(selectedVisitType.getId()));
-        queryMap.put("resource_ids", String.valueOf(selectedResource.getId()));
-        queryMap.put("location_ids", String.valueOf(selectedLocation.getId()));
-        TransitionDTO transitionDTO = appointmentsModelDto.getMetadata().getLinks().getAppointmentAvailability();
-        getWorkflowServiceHelper().execute(transitionDTO, new WorkflowServiceCallback() {
-            @Override
-            public void onPreExecute() {
-                showProgressDialog();
-            }
-
-            @Override
-            public void onPostExecute(WorkflowDTO workflowDTO) {
-                hideProgressDialog();
-                AppointmentsResultModel availabilityDto = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
-                if (availabilityDto.getPayload().getAppointmentAvailability().getPayload().isEmpty()) {
-                    AppointmentAvailabilityPayloadDTO payload = new AppointmentAvailabilityPayloadDTO();
-                    payload.setLocation(selectedLocation);
-                    payload.setResource(selectedResource);
-                    ProvidersReasonDTO reasonDTO = new ProvidersReasonDTO();
-                    reasonDTO.setAmount(selectedVisitType.getAmount());
-                    reasonDTO.setName(selectedVisitType.getName());
-                    reasonDTO.setDescription(selectedVisitType.getDescription());
-                    reasonDTO.setId(selectedVisitType.getId());
-                    payload.setVisitReason(reasonDTO);
-                    availabilityDto.getPayload().getAppointmentAvailability().getPayload().add(payload);
-                }
-                availabilityDto.getPayload().getAppointmentAvailability().getPayload().get(0)
-                        .getResource().getProvider().setPhoto(selectedResource.getProvider().getPhoto());
-                availabilityDto.getPayload().getAppointmentAvailability().getPayload().get(0)
-                        .getVisitReason().setAmount(selectedVisitType.getAmount());
-                appointmentsModelDto.getPayload().setAppointmentAvailability(availabilityDto.getPayload()
-                        .getAppointmentAvailability());
-                callback.showAvailabilityHourFragment();
-            }
-
-            @Override
-            public void onFailure(String exceptionMessage) {
-                hideProgressDialog();
-                showErrorNotification(exceptionMessage);
-                Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
-            }
-        }, queryMap);
+        AppointmentAvailabilityPayloadDTO payload = new AppointmentAvailabilityPayloadDTO();
+        payload.setLocation(selectedLocation);
+        payload.setResource(selectedResource);
+        ProvidersReasonDTO reasonDTO = new ProvidersReasonDTO();
+        reasonDTO.setAmount(selectedVisitType.getAmount());
+        reasonDTO.setName(selectedVisitType.getName());
+        reasonDTO.setDescription(selectedVisitType.getDescription());
+        reasonDTO.setId(selectedVisitType.getId());
+        payload.setVisitReason(reasonDTO);
+        AppointmentAvailabilityDataDTO appointmentAvailabilityDataDTO = new AppointmentAvailabilityDataDTO();
+        ArrayList<AppointmentAvailabilityPayloadDTO> payloadList = new ArrayList<>();
+        payloadList.add(payload);
+        AppointmentAvailabilityMetadataDTO metadataDTO = new AppointmentAvailabilityMetadataDTO();
+        metadataDTO.setPracticeId(selectedPractice.getPracticeId());
+        metadataDTO.setPracticeMgmt(selectedPractice.getPracticeMgmt());
+        appointmentAvailabilityDataDTO.setMetadata(metadataDTO);
+        appointmentAvailabilityDataDTO.setPayload(payloadList);
+        appointmentsModelDto.getPayload().setAppointmentAvailability(appointmentAvailabilityDataDTO);
+        showAvailabilityFragment();
     }
+
+    protected abstract void showAvailabilityFragment();
 
     protected abstract void showLocationList(UserPracticeDTO selectedPractice,
                                              AppointmentResourcesItemDTO selectedProvider,

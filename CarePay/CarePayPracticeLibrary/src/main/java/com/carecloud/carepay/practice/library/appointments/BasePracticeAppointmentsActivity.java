@@ -218,7 +218,6 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     }
 
-    @Override
     public void showAvailabilityHourFragment() {
         showFragment(AvailabilityHourFragment.newInstance(AvailabilityHourFragment.SCHEDULE_MODE));
     }
