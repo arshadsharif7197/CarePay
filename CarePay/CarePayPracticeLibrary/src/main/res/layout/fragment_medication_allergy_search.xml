@@ -65,12 +65,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:gravity="center"
                 android:layout_marginBottom="@dimen/dimen_5dp"
                 android:layout_marginTop="@dimen/dimen_20dp"
                 android:textColor="@color/textview_default_textcolor"
-                android:textSize="@dimen/text_size_21"
+                android:textSize="@dimen/medicationAllergyHeaderTitleTextSize"
                 app:customAssetFont="gotham_rounded_medium"
-                tools:text="Begin typing to find your allergy"/>
+                tools:text="Begin typing to find your medications"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/search_header_subtitle"
@@ -78,10 +79,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:paddingEnd="@dimen/dimen_80dp"
-                android:paddingStart="@dimen/dimen_80dp"
+                android:paddingEnd="@dimen/medicationAllergyHeaderSubtitlePadding"
+                android:paddingStart="@dimen/medicationAllergyHeaderSubtitlePadding"
                 android:textColor="@color/optional_gray"
-                android:textSize="@dimen/text_size_13"
+                android:textSize="@dimen/medicationAllergyHeaderSubtitleTextSize"
                 app:customAssetFont="gotham_rounded_medium"
                 tools:text="and click on the result to add it or click the button below to add it as an unlisted allergy"/>
 
@@ -139,6 +140,7 @@
         </FrameLayout>
 
         <View
+            android:id="@+id/add_unlisted_border"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_1dp"
             android:background="@color/light_gray"/>
@@ -146,18 +148,18 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/patient_mode_dialog_body_bg">
+            android:background="@drawable/patient_mode_dialog_body_bg"
+            android:padding="@dimen/dimen_15dp">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/add_unlisted"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_15dp"
                 android:background="@drawable/blue_border_rounded_button_selector"
                 android:padding="@dimen/dimen_8dp"
                 android:textAllCaps="false"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_22"
+                android:textSize="@dimen/medicationAllergyButtonTextSize"
                 app:customAssetFont="gotham_rounded_medium"
                 tools:text="Add Unlisted Allergy"/>
 

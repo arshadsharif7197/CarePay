@@ -486,4 +486,16 @@
     <dimen name="homeButtonIconBottomPadding">30dp</dimen>
     <dimen name="homeButtonIconStartPadding">30dp</dimen>
 
+    <!--Check In Screen-->
+    <dimen name="checkinPlanTotalHeaderTextHeight">100dp</dimen>
+    <dimen name="checkinPlanTotalHeaderTextSize">90sp</dimen>
+    <dimen name="checkinPlanParametersTextPadding">100dp</dimen>
+    <dimen name="checkinPlanParametersTextSize">12sp</dimen>
+    <dimen name="checkinPlanParametersTextPaddingTopBottom">10dp</dimen>
+    <dimen name="checkinPlanHeaderMessageMargin">10dp</dimen>
+    <dimen name="checkinPlanTitleTextSize">30sp</dimen>
+    <dimen name="checkinPlanFooterButtonHeight">48dp</dimen>
+    <dimen name="checkinPlanFooterButtonMargin">10dp</dimen>
+    <dimen name="checkinPlanMainContainerSidePadding">150dp</dimen>
+
 </resources>
