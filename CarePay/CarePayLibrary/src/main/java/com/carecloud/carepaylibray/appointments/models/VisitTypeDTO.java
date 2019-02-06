@@ -12,7 +12,7 @@ public class VisitTypeDTO {
 
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private String id;
     @SerializedName("name")
     @Expose
     private String name;
@@ -34,7 +34,7 @@ public class VisitTypeDTO {
      *
      * @return the id
      */
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
@@ -43,7 +43,7 @@ public class VisitTypeDTO {
      *
      * @param id the id
      */
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

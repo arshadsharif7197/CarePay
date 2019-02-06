@@ -98,7 +98,7 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
         queryMap.put("practice_mgmt", selectedPractice.getPracticeMgmt());
         queryMap.put("practice_id", selectedPractice.getPracticeId());
         queryMap.put("patient_id", ApplicationPreferences.getInstance().getPatientId());
-        queryMap.put("visit_reason_id", String.valueOf(selectedVisitType.getId()));
+        queryMap.put("visit_reason_id", selectedVisitType.getId());
         queryMap.put("resource_ids", String.valueOf(selectedResource.getId()));
         queryMap.put("location_ids", String.valueOf(selectedLocation.getId()));
         TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getLinks().getAppointmentAvailability();

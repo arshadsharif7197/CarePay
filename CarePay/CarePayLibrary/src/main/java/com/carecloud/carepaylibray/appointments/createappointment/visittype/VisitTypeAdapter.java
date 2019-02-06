@@ -24,11 +24,11 @@ import java.util.Locale;
 public class VisitTypeAdapter extends RecyclerView.Adapter<VisitTypeAdapter.ViewHolder> {
 
     private final List<VisitTypeDTO> visitTypes;
-    private final HashMap<Integer, Double> prePayments;
+    private final HashMap<String, Double> prePayments;
     private final OnVisitTypeListItemClickListener listener;
 
     public VisitTypeAdapter(List<VisitTypeDTO> visitTypes,
-                            HashMap<Integer, Double> prePayments,
+                            HashMap<String, Double> prePayments,
                             OnVisitTypeListItemClickListener listener) {
         this.visitTypes = visitTypes;
         this.prePayments = prePayments;

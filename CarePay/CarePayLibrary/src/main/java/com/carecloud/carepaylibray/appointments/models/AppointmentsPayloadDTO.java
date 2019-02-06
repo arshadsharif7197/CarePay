@@ -84,7 +84,7 @@ public class AppointmentsPayloadDTO {
     private Object referringPhysicianNpi;
     @SerializedName("visit_reason_id")
     @Expose
-    private Integer visitReasonId;
+    private String visitReasonId;
     @SerializedName("visit_reason")
     @Expose
     private VisitTypeDTO visitType = new VisitTypeDTO();
@@ -416,14 +416,14 @@ public class AppointmentsPayloadDTO {
     /**
      * @return The visitReasonId
      */
-    public Integer getVisitReasonId() {
+    public String getVisitReasonId() {
         return visitReasonId;
     }
 
     /**
      * @param visitReasonId The visit_reason_id
      */
-    public void setVisitReasonId(Integer visitReasonId) {
+    public void setVisitReasonId(String visitReasonId) {
         this.visitReasonId = visitReasonId;
     }
 

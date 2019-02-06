@@ -9,7 +9,7 @@ public class ProvidersReasonDTO {
 
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private String id;
     @SerializedName("name")
     @Expose
     private String name;
@@ -21,14 +21,14 @@ public class ProvidersReasonDTO {
     /**
      * @return The id
      */
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
     /**
      * @param id The id
      */
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

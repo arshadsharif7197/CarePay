@@ -83,7 +83,7 @@ public abstract class BaseProviderListFragment extends BaseDialogFragment {
         queryMap.put("practice_id", selectedPractice.getPracticeId());
         queryMap.put("request", "resources");
         if (selectedVisitType != null) {
-            queryMap.put("filter_nature_of_visit_id", String.valueOf(selectedVisitType.getId()));
+            queryMap.put("filter_nature_of_visit_id", selectedVisitType.getId());
         }
         if (selectedLocation != null) {
             queryMap.put("filter_location_id", String.valueOf(selectedLocation.getId()));

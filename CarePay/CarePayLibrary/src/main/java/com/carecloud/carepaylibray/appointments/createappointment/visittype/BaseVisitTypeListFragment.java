@@ -139,8 +139,8 @@ public abstract class BaseVisitTypeListFragment extends BaseDialogFragment {
                 }));
     }
 
-    private HashMap<Integer, Double> hashMapPrepayments(List<AppointmentsPrePaymentDTO> appointmentPrepayments) {
-        HashMap<Integer, Double> prepaymentsMap = new HashMap<>();
+    private HashMap<String, Double> hashMapPrepayments(List<AppointmentsPrePaymentDTO> appointmentPrepayments) {
+        HashMap<String, Double> prepaymentsMap = new HashMap<>();
         for (AppointmentsPrePaymentDTO prePaymentDTO : appointmentPrepayments) {
             prepaymentsMap.put(prePaymentDTO.getVisitType(), prePaymentDTO.getAmount());
         }

@@ -87,7 +87,7 @@ public abstract class BaseLocationListFragment extends BaseDialogFragment {
             queryMap.put("filter_resource_id", String.valueOf(selectedResource.getId()));
         }
         if (selectedVisitType != null) {
-            queryMap.put("filter_nature_of_visit_id", String.valueOf(selectedVisitType.getId()));
+            queryMap.put("filter_nature_of_visit_id", selectedVisitType.getId());
         }
         getWorkflowServiceHelper().execute(transition, new WorkflowServiceCallback() {
             @Override

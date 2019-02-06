@@ -11,16 +11,16 @@ import java.io.Serializable;
 public class AppointmentsPrePaymentDTO implements Serializable {
     @SerializedName("visit_type")
     @Expose
-    private int visitType;
+    private String visitType;
     @SerializedName("amount")
     @Expose
     private double amount;
 
-    public int getVisitType() {
+    public String getVisitType() {
         return visitType;
     }
 
-    public void setVisitType(int visitType) {
+    public void setVisitType(String visitType) {
         this.visitType = visitType;
     }
 
