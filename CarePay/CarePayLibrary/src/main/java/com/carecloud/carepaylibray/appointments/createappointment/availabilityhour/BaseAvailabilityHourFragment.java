@@ -116,7 +116,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
         super.onStart();
         if (!alreadyCalled) {
             callAvailabilityService();
-            alreadyCalled = false;
+            alreadyCalled = true;
         }
     }
 
