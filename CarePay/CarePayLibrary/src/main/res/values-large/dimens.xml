@@ -10,4 +10,5 @@
     <dimen name="reasonForVisitTopMargin">10dp</dimen>
     <dimen name="nextAppointmentProviderImageSize">100dp</dimen>
     <dimen name="itemProviderVerticalMargin">6dp</dimen>
+    <dimen name="locationItemHorizontalMargin">6dp</dimen>
 </resources>

@@ -39,7 +39,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/textview_margin"
+            android:layout_marginStart="@dimen/locationItemHorizontalMargin"
+            android:layout_marginEnd="@dimen/locationItemHorizontalMargin"
             android:gravity="center_vertical"
             android:orientation="vertical">
 

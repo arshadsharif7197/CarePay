@@ -13,4 +13,5 @@
     <dimen name="optionalLabelRightMargin">38dp</dimen>
     <dimen name="optionalLabelTextSize">9sp</dimen>
     <dimen name="itemProviderVerticalMargin">12dp</dimen>
+    <dimen name="locationItemHorizontalMargin">12dp</dimen>
 </resources>

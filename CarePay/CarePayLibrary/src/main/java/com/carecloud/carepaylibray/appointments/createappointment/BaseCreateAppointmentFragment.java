@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,10 +13,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.interfaces.ScheduleAppointmentInterface;
@@ -38,9 +34,7 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * @author pjohnson on 1/15/19.
@@ -219,14 +213,17 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         visitTypeNoDataTextView.setVisibility(View.GONE);
         String title = StringUtil.capitalize(visitType.getName());
         String subtitle = null;
+        TextView subTitleTextView = visitTypeContainer.findViewById(R.id.subTitleTextView);
         if (visitType.getAmount() > 0) {
+            subTitleTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
             subtitle = String.format(Label
                             .getLabel("createAppointment.visitTypeList.item.label.prepaymentMessage"),
                     NumberFormat.getCurrencyInstance(Locale.US).format(visitType.getAmount()));
+        } else {
+//            subTitleTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+            subtitle = Label.getLabel("createAppointment.visitTypeList.item.label.noPrepaymentMessage");
         }
         setCardViewContent(visitTypeContainer, title, subtitle, false, null);
-        TextView subTitleTextView = visitTypeContainer.findViewById(R.id.subTitleTextView);
-        subTitleTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
         ImageView deleteImageView = visitTypeContainer.findViewById(R.id.deleteImageView);
         deleteImageView.setOnClickListener(new View.OnClickListener() {
