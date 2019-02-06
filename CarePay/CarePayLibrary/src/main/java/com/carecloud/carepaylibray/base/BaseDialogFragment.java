@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,12 +19,16 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import fr.tvbarthel.lib.blurdialogfragment.SupportBlurDialogFragment;
+
 /**
  * Created by cocampo on 2/6/17
  */
 
-public abstract class BaseDialogFragment extends DialogFragment implements ISession {
+public abstract class BaseDialogFragment extends SupportBlurDialogFragment implements ISession {
     private static final int FULLSCREEN_VALUE = 0x10000000;
+    public static final float DOWN_SCALE_FACTOR = 8.0F;
+    public static final int BLUR_RADIUS = 8;
 
     private Dialog dialog;
     private boolean isPracticeAppPatientMode;
@@ -72,12 +75,12 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         if (dialog != null) {
             View decorView = dialog.getWindow().getDecorView();
             hideKeyboardOnViewTouch(decorView);
-            if(isPracticeAppPatientMode){
+            if (isPracticeAppPatientMode) {
                 decorView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
                         long now = System.currentTimeMillis();
-                        if(now - lastFullScreenSet > 1000) {
+                        if (now - lastFullScreenSet > 1000) {
                             Log.d("Base", "Hide Nav Bar");
                             setNavigationBarVisibility();
                             lastFullScreenSet = now;
@@ -112,7 +115,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         this.onCancelListener = cancelListener;
     }
 
-    public void cancel(){
+    public void cancel() {
         if (onCancelListener != null && getDialog() != null) {
             onCancelListener.onCancel(getDialog());
         }
@@ -286,7 +289,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
 
     @Override
     public void setNavigationBarVisibility() {
-        if(getDialog().getWindow() != null) {
+        if (getDialog().getWindow() != null) {
             View decorView = getDialog().getWindow().getDecorView();
             int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -294,6 +297,32 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
                     | FULLSCREEN_VALUE;
             decorView.setSystemUiVisibility(uiOptions);
         }
+    }
+
+    @Override
+    protected float getDownScaleFactor() {
+        // Allow to customize the down scale factor.
+        return DOWN_SCALE_FACTOR;
+    }
+
+    @Override
+    protected boolean isDimmingEnable() {
+        // Enable or disable the dimming effect.
+        // Disabled by default.
+        return true;
+    }
+
+    @Override
+    protected int getBlurRadius() {
+        // Allow to customize the blur radius factor.
+        return BLUR_RADIUS;
+    }
+
+    @Override
+    protected boolean isActionBarBlurred() {
+        // Enable or disable the blur effect on the action bar.
+        // Disabled by default.
+        return true;
     }
 
 }

@@ -3,7 +3,6 @@ package com.carecloud.carepaylibray.customdialogs;
 import android.app.Dialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,9 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-public abstract class BaseDialogFragment extends DialogFragment implements View.OnClickListener {
+import fr.tvbarthel.lib.blurdialogfragment.SupportBlurDialogFragment;
+
+public abstract class BaseDialogFragment extends SupportBlurDialogFragment implements View.OnClickListener {
     private static final int FULLSCREEN_VALUE = 0x10000000;
 
     private Dialog dialog;
@@ -76,8 +77,8 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
         }
     }
 
-    protected void hideKeyboardOnViewTouch(View view){
-        if(isPracticeAppPatientMode && view!=null){
+    protected void hideKeyboardOnViewTouch(View view) {
+        if (isPracticeAppPatientMode && view != null) {
             view.setSoundEffectsEnabled(false);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -133,9 +134,9 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
         return textView;
     }
 
-    protected void enableById(int id, boolean enabled){
+    protected void enableById(int id, boolean enabled) {
         View view = findViewById(id);
-        if(view != null){
+        if (view != null) {
             view.setEnabled(enabled);
         }
     }
@@ -154,5 +155,30 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
         decorView.setSystemUiVisibility(uiOptions);
     }
 
+    @Override
+    protected float getDownScaleFactor() {
+        // Allow to customize the down scale factor.
+        return com.carecloud.carepaylibray.base.BaseDialogFragment.DOWN_SCALE_FACTOR;
+    }
+
+    @Override
+    protected boolean isDimmingEnable() {
+        // Enable or disable the dimming effect.
+        // Disabled by default.
+        return true;
+    }
+
+    @Override
+    protected int getBlurRadius() {
+        // Allow to customize the blur radius factor.
+        return com.carecloud.carepaylibray.base.BaseDialogFragment.BLUR_RADIUS;
+    }
+
+    @Override
+    protected boolean isActionBarBlurred() {
+        // Enable or disable the blur effect on the action bar.
+        // Disabled by default.
+        return true;
+    }
 
 }
