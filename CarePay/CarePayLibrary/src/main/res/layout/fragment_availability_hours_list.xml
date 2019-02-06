@@ -36,7 +36,8 @@
     <include
         android:id="@+id/no_appointment_layout"
         layout="@layout/no_appointment_layout"
-        android:layout_below="@id/prepaymentMessage"
-        tools:ignore="IncludeLayoutParam" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/prepaymentMessage" />
 
 </RelativeLayout>

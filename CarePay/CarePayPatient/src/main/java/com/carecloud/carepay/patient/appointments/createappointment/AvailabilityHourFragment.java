@@ -50,7 +50,7 @@ public class AvailabilityHourFragment extends BaseAvailabilityHourFragment imple
             }
         });
         toolbarTitle = toolbar.findViewById(R.id.add_appointment_toolbar_title);
-        toolbarTitle.setText(Label.getLabel("today_label"));
+        toolbarTitle.setText(Label.getLabel("next_5_days_option"));
         callback.displayToolbar(false, null);
 
         TextView titleOther = toolbar.findViewById(R.id.add_appointment_toolbar_other);

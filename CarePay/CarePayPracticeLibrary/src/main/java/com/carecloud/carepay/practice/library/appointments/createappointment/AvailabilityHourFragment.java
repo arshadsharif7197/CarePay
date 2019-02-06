@@ -50,7 +50,7 @@ public class AvailabilityHourFragment extends BaseAvailabilityHourFragment imple
     private void setUpToolbar(View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
-        toolbarTitle.setText(Label.getLabel("today_label"));
+        toolbarTitle.setText(Label.getLabel("next_5_days_option"));
 
         view.findViewById(R.id.closeViewLayout).setOnClickListener(new View.OnClickListener() {
             @Override

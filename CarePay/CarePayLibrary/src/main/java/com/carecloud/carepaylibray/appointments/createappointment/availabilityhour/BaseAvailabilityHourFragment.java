@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -35,6 +36,7 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -93,6 +95,14 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
         selectedResource = appointmentModelDto.getPayload().getAppointmentAvailability()
                 .getPayload().get(0).getResource();
         mode = getArguments().getInt("mode");
+        initDates();
+    }
+
+    private void initDates() {
+        startDate = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, 5);
+        endDate = cal.getTime();
     }
 
     @Override
@@ -106,6 +116,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
         super.onStart();
         if (!alreadyCalled) {
             callAvailabilityService();
+            alreadyCalled = false;
         }
     }
 
@@ -135,6 +146,15 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
             titleTextView.setText(Label.getLabel("no_appointment_slots_title"));
             TextView subTitleTextView = noAppointmentLayout.findViewById(R.id.no_apt_message_desc);
             subTitleTextView.setText(Label.getLabel("no_appointment_slots_message"));
+            Button changeDatesButton = noAppointmentLayout.findViewById(R.id.newAppointmentClassicButton);
+            changeDatesButton.setVisibility(View.VISIBLE);
+            changeDatesButton.setText(Label.getLabel("change_dates"));
+            changeDatesButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectDateRange();
+                }
+            });
         }
     }
 
