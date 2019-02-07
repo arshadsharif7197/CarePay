@@ -681,4 +681,13 @@
     <dimen name="addChargeItemHeaderTextSize">15sp</dimen>
     <dimen name="addChargeItemHeaderVerticalPadding">10dp</dimen>
 
+    <!--Add Retail Item Fragment-->
+    <dimen name="addRetailItemVerticalPadding">10dp</dimen>
+    <dimen name="addRetailItemNameStartMargin">12dp</dimen>
+    <dimen name="addRetailItemNameTextSize">16sp</dimen>
+    <dimen name="addRetailItemSubNameTextSize">13sp</dimen>
+    <dimen name="addRetailItemPriceStartMargin">5dp</dimen>
+    <dimen name="addRetailItemPriceTextSize">14sp</dimen>
+    <dimen name="addRetailItemSoldOutTopMargin">12dp</dimen>
+
 </resources>
