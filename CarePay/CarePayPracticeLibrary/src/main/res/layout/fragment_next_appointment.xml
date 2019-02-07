@@ -201,7 +201,7 @@
                             android:imeOptions="actionNext"
                             android:textSize="@dimen/nextAppointmentFieldTextSize"
                             app:customAssetFont="proxima_nova_semi_bold"
-                            breeze:hintKey="next_appointment_choose_visit_type_hint" />
+                            breeze:hintKey="add_appointment_location" />
 
                     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
