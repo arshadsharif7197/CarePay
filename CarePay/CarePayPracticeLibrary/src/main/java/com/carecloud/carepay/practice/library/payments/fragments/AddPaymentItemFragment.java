@@ -72,10 +72,10 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
         });
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        searchRecycler = (RecyclerView) view.findViewById(R.id.search_recycler);
+        searchRecycler = view.findViewById(R.id.search_recycler);
         searchRecycler.setLayoutManager(layoutManager);
 
-        searchView = (SearchView) view.findViewById(R.id.search_entry_view);
+        searchView = view.findViewById(R.id.search_entry_view);
         searchView.setOnQueryTextListener(queryTextListener);
 
         setAdapter(templateItems, simpleChargeItems);
@@ -83,8 +83,8 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
     }
 
     private void setupToolbar(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.search_toolbar);
-        TextView textView = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        Toolbar toolbar = view.findViewById(R.id.search_toolbar);
+        TextView textView = toolbar.findViewById(R.id.toolbar_title);
         textView.setText(Label.getLabel("payment_add_item_button"));
 
     }

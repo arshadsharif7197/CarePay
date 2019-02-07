@@ -772,4 +772,15 @@
     <dimen name="transactionHistoryItemDateTextSize">21sp</dimen>
     <dimen name="transactionHistoryItemVerticalPadding">10dp</dimen>
 
+    <!--Add Payment Item Fragment-->
+    <dimen name="addPaymentItemSearchPadding">20dp</dimen>
+    <dimen name="addPaymentItemListPadding">16dp</dimen>
+    <dimen name="addPaymentItemEmptyScreenPadding">60dp</dimen>
+    <dimen name="addPaymentItemEmptyScreenTextSize">18sp</dimen>
+    <dimen name="addChargeItemVerticalPadding">16dp</dimen>
+    <dimen name="addChargeItemTextSize">22sp</dimen>
+    <dimen name="addChargeItemAmountTextSize">17sp</dimen>
+    <dimen name="addChargeItemHeaderTextSize">18sp</dimen>
+    <dimen name="addChargeItemHeaderVerticalPadding">16dp</dimen>
+
 </resources>
