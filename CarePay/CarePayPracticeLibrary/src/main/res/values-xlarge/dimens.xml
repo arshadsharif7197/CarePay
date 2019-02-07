@@ -683,4 +683,21 @@
     <dimen name="addRetailItemPriceTextSize">20sp</dimen>
     <dimen name="addRetailItemSoldOutTopMargin">20dp</dimen>
 
+    <!--Payment Transaction History Detail Fragment-->
+    <dimen name="paymentHistoryDetailDateTextSize">22sp</dimen>
+    <dimen name="paymentHistoryDetailHorizontalPadding">24dp</dimen>
+    <dimen name="paymentHistoryDetailReceiptLabelTopMargin">20dp</dimen>
+    <dimen name="paymentHistoryDetailReceiptLabelTextSize">18sp</dimen>
+    <dimen name="paymentHistoryDetailReceiptNumberHorizontalMargin">20dp</dimen>
+    <dimen name="paymentHistoryDetailReceiptNumberTopMargin">5dp</dimen>
+    <dimen name="paymentHistoryDetailReceiptNumberBottomMargin">20dp</dimen>
+    <dimen name="paymentHistoryDetailReceiptNumberTextSize">16sp</dimen>
+    <dimen name="paymentHistoryDetailSectionHorizontalPadding">13dp</dimen>
+    <dimen name="paymentHistoryDetailSectionVerticalPadding">22dp</dimen>
+    <dimen name="paymentHistoryDetailLabelTextSize">24sp</dimen>
+    <dimen name="paymentHistoryDetailValueTextSize">17sp</dimen>
+    <dimen name="paymentHistoryDetailItemsLabelTopMargin">50dp</dimen>
+    <dimen name="paymentHistoryDetailItemsLabelTextSize">18sp</dimen>
+    <dimen name="paymentHistoryDetailItemsListTopMargin">12dp</dimen>
+
 </resources>
