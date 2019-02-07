@@ -35,7 +35,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final LocationDTO locationDTO = locations.get(position);
-        holder.locationNameTextView.setText(locationDTO.getName());
+        holder.locationNameTextView.setText(StringUtil.capitalize(locationDTO.getName()));
         String address = locationDTO.getAddress().geAddressStringWithShortZipWOCounty();
         if (!StringUtil.isNullOrEmpty(address)) {
             holder.locationAddressTextView.setText(address);

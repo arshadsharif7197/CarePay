@@ -13,10 +13,6 @@ public class ResourcesToScheduleDTO {
     @SerializedName("practice")
     @Expose
     private UserPracticeDTO practice = new UserPracticeDTO();
-    //TODO: Delete this
-    @SerializedName("resources_")
-    @Expose
-    private List<AppointmentResourcesDTO> resources = new ArrayList<>();
     @SerializedName("resources")
     @Expose
     private List<AppointmentResourcesItemDTO> resourcesV2 = new ArrayList<>();
@@ -39,20 +35,6 @@ public class ResourcesToScheduleDTO {
      */
     public void setPractice(UserPracticeDTO practice) {
         this.practice = practice;
-    }
-
-    /**
-     * @return resources
-     */
-    public List<AppointmentResourcesDTO> getResources() {
-        return resources;
-    }
-
-    /**
-     * @param resources resources
-     */
-    public void setResources(List<AppointmentResourcesDTO> resources) {
-        this.resources = resources;
     }
 
     public List<AppointmentResourcesItemDTO> getResourcesV2() {
