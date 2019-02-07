@@ -294,7 +294,7 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
         TextView title = locationCard.findViewById(R.id.title);
         title.setText(StringUtil.capitalize(locationDTO.getName()));
         TextView subtitle = locationCard.findViewById(R.id.subTitle);
-        subtitle.setText(locationDTO.getAddress().geAddressStringWithShortZipWOCounty());
+        subtitle.setText(locationDTO.getAddress().geAddressStringWithShortZipWOCounty2Lines());
         ImageView resetImageView = locationCard.findViewById(R.id.resetImageView);
         resetImageView.setOnClickListener(new View.OnClickListener() {
             @Override
