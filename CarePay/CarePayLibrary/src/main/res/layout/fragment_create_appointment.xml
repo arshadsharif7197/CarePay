@@ -30,9 +30,10 @@
         android:layout_alignParentBottom="true"
         android:background="@drawable/button_selector"
         android:enabled="false"
+        android:textAllCaps="true"
         android:textColor="@color/white"
         app:customAssetFont="gotham_rounded_bold"
-        breeze:textKey="add_appointment_check_available_times"
+        breeze:textKey="patientMode.appointmentCreation.availabilityButton.label.available"
         tools:text="Check Available Times" />
 
     <android.support.v4.widget.NestedScrollView

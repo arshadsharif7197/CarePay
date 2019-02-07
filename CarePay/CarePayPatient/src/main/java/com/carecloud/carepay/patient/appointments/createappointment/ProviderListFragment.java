@@ -55,7 +55,7 @@ public class ProviderListFragment extends BaseProviderListFragment {
             }
         });
         TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
-        title.setText(Label.getLabel("choose_provider_heading"));
+        title.setText(Label.getLabel("add_appointment_provider"));
         callback.displayToolbar(false, null);
     }
 }

@@ -48,7 +48,7 @@ public class VisitTypeListFragment extends BaseVisitTypeListFragment {
     private void setUpToolbar(View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
-        title.setText(Label.getLabel("createAppointment.visitTypeList.title.label.visitType"));
+        title.setText(Label.getLabel("visit_type_heading"));
         view.findViewById(R.id.closeViewLayout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

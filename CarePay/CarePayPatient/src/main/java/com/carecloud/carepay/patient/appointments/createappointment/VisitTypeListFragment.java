@@ -55,7 +55,7 @@ public class VisitTypeListFragment extends BaseVisitTypeListFragment {
             }
         });
         TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
-        title.setText(Label.getLabel("createAppointment.visitTypeList.title.label.visitType"));
+        title.setText(Label.getLabel("visit_type_heading"));
         callback.displayToolbar(false, null);
     }
 

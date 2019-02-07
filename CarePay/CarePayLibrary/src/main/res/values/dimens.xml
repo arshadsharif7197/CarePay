@@ -505,6 +505,9 @@
     <dimen name="emptyScreenTitleTextSize">21sp</dimen>
     <dimen name="emptyScreenTitlePadding">10dp</dimen>
     <dimen name="itemProviderVerticalMargin">12dp</dimen>
-    <dimen name="locationItemHorizontalMargin">12dp</dimen>
+    <dimen name="locationItemHorizontalMargin">15dp</dimen>
+    <dimen name="timeSlotItemPadding">18dp</dimen>
+    <dimen name="timeSlotItemTextSize">20sp</dimen>
+    <dimen name="locationItemHeight">80dp</dimen>
 
 </resources>

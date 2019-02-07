@@ -129,7 +129,7 @@
                         android:layout_marginBottom="@dimen/nextAppointmentResetFieldBottomMargin"
                         android:background="?selectableItemBackground"
                         android:padding="@dimen/nextAppointmentResetFieldPadding"
-                        android:src="@drawable/ic_delete" />
+                        android:src="@drawable/ic_delete_dark" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                         android:id="@+id/providerTextInputLayout"
@@ -178,7 +178,7 @@
                         android:layout_marginBottom="@dimen/nextAppointmentResetFieldBottomMargin"
                         android:background="?selectableItemBackground"
                         android:padding="@dimen/nextAppointmentResetFieldPadding"
-                        android:src="@drawable/ic_delete" />
+                        android:src="@drawable/ic_delete_dark" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                         android:id="@+id/locationTextInputLayout"
@@ -226,7 +226,7 @@
                         android:layout_marginBottom="@dimen/nextAppointmentResetFieldBottomMargin"
                         android:background="?selectableItemBackground"
                         android:padding="@dimen/nextAppointmentResetFieldPadding"
-                        android:src="@drawable/ic_delete"
+                        android:src="@drawable/ic_delete_dark"
                         android:visibility="gone" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
@@ -276,7 +276,7 @@
                         android:layout_marginBottom="@dimen/nextAppointmentResetFieldBottomMargin"
                         android:background="?selectableItemBackground"
                         android:padding="@dimen/nextAppointmentResetFieldPadding"
-                        android:src="@drawable/ic_delete"
+                        android:src="@drawable/ic_delete_dark"
                         android:visibility="gone" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout

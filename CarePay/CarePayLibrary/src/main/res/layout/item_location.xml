@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/locationItemHeight"
     android:background="?selectableItemBackground"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_marginTop="@dimen/apt_dl_image_elevation"
         android:layout_marginBottom="@dimen/apt_dl_image_elevation"
         android:baselineAligned="false">
@@ -71,6 +72,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
         android:layout_marginBottom="3dp"
         android:background="@color/divider_color" />
-</LinearLayout>
+</RelativeLayout>

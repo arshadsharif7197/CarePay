@@ -10,9 +10,10 @@
         style="@style/AppointmentAvailableHoursListHeaderText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/apt_available_hours_list_row_padding"
-        android:textSize="@dimen/dimen_14dp"
+        android:padding="@dimen/timeSlotItemPadding"
         android:textAllCaps="true"
+        android:textSize="@dimen/timeSlotItemTextSize"
+        android:textStyle="bold"
         app:customAssetFont="proxima_nova_semi_bold" />
 
 </LinearLayout>

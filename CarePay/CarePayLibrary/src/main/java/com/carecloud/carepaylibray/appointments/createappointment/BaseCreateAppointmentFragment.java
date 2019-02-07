@@ -241,7 +241,7 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         selectedLocation = locationDTO;
         locationNoDataTextView.setVisibility(View.GONE);
         String title = StringUtil.capitalize(locationDTO.getName());
-        String subtitle = locationDTO.getAddress().geAddressStringWithShortZipWOCounty();
+        String subtitle = locationDTO.getAddress().geAddressStringWithShortZipWOCounty2Lines();
         setCardViewContent(locationContainer, title, subtitle, false, null);
 
         ImageView deleteImageView = locationContainer.findViewById(R.id.deleteImageView);

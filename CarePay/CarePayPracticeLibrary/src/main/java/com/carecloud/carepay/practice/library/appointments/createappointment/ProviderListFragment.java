@@ -48,7 +48,7 @@ public class ProviderListFragment extends BaseProviderListFragment {
     private void setUpToolbar(View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
-        title.setText(Label.getLabel("choose_provider_heading"));
+        title.setText(Label.getLabel("add_appointment_provider"));
         view.findViewById(R.id.closeViewLayout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

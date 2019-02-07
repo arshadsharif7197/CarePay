@@ -48,7 +48,7 @@ public class LocationListFragment extends BaseLocationListFragment {
     private void setUpToolbar(View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
-        title.setText(Label.getLabel("payment_choose_location"));
+        title.setText(Label.getLabel("add_appointment_location"));
         view.findViewById(R.id.closeViewLayout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

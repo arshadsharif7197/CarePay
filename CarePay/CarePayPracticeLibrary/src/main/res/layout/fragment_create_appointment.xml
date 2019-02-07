@@ -69,7 +69,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/respons_button_text_size"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="add_appointment_check_available_times"
+                breeze:textKey="patientMode.appointmentCreation.availabilityButton.label.available"
                 tools:text="Check Available Times" />
 
         </FrameLayout>

@@ -53,15 +53,15 @@
             android:id="@+id/locationRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/patient_mode_dialog_body_bg"
-            android:layout_below="@id/toolbarLayout" />
+            android:layout_below="@id/toolbarLayout"
+            android:background="@drawable/patient_mode_dialog_body_bg" />
 
         <RelativeLayout
             android:id="@+id/emptyStateScreen"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
             android:layout_below="@id/toolbarLayout"
+            android:background="@color/white"
             android:visibility="gone">
 
             <View
@@ -82,7 +82,7 @@
                 android:textSize="@dimen/emptyScreenTitleTextSize"
                 android:textStyle="bold"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="appointment.visitType.message.label.emptyScreenTitle"
+                breeze:textKey="appointment.chooseLocation.message.label.emptyScreenTitle"
                 tools:text="No locations available" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -96,7 +96,7 @@
                 android:textColor="@color/cadet_gray"
                 android:textSize="@dimen/emptyScreenSubTitleTextSize"
                 app:customAssetFont="proxima_nova_regular"
-                breeze:textKey="appointment.visitType.message.label.emptyScreenSubTitle"
+                breeze:textKey="appointment.chooseLocation.message.label.emptyScreenSubTitle"
                 tools:text="There are currently no locations available to schedule an appointment with" />
 
         </RelativeLayout>

@@ -100,7 +100,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/appointmentCreationStepResetImageBottomMargin"
-            android:src="@drawable/ic_delete" />
+            android:src="@drawable/ic_delete_dark" />
 
     </RelativeLayout>
 

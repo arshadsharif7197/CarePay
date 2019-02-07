@@ -11,4 +11,7 @@
     <dimen name="nextAppointmentProviderImageSize">100dp</dimen>
     <dimen name="itemProviderVerticalMargin">6dp</dimen>
     <dimen name="locationItemHorizontalMargin">6dp</dimen>
+    <dimen name="timeSlotItemPadding">15dp</dimen>
+    <dimen name="timeSlotItemTextSize">17sp</dimen>
+    <dimen name="locationItemHeight">60dp</dimen>
 </resources>

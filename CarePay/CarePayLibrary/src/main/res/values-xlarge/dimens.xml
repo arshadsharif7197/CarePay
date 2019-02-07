@@ -14,4 +14,7 @@
     <dimen name="optionalLabelTextSize">9sp</dimen>
     <dimen name="itemProviderVerticalMargin">12dp</dimen>
     <dimen name="locationItemHorizontalMargin">12dp</dimen>
+    <dimen name="timeSlotItemPadding">15dp</dimen>
+    <dimen name="timeSlotItemTextSize">17sp</dimen>
+    <dimen name="locationItemHeight">90dp</dimen>
 </resources>

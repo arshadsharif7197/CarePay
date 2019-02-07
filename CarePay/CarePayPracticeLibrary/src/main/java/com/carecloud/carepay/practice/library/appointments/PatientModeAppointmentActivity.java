@@ -237,9 +237,9 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
         providerStepNoDataTextView.setVisibility(View.GONE);
         providerCard.setVisibility(View.VISIBLE);
         TextView title = providerCard.findViewById(R.id.title);
-        title.setText(resource.getName());
+        title.setText(StringUtil.capitalize(resource.getName()));
         TextView subtitle = providerCard.findViewById(R.id.subTitle);
-        subtitle.setText(resource.getProvider().getSpecialty().getName());
+        subtitle.setText(StringUtil.capitalize(resource.getProvider().getSpecialty().getName()));
         ImageView resetImageView = providerCard.findViewById(R.id.resetImageView);
         TextView profileShortNameTextView = providerCard.findViewById(R.id.profileShortNameTextView);
         profileShortNameTextView.setText(StringUtil.getShortName(resource.getProvider().getSpecialty().getName()));
@@ -264,13 +264,15 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
         visitTypeStepNoDataTextView.setVisibility(View.GONE);
         visitTypeCard.setVisibility(View.VISIBLE);
         TextView title = visitTypeCard.findViewById(R.id.title);
-        title.setText(visitTypeDTO.getName());
+        title.setText(StringUtil.capitalize(visitTypeDTO.getName()));
         TextView subtitle = visitTypeCard.findViewById(R.id.subTitle);
         if (visitTypeDTO.getAmount() > 0) {
             String subtitleText = String.format(Label
                             .getLabel("createAppointment.visitTypeList.item.label.prepaymentMessage"),
                     NumberFormat.getCurrencyInstance(Locale.US).format(visitTypeDTO.getAmount()));
             subtitle.setText(subtitleText);
+        } else {
+            subtitle.setText(Label.getLabel("createAppointment.visitTypeList.item.label.noPrepaymentMessage"));
         }
         ImageView resetImageView = visitTypeCard.findViewById(R.id.resetImageView);
         resetImageView.setOnClickListener(new View.OnClickListener() {
@@ -290,7 +292,7 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
         locationStepNoDataTextView.setVisibility(View.GONE);
         locationCard.setVisibility(View.VISIBLE);
         TextView title = locationCard.findViewById(R.id.title);
-        title.setText(locationDTO.getName());
+        title.setText(StringUtil.capitalize(locationDTO.getName()));
         TextView subtitle = locationCard.findViewById(R.id.subTitle);
         subtitle.setText(locationDTO.getAddress().geAddressStringWithShortZipWOCounty());
         ImageView resetImageView = locationCard.findViewById(R.id.resetImageView);
