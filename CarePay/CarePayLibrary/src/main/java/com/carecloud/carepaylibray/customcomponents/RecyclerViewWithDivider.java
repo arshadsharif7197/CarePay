@@ -11,8 +11,8 @@ import com.carecloud.carepaylibrary.R;
 
 /**
  * Created by kkannan on 2/22/17.
- *
- *  Custom RecyclerView with divider decoration.
+ * <p>
+ * Custom RecyclerView with divider decoration.
  */
 public class RecyclerViewWithDivider extends RecyclerView {
 
@@ -55,9 +55,8 @@ public class RecyclerViewWithDivider extends RecyclerView {
      *
      * @param context the context
      */
-    private void setDivider(Context context)
-    {
-        Drawable dividerDrawable =  ContextCompat.getDrawable(context, R.drawable.light_gray_divider);
+    private void setDivider(Context context) {
+        Drawable dividerDrawable = ContextCompat.getDrawable(context, R.drawable.light_gray_divider);
         RecyclerView.ItemDecoration dividerItemDecoration = new com.carecloud.carepaylibray
                 .itemdecorations.DividerItemDecoration(dividerDrawable);
         this.addItemDecoration(dividerItemDecoration);
