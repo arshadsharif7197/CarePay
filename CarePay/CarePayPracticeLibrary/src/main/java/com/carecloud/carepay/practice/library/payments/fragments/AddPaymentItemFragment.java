@@ -39,12 +39,12 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
     private AddPaymentItemCallback callback;
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
         Bundle args = getArguments();
         Gson gson = new Gson();
-        if(args!=null){
+        if (args != null) {
             String payloadInfo = args.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
             SimpleChargeItem[] balanceItemArray = gson.fromJson(payloadInfo, SimpleChargeItem[].class);
             simpleChargeItems = Arrays.asList(balanceItemArray);
@@ -54,12 +54,12 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_search, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         setupToolbar(view);
 
         View closeButton = view.findViewById(R.id.closeViewLayout);
@@ -82,18 +82,18 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
 
     }
 
-    private void setupToolbar(View view){
+    private void setupToolbar(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.search_toolbar);
         TextView textView = (TextView) toolbar.findViewById(R.id.toolbar_title);
         textView.setText(Label.getLabel("payment_add_item_button"));
 
     }
 
-    private void setAdapter(List<SimpleChargeItem> templateItems, List<SimpleChargeItem> simpleChargeItems){
-        if(searchRecycler.getAdapter()==null){
+    private void setAdapter(List<SimpleChargeItem> templateItems, List<SimpleChargeItem> simpleChargeItems) {
+        if (searchRecycler.getAdapter() == null) {
             AddPaymentItemAdapter adapter = new AddPaymentItemAdapter(getContext(), templateItems, simpleChargeItems, this);
             searchRecycler.setAdapter(adapter);
-        }else{
+        } else {
             AddPaymentItemAdapter adapter = (AddPaymentItemAdapter) searchRecycler.getAdapter();
             adapter.setSimpleChargeItems(simpleChargeItems);
             adapter.setTemplateItems(templateItems);
@@ -111,25 +111,25 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
 
         @Override
         public boolean onQueryTextChange(String newText) {
-            if(newText.length()>0){
+            if (newText.length() > 0) {
                 searchItems(newText);
-            }else{
+            } else {
                 setAdapter(templateItems, simpleChargeItems);
             }
             return true;
         }
     };
 
-    private void getBaseTemplateItems(){
+    private void getBaseTemplateItems() {
         addTemplateItem(Label.getLabel("practice_payments_detail_dialog_insurance_copay"), 0D, IntegratedPaymentLineItem.TYPE_COPAY);
         addTemplateItem(Label.getLabel("practice_payments_detail_dialog_co_insurance"), 0D, IntegratedPaymentLineItem.TYPE_COINSURANCE);
         addTemplateItem(Label.getLabel("practice_payments_detail_dialog_insurance_deductible"), 0D, IntegratedPaymentLineItem.TYPE_DEDUCTABLE);
         addTemplateItem(Label.getLabel("practice_payments_detail_dialog_pre_payment"), 0D, IntegratedPaymentLineItem.TYPE_PREPAYMENT);
         addTemplateItem(Label.getLabel("practice_payments_detail_dialog_cancellation_fee"), 0D, IntegratedPaymentLineItem.TYPE_CANCELLATION);
         addTemplateItem(Label.getLabel("practice_payments_detail_dialog_other"), 0D, IntegratedPaymentLineItem.TYPE_OTHER);
-}
+    }
 
-    private void addTemplateItem(String description, double amount, @IntegratedPaymentLineItem.LineItemType String responsibilityType){
+    private void addTemplateItem(String description, double amount, @IntegratedPaymentLineItem.LineItemType String responsibilityType) {
         SimpleChargeItem templateItem = new SimpleChargeItem();
         templateItem.setDescription(description);
         templateItem.setAmount(amount);
@@ -137,16 +137,16 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
         templateItems.add(templateItem);
     }
 
-    private void searchItems(String searchText){
+    private void searchItems(String searchText) {
         List<SimpleChargeItem> searchItems = new ArrayList<>();
-        for(SimpleChargeItem templateItem : templateItems){
-            if(templateItem.getDescription().toLowerCase().contains(searchText.toLowerCase())){
+        for (SimpleChargeItem templateItem : templateItems) {
+            if (templateItem.getDescription().toLowerCase().contains(searchText.toLowerCase())) {
                 searchItems.add(templateItem);
             }
         }
 
-        for(SimpleChargeItem simpleChargeItem : simpleChargeItems){
-            if(simpleChargeItem.getDescription().toLowerCase().contains(searchText.toLowerCase())){
+        for (SimpleChargeItem simpleChargeItem : simpleChargeItems) {
+            if (simpleChargeItem.getDescription().toLowerCase().contains(searchText.toLowerCase())) {
                 searchItems.add(simpleChargeItem);
             }
         }
@@ -161,7 +161,7 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
 
     @Override
     public void paymentItemSelected(SimpleChargeItem chargeItem) {
-        if(callback!=null){
+        if (callback != null) {
             callback.addChargeItem(chargeItem);
         }
         dismiss();

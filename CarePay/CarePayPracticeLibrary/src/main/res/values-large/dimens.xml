@@ -655,4 +655,19 @@
     <dimen name="paymentPlanDetailValueTextSize">13sp</dimen>
     <dimen name="paymentPlanDetailVerticalPadding">16dp</dimen>
 
+    <!--History Fragment-->
+    <dimen name="patientProfileShortNameTextSize">26sp</dimen>
+    <dimen name="historyFragmentPatientFullNameTextSize">22sp</dimen>
+    <dimen name="paymentFragmentListHorizontalMargin">12dp</dimen>
+    <dimen name="transactionHistoryItemFlagStartMargin">5dp</dimen>
+    <dimen name="transactionHistoryItemFlagHorizontalPadding">3dp</dimen>
+    <dimen name="transactionHistoryItemFlagTextSize">10sp</dimen>
+    <dimen name="transactionHistoryTotalHorizontalMargin">5dp</dimen>
+    <dimen name="transactionHistoryTotalTextSize">14sp</dimen>
+    <dimen name="transactionHistoryTypeTextSize">12sp</dimen>
+    <dimen name="transactionHistoryTypeStartMargin">3dp</dimen>
+    <dimen name="transactionHistoryTimTextSize">11sp</dimen>
+    <dimen name="transactionHistoryItemDateTextSize">15sp</dimen>
+    <dimen name="transactionHistoryItemVerticalPadding">6dp</dimen>
+
 </resources>

@@ -72,7 +72,7 @@
                         android:gravity="center"
                         android:src="@drawable/icn_placeholder_user_profile_png"
                         android:textColor="@color/lightSlateGray"
-                        android:textSize="@dimen/text_size_38"
+                        android:textSize="@dimen/patientProfileShortNameTextSize"
                         app:customAssetFont="gotham_rounded_medium" />
 
                     <ImageView
