@@ -41,7 +41,7 @@ public class PaymentPlanItemAdapter extends RecyclerView.Adapter<PaymentPlanItem
         final BalanceItemDTO item = items.get(position);
         holder.itemNameTextView.setText(item.getDescription());
         holder.itemRemainingBalanceTextView.setText(currencyFormat
-                .format(SystemUtil.safeSubtract(item.getBalance(), item.getAmountInPaymentPlan())));
+                .format(SystemUtil.safeSubtract(item.getMaxAmount(), item.getAmountInPaymentPlan())));
         holder.itemAddToPlanTextView.setText(currencyFormat
                 .format(item.getAmountSelected()));
         holder.itemCheckBox.setOnCheckedChangeListener(null);
