@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,13 +20,13 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import fr.tvbarthel.lib.blurdialogfragment.SupportBlurDialogFragment;
+import fr.tvbarthel.lib.blurdialogfragment.BlurDialogEngine;
 
 /**
  * Created by cocampo on 2/6/17
  */
 
-public abstract class BaseDialogFragment extends SupportBlurDialogFragment implements ISession {
+public abstract class BaseDialogFragment extends DialogFragment implements ISession {
     private static final int FULLSCREEN_VALUE = 0x10000000;
     public static final float DOWN_SCALE_FACTOR = 8.0F;
     public static final int BLUR_RADIUS = 8;
@@ -38,6 +39,7 @@ public abstract class BaseDialogFragment extends SupportBlurDialogFragment imple
     protected DialogInterface.OnCancelListener onCancelListener;
 
     private long lastFullScreenSet;
+    private BlurDialogEngine mBlurEngine;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -58,15 +60,16 @@ public abstract class BaseDialogFragment extends SupportBlurDialogFragment imple
         if (isPracticeAppPatientMode) {
             setNavigationBarVisibility();
         }
-
+        setUpBlur();
     }
 
-    @Override
-    public void onDismiss(DialogInterface dialogInterface) {
-        super.onDismiss(dialogInterface);
-        if (onDismissListener != null) {
-            onDismissListener.onDismiss(dialogInterface);
-        }
+    private void setUpBlur() {
+        mBlurEngine = new BlurDialogEngine(getActivity());
+        mBlurEngine.setBlurRadius(BLUR_RADIUS);
+        mBlurEngine.setDownScaleFactor(DOWN_SCALE_FACTOR);
+        mBlurEngine.debug(true);
+        mBlurEngine.setBlurActionBar(true);
+        mBlurEngine.setUseRenderScript(false);
     }
 
     @Override
@@ -89,7 +92,37 @@ public abstract class BaseDialogFragment extends SupportBlurDialogFragment imple
                 });
             }
         }
+        if (mBlurEngine != null) {
+            mBlurEngine.onResume(getRetainInstance());
+        }
         setLastInteraction(System.currentTimeMillis());
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialogInterface) {
+        super.onDismiss(dialogInterface);
+        if (onDismissListener != null) {
+            onDismissListener.onDismiss(dialogInterface);
+        }
+        if (mBlurEngine != null) {
+            mBlurEngine.onDismiss();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mBlurEngine != null) {
+            mBlurEngine.onDetach();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (getDialog() != null) {
+            getDialog().setDismissMessage(null);
+        }
+        super.onDestroyView();
     }
 
     @Override
@@ -120,26 +153,6 @@ public abstract class BaseDialogFragment extends SupportBlurDialogFragment imple
             onCancelListener.onCancel(getDialog());
         }
         dismiss();
-    }
-
-
-    public boolean enableViewById(int id) {
-        return setEnabledViewById(id, true);
-    }
-
-    public boolean disableViewById(int id) {
-        return setEnabledViewById(id, true);
-    }
-
-    private boolean setEnabledViewById(int id, boolean enabled) {
-        View view = findViewById(id);
-        if (null == view) {
-            return false;
-        }
-
-        view.setEnabled(enabled);
-
-        return true;
     }
 
     public boolean showViewById(int id) {
@@ -298,31 +311,4 @@ public abstract class BaseDialogFragment extends SupportBlurDialogFragment imple
             decorView.setSystemUiVisibility(uiOptions);
         }
     }
-
-    @Override
-    protected float getDownScaleFactor() {
-        // Allow to customize the down scale factor.
-        return DOWN_SCALE_FACTOR;
-    }
-
-    @Override
-    protected boolean isDimmingEnable() {
-        // Enable or disable the dimming effect.
-        // Disabled by default.
-        return true;
-    }
-
-    @Override
-    protected int getBlurRadius() {
-        // Allow to customize the blur radius factor.
-        return BLUR_RADIUS;
-    }
-
-    @Override
-    protected boolean isActionBarBlurred() {
-        // Enable or disable the blur effect on the action bar.
-        // Disabled by default.
-        return true;
-    }
-
 }

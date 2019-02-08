@@ -91,8 +91,6 @@ public class ChangeModeDialogFragment extends BaseDialogFragment implements View
         } else if (viewId == R.id.dialog_logout_option) {
             onLogOutSelected();
         }
-
-        dismiss();
     }
 
     private void onLogOutSelected() {
@@ -114,6 +112,7 @@ public class ChangeModeDialogFragment extends BaseDialogFragment implements View
             getApplicationMode().clearUserPracticeDTO();
             getAppAuthorizationHelper().setUser(null);
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            dismiss();
             getActivity().finish();
         }
 
@@ -142,6 +141,7 @@ public class ChangeModeDialogFragment extends BaseDialogFragment implements View
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            dismiss();
         }
 
         @Override

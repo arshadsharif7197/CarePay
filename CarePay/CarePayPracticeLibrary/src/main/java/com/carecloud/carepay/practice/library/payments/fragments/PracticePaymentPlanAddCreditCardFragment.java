@@ -10,7 +10,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
-import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAddCreditCardFragment;
 import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
@@ -143,7 +143,7 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
     }
 
     @Override
-    protected LargeAlertDialog.LargeAlertInterface getLargeAlertInterface() {
+    protected LargeAlertDialogFragment.LargeAlertInterface getLargeAlertInterface() {
         if (largeAlertInterface != null) {
             dismiss();
             return largeAlertInterface;
