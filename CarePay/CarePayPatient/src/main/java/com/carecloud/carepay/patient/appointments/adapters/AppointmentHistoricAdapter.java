@@ -29,7 +29,7 @@ public class AppointmentHistoricAdapter extends BaseAppointmentAdapter {
                                       Map<String, Set<String>> enabledPracticeLocations,
                                       SelectAppointmentCallback callback) {
         this.context = context;
-        this.sortedAppointments = appointments;
+        this.sortedAppointments = getFilteredAppointments(appointments);
         this.userPracticeDTOs = userPracticeDTOs;
         this.enabledPracticeLocations = enabledPracticeLocations;
         this.callback = callback;
@@ -113,7 +113,7 @@ public class AppointmentHistoricAdapter extends BaseAppointmentAdapter {
         if (refresh) {
             sortedAppointments.clear();
         }
-        this.sortedAppointments.addAll(appointments);
+        this.sortedAppointments.addAll(getFilteredAppointments(appointments));
         notifyDataSetChanged();
     }
 
