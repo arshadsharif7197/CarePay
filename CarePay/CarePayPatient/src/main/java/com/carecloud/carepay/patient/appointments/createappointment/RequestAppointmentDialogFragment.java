@@ -34,6 +34,7 @@ import java.util.Locale;
  */
 public class RequestAppointmentDialogFragment extends BaseRequestAppointmentDialogFragment {
 
+
     public static RequestAppointmentDialogFragment newInstance(AppointmentDTO appointmentDTO) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, appointmentDTO);
@@ -128,7 +129,7 @@ public class RequestAppointmentDialogFragment extends BaseRequestAppointmentDial
         }
 
         view.findViewById(R.id.appointDialogButtonLayout).setVisibility(View.VISIBLE);
-        Button requestAppointmentButton = view.findViewById(R.id.requestAppointmentButton);
+        requestAppointmentButton = view.findViewById(R.id.requestAppointmentButton);
         requestAppointmentButton.setText(Label.getLabel(autoScheduleAppointments ?
                 "appointments_schedule_button" : "appointments_request_heading"));
         requestAppointmentButton.requestFocus();

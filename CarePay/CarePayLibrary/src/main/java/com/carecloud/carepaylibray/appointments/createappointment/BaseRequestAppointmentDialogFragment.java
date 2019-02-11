@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -43,6 +44,7 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
     private UserPracticeDTO selectedPractice;
     protected boolean autoScheduleAppointments;
     protected String patientId;
+    protected Button requestAppointmentButton;
 
     @Override
     public void onAttach(Context context) {
@@ -95,6 +97,7 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
         if (amount > 0) {
             startPrepaymentProcess(appointmentRequestDto, amount);
         } else {
+            requestAppointmentButton.setEnabled(false);
             callRequestAppointmentService(queryMap, appointmentRequestDto);
         }
     }
@@ -112,6 +115,7 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
                     @Override
                     public void onPostExecute(WorkflowDTO workflowDTO) {
                         hideProgressDialog();
+                        requestAppointmentButton.setEnabled(true);
                         String appointmentRequestSuccessMessage = Label.getLabel(autoScheduleAppointments ?
                                 "appointment_schedule_success_message_HTML" :
                                 "appointment_request_success_message_HTML");
@@ -124,6 +128,7 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
                     @Override
                     public void onFailure(String exceptionMessage) {
                         hideProgressDialog();
+                        requestAppointmentButton.setEnabled(true);
                         showErrorNotification(exceptionMessage);
                         if (isVisible()) {
                             Log.e(getString(R.string.alert_title_server_error), exceptionMessage);

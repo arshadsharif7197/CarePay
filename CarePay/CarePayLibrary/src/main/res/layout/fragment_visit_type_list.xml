@@ -41,7 +41,7 @@
             android:textColor="@color/charcoal"
             android:textSize="@dimen/emptyScreenTitleTextSize"
             android:textStyle="bold"
-            app:customAssetFont="gotham_rounded_book"
+            app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="appointment.visitType.message.label.emptyScreenTitle"
             tools:text="No visit types available" />
 

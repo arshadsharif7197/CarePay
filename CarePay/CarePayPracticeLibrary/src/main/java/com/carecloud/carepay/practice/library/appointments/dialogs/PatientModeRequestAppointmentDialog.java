@@ -48,10 +48,8 @@ public class PatientModeRequestAppointmentDialog extends BaseRequestAppointmentD
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button requestAppointmentButton = view.findViewById(R.id.requestAppointmentButton);
+        requestAppointmentButton = view.findViewById(R.id.requestAppointmentButton);
         ApplicationMode.ApplicationType applicationType = getApplicationMode().getApplicationType();
-        //TODO: fix this on the patient mode ticket
-
         boolean autoScheduleAppointments = getAutomaticallyApproveRequests();
 
         final EditText reasonForVisitEditText = view.findViewById(R.id.reasonForVisitEditText);
