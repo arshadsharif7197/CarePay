@@ -101,7 +101,8 @@ public abstract class BaseProviderListFragment extends BaseDialogFragment {
                 AppointmentsResultModel resourcesDto = DtoHelper
                         .getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
                 if (resourcesDto.getPayload().getResourcesToSchedule().get(0).getResourcesV2().size() > 0) {
-                    List<AppointmentResourcesItemDTO> providers = sortProviders(resourcesDto);
+                    List<AppointmentResourcesItemDTO> providers = sortProviders(resourcesDto
+                            .getPayload().getResourcesToSchedule().get(0).getResourcesV2());
                     showResources(providers);
                 } else {
                     getView().findViewById(R.id.providers_recycler_view).setVisibility(View.GONE);
@@ -118,21 +119,20 @@ public abstract class BaseProviderListFragment extends BaseDialogFragment {
         }, queryMap);
     }
 
-    private List<AppointmentResourcesItemDTO> sortProviders(AppointmentsResultModel resourcesDto) {
-        Collections.sort(resourcesDto.getPayload().getResourcesToSchedule().get(0).getResourcesV2(),
-                new Comparator<AppointmentResourcesItemDTO>() {
-                    @Override
-                    public int compare(AppointmentResourcesItemDTO o1, AppointmentResourcesItemDTO o2) {
-                        if (StringUtil.isNullOrEmpty(o2.getProvider().getLastName())) {
-                            o2.getProvider().setLastName("");
-                        }
-                        if (StringUtil.isNullOrEmpty(o1.getProvider().getLastName())) {
-                            o1.getProvider().setLastName("");
-                        }
-                        return o1.getProvider().getLastName().compareTo(o2.getProvider().getLastName());
-                    }
-                });
-        return resourcesDto.getPayload().getResourcesToSchedule().get(0).getResourcesV2();
+    private List<AppointmentResourcesItemDTO> sortProviders(List<AppointmentResourcesItemDTO> resourcesDto) {
+        Collections.sort(resourcesDto, new Comparator<AppointmentResourcesItemDTO>() {
+            @Override
+            public int compare(AppointmentResourcesItemDTO o1, AppointmentResourcesItemDTO o2) {
+                if (StringUtil.isNullOrEmpty(o2.getProvider().getLastName())) {
+                    o2.getProvider().setLastName("");
+                }
+                if (StringUtil.isNullOrEmpty(o1.getProvider().getLastName())) {
+                    o1.getProvider().setLastName("");
+                }
+                return o1.getProvider().getLastName().compareTo(o2.getProvider().getLastName());
+            }
+        });
+        return resourcesDto;
     }
 
     private void showResources(List<AppointmentResourcesItemDTO> resources) {
