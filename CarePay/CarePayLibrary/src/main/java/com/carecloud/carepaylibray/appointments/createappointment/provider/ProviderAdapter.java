@@ -37,9 +37,8 @@ public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final AppointmentResourcesItemDTO resource = resources.get(position);
-        String providerName = resource.getProvider().getName();
-        holder.doctorNameTextView.setText(providerName);
-        holder.shortNameTextView.setText(StringUtil.getShortName(providerName));
+        holder.doctorNameTextView.setText(StringUtil.capitalize(resource.getProvider().getFullName()));
+        holder.shortNameTextView.setText(StringUtil.getShortName(resource.getProvider().getName()));
         holder.doctorTypeTextView.setText(resource.getProvider().getSpecialty().getName());
         PicassoHelper.get().loadImage(holder.providerPicImageView.getContext(), holder.providerPicImageView,
                 holder.shortNameTextView, resource.getProvider().getPhoto());

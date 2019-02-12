@@ -20,6 +20,7 @@ import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -100,6 +101,19 @@ public abstract class BaseProviderListFragment extends BaseDialogFragment {
                 AppointmentsResultModel resourcesDto = DtoHelper
                         .getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
                 if (resourcesDto.getPayload().getResourcesToSchedule().get(0).getResourcesV2().size() > 0) {
+                    Collections.sort(resourcesDto.getPayload().getResourcesToSchedule().get(0).getResourcesV2(),
+                            new Comparator<AppointmentResourcesItemDTO>() {
+                                @Override
+                                public int compare(AppointmentResourcesItemDTO o1, AppointmentResourcesItemDTO o2) {
+                                    if (StringUtil.isNullOrEmpty(o2.getProvider().getLastName())) {
+                                        o2.getProvider().setLastName("");
+                                    }
+                                    if (StringUtil.isNullOrEmpty(o1.getProvider().getLastName())) {
+                                        o1.getProvider().setLastName("");
+                                    }
+                                    return o1.getProvider().getLastName().compareTo(o2.getProvider().getLastName());
+                                }
+                            });
                     showResources(resourcesDto.getPayload().getResourcesToSchedule().get(0).getResourcesV2());
                 } else {
                     getView().findViewById(R.id.providers_recycler_view).setVisibility(View.GONE);
@@ -117,12 +131,6 @@ public abstract class BaseProviderListFragment extends BaseDialogFragment {
     }
 
     private void showResources(List<AppointmentResourcesItemDTO> resources) {
-        Collections.sort(resources, new Comparator<AppointmentResourcesItemDTO>() {
-            @Override
-            public int compare(final AppointmentResourcesItemDTO object1, final AppointmentResourcesItemDTO object2) {
-                return object1.getProvider().getName().compareTo(object2.getProvider().getName());
-            }
-        });
         RecyclerView providersRecyclerView = getView().findViewById(R.id.providers_recycler_view);
         providersRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         providersRecyclerView.setAdapter(new ProviderAdapter(resources, new ProviderAdapter.OnProviderListItemClickListener() {
