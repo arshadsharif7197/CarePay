@@ -315,13 +315,14 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             practiceId = appointmentDTO.getMetadata().getPracticeId();
             practiceMgmt = appointmentDTO.getMetadata().getPracticeMgmt();
             patientId = appointmentDTO.getMetadata().getPatientId();
-            new CancelAppointmentFeeDialog(getContext(), cancellationFee,
-                    new CancelAppointmentFeeDialog.CancelAppointmentFeeDialogListener() {
-                        @Override
-                        public void onCancelAppointmentFeeAccepted() {
-                            showCancellationReasons(appointmentDTO, cancellationFee);
-                        }
-                    }).show();
+            CancelAppointmentFeeDialog fragment  = CancelAppointmentFeeDialog.newInstance(cancellationFee);
+            fragment.setCancelFeeDialogListener(new CancelAppointmentFeeDialog.CancelAppointmentFeeDialogListener() {
+                @Override
+                public void onCancelAppointmentFeeAccepted() {
+                    showCancellationReasons(appointmentDTO, cancellationFee);
+                }
+            });
+            viewHandler.displayDialogFragment(fragment, false);
         }
     }
 
@@ -401,15 +402,16 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void onCheckInOfficeStarted(AppointmentDTO appointmentDTO) {
-        new QrCodeViewDialog(getContext(), appointmentDTO, appointmentsResultModel.getMetadata(),
-                new QrCodeViewDialog.QRCodeViewDialogListener() {
-                    @Override
-                    public void onGenerateQRCodeError(String errorMessage) {
-                        viewHandler.showErrorNotification(null);
-                        Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error),
-                                errorMessage);
-                    }
-                }).show();
+        QrCodeViewDialog fragment = QrCodeViewDialog.newInstance(appointmentDTO, appointmentsResultModel.getMetadata());
+        fragment.setQRCodeViewDialogListener(new QrCodeViewDialog.QRCodeViewDialogListener() {
+            @Override
+            public void onGenerateQRCodeError(String errorMessage) {
+                viewHandler.showErrorNotification(null);
+                Log.e(getContext().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error),
+                        errorMessage);
+            }
+        });
+        viewHandler.displayDialogFragment(fragment, false);
     }
 
     @Override
@@ -484,13 +486,11 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     private void showCancellationReasons(AppointmentDTO appointmentDTO, final AppointmentCancellationFee cancellationFee) {
-        new CancelReasonAppointmentDialog(getContext(), appointmentDTO, appointmentsResultModel,
-                new CancelReasonAppointmentDialog.CancelReasonAppointmentDialogListener() {
-                    @Override
-                    public void onCancelReasonAppointmentDialogCancelClicked(AppointmentDTO appointmentDTO,
-                                                                             int cancellationReason,
-                                                                             String cancellationReasonComment) {
-                        cancellationReasonString = getCancelReason(cancellationReason, cancellationReasonComment);
+        CancelReasonAppointmentDialog dialog = CancelReasonAppointmentDialog.newInstance(appointmentDTO,appointmentsResultModel);
+        dialog.setsCancelReasonAppointmentDialogListener(new CancelReasonAppointmentDialog.CancelReasonAppointmentDialogListener() {
+            @Override
+            public void onCancelReasonAppointmentDialogCancelClicked(AppointmentDTO appointmentDTO, int cancellationReason, String cancellationReasonComment) {
+                cancellationReasonString = getCancelReason(cancellationReason, cancellationReasonComment);
                         cancelAppointmentDTO = appointmentDTO;
                         practiceName = getPracticeInfo(appointmentDTO).getPracticeName();
                         if (cancellationFee == null) {
@@ -529,8 +529,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                             };
                             MixPanelUtil.logEvent(getString(R.string.event_payment_cancellation_started), params, values);
                         }
-                    }
-                }).show();
+            }
+        });
+        viewHandler.displayDialogFragment(dialog, false);
     }
 
     private String getCancelReason(int cancellationReasonId, String cancellationReasonComment){
@@ -662,7 +663,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     @Override
     public void onPaymentDismissed() {
         startCancelationFeePayment = false;
-        if (appointmentDTO != null) {
+        if (appointmentDTO != null && appointmentSlot != null) {
             onHoursAndLocationSelected(appointmentSlot, null);
         } else {
             viewHandler.refreshAppointments();
