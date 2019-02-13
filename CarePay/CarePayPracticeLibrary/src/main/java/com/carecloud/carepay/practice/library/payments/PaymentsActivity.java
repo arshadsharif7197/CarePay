@@ -310,10 +310,9 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             public void onClick(View view) {
                 TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata()
                         .getPaymentsLinks().getFindPatient();
-                FindPatientDialog findPatientDialog = new FindPatientDialog(PaymentsActivity.this,
-                        transitionDTO, Label.getLabel("practice_payments_filter_find_patient_by_name"));
+                FindPatientDialog findPatientDialog = FindPatientDialog.newInstance(transitionDTO, Label.getLabel("practice_payments_filter_find_patient_by_name"));
                 setFindPatientOnItemClickedListener(findPatientDialog);
-                findPatientDialog.show();
+                displayDialogFragment(findPatientDialog, false);
             }
         };
     }

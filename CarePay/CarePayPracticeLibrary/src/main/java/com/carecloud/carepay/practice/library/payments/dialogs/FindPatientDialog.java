@@ -4,10 +4,12 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -21,6 +23,7 @@ import com.carecloud.carepay.practice.library.payments.adapter.PatientSearchResu
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayEditText;
@@ -35,9 +38,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FindPatientDialog extends Dialog {
+public class FindPatientDialog extends BaseDialogFragment {
 
-    private Context context;
     private TransitionDTO transitionDTO;
     private OnItemClickedListener clickedListener;
     private String titleLabel;
@@ -46,33 +48,38 @@ public class FindPatientDialog extends Dialog {
     /**
      * Constructor
      *
-     * @param context       context
      * @param transitionDTO transition dto
      */
-    public FindPatientDialog(Context context, TransitionDTO transitionDTO, String titleLabel) {
-        super(context);
-        this.context = context;
-        this.transitionDTO = transitionDTO;
-        this.titleLabel = titleLabel;
+    public static FindPatientDialog newInstance(TransitionDTO transitionDTO, String titleLabel) {
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, transitionDTO);
+        args.putString("titleLabel", titleLabel);
+        FindPatientDialog fragment = new FindPatientDialog();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @SuppressWarnings("ConstantConditions")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        if (args != null) {
+            transitionDTO = DtoHelper.getConvertedDTO(TransitionDTO.class, args);
+            titleLabel = args.getString("titleLabel");
+        }
+    }
 
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.dialog_find_patient);
-        setCancelable(false);
-        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-
-        WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.height = LinearLayout.LayoutParams.MATCH_PARENT;
-        params.width = LinearLayout.LayoutParams.MATCH_PARENT;
-        getWindow().setAttributes(params);
-
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         initializeView();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.dialog_find_patient, container, false);
     }
 
     private void initializeView() {
@@ -83,7 +90,7 @@ public class FindPatientDialog extends Dialog {
         findViewById(R.id.find_patient_close_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ISession) context).getWorkflowServiceHelper().interrupt();
+                ((ISession) getContext()).getWorkflowServiceHelper().interrupt();
                 dismiss();
             }
         });
@@ -100,14 +107,14 @@ public class FindPatientDialog extends Dialog {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN)
                         && (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     // Hide keyboard
-                    InputMethodManager manager = (InputMethodManager) context
+                    InputMethodManager manager = (InputMethodManager) getContext()
                             .getSystemService(Context.INPUT_METHOD_SERVICE);
                     manager.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
                     Map<String, String> queryMap = new HashMap<>();
-                    queryMap.put("practice_mgmt", ((ISession) context).getApplicationMode()
+                    queryMap.put("practice_mgmt", ((ISession) getContext()).getApplicationMode()
                             .getUserPracticeDTO().getPracticeMgmt());
-                    queryMap.put("practice_id", ((ISession) context).getApplicationMode()
+                    queryMap.put("practice_id", ((ISession) getContext()).getApplicationMode()
                             .getUserPracticeDTO().getPracticeId());
 
                     query = ((CarePayEditText) view).getText().toString().toUpperCase();
@@ -115,7 +122,7 @@ public class FindPatientDialog extends Dialog {
                     postModel.add(query);
                     String postBody = postModel.toString();
 
-                    ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO, findPatientCallback,
+                    ((ISession) getContext()).getWorkflowServiceHelper().execute(transitionDTO, findPatientCallback,
                             postBody, queryMap);
                     return true;
                 }
@@ -140,13 +147,13 @@ public class FindPatientDialog extends Dialog {
                 if (charSequence.length() == 0) {
                     findViewById(R.id.patient_searched_list).setVisibility(View.GONE);
                 } else if (charSequence.length() > 3) {
-                    ((ISession) context).getWorkflowServiceHelper().interrupt();
+                    ((ISession) getContext()).getWorkflowServiceHelper().interrupt();
 
                     query = charSequence.toString().toUpperCase();
                     JsonArray postModel = new JsonArray();
                     postModel.add(query);
                     String postBody = postModel.toString();
-                    ((ISession) context).getWorkflowServiceHelper()
+                    ((ISession) getContext()).getWorkflowServiceHelper()
                             .execute(transitionDTO, findPatientCallback, postBody);
                 }
             }
@@ -203,14 +210,14 @@ public class FindPatientDialog extends Dialog {
     };
 
     private void showSearchResultList(List<PatientModel> patients) {
-        PatientSearchResultAdapter adapter = new PatientSearchResultAdapter(context, patients);
+        PatientSearchResultAdapter adapter = new PatientSearchResultAdapter(getContext(), patients);
         setOnItemClickedListener(adapter);
 
         RecyclerViewWithDivider searchedList = (RecyclerViewWithDivider) findViewById(R.id.patient_searched_list);
-        searchedList.setLayoutManager(new LinearLayoutManager(context));
+        searchedList.setLayoutManager(new LinearLayoutManager(getContext()));
         ViewGroup.LayoutParams params = searchedList.getLayoutParams();
         if (patients != null && patients.size() > 4) {
-            params.height = getContext().getResources().getDimensionPixelSize(R.dimen.dimen_175dp);
+            params.height = getResources().getDimensionPixelSize(R.dimen.dimen_175dp);
         } else {
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         }

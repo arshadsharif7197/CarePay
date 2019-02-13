@@ -349,12 +349,11 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             public void onClick(View view) {
                 needsToConfirmAppointmentCreation = needsConfirmation;
                 TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getFindPatient();
-                FindPatientDialog findPatientDialog = new FindPatientDialog(getContext(),
-                        transitionDTO,
+                FindPatientDialog findPatientDialog = FindPatientDialog.newInstance(transitionDTO,
                         Label.getLabel(needsConfirmation ? "practice_checkin_filter_find_patient_by_name"
                                 : "practice_filter_find_patient_first"));
                 findPatientDialog.setClickedListener(getFindPatientDialogListener());
-                findPatientDialog.show();
+                displayDialogFragment(findPatientDialog, false);
             }
         };
     }
