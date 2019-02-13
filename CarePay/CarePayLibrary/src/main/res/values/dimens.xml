@@ -487,7 +487,7 @@
     <dimen name="createAppointmentMainPadding">15dp</dimen>
     <dimen name="createAppointmentNoDataVerticalMargin">10dp</dimen>
     <dimen name="createAppointmentNoDataPadding">20dp</dimen>
-    <dimen name="createAppointmentNoDataTextSize">17sp</dimen>
+    <dimen name="createAppointmentNoDataTextSize">15sp</dimen>
     <dimen name="createAppointmentHeaderTopMargin">40dp</dimen>
     <dimen name="itemVisitTypePadding">15dp</dimen>
     <dimen name="visitTypeItemTextSize">17sp</dimen>

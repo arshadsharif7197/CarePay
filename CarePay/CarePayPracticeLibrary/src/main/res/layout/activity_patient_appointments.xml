@@ -148,8 +148,8 @@
                 android:background="@drawable/bg_blue_overlay"
                 breeze:textKey="appointment_schedule_new_button"
                 android:gravity="center"
-                android:paddingEnd="@dimen/dimen_50dp"
-                android:paddingStart="@dimen/dimen_50dp"
+                android:paddingEnd="@dimen/dimen_80dp"
+                android:paddingStart="@dimen/dimen_80dp"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_22sp"
                 app:customAssetFont="gotham_rounded_medium" />

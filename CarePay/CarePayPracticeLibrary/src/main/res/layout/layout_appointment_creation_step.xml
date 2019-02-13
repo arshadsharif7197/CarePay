@@ -16,7 +16,7 @@
         android:layout_marginBottom="@dimen/createAppointmentStepTitleBottomMargin"
         android:textColor="@color/white"
         android:textSize="@dimen/createAppointmentStepTitleTextSize"
-        app:customAssetFont="gotham_rounded_medium"
+        app:customAssetFont="gotham_rounded_book"
         tools:text="Visit Type" />
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
