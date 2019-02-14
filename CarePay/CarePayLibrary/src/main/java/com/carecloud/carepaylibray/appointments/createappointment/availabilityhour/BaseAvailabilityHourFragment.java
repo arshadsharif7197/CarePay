@@ -148,7 +148,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
             TextView subTitleTextView = noAppointmentLayout.findViewById(R.id.no_apt_message_desc);
             subTitleTextView.setText(Label.getLabel("no_appointment_slots_message"));
             Button changeDatesButton = noAppointmentLayout.findViewById(R.id.newAppointmentClassicButton);
-            changeDatesButton.setVisibility(View.VISIBLE);
+            changeDatesButton.setVisibility(getChangeDatesToolbarButtonVisibility() ? View.VISIBLE : View.GONE);
             changeDatesButton.setText(Label.getLabel("change_dates"));
             changeDatesButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -157,6 +157,10 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
                 }
             });
         }
+    }
+
+    protected boolean getChangeDatesToolbarButtonVisibility() {
+        return false;
     }
 
     private void showAppointmentConfirmationFragment(AppointmentsSlotsDTO slot) {

@@ -40,6 +40,11 @@ public class AvailabilityHourFragment extends BaseAvailabilityHourFragment imple
         setUpToolbar(view);
     }
 
+    @Override
+    protected boolean getChangeDatesToolbarButtonVisibility() {
+        return true;
+    }
+
     private void setUpToolbar(View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
