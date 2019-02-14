@@ -100,7 +100,8 @@ public abstract class BaseProviderListFragment extends BaseDialogFragment {
                 hideProgressDialog();
                 AppointmentsResultModel resourcesDto = DtoHelper
                         .getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
-                if (resourcesDto.getPayload().getResourcesToSchedule().get(0).getResourcesV2().size() > 0) {
+                if (!resourcesDto.getPayload().getResourcesToSchedule().isEmpty() &&
+                        (resourcesDto.getPayload().getResourcesToSchedule().get(0).getResourcesV2().size() > 0)) {
                     List<AppointmentResourcesItemDTO> providers = sortProviders(resourcesDto
                             .getPayload().getResourcesToSchedule().get(0).getResourcesV2());
                     showResources(providers);

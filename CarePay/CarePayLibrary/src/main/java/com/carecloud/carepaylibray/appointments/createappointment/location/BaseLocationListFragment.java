@@ -100,7 +100,8 @@ public abstract class BaseLocationListFragment extends BaseDialogFragment {
                 hideProgressDialog();
                 AppointmentsResultModel resourcesDto = DtoHelper
                         .getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
-                if (resourcesDto.getPayload().getResourcesToSchedule().get(0).getLocations().size() > 0) {
+                if (!resourcesDto.getPayload().getResourcesToSchedule().isEmpty() &&
+                        (resourcesDto.getPayload().getResourcesToSchedule().get(0).getLocations().size() > 0)) {
                     showLocations(resourcesDto.getPayload().getResourcesToSchedule().get(0).getLocations());
                 } else {
                     getView().findViewById(R.id.locationRecyclerView).setVisibility(View.GONE);

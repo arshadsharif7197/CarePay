@@ -102,7 +102,8 @@ public abstract class BaseVisitTypeListFragment extends BaseDialogFragment {
                 hideProgressDialog();
                 AppointmentsResultModel resourcesDto = DtoHelper
                         .getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
-                if (resourcesDto.getPayload().getResourcesToSchedule().get(0).getVisitReasons().size() > 0) {
+                if (!resourcesDto.getPayload().getResourcesToSchedule().isEmpty() &&
+                        (resourcesDto.getPayload().getResourcesToSchedule().get(0).getVisitReasons().size() > 0)) {
                     showVisitTypes(resourcesDto.getPayload().getResourcesToSchedule().get(0).getVisitReasons());
                 } else {
                     getView().findViewById(R.id.visitTypeRecyclerView).setVisibility(View.GONE);
