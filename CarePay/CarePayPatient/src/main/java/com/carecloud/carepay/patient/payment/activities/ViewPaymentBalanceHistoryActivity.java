@@ -215,8 +215,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
-        new PartialPaymentDialog(this, paymentsDTO, selectedBalance).show();
-
+        PartialPaymentDialog dialog = PartialPaymentDialog.newInstance(paymentsDTO, selectedBalance);
+        displayDialogFragment(dialog, false);
         MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment),
                 getString(R.string.param_practice_id),
                 selectedBalance.getMetadata().getPracticeId());
@@ -307,15 +307,15 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     public void onPaymentPlanAction(final PaymentsModel paymentsModel) {
         PendingBalanceDTO reducedBalancesItem = paymentsModel.getPaymentPayload()
                 .reduceBalanceItems(selectedBalancesItem, false);
-        Dialog dialog = new PaymentPlanAmountDialog(getContext(), paymentsModel,
-                reducedBalancesItem, this);
+        PaymentPlanAmountDialog dialog = PaymentPlanAmountDialog.newInstance(paymentsModel,
+                reducedBalancesItem);
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
                 startPaymentProcess(paymentsModel);
             }
         });
-        dialog.show();
+        displayDialogFragment(dialog, false);
     }
 
     @Override
@@ -553,7 +553,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void onMakeOneTimePayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
         paymentPlan = paymentPlanDTO;
-        new OneTimePaymentDialog(getContext(), paymentsModel, paymentPlanDTO, this).show();
+        OneTimePaymentDialog dialog = OneTimePaymentDialog.newInstance(paymentsModel, paymentPlanDTO);
+        displayDialogFragment(dialog, false);
     }
 
     @Override
@@ -791,8 +792,9 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     public void onStartEditScheduledPayment(PaymentsModel paymentsModel,
                                             PaymentPlanDTO paymentPlanDTO,
                                             ScheduledPaymentModel scheduledPaymentModel) {
-        new EditOneTimePaymentDialog(this, paymentsDTO, paymentPlanDTO,
-                scheduledPaymentModel, this).show();
+        EditOneTimePaymentDialog dialog = EditOneTimePaymentDialog.newInstance(paymentsDTO, paymentPlanDTO,
+                scheduledPaymentModel);
+        displayDialogFragment(dialog, false);
     }
 
     @Override

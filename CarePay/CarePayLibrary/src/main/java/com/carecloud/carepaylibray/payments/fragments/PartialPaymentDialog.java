@@ -4,11 +4,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -20,6 +23,7 @@ import android.widget.Toast;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterface;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
@@ -30,6 +34,7 @@ import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -42,8 +47,7 @@ import java.util.Locale;
  * Created by lmenendez on 2/28/17
  */
 
-public class PartialPaymentDialog extends Dialog implements View.OnClickListener, TextWatcher {
-    private Context context;
+public class PartialPaymentDialog extends BaseDialogFragment implements View.OnClickListener, TextWatcher {
 
     private EditText amountText;
     private TextView partialPaymentTotalAmountTitle;
@@ -51,9 +55,9 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     private Button payPartialButton;
 
     private double fullAmount = 0.00;
-    private PaymentsModel paymentsDTO;
+    protected PaymentsModel paymentsDTO;
     private double minimumPayment;
-    private PendingBalanceDTO selectedBalance;
+    protected PendingBalanceDTO selectedBalance;
     protected NumberFormat currencyFormat;
 
 
@@ -65,42 +69,52 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     /**
      * Contructor
      *
-     * @param context     context must implement PayNowClickListener
      * @param paymentsDTO payment model
      */
-    public PartialPaymentDialog(Context context, PaymentsModel paymentsDTO, PendingBalanceDTO selectedBalance) {
-        super(context);
-        this.context = context;
-        this.paymentsDTO = paymentsDTO;
-        this.selectedBalance = selectedBalance;
-        this.currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+    public static PartialPaymentDialog newInstance(PaymentsModel paymentsDTO, PendingBalanceDTO selectedBalance) {
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, paymentsDTO);
+        DtoHelper.bundleDto(args, selectedBalance);
+        PartialPaymentDialog dialog = new PartialPaymentDialog();
+        dialog.setArguments(args);
+        return dialog;
+    }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            if (context instanceof PaymentViewHandler) {
-                payListener = ((PaymentViewHandler) context).getPaymentPresenter();
+            if (getContext() instanceof PaymentViewHandler) {
+                payListener = ((PaymentViewHandler) getContext()).getPaymentPresenter();
             } else {
-                payListener = (PaymentConfirmationInterface) context;
+                payListener = (PaymentConfirmationInterface) getContext();
             }
         } catch (ClassCastException cce) {
             throw new ClassCastException("Dialog Context must implement PaymentInterface for callback");
         }
-
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(getContentLayout());
-        setCancelable(false);
-        if (getWindow() != null) {
-            getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-            WindowManager.LayoutParams params = getWindow().getAttributes();
-            params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-            params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.90);
-            getWindow().setAttributes(params);
+        Bundle args = getArguments();
+        if (args != null) {
+            paymentsDTO = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
+            selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
         }
+        currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         initViews();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(getContentLayout(), container, false);
     }
 
     protected int getContentLayout() {
@@ -137,7 +151,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
                     currencyFormat.format(minimumPayment));
             header.setText(headerText);
         }
-        SystemUtil.showSoftKeyboard(context);
+        SystemUtil.showSoftKeyboard(getContext());
         amountText.requestFocus();
     }
 
@@ -145,23 +159,23 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     public void onClick(View view) {
         int viewId = view.getId();
         if (viewId == R.id.closeViewLayout) {
-            SystemUtil.hideSoftKeyboard(context, view);
+            SystemUtil.hideSoftKeyboard(getContext(), view);
             cancel();
         } else if (viewId == R.id.payPartialButton) {
             double amount = Double.parseDouble(amountText.getText().toString());
             if (amount > fullAmount) {
                 String errorMessage = Label.getLabel("payment_partial_max_error") + currencyFormat.format(fullAmount);
-                CustomMessageToast toast = new CustomMessageToast(context, errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
+                CustomMessageToast toast = new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
                 toast.show();
                 return;
             }
             if (minimumPayment > 0 && amount < minimumPayment) {
                 String errorMessage = Label.getLabel("payment_partial_minimum_error") + currencyFormat.format(minimumPayment);
-                CustomMessageToast toast = new CustomMessageToast(context, errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
+                CustomMessageToast toast = new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
                 toast.show();
                 return;
             }
-            SystemUtil.hideSoftKeyboard(context, view);
+            SystemUtil.hideSoftKeyboard(getContext(), view);
             onPaymentClick(amountText);
         }
     }
@@ -169,10 +183,10 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
     @Override
     public void afterTextChanged(Editable str) {
         if (str.length() > 0) {
-            amountSymbol.setTextColor(ContextCompat.getColor(context, R.color.white));
+            amountSymbol.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
             amountText.setHint(null);
         } else {
-            amountSymbol.setTextColor(ContextCompat.getColor(context, R.color.white_transparent));
+            amountSymbol.setTextColor(ContextCompat.getColor(getContext(), R.color.white_transparent));
             amountText.setHint("0.00");
         }
         if (str.length() > 7) {
@@ -283,7 +297,7 @@ public class PartialPaymentDialog extends Dialog implements View.OnClickListener
             dismiss();
         } catch (NumberFormatException nfe) {
             nfe.printStackTrace();
-            Toast.makeText(context, "Please enter valid amount!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Please enter valid amount!", Toast.LENGTH_LONG).show();
         }
     }
 

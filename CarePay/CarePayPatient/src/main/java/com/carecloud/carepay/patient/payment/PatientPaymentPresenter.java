@@ -75,7 +75,8 @@ public class PatientPaymentPresenter extends PaymentPresenter
 
     @Override
     public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
-        new PartialPaymentDialog(viewHandler.getContext(), paymentsModel, selectedBalance).show();
+        PartialPaymentDialog dialog=  PartialPaymentDialog.newInstance(paymentsModel, selectedBalance);
+        viewHandler.displayDialogFragment(dialog,false);
 
         MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment),
                 getString(R.string.param_practice_id),
@@ -174,7 +175,8 @@ public class PatientPaymentPresenter extends PaymentPresenter
     public void onPaymentPlanAction(PaymentsModel paymentsModel) {
         PendingBalanceDTO selectedBalancesItem = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);//this should be a safe assumption for checkin
         PendingBalanceDTO reducedBalancesItem = paymentsModel.getPaymentPayload().reduceBalanceItems(selectedBalancesItem, false);
-        new PaymentPlanAmountDialog(viewHandler.getContext(), paymentsModel, reducedBalancesItem, this).show();
+        PaymentPlanAmountDialog dialog = PaymentPlanAmountDialog.newInstance(paymentsModel, reducedBalancesItem);
+        viewHandler.displayDialogFragment(dialog, false);
     }
 
     @Override

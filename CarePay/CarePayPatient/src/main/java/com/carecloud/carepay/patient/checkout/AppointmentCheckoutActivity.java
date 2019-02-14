@@ -288,7 +288,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     @Override
     public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
-        new PartialPaymentDialog(getContext(), paymentsModel, selectedBalance).show();
+        displayDialogFragment(PartialPaymentDialog.newInstance(paymentsModel, selectedBalance), false);
 
         MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment),
                 getString(R.string.param_practice_id),
@@ -306,7 +306,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
                 .getPatientBalances().get(0).getBalances().get(0);//this should be a safe assumption for checkin
         PendingBalanceDTO reducedBalancesItem = paymentsModel.getPaymentPayload()
                 .reduceBalanceItems(selectedBalancesItem, false);
-        new PaymentPlanAmountDialog(getContext(), paymentsModel, reducedBalancesItem, this).show();
+        displayDialogFragment(PaymentPlanAmountDialog.newInstance(paymentsModel, reducedBalancesItem), false);
     }
 
     @Override
