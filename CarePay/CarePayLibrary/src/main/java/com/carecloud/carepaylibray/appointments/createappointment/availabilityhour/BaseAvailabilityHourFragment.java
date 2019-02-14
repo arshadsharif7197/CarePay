@@ -135,6 +135,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
                             if (mode == SCHEDULE_MODE) {
                                 showAppointmentConfirmationFragment(slot);
                             } else {
+                                dismiss();
                                 callback.setAppointmentSlot(slot);
                             }
                         }

@@ -1141,7 +1141,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     @Override
     public void setAppointmentSlot(AppointmentsSlotsDTO slot) {
-        getSupportFragmentManager().popBackStackImmediate();
         Fragment fragment = getSupportFragmentManager()
                 .findFragmentByTag(NextAppointmentFragment.class.getName());
         if (fragment instanceof CreateAppointmentFragmentInterface) {
