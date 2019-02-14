@@ -56,8 +56,8 @@
     <dimen name="home_button_width">210dp</dimen>
     <dimen name="home_button_height">170dp</dimen>
     <dimen name="homeItemVerticalPadding">20dp</dimen>
-    <dimen name="home_shadow_width">600dp</dimen>
-    <dimen name="home_shadow_margin_top">-15dp</dimen>
+    <dimen name="home_shadow_width">500dp</dimen>
+    <dimen name="home_shadow_margin_top">-20dp</dimen>
     <dimen name="home_main_margin_top">10dp</dimen>
     <dimen name="officeNewsHeaderTopMargin">10dp</dimen>
     <dimen name="officeNewsItemWidth">240dp</dimen>
@@ -573,7 +573,7 @@
 
     <!--Patient Home-->
     <dimen name="patientHomeLayoutContainerTopMargin">80dp</dimen>
-    <dimen name="patientHomeLayoutContainerHorizontalMargin">100dp</dimen>
+    <dimen name="patientHomeLayoutContainerHorizontalMargin">150dp</dimen>
     <dimen name="patientHomeButtonHeight">120dp</dimen>
     <dimen name="patientHomeIconButtonWidth">96dp</dimen>
     <dimen name="patientHomeIconButtonHeight">96dp</dimen>
@@ -588,7 +588,7 @@
     <dimen name="howToCheckInHeaderMargin">20dp</dimen>
     <dimen name="howToCheckInTitleTextSize">24sp</dimen>
     <dimen name="howToCheckInTitleTopMargin">5dp</dimen>
-    <dimen name="howToCheckInTitleBottomMargin">15dp</dimen>
+    <dimen name="howToCheckInTitleBottomMargin">30dp</dimen>
     <dimen name="howToCheckInOptionPadding">10dp</dimen>
     <dimen name="howToCheckInOptionTextSize">20sp</dimen>
 
@@ -730,5 +730,7 @@
     <dimen name="appointmentCardFakeCenterBottomMargin">10dp</dimen>
     <dimen name="appointmentCardStatusPadding">10dp</dimen>
     <dimen name="appointmentCardAddressTextSize">11sp</dimen>
+    <dimen name="loginOptionHeight">60dp</dimen>
+    <dimen name="checkInOptionWidth">300dp</dimen>
 
 </resources>

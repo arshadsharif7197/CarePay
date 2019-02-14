@@ -829,5 +829,7 @@
     <dimen name="appointmentCardFakeCenterBottomMargin">20dp</dimen>
     <dimen name="appointmentCardStatusPadding">10dp</dimen>
     <dimen name="appointmentCardAddressTextSize">14sp</dimen>
+    <dimen name="loginOptionHeight">81dp</dimen>
+    <dimen name="checkInOptionWidth">450dp</dimen>
 
 </resources>

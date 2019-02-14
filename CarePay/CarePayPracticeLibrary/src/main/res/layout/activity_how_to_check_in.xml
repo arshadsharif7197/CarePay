@@ -19,7 +19,7 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/goBackButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/goBackHeight"
             android:background="@drawable/bg_blue_overlay"
             android:drawableLeft="@drawable/icn_arrow_left"
             android:drawablePadding="@dimen/dimen_10dp"
@@ -27,7 +27,7 @@
             android:paddingRight="@dimen/dimen_15dp"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_22sp"
+            android:textSize="@dimen/goBackTextSize"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="go_back_label" />
 
@@ -69,7 +69,7 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/dimen_81dp"
+                android:layout_height="@dimen/loginOptionHeight"
                 android:background="@color/transparent_apt"
                 android:drawableStart="@drawable/icn_key"
                 android:drawablePadding="@dimen/dimen_25dp"
@@ -81,7 +81,7 @@
                 breeze:textKey="signin_how_check_in_carepay_login" />
 
             <View
-                android:layout_width="@dimen/dimen_450dp"
+                android:layout_width="@dimen/checkInOptionWidth"
                 android:layout_height="@dimen/dimen_1dp"
                 android:layout_gravity="center_horizontal"
                 android:background="@color/white_opacity_30" />
@@ -98,7 +98,7 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/dimen_81dp"
+                android:layout_height="@dimen/loginOptionHeight"
                 android:background="@color/transparent_apt"
                 android:drawableLeft="@drawable/icn_scan"
                 android:drawablePadding="@dimen/dimen_25dp"
@@ -110,7 +110,7 @@
                 breeze:textKey="sigin_how_check_in_scan_qr_code" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:layout_width="@dimen/dimen_450dp"
+                android:layout_width="@dimen/checkInOptionWidth"
                 android:layout_height="@dimen/dimen_1dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/dimen_10dp"
@@ -128,7 +128,7 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/dimen_81dp"
+                android:layout_height="@dimen/loginOptionHeight"
                 android:background="@color/transparent_apt"
                 android:drawableLeft="@drawable/icn_search"
                 android:drawablePadding="@dimen/dimen_25dp"
@@ -140,7 +140,7 @@
                 breeze:textKey="sigin_how_check_in_manual_search" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:layout_width="@dimen/dimen_450dp"
+                android:layout_width="@dimen/checkInOptionWidth"
                 android:layout_height="@dimen/dimen_1dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/dimen_10dp"
