@@ -64,7 +64,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
         mBlurEngine = new BlurDialogEngine(getActivity());
         mBlurEngine.setBlurRadius(com.carecloud.carepaylibray.base.BaseDialogFragment.BLUR_RADIUS);
         mBlurEngine.setDownScaleFactor(com.carecloud.carepaylibray.base.BaseDialogFragment.DOWN_SCALE_FACTOR);
-        mBlurEngine.debug(true);
+        mBlurEngine.debug(false);
         mBlurEngine.setBlurActionBar(true);
         mBlurEngine.setUseRenderScript(false);
     }

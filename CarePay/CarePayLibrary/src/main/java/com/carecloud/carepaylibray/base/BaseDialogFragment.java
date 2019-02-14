@@ -67,7 +67,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         mBlurEngine = new BlurDialogEngine(getActivity());
         mBlurEngine.setBlurRadius(BLUR_RADIUS);
         mBlurEngine.setDownScaleFactor(DOWN_SCALE_FACTOR);
-        mBlurEngine.debug(true);
+        mBlurEngine.debug(false);
         mBlurEngine.setBlurActionBar(true);
         mBlurEngine.setUseRenderScript(false);
     }
