@@ -604,9 +604,11 @@
     <dimen name="provider_card_width">240dp</dimen>
     <dimen name="providerCardHorizontalMargin">9dp</dimen>
     <dimen name="appointment_card_header_height">140dp</dimen>
+    <dimen name="appointment_card_date_view_height">105dp</dimen>
     <dimen name="provider_card_avatar_size">70dp</dimen>
     <dimen name="providerPaymentAmountHeight">110dp</dimen>
     <dimen name="appointment_card_footer_height">160dp</dimen>
+    <dimen name="appointment_card_checked_in_button_margin">30dp</dimen>
     <dimen name="providerLocationNameTextSize">18sp</dimen>
     <dimen name="provider_list_title_margin">34dp</dimen>
     <dimen name="provider_no_list_margin">72dp</dimen>
@@ -706,5 +708,27 @@
     <dimen name="paymentHistoryDetailItemsLabelTopMargin">30dp</dimen>
     <dimen name="paymentHistoryDetailItemsLabelTextSize">14sp</dimen>
     <dimen name="paymentHistoryDetailItemsListTopMargin">6dp</dimen>
+
+    <!--Checkin Activity Patient Mode-->
+    <dimen name="emptyScreenImageWidth">200dp</dimen>
+    <dimen name="emptyScreenImageHeight">300dp</dimen>
+    <dimen name="mainContentTopMargin">20dp</dimen>
+    <dimen name="appointmentsListTopMargin">10dp</dimen>
+    <dimen name="scheduleAppointmentButtonTopMargin">40dp</dimen>
+    <dimen name="scheduleAppointmentButtonHorizontalPadding">50dp</dimen>
+    <dimen name="appointmentCardHeaderTopPadding">5dp</dimen>
+    <dimen name="appointmentCardVisitTypeTextSize">14sp</dimen>
+    <dimen name="appointmentCardStartDayTextSize">22sp</dimen>
+    <dimen name="appointmentCardStartHourTextSize">14sp</dimen>
+    <dimen name="appointmentCardDoctorNameTopMargin">20dp</dimen>
+    <dimen name="appointmentCardDoctorNameTextSize">18sp</dimen>
+    <dimen name="appointmentCardDoctorSpecialityTextSize">14sp</dimen>
+    <dimen name="startCheckinHorizontalMargin">16dp</dimen>
+    <dimen name="appointmentCardStatusTextSize">14sp</dimen>
+    <dimen name="checked_in_card_status_top_margin">18dp</dimen>
+    <dimen name="appointmentCardStartHourTopMargin">0dp</dimen>
+    <dimen name="appointmentCardFakeCenterBottomMargin">10dp</dimen>
+    <dimen name="appointmentCardStatusPadding">10dp</dimen>
+    <dimen name="appointmentCardAddressTextSize">11sp</dimen>
 
 </resources>

@@ -497,5 +497,6 @@
     <dimen name="checkinPlanFooterButtonHeight">48dp</dimen>
     <dimen name="checkinPlanFooterButtonMargin">10dp</dimen>
     <dimen name="checkinPlanMainContainerSidePadding">150dp</dimen>
+    <dimen name="separatorHeight">1dp</dimen>
 
 </resources>

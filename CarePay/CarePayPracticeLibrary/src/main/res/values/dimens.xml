@@ -809,4 +809,25 @@
     <dimen name="paymentHistoryDetailItemsLabelTextSize">18sp</dimen>
     <dimen name="paymentHistoryDetailItemsListTopMargin">12dp</dimen>
 
+    <!--Checkin Activity Patient Mode-->
+    <dimen name="emptyScreenImageWidth">200dp</dimen>
+    <dimen name="emptyScreenImageHeight">300dp</dimen>
+    <dimen name="mainContentTopMargin">40dp</dimen>
+    <dimen name="appointmentsListTopMargin">20dp</dimen>
+    <dimen name="scheduleAppointmentButtonTopMargin">40dp</dimen>
+    <dimen name="scheduleAppointmentButtonHorizontalPadding">80dp</dimen>
+    <dimen name="appointmentCardHeaderTopPadding">10dp</dimen>
+    <dimen name="appointmentCardVisitTypeTextSize">18sp</dimen>
+    <dimen name="appointmentCardStartDayTextSize">30sp</dimen>
+    <dimen name="appointmentCardStartHourTextSize">18sp</dimen>
+    <dimen name="appointmentCardDoctorNameTopMargin">30dp</dimen>
+    <dimen name="appointmentCardDoctorNameTextSize">24sp</dimen>
+    <dimen name="appointmentCardDoctorSpecialityTextSize">18sp</dimen>
+    <dimen name="startCheckinHorizontalMargin">24dp</dimen>
+    <dimen name="appointmentCardStatusTextSize">18sp</dimen>
+    <dimen name="appointmentCardStartHourTopMargin">5dp</dimen>
+    <dimen name="appointmentCardFakeCenterBottomMargin">20dp</dimen>
+    <dimen name="appointmentCardStatusPadding">10dp</dimen>
+    <dimen name="appointmentCardAddressTextSize">14sp</dimen>
+
 </resources>

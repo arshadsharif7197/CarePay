@@ -17,4 +17,5 @@
 
     <dimen name="homeButtonIconBottomPadding">15dp</dimen>
     <dimen name="homeButtonIconStartPadding">15dp</dimen>
+    <dimen name="separatorHeight">0.5dp</dimen>
 </resources>

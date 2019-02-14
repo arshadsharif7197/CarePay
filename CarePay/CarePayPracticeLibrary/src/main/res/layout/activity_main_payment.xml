@@ -82,8 +82,8 @@
 
     <ImageView
         android:id="@+id/emptyPaymentsImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/emptyScreenImageWidth"
+        android:layout_height="@dimen/emptyScreenImageHeight"
         android:layout_above="@+id/btnHome"
         android:layout_below="@+id/appointmentProgressBar"
         android:layout_centerHorizontal="true"
