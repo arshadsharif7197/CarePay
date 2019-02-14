@@ -831,5 +831,7 @@
     <dimen name="appointmentCardAddressTextSize">14sp</dimen>
     <dimen name="loginOptionHeight">81dp</dimen>
     <dimen name="checkInOptionWidth">450dp</dimen>
+    <dimen name="signInShadowWidth">400dp</dimen>
+    <dimen name="signInShadowTopMargin">-48dp</dimen>
 
 </resources>
