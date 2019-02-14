@@ -67,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:textColor="@color/white"
+                android:textColor="@color/soft_sky"
                 android:textSize="@dimen/createAppointmentSubTitleTextSize"
                 tools:text="Create Appointment subheader"
                 app:customAssetFont="proxima_nova_regular"
