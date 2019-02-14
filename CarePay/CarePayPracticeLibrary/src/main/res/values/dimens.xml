@@ -833,5 +833,12 @@
     <dimen name="checkInOptionWidth">450dp</dimen>
     <dimen name="signInShadowWidth">400dp</dimen>
     <dimen name="signInShadowTopMargin">-48dp</dimen>
+    <dimen name="allergyMedicationHeaderTextSize">30sp</dimen>
+    <dimen name="allergyMedicationImageSize">150dp</dimen>
+    <dimen name="allergyMedicationImageTopMargin">30dp</dimen>
+    <dimen name="allergyMedicationEmptyMessageHorizontalPadding">30dp</dimen>
+    <dimen name="allergyMedicationEmptyMessageTextSize">40sp</dimen>
+    <dimen name="medicationAllergyPadding">16dp</dimen>
+    <dimen name="medicationAllergySearchPadding">20dp</dimen>
 
 </resources>

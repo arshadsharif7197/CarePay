@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -24,14 +23,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:src="@drawable/dialog_button_bg"/>
+                android:src="@drawable/dialog_button_bg" />
 
             <ImageView
                 android:id="@+id/cancel_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:src="@drawable/icn_close"/>
+                android:src="@drawable/icn_close" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -39,8 +38,8 @@
         android:id="@+id/search_content"
         android:layout_width="@dimen/dialog_width"
         android:layout_height="@dimen/dialog_height"
-        android:layout_marginEnd="@dimen/dimen_26dp"
         android:layout_marginStart="@dimen/dimen_26dp"
+        android:layout_marginEnd="@dimen/dimen_26dp"
         android:orientation="vertical">
 
         <FrameLayout
@@ -50,7 +49,7 @@
 
             <include
                 android:id="@+id/search_toolbar"
-                layout="@layout/toolbar_title_only"/>
+                layout="@layout/toolbar_title_only" />
 
         </FrameLayout>
 
@@ -65,13 +64,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/dimen_5dp"
                 android:layout_marginTop="@dimen/dimen_20dp"
+                android:layout_marginBottom="@dimen/dimen_5dp"
+                android:gravity="center"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/medicationAllergyHeaderTitleTextSize"
                 app:customAssetFont="gotham_rounded_medium"
-                tools:text="Begin typing to find your medications"/>
+                tools:text="Begin typing to find your medications" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/search_header_subtitle"
@@ -79,12 +78,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:paddingEnd="@dimen/medicationAllergyHeaderSubtitlePadding"
                 android:paddingStart="@dimen/medicationAllergyHeaderSubtitlePadding"
+                android:paddingEnd="@dimen/medicationAllergyHeaderSubtitlePadding"
                 android:textColor="@color/optional_gray"
                 android:textSize="@dimen/medicationAllergyHeaderSubtitleTextSize"
                 app:customAssetFont="gotham_rounded_medium"
-                tools:text="and click on the result to add it or click the button below to add it as an unlisted allergy"/>
+                tools:text="and click on the result to add it or click the button below to add it as an unlisted allergy" />
 
         </LinearLayout>
 
@@ -93,7 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:padding="@dimen/dimen_20dp">
+            android:padding="@dimen/medicationAllergySearchPadding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePaySearchView
                 android:id="@+id/search_entry_view"
@@ -102,7 +101,7 @@
                 android:background="@drawable/search_rounded_border"
                 android:theme="@style/SearchViewStyleDark_NoLine"
                 app:customAssetFont="proxima_nova_regular"
-                app:iconifiedByDefault="false"/>
+                app:iconifiedByDefault="false" />
 
         </FrameLayout>
 
@@ -116,14 +115,14 @@
                 android:id="@+id/search_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="@dimen/padding_xlarge"/>
+                android:padding="@dimen/medicationAllergyPadding" />
 
             <FrameLayout
                 android:id="@+id/emptyStateScreen"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingEnd="@dimen/dimen_60dp"
                 android:paddingStart="@dimen/dimen_60dp"
+                android:paddingEnd="@dimen/dimen_60dp"
                 android:visibility="gone">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -133,7 +132,7 @@
                     android:gravity="center"
                     android:textColor="@color/optional_gray"
                     android:textSize="@dimen/text_size_18sp"
-                    app:customAssetFont="gotham_rounded_medium"/>
+                    app:customAssetFont="gotham_rounded_medium" />
 
             </FrameLayout>
 
@@ -143,25 +142,25 @@
             android:id="@+id/add_unlisted_border"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_1dp"
-            android:background="@color/light_gray"/>
+            android:background="@color/light_gray" />
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/patient_mode_dialog_body_bg"
-            android:padding="@dimen/dimen_15dp">
+            android:padding="@dimen/distributionButtonContainersPadding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/add_unlisted"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/commonButtonHeight"
                 android:background="@drawable/blue_border_rounded_button_selector"
-                android:padding="@dimen/dimen_8dp"
+                android:padding="@dimen/distributionButtonContainersPadding"
                 android:textAllCaps="false"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/medicationAllergyButtonTextSize"
+                android:textSize="@dimen/respons_button_text_size"
                 app:customAssetFont="gotham_rounded_medium"
-                tools:text="Add Unlisted Allergy"/>
+                tools:text="Add Unlisted Allergy" />
 
         </FrameLayout>
 
@@ -173,11 +172,10 @@
         android:orientation="vertical"
         android:visibility="invisible">
 
-
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/dialog_button_bg"/>
+            android:src="@drawable/dialog_button_bg" />
 
     </LinearLayout>
 </LinearLayout>
