@@ -437,9 +437,11 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private void unlockPracticeMode() {
         Gson gson = new Gson();
         PatientModeLinksDTO pinPadObject = gson.fromJson(homeScreenDTO.getMetadata().getLinks(), PatientModeLinksDTO.class);
-        ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this,
-                pinPadObject.getPinpad(), false, pinPadObject.getLanguage());
-        confirmationPinDialog.show();
+        ConfirmationPinDialog confirmationPinDialog = ConfirmationPinDialog.newInstance(
+                pinPadObject.getPinpad(),
+                false,
+                pinPadObject.getLanguage());
+        displayDialogFragment(confirmationPinDialog, false);
     }
 
     private void getNews() {

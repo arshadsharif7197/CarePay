@@ -125,10 +125,11 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
         if (metadataModel == null) {
             metadataModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, getWorkflowDto());
         }
-        ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this,
-                metadataModel.getMetadata().getLinks().getPinpad(), false,
+        ConfirmationPinDialog confirmationPinDialog = ConfirmationPinDialog.newInstance(
+                metadataModel.getMetadata().getLinks().getPinpad(),
+                false,
                 metadataModel.getMetadata().getLinks().getLanguage());
-        confirmationPinDialog.show();
+        displayDialogFragment(confirmationPinDialog, false);
     }
 
     @Override

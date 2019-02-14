@@ -145,10 +145,11 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
     }
 
     private void showPinDialog() {
-        ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(getContext(),
-                adhocFormsModel.getMetadata().getLinks().getPinpad(), false,
+        ConfirmationPinDialog confirmationPinDialog = ConfirmationPinDialog.newInstance(
+                adhocFormsModel.getMetadata().getLinks().getPinpad(),
+                false,
                 adhocFormsModel.getMetadata().getLinks().getLanguage());
-        confirmationPinDialog.show();
+        displayDialogFragment(confirmationPinDialog, false);
     }
 
     @Override
