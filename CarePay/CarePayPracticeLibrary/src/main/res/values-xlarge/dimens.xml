@@ -734,4 +734,23 @@
     <dimen name="medicationAllergyPadding">16dp</dimen>
     <dimen name="medicationAllergySearchPadding">20dp</dimen>
 
+    <!--Complete Screen-->
+    <dimen name="completeScreenCheckImageSize">120dp</dimen>
+    <dimen name="completeScreenCheckBottomMargin">40dp</dimen>
+    <dimen name="checkin_complete_divider_width">350dp</dimen>
+    <dimen name="completeScreenSuccessScreenTextSize">26sp</dimen>
+    <dimen name="giveDeviceBackMessageVerticalMargin">10dp</dimen>
+    <dimen name="giveDeviceBackMessageTextSize">17sp</dimen>
+    <dimen name="completeScreenUserImageSize">100dp</dimen>
+    <dimen name="completeScreenUserImageVerticalMargin">10dp</dimen>
+    <dimen name="completeScreenUserImageEndMargin">20dp</dimen>
+    <dimen name="completeScreenUserNameTextSize">28sp</dimen>
+    <dimen name="completeScreenProviderTextSize">18sp</dimen>
+    <dimen name="completeScreenInfoContainerPadding">20dp</dimen>
+    <dimen name="completeCheckInItemMargin">14dp</dimen>
+    <dimen name="completeCheckInItemTextSize">22sp</dimen>
+    <dimen name="completeCheckInItemValueTextSize">16sp</dimen>
+    <dimen name="completeScreenSectionTitleTextSize">18sp</dimen>
+    <dimen name="completeScreenSectionTitleVerticalMargin">20dp</dimen>
+
 </resources>
