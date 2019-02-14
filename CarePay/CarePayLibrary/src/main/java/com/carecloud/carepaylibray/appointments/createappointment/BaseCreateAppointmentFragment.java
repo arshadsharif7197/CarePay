@@ -220,7 +220,7 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
                             .getLabel("createAppointment.visitTypeList.item.label.prepaymentMessage"),
                     NumberFormat.getCurrencyInstance(Locale.US).format(visitType.getAmount()));
         } else {
-//            subTitleTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+            subTitleTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.lightSlateGray));
             subtitle = Label.getLabel("createAppointment.visitTypeList.item.label.noPrepaymentMessage");
         }
         setCardViewContent(visitTypeContainer, title, subtitle, false, null);
