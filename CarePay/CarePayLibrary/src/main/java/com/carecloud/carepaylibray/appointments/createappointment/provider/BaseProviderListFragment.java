@@ -101,7 +101,7 @@ public abstract class BaseProviderListFragment extends BaseDialogFragment {
                 AppointmentsResultModel resourcesDto = DtoHelper
                         .getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
                 if (!resourcesDto.getPayload().getResourcesToSchedule().isEmpty() &&
-                        (resourcesDto.getPayload().getResourcesToSchedule().get(0).getResourcesV2().size() > 0)) {
+                        !resourcesDto.getPayload().getResourcesToSchedule().get(0).getResourcesV2().isEmpty) {
                     List<AppointmentResourcesItemDTO> providers = sortProviders(resourcesDto
                             .getPayload().getResourcesToSchedule().get(0).getResourcesV2());
                     showResources(providers);
