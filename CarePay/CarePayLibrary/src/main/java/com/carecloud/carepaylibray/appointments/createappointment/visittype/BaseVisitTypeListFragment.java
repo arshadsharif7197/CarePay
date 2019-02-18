@@ -103,7 +103,7 @@ public abstract class BaseVisitTypeListFragment extends BaseDialogFragment {
                 AppointmentsResultModel resourcesDto = DtoHelper
                         .getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
                 if (!resourcesDto.getPayload().getResourcesToSchedule().isEmpty() &&
-                        !resourcesDto.getPayload().getResourcesToSchedule().get(0).getVisitReasons().isEmpty) {
+                        !resourcesDto.getPayload().getResourcesToSchedule().get(0).getVisitReasons().isEmpty()) {
                     showVisitTypes(resourcesDto.getPayload().getResourcesToSchedule().get(0).getVisitReasons());
                 } else {
                     getView().findViewById(R.id.visitTypeRecyclerView).setVisibility(View.GONE);
