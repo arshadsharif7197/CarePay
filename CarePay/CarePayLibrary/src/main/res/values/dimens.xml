@@ -481,4 +481,33 @@
     <dimen name="demographicErrorImageHeight">30dp</dimen>
     <dimen name="demographicErrorViewWidth">22dp</dimen>
 
+    <!--Create appointment flow-->
+    <dimen name="createAppointmentNoDataTextViewHeight">90dp</dimen>
+    <dimen name="createAppointmentHeaderVerticalMargin">10dp</dimen>
+    <dimen name="createAppointmentMainPadding">15dp</dimen>
+    <dimen name="createAppointmentNoDataVerticalMargin">10dp</dimen>
+    <dimen name="createAppointmentNoDataPadding">20dp</dimen>
+    <dimen name="createAppointmentNoDataTextSize">15sp</dimen>
+    <dimen name="createAppointmentHeaderTopMargin">40dp</dimen>
+    <dimen name="itemVisitTypePadding">15dp</dimen>
+    <dimen name="visitTypeItemTextSize">17sp</dimen>
+    <dimen name="visitTypeAlertImageStartMargin">5dp</dimen>
+    <dimen name="visitTypePrepaymentAmountTextSize">14sp</dimen>
+    <dimen name="createAppointmentDataTextViewHeight">100dp</dimen>
+    <dimen name="createAppointmentSectionImageSize">35dp</dimen>
+    <dimen name="nextAppointmentResetFieldImageSize">25dp</dimen>
+    <dimen name="nextAppointmentResetFieldEndMargin">20dp</dimen>
+    <dimen name="nextAppointmentResetFieldBottomMargin">15dp</dimen>
+    <dimen name="nextAppointmentResetFieldPadding">5dp</dimen>
+    <dimen name="createAppointmentSectionTextSize">22sp</dimen>
+    <dimen name="emptyScreenSubtitleHorizontalPadding">35dp</dimen>
+    <dimen name="emptyScreenSubTitleTextSize">15sp</dimen>
+    <dimen name="emptyScreenTitleTextSize">21sp</dimen>
+    <dimen name="emptyScreenTitlePadding">10dp</dimen>
+    <dimen name="itemProviderVerticalMargin">12dp</dimen>
+    <dimen name="locationItemHorizontalMargin">15dp</dimen>
+    <dimen name="timeSlotItemPadding">18dp</dimen>
+    <dimen name="timeSlotItemTextSize">20sp</dimen>
+    <dimen name="locationItemHeight">80dp</dimen>
+
 </resources>

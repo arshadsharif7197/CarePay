@@ -21,7 +21,7 @@ public class LinksDTO extends BaseLinks {
     @SerializedName("patient_balances")
     @Expose
     private TransitionDTO patientBalances = new TransitionDTO();
-    @SerializedName("resources_to_schedule")
+    @SerializedName("resources_to_schedule_v2")
     @Expose
     private TransitionDTO resourcesToSchedule = new TransitionDTO();
     @SerializedName("providers_schedule")

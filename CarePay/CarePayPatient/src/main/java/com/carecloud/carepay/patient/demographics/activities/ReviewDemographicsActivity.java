@@ -18,6 +18,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
@@ -40,12 +41,14 @@ import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmp
 import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
 import com.carecloud.carepaylibray.medications.fragments.MedicationsFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.clover.sdk.v3.payments.Payment;
 
 public class ReviewDemographicsActivity extends BasePatientActivity implements DemographicsView,
         PaymentViewHandler, ConfirmationCallback {
@@ -56,6 +59,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     private PatientPaymentPresenter paymentPresenter;
     private String paymentWorkflow;
     private MediaResultListener resultListener;
+    private PaymentsModel paymentsModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -221,14 +225,18 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
      */
     public void getPaymentInformation(String workflowJson) {
         paymentWorkflow = workflowJson;
-        PaymentsModel paymentsModel = initPaymentPresenter(paymentWorkflow);
+        paymentsModel = initPaymentPresenter(paymentWorkflow);
         paymentPresenter.startPaymentProcess(paymentsModel);
     }
 
     private PaymentsModel initPaymentPresenter(String workflowJson) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowJson);
         String patientID = demographicsPresenter.getAppointment().getMetadata().getPatientId();
-        paymentPresenter = new PatientPaymentPresenter(this, paymentsModel, patientID);
+        if (paymentPresenter == null) {
+            paymentPresenter = new PatientPaymentPresenter(this, paymentsModel, patientID);
+        } else {
+            paymentPresenter.setPaymentPresenter(this, paymentsModel, patientID);
+        }
         return paymentsModel;
     }
 
@@ -249,7 +257,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         Bundle bundle = new Bundle();
         bundle.putBoolean(CarePayConstants.REFRESH, true);
         navigateToWorkflow(workflowDTO, bundle);
-        checkinCompleted();
+        checkinCompleted(false, false);
     }
 
     @Override
@@ -263,12 +271,12 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     }
 
     @Override
-    public void exitPaymentProcess(boolean cancelled) {
+    public void exitPaymentProcess(boolean cancelled,  boolean paymentPlanCreated, boolean paymentMade) {
         if (getCallingActivity() != null) {
             setResult(cancelled ? RESULT_CANCELED : RESULT_OK);
         }
         finish();
-        checkinCompleted();
+        checkinCompleted(paymentPlanCreated, paymentMade);
     }
 
     @Nullable
@@ -347,7 +355,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         }
     }
 
-    private void checkinCompleted() {
+    private void checkinCompleted(boolean paymentPlanCreated, boolean paymentMade) {
         //Log Check-in Completed
         if (getAppointment() != null) {
             String[] params = {getString(R.string.param_practice_id),
@@ -355,14 +363,21 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
                     getString(R.string.param_appointment_type),
                     getString(R.string.param_is_guest),
                     getString(R.string.param_provider_id),
-                    getString(R.string.param_location_id)
+                    getString(R.string.param_location_id),
+                    getString(R.string.param_payment_made),
+                    getString(R.string.param_payment_plan_created),
+                    getString(R.string.param_partial_pay_available)
             };
             Object[] values = {getAppointment().getMetadata().getPracticeId(),
                     getAppointmentId(),
                     getAppointment().getPayload().getVisitType().getName(),
                     false,
                     getAppointment().getPayload().getProvider().getGuid(),
-                    getAppointment().getPayload().getLocation().getGuid()
+                    getAppointment().getPayload().getLocation().getGuid(),
+                    paymentMade,
+                    paymentPlanCreated,
+                    paymentsModel.getPaymentPayload().getPaymentSetting(getAppointment().getMetadata().getPracticeId())
+                            .getPayload().getRegularPayments().isAllowPartialPayments()
             };
             MixPanelUtil.logEvent(getString(R.string.event_checkin_completed), params, values);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_checkin_completed), 1);

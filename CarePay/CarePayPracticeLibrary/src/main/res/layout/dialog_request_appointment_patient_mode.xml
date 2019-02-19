@@ -5,18 +5,52 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="horizontal">
+
+    <FrameLayout
+        android:id="@+id/closeViewLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/button_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/dialog_button_bg" />
+
+        <ImageView
+            android:id="@+id/cancel_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/icn_arrow_left" />
+    </FrameLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_cardview"
+        android:layout_width="@dimen/dialog_width"
+        android:layout_height="@dimen/commonPracticeDialogHeight"
+        android:layout_marginStart="@dimen/dimen_26dp"
+        android:layout_marginEnd="@dimen/dimen_26dp"
         android:orientation="vertical">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/content_view_header_title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/contentViewHeaderTitleHeight"
+            android:background="@drawable/patient_mode_dialog_header_bg"
+            android:gravity="center"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/contentViewHeaderTitleTextSize"
+            app:customAssetFont="gotham_rounded_medium" />
 
         <RelativeLayout
             android:id="@+id/header"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/appointmentRequestDialogHeaderHeight">
+            android:layout_height="@dimen/appointmentRequestDialogHeaderHeight"
+            android:background="@color/white">
 
             <RelativeLayout
                 android:id="@+id/summary_header_layout"
@@ -44,18 +78,18 @@
                     android:textColor="@color/white_opacity_60"
                     android:textSize="@dimen/appointmentDialogStartTimeTextSize"
                     app:customAssetFont="gotham_rounded_bold"
-                    tools:text="10:15 AM"/>
+                    tools:text="10:15 AM" />
             </RelativeLayout>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/provider_short_name"
                 android:layout_width="@dimen/provider_card_avatar_size"
                 android:layout_height="@dimen/provider_card_avatar_size"
-                android:layout_below="@id/summary_header_layout"
+                android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/appointment_summary_provider_image_margin"
                 android:background="@drawable/round_list_tv"
-                android:gravity="center_vertical|center_horizontal"
+                android:gravity="center"
                 android:src="@drawable/icn_placeholder_user_profile_png"
                 android:textColor="@color/lightSlateGray"
                 android:textSize="@dimen/text_size_40sp"
@@ -66,9 +100,8 @@
                 android:id="@+id/picImageView"
                 android:layout_width="@dimen/provider_card_avatar_size"
                 android:layout_height="@dimen/provider_card_avatar_size"
-                android:layout_below="@id/summary_header_layout"
+                android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/appointment_summary_provider_image_margin"
                 android:visibility="gone" />
 
         </RelativeLayout>
@@ -78,6 +111,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:background="@color/white"
             android:fillViewport="true">
 
             <LinearLayout
@@ -269,6 +303,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/round_bottom_white_background"
             android:orientation="vertical">
 
             <View
@@ -295,4 +330,18 @@
 
         </LinearLayout>
     </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/dialog_button_bg" />
+
+    </FrameLayout>
 </LinearLayout>

@@ -13,15 +13,17 @@ public class ResourcesToScheduleDTO {
     @SerializedName("practice")
     @Expose
     private UserPracticeDTO practice = new UserPracticeDTO();
+    @SerializedName("resources")
+    @Expose
+    private List<AppointmentResourcesItemDTO> resourcesV2 = new ArrayList<>();
+    @SerializedName("visit_reasons")
+    @Expose
+    private List<VisitTypeDTO> visitReasons = new ArrayList<>();
     @SerializedName("locations")
     @Expose
     private List<LocationDTO> locations = new ArrayList<>();
-    @SerializedName("resources")
-    @Expose
-    private List<AppointmentResourcesDTO> resources = new ArrayList<>();
 
     /**
-     *
      * @return practice
      */
     public UserPracticeDTO getPractice() {
@@ -29,42 +31,33 @@ public class ResourcesToScheduleDTO {
     }
 
     /**
-     *
      * @param practice practice
      */
     public void setPractice(UserPracticeDTO practice) {
         this.practice = practice;
     }
 
-    /**
-     *
-     * @return locations
-     */
+    public List<AppointmentResourcesItemDTO> getResourcesV2() {
+        return resourcesV2;
+    }
+
+    public void setResourcesV2(List<AppointmentResourcesItemDTO> resourcesV2) {
+        this.resourcesV2 = resourcesV2;
+    }
+
+    public List<VisitTypeDTO> getVisitReasons() {
+        return visitReasons;
+    }
+
+    public void setVisitReasons(List<VisitTypeDTO> visitReasons) {
+        this.visitReasons = visitReasons;
+    }
+
     public List<LocationDTO> getLocations() {
         return locations;
     }
 
-    /**
-     *
-     * @param locations locations
-     */
     public void setLocations(List<LocationDTO> locations) {
         this.locations = locations;
-    }
-
-    /**
-     *
-     * @return resources
-     */
-    public List<AppointmentResourcesDTO> getResources() {
-        return resources;
-    }
-
-    /**
-     *
-     * @param resources resources
-     */
-    public void setResources(List<AppointmentResourcesDTO> resources) {
-        this.resources = resources;
     }
 }

@@ -5,7 +5,6 @@ import android.os.Bundle;
 /**
  * @author pjohnson on 19/12/17.
  */
-
 public interface TranslatableFragment {
     Bundle saveInstanceForTranslation(Bundle bundle);
 

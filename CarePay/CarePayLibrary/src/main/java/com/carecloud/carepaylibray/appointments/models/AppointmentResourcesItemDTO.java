@@ -54,246 +54,196 @@ public class AppointmentResourcesItemDTO {
     @SerializedName("visit_reasons")
     @Expose
     private List<VisitTypeDTO> visitReasons = new ArrayList<>();
+    @SerializedName("default_provider")
+    @Expose
+    private ProvidersDefaultDTO defaultProvider = new ProvidersDefaultDTO();
     @SerializedName("provider")
     @Expose
     private ProviderDTO provider = new ProviderDTO();
 
     /**
-     * 
-     * @return
-     *     The appointmentConfirmation
+     * @return The appointmentConfirmation
      */
     public String getAppointmentConfirmation() {
         return appointmentConfirmation;
     }
 
     /**
-     * 
-     * @param appointmentConfirmation
-     *     The appointment_confirmation
+     * @param appointmentConfirmation The appointment_confirmation
      */
     public void setAppointmentConfirmation(String appointmentConfirmation) {
         this.appointmentConfirmation = appointmentConfirmation;
     }
 
     /**
-     * 
-     * @return
-     *     The businessEntityId
+     * @return The businessEntityId
      */
     public String getBusinessEntityId() {
         return businessEntityId;
     }
 
     /**
-     * 
-     * @param businessEntityId
-     *     The business_entity_id
+     * @param businessEntityId The business_entity_id
      */
     public void setBusinessEntityId(String businessEntityId) {
         this.businessEntityId = businessEntityId;
     }
 
     /**
-     * 
-     * @return
-     *     The code
+     * @return The code
      */
     public Object getCode() {
         return code;
     }
 
     /**
-     * 
-     * @param code
-     *     The code
+     * @param code The code
      */
     public void setCode(Object code) {
         this.code = code;
     }
 
     /**
-     * 
-     * @return
-     *     The createdAt
+     * @return The createdAt
      */
     public String getCreatedAt() {
         return createdAt;
     }
 
     /**
-     * 
-     * @param createdAt
-     *     The created_at
+     * @param createdAt The created_at
      */
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
     /**
-     * 
-     * @return
-     *     The createdBy
+     * @return The createdBy
      */
     public Integer getCreatedBy() {
         return createdBy;
     }
 
     /**
-     * 
-     * @param createdBy
-     *     The created_by
+     * @param createdBy The created_by
      */
     public void setCreatedBy(Integer createdBy) {
         this.createdBy = createdBy;
     }
 
     /**
-     * 
-     * @return
-     *     The description
+     * @return The description
      */
     public Object getDescription() {
         return description;
     }
 
     /**
-     * 
-     * @param description
-     *     The description
+     * @param description The description
      */
     public void setDescription(Object description) {
         this.description = description;
     }
 
     /**
-     * 
-     * @return
-     *     The id
+     * @return The id
      */
     public Integer getId() {
         return id;
     }
 
     /**
-     * 
-     * @param id
-     *     The id
+     * @param id The id
      */
     public void setId(Integer id) {
         this.id = id;
     }
 
     /**
-     * 
-     * @return
-     *     The isForRequests
+     * @return The isForRequests
      */
     public Boolean getIsForRequests() {
         return isForRequests;
     }
 
     /**
-     * 
-     * @param isForRequests
-     *     The is_for_requests
+     * @param isForRequests The is_for_requests
      */
     public void setIsForRequests(Boolean isForRequests) {
         this.isForRequests = isForRequests;
     }
 
     /**
-     * 
-     * @return
-     *     The name
+     * @return The name
      */
     public String getName() {
         return name;
     }
 
     /**
-     * 
-     * @param name
-     *     The name
+     * @param name The name
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * 
-     * @return
-     *     The sortCode
+     * @return The sortCode
      */
     public Integer getSortCode() {
         return sortCode;
     }
 
     /**
-     * 
-     * @param sortCode
-     *     The sort_code
+     * @param sortCode The sort_code
      */
     public void setSortCode(Integer sortCode) {
         this.sortCode = sortCode;
     }
 
     /**
-     * 
-     * @return
-     *     The status
+     * @return The status
      */
     public String getStatus() {
         return status;
     }
 
     /**
-     * 
-     * @param status
-     *     The status
+     * @param status The status
      */
     public void setStatus(String status) {
         this.status = status;
     }
 
     /**
-     * 
-     * @return
-     *     The updatedAt
+     * @return The updatedAt
      */
     public String getUpdatedAt() {
         return updatedAt;
     }
 
     /**
-     * 
-     * @param updatedAt
-     *     The updated_at
+     * @param updatedAt The updated_at
      */
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
 
     /**
-     * 
-     * @return
-     *     The updatedBy
+     * @return The updatedBy
      */
     public Integer getUpdatedBy() {
         return updatedBy;
     }
 
     /**
-     * 
-     * @param updatedBy
-     *     The updated_by
+     * @param updatedBy The updated_by
      */
     public void setUpdatedBy(Integer updatedBy) {
         this.updatedBy = updatedBy;
     }
 
     /**
-     *
      * @return visitReasons
      */
     public List<VisitTypeDTO> getVisitReasons() {
@@ -301,7 +251,6 @@ public class AppointmentResourcesItemDTO {
     }
 
     /**
-     *
      * @param visitReasons visitReasons
      */
     public void setVisitReasons(List<VisitTypeDTO> visitReasons) {
@@ -309,7 +258,6 @@ public class AppointmentResourcesItemDTO {
     }
 
     /**
-     *
      * @return provider
      */
     public ProviderDTO getProvider() {
@@ -317,10 +265,17 @@ public class AppointmentResourcesItemDTO {
     }
 
     /**
-     *
      * @param provider provider
      */
     public void setProvider(ProviderDTO provider) {
         this.provider = provider;
+    }
+
+    public ProvidersDefaultDTO getDefaultProvider() {
+        return defaultProvider;
+    }
+
+    public void setDefaultProvider(ProvidersDefaultDTO defaultProvider) {
+        this.defaultProvider = defaultProvider;
     }
 }

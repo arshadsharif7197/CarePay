@@ -146,7 +146,7 @@ public class AppointmentHistoryFragment extends BaseFragment
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.getAppointmentPresenter().newAppointment();
+                callback.newAppointment();
             }
         });
     }

@@ -3,53 +3,53 @@ package com.carecloud.carepay.patient.appointments.presenter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
+import com.carecloud.carepay.patient.appointments.createappointment.AvailabilityHourFragment;
+import com.carecloud.carepay.patient.appointments.createappointment.RequestAppointmentDialogFragment;
 import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentFeeDialog;
 import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
-import com.carecloud.carepay.patient.appointments.fragments.AppointmentDateRangeFragment;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentDetailDialog;
-import com.carecloud.carepay.patient.appointments.fragments.AvailableHoursFragment;
-import com.carecloud.carepay.patient.appointments.fragments.ChooseProviderFragment;
+import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.appointment.DataDTO;
-import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDTO;
+import com.carecloud.carepaylibray.appointments.createappointment.CreateAppointmentFragmentInterface;
+import com.carecloud.carepaylibray.appointments.interfaces.DateCalendarRangeInterface;
+import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDataDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityMetadataDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentCancellationFee;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPrePaymentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.CancellationReasonDTO;
-import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
-import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
-import com.carecloud.carepaylibray.appointments.models.ResourcesToScheduleDTO;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
+import com.carecloud.carepaylibray.appointments.models.ProvidersReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.ISession;
-import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.customdialogs.QrCodeViewDialog;
-import com.carecloud.carepaylibray.customdialogs.RequestAppointmentDialog;
-import com.carecloud.carepaylibray.customdialogs.VisitTypeFragmentDialog;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
@@ -69,6 +69,7 @@ import com.google.android.gms.wallet.MaskedWallet;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -84,8 +85,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     private String practiceId;
     private String practiceMgmt;
     private String practiceName;
-    private AppointmentResourcesDTO selectedAppointmentResourcesDTO;
-    private VisitTypeDTO selectedVisitTypeDTO;
     private AppointmentDTO appointmentDTO;
     private AppointmentsSlotsDTO appointmentSlot;
 
@@ -93,213 +92,12 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     private boolean startCancelationFeePayment = false;
     private String cancellationReasonString;
-
-    private ScheduleAppointmentRequestDTO scheduleAppointmentRequestDTO;
-    private double prepayAmount;
     private AppointmentDTO cancelAppointmentDTO;
 
     public PatientAppointmentPresenter(AppointmentViewHandler viewHandler,
                                        AppointmentsResultModel appointmentsResultModel,
                                        PaymentsModel paymentsModel) {
         super(viewHandler, appointmentsResultModel, paymentsModel);
-    }
-
-    @Override
-    public void newAppointment() {
-        ChooseProviderFragment fragment = ChooseProviderFragment.newInstance(appointmentsResultModel,
-                null, null);
-        viewHandler.navigateToFragment(fragment, true);
-    }
-
-    @Override
-    public void onProviderSelected(AppointmentResourcesDTO appointmentResourcesDTO,
-                                   AppointmentsResultModel appointmentsResultModel,
-                                   ResourcesToScheduleDTO resourcesToScheduleDTO) {
-        UserPracticeDTO selectedResourcesPracticeDTO;
-        if (resourcesToScheduleDTO != null) {
-            selectedResourcesPracticeDTO = resourcesToScheduleDTO.getPractice();
-        } else {
-            selectedResourcesPracticeDTO = appointmentsResultModel.getPayload()
-                    .getResourcesToSchedule().get(0).getPractice();
-        }
-        setPatientID(selectedResourcesPracticeDTO.getPracticeId());
-        practiceId = selectedResourcesPracticeDTO.getPracticeId();
-        practiceMgmt = selectedResourcesPracticeDTO.getPracticeMgmt();
-        practiceName = selectedResourcesPracticeDTO.getPracticeName();
-
-        VisitTypeFragmentDialog dialog = VisitTypeFragmentDialog.newInstance(appointmentResourcesDTO,
-                appointmentsResultModel, getPracticeSettings());
-        viewHandler.displayDialogFragment(dialog, true);
-    }
-
-    @Override
-    public void onVisitTypeSelected(VisitTypeDTO visitTypeDTO,
-                                    AppointmentResourcesDTO appointmentResourcesDTO,
-                                    AppointmentsResultModel appointmentsResultModel) {
-        selectedAppointmentResourcesDTO = appointmentResourcesDTO;
-        selectedVisitTypeDTO = visitTypeDTO;
-        AvailableHoursFragment availableHoursFragment = AvailableHoursFragment
-                .newInstance(appointmentsResultModel,
-                        appointmentResourcesDTO.getResource(), null, null, visitTypeDTO);
-        viewHandler.navigateToFragment(availableHoursFragment, true);
-    }
-
-    @Override
-    public void onDateRangeSelected(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO,
-                                    AppointmentResourcesItemDTO appointmentResource,
-                                    AppointmentsResultModel appointmentsResultModel) {
-        AvailableHoursFragment availableHoursFragment = AvailableHoursFragment
-                .newInstance(appointmentsResultModel, appointmentResource,
-                        startDate, endDate, visitTypeDTO);
-        viewHandler.navigateToFragment(availableHoursFragment, false);
-    }
-
-    @Override
-    public void selectDateRange(Date startDate, Date endDate, VisitTypeDTO visitTypeDTO,
-                                AppointmentResourcesItemDTO appointmentResource,
-                                AppointmentsResultModel appointmentsResultModel) {
-        AppointmentDateRangeFragment fragment = AppointmentDateRangeFragment
-                .newInstance(appointmentsResultModel, startDate, endDate, appointmentResource, visitTypeDTO);
-        viewHandler.navigateToFragment(fragment, false);
-    }
-
-    @Override
-    public void rescheduleAppointment(AppointmentDTO appointmentDTO) {
-        this.appointmentDTO = appointmentDTO;
-        selectedVisitTypeDTO = appointmentDTO.getPayload().getVisitType();
-        AppointmentResourcesItemDTO resourcesItemDTO = new AppointmentResourcesItemDTO();
-        resourcesItemDTO.setId(appointmentDTO.getPayload().getResourceId());
-        resourcesItemDTO.setProvider(appointmentDTO.getPayload().getProvider());
-
-        selectedAppointmentResourcesDTO = new AppointmentResourcesDTO();
-        selectedAppointmentResourcesDTO.setResource(resourcesItemDTO);
-        practiceId = appointmentDTO.getMetadata().getPracticeId();
-        practiceMgmt = appointmentDTO.getMetadata().getPracticeMgmt();
-        patientId = appointmentDTO.getMetadata().getPatientId();
-
-        ResourcesToScheduleDTO resourcesToSchedule = new ResourcesToScheduleDTO();
-        resourcesToSchedule.getPractice().setPracticeId(appointmentDTO.getMetadata().getPracticeId());
-        resourcesToSchedule.getPractice().setPracticeMgmt(appointmentDTO.getMetadata().getPracticeMgmt());
-        appointmentsResultModel.getPayload().getResourcesToSchedule().add(resourcesToSchedule);
-
-        AvailableHoursFragment availableHoursFragment = AvailableHoursFragment
-                .newInstance(appointmentsResultModel, appointmentDTO);
-
-        viewHandler.navigateToFragment(availableHoursFragment, true);
-    }
-
-    @Override
-    public void onHoursAndLocationSelected(AppointmentsSlotsDTO appointmentsSlot,
-                                           AppointmentAvailabilityDTO availabilityDTO) {
-        ProviderDTO providersDTO;
-        if (selectedAppointmentResourcesDTO != null) {
-            providersDTO = selectedAppointmentResourcesDTO.getResource().getProvider();
-        } else {
-            providersDTO = appointmentDTO.getPayload().getProvider();
-            patientId = appointmentDTO.getMetadata().getPatientId();
-            practiceId = appointmentDTO.getMetadata().getPracticeId();
-            practiceMgmt = appointmentDTO.getMetadata().getPracticeMgmt();
-        }
-
-        AppointmentsPayloadDTO payloadDTO = new AppointmentsPayloadDTO();
-        payloadDTO.setStartTime(appointmentsSlot.getStartTime());
-        payloadDTO.setEndTime(appointmentsSlot.getEndTime());
-        payloadDTO.setLocation(appointmentsSlot.getLocation());
-
-        payloadDTO.setProvider(providersDTO);
-        payloadDTO.setProviderId(providersDTO.getId().toString());
-
-        PatientModel patientDTO = new PatientModel();
-        patientDTO.setPatientId(patientId);
-        payloadDTO.setPatient(patientDTO);
-
-        AppointmentDTO appointmentDTO = new AppointmentDTO();
-        appointmentDTO.setPayload(payloadDTO);
-
-        final RequestAppointmentDialog requestAppointmentDialog = new RequestAppointmentDialog(getContext(),
-                appointmentDTO, appointmentsSlot, selectedVisitTypeDTO, appointmentDTO.getPayload().getProvider());
-        requestAppointmentDialog.show();
-    }
-
-    @Override
-    public void requestAppointment(AppointmentsSlotsDTO appointmentSlot, String reasonForVisit) {
-        Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("practice_mgmt", practiceMgmt);
-        queryMap.put("practice_id", practiceId);
-
-        scheduleAppointmentRequestDTO = new ScheduleAppointmentRequestDTO();
-        ScheduleAppointmentRequestDTO.Appointment appointment = scheduleAppointmentRequestDTO.getAppointment();
-        appointment.setStartTime(appointmentSlot.getStartTime());
-        appointment.setEndTime(appointmentSlot.getEndTime());
-        appointment.setLocationId(appointmentSlot.getLocation().getId());
-        appointment.setLocationGuid(appointmentSlot.getLocation().getGuid());
-        appointment.setProviderId(selectedAppointmentResourcesDTO.getResource().getProvider().getId());
-        appointment.setProviderGuid(selectedAppointmentResourcesDTO.getResource().getProvider().getGuid());
-        appointment.setVisitReasonId(selectedVisitTypeDTO.getId());
-        appointment.setResourceId(selectedAppointmentResourcesDTO.getResource().getId());
-        appointment.setComplaint(reasonForVisit);
-        appointment.setComments(reasonForVisit);
-
-        appointment.getPatient().setId(patientId);
-
-        prepayAmount = selectedVisitTypeDTO.getAmount();
-        if (prepayAmount > 0 && paymentsModel != null) {
-            startPrepaymentProcess(scheduleAppointmentRequestDTO, appointmentSlot, prepayAmount);
-        } else {
-            Gson gson = new Gson();
-            TransitionDTO transitionDTO = appointmentsResultModel.getMetadata()
-                    .getTransitions().getMakeAppointment();
-            viewHandler.getWorkflowServiceHelper().execute(transitionDTO, getMakeAppointmentCallback,
-                    gson.toJson(scheduleAppointmentRequestDTO), queryMap);
-        }
-    }
-
-    @Override
-    public void onAppointmentUnconfirmed() {
-
-    }
-
-    @Override
-    public void onAppointmentRequestSuccess() {
-        //log appt scheduled to mixpanel
-        String[] params = {getString(R.string.param_appointment_type),
-                getString(R.string.param_practice_id),
-                getString(R.string.param_practice_name),
-                getString(R.string.param_provider_id),
-                getString(R.string.param_patient_id),
-                getString(R.string.param_location_id),
-                getString(R.string.param_reason_visit),
-                //make sure this is the last item in case we need to null it out to prevent it from sending
-                getString(R.string.param_payment_made)
-        };
-        Object[] values = {selectedVisitTypeDTO.getName(),
-                practiceId,
-                getPracticeInfo(practiceId).getPracticeName(),
-                scheduleAppointmentRequestDTO.getAppointment().getProviderGuid(),
-                patientId,
-                scheduleAppointmentRequestDTO.getAppointment().getLocationGuid(),
-                scheduleAppointmentRequestDTO.getAppointment().getComments(),
-                prepayAmount
-        };
-        if (prepayAmount <= 0) {
-            params[params.length - 1] = null;
-        }
-        MixPanelUtil.logEvent(getString(R.string.event_appointment_requested), params, values);
-        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
-
-        viewHandler.confirmAppointment(true,
-                getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests());
-        appointmentDTO = null;//clear this
-    }
-
-    @Override
-    public ApplicationMode getApplicationMode() {
-        return viewHandler.getApplicationMode();
-    }
-
-    @Override
-    public AppointmentsSettingDTO getAppointmentsSettings() {
-        return getPracticeSettings();
     }
 
     public AppointmentsResultModel getMainAppointmentDto() {
@@ -413,11 +211,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     @Override
-    public void onRescheduleAppointment(AppointmentDTO appointmentDTO) {
-        rescheduleAppointment(appointmentDTO);
-    }
-
-    @Override
     public void getQueueStatus(AppointmentDTO appointmentDTO, WorkflowServiceCallback callback) {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
@@ -472,6 +265,11 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     @Override
+    public void newAppointment() {
+        viewHandler.newAppointment();
+    }
+
+    @Override
     public void displayAppointmentDetails(AppointmentDTO appointmentDTO) {
         practiceId = appointmentDTO.getMetadata().getPracticeId();
         practiceMgmt = appointmentDTO.getMetadata().getPracticeMgmt();
@@ -511,11 +309,10 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                             postModel.getMetadata().setAppointmentId(appointmentDTO.getPayload().getId());
                             postModel.getMetadata().setCancellationReasonId(String.valueOf(cancellationReason));
                             paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
-
                             PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
                                     .newInstance(paymentsModel, Double.parseDouble(cancellationFee.getAmount()),
                                             Label.getLabel("appointment_cancellation_fee_title"));
-                            viewHandler.navigateToFragment(prepaymentFragment, true);
+                            viewHandler.replaceFragment(prepaymentFragment, true);
 
                             String[] params = {getString(R.string.param_payment_amount),
                                     getString(R.string.param_provider_id),
@@ -533,9 +330,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                 }).show();
     }
 
-    private String getCancelReason(int cancellationReasonId, String cancellationReasonComment){
-        for(CancellationReasonDTO cancellationReason : appointmentsResultModel.getPayload().getCancellationReasons()){
-            if (cancellationReason.getAppointmentCancellationReason().getId().equals(cancellationReasonId)){
+    private String getCancelReason(int cancellationReasonId, String cancellationReasonComment) {
+        for (CancellationReasonDTO cancellationReason : appointmentsResultModel.getPayload().getCancellationReasons()) {
+            if (cancellationReason.getAppointmentCancellationReason().getId().equals(cancellationReasonId)) {
                 return cancellationReason.getAppointmentCancellationReason().getName() +
                         (StringUtil.isNullOrEmpty(cancellationReasonComment) ? "" : (" " + cancellationReasonComment));
             }
@@ -554,20 +351,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         }
         return null;
     }
-
-
-    private void setPatientID(String practiceID) {
-        PracticePatientIdsDTO[] practicePatientIdArray = ApplicationPreferences.getInstance()
-                .getObjectFromSharedPreferences(CarePayConstants.KEY_PRACTICE_PATIENT_IDS,
-                        PracticePatientIdsDTO[].class);
-        for (PracticePatientIdsDTO practicePatientId : practicePatientIdArray) {
-            if (practicePatientId.getPracticeId().equals(practiceID)) {
-                patientId = practicePatientId.getPatientId();
-                return;
-            }
-        }
-    }
-
 
     private WorkflowServiceCallback cancelCallback = new WorkflowServiceCallback() {
         @Override
@@ -617,31 +400,13 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         };
     }
 
-    private WorkflowServiceCallback getMakeAppointmentCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            viewHandler.showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            viewHandler.hideProgressDialog();
-            onAppointmentRequestSuccess();
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            viewHandler.hideProgressDialog();
-            viewHandler.showErrorNotification(exceptionMessage);
-            onAppointmentUnconfirmed();
-        }
-    };
-
-
     @Override
     public void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDTO,
                                        AppointmentsSlotsDTO appointmentSlot, double amount) {
         this.appointmentSlot = appointmentSlot;
+        if (StringUtil.isNullOrEmpty(patientId)) {
+            patientId = appointmentRequestDTO.getAppointment().getPatient().getId();
+        }
         IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
         postModel.setAmount(amount);
 
@@ -662,9 +427,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     @Override
     public void onPaymentDismissed() {
         startCancelationFeePayment = false;
-        if (appointmentDTO != null) {
-            onHoursAndLocationSelected(appointmentSlot, null);
-        } else {
+        if (appointmentDTO == null) {
             viewHandler.refreshAppointments();
         }
     }
@@ -672,7 +435,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     @Override
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
         Fragment fragment = AddNewCreditCardFragment.newInstance(paymentsModel, amount);
-        viewHandler.navigateToFragment(fragment, true);
+        viewHandler.replaceFragment(fragment, true);
     }
 
     @Override
@@ -684,20 +447,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
                 .newInstance(paymentsModel, amount, Label.getLabel("appointments_prepayment_title"));
-        viewHandler.navigateToFragment(prepaymentFragment, true);
-
-        String[] params = {getString(R.string.param_payment_amount),
-                getString(R.string.param_provider_id),
-                getString(R.string.param_practice_id),
-                getString(R.string.param_location_id)
-        };
-        Object[] values = {amount,
-                scheduleAppointmentRequestDTO.getAppointment().getProviderGuid(),
-                practiceId,
-                scheduleAppointmentRequestDTO.getAppointment().getLocationGuid()
-        };
-
-        MixPanelUtil.logEvent(getString(R.string.event_payment_start_prepayment), params, values);
+        viewHandler.replaceFragment(prepaymentFragment, true);
     }
 
     @Override
@@ -715,7 +465,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
         fragment.setArguments(args);
 
-        viewHandler.navigateToFragment(fragment, true);
+        viewHandler.replaceFragment(fragment, true);
     }
 
     @Override
@@ -725,7 +475,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                 && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             Fragment fragment = ChooseCreditCardFragment.newInstance(paymentsModel,
                     selectedPaymentMethod.getLabel(), amount);
-            viewHandler.navigateToFragment(fragment, true);
+            viewHandler.replaceFragment(fragment, true);
         } else {
             showAddCard(amount, paymentsModel);
         }
@@ -734,7 +484,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     @Nullable
     @Override
     public String getAppointmentId() {
-        if(appointmentDTO != null){
+        if (appointmentDTO != null) {
             return appointmentDTO.getPayload().getId();
         }
         return null;
@@ -776,7 +526,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                             Label.getLabel("add_appointment_back_to_appointments_button"));
             viewHandler.displayDialogFragment(confirmationFragment, false);
 
-            if(paymentType.equals(Label.getLabel("appointment.confirmationScreen.type.label.paymentType"))){
+            if (paymentType.equals(Label.getLabel("appointment.confirmationScreen.type.label.paymentType"))) {
                 //this is a prepayment
                 MixPanelUtil.incrementPeopleProperty(getString(R.string.count_prepayments_completed), 1);
             }
@@ -787,7 +537,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     public void showPaymentPendingConfirmation(PaymentsModel paymentsModel) {
         new CustomMessageToast(getContext(), Label.getLabel("payment_queued_patient"), CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
         viewHandler.confirmAppointment(false,
-                getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests());
+                getPracticeSettings().getRequests().getAutomaticallyApproveRequests());
         appointmentDTO = null;//clear this
     }
 
@@ -890,14 +640,16 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             viewHandler.confirmAppointment(false, false);
             logApptCancelMixpanel();
         } else {
-            onAppointmentRequestSuccess();
+            viewHandler.confirmAppointment(true,
+                    getPracticeSettings().getRequests().getAutomaticallyApproveRequests());
+            this.appointmentDTO = null;//clear this
         }
         startCancelationFeePayment = false;
     }
 
     @Override
     public void createWalletFragment(MaskedWallet maskedWallet, Double amount) {
-        viewHandler.navigateToFragment(AndroidPayDialogFragment.newInstance(maskedWallet, paymentsModel, amount), true);
+        viewHandler.replaceFragment(AndroidPayDialogFragment.newInstance(maskedWallet, paymentsModel, amount), true);
     }
 
     @Override
@@ -908,11 +660,126 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         }
     }
 
+    public void setPracticeId(String practiceId) {
+        this.practiceId = practiceId;
+    }
+
     private String getString(int id) {
         return getContext().getString(id);
     }
 
+    @Override
+    public void showFragment(DialogFragment fragment) {
+        addFragment(fragment, true);
+    }
+
+    @Override
+    public void displayToolbar(boolean display, String title) {
+        ((MenuPatientActivity) viewHandler).displayToolbar(display, title);
+    }
+
+    @Override
+    public void setResourceProvider(AppointmentResourcesItemDTO resource) {
+        getSupportFragmentManager().popBackStackImmediate();
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container_main);
+        if (fragment instanceof CreateAppointmentFragmentInterface) {
+            ((CreateAppointmentFragmentInterface) fragment).setResourceProvider(resource);
+        }
+    }
+
+    @Override
+    public void setVisitType(VisitTypeDTO visitTypeDTO) {
+        getSupportFragmentManager().popBackStackImmediate();
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container_main);
+        if (fragment instanceof CreateAppointmentFragmentInterface) {
+            ((CreateAppointmentFragmentInterface) fragment).setVisitType(visitTypeDTO);
+        }
+    }
+
+    @Override
+    public void setLocation(LocationDTO locationDTO) {
+        getSupportFragmentManager().popBackStackImmediate();
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container_main);
+        if (fragment instanceof CreateAppointmentFragmentInterface) {
+            ((CreateAppointmentFragmentInterface) fragment).setLocation(locationDTO);
+        }
+    }
+
+    @Override
+    public void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO) {
+        RequestAppointmentDialogFragment.newInstance(appointmentDTO).show(getSupportFragmentManager(), "confirmation");
+    }
+
+    @Override
+    public void appointmentScheduledSuccessfully() {
+        getSupportFragmentManager().popBackStackImmediate();
+        getSupportFragmentManager().popBackStackImmediate();
+        viewHandler.refreshAppointments();
+    }
+
+    @Override
+    public void rescheduleAppointment(AppointmentDTO appointmentDTO) {
+        this.appointmentDTO = appointmentDTO;
+
+        AppointmentAvailabilityPayloadDTO payload = new AppointmentAvailabilityPayloadDTO();
+        payload.setLocation(appointmentDTO.getPayload().getLocation());
+
+        AppointmentResourcesItemDTO selectedResource = new AppointmentResourcesItemDTO();
+        selectedResource.setId(appointmentDTO.getPayload().getResourceId());
+        selectedResource.setProvider(appointmentDTO.getPayload().getProvider());
+        payload.setResource(selectedResource);
+
+        VisitTypeDTO selectedVisitType = appointmentDTO.getPayload().getVisitType();
+        ProvidersReasonDTO reasonDTO = new ProvidersReasonDTO();
+        reasonDTO.setAmount(selectedVisitType.getAmount());
+        reasonDTO.setName(selectedVisitType.getName());
+        reasonDTO.setDescription(selectedVisitType.getDescription());
+        reasonDTO.setId(selectedVisitType.getId());
+        payload.setVisitReason(reasonDTO);
+
+        AppointmentAvailabilityDataDTO appointmentAvailabilityDataDTO = new AppointmentAvailabilityDataDTO();
+        ArrayList<AppointmentAvailabilityPayloadDTO> payloadList = new ArrayList<>();
+        payloadList.add(payload);
+        AppointmentAvailabilityMetadataDTO metadataDTO = new AppointmentAvailabilityMetadataDTO();
+        metadataDTO.setPracticeId(appointmentDTO.getMetadata().getPracticeId());
+        metadataDTO.setPracticeMgmt(appointmentDTO.getMetadata().getPracticeMgmt());
+        appointmentAvailabilityDataDTO.setMetadata(metadataDTO);
+        appointmentAvailabilityDataDTO.setPayload(payloadList);
+        appointmentsResultModel.getPayload().setAppointmentAvailability(appointmentAvailabilityDataDTO);
+        showFragment(AvailabilityHourFragment.newInstance(AvailabilityHourFragment.SCHEDULE_MODE));
+    }
+
+    @Override
+    public void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDto,
+                                       double amount,
+                                       String practiceId) {
+        AppointmentsSlotsDTO slot = new AppointmentsSlotsDTO();
+        slot.setStartTime(appointmentRequestDto.getAppointment().getStartTime());
+        slot.setEndTime(appointmentRequestDto.getAppointment().getEndTime());
+        setPracticeId(practiceId);
+        startPrepaymentProcess(appointmentRequestDto, slot, amount);
+    }
+
+    @Override
+    public void setAppointmentSlot(AppointmentsSlotsDTO slot) {
+        //NA for this flow
+    }
+
+    @Override
+    public void setDateRange(Date newStartDate, Date newEndDate) {
+        getSupportFragmentManager().popBackStackImmediate();
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container_main);
+        if (fragment instanceof DateCalendarRangeInterface) {
+            ((DateCalendarRangeInterface) fragment).setDateRange(newStartDate, newEndDate);
+        }
+    }
+
+    private FragmentManager getSupportFragmentManager() {
+        return ((BaseActivity) viewHandler).getSupportFragmentManager();
+    }
+
     private void logApptCancelMixpanel() {
+        AppointmentCancellationFee cancellationFee = getCancellationFee(cancelAppointmentDTO);
         //log appt cancellation to mixpanel
         String[] params = {getString(R.string.param_appointment_cancel_reason),
                 getString(R.string.param_practice_id),
@@ -920,7 +787,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                 getString(R.string.param_provider_id),
                 getString(R.string.param_patient_id),
                 getString(R.string.param_location_id),
-                getString(R.string.param_appointment_type)
+                getString(R.string.param_appointment_type),
+                getString(R.string.param_payment_amount)
         };
         Object[] values = {
                 cancellationReasonString,
@@ -929,7 +797,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                 cancelAppointmentDTO.getPayload().getProvider().getGuid(),
                 patientId,
                 cancelAppointmentDTO.getPayload().getLocation().getGuid(),
-                cancelAppointmentDTO.getPayload().getVisitType().getName()
+                cancelAppointmentDTO.getPayload().getVisitType().getName(),
+                cancellationFee != null ? cancellationFee.getAmount() : null
         };
         MixPanelUtil.logEvent(getString(R.string.event_appointment_cancelled), params, values);
         MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_cancelled), 1);

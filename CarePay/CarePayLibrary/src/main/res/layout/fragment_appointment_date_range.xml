@@ -15,8 +15,8 @@
         android:layout_height="wrap_content"
         android:background="@color/date_range_header"
         android:orientation="horizontal"
-        android:paddingBottom="@dimen/add_apt_calendar_day_title_padding_top"
         android:paddingTop="@dimen/add_apt_calendar_day_title_padding_top"
+        android:paddingBottom="@dimen/add_apt_calendar_day_title_padding_top"
         android:weightSum="7">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
