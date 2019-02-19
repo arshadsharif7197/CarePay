@@ -19,11 +19,13 @@ public class PracticePaymentPlanTermsFragment extends PaymentPlanTermsFragment {
 
     /**
      * Constructor
-     * @param paymentsModel payment model
+     *
+     * @param paymentsModel        payment model
      * @param paymentPlanPostModel post model
      * @return new instance
      */
-    public static PracticePaymentPlanTermsFragment newInstance(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel){
+    public static PracticePaymentPlanTermsFragment newInstance(PaymentsModel paymentsModel,
+                                                               PaymentPlanPostModel paymentPlanPostModel) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPlanPostModel);
@@ -34,7 +36,7 @@ public class PracticePaymentPlanTermsFragment extends PaymentPlanTermsFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
 
         View close = view.findViewById(R.id.closeViewLayout);

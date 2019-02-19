@@ -30,8 +30,8 @@ public class AddPaymentItemAdapter extends RecyclerView.Adapter<AddPaymentItemAd
     private static final int VIEW_TYPE_LINE = 0x200;
 
     private Context context;
-    private List<SimpleChargeItem> templateItems = new ArrayList<>();
-    private List<SimpleChargeItem> simpleChargeItems = new ArrayList<>();
+    private List<SimpleChargeItem> templateItems;
+    private List<SimpleChargeItem> simpleChargeItems;
     private PaymentItemSelectedCallback callback;
 
     private NumberFormat currencyFormatter;
@@ -155,9 +155,9 @@ public class AddPaymentItemAdapter extends RecyclerView.Adapter<AddPaymentItemAd
 
         AddPaymentItemViewHolder(View itemView) {
             super(itemView);
-            header = (TextView) itemView.findViewById(R.id.charge_item_header);
-            description = (TextView) itemView.findViewById(R.id.charge_item_description);
-            amount = (TextView) itemView.findViewById(R.id.charge_item_amount);
+            header = itemView.findViewById(R.id.charge_item_header);
+            description = itemView.findViewById(R.id.charge_item_description);
+            amount = itemView.findViewById(R.id.charge_item_amount);
         }
 
         public TextView getHeader() {

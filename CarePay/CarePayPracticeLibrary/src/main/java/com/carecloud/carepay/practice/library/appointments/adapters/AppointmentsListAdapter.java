@@ -113,23 +113,23 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
 
         AppointmentsListViewHolder(View view) {
             super(view);
-            startCheckIn = (Button) view.findViewById(R.id.appointment_check_in);
+            startCheckIn = view.findViewById(R.id.appointment_check_in);
             appointmentCardHeader = view.findViewById(R.id.appointment_card_header);
             appointmentLocationView = view.findViewById(R.id.appointment_location_view);
-            shortName = (CarePayTextView) view.findViewById(R.id.appointment_short_name);
-            doctorName = (CarePayTextView) view.findViewById(R.id.appointment_doctor_name);
-            doctorType = (CarePayTextView) view.findViewById(R.id.appointment_doctor_speciality);
-            appointmentDate = (CarePayTextView) view.findViewById(R.id.appointment_start_day);
-            appointmentTime = (CarePayTextView) view.findViewById(R.id.appointment_start_time);
-            appointmentStatusMissed = (CarePayTextView) view.findViewById(R.id.appointment_status_missed);
-            appointmentStatusCheckedIn = (CarePayTextView) view.findViewById(R.id.appointment_status_checked_in);
-            appointmentStatusRequested = (CarePayTextView) view.findViewById(R.id.appointment_status_requested);
-            appointmentStatusCanceled = (CarePayTextView) view.findViewById(R.id.appointment_status_canceled);
-            appointmentStatusCheckedOut = (CarePayTextView) view.findViewById(R.id.appointment_status_checked_out);
-            appointmentPlaceName = (CarePayTextView) view.findViewById(R.id.appointment_place_name);
-            appointmentPlaceAddress = (CarePayTextView) view.findViewById(R.id.appointment_place_address);
-            appointmentVisitTypeTextView = (CarePayTextView) view.findViewById(R.id.appointmentVisitTypeTextView);
-            profileImage = (ImageView) view.findViewById(R.id.appointment_picture_image_view);
+            shortName = view.findViewById(R.id.appointment_short_name);
+            doctorName = view.findViewById(R.id.appointment_doctor_name);
+            doctorType = view.findViewById(R.id.appointment_doctor_speciality);
+            appointmentDate = view.findViewById(R.id.appointment_start_day);
+            appointmentTime = view.findViewById(R.id.appointment_start_time);
+            appointmentStatusMissed = view.findViewById(R.id.appointment_status_missed);
+            appointmentStatusCheckedIn = view.findViewById(R.id.appointment_status_checked_in);
+            appointmentStatusRequested = view.findViewById(R.id.appointment_status_requested);
+            appointmentStatusCanceled = view.findViewById(R.id.appointment_status_canceled);
+            appointmentStatusCheckedOut = view.findViewById(R.id.appointment_status_checked_out);
+            appointmentPlaceName = view.findViewById(R.id.appointment_place_name);
+            appointmentPlaceAddress = view.findViewById(R.id.appointment_place_address);
+            appointmentVisitTypeTextView = view.findViewById(R.id.appointmentVisitTypeTextView);
+            profileImage = view.findViewById(R.id.appointment_picture_image_view);
         }
 
         void setStatus(AppointmentsPayloadDTO payloadDTO, boolean isToday) {
@@ -185,7 +185,6 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
                     break;
 
                 default:
-
                     // Missed Appointment
                     if (payloadDTO.isAppointmentOver()) {
 

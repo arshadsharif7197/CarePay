@@ -9,11 +9,11 @@
         android:id="@+id/charge_item_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/dimen_16dp"
-        android:paddingBottom="@dimen/dimen_16dp"
+        android:paddingTop="@dimen/addChargeItemHeaderVerticalPadding"
+        android:paddingBottom="@dimen/addChargeItemHeaderVerticalPadding"
         android:gravity="start"
         android:textAllCaps="true"
-        android:textSize="@dimen/text_size_18sp"
+        android:textSize="@dimen/addChargeItemHeaderTextSize"
         android:textColor="@color/textview_default_textcolor"
         app:customAssetFont="proxima_nova_semi_bold"/>
 

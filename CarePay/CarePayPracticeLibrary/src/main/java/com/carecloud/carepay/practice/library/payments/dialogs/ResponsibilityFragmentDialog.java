@@ -130,12 +130,12 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
     }
 
     private void initializeHeader(View view) {
-        TextView titleView = (TextView) view.findViewById(R.id.patient_full_name);
+        TextView titleView = view.findViewById(R.id.patient_full_name);
         titleView.setText(headerModel.getHeaderFullTitle());
-        TextView subtitleView = (TextView) view.findViewById(R.id.patient_provider_name);
+        TextView subtitleView = view.findViewById(R.id.patient_provider_name);
         subtitleView.setText(headerModel.getHeaderSubtitle());
-        ImageView profilePhoto = (ImageView) view.findViewById(R.id.patient_profile_photo);
-        final TextView shortName = (TextView) view.findViewById(R.id.patient_profile_short_name);
+        ImageView profilePhoto = view.findViewById(R.id.patient_profile_photo);
+        final TextView shortName = view.findViewById(R.id.patient_profile_short_name);
         shortName.setText(headerModel.getHeaderShortTitle());
 
         String photoUrl = headerModel.getHeaderPhotoUrl();
@@ -155,14 +155,6 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
                         }
                     });
 
-//            ImageView bgImage = (ImageView) view.findViewById(R.id.profile_bg_image);
-//
-//
-//            Picasso.with(getContext()).load(photoUrl)
-//                    .fit()
-//                    .transform(new RoundedCornersTransformation(10, 0, RoundedCornersTransformation.CornerType.TOP))
-//                    .into(bgImage);
-
             profilePhoto.setVisibility(View.VISIBLE);
         }
     }
@@ -177,7 +169,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
                 noBalancePlaceholder.setVisibility(View.GONE);
             } else {
                 noBalancePlaceholder.setVisibility(View.VISIBLE);
-                TextView message = (TextView) view.findViewById(R.id.no_payment_message);
+                TextView message = view.findViewById(R.id.no_payment_message);
                 message.setText(null);
             }
         }
@@ -186,7 +178,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
     }
 
     private void initializePaymentLines(View view, List<PendingBalanceDTO> balances) {
-        RecyclerView amountDetails = (RecyclerView) view.findViewById(R.id.payment_responsibility_balance_details);
+        RecyclerView amountDetails = view.findViewById(R.id.payment_responsibility_balance_details);
         amountDetails.setLayoutManager(new LinearLayoutManager(getContext()));
         PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(getContext(), getAllPendingBalancePayloads(balances), this);
         amountDetails.setAdapter(adapter);
@@ -212,12 +204,12 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
     private void initializeOwedAmountTextView(View view) {
         String text = Label.getLabel("responsibility_balance_title") + ": " +
                 StringUtil.getFormattedBalanceAmount(owedAmount);
-        TextView balance = (TextView) view.findViewById(R.id.payment_responsibility_balance);
+        TextView balance = view.findViewById(R.id.payment_responsibility_balance);
         balance.setText(text);
     }
 
     private void initializeFooter(View view) {
-        TextView leftButton = (TextView) view.findViewById(R.id.payment_plan_button);
+        TextView leftButton = view.findViewById(R.id.payment_plan_button);
         if (leftButton != null) {
             leftButton.setVisibility(isPaymentPlanAvailable(owedAmount)
                     ? View.VISIBLE : View.GONE);

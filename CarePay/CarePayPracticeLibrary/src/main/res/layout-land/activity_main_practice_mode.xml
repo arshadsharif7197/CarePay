@@ -372,10 +372,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/office_news_header"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_marginTop="@dimen/officeNewsListVerticalPadding"
         android:background="?newsBackgroundColor"
-        android:paddingTop="@dimen/dimen_20dp"
-        android:paddingBottom="@dimen/dimen_20dp"
+        android:paddingTop="@dimen/officeNewsListVerticalPadding"
+        android:paddingBottom="@dimen/officeNewsListVerticalPadding"
         android:visibility="gone" />
 
 </RelativeLayout>

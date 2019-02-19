@@ -176,7 +176,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         final View languageContainer = findViewById(R.id.languageContainer);
         if (languageContainer != null) {
-            languageSpinner = (TextView) findViewById(R.id.languageSpinner);
+            languageSpinner = findViewById(R.id.languageSpinner);
             languageSpinner.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -191,7 +191,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
             headers.put("username", getApplicationPreferences().getUserName());
             headers.put("username_patient", getApplicationPreferences().getPatientId());
-            RecyclerView languageList = (RecyclerView) findViewById(R.id.languageList);
+            RecyclerView languageList = findViewById(R.id.languageList);
             LanguageAdapter languageAdapter = new LanguageAdapter(languages, selectedLanguage);
             languageList.setAdapter(languageAdapter);
             languageList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -210,11 +210,11 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     private void initUIFields() {
-        homeCheckInLl = (LinearLayout) findViewById(R.id.homeQueueLayout);
-        homeAlertLinearLl = (LinearLayout) findViewById(R.id.homeAlertLayout);
-        homeLockImageView = (ImageView) findViewById(R.id.homeLockIcon);
-        modeSwitchImageView = (ImageView) findViewById(R.id.homeModeSwitchClickable);
-        languageSpinner = (TextView) findViewById(R.id.languageSpinner);
+        homeCheckInLl = findViewById(R.id.homeQueueLayout);
+        homeAlertLinearLl = findViewById(R.id.homeAlertLayout);
+        homeLockImageView = findViewById(R.id.homeLockIcon);
+        modeSwitchImageView = findViewById(R.id.homeModeSwitchClickable);
+        languageSpinner = findViewById(R.id.languageSpinner);
     }
 
     private void populateWithLabels() {
@@ -225,7 +225,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     private void changeScreenMode(HomeScreenMode homeScreenMode) {
-        TextView checkinLabelTextView = (TextView) findViewById(R.id.homeCheckinLabel);
+        TextView checkinLabelTextView = findViewById(R.id.homeCheckinLabel);
         if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
             if (homeCheckInLl != null) {
                 homeCheckInLl.setVisibility(View.GONE);
@@ -262,11 +262,11 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
                     shopContainer.setOnClickListener(this);
                     findViewById(R.id.separator).setVisibility(View.VISIBLE);
 
-                    ImageView checkinImageView = (ImageView) findViewById(R.id.homeCheckinImageView);
+                    ImageView checkinImageView = findViewById(R.id.homeCheckinImageView);
                     redesignTopLayouts(checkinLabelTextView, checkinImageView, R.id.checkInFakeCenter);
 
-                    TextView checkOutLabelTextView = (TextView) findViewById(R.id.homeCheckoutLabel);
-                    ImageView checkoutImageView = (ImageView) findViewById(R.id.checkoutImageView);
+                    TextView checkOutLabelTextView = findViewById(R.id.homeCheckoutLabel);
+                    ImageView checkoutImageView = findViewById(R.id.checkoutImageView);
                     redesignTopLayouts(checkOutLabelTextView, checkoutImageView, R.id.checkoutFakeCenter);
                 }
             }
@@ -324,7 +324,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         if (homeScreenAppointmentCountsDTO != null) {
             int checkinCounter = homeScreenAppointmentCountsDTO.getCheckingInCount() != null ?
                     homeScreenAppointmentCountsDTO.getCheckingInCount() : 0;
-            TextView counter = (TextView) findViewById(R.id.checkedInCounterTextview);
+            TextView counter = findViewById(R.id.checkedInCounterTextview);
             if (counter != null) {
                 counter.setText(String.valueOf(checkinCounter));
             }
@@ -334,7 +334,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private void setAlertCount(PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO) {
         HomeScreenAlertsDTO alertsDTO = practiceHomeScreenPayloadDTO.getAlerts();
         if (alertsDTO != null) {
-            TextView alertText = (TextView) findViewById(R.id.alertTextView);
+            TextView alertText = findViewById(R.id.alertTextView);
             if (alertText != null) {
                 int alertCounter = alertsDTO.getCount();
                 alertText.setText(String.valueOf(alertCounter));
@@ -381,7 +381,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         @Override
         public void onReceive(Context context, Intent intent) {
             String count = intent.getExtras().getString("appointments_checking_in");
-            TextView counter = ((TextView) findViewById(R.id.checkedInCounterTextview));
+            TextView counter = findViewById(R.id.checkedInCounterTextview);
             if (count != null) {
                 counter.setText(count);
             }
@@ -696,7 +696,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
                     PracticeHomeScreenPayloadDTO.class);
             List<HomeScreenOfficeNewsDTO> officeNews = practiceHomePayloadDTO.getOfficeNews();
             if (!officeNews.isEmpty()) {
-                RecyclerView newsListRecyclerView = (RecyclerView) findViewById(R.id.office_news_list);
+                RecyclerView newsListRecyclerView = findViewById(R.id.office_news_list);
                 if (newsListRecyclerView != null) {
                     newsListRecyclerView.setVisibility(View.VISIBLE);
                     findViewById(R.id.office_news_header).setVisibility(View.VISIBLE);

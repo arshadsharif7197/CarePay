@@ -169,6 +169,11 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
         //disable adding unlisted allergies as these are not yet supported
         unlisted.setVisibility(searchMode == ALLERGY_ITEM ? View.GONE : View.VISIBLE);
 
+        View unlistedBorder = view.findViewById(R.id.add_unlisted_border);
+        if (unlistedBorder != null) {
+            unlistedBorder.setVisibility(searchMode == ALLERGY_ITEM ? View.GONE : View.VISIBLE);
+        }
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         searchRecycler = (RecyclerView) view.findViewById(R.id.search_recycler);
         searchRecycler.setLayoutManager(layoutManager);

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
@@ -16,7 +15,7 @@
 
         <include
             android:id="@+id/toolbar_layout"
-            layout="@layout/toolbar_no_title"/>
+            layout="@layout/toolbar_no_title" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/allergy_medication_header"
@@ -24,9 +23,9 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/text_size_30sp"
+            android:textSize="@dimen/allergyMedicationHeaderTextSize"
             app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="medication_allergies_titlebar_text"/>
+            breeze:textKey="medication_allergies_titlebar_text" />
 
     </FrameLayout>
 
@@ -39,23 +38,23 @@
 
         <ImageView
             android:id="@+id/headerIconImageView"
-            android:layout_width="@dimen/dimen_150dp"
-            android:layout_height="@dimen/dimen_150dp"
-            android:layout_marginTop="@dimen/dimen_30dp"
-            android:src="@drawable/icon_medication"/>
+            android:layout_width="@dimen/allergyMedicationImageSize"
+            android:layout_height="@dimen/allergyMedicationImageSize"
+            android:layout_marginTop="@dimen/allergyMedicationImageTopMargin"
+            android:src="@drawable/icon_medication" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/empty_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_30dp"
+            android:layout_marginTop="@dimen/allergyMedicationImageTopMargin"
             android:gravity="center_horizontal|top"
-            android:paddingEnd="@dimen/dimen_30dp"
-            android:paddingStart="@dimen/dimen_30dp"
+            android:paddingStart="@dimen/allergyMedicationEmptyMessageHorizontalPadding"
+            android:paddingEnd="@dimen/allergyMedicationEmptyMessageHorizontalPadding"
             android:textColor="@color/optional_gray"
-            android:textSize="@dimen/text_size_40sp"
+            android:textSize="@dimen/allergyMedicationEmptyMessageTextSize"
             app:customAssetFont="gotham_rounded_book"
-            tools:text="Are you taking any medications?"/>
+            tools:text="Are you taking any medications?" />
 
     </LinearLayout>
 
@@ -67,38 +66,36 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/dimen_20dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="@dimen/distributionButtonContainersPadding">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/button_no"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/commonButtonHeight"
+            android:layout_marginEnd="@dimen/distributionButtonContainersPadding"
             android:layout_weight="1"
-            android:layout_marginEnd="@dimen/dimen_10dp"
             android:background="@drawable/button_rounded_red"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_22"
             android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/respons_button_text_size"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="no"
-            tools:text="No"/>
+            tools:text="No" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/button_yes"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/commonButtonHeight"
+            android:layout_marginStart="@dimen/distributionButtonContainersPadding"
             android:layout_weight="1"
-            android:layout_marginStart="@dimen/dimen_10dp"
             android:background="@drawable/green_rounded_button_selector"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_22"
             android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/respons_button_text_size"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="yes"
-            tools:text="Yes"/>
-
-
+            tools:text="Yes" />
 
     </LinearLayout>
 

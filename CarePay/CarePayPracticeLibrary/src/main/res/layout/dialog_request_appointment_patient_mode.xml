@@ -126,10 +126,10 @@
                     android:id="@+id/provider_doctor_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_15dp"
+                    android:layout_marginTop="@dimen/providerDoctorNameTopMargin"
                     android:gravity="center"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/text_size_24sp"
+                    android:textSize="@dimen/providerDoctorNameTextSize"
                     app:customAssetFont="proxima_nova_semi_bold"
                     tools:text="Dr. James Seaworth" />
 
@@ -139,7 +139,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textColor="@color/lightSlateGray"
-                    android:textSize="@dimen/text_size_20"
+                    android:textSize="@dimen/providerDoctorSpecialityTextSize"
                     app:customAssetFont="proxima_nova_extra_bold"
                     tools:text="Main Medical Center" />
 
@@ -149,7 +149,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textColor="@color/lightSlateGray"
-                    android:textSize="@dimen/text_size_20"
+                    android:textSize="@dimen/providerDoctorSpecialityTextSize"
                     android:visibility="gone"
                     app:customAssetFont="proxima_nova_regular"
                     tools:text="Main Medical Center" />
@@ -161,7 +161,7 @@
                     android:gravity="center"
                     android:maxLines="2"
                     android:textColor="@color/lightSlateGray"
-                    android:textSize="@dimen/text_size_14sp"
+                    android:textSize="@dimen/providerPlaceAddressTextSize"
                     app:customAssetFont="proxima_nova_regular"
                     tools:text="5200 Blue Lagoon Drive Miami, FL 33126" />
 
@@ -200,7 +200,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:textColor="@color/textview_default_textcolor"
-                        android:textSize="@dimen/text_size_24sp"
+                        android:textSize="@dimen/visitTypeLabelTextSize"
                         app:customAssetFont="gotham_rounded_book"
                         breeze:textKey="visit_type_heading"
                         tools:text="Visit Type" />
@@ -213,7 +213,7 @@
                         android:layout_weight="1"
                         android:gravity="end"
                         android:textColor="@color/cardview_header_bg"
-                        android:textSize="@dimen/text_size_17"
+                        android:textSize="@dimen/reasonTypeValueTextSize"
                         app:customAssetFont="gotham_rounded_medium"
                         tools:ignore="RelativeOverlap"
                         tools:text="Follow-Up" />
@@ -276,7 +276,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginTop="@dimen/dimen_25dp"
                     android:textColor="@color/textview_default_textcolor"
-                    android:textSize="@dimen/text_size_24sp"
+                    android:textSize="@dimen/visitTypeLabelTextSize"
                     app:customAssetFont="gotham_rounded_book"
                     breeze:textKey="appointments_reason_for_visit_heading"
                     tools:text="Reason for Visit" />
@@ -291,8 +291,9 @@
                     android:gravity="top"
                     android:lines="4"
                     android:maxLength="100"
-                    android:padding="@dimen/reasonForVisitHorizontalMargin"
+                    android:padding="@dimen/reasonForVisitPadding"
                     android:textColorHint="@color/gray"
+                    android:textSize="@dimen/reasonTypeValueTextSize"
                     app:customAssetFont="proxima_nova_regular"
                     breeze:hintKey="appointment.request.visitTypeReason.hint.typeHint" />
 
@@ -314,19 +315,15 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/requestAppointmentButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dimen_24dp"
-                android:layout_marginTop="@dimen/dimen_15dp"
-                android:layout_marginEnd="@dimen/dimen_24dp"
-                android:layout_marginBottom="@dimen/dimen_15dp"
+                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:background="@drawable/bg_green_overlay"
                 android:contentDescription="@string/content_description_request_appointment"
-                android:paddingTop="@dimen/dimen_14dp"
-                android:paddingBottom="@dimen/dimen_14dp"
-                android:textAllCaps="false"
+                android:gravity="center"
+                android:textAllCaps="true"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_22sp"
-                app:customAssetFont="gotham_rounded_medium" />
+                android:textSize="@dimen/respons_button_text_size"
+                breeze:textKey="schedule_appointment_button_label" />
 
         </LinearLayout>
     </LinearLayout>
