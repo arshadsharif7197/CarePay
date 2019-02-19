@@ -621,8 +621,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
         if (appointmentPayloadDTO.getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
             rejectAppointment(appointmentDTO);
-        } else if (appointmentPayloadDTO.isAppointmentOver()) {
-            //TODO Add future logic
         } else {
             CancelAppointmentConfirmDialogFragment fragment = CancelAppointmentConfirmDialogFragment
                     .newInstance(appointmentDTO);
