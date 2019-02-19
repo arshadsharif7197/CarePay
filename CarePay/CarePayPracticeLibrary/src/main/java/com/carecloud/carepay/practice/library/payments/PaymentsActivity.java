@@ -189,7 +189,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     private void initializePatientListView() {
-        TwoColumnPatientListView patientListView = (TwoColumnPatientListView) findViewById(R.id.list_patients);
+        TwoColumnPatientListView patientListView = findViewById(R.id.list_patients);
         patientListView.setPaymentsModel(paymentsModel);
         patientListView.setCallback(new TwoColumnPatientListView.TwoColumnPatientListViewListener() {
             @Override
@@ -369,7 +369,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void applyFilter() {
-        TwoColumnPatientListView patientListView = (TwoColumnPatientListView) findViewById(R.id.list_patients);
+        TwoColumnPatientListView patientListView = findViewById(R.id.list_patients);
         patientListView.applyFilter(filter);
     }
 
@@ -457,7 +457,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         }
 
         //reload list data
-        TwoColumnPatientListView patientListView = (TwoColumnPatientListView) findViewById(R.id.list_patients);
+        TwoColumnPatientListView patientListView = findViewById(R.id.list_patients);
         patientListView.setPaymentsModel(paymentsModel);
         setTextViewById(R.id.practice_payment_in_office_count,
                 String.format(Locale.getDefault(), "%1s", paymentsModel.getPaymentPayload()

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
-    android:orientation="horizontal"
-    android:gravity="center_horizontal"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal">
 
     <FrameLayout
         android:id="@+id/closeViewLayout"
@@ -41,43 +40,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/patient_mode_dialog_header_bg"
+            android:gravity="center"
             android:orientation="horizontal"
-            android:gravity="center">
+            android:paddingTop="@dimen/dimen_18dp"
+            android:paddingBottom="@dimen/dimen_18dp">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/transaction_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingTop="@dimen/dimen_18dp"
-                android:paddingBottom="@dimen/dimen_18dp"
+                android:gravity="center"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_22sp"
-                tools:text="October 13, 2017"
-                app:customAssetFont="proxima_nova_semi_bold" />
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:padding="@dimen/dimen_18dp"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_22sp"
-                android:text="@string/em_dash"
-                app:customAssetFont="proxima_nova_semi_bold" />
-
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/transaction_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingTop="@dimen/dimen_18dp"
-                android:paddingBottom="@dimen/dimen_18dp"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_22sp"
-                tools:text="8:45 AM"
-                app:customAssetFont="proxima_nova_semi_bold" />
+                android:textSize="@dimen/paymentHistoryDetailDateTextSize"
+                app:customAssetFont="proxima_nova_semi_bold"
+                tools:text="October 13, 2017 - 8:45 AM" />
 
         </LinearLayout>
 
@@ -92,58 +69,57 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:paddingStart="@dimen/dimen_24dp"
-                android:paddingEnd="@dimen/dimen_24dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingStart="@dimen/paymentHistoryDetailHorizontalPadding"
+                android:paddingEnd="@dimen/paymentHistoryDetailHorizontalPadding">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/dimen_20dp"
+                    android:layout_marginTop="@dimen/paymentHistoryDetailReceiptLabelTopMargin"
                     android:textColor="@color/cadet_gray"
-                    android:textSize="@dimen/text_size_18sp"
-                    tools:text="Receipt Number"
+                    android:textSize="@dimen/paymentHistoryDetailReceiptLabelTextSize"
+                    app:customAssetFont="proxima_nova_regular"
                     breeze:textKey="payment_receipt_no_label"
-                    app:customAssetFont="proxima_nova_regular"/>
+                    tools:text="Receipt Number" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/transaction_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/dimen_5dp"
-                    android:layout_marginBottom="@dimen/dimen_20dp"
-                    android:layout_marginStart="@dimen/dimen_20dp"
-                    android:layout_marginEnd="@dimen/dimen_20dp"
-                    android:lines="1"
+                    android:layout_marginStart="@dimen/paymentHistoryDetailReceiptNumberHorizontalMargin"
+                    android:layout_marginTop="@dimen/paymentHistoryDetailReceiptNumberTopMargin"
+                    android:layout_marginEnd="@dimen/paymentHistoryDetailReceiptNumberHorizontalMargin"
+                    android:layout_marginBottom="@dimen/paymentHistoryDetailReceiptNumberBottomMargin"
                     android:ellipsize="end"
+                    android:lines="1"
                     android:textColor="@color/textview_default_textcolor"
-                    android:textSize="@dimen/text_size_16"
-                    tools:text="dveervev-vvever-evever-evverv--veve"
-                    app:customAssetFont="proxima_nova_regular"/>
-
+                    android:textSize="@dimen/paymentHistoryDetailReceiptNumberTextSize"
+                    app:customAssetFont="proxima_nova_regular"
+                    tools:text="dveervev-vvever-evever-evverv--veve" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingStart="@dimen/dimen_13dp"
-                    android:paddingEnd="@dimen/dimen_13dp"
-                    android:paddingTop="@dimen/dimen_22dp"
-                    android:paddingBottom="@dimen/dimen_22dp">
+                    android:paddingStart="@dimen/paymentHistoryDetailSectionHorizontalPadding"
+                    android:paddingTop="@dimen/paymentHistoryDetailSectionVerticalPadding"
+                    android:paddingEnd="@dimen/paymentHistoryDetailSectionHorizontalPadding"
+                    android:paddingBottom="@dimen/paymentHistoryDetailSectionVerticalPadding">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
                         android:gravity="start"
                         android:textColor="@color/textview_default_textcolor"
-                        android:textSize="@dimen/text_size_24sp"
-                        tools:text="Method"
+                        android:textSize="@dimen/paymentHistoryDetailLabelTextSize"
+                        app:customAssetFont="gotham_rounded_book"
                         breeze:textKey="payment_history_detail_type"
-                        app:customAssetFont="gotham_rounded_book"/>
+                        tools:text="Method" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/transaction_payment_type"
@@ -152,9 +128,9 @@
                         android:layout_gravity="center_vertical"
                         android:gravity="end"
                         android:textColor="@color/textview_default_textcolor"
-                        android:textSize="@dimen/text_size_17"
-                        tools:text="Credit Card"
-                        app:customAssetFont="gotham_rounded_medium"/>
+                        android:textSize="@dimen/paymentHistoryDetailValueTextSize"
+                        app:customAssetFont="gotham_rounded_medium"
+                        tools:text="Credit Card" />
 
                 </LinearLayout>
 
@@ -167,22 +143,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingStart="@dimen/dimen_13dp"
-                    android:paddingEnd="@dimen/dimen_13dp"
-                    android:paddingTop="@dimen/dimen_22dp"
-                    android:paddingBottom="@dimen/dimen_22dp">
+                    android:paddingStart="@dimen/paymentHistoryDetailSectionHorizontalPadding"
+                    android:paddingTop="@dimen/paymentHistoryDetailSectionVerticalPadding"
+                    android:paddingEnd="@dimen/paymentHistoryDetailSectionHorizontalPadding"
+                    android:paddingBottom="@dimen/paymentHistoryDetailSectionVerticalPadding">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
                         android:gravity="start"
                         android:textColor="@color/textview_default_textcolor"
-                        android:textSize="@dimen/text_size_24sp"
-                        tools:text="Total Paid"
+                        android:textSize="@dimen/paymentHistoryDetailLabelTextSize"
+                        app:customAssetFont="gotham_rounded_book"
                         breeze:textKey="payment_history_detail_total"
-                        app:customAssetFont="gotham_rounded_book"/>
+                        tools:text="Total Paid" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/transaction_total"
@@ -191,9 +167,9 @@
                         android:layout_gravity="center_vertical"
                         android:gravity="end"
                         android:textColor="@color/textview_default_textcolor"
-                        android:textSize="@dimen/text_size_17"
-                        tools:text="$789.00"
-                        app:customAssetFont="gotham_rounded_medium"/>
+                        android:textSize="@dimen/paymentHistoryDetailValueTextSize"
+                        app:customAssetFont="gotham_rounded_medium"
+                        tools:text="$789.00" />
 
                 </LinearLayout>
 
@@ -213,22 +189,22 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:paddingStart="@dimen/dimen_13dp"
-                        android:paddingEnd="@dimen/dimen_13dp"
-                        android:paddingTop="@dimen/dimen_22dp"
-                        android:paddingBottom="@dimen/dimen_22dp">
+                        android:paddingStart="@dimen/paymentHistoryDetailSectionHorizontalPadding"
+                        android:paddingTop="@dimen/paymentHistoryDetailSectionVerticalPadding"
+                        android:paddingEnd="@dimen/paymentHistoryDetailSectionHorizontalPadding"
+                        android:paddingBottom="@dimen/paymentHistoryDetailSectionVerticalPadding">
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
                             android:gravity="start"
                             android:textColor="@color/textview_default_textcolor"
-                            android:textSize="@dimen/text_size_24sp"
-                            tools:text="Refunded"
+                            android:textSize="@dimen/paymentHistoryDetailLabelTextSize"
+                            app:customAssetFont="gotham_rounded_book"
                             breeze:textKey="payment_history_detail_refunded"
-                            app:customAssetFont="gotham_rounded_book"/>
+                            tools:text="Refunded" />
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                             android:id="@+id/transaction_refunded"
@@ -237,9 +213,9 @@
                             android:layout_gravity="center_vertical"
                             android:gravity="end"
                             android:textColor="@color/textview_default_textcolor"
-                            android:textSize="@dimen/text_size_17"
-                            tools:text="$189.00"
-                            app:customAssetFont="gotham_rounded_medium"/>
+                            android:textSize="@dimen/paymentHistoryDetailValueTextSize"
+                            app:customAssetFont="gotham_rounded_medium"
+                            tools:text="$189.00" />
 
                     </LinearLayout>
 
@@ -249,25 +225,26 @@
                         android:background="@color/light_gray" />
 
                 </LinearLayout>
+
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_50dp"
                     android:layout_gravity="start"
+                    android:layout_marginTop="@dimen/paymentHistoryDetailItemsLabelTopMargin"
                     android:gravity="start"
-                    android:textColor="@color/textview_default_textcolor"
-                    android:textSize="@dimen/text_size_18sp"
                     android:textAllCaps="true"
-                    tools:text="Items"
+                    android:textColor="@color/textview_default_textcolor"
+                    android:textSize="@dimen/paymentHistoryDetailItemsLabelTextSize"
+                    app:customAssetFont="proxima_nova_semi_bold"
                     breeze:textKey="payment_history_detail_items"
-                    app:customAssetFont="proxima_nova_semi_bold"/>
+                    tools:text="Items" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/items_recycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_12dp"
-                    android:nestedScrollingEnabled="false"/>
+                    android:layout_marginTop="@dimen/paymentHistoryDetailItemsListTopMargin"
+                    android:nestedScrollingEnabled="false" />
 
             </LinearLayout>
 
@@ -282,20 +259,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/patient_mode_dialog_body_bg"
-            android:minHeight="@dimen/dimen_20dp">
+            android:padding="@dimen/distributionButtonContainersPadding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/refund_button"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_48dp"
-                android:layout_margin="@dimen/dimen_18dp"
+                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:background="@drawable/green_rounded_button_selector"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_18sp"
                 android:textAllCaps="false"
-                tools:text="Start Refund Process"
+                android:textColor="@color/white"
+                android:textSize="@dimen/respons_button_text_size"
+                app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="payment_history_start_refund"
-                app:customAssetFont="gotham_rounded_medium"/>
+                tools:text="Start Refund Process" />
 
         </FrameLayout>
     </LinearLayout>

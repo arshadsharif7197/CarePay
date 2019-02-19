@@ -18,6 +18,7 @@
     <dimen name="dialog_width">510dp</dimen>
     <dimen name="separatorHeight">1dp</dimen>
     <dimen name="ediTextPadding">15dp</dimen>
+    <dimen name="dialog_height">672dp</dimen>
 
     <!--Language-->
     <dimen name="langSpinnerTextSize">20sp</dimen>
@@ -67,6 +68,7 @@
     <dimen name="officeNewsContainerVerticalPadding">10dp</dimen>
     <dimen name="officeNewsContainerHorizontalPadding">20dp</dimen>
     <dimen name="officeNewsHorizontalPadding">5dp</dimen>
+    <dimen name="officeNewsListVerticalPadding">20dp</dimen>
 
     <!--CheckIn Practice Mode-->
     <dimen name="checkInPanelWidth">1600dp</dimen>
@@ -154,20 +156,6 @@
     <dimen name="negativeContainerTopMargin">40dp</dimen>
     <dimen name="surveyFeedbackButtonWidth">300dp</dimen>
     <dimen name="checkoutMessageTextSize">40sp</dimen>
-
-    <!--Payment Options Dialog-->
-    <dimen name="paymentOptionIconSize">60dp</dimen>
-    <dimen name="paymentOptionIconMargin">10dp</dimen>
-    <dimen name="paymentOptionTextSize">26sp</dimen>
-    <dimen name="paymentOptionContainerHeight">90dp</dimen>
-    <dimen name="paymentOptionContainerPadding">10dp</dimen>
-    <dimen name="paymentOptionHeaderPadding">15dp</dimen>
-    <dimen name="paymentOptionHeaderMessageTextSize">22sp</dimen>
-    <dimen name="paymentOptionHeaderBalanceTextSize">90sp</dimen>
-    <dimen name="paymentOptionBodyHorizontalPadding">20dp</dimen>
-    <dimen name="paymentOptionBodyVerticalPadding">10dp</dimen>
-    <dimen name="paymentOptionBodyMessageHorizontalPadding">15dp</dimen>
-    <dimen name="paymentOptionBodyMessageTextSize">22sp</dimen>
 
     <!--Payments Activity-->
     <dimen name="paymentPatientNameTextSize">24sp</dimen>
@@ -426,6 +414,7 @@
     <dimen name="providerPlaceAddressTextSize">14sp</dimen>
     <dimen name="visitTypeContainerTopMargin">25dp</dimen>
     <dimen name="reasonTypeValueTextSize">17sp</dimen>
+    <dimen name="reasonForVisitPadding">14dp</dimen>
 
     <!--Check In Screen-->
     <dimen name="checkInShadowEndMargin">-25dp</dimen>
@@ -454,6 +443,16 @@
     <dimen name="checkInToolbarPaddingTop">10dp</dimen>
     <dimen name="checkInDotSize">10dp</dimen>
     <dimen name="checkInDotSpacing">12dp</dimen>
+    <dimen name="checkinPlanTotalHeaderTextHeight">100dp</dimen>
+    <dimen name="checkinPlanTotalHeaderTextSize">90sp</dimen>
+    <dimen name="checkinPlanParametersTextPadding">100dp</dimen>
+    <dimen name="checkinPlanParametersTextSize">16sp</dimen>
+    <dimen name="checkinPlanParametersTextPaddingTopBottom">10dp</dimen>
+    <dimen name="checkinPlanHeaderMessageMargin">10dp</dimen>
+    <dimen name="checkinPlanTitleTextSize">30sp</dimen>
+    <dimen name="checkinPlanFooterButtonHeight">48dp</dimen>
+    <dimen name="checkinPlanFooterButtonMargin">10dp</dimen>
+    <dimen name="checkinPlanMainContainerSidePadding">150dp</dimen>
 
     <!--Next Appointment Screen-->
     <dimen name="nextAppointmentTitleTextSize">30sp</dimen>
@@ -539,6 +538,220 @@
     <dimen name="paymentMethodImageWidth">36dp</dimen>
     <dimen name="paymentMethodItemNamePadding">13dp</dimen>
     <dimen name="paymentMethodItemNameTextSize">22sp</dimen>
+    <dimen name="medicationAllergyHeaderTitleTextSize">21sp</dimen>
+    <dimen name="medicationAllergyHeaderSubtitleTextSize">13sp</dimen>
+    <dimen name="medicationAllergyHeaderSubtitlePadding">80dp</dimen>
+    <dimen name="medicationAllergyButtonTextSize">22sp</dimen>
+
+    <!--Payment Options Dialog-->
+    <dimen name="paymentOptionIconSize">60dp</dimen>
+    <dimen name="paymentOptionIconMargin">10dp</dimen>
+    <dimen name="paymentOptionTextSize">26sp</dimen>
+    <dimen name="paymentOptionContainerHeight">90dp</dimen>
+    <dimen name="paymentOptionContainerPadding">10dp</dimen>
+    <dimen name="paymentOptionHeaderPadding">15dp</dimen>
+    <dimen name="paymentOptionHeaderMessageTextSize">22sp</dimen>
+    <dimen name="paymentOptionHeaderBalanceTextSize">90sp</dimen>
+    <dimen name="paymentOptionBodyHorizontalPadding">20dp</dimen>
+    <dimen name="paymentOptionBodyVerticalPadding">10dp</dimen>
+    <dimen name="paymentOptionBodyMessageHorizontalPadding">15dp</dimen>
+    <dimen name="paymentOptionBodyMessageTextSize">22sp</dimen>
+
+    <!--Patient Splash Screen-->
+    <dimen name="patientSplashPracticeLogoSize">250dp</dimen>
+    <dimen name="patientSplashWelcomeTitleTextSize">36sp</dimen>
+    <dimen name="patientSplashButtonWidth">250dp</dimen>
+    <dimen name="patientSplashButtonHeight">50dp</dimen>
+    <dimen name="patientSplashButtonTextSize">21sp</dimen>
+
+    <!--Patient Home-->
+    <dimen name="patientHomeButtonHeight">200dp</dimen>
+    <dimen name="patientHomeLayoutContainerHorizontalMargin">150dp</dimen>
+    <dimen name="patientHomeLayoutContainerTopMargin">120dp</dimen>
+    <dimen name="patientHomeIconButtonWidth">144dp</dimen>
+    <dimen name="patientHomeIconButtonHeight">144dp</dimen>
+    <dimen name="patientHomeSeparatorVerticalMargin">10dp</dimen>
+    <dimen name="patientHomeMainSeparatorHorizontalMargin">30dp</dimen>
+    <dimen name="patientHomeBottomButtonPadding">20dp</dimen>
+    <dimen name="patientHomeSpinnerWidth">100dp</dimen>
+    <dimen name="patientHomeSpinnerHeight">40dp</dimen>
+
+    <!--How to check in-->
+    <dimen name="howToCheckinHomeButtonPadding">30dp</dimen>
+    <dimen name="howToCheckInHeaderMargin">30dp</dimen>
+    <dimen name="howToCheckInTitleTextSize">36sp</dimen>
+    <dimen name="howToCheckInTitleTopMargin">20dp</dimen>
+    <dimen name="howToCheckInTitleBottomMargin">30dp</dimen>
+    <dimen name="howToCheckInOptionPadding">15dp</dimen>
+    <dimen name="howToCheckInOptionTextSize">28sp</dimen>
+
+    <!--Patient Mode Payment Screen-->
+    <dimen name="patientModePaymentTitleTopMargin">50dp</dimen>
+    <dimen name="patientModePaymentTitleTextSize">36sp</dimen>
+    <dimen name="patientModePaymentSubTitleTopMargin">20dp</dimen>
+    <dimen name="patientModePaymentSubTitleTextSize">22sp</dimen>
+    <dimen name="logoImageTopPadding">34dp</dimen>
+    <dimen name="patientModePaymentBottomPadding">25dp</dimen>
+
+    <!--Provider lists-->
+    <dimen name="provider_card_width">380dp</dimen>
+    <dimen name="providerCardHorizontalMargin">18dp</dimen>
+    <dimen name="appointment_card_header_height">220dp</dimen>
+    <dimen name="appointment_card_date_view_height">170dp</dimen>
+    <dimen name="providerPaymentAmountHeight">150dp</dimen>
+    <dimen name="provider_card_avatar_size">100dp</dimen>
+    <dimen name="appointment_card_footer_height">208dp</dimen>
+    <dimen name="appointment_card_checked_in_button_margin">56dp</dimen>
+    <dimen name="provider_list_title_margin">34dp</dimen>
+    <dimen name="provider_no_list_margin">72dp</dimen>
+    <dimen name="provider_card_header_height">150dp</dimen>
+    <dimen name="provider_card_address_margin">110dp</dimen>
+    <dimen name="provider_card_place_margin">19dp</dimen>
+    <dimen name="providerLocationNameTextSize">24sp</dimen>
+    <dimen name="paymentAmountTextSize">50sp</dimen>
+    <dimen name="paymentAmountTopPadding">28dp</dimen>
+    <dimen name="planInstallmentFrequencyTextSize">20sp</dimen>
+    <dimen name="appointmentCardFooterHorizontalPadding">20dp</dimen>
+    <dimen name="appointmentCardFooterBottomPadding">20dp</dimen>
+
+    <!--Patient Responsibility Fragment-->
+    <dimen name="patientResponsibilityPatientFullNameTextSize">34sp</dimen>
+    <dimen name="patientResponsibilityProviderNameTextSize">18sp</dimen>
+    <dimen name="patientResponsibilityBalanceTextSize">24sp</dimen>
+    <dimen name="patientResponsibilityBalanceVerticalPadding">19dp</dimen>
+    <dimen name="patientResponsibilityDetailsTopPadding">30dp</dimen>
+
+    <!--Patient Payment Plan-->
+    <dimen name="patientPaymentPlanHeaderMargin">10dp</dimen>
+    <dimen name="paymentPlanHeaderMessageTextSize">18sp</dimen>
+    <dimen name="paymentPlanHeaderPlanTotalTextSize">90sp</dimen>
+    <dimen name="paymentPlanParametersTextSize">13sp</dimen>
+    <dimen name="paymentPlanAddToExistingButtonTextSize">12sp</dimen>
+    <dimen name="paymentPlanAddToExistingButtonHotizontalPadding">45dp</dimen>
+    <dimen name="paymentPlanHeaderPlanTotalHeight">100dp</dimen>
+
+    <!--Patient Payment Plan Detail-->
+    <dimen name="headerImagesTopMargin">26dp</dimen>
+    <dimen name="patientPaymentPlanDetailPracticeNameTextSize">34sp</dimen>
+    <dimen name="patientPaymentPlanDetailNameTextSize">18sp</dimen>
+    <dimen name="patientPaymentPlanDetailPadding">4dp</dimen>
+    <dimen name="responsibilityContainerHorizontalPadding">24dp</dimen>
+    <dimen name="responsibilityContainerVerticalPadding">19dp</dimen>
+    <dimen name="paymentPlanInstallmentDetailTextSize">24sp</dimen>
+    <dimen name="editPlanButtonTextSize">12sp</dimen>
+    <dimen name="editPlanButtonHorizontalPadding">30dp</dimen>
+    <dimen name="editPlanButtonVerticalPadding">10dp</dimen>
+    <dimen name="scheduledPaymentLayoutHorizontalMargin">20dp</dimen>
+    <dimen name="scheduledPaymentLayoutBottomMargin">4dp</dimen>
+    <dimen name="scheduledPaymentLayoutPadding">15dp</dimen>
+    <dimen name="scheduledPaymentMessageTextSize">16sp</dimen>
+    <dimen name="scheduledPaymentImageMargin">10dp</dimen>
+    <dimen name="paymentPlanDetailLabelTextSize">24sp</dimen>
+    <dimen name="paymentPlanDetailValueTextSize">17sp</dimen>
+    <dimen name="paymentPlanDetailVerticalPadding">24dp</dimen>
+
+    <!--History Fragment-->
+    <dimen name="patientProfileShortNameTextSize">38sp</dimen>
+    <dimen name="historyFragmentPatientFullNameTextSize">34sp</dimen>
+    <dimen name="paymentFragmentListHorizontalMargin">24dp</dimen>
+    <dimen name="transactionHistoryItemFlagStartMargin">10dp</dimen>
+    <dimen name="transactionHistoryItemFlagHorizontalPadding">7dp</dimen>
+    <dimen name="transactionHistoryItemFlagTextSize">13sp</dimen>
+    <dimen name="transactionHistoryTotalHorizontalMargin">10dp</dimen>
+    <dimen name="transactionHistoryTotalTextSize">17sp</dimen>
+    <dimen name="transactionHistoryTypeTextSize">15sp</dimen>
+    <dimen name="transactionHistoryTypeStartMargin">3dp</dimen>
+    <dimen name="transactionHistoryTimTextSize">15sp</dimen>
+    <dimen name="transactionHistoryItemDateTextSize">21sp</dimen>
+    <dimen name="transactionHistoryItemVerticalPadding">10dp</dimen>
+
+    <!--Add Payment Item Fragment-->
+    <dimen name="addPaymentItemSearchPadding">20dp</dimen>
+    <dimen name="addPaymentItemListPadding">16dp</dimen>
+    <dimen name="addPaymentItemEmptyScreenPadding">60dp</dimen>
+    <dimen name="addPaymentItemEmptyScreenTextSize">18sp</dimen>
+    <dimen name="addChargeItemVerticalPadding">16dp</dimen>
+    <dimen name="addChargeItemTextSize">22sp</dimen>
+    <dimen name="addChargeItemAmountTextSize">17sp</dimen>
+    <dimen name="addChargeItemHeaderTextSize">18sp</dimen>
+    <dimen name="addChargeItemHeaderVerticalPadding">16dp</dimen>
+
+    <!--Add Retail Item Fragment-->
+    <dimen name="addRetailItemVerticalPadding">16dp</dimen>
+    <dimen name="addRetailItemNameStartMargin">20dp</dimen>
+    <dimen name="addRetailItemNameTextSize">22sp</dimen>
+    <dimen name="addRetailItemSubNameTextSize">17sp</dimen>
+    <dimen name="addRetailItemPriceStartMargin">10dp</dimen>
+    <dimen name="addRetailItemPriceTextSize">20sp</dimen>
+    <dimen name="addRetailItemSoldOutTopMargin">20dp</dimen>
+
+    <!--Payment Transaction History Detail Fragment-->
+    <dimen name="paymentHistoryDetailDateTextSize">22sp</dimen>
+    <dimen name="paymentHistoryDetailHorizontalPadding">24dp</dimen>
+    <dimen name="paymentHistoryDetailReceiptLabelTopMargin">20dp</dimen>
+    <dimen name="paymentHistoryDetailReceiptLabelTextSize">18sp</dimen>
+    <dimen name="paymentHistoryDetailReceiptNumberHorizontalMargin">20dp</dimen>
+    <dimen name="paymentHistoryDetailReceiptNumberTopMargin">5dp</dimen>
+    <dimen name="paymentHistoryDetailReceiptNumberBottomMargin">20dp</dimen>
+    <dimen name="paymentHistoryDetailReceiptNumberTextSize">16sp</dimen>
+    <dimen name="paymentHistoryDetailSectionHorizontalPadding">13dp</dimen>
+    <dimen name="paymentHistoryDetailSectionVerticalPadding">22dp</dimen>
+    <dimen name="paymentHistoryDetailLabelTextSize">24sp</dimen>
+    <dimen name="paymentHistoryDetailValueTextSize">17sp</dimen>
+    <dimen name="paymentHistoryDetailItemsLabelTopMargin">50dp</dimen>
+    <dimen name="paymentHistoryDetailItemsLabelTextSize">18sp</dimen>
+    <dimen name="paymentHistoryDetailItemsListTopMargin">12dp</dimen>
+
+    <!--Checkin Activity Patient Mode-->
+    <dimen name="emptyScreenImageWidth">200dp</dimen>
+    <dimen name="emptyScreenImageHeight">300dp</dimen>
+    <dimen name="mainContentTopMargin">40dp</dimen>
+    <dimen name="appointmentsListTopMargin">20dp</dimen>
+    <dimen name="scheduleAppointmentButtonTopMargin">40dp</dimen>
+    <dimen name="scheduleAppointmentButtonHorizontalPadding">80dp</dimen>
+    <dimen name="appointmentCardHeaderTopPadding">10dp</dimen>
+    <dimen name="appointmentCardVisitTypeTextSize">18sp</dimen>
+    <dimen name="appointmentCardStartDayTextSize">30sp</dimen>
+    <dimen name="appointmentCardStartHourTextSize">18sp</dimen>
+    <dimen name="appointmentCardDoctorNameTopMargin">30dp</dimen>
+    <dimen name="appointmentCardDoctorNameTextSize">24sp</dimen>
+    <dimen name="appointmentCardDoctorSpecialityTextSize">18sp</dimen>
+    <dimen name="startCheckinHorizontalMargin">24dp</dimen>
+    <dimen name="appointmentCardStatusTextSize">18sp</dimen>
+    <dimen name="appointmentCardStartHourTopMargin">5dp</dimen>
+    <dimen name="appointmentCardFakeCenterBottomMargin">20dp</dimen>
+    <dimen name="appointmentCardStatusPadding">10dp</dimen>
+    <dimen name="appointmentCardAddressTextSize">14sp</dimen>
+    <dimen name="loginOptionHeight">81dp</dimen>
+    <dimen name="checkInOptionWidth">450dp</dimen>
+    <dimen name="signInShadowWidth">400dp</dimen>
+    <dimen name="signInShadowTopMargin">-48dp</dimen>
+    <dimen name="allergyMedicationHeaderTextSize">30sp</dimen>
+    <dimen name="allergyMedicationImageSize">150dp</dimen>
+    <dimen name="allergyMedicationImageTopMargin">30dp</dimen>
+    <dimen name="allergyMedicationEmptyMessageHorizontalPadding">30dp</dimen>
+    <dimen name="allergyMedicationEmptyMessageTextSize">40sp</dimen>
+    <dimen name="medicationAllergyPadding">16dp</dimen>
+    <dimen name="medicationAllergySearchPadding">20dp</dimen>
+
+    <!--Complete Screen-->
+    <dimen name="completeScreenCheckImageSize">120dp</dimen>
+    <dimen name="completeScreenCheckBottomMargin">40dp</dimen>
+    <dimen name="checkin_complete_divider_width">350dp</dimen>
+    <dimen name="completeScreenSuccessScreenTextSize">26sp</dimen>
+    <dimen name="giveDeviceBackMessageVerticalMargin">10dp</dimen>
+    <dimen name="giveDeviceBackMessageTextSize">17sp</dimen>
+    <dimen name="completeScreenUserImageSize">100dp</dimen>
+    <dimen name="completeScreenUserImageVerticalMargin">10dp</dimen>
+    <dimen name="completeScreenUserImageEndMargin">20dp</dimen>
+    <dimen name="completeScreenUserNameTextSize">28sp</dimen>
+    <dimen name="completeScreenProviderTextSize">18sp</dimen>
+    <dimen name="completeScreenInfoContainerPadding">20dp</dimen>
+    <dimen name="completeCheckInItemMargin">14dp</dimen>
+    <dimen name="completeCheckInItemTextSize">22sp</dimen>
+    <dimen name="completeCheckInItemValueTextSize">16sp</dimen>
+    <dimen name="completeScreenSectionTitleTextSize">18sp</dimen>
+    <dimen name="completeScreenSectionTitleVerticalMargin">20dp</dimen>
 
     <!--Schedule Appointment Flow-->
     <dimen name="createAppointmentImageLabelSize">40dp</dimen>

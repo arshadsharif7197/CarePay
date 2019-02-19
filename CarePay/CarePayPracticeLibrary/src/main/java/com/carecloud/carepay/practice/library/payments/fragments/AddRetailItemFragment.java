@@ -89,15 +89,15 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
         });
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        searchRecycler = (RecyclerView) view.findViewById(R.id.search_recycler);
+        searchRecycler = view.findViewById(R.id.search_recycler);
         searchRecycler.setLayoutManager(layoutManager);
         searchRecycler.addOnScrollListener(retailScrollListener);
 
-        searchView = (SearchView) view.findViewById(R.id.search_entry_view);
+        searchView = view.findViewById(R.id.search_entry_view);
         searchView.setOnQueryTextListener(queryTextListener);
         searchView.setQueryHint(Label.getLabel("search_field_hint"));
 
-        TextView noResultsMessage = (TextView) view.findViewById(R.id.no_results_message);
+        TextView noResultsMessage = view.findViewById(R.id.no_results_message);
         noResultsMessage.setText(Label.getLabel("payment_retail_items_no_results"));
         emptyState = view.findViewById(R.id.emptyStateScreen);
 
@@ -106,8 +106,8 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
     }
 
     private void setupToolbar(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.search_toolbar);
-        TextView textView = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        Toolbar toolbar = view.findViewById(R.id.search_toolbar);
+        TextView textView = toolbar.findViewById(R.id.toolbar_title);
         textView.setText(Label.getLabel("payment_retail_items_title"));
 
     }

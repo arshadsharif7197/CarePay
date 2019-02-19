@@ -982,9 +982,9 @@
     <style name="HomeButtonIcon">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingBottom">@dimen/dimen_30dp</item>
+        <item name="android:paddingBottom">@dimen/homeButtonIconBottomPadding</item>
         <item name="android:paddingEnd">0dp</item>
-        <item name="android:paddingStart">@dimen/dimen_30dp</item>
+        <item name="android:paddingStart">@dimen/homeButtonIconStartPadding</item>
         <item name="android:src">@drawable/icn_home</item>
     </style>
 
@@ -1002,5 +1002,4 @@
     <style name="ActionModeTitleStyle" parent="TextAppearance.AppCompat.Widget.ActionMode.Title">
         <item name="android:textColor">@color/white</item>
     </style>
-
 </resources>

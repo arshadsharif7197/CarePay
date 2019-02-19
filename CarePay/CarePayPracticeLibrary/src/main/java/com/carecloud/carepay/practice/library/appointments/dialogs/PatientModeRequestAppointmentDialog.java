@@ -23,6 +23,7 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.PicassoHelper;
+import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -30,6 +31,8 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 public class PatientModeRequestAppointmentDialog extends BaseRequestAppointmentDialogFragment {
+
+    private TextView providerImageTextView;
 
     public static PatientModeRequestAppointmentDialog newInstance(AppointmentDTO appointmentDTO) {
         Bundle args = new Bundle();
@@ -71,9 +74,8 @@ public class PatientModeRequestAppointmentDialog extends BaseRequestAppointmentD
         TextView appointmentTimeTextView = view.findViewById(R.id.appointment_time);
         appointmentTimeTextView.setText(dateUtil.getTime12Hour());
 
-        TextView providerImageTextView = view.findViewById(R.id.provider_short_name);
-        ProviderDTO provider = appointmentDTO.getPayload().getResource().getProvider();
-        providerImageTextView.setText(StringUtil.getShortName(provider.getName()));
+        providerImageTextView = view.findViewById(R.id.provider_short_name);
+        providerImageTextView.setText(StringUtil.getShortName(appointmentResourcesDTO.getResource().getProvider().getName()));
 
         TextView appointmentDoctorNameTextView = view.findViewById(R.id.provider_doctor_name);
         appointmentDoctorNameTextView.setText(String
@@ -145,5 +147,9 @@ public class PatientModeRequestAppointmentDialog extends BaseRequestAppointmentD
         if (applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
         }
+    }
+
+    protected void loadImage(final ImageView imageView, String url) {
+        PicassoHelper.get().loadImage(getContext(), imageView, providerImageTextView, url);
     }
 }

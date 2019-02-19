@@ -39,12 +39,12 @@
 
                 <ImageView
                     android:id="@+id/userImage"
-                    android:layout_width="@dimen/dimen_100dp"
-                    android:layout_height="@dimen/dimen_100dp"
-                    android:layout_marginBottom="@dimen/dimen_10dp"
-                    android:layout_marginEnd="@dimen/dimen_20dp"
-                    android:layout_marginStart="@dimen/dimen_10dp"
-                    android:layout_marginTop="@dimen/dimen_10dp" />
+                    android:layout_width="@dimen/completeScreenUserImageSize"
+                    android:layout_height="@dimen/completeScreenUserImageSize"
+                    android:layout_marginBottom="@dimen/completeScreenUserImageVerticalMargin"
+                    android:layout_marginEnd="@dimen/completeScreenUserImageEndMargin"
+                    android:layout_marginStart="@dimen/completeScreenUserImageVerticalMargin"
+                    android:layout_marginTop="@dimen/completeScreenUserImageVerticalMargin" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -52,7 +52,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_toEndOf="@id/userImage"
-                    android:minHeight="@dimen/dimen_100dp"
+                    android:minHeight="@dimen/completeScreenUserImageSize"
                     android:orientation="vertical">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -63,7 +63,7 @@
                         android:gravity="start"
                         android:maxLines="2"
                         android:textColor="@color/white"
-                        android:textSize="28sp"
+                        android:textSize="@dimen/completeScreenUserNameTextSize"
                         app:customAssetFont="proxima_nova_extra_bold"
                         tools:text="RICK SANCHEZ DEL AGUILA" />
 
@@ -73,7 +73,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="28sp"
+                        android:textSize="@dimen/completeScreenUserNameTextSize"
                         app:customAssetFont="gotham_rounded_bold"
                         tools:text="2:00 AM" />
 
@@ -82,7 +82,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/pastel_blue"
-                        android:textSize="@dimen/text_size_18sp"
+                        android:textSize="@dimen/completeScreenProviderTextSize"
                         app:customAssetFont="proxima_nova_regular"
                         tools:text="with Dr. Anne Rather" />
 
@@ -99,7 +99,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="20dp">
+                    android:padding="@dimen/completeScreenInfoContainerPadding">
 
                     <LinearLayout
                         android:id="@+id/statusContainer"
@@ -186,11 +186,11 @@
                         android:id="@+id/paymentDetailsLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dimen_20dp"
-                        android:layout_marginTop="@dimen/dimen_20dp"
+                        android:layout_marginBottom="@dimen/completeScreenSectionTitleVerticalMargin"
+                        android:layout_marginTop="@dimen/completeScreenSectionTitleVerticalMargin"
                         android:textAllCaps="true"
                         android:textColor="@color/textview_default_textcolor"
-                        android:textSize="@dimen/text_size_18sp"
+                        android:textSize="@dimen/completeScreenSectionTitleTextSize"
                         app:customAssetFont="proxima_nova_extra_bold"
                         breeze:textKey="payment_details_label"
                         tools:text="Payment Details" />
@@ -200,10 +200,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:visibility="gone">
-
-
-                    </android.support.v7.widget.RecyclerView>
+                        android:visibility="gone"/>
 
                     <LinearLayout
                         android:id="@+id/paymentTypeLayout"
@@ -579,9 +576,9 @@
 
             <ImageView
                 android:id="@+id/checkImage"
-                android:layout_width="@dimen/dimen_120dp"
-                android:layout_height="@dimen/dimen_120dp"
-                android:layout_marginBottom="@dimen/dimen_40dp"
+                android:layout_width="@dimen/completeScreenCheckImageSize"
+                android:layout_height="@dimen/completeScreenCheckImageSize"
+                android:layout_marginBottom="@dimen/completeScreenCheckBottomMargin"
                 android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
                 android:src="@drawable/icn_payment_confirm_check_white" />
@@ -592,7 +589,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_26sp"
+                android:textSize="@dimen/completeScreenSuccessScreenTextSize"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="confirm_appointment_checkin"
                 tools:text="Congratulations, you have \n checked in to your \n appointment!" />
@@ -607,10 +604,10 @@
                 android:id="@+id/giveDeviceBackMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginBottom="@dimen/giveDeviceBackMessageVerticalMargin"
+                android:layout_marginTop="@dimen/giveDeviceBackMessageVerticalMargin"
                 android:textColor="@color/white"
-                android:textSize="17sp"
+                android:textSize="@dimen/giveDeviceBackMessageTextSize"
                 app:customAssetFont="gotham_rounded_light"
                 breeze:textKey="checkin_complete_device_back_message"
                 tools:text="Now you can give the device back." />
@@ -625,13 +622,13 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/surveyButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/commonButtonHeight"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:background="@drawable/button_rounded_white"
                 android:padding="@dimen/dimen_10dp"
                 android:textColor="@color/lemonGreen"
-                android:textSize="@dimen/text_size_22sp"
+                android:textSize="@dimen/respons_button_text_size"
                 android:visibility="gone"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="check_in-out.succcess.button.label.survey"
@@ -640,13 +637,13 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/browseOurShopTextView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/commonButtonHeight"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:background="@drawable/button_rounded_white"
                 android:padding="@dimen/dimen_10dp"
                 android:textColor="@color/lemonGreen"
-                android:textSize="@dimen/text_size_22sp"
+                android:textSize="@dimen/respons_button_text_size"
                 android:visibility="gone"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="check_in-out.succcess.button.label.shop"
@@ -655,13 +652,13 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/continueTextView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/commonButtonHeight"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:background="@drawable/bottom_rounded_white_alpha"
                 android:padding="@dimen/dimen_10dp"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_22sp"
+                android:textSize="@dimen/respons_button_text_size"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="check_in-out.succcess.button.label.home"
                 tools:text="Go Home" />

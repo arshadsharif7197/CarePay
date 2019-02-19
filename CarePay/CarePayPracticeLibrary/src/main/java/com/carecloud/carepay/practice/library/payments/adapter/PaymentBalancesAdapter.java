@@ -171,13 +171,13 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
          */
         public ViewHolder(View itemView) {
             super(itemView);
-            placeNameTextView = (TextView) itemView.findViewById(R.id.placeNameTextView);
-            paymentAmountTextView = (TextView) itemView.findViewById(R.id.paymentAmountTextView);
-            payButton = (Button) itemView.findViewById(R.id.payButton);
-            providerImageTextView = (TextView) itemView.findViewById(R.id.providerImageTextView);
-            providerImageView = (ImageView) itemView.findViewById(R.id.providerImageView);
-            planInstallmentFrequency = (TextView) itemView.findViewById(R.id.planInstallmentFrequency);
-            paymentPlanProgress = (ProgressBar) itemView.findViewById(R.id.paymentPlanProgress);
+            placeNameTextView = itemView.findViewById(R.id.placeNameTextView);
+            paymentAmountTextView = itemView.findViewById(R.id.paymentAmountTextView);
+            payButton = itemView.findViewById(R.id.payButton);
+            providerImageTextView = itemView.findViewById(R.id.providerImageTextView);
+            providerImageView = itemView.findViewById(R.id.providerImageView);
+            planInstallmentFrequency = itemView.findViewById(R.id.planInstallmentFrequency);
+            paymentPlanProgress = itemView.findViewById(R.id.paymentPlanProgress);
             scheduledIcon = itemView.findViewById(com.carecloud.carepaylibrary.R.id.scheduledPaymentIcon);
         }
     }
