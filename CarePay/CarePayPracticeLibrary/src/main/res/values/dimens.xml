@@ -362,7 +362,21 @@
     <dimen name="negativeContainerTopMargin">40dp</dimen>
     <dimen name="surveyFeedbackButtonWidth">300dp</dimen>
     <dimen name="checkoutMessageTextSize">40sp</dimen>
-    <dimen name="practiceAppointmentDetailDialogWidth">300dp</dimen>
+
+
+    <!--Payment Options Dialog-->
+    <dimen name="paymentOptionIconSize">60dp</dimen>
+    <dimen name="paymentOptionIconMargin">10dp</dimen>
+    <dimen name="paymentOptionTextSize">26sp</dimen>
+    <dimen name="paymentOptionContainerHeight">90dp</dimen>
+    <dimen name="paymentOptionContainerPadding">10dp</dimen>
+    <dimen name="paymentOptionHeaderPadding">15dp</dimen>
+    <dimen name="paymentOptionHeaderMessageTextSize">22sp</dimen>
+    <dimen name="paymentOptionHeaderBalanceTextSize">90sp</dimen>
+    <dimen name="paymentOptionBodyHorizontalPadding">20dp</dimen>
+    <dimen name="paymentOptionBodyVerticalPadding">10dp</dimen>
+    <dimen name="paymentOptionBodyMessageHorizontalPadding">15dp</dimen>
+    <dimen name="paymentOptionBodyMessageTextSize">22sp</dimen>
 
     <!--Payments Activity-->
     <dimen name="paymentPatientNameTextSize">24sp</dimen>
@@ -430,7 +444,7 @@
     <dimen name="creditCardOptionMargin">10dp</dimen>
     <dimen name="creditCardFieldPadding">10dp</dimen>
     <dimen name="creditCardFieldBottomPadding">20dp</dimen>
-    <dimen name="creditCardFieldTextSize">16sp</dimen>
+    <dimen name="creditCardFieldTextSize">18sp</dimen>
     <dimen name="payment_pick_date_label_text_size">14sp</dimen>
     <dimen name="addNewCreditCardTextFieldSize">18sp</dimen>
 
@@ -660,44 +674,10 @@
     <dimen name="paymentMethodImageWidth">36dp</dimen>
     <dimen name="paymentMethodItemNamePadding">13dp</dimen>
     <dimen name="paymentMethodItemNameTextSize">22sp</dimen>
-    <dimen name="medicationAllergyHeaderTitleTextSize">21sp</dimen>
-    <dimen name="medicationAllergyHeaderSubtitleTextSize">13sp</dimen>
-    <dimen name="medicationAllergyHeaderSubtitlePadding">80dp</dimen>
-    <dimen name="medicationAllergyButtonTextSize">22sp</dimen>
+    <dimen name="paymentOptionBodyBottomPadding">20dp</dimen>
 
-    <!--Payment Options Dialog-->
-    <dimen name="paymentOptionIconSize">60dp</dimen>
-    <dimen name="paymentOptionIconMargin">10dp</dimen>
-    <dimen name="paymentOptionTextSize">26sp</dimen>
-    <dimen name="paymentOptionContainerHeight">90dp</dimen>
-    <dimen name="paymentOptionContainerPadding">10dp</dimen>
-    <dimen name="paymentOptionHeaderPadding">15dp</dimen>
-    <dimen name="paymentOptionHeaderMessageTextSize">22sp</dimen>
-    <dimen name="paymentOptionHeaderBalanceTextSize">90sp</dimen>
-    <dimen name="paymentOptionBodyHorizontalPadding">20dp</dimen>
-    <dimen name="paymentOptionBodyVerticalPadding">10dp</dimen>
-    <dimen name="paymentOptionBodyMessageHorizontalPadding">15dp</dimen>
-    <dimen name="paymentOptionBodyMessageTextSize">22sp</dimen>
-
-    <!--Patient Splash Screen-->
-    <dimen name="patientSplashPracticeLogoSize">250dp</dimen>
-    <dimen name="patientSplashWelcomeTitleTextSize">36sp</dimen>
-    <dimen name="patientSplashButtonWidth">250dp</dimen>
-    <dimen name="patientSplashButtonHeight">50dp</dimen>
-    <dimen name="patientSplashButtonTextSize">21sp</dimen>
-
-    <!--Patient Home-->
-    <dimen name="patientHomeLayoutContainerHorizontalMargin">150dp</dimen>
-    <dimen name="patientHomeLayoutContainerTopMargin">120dp</dimen>
-    <dimen name="patientHomeButtonHeight">200dp</dimen>
-    <dimen name="patientHomeIconButtonWidth">144dp</dimen>
-    <dimen name="patientHomeIconButtonHeight">144dp</dimen>
-    <dimen name="patientHomeSeparatorVerticalMargin">10dp</dimen>
-    <dimen name="patientHomeMainSeparatorHorizontalMargin">30dp</dimen>
-    <dimen name="patientHomeBottomButtonPadding">20dp</dimen>
-    <dimen name="patientHomeSpinnerWidth">100dp</dimen>
-    <dimen name="patientHomeSpinnerHeight">40dp</dimen>
-
+    <!--Sign In-->
+    <dimen name="signinHeaderTextSize">36sp</dimen>
     <!--Schedule Appointment Flow-->
     <dimen name="createAppointmentImageLabelSize">40dp</dimen>
     <dimen name="createAppointmentStepContainerWidth">400dp</dimen>
@@ -723,6 +703,29 @@
     <dimen name="createAppointmentSubTitleTextSize">22sp</dimen>
     <dimen name="createAppointmentHeaderTopMargin">40dp</dimen>
     <dimen name="createAppointmentHeaderVerticalMargin">10dp</dimen>
+    <dimen name="medicationAllergyHeaderTitleTextSize">21sp</dimen>
+    <dimen name="medicationAllergyHeaderSubtitleTextSize">13sp</dimen>
+    <dimen name="medicationAllergyHeaderSubtitlePadding">80dp</dimen>
+    <dimen name="medicationAllergyButtonTextSize">22sp</dimen>
+
+    <!--Patient Splash Screen-->
+    <dimen name="patientSplashPracticeLogoSize">250dp</dimen>
+    <dimen name="patientSplashWelcomeTitleTextSize">36sp</dimen>
+    <dimen name="patientSplashButtonWidth">250dp</dimen>
+    <dimen name="patientSplashButtonHeight">50dp</dimen>
+    <dimen name="patientSplashButtonTextSize">21sp</dimen>
+
+    <!--Patient Home-->
+    <dimen name="patientHomeLayoutContainerHorizontalMargin">150dp</dimen>
+    <dimen name="patientHomeLayoutContainerTopMargin">120dp</dimen>
+    <dimen name="patientHomeButtonHeight">200dp</dimen>
+    <dimen name="patientHomeIconButtonWidth">144dp</dimen>
+    <dimen name="patientHomeIconButtonHeight">144dp</dimen>
+    <dimen name="patientHomeSeparatorVerticalMargin">10dp</dimen>
+    <dimen name="patientHomeMainSeparatorHorizontalMargin">30dp</dimen>
+    <dimen name="patientHomeBottomButtonPadding">20dp</dimen>
+    <dimen name="patientHomeSpinnerWidth">100dp</dimen>
+    <dimen name="patientHomeSpinnerHeight">40dp</dimen>
 
     <!--How to check in-->
     <dimen name="howToCheckinHomeButtonPadding">30dp</dimen>
@@ -834,6 +837,8 @@
     <dimen name="paymentHistoryDetailItemsLabelTopMargin">50dp</dimen>
     <dimen name="paymentHistoryDetailItemsLabelTextSize">18sp</dimen>
     <dimen name="paymentHistoryDetailItemsListTopMargin">12dp</dimen>
+
+    <dimen name="practiceAppointmentDetailDialogWidth">300dp</dimen>
 
     <!--Checkin Activity Patient Mode-->
     <dimen name="emptyScreenImageWidth">200dp</dimen>
