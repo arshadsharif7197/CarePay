@@ -32,8 +32,6 @@ import java.util.Locale;
 
 public class PatientModeRequestAppointmentDialog extends BaseRequestAppointmentDialogFragment {
 
-    private TextView providerImageTextView;
-
     public static PatientModeRequestAppointmentDialog newInstance(AppointmentDTO appointmentDTO) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, appointmentDTO);
@@ -74,8 +72,9 @@ public class PatientModeRequestAppointmentDialog extends BaseRequestAppointmentD
         TextView appointmentTimeTextView = view.findViewById(R.id.appointment_time);
         appointmentTimeTextView.setText(dateUtil.getTime12Hour());
 
-        providerImageTextView = view.findViewById(R.id.provider_short_name);
-        providerImageTextView.setText(StringUtil.getShortName(appointmentResourcesDTO.getResource().getProvider().getName()));
+        TextView providerImageTextView = view.findViewById(R.id.provider_short_name);
+        ProviderDTO provider = appointmentDTO.getPayload().getResource().getProvider();
+        providerImageTextView.setText(StringUtil.getShortName(provider.getName()));
 
         TextView appointmentDoctorNameTextView = view.findViewById(R.id.provider_doctor_name);
         appointmentDoctorNameTextView.setText(String
@@ -149,7 +148,4 @@ public class PatientModeRequestAppointmentDialog extends BaseRequestAppointmentD
         }
     }
 
-    protected void loadImage(final ImageView imageView, String url) {
-        PicassoHelper.get().loadImage(getContext(), imageView, providerImageTextView, url);
-    }
 }
