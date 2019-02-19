@@ -8,6 +8,7 @@
     <dimen name="reasonForVisitHorizontalMargin">14dp</dimen>
     <dimen name="visitTypeContainerVerticalPadding">15dp</dimen>
     <dimen name="reasonForVisitTopMargin">10dp</dimen>
+    <dimen name="itemProviderVerticalMargin">6dp</dimen>
     <dimen name="nextAppointmentProviderImageSize">80dp</dimen>
 
     <!--Available hours-->
@@ -18,9 +19,8 @@
     <dimen name="homeButtonIconBottomPadding">15dp</dimen>
     <dimen name="homeButtonIconStartPadding">15dp</dimen>
     <dimen name="separatorHeight">0.5dp</dimen>
-    <dimen name="itemProviderVerticalMargin">6dp</dimen>
     <dimen name="locationItemHorizontalMargin">6dp</dimen>
-    <dimen name="timeSlotItemPadding">15dp</dimen>
-    <dimen name="timeSlotItemTextSize">17sp</dimen>
-    <dimen name="locationItemHeight">60dp</dimen>
+    <dimen name="timeSlotItemPadding">10dp</dimen>
+    <dimen name="timeSlotItemTextSize">14sp</dimen>
+    <dimen name="locationItemHeight">80dp</dimen>
 </resources>

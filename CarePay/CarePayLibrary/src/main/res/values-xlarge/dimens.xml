@@ -13,10 +13,6 @@
     <dimen name="optionalLabelRightMargin">38dp</dimen>
     <dimen name="optionalLabelTextSize">9sp</dimen>
     <dimen name="itemProviderVerticalMargin">12dp</dimen>
-    <dimen name="locationItemHorizontalMargin">12dp</dimen>
-    <dimen name="timeSlotItemPadding">15dp</dimen>
-    <dimen name="timeSlotItemTextSize">17sp</dimen>
-    <dimen name="locationItemHeight">90dp</dimen>
 
     <!--Available hours-->
     <dimen name="availableHourListHeaderTextSize">14sp</dimen>
@@ -26,4 +22,8 @@
     <dimen name="homeButtonIconBottomPadding">30dp</dimen>
     <dimen name="homeButtonIconStartPadding">30dp</dimen>
     <dimen name="separatorHeight">1dp</dimen>
+    <dimen name="locationItemHorizontalMargin">12dp</dimen>
+    <dimen name="timeSlotItemPadding">15dp</dimen>
+    <dimen name="timeSlotItemTextSize">20sp</dimen>
+    <dimen name="locationItemHeight">90dp</dimen>
 </resources>
