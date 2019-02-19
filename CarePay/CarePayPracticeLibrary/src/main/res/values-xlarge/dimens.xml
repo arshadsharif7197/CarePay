@@ -40,6 +40,7 @@
     <dimen name="signInButtonHeight">48dp</dimen>
     <dimen name="signInButtonMarginTop">30dp</dimen>
     <dimen name="signInButtonTextSize">22sp</dimen>
+    <dimen name="signinHeaderTextSize">36sp</dimen>
 
     <!-- Home Screen -->
     <dimen name="mainTitleHeaderMarginTop">30dp</dimen>
@@ -156,6 +157,20 @@
     <dimen name="negativeContainerTopMargin">40dp</dimen>
     <dimen name="surveyFeedbackButtonWidth">300dp</dimen>
     <dimen name="checkoutMessageTextSize">40sp</dimen>
+
+    <!--Payment Options Dialog-->
+    <dimen name="paymentOptionIconSize">60dp</dimen>
+    <dimen name="paymentOptionIconMargin">10dp</dimen>
+    <dimen name="paymentOptionTextSize">26sp</dimen>
+    <dimen name="paymentOptionContainerHeight">90dp</dimen>
+    <dimen name="paymentOptionContainerPadding">10dp</dimen>
+    <dimen name="paymentOptionHeaderPadding">15dp</dimen>
+    <dimen name="paymentOptionHeaderMessageTextSize">22sp</dimen>
+    <dimen name="paymentOptionHeaderBalanceTextSize">90sp</dimen>
+    <dimen name="paymentOptionBodyHorizontalPadding">20dp</dimen>
+    <dimen name="paymentOptionBodyVerticalPadding">10dp</dimen>
+    <dimen name="paymentOptionBodyMessageHorizontalPadding">15dp</dimen>
+    <dimen name="paymentOptionBodyMessageTextSize">22sp</dimen>
 
     <!--Payments Activity-->
     <dimen name="paymentPatientNameTextSize">24sp</dimen>
@@ -296,7 +311,7 @@
     <dimen name="creditCardOptionMargin">10dp</dimen>
     <dimen name="creditCardFieldPadding">10dp</dimen>
     <dimen name="creditCardFieldBottomPadding">20dp</dimen>
-    <dimen name="creditCardFieldTextSize">16sp</dimen>
+    <dimen name="creditCardFieldTextSize">18sp</dimen>
     <dimen name="payment_pick_date_label_text_size">14sp</dimen>
     <dimen name="addNewCreditCardTextFieldSize">18sp</dimen>
 
@@ -538,24 +553,38 @@
     <dimen name="paymentMethodImageWidth">36dp</dimen>
     <dimen name="paymentMethodItemNamePadding">13dp</dimen>
     <dimen name="paymentMethodItemNameTextSize">22sp</dimen>
+    <dimen name="paymentOptionBodyBottomPadding">20dp</dimen>
+
+    <!--Schedule Appointment Flow-->
+    <dimen name="createAppointmentImageLabelSize">40dp</dimen>
+    <dimen name="createAppointmentStepContainerWidth">320dp</dimen>
+    <dimen name="createAppointmentStepContainerHeight">220dp</dimen>
+    <dimen name="appointmentCreationstepsContainerTopMargin">50dp</dimen>
+    <dimen name="appointmentCreationStepContainerHorizontalSize">30dp</dimen>
+    <dimen name="createAppointmentStepTitleBottomMargin">20dp</dimen>
+    <dimen name="createAppointmentStepTitleTextSize">26sp</dimen>
+    <dimen name="appointmentCreationProfileImageVerticalMargin">10dp</dimen>
+    <dimen name="appointmentCreationStepHeaderHeight">55dp</dimen>
+    <dimen name="appointmentCreationProfilePicSize">110dp</dimen>
+    <dimen name="appointmentCreationStepResetImageSize">20dp</dimen>
+    <dimen name="appointmentCreationStepResetImageBottomMargin">10dp</dimen>
+    <dimen name="appointmentCreationStepSubtitleBottomMargin">10dp</dimen>
+    <dimen name="appointmentCreationStepSubtitleTextSize">14sp</dimen>
+    <dimen name="appointmentCreationStepTitleTextSize">20sp</dimen>
+    <dimen name="appointmentCreationAvailabilityButtonWidth">500dp</dimen>
+    <dimen name="appointmentCreationAvailabilityButtonTextSize">22sp</dimen>
+    <dimen name="appointmentCreationAvailabilityButtonTopMargin">60dp</dimen>
+    <dimen name="createAppointmentMainContainerTopMargin">40dp</dimen>
+    <dimen name="createAppointmentTitleTopMargin">36dp</dimen>
+    <dimen name="createAppointmentTitleTextSize">36sp</dimen>
+    <dimen name="createAppointmentSubTitleTextSize">22sp</dimen>
+    <dimen name="createAppointmentHeaderTopMargin">40dp</dimen>
+    <dimen name="createAppointmentHeaderVerticalMargin">10dp</dimen>
+
     <dimen name="medicationAllergyHeaderTitleTextSize">21sp</dimen>
     <dimen name="medicationAllergyHeaderSubtitleTextSize">13sp</dimen>
     <dimen name="medicationAllergyHeaderSubtitlePadding">80dp</dimen>
     <dimen name="medicationAllergyButtonTextSize">22sp</dimen>
-
-    <!--Payment Options Dialog-->
-    <dimen name="paymentOptionIconSize">60dp</dimen>
-    <dimen name="paymentOptionIconMargin">10dp</dimen>
-    <dimen name="paymentOptionTextSize">26sp</dimen>
-    <dimen name="paymentOptionContainerHeight">90dp</dimen>
-    <dimen name="paymentOptionContainerPadding">10dp</dimen>
-    <dimen name="paymentOptionHeaderPadding">15dp</dimen>
-    <dimen name="paymentOptionHeaderMessageTextSize">22sp</dimen>
-    <dimen name="paymentOptionHeaderBalanceTextSize">90sp</dimen>
-    <dimen name="paymentOptionBodyHorizontalPadding">20dp</dimen>
-    <dimen name="paymentOptionBodyVerticalPadding">10dp</dimen>
-    <dimen name="paymentOptionBodyMessageHorizontalPadding">15dp</dimen>
-    <dimen name="paymentOptionBodyMessageTextSize">22sp</dimen>
 
     <!--Patient Splash Screen-->
     <dimen name="patientSplashPracticeLogoSize">250dp</dimen>
@@ -752,31 +781,5 @@
     <dimen name="completeCheckInItemValueTextSize">16sp</dimen>
     <dimen name="completeScreenSectionTitleTextSize">18sp</dimen>
     <dimen name="completeScreenSectionTitleVerticalMargin">20dp</dimen>
-
-    <!--Schedule Appointment Flow-->
-    <dimen name="createAppointmentImageLabelSize">40dp</dimen>
-    <dimen name="createAppointmentStepContainerWidth">320dp</dimen>
-    <dimen name="createAppointmentStepContainerHeight">220dp</dimen>
-    <dimen name="appointmentCreationstepsContainerTopMargin">50dp</dimen>
-    <dimen name="appointmentCreationStepContainerHorizontalSize">30dp</dimen>
-    <dimen name="createAppointmentStepTitleBottomMargin">20dp</dimen>
-    <dimen name="createAppointmentStepTitleTextSize">26sp</dimen>
-    <dimen name="appointmentCreationProfileImageVerticalMargin">10dp</dimen>
-    <dimen name="appointmentCreationStepHeaderHeight">55dp</dimen>
-    <dimen name="appointmentCreationProfilePicSize">110dp</dimen>
-    <dimen name="appointmentCreationStepResetImageSize">20dp</dimen>
-    <dimen name="appointmentCreationStepResetImageBottomMargin">10dp</dimen>
-    <dimen name="appointmentCreationStepSubtitleBottomMargin">10dp</dimen>
-    <dimen name="appointmentCreationStepSubtitleTextSize">14sp</dimen>
-    <dimen name="appointmentCreationStepTitleTextSize">20sp</dimen>
-    <dimen name="appointmentCreationAvailabilityButtonWidth">500dp</dimen>
-    <dimen name="appointmentCreationAvailabilityButtonTextSize">22sp</dimen>
-    <dimen name="appointmentCreationAvailabilityButtonTopMargin">60dp</dimen>
-    <dimen name="createAppointmentMainContainerTopMargin">40dp</dimen>
-    <dimen name="createAppointmentTitleTopMargin">36dp</dimen>
-    <dimen name="createAppointmentTitleTextSize">36sp</dimen>
-    <dimen name="createAppointmentSubTitleTextSize">22sp</dimen>
-    <dimen name="createAppointmentHeaderTopMargin">40dp</dimen>
-    <dimen name="createAppointmentHeaderVerticalMargin">10dp</dimen>
 
 </resources>

@@ -480,6 +480,10 @@
     <dimen name="demographicErrorImageHeight">30dp</dimen>
     <dimen name="demographicErrorViewWidth">22dp</dimen>
 
+    <dimen name="homeButtonIconBottomPadding">30dp</dimen>
+    <dimen name="homeButtonIconStartPadding">30dp</dimen>
+    <dimen name="ssoWebViewOpenOffset">240dp</dimen>
+
     <!--Create appointment flow-->
     <dimen name="createAppointmentNoDataTextViewHeight">90dp</dimen>
     <dimen name="createAppointmentHeaderVerticalMargin">10dp</dimen>
@@ -508,9 +512,6 @@
     <dimen name="timeSlotItemPadding">18dp</dimen>
     <dimen name="timeSlotItemTextSize">20sp</dimen>
     <dimen name="locationItemHeight">80dp</dimen>
-
-    <dimen name="homeButtonIconBottomPadding">30dp</dimen>
-    <dimen name="homeButtonIconStartPadding">30dp</dimen>
 
     <!--Check In Screen-->
     <dimen name="checkinPlanTotalHeaderTextHeight">100dp</dimen>
