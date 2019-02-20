@@ -34,7 +34,7 @@ public class OfficeNewsDetailsDialog extends BaseDialogFragment {
      * @param officeNewsList data
      */
     public static OfficeNewsDetailsDialog newInstance(List<HomeScreenOfficeNewsDTO> officeNewsList,
-                                   int position) {
+                                                      int position) {
         Bundle args = new Bundle();
         args.putSerializable("officeNewsList", (Serializable) officeNewsList);
         args.putInt("position", position);
@@ -55,8 +55,8 @@ public class OfficeNewsDetailsDialog extends BaseDialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        addView();
-        initializeView();
+        addView(view);
+        initializeView(view);
         handleException();
     }
 
@@ -74,12 +74,12 @@ public class OfficeNewsDetailsDialog extends BaseDialogFragment {
 
     @SuppressWarnings("deprecation")
     @SuppressLint("SetJavaScriptEnabled")
-    private void initializeView() {
+    private void initializeView(View view) {
 //        ((TextView) findViewById(R.id.office_news_details_header)).setText(Label.getLabel("news_title"));
 
         if (officeNewsList != null && !officeNewsList.isEmpty()) {
             NewsPagerAdapter adapter = new NewsPagerAdapter();
-            ViewPager newsArticle = (ViewPager) findViewById(R.id.office_news_viewpager);
+            ViewPager newsArticle = view.findViewById(R.id.office_news_viewpager);
             newsArticle.setAdapter(adapter);
 
             newsArticle.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -107,9 +107,9 @@ public class OfficeNewsDetailsDialog extends BaseDialogFragment {
     }
 
     @SuppressWarnings("deprecation")
-    private void addView() {
+    private void addView(View view) {
         officeNewsPages = new ArrayList<>();
-        pages = (RadioGroup) findViewById(R.id.office_news_page_indicator);
+        pages = view.findViewById(R.id.office_news_page_indicator);
         RadioGroup.LayoutParams params;
 
         for (int i = 0; i < officeNewsList.size(); i++) {
