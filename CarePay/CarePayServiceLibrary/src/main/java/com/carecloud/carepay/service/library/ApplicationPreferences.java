@@ -10,6 +10,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
+import com.carecloud.carepay.service.library.unifiedauth.UserLinks;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -51,6 +52,7 @@ public class ApplicationPreferences {
     private static final String PREFERENCE_LAST_APP_VERSION_NUM = "last_app_version_num";
     private static final String PREFERENCE_REMIND_LATEST = "remind_latest";
     private static final String PREFERENCE_FORCE_UPDATE = "force_update";
+    private static final String PREFERENCE_DELEGATES = "delegates";
 
     private String patientId;
     private String practiceId;
@@ -513,5 +515,9 @@ public class ApplicationPreferences {
 
     public void setForceUpdate(boolean mustForceUpdate){
         writeBooleanToSharedPref(PREFERENCE_FORCE_UPDATE, mustForceUpdate);
+    }
+
+    public void saveDelegates(UserLinks userLinks) {
+        writeStringToSharedPref(PREFERENCE_DELEGATES, userLinks != null ? new Gson().toJson(userLinks) : null);
     }
 }

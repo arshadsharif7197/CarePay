@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
@@ -111,9 +110,8 @@ public class RetailActivity extends MenuPatientActivity implements RetailPatient
     @Override
     protected void onResume() {
         super.onResume();
-        MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_purchase);
-        menuItem.setChecked(true);
-        title = menuItem.getTitle().toString();
+        selectMenuItem(R.id.shopMenuItem);
+        title = Label.getLabel("shop_button");
         if (!hideToolbar) {
             displayToolbar(true);
         }

@@ -180,7 +180,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     protected void onResume() {
         super.onResume();
-        navigationView.getMenu().findItem(R.id.nav_payments).setChecked(true);
+        selectMenuItem(R.id.paymentsMenuItem);
     }
 
     @Override

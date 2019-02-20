@@ -21,6 +21,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
@@ -106,10 +107,9 @@ public class NotificationActivity extends MenuPatientActivity
     @Override
     protected void onResume() {
         super.onResume();
-        MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_notification);
-        menuItem.setChecked(true);
+        selectMenuItem(R.id.notificationsMenuItem);
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-            displayToolbar(true, menuItem.getTitle().toString());
+            displayToolbar(true, Label.getLabel("notifications_heading"));
         }
     }
 

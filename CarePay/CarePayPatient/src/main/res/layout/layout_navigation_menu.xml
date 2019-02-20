@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:showIn="@layout/activity_navigation">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/menuHeader"
+            layout="@layout/nav_header_navigation" />
+
+        <LinearLayout
+            android:id="@+id/mainMenuItemContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/menuHeader"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/mainMenuItemContainerTopPadding">
+
+            <com.carecloud.carepaylibray.customcomponents.CustomMenuItem
+                android:id="@+id/appointmentMenuItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:imageSource="@drawable/icn_drawer_appointments"
+                app:labelTextKey="navigation_link_appointments" />
+
+            <com.carecloud.carepaylibray.customcomponents.CustomMenuItem
+                android:id="@+id/myHealthMenuItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:imageSource="@drawable/icn_drawer_my_health"
+                app:labelTextKey="navigation_link_my_health" />
+
+            <com.carecloud.carepaylibray.customcomponents.CustomMenuItem
+                android:id="@+id/paymentsMenuItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:imageSource="@drawable/ic_icn_drawer_payments_default"
+                app:labelTextKey="navigation_link_payments" />
+
+            <com.carecloud.carepaylibray.customcomponents.CustomMenuItem
+                android:id="@+id/messagesMenuItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:imageSource="@drawable/icn_messages"
+                app:labelTextKey="navigation_link_messages" />
+
+            <com.carecloud.carepaylibray.customcomponents.CustomMenuItem
+                android:id="@+id/formsMenuItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:imageSource="@drawable/ic_forms"
+                app:labelTextKey="adhoc_show_forms_button_label" />
+
+            <com.carecloud.carepaylibray.customcomponents.CustomMenuItem
+                android:id="@+id/shopMenuItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:imageSource="@drawable/icn_drawer_purchase_default"
+                app:labelTextKey="shop_button" />
+
+            <com.carecloud.carepaylibray.customcomponents.CustomMenuItem
+                android:id="@+id/notificationsMenuItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:imageSource="@drawable/icn_drawer_notifications"
+                app:labelTextKey="notifications_heading" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_1dp"
+                android:layout_marginTop="@dimen/menuItemSeparatorVerticalMargin"
+                android:layout_marginBottom="@dimen/menuItemSeparatorVerticalMargin"
+                android:background="@color/light_gray" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/secondaryMenuItemContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mainMenuItemContainer"
+            android:layout_alignParentBottom="true"
+            android:gravity="bottom"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/mainMenuItemContainerTopPadding">
+
+            <com.carecloud.carepaylibray.customcomponents.CustomMenuItem
+                android:id="@+id/settingsMenuItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:labelTextKey="navigation_link_profile_settings" />
+
+            <com.carecloud.carepaylibray.customcomponents.CustomMenuItem
+                android:id="@+id/logOutMenuItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:labelTextKey="navigation_link_sign_out" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

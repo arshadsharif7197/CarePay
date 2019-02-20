@@ -14,4 +14,6 @@
     <dimen name="visitSummaryExportAsLabelBottomMargin">10dp</dimen>
     <dimen name="visitSummaryExportButtonTopMargin">15dp</dimen>
     <dimen name="encryptedCheckBoxVerticalMargin">10dp</dimen>
+    <dimen name="mainMenuItemContainerTopPadding">5dp</dimen>
+    <dimen name="menuItemSeparatorVerticalMargin">5dp</dimen>
 </resources>

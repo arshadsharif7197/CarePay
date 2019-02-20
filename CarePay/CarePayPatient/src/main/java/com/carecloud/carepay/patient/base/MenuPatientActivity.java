@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -34,13 +33,13 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
+import com.carecloud.carepaylibray.customcomponents.CustomMenuItem;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -54,8 +53,7 @@ import java.util.Map;
 /**
  * Created by jorge on 10/01/17
  */
-public abstract class MenuPatientActivity extends BasePatientActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public abstract class MenuPatientActivity extends BasePatientActivity {
 
     //transitions
     private static TransitionDTO transitionBalance;
@@ -84,10 +82,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         toolbar = findViewById(R.id.toolbar);
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
-        appointmentsDrawerUserIdTextView = navigationView.getHeaderView(0)
-                .findViewById(R.id.appointmentsDrawerIdTextView);
-        userFullNameTextView = navigationView.getHeaderView(0)
-                .findViewById(R.id.userNameTextView);
+        appointmentsDrawerUserIdTextView = navigationView.findViewById(R.id.appointmentsDrawerIdTextView);
+        userFullNameTextView = navigationView.findViewById(R.id.userNameTextView);
         inflateDrawer();
         LocalBroadcastManager.getInstance(this).registerReceiver(badgeReceiver,
                 new IntentFilter(CarePayConstants.UPDATE_BADGES_BROADCAST));
@@ -143,25 +139,22 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         toggle.getDrawerArrowDrawable().setColor(ContextCompat.getColor(this, R.color.white));
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        navigationView.setNavigationItemSelectedListener(this);
-        setMenuLabels();
-    }
+//        navigationView.setNavigationItemSelectedListener(this);
 
-    private void setMenuLabels() {
-        navigationView.getMenu().findItem(R.id.nav_my_health).setTitle(Label.getLabel("navigation_link_my_health"));
-        navigationView.getMenu().findItem(R.id.nav_appointments).setTitle(Label.getLabel("navigation_link_appointments"));
-        navigationView.getMenu().findItem(R.id.nav_payments).setTitle(Label.getLabel("navigation_link_payments"));
-        navigationView.getMenu().findItem(R.id.nav_messages).setTitle(Label.getLabel("navigation_link_messages"));
-        navigationView.getMenu().findItem(R.id.nav_purchase).setTitle(Label.getLabel("shop_button"));
-        navigationView.getMenu().findItem(R.id.nav_notification).setTitle(Label.getLabel("notifications_heading"));
-        navigationView.getMenu().findItem(R.id.nav_settings).setTitle(Label.getLabel("navigation_link_profile_settings"));
-        navigationView.getMenu().findItem(R.id.nav_logout).setTitle(Label.getLabel("navigation_link_sign_out"));
+        navigationView.findViewById(R.id.appointmentMenuItem).setOnClickListener(menuItemClickListener);
+        navigationView.findViewById(R.id.myHealthMenuItem).setOnClickListener(menuItemClickListener);
+        navigationView.findViewById(R.id.paymentsMenuItem).setOnClickListener(menuItemClickListener);
+        navigationView.findViewById(R.id.messagesMenuItem).setOnClickListener(menuItemClickListener);
+        navigationView.findViewById(R.id.formsMenuItem).setOnClickListener(menuItemClickListener);
+        navigationView.findViewById(R.id.shopMenuItem).setOnClickListener(menuItemClickListener);
+        navigationView.findViewById(R.id.notificationsMenuItem).setOnClickListener(menuItemClickListener);
+        navigationView.findViewById(R.id.settingsMenuItem).setOnClickListener(menuItemClickListener);
+        navigationView.findViewById(R.id.logOutMenuItem).setOnClickListener(menuItemClickListener);
     }
 
     private void setUserImage() {
         String imageUrl = ApplicationPreferences.getInstance().getUserPhotoUrl();
-        ImageView userImageView = navigationView.getHeaderView(0)
-                .findViewById(R.id.appointmentDrawerIdImageView);
+        ImageView userImageView = navigationView.findViewById(R.id.appointmentDrawerIdImageView);
         if (!StringUtil.isNullOrEmpty(imageUrl)) {
             Picasso.with(this)
                     .load(imageUrl)
@@ -204,81 +197,80 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         icicle.clear();
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        WorkflowServiceCallback callback = null;
-        TransitionDTO transition = null;
-        Map<String, String> headersMap = new HashMap<>();
-        Map<String, String> queryMap = new HashMap<>();
-        String payload = null;
+    View.OnClickListener menuItemClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            WorkflowServiceCallback callback = null;
+            TransitionDTO transition = null;
+            Map<String, String> headersMap = new HashMap<>();
+            Map<String, String> queryMap = new HashMap<>();
+            String payload = null;
 
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.nav_my_health:
-                startActivity(MyHealthActivity.class);
-                break;
-            case R.id.nav_appointments:
-                startActivity(AppointmentsActivity.class);
-                break;
-            case R.id.nav_payments:
-                startActivity(ViewPaymentBalanceHistoryActivity.class);
-                break;
-            case R.id.nav_messages:
-                startActivity(MessagesActivity.class);
-                break;
-            case R.id.nav_forms:
-                startActivity(ConsentFormsActivity.class);
-                break;
-            case R.id.nav_purchase:
-                startActivity(RetailActivity.class);
-                break;
-            case R.id.nav_notification:
-                startActivity(NotificationActivity.class);
-                break;
-            case R.id.nav_settings:
-                callback = demographicsSettingsCallBack;
-                transition = transitionProfile;
-                break;
-            case R.id.nav_logout:
-                transition = transitionLogout;
-                callback = logoutWorkflowCallback;
-                headersMap.put("x-api-key", HttpConstants.getApiStartKey());
-                headersMap.put("transition", "true");
+            int id = view.getId();
+            switch (id) {
+                case R.id.myHealthMenuItem:
+                    startActivity(MyHealthActivity.class);
+                    break;
+                case R.id.appointmentMenuItem:
+                    startActivity(AppointmentsActivity.class);
+                    break;
+                case R.id.paymentsMenuItem:
+                    startActivity(ViewPaymentBalanceHistoryActivity.class);
+                    break;
+                case R.id.messagesMenuItem:
+                    startActivity(MessagesActivity.class);
+                    break;
+                case R.id.formsMenuItem:
+                    startActivity(ConsentFormsActivity.class);
+                    break;
+                case R.id.shopMenuItem:
+                    startActivity(RetailActivity.class);
+                    break;
+                case R.id.notificationsMenuItem:
+                    startActivity(NotificationActivity.class);
+                    break;
+                case R.id.settingsMenuItem:
+                    callback = demographicsSettingsCallBack;
+                    transition = transitionProfile;
+                    break;
+                case R.id.logOutMenuItem:
+                    transition = transitionLogout;
+                    callback = logoutWorkflowCallback;
+                    headersMap.put("x-api-key", HttpConstants.getApiStartKey());
+                    headersMap.put("transition", "true");
 
-                UnifiedSignInUser user = new UnifiedSignInUser();
-                user.setEmail(ApplicationPreferences.getInstance().getUserId());
-                user.setDeviceToken(((AndroidPlatform) Platform.get()).openDefaultSharedPreferences()
-                        .getString(CarePayConstants.FCM_TOKEN, null));
-                UnifiedSignInDTO signInDTO = new UnifiedSignInDTO();
-                signInDTO.setUser(user);
+                    UnifiedSignInUser user = new UnifiedSignInUser();
+                    user.setEmail(ApplicationPreferences.getInstance().getUserId());
+                    user.setDeviceToken(((AndroidPlatform) Platform.get()).openDefaultSharedPreferences()
+                            .getString(CarePayConstants.FCM_TOKEN, null));
+                    UnifiedSignInDTO signInDTO = new UnifiedSignInDTO();
+                    signInDTO.setUser(user);
 
-                payload = new Gson().toJson(signInDTO);
-                break;
-            default:
+                    payload = new Gson().toJson(signInDTO);
+                    break;
+                default:
+                    drawer.closeDrawer(GravityCompat.START);
+            }
+
+            if (transition == null || transition.getUrl() == null) {
                 drawer.closeDrawer(GravityCompat.START);
-                return false;
-        }
+                return;
+            }
 
-        if (transition == null || transition.getUrl() == null) {
+            if (payload != null) {
+                //do transition with payload
+                getWorkflowServiceHelper().execute(transition, callback, payload, queryMap, headersMap);
+            } else if (headersMap.isEmpty()) {
+                //do regular transition
+                getWorkflowServiceHelper().execute(transition, callback, queryMap);
+            } else {
+                //do transition with headers since no query params are required we can ignore them
+                getWorkflowServiceHelper().execute(transition, callback, queryMap, headersMap);
+            }
+
             drawer.closeDrawer(GravityCompat.START);
-            return false;
         }
-
-        if (payload != null) {
-            //do transition with payload
-            getWorkflowServiceHelper().execute(transition, callback, payload, queryMap, headersMap);
-        } else if (headersMap.isEmpty()) {
-            //do regular transition
-            getWorkflowServiceHelper().execute(transition, callback, queryMap);
-        } else {
-            //do transition with headers since no query params are required we can ignore them
-            getWorkflowServiceHelper().execute(transition, callback, queryMap, headersMap);
-        }
-
-        drawer.closeDrawer(GravityCompat.START);
-        return false;
-
-    }
+    };
 
     private void startActivity(Class<?> clazz) {
         Intent intent = new Intent(this, clazz);
@@ -417,7 +409,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         return transitionMessaging;
     }
 
-    protected void displayMessagesScreen(){
+    protected void displayMessagesScreen() {
         //backward compat for pending notification merge
         startActivity(MessagesActivity.class);
     }
@@ -471,35 +463,41 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         }, queryMap);
     }
 
+    protected void selectMenuItem(int menuItemId) {
+        CustomMenuItem menuItem = findViewById(menuItemId);
+        menuItem.select();
+    }
+
     protected void updateBadgeCounterViews() {
-        int messageBadgeCounter = ApplicationPreferences.getInstance().getMessagesBadgeCounter();
-        TextView messageBadgeCounterTextView = navigationView.getMenu()
-                .findItem(R.id.nav_messages).getActionView().findViewById(R.id.badgeCounter);
-        if (messageBadgeCounter > 0) {
-            messageBadgeCounterTextView.setText(String.valueOf(messageBadgeCounter));
-            messageBadgeCounterTextView.setVisibility(View.VISIBLE);
-        } else {
-            messageBadgeCounterTextView.setVisibility(View.GONE);
-        }
-
-        int formBadgeCounter = ApplicationPreferences.getInstance().getFormsBadgeCounter();
-        TextView formBadgeCounterTextView = navigationView.getMenu()
-                .findItem(R.id.nav_forms).getActionView().findViewById(R.id.badgeCounter);
-        if (formBadgeCounter > 0) {
-            formBadgeCounterTextView.setText(String.valueOf(formBadgeCounter));
-            formBadgeCounterTextView.setVisibility(View.VISIBLE);
-        } else {
-            formBadgeCounterTextView.setVisibility(View.GONE);
-        }
-
-        int badgeSums = messageBadgeCounter + formBadgeCounter;
-        if (badgeSums > 0) {
-            //Uncomment this for showing the number of pending badges in the hamburger menu
-//            badgeDrawable.setText(String.valueOf(badgeSums));
-            badgeDrawable.setEnabled(true);
-        } else {
-            badgeDrawable.setEnabled(false);
-        }
+        //TODO: work on this
+//        int messageBadgeCounter = ApplicationPreferences.getInstance().getMessagesBadgeCounter();
+//        TextView messageBadgeCounterTextView = navigationView.getMenu()
+//                .findItem(R.id.nav_messages).getActionView().findViewById(R.id.badgeCounter);
+//        if (messageBadgeCounter > 0) {
+//            messageBadgeCounterTextView.setText(String.valueOf(messageBadgeCounter));
+//            messageBadgeCounterTextView.setVisibility(View.VISIBLE);
+//        } else {
+//            messageBadgeCounterTextView.setVisibility(View.GONE);
+//        }
+//
+//        int formBadgeCounter = ApplicationPreferences.getInstance().getFormsBadgeCounter();
+//        TextView formBadgeCounterTextView = navigationView.getMenu()
+//                .findItem(R.id.nav_forms).getActionView().findViewById(R.id.badgeCounter);
+//        if (formBadgeCounter > 0) {
+//            formBadgeCounterTextView.setText(String.valueOf(formBadgeCounter));
+//            formBadgeCounterTextView.setVisibility(View.VISIBLE);
+//        } else {
+//            formBadgeCounterTextView.setVisibility(View.GONE);
+//        }
+//
+//        int badgeSums = messageBadgeCounter + formBadgeCounter;
+//        if (badgeSums > 0) {
+//            //Uncomment this for showing the number of pending badges in the hamburger menu
+////            badgeDrawable.setText(String.valueOf(badgeSums));
+//            badgeDrawable.setEnabled(true);
+//        } else {
+//            badgeDrawable.setEnabled(false);
+//        }
     }
 
     private BroadcastReceiver badgeReceiver = new BroadcastReceiver() {

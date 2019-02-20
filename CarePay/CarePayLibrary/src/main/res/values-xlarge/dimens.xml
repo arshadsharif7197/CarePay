@@ -26,4 +26,10 @@
     <dimen name="timeSlotItemPadding">15dp</dimen>
     <dimen name="timeSlotItemTextSize">20sp</dimen>
     <dimen name="locationItemHeight">90dp</dimen>
+    <dimen name="menuIconSize">40dp</dimen>
+    <dimen name="menuItemPadding">10dp</dimen>
+    <dimen name="menuIconPadding">5dp</dimen>
+    <dimen name="menuIconLabelStartMargin">10dp</dimen>
+    <dimen name="menuIconLabelTextSize">14sp</dimen>
+    <dimen name="menuIconStartMargin">5dp</dimen>
 </resources>

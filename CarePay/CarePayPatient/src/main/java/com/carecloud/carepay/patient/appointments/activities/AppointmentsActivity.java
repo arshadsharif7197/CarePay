@@ -116,10 +116,9 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     @Override
     protected void onResume() {
         super.onResume();
-        MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_appointments);
-        menuItem.setChecked(true);
+        selectMenuItem(R.id.appointmentMenuItem);
         if (!toolbarHidden) {
-            displayToolbar(true, menuItem.getTitle().toString());
+            displayToolbar(true, Label.getLabel("navigation_link_appointments"));
         }
     }
 

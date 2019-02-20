@@ -530,6 +530,12 @@
     <dimen name="completeCheckInItemMargin">14dp</dimen>
     <dimen name="completeCheckInItemTextSize">22sp</dimen>
     <dimen name="completeCheckInItemValueTextSize">16sp</dimen>
+    <dimen name="menuIconSize">36dp</dimen>
+    <dimen name="menuItemPadding">6dp</dimen>
+    <dimen name="menuIconPadding">5dp</dimen>
+    <dimen name="menuIconLabelStartMargin">15dp</dimen>
+    <dimen name="menuIconLabelTextSize">16sp</dimen>
+    <dimen name="menuIconStartMargin">5dp</dimen>
 
 
 </resources>

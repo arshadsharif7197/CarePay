@@ -43,6 +43,7 @@ import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTo
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
+import com.carecloud.carepay.service.library.unifiedauth.UserLinks;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.PlainWebViewFragment;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
@@ -156,7 +157,7 @@ public class SigninFragment extends BaseFragment {
 
     private void setClickListeners(View view) {
 
-        signInButton = (Button) view.findViewById(R.id.signin_button);
+        signInButton = view.findViewById(R.id.signin_button);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -225,7 +226,7 @@ public class SigninFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 PlainWebViewFragment fragment = PlainWebViewFragment
-                        .newInstance(HttpConstants.getRetailUrl()+CarePayConstants.GET_STARTED_URL);
+                        .newInstance(HttpConstants.getRetailUrl() + CarePayConstants.GET_STARTED_URL);
                 callback.replaceFragment(fragment, true);
             }
         });
@@ -252,8 +253,8 @@ public class SigninFragment extends BaseFragment {
         Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
         if (signInDTO.isValidUser()) {
             Gson gson = new Gson();
-            getWorkflowServiceHelper().execute(signInTransition, getUnifiedLoginCallback(userName, password), gson.toJson(signInDTO),
-                    queryParams, headers);
+            getWorkflowServiceHelper().execute(signInTransition, getUnifiedLoginCallback(userName, password),
+                    gson.toJson(signInDTO), queryParams, headers);
             getAppAuthorizationHelper().setUser(userName);
             getApplicationPreferences().setUserId(userName);
             NewRelic.setUserId(userName);
@@ -305,6 +306,7 @@ public class SigninFragment extends BaseFragment {
         getAppAuthorizationHelper().setAuthorizationTokens(authTokens);
         getAppAuthorizationHelper().setRefreshTransition(refreshTransition);
         getWorkflowServiceHelper().setAppAuthorizationHelper(getAppAuthorizationHelper());
+        saveDelegates(signInResponse.getPayload().getAuthorizationModel().getUserLinks());
 
         Map<String, String> query = new HashMap<>();
         Map<String, String> header = new HashMap<>();
@@ -312,6 +314,10 @@ public class SigninFragment extends BaseFragment {
         String languageId = getApplicationPreferences().getUserLanguage();
         header.put("Accept-Language", languageId);
         getWorkflowServiceHelper().execute(authenticateTransition, getSignInCallback(user, password), query, header);
+    }
+
+    private void saveDelegates(UserLinks userLinks) {
+        ApplicationPreferences.getInstance().saveDelegates(userLinks);
     }
 
     private WorkflowServiceCallback getSignInCallback(final String user, final String password) {
@@ -460,10 +466,10 @@ public class SigninFragment extends BaseFragment {
 
 
     private void setEditTexts(View view) {
-        signInEmailTextInputLayout = (TextInputLayout) view.findViewById(R.id.signInEmailTextInputLayout);
-        emailEditText = (EditText) view.findViewById(R.id.signinEmailEditText);
-        passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
-        passwordTextInputLayout = (TextInputLayout) view.findViewById(R.id.passwordTextInputLayout);
+        signInEmailTextInputLayout = view.findViewById(R.id.signInEmailTextInputLayout);
+        emailEditText = view.findViewById(R.id.signinEmailEditText);
+        passwordEditText = view.findViewById(R.id.passwordEditText);
+        passwordTextInputLayout = view.findViewById(R.id.passwordTextInputLayout);
         emailEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(signInEmailTextInputLayout, null));
         passwordEditText.setOnFocusChangeListener(SystemUtil

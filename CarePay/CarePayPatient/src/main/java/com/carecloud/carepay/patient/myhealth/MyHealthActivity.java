@@ -101,10 +101,9 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
     @Override
     protected void onResume() {
         super.onResume();
-        MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_my_health);
-        menuItem.setChecked(true);
+        selectMenuItem(R.id.myHealthMenuItem);
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-            displayToolbar(true, menuItem.getTitle().toString());
+            displayToolbar(true, Label.getLabel("navigation_link_my_health"));
         }
     }
 

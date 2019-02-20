@@ -2,7 +2,6 @@ package com.carecloud.carepay.patient.messages.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
@@ -17,6 +16,7 @@ import com.carecloud.carepay.patient.messages.models.ProviderContact;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.util.ArrayList;
@@ -87,9 +87,8 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
     }
 
     private void setupToolbar() {
-        MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_messages);
-        menuItem.setChecked(true);
-        displayToolbar(true, menuItem.getTitle().toString());
+        selectMenuItem(R.id.messagesMenuItem);
+        displayToolbar(true, Label.getLabel("navigation_link_messages"));
     }
 
     @Override

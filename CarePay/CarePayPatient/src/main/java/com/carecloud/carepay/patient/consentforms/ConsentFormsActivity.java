@@ -17,6 +17,7 @@ import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormActivity
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.UserFormDTO;
@@ -86,10 +87,9 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Consent
     @Override
     protected void onResume() {
         super.onResume();
-        MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_forms);
-        menuItem.setChecked(true);
+        selectMenuItem(R.id.formsMenuItem);
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-            displayToolbar(true, menuItem.getTitle().toString());
+            displayToolbar(true, Label.getLabel("adhoc_show_forms_button_label"));
         }
     }
 
@@ -98,8 +98,7 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Consent
     public void onBackPressed() {
         super.onBackPressed();
         if (getSupportFragmentManager().getBackStackEntryCount() < 1) {
-            MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_forms);
-            displayToolbar(true, menuItem.getTitle().toString());
+            displayToolbar(true, Label.getLabel("adhoc_show_forms_button_label"));
         }
     }
 
