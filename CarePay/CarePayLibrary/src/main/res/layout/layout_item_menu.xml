@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -14,16 +14,34 @@
         android:id="@+id/menuIconImageView"
         android:layout_width="@dimen/menuIconSize"
         android:layout_height="@dimen/menuIconSize"
+        android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/menuIconStartMargin"
         android:padding="@dimen/menuIconPadding"
         android:tint="@color/Feldgrau" />
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/badgeCounter"
+        android:layout_width="@dimen/menuItemBadgeSize"
+        android:layout_height="@dimen/menuItemBadgeSize"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/badgeCounterEndMargin"
+        android:background="@drawable/badge_background"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/menuItemBadeTextSize"
+        android:visibility="gone"
+        app:customAssetFont="proxima_nova_semi_bold" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/menuIconLabelTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
+        android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/menuIconLabelStartMargin"
+        android:layout_toStartOf="@id/badgeCounter"
+        android:layout_toEndOf="@id/menuIconImageView"
+        android:gravity="start"
         android:paddingTop="@dimen/menuIconPadding"
         android:paddingBottom="@dimen/menuIconPadding"
         android:textColor="@drawable/menuitem_selector"
@@ -31,4 +49,4 @@
         app:customAssetFont="proxima_nova_semi_bold"
         tools:text="Appointments" />
 
-</LinearLayout>
+</RelativeLayout>

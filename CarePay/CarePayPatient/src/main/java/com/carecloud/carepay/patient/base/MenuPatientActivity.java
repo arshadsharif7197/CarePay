@@ -139,7 +139,6 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
         toggle.getDrawerArrowDrawable().setColor(ContextCompat.getColor(this, R.color.white));
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-//        navigationView.setNavigationItemSelectedListener(this);
 
         navigationView.findViewById(R.id.appointmentMenuItem).setOnClickListener(menuItemClickListener);
         navigationView.findViewById(R.id.myHealthMenuItem).setOnClickListener(menuItemClickListener);
@@ -469,35 +468,26 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
     }
 
     protected void updateBadgeCounterViews() {
-        //TODO: work on this
-//        int messageBadgeCounter = ApplicationPreferences.getInstance().getMessagesBadgeCounter();
-//        TextView messageBadgeCounterTextView = navigationView.getMenu()
-//                .findItem(R.id.nav_messages).getActionView().findViewById(R.id.badgeCounter);
-//        if (messageBadgeCounter > 0) {
-//            messageBadgeCounterTextView.setText(String.valueOf(messageBadgeCounter));
-//            messageBadgeCounterTextView.setVisibility(View.VISIBLE);
-//        } else {
-//            messageBadgeCounterTextView.setVisibility(View.GONE);
-//        }
-//
-//        int formBadgeCounter = ApplicationPreferences.getInstance().getFormsBadgeCounter();
-//        TextView formBadgeCounterTextView = navigationView.getMenu()
-//                .findItem(R.id.nav_forms).getActionView().findViewById(R.id.badgeCounter);
-//        if (formBadgeCounter > 0) {
-//            formBadgeCounterTextView.setText(String.valueOf(formBadgeCounter));
-//            formBadgeCounterTextView.setVisibility(View.VISIBLE);
-//        } else {
-//            formBadgeCounterTextView.setVisibility(View.GONE);
-//        }
-//
-//        int badgeSums = messageBadgeCounter + formBadgeCounter;
-//        if (badgeSums > 0) {
-//            //Uncomment this for showing the number of pending badges in the hamburger menu
-////            badgeDrawable.setText(String.valueOf(badgeSums));
-//            badgeDrawable.setEnabled(true);
-//        } else {
-//            badgeDrawable.setEnabled(false);
-//        }
+        int messageBadgeCounter = ApplicationPreferences.getInstance().getMessagesBadgeCounter();
+        CustomMenuItem messageMenuItem = navigationView.findViewById(R.id.messagesMenuItem);
+        if (messageBadgeCounter > 0) {
+            messageMenuItem.setAlertCounter(messageBadgeCounter);
+        }
+
+        int formBadgeCounter = ApplicationPreferences.getInstance().getFormsBadgeCounter();
+        CustomMenuItem formsBadgeCounter = navigationView.findViewById(R.id.formsMenuItem);
+        if (formBadgeCounter > 0) {
+            formsBadgeCounter.setAlertCounter(formBadgeCounter);
+        }
+
+        int badgeSums = messageBadgeCounter + formBadgeCounter;
+        if (badgeSums > 0) {
+            //Uncomment this for showing the number of pending badges in the hamburger menu
+//            badgeDrawable.setText(String.valueOf(badgeSums));
+            badgeDrawable.setEnabled(true);
+        } else {
+            badgeDrawable.setEnabled(false);
+        }
     }
 
     private BroadcastReceiver badgeReceiver = new BroadcastReceiver() {

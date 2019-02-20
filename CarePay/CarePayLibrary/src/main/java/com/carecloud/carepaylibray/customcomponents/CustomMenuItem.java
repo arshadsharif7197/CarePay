@@ -55,4 +55,10 @@ public class CustomMenuItem extends RelativeLayout {
         menuItemImage.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimary),
                 android.graphics.PorterDuff.Mode.SRC_IN);
     }
+
+    public void setAlertCounter(int counter) {
+        TextView badgeCounter = findViewById(R.id.badgeCounter);
+        badgeCounter.setText(String.valueOf(counter));
+        badgeCounter.setVisibility(VISIBLE);
+    }
 }

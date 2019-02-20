@@ -536,6 +536,9 @@
     <dimen name="menuIconLabelStartMargin">15dp</dimen>
     <dimen name="menuIconLabelTextSize">16sp</dimen>
     <dimen name="menuIconStartMargin">5dp</dimen>
+    <dimen name="menuItemBadgeSize">25dp</dimen>
+    <dimen name="menuItemBadeTextSize">13sp</dimen>
+    <dimen name="badgeCounterEndMargin">10dp</dimen>
 
 
 </resources>
