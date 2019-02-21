@@ -51,6 +51,7 @@ public class ApplicationPreferences {
     private static final String PREFERENCE_LAST_APP_VERSION_NUM = "last_app_version_num";
     private static final String PREFERENCE_REMIND_LATEST = "remind_latest";
     private static final String PREFERENCE_FORCE_UPDATE = "force_update";
+    public static final String PREFERENCE_APPOINTMENT_COUNTS = "appointment_counts";
 
     private String patientId;
     private String practiceId;
@@ -513,5 +514,13 @@ public class ApplicationPreferences {
 
     public void setForceUpdate(boolean mustForceUpdate){
         writeBooleanToSharedPref(PREFERENCE_FORCE_UPDATE, mustForceUpdate);
+    }
+
+    public void setAppointmentCounts(Object appointmentCounts){
+        writeObjectToSharedPreference(PREFERENCE_APPOINTMENT_COUNTS, appointmentCounts);
+    }
+
+    public Object getAppointmentCounts(Class appointmentCountsClass){
+        return getObjectFromSharedPreferences(PREFERENCE_APPOINTMENT_COUNTS, appointmentCountsClass);
     }
 }
