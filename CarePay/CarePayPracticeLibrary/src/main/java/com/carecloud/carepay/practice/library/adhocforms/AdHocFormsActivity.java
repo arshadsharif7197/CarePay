@@ -23,6 +23,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.adhoc.AdhocFormsPatientModeInfo;
 import com.carecloud.carepaylibray.adhoc.SelectedAdHocForms;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
@@ -45,7 +46,7 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
     private AdHocRecyclerViewAdapter adapter;
 
     private boolean isUserInteraction = false;
-    private String patientId;
+    private AdhocFormsPatientModeInfo patientModeInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,7 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
         selectedAdHocForms = (SelectedAdHocForms) bundle.getSerializable(CarePayConstants.SELECTED_FORMS);
 
         switchToPatientMode();
-        patientId = adhocFormsModel.getPayload().getAdhocFormsPatientModeInfo().getMetadata().getPatientId();
+        patientModeInfo = adhocFormsModel.getPayload().getAdhocFormsPatientModeInfo();
 
         initView();
 
@@ -163,7 +164,7 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
 
     private void refreshSelfDto() {
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("patient_id", patientId);
+        queryMap.put("patient_id", patientModeInfo.getMetadata().getPatientId());
         TransitionDTO self = adhocFormsModel.getMetadata().getLinks().getSelf();
         getWorkflowServiceHelper().execute(self, new WorkflowServiceCallback() {
             @Override
@@ -175,6 +176,7 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
                 adhocFormsModel = DtoHelper.getConvertedDTO(AdHocFormsModel.class, workflowDTO);
+                adhocFormsModel.getPayload().setAdhocFormsPatientModeInfo(patientModeInfo);
                 initView();
                 addFragment(AdHocFormFragment.newInstance(), false);
             }
