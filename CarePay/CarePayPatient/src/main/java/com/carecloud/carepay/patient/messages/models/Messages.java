@@ -1,7 +1,10 @@
 package com.carecloud.carepay.patient.messages.models;
 
 import com.carecloud.carepaylibray.base.models.PagingDto;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +56,7 @@ public class Messages extends PagingDto {
         private List<Reply> replies = new ArrayList<>();
 
         @SerializedName("attachments")
-        private List<MessageAttachment> attachments = new ArrayList<>();
+        private List<JsonElement> attachments = new ArrayList<>();
 
         @SerializedName("has_attachments")
         private boolean hasAttachments = false;
@@ -131,11 +134,28 @@ public class Messages extends PagingDto {
         }
 
         public List<MessageAttachment> getAttachments() {
-            return attachments;
+            Gson gson = new Gson();
+            String stringifyAttachments = gson.toJson(attachments);
+            try {
+                return gson.fromJson(stringifyAttachments,
+                        new TypeToken<List<MessageAttachment>>() {
+                        }.getType());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return new ArrayList<>();
+            }
         }
 
         public void setAttachments(List<MessageAttachment> attachments) {
-            this.attachments = attachments;
+            Gson gson = new Gson();
+            String stringifyAttachments = gson.toJson(attachments);
+            try {
+                this.attachments = gson.fromJson(stringifyAttachments,
+                        new TypeToken<List<JsonElement>>() {
+                        }.getType());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
 
         public boolean isHasAttachments() {
