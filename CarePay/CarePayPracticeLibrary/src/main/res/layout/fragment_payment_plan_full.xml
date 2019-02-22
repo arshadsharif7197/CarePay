@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_margin="@dimen/dimen_10dp"
+            android:layout_margin="@dimen/checkinPlanHeaderMessageMargin"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_18sp"
             app:customAssetFont="gotham_rounded_book"
@@ -58,13 +58,13 @@
         <com.carecloud.carepaylibray.customcomponents.AutoResizeTextView
             android:id="@+id/headerPlanTotal"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="@dimen/checkinPlanTotalHeaderTextHeight"
             android:layout_below="@id/headerMessage"
             android:gravity="center"
             android:paddingEnd="@dimen/dimen_5dp"
             android:paddingStart="@dimen/dimen_5dp"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_90sp"
+            android:textSize="@dimen/checkinPlanTotalHeaderTextSize"
             app:customAssetFont="gotham_rounded_medium"
             tools:text="$1,840.09" />
 
@@ -74,12 +74,12 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/headerPlanTotal"
             android:gravity="center"
-            android:paddingBottom="@dimen/dimen_10dp"
-            android:paddingEnd="@dimen/dimen_100dp"
-            android:paddingStart="@dimen/dimen_100dp"
-            android:paddingTop="@dimen/dimen_10dp"
+            android:paddingBottom="@dimen/checkinPlanParametersTextPaddingTopBottom"
+            android:paddingEnd="@dimen/checkinPlanParametersTextPadding"
+            android:paddingStart="@dimen/checkinPlanParametersTextPadding"
+            android:paddingTop="@dimen/checkinPlanParametersTextPaddingTopBottom"
             android:textColor="@color/light_gray"
-            android:textSize="@dimen/text_size_16sp"
+            android:textSize="@dimen/checkinPlanParametersTextSize"
             android:visibility="visible"
             app:customAssetFont="proxima_nova_regular"
             tools:text="This balance must be paid over a maximum of 6 months and requires a downpayment of $20." />
@@ -119,8 +119,8 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:paddingBottom="@dimen/dimen_30dp"
-                android:paddingEnd="@dimen/dimen_150dp"
-                android:paddingStart="@dimen/dimen_150dp"
+                android:paddingEnd="@dimen/checkinPlanMainContainerSidePadding"
+                android:paddingStart="@dimen/checkinPlanMainContainerSidePadding"
                 android:paddingTop="@dimen/dimen_30dp">
 
                 <FrameLayout
@@ -495,8 +495,8 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/cancel_button"
             android:layout_width="0dp"
-            android:layout_height="@dimen/dimen_48dp"
-            android:layout_margin="@dimen/dimen_10dp"
+            android:layout_height="@dimen/checkinPlanFooterButtonHeight"
+            android:layout_margin="@dimen/checkinPlanFooterButtonMargin"
             android:layout_weight="1"
             android:background="@drawable/round_border_button_bg"
             android:textAllCaps="false"
@@ -510,8 +510,8 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/create_payment_plan_button"
             android:layout_width="0dp"
-            android:layout_height="@dimen/dimen_48dp"
-            android:layout_margin="@dimen/dimen_10dp"
+            android:layout_height="@dimen/checkinPlanFooterButtonHeight"
+            android:layout_margin="@dimen/checkinPlanFooterButtonMargin"
             android:layout_weight="3"
             android:background="@drawable/green_rounded_button_selector_always_click"
             android:gravity="center"

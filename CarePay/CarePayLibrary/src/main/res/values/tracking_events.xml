@@ -185,5 +185,6 @@
     <string name="login_touch">Touch ID</string>
     <string name="survey_access_mode_checkout">Check out</string>
     <string name="survey_access_mode_standard">Standard</string>
+    <string name="event_appointment_scheduled">Appointment Scheduled</string>
 
 </resources>

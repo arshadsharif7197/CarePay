@@ -77,7 +77,7 @@
             android:name="com.carecloud.carepay.practice.library.checkin.PatientModeCheckInCheckOutActivity"
             android:screenOrientation="sensorLandscape"/>
         <activity
-            android:name="com.carecloud.carepay.practice.library.appointments.PatientModePracticeAppointmentActivity"
+            android:name="com.carecloud.carepay.practice.library.appointments.PatientModeAppointmentActivity"
             android:screenOrientation="sensorLandscape"/>
         <activity
             android:name="com.carecloud.carepay.practice.library.checkin.activities.PersonalInformationActivity"

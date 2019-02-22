@@ -390,7 +390,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         setPendingBalance(selectedBalancesItem);
         selectedUserPractice = DtoHelper.getConvertedDTO(UserPracticeDTO.class,
                 DtoHelper.getStringDTO(selectedBalancesItem.getMetadata()));
-        if (paymentDTO.getPaymentPayload().canMakePayments(selectedBalancesItem.getMetadata().getPracticeId())) {
+        String practiceId = selectedBalancesItem.getMetadata().getPracticeId();
+        if (paymentDTO.getPaymentPayload().canMakePayments(practiceId) && paymentDTO.getPaymentPayload().hasPaymentMethods(practiceId)) {
             startPaymentProcess(paymentDTO);
         } else {
             PaymentDisabledAlertDialogFragment fragment = PaymentDisabledAlertDialogFragment

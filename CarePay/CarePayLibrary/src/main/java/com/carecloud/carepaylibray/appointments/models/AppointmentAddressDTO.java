@@ -180,12 +180,21 @@ public class AppointmentAddressDTO {
     }
 
     public String geAddressStringWithShortZipWOCounty() {
-        return (StringUtil.isNullOrEmpty(line1) ? "" : line1 + ", ")
+        return StringUtil.capitalize((StringUtil.isNullOrEmpty(line1) ? "" : line1 + ", ")
                 + (StringUtil.isNullOrEmpty(line2) ? "" : line2 + ", ")
                 + (StringUtil.isNullOrEmpty(city) ? "" : city + ", ")
                 + (line3 == null ? "" : line3 + ", ")
                 + (StringUtil.isNullOrEmpty(stateName) ? "" : stateName + ", ")
-                + (StringUtil.isNullOrEmpty(zipCode) ? "" : zipCode.substring(0, 5) + " ");
+                + (StringUtil.isNullOrEmpty(zipCode) ? "" : zipCode.substring(0, 5) + " "));
+    }
+
+    public String geAddressStringWithShortZipWOCounty2Lines() {
+        return StringUtil.capitalize((StringUtil.isNullOrEmpty(line1) ? "" : line1 + ", ")
+                + (StringUtil.isNullOrEmpty(line2) ? "" : line2 + ", ")
+                + (StringUtil.isNullOrEmpty(city) ? "\n" : "\n" + city + ", ")
+                + (line3 == null ? "" : line3 + ", ")
+                + (StringUtil.isNullOrEmpty(stateName) ? "" : stateName + ", ")
+                + (StringUtil.isNullOrEmpty(zipCode) ? "" : zipCode.substring(0, 5) + " "));
     }
 
     @Override

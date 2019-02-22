@@ -84,7 +84,7 @@ public class AppointmentsPayloadDTO {
     private Object referringPhysicianNpi;
     @SerializedName("visit_reason_id")
     @Expose
-    private Integer visitReasonId;
+    private String visitReasonId;
     @SerializedName("visit_reason")
     @Expose
     private VisitTypeDTO visitType = new VisitTypeDTO();
@@ -114,9 +114,10 @@ public class AppointmentsPayloadDTO {
     private ProviderDTO provider = new ProviderDTO();
     @SerializedName("resource")
     @Expose
-    private AppointmentResourceDTO resource = new AppointmentResourceDTO();
+    private AppointmentResourcesItemDTO resource = new AppointmentResourcesItemDTO();
 
     private AppointmentDisplayStyle displayStyle;
+    private String reasonForVisit;
 
     /**
      * @return The id
@@ -415,14 +416,14 @@ public class AppointmentsPayloadDTO {
     /**
      * @return The visitReasonId
      */
-    public Integer getVisitReasonId() {
+    public String getVisitReasonId() {
         return visitReasonId;
     }
 
     /**
      * @param visitReasonId The visit_reason_id
      */
-    public void setVisitReasonId(Integer visitReasonId) {
+    public void setVisitReasonId(String visitReasonId) {
         this.visitReasonId = visitReasonId;
     }
 
@@ -541,14 +542,14 @@ public class AppointmentsPayloadDTO {
     /**
      * @return The resource
      */
-    public AppointmentResourceDTO getResource() {
+    public AppointmentResourcesItemDTO getResource() {
         return resource;
     }
 
     /**
      * @param resource The resource
      */
-    public void setResource(AppointmentResourceDTO resource) {
+    public void setResource(AppointmentResourcesItemDTO resource) {
         this.resource = resource;
     }
 
@@ -752,5 +753,13 @@ public class AppointmentsPayloadDTO {
             }
         }
         return false;
+    }
+
+    public void setReasonForVisit(String reasonForVisit) {
+        this.reasonForVisit = reasonForVisit;
+    }
+
+    public String getReasonForVisit() {
+        return reasonForVisit;
     }
 }

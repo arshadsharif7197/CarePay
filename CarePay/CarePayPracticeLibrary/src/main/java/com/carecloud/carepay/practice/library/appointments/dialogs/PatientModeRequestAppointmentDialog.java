@@ -1,94 +1,57 @@
 package com.carecloud.carepay.practice.library.appointments.dialogs;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.customdialog.BasePracticeDialog;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.appointments.interfaces.AppointmentNavigationCallback;
-import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
+import com.carecloud.carepaylibray.appointments.createappointment.BaseRequestAppointmentDialogFragment;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
+import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
-import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.PicassoHelper;
+import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 
-public class PatientModeRequestAppointmentDialog extends BasePracticeDialog {
+public class PatientModeRequestAppointmentDialog extends BaseRequestAppointmentDialogFragment {
 
-    private final AppointmentsSlotsDTO appointmentSlot;
-    private final LayoutInflater inflater;
-    protected final AppointmentResourcesDTO appointmentResourcesDTO;
-    private VisitTypeDTO visitTypeDTO;
-    protected final AppointmentNavigationCallback callback;
-
-    /**
-     * Constructor.
-     *
-     * @param context         activity context
-     * @param cancelString    String
-     * @param appointmentSlot The appointment data
-     * @param callback        for dialog actions
-     */
-    public PatientModeRequestAppointmentDialog(Context context, String cancelString,
-                                               AppointmentsSlotsDTO appointmentSlot,
-                                               AppointmentResourcesDTO appointmentResourcesDTO,
-                                               VisitTypeDTO visitTypeDTO,
-                                               AppointmentNavigationCallback callback) {
-
-        super(context, cancelString, false);
-        Context context1 = context;
-        this.appointmentSlot = appointmentSlot;
-        this.appointmentResourcesDTO = appointmentResourcesDTO;
-        this.visitTypeDTO = visitTypeDTO;
-        this.callback = callback;
-
-        inflater = (LayoutInflater) context1.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public static PatientModeRequestAppointmentDialog newInstance(AppointmentDTO appointmentDTO) {
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, appointmentDTO);
+        PatientModeRequestAppointmentDialog fragment = new PatientModeRequestAppointmentDialog();
+        fragment.setArguments(args);
+        return fragment;
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-
-        onAddContentView(inflater);
-    }
-
-    @SuppressLint("InflateParams")
-    @Override
-    protected void onAddContentView(LayoutInflater inflater) {
-        View view = inflater.inflate(R.layout.dialog_request_appointment_patient_mode, null);
-        ((FrameLayout) findViewById(R.id.base_dialog_content_layout)).addView(view);
-        inflateUIComponents(view);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.dialog_request_appointment_patient_mode, container, false);
     }
 
     @Override
-    protected void onAddFooterView(LayoutInflater inflater) {
-
-    }
-
-    protected void inflateUIComponents(final View view) {
-        Button requestAppointmentButton = view.findViewById(R.id.requestAppointmentButton);
-        ApplicationMode.ApplicationType applicationType = callback.getApplicationMode().getApplicationType();
-        boolean autoScheduleAppointments = callback.getAppointmentsSettings().getRequests().getAutomaticallyApproveRequests();
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        requestAppointmentButton = view.findViewById(R.id.requestAppointmentButton);
+        ApplicationMode.ApplicationType applicationType = getApplicationMode().getApplicationType();
+        boolean autoScheduleAppointments = getAutomaticallyApproveRequests();
 
         final EditText reasonForVisitEditText = view.findViewById(R.id.reasonForVisitEditText);
         requestAppointmentButton.setText(Label.getLabel(applicationType == ApplicationMode.ApplicationType.PRACTICE ||
@@ -96,48 +59,57 @@ public class PatientModeRequestAppointmentDialog extends BasePracticeDialog {
         requestAppointmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (callback != null) {
-                    callback.requestAppointment(appointmentSlot, reasonForVisitEditText.getText().toString());
-                }
-                dismiss();
+                final String reasonForVisit = reasonForVisitEditText.getText().toString();
+                appointmentDTO.getPayload().setReasonForVisit(reasonForVisit);
+                requestAppointment(appointmentDTO);
             }
         });
 
-        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentSlot.getStartTime());
+        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime());
 
-        setDialogTitle(dateUtil.getDateAsDayMonthDayOrdinalYear(Label.getLabel("appointments_web_today_heading")));
+//        setDialogTitle(dateUtil.getDateAsDayMonthDayOrdinalYear(Label.getLabel("appointments_web_today_heading")));
 
         TextView appointmentTimeTextView = view.findViewById(R.id.appointment_time);
         appointmentTimeTextView.setText(dateUtil.getTime12Hour());
 
         TextView providerImageTextView = view.findViewById(R.id.provider_short_name);
-        providerImageTextView.setText(StringUtil.getShortName(appointmentResourcesDTO.getResource().getProvider().getName()));
+        ProviderDTO provider = appointmentDTO.getPayload().getResource().getProvider();
+        providerImageTextView.setText(StringUtil.getShortName(provider.getName()));
 
         TextView appointmentDoctorNameTextView = view.findViewById(R.id.provider_doctor_name);
         appointmentDoctorNameTextView.setText(String
-                .format("%s | %s", appointmentResourcesDTO.getResource().getProvider().getName(),
-                        appointmentResourcesDTO.getResource().getProvider().getSpecialty().getName()));
+                .format("%s | %s", provider.getName(), provider.getSpecialty().getName()));
+
+        ImageView picImageView = view.findViewById(R.id.picImageView);
+        PicassoHelper.get().loadImage(getContext(), picImageView, null, provider.getPhoto());
+
 
         TextView appointmentPlaceNameTextView = view.findViewById(R.id.provider_place_name);
-        appointmentPlaceNameTextView.setText(appointmentSlot.getLocation().getName());
+        appointmentPlaceNameTextView.setText(appointmentDTO.getPayload().getLocation().getName());
 
         TextView appointmentAddressTextView = view.findViewById(R.id.provider_place_address);
-        appointmentAddressTextView.setText(appointmentSlot.getLocation().getAddress().getPlaceAddressString());
+        appointmentAddressTextView.setText(appointmentDTO.getPayload().getLocation().getAddress().getPlaceAddressString());
 
-        initializeVisitTypeTextView(view);
-
-        setCancelImage(R.drawable.icn_arrow_left);
-        setCancelable(false);
+        VisitTypeDTO visitTypeDTO = appointmentDTO.getPayload().getVisitType();
+        TextView visitTypeTextView = view.findViewById(R.id.reasonTextView);
+        visitTypeTextView.setText(visitTypeDTO.getName());
 
         View prepaidLayout = findViewById(R.id.prepaymentLayout);
         if (visitTypeDTO.getAmount() > 0) {
             prepaidLayout.setVisibility(View.VISIBLE);
-            TextView prepaidAmount = findViewById(R.id.prepaymentAmount);
+            TextView prepaidAmount = view.findViewById(R.id.prepaymentAmount);
             prepaidAmount.setText(NumberFormat.getCurrencyInstance(Locale.US).format(visitTypeDTO.getAmount()));
             requestAppointmentButton.setText(Label.getLabel("appointments_prepayment_button"));
         } else {
             prepaidLayout.setVisibility(View.GONE);
         }
+
+        view.findViewById(R.id.closeViewLayout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
 
         final ScrollView scrollContainer = view.findViewById(R.id.scrollContainer);
         scrollContainer.post(new Runnable() {
@@ -147,49 +119,33 @@ public class PatientModeRequestAppointmentDialog extends BasePracticeDialog {
                 SystemUtil.hideSoftKeyboard(getContext(), view);
             }
         });
-
-        ImageView picImageView = findViewById(R.id.picImageView);
-        loadImage(picImageView, appointmentResourcesDTO.getResource().getProvider().getPhoto());
-
     }
 
-    private void initializeVisitTypeTextView(View view) {
-        TextView visitTypeTextView = view.findViewById(R.id.reasonTextView);
-        if (null == visitTypeDTO) {
-            dismiss();
-            return;
+    private boolean getAutomaticallyApproveRequests() {
+        AppointmentsSettingDTO appointmentsSettingDTO = appointmentModelDto.getPayload()
+                .getAppointmentsSetting(appointmentDTO.getMetadata().getPracticeId());
+        if (appointmentsSettingDTO == null) {
+            return false;
         }
-        String visitReason = visitTypeDTO.getName();
-        if (SystemUtil.isNotEmptyString(visitReason)) {
-            visitTypeTextView.setText(visitReason);
-        }
+        return appointmentsSettingDTO.getRequests().getAutomaticallyApproveRequests();
     }
 
     @Override
-    protected void onDialogCancel() {
-        super.onDialogCancel();
-        if (null != callback) {
-            callback.onAppointmentUnconfirmed();
+    protected void logMixPanelAppointmentRequestedEvent(AppointmentDTO appointmentRequestDto) {
+        ApplicationMode.ApplicationType applicationType = getApplicationMode().getApplicationType();
+        String[] params = {getString(R.string.param_appointment_type),
+                getString(R.string.param_practice_id),
+                getString(R.string.param_practice_name),
+                getString(R.string.param_patient_id)};
+        String[] values = {appointmentRequestDto.getPayload().getVisitType().getName(),
+                getApplicationMode().getUserPracticeDTO().getPracticeId(),
+                getApplicationMode().getUserPracticeDTO().getPracticeName(),
+                patientId};
+        MixPanelUtil.logEvent(getString(applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE ?
+                R.string.event_appointment_requested : R.string.event_appointment_scheduled), params, values);
+        if (applicationType == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
         }
-        dismiss();
     }
 
-    protected void loadImage(final ImageView imageView, String url) {
-        int size = getContext().getResources().getDimensionPixelSize(R.dimen.provider_card_avatar_size);
-        Picasso.with(getContext()).load(url)
-                .resize(size, size)
-                .centerCrop()
-                .transform(new CircleImageTransform())
-                .into(imageView, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        imageView.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onError() {
-                        imageView.setVisibility(View.GONE);
-                    }
-                });
-    }
 }

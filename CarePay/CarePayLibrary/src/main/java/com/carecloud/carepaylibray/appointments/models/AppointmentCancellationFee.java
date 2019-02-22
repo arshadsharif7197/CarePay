@@ -11,17 +11,17 @@ public class AppointmentCancellationFee {
 
     @Expose
     @SerializedName("visit_type")
-    private Integer visitType;
+    private String visitType;
 
     @Expose
     @SerializedName("amount")
     private String amount;
 
-    public Integer getVisitType() {
+    public String getVisitType() {
         return visitType;
     }
 
-    public void setVisitType(Integer visitType) {
+    public void setVisitType(String visitType) {
         this.visitType = visitType;
     }
 

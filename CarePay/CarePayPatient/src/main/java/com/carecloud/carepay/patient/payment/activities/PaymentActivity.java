@@ -100,7 +100,7 @@ public class PaymentActivity extends BasePatientActivity implements PaymentViewH
     }
 
     @Override
-    public void exitPaymentProcess(boolean cancelled) {
+    public void exitPaymentProcess(boolean cancelled, boolean paymentPlanCreated, boolean paymentMade) {
         if(getCallingActivity()!=null){
             setResult(cancelled ? RESULT_CANCELED : RESULT_OK);
         }

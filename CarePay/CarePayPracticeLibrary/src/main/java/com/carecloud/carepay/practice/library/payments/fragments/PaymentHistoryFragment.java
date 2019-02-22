@@ -52,10 +52,11 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
 
     /**
      * Create instance of PaymentHistoryFragment
+     *
      * @param paymentsModel payment model
      * @return new instance of PaymentHistoryFragment
      */
-    public static PaymentHistoryFragment newInstance(PaymentsModel paymentsModel){
+    public static PaymentHistoryFragment newInstance(PaymentsModel paymentsModel) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
 
@@ -65,17 +66,17 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
     }
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
-        try{
+        try {
             callback = (PracticePaymentHistoryCallback) context;
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement PracticePaymentHistoryCallback");
         }
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
         Bundle args = getArguments();
@@ -85,18 +86,18 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_payment_history, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         String patientName = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getPersonalDetails().getFullName();
-        TextView fullName = ((TextView) view.findViewById(R.id.patient_full_name));
+        TextView fullName = view.findViewById(R.id.patient_full_name);
         fullName.setText(patientName);
 
-        final ImageView profilePhoto = (ImageView) view.findViewById(R.id.patient_profile_photo);
-        final TextView shortName = (TextView) view.findViewById(R.id.patient_profile_short_name);
+        final ImageView profilePhoto = view.findViewById(R.id.patient_profile_photo);
+        final TextView shortName = view.findViewById(R.id.patient_profile_short_name);
         shortName.setText(StringUtil.getShortName(patientName));
 
         String photoUrl = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
@@ -131,10 +132,10 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
         String plansLabel = Label.getLabel("payment_plan_heading");
         final String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
         final int plans = paymentsModel.getPaymentPayload().getActivePlans(practiceId).size();
-        if(plans > 1){
+        if (plans > 1) {
             plansLabel = String.format(Label.getLabel("payment_plan_count"), plans);
         }
-        TextView viewPlans = (TextView) view.findViewById(R.id.viewPaymentPlans);
+        TextView viewPlans = view.findViewById(R.id.viewPaymentPlans);
 //        hiding this button but leaving the old code just in case...
 //        viewPlans.setVisibility(plans > 0 ? View.VISIBLE : View.GONE);
         viewPlans.setVisibility(View.GONE);
@@ -142,9 +143,9 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
         viewPlans.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(plans > 1) {
+                if (plans > 1) {
                     callback.displayPaymentPlansList(paymentsModel);
-                }else{
+                } else {
                     callback.onPaymentPlanSelected(paymentsModel,
                             paymentsModel.getPaymentPayload().getActivePlans(practiceId).get(0));
                 }
@@ -152,25 +153,25 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
             }
         });
 
-        historyRecycler = (RecyclerView) view.findViewById(R.id.history_recycler_view);
+        historyRecycler = view.findViewById(R.id.history_recycler_view);
         historyRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         historyRecycler.addOnScrollListener(historyScrollListener);
         setAdapter();
     }
 
-    private void setAdapter(){
+    private void setAdapter() {
         setAdapter(null);
     }
 
-    private void setAdapter(List<PaymentHistoryItem> newItems){
+    private void setAdapter(List<PaymentHistoryItem> newItems) {
         PaymentHistoryAdapter adapter = (PaymentHistoryAdapter) historyRecycler.getAdapter();
-        if(adapter != null){
-            if(newItems != null && !newItems.isEmpty()){
+        if (adapter != null) {
+            if (newItems != null && !newItems.isEmpty()) {
                 adapter.addPaymentHistoryItems(newItems);
-            }else{
+            } else {
                 adapter.setPaymentHistoryItems(paymentHistory);
             }
-        }else{
+        } else {
             adapter = new PaymentHistoryAdapter(getContext(), paymentHistory, this);
             historyRecycler.setAdapter(adapter);
         }
@@ -182,13 +183,13 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
         dismiss();
     }
 
-    private boolean hasMorePages(){
+    private boolean hasMorePages() {
         return paging.getCurrentPage() != paging.getTotalPages();
     }
 
-    private void loadNextPage(){
+    private void loadNextPage() {
         NextPagingDTO next = new NextPagingDTO();
-        next.setNextPage(paging.getCurrentPage()+1);
+        next.setNextPage(paging.getCurrentPage() + 1);
         next.setPageCount(paging.getResultsPerPage());
 
         Map<String, String> queryMap = new HashMap<>();
@@ -199,14 +200,14 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
         getWorkflowServiceHelper().execute(nextPageTransition, nextPageCallback, payload, queryMap);
     }
 
-    private RecyclerView.OnScrollListener historyScrollListener = new RecyclerView.OnScrollListener(){
+    private RecyclerView.OnScrollListener historyScrollListener = new RecyclerView.OnScrollListener() {
 
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
             if (hasMorePages()) {
-                int last = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-                if(last > recyclerView.getAdapter().getItemCount() - BOTTOM_ROW_OFFSET && !isPaging){
+                int last = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+                if (last > recyclerView.getAdapter().getItemCount() - BOTTOM_ROW_OFFSET && !isPaging) {
                     loadNextPage();
                     isPaging = true;
                 }
@@ -216,6 +217,7 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
 
     private WorkflowServiceCallback nextPageCallback = new WorkflowServiceCallback() {
         PaymentHistoryAdapter adapter;
+
         @Override
         public void onPreExecute() {
             adapter = (PaymentHistoryAdapter) historyRecycler.getAdapter();
@@ -227,7 +229,7 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
             adapter.setLoading(false);
             PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             Paging nextPage = paymentsModel.getPaymentPayload().getTransactionHistory().getPageDetails();
-            if(nextPage.getCurrentPage() != paging.getCurrentPage()){
+            if (nextPage.getCurrentPage() != paging.getCurrentPage()) {
                 paging = nextPage;
                 List<PaymentHistoryItem> newItems = paymentsModel.getPaymentPayload().getTransactionHistory().getPaymentHistoryList();
                 setAdapter(newItems);

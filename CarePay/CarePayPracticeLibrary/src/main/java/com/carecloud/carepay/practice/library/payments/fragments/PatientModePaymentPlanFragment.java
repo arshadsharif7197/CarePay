@@ -17,7 +17,9 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 public class PatientModePaymentPlanFragment extends PaymentPlanFragment {
 
 
-    public static PatientModePaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
+    public static PatientModePaymentPlanFragment newInstance(PaymentsModel paymentsModel,
+                                                             PendingBalanceDTO selectedBalance,
+                                                             double amount) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
@@ -43,23 +45,23 @@ public class PatientModePaymentPlanFragment extends PaymentPlanFragment {
     @Override
     protected void setupHeader(View view) {
         super.setupHeader(view);
-        TextView headerPaymentAmount = (TextView) view.findViewById(R.id.headerPlanTotal);
+        TextView headerPaymentAmount = view.findViewById(R.id.headerPlanTotal);
         headerPaymentAmount.setText(currencyFormatter.format(paymentPlanAmount));
 
-        TextView patientBalance = (TextView) view.findViewById(R.id.patientBalance);
+        TextView patientBalance = view.findViewById(R.id.patientBalance);
         patientBalance.setText(currencyFormatter.format(paymentPlanAmount));
     }
 
     @Override
-    protected void createPaymentPlanPostModel(boolean userInteraction){
+    protected void createPaymentPlanPostModel(boolean userInteraction) {
         super.createPaymentPlanPostModel(userInteraction);
-        if(validateFields(true)){
+        if (validateFields(true)) {
             dismiss();
         }
     }
 
     @Override
-    protected void addBalanceToExisting(){
+    protected void addBalanceToExisting() {
         super.addBalanceToExisting();
         dismiss();
     }

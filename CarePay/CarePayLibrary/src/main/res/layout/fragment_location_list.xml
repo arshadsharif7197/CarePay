@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <include
+        android:id="@+id/toolbar_layout"
+        layout="@layout/toolbar_responsibility" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/locationRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar_layout" />
+
+    <RelativeLayout
+        android:id="@+id/emptyStateScreen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/add_appointment_toolbar"
+        android:visibility="gone">
+
+        <View
+            android:id="@+id/placeHolder"
+            android:layout_width="@dimen/dimen_1dp"
+            android:layout_height="@dimen/dimen_1dp"
+            android:layout_centerInParent="true" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/placeHolder"
+            android:layout_centerInParent="true"
+            android:padding="@dimen/emptyScreenTitlePadding"
+            android:textColor="@color/charcoal"
+            android:textSize="@dimen/emptyScreenTitleTextSize"
+            android:textStyle="bold"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="appointment.chooseLocation.message.label.emptyScreenTitle"
+            tools:text="No locations available" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/placeHolder"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:paddingStart="@dimen/emptyScreenSubtitleHorizontalPadding"
+            android:paddingEnd="@dimen/emptyScreenSubtitleHorizontalPadding"
+            android:textColor="@color/cadet_gray"
+            android:textSize="@dimen/emptyScreenSubTitleTextSize"
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textKey="appointment.chooseLocation.message.label.emptyScreenSubTitle"
+            tools:text="There are currently no locations available to schedule an appointment with" />
+
+    </RelativeLayout>
+</RelativeLayout>

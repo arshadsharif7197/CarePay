@@ -62,7 +62,7 @@ public class HowToCheckInActivity extends BasePracticeActivity {
         setContentView(R.layout.activity_how_to_check_in);
 
         Bundle extraInfo = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
-        if(extraInfo != null) {
+        if (extraInfo != null) {
             showQROption = extraInfo.getBoolean(CarePayConstants.LOGIN_OPTION_QR, true);
             showSearchOption = extraInfo.getBoolean(CarePayConstants.LOGIN_OPTION_SEARCH, true);
         }
@@ -75,10 +75,10 @@ public class HowToCheckInActivity extends BasePracticeActivity {
      * Method to initialise view
      */
     void initViews() {
-        Button goBackButton = (Button) findViewById(R.id.goBackButton);
+        Button goBackButton = findViewById(R.id.goBackButton);
         goBackButton.setOnClickListener(goBackButtonListener);
 
-        TextView howToCheckInTextView = (TextView) findViewById(R.id.howToCheckInTextView);
+        TextView howToCheckInTextView = findViewById(R.id.howToCheckInTextView);
         howToCheckInTextView.setTextColor(ContextCompat.getColor(getBaseContext(), R.color.white));
 
         View carePayLoginButton = findViewById(R.id.carePayLoginButton);

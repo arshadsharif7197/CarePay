@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentFragment;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentTabHostFragment;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
@@ -23,6 +24,8 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
+import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -30,7 +33,8 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AppointmentsActivity extends MenuPatientActivity implements AppointmentViewHandler {
+public class AppointmentsActivity extends MenuPatientActivity implements AppointmentViewHandler,
+        FragmentActivityInterface {
 
     private AppointmentsResultModel appointmentsResultModel;
     private PaymentsModel paymentsModel;
@@ -91,7 +95,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         }
         initPresenter();
         AppointmentTabHostFragment fragment = AppointmentTabHostFragment.newInstance(0);
-        replaceFragment(fragment, false);
+        replaceFragment(R.id.container_main, fragment, false);
     }
 
     @Override
@@ -125,13 +129,14 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
     @Override
     public void onBackPressed() {// sign-out from Cognito
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStackImmediate();
-            if (getSupportFragmentManager().getBackStackEntryCount() < 1) {
+            if (getSupportFragmentManager().getBackStackEntryCount() <= 0) {
                 displayToolbar(true, null);
+                getSupportActionBar().setElevation(0);
                 toolbarHidden = false;
             }
         } else {
@@ -146,10 +151,8 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     }
 
     @Override
-    public void navigateToFragment(Fragment fragment, boolean addToBackStack) {
-        replaceFragment(fragment, addToBackStack);
-        displayToolbar(false, null);
-        toolbarHidden = true;
+    public void replaceFragment(Fragment fragment, boolean addToBackStack) {
+        replaceFragment(R.id.container_main, fragment, addToBackStack);
     }
 
     @Override
@@ -173,6 +176,12 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         callAppointmentService();
     }
 
+    @Override
+    public void newAppointment() {
+        CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
+        addFragment(fragment, true);
+    }
+
     private void showAppointmentConfirmation(boolean isAutoScheduled) {
         String appointmentRequestSuccessMessage = Label.getLabel(isAutoScheduled ?
                 "appointment_schedule_success_message_HTML" :
@@ -180,8 +189,13 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         SystemUtil.showSuccessToast(getContext(), appointmentRequestSuccessMessage);
     }
 
-    private void replaceFragment(Fragment fragment, boolean addToStack) {
-        replaceFragment(R.id.container_main, fragment, addToStack);
+    @Override
+    public void addFragment(Fragment fragment, boolean addToBackStack) {
+        addFragment(R.id.container_main, fragment, addToBackStack);
     }
 
+    @Override
+    public DTO getDto() {
+        return appointmentsResultModel;
+    }
 }

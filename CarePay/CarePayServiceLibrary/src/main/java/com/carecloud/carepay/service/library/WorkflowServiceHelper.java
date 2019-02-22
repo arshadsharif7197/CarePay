@@ -122,7 +122,7 @@ public class WorkflowServiceHelper {
                 headers.remove("Authorization");
             }
             //this can cause a delegate issue in patient app as of 12.28.18
-            // TODO remove this once delegeate is reimplemented
+            // TODO remove this once delegate is reimplemented
             if(applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PATIENT &&
                     customHeaders.containsKey("username_patient")){
                 customHeaders.remove("username_patient");

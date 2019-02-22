@@ -110,10 +110,10 @@
                 android:layout_marginStart="@dimen/dimen_8dp"
                 android:layout_marginEnd="@dimen/dimen_8dp"
                 android:background="@drawable/bg_white_border_trans"
-                android:paddingBottom="@dimen/roundedValueVerticalPadding"
-                android:paddingEnd="@dimen/roundedValueHorizontalPadding"
                 android:paddingStart="@dimen/roundedValueHorizontalPadding"
                 android:paddingTop="@dimen/roundedValueVerticalPadding"
+                android:paddingEnd="@dimen/roundedValueHorizontalPadding"
+                android:paddingBottom="@dimen/roundedValueVerticalPadding"
                 android:textColor="@color/white"
                 android:textSize="@dimen/amountLabelTextSize"
                 app:customAssetFont="proxima_nova_semi_bold"
@@ -225,9 +225,9 @@
                     android:id="@+id/detailsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/itemDashboardFieldMargin"
                     android:layout_marginStart="@dimen/dashboardLabelStartMargin"
                     android:layout_marginTop="@dimen/dashboardLabelTopMargin"
+                    android:layout_marginBottom="@dimen/itemDashboardFieldMargin"
                     android:textAllCaps="true"
                     android:textColor="@color/textview_default_textcolor"
                     android:textSize="@dimen/dashboardLabelTextSize"
@@ -239,10 +239,10 @@
                     android:id="@+id/cancelledInfoContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dimen_15dp"
-                    android:layout_marginEnd="@dimen/dimen_15dp"
-                    android:paddingTop="@dimen/dimen_24dp"
-                    android:paddingBottom="@dimen/dimen_24dp"
+                    android:layout_marginStart="@dimen/paymentPlanDetailSectionHorizontalMargin"
+                    android:layout_marginEnd="@dimen/paymentPlanDetailSectionHorizontalMargin"
+                    android:paddingTop="@dimen/paymentPlanDetailSectionVerticalPadding"
+                    android:paddingBottom="@dimen/paymentPlanDetailSectionVerticalPadding"
                     android:visibility="gone">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -269,10 +269,10 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/paymentPlanDetailSectionHorizontalMargin"
                     android:layout_marginStart="@dimen/paymentPlanDetailSectionHorizontalMargin"
-                    android:paddingBottom="@dimen/paymentPlanDetailSectionVerticalPadding"
-                    android:paddingTop="@dimen/paymentPlanDetailSectionVerticalPadding">
+                    android:layout_marginEnd="@dimen/paymentPlanDetailSectionHorizontalMargin"
+                    android:paddingTop="@dimen/paymentPlanDetailSectionVerticalPadding"
+                    android:paddingBottom="@dimen/paymentPlanDetailSectionVerticalPadding">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/paymentsInstallmentsCount"
@@ -302,18 +302,18 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_1dp"
-                    android:layout_marginEnd="@dimen/paymentPlanDividerVerticalMargin"
                     android:layout_marginStart="@dimen/paymentPlanDividerVerticalMargin"
+                    android:layout_marginEnd="@dimen/paymentPlanDividerVerticalMargin"
                     android:background="@color/divider_color" />
 
                 <RelativeLayout
                     android:id="@+id/nextPaymentContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/paymentPlanDetailSectionHorizontalMargin"
                     android:layout_marginStart="@dimen/paymentPlanDetailSectionHorizontalMargin"
-                    android:paddingBottom="@dimen/paymentPlanDetailSectionVerticalPadding"
-                    android:paddingTop="@dimen/paymentPlanDetailSectionVerticalPadding">
+                    android:layout_marginEnd="@dimen/paymentPlanDetailSectionHorizontalMargin"
+                    android:paddingTop="@dimen/paymentPlanDetailSectionVerticalPadding"
+                    android:paddingBottom="@dimen/paymentPlanDetailSectionVerticalPadding">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/nexyPaymentDate"
@@ -347,8 +347,8 @@
                     android:layout_marginStart="@dimen/dimen_15dp"
                     android:layout_marginEnd="@dimen/dimen_15dp"
                     android:paddingTop="@dimen/dimen_24dp"
-                    android:visibility="gone"
-                    android:paddingBottom="@dimen/dimen_24dp">
+                    android:paddingBottom="@dimen/dimen_24dp"
+                    android:visibility="gone">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/amountPaidTextView"
@@ -377,18 +377,18 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_1dp"
-                    android:layout_marginEnd="@dimen/paymentPlanDividerVerticalMargin"
                     android:layout_marginStart="@dimen/paymentPlanDividerVerticalMargin"
+                    android:layout_marginEnd="@dimen/paymentPlanDividerVerticalMargin"
                     android:background="@color/divider_color" />
 
                 <RelativeLayout
                     android:id="@+id/transactionTotalContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/paymentPlanDetailSectionHorizontalMargin"
                     android:layout_marginStart="@dimen/paymentPlanDetailSectionHorizontalMargin"
-                    android:paddingBottom="@dimen/paymentPlanDetailSectionVerticalPadding"
-                    android:paddingTop="@dimen/paymentPlanDetailSectionVerticalPadding">
+                    android:layout_marginEnd="@dimen/paymentPlanDetailSectionHorizontalMargin"
+                    android:paddingTop="@dimen/paymentPlanDetailSectionVerticalPadding"
+                    android:paddingBottom="@dimen/paymentPlanDetailSectionVerticalPadding">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/transaction_total"
@@ -419,18 +419,18 @@
                     android:id="@+id/transactionSeparator"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_1dp"
-                    android:layout_marginEnd="@dimen/paymentPlanDividerVerticalMargin"
                     android:layout_marginStart="@dimen/paymentPlanDividerVerticalMargin"
+                    android:layout_marginEnd="@dimen/paymentPlanDividerVerticalMargin"
                     android:background="@color/divider_color" />
 
                 <RelativeLayout
                     android:id="@+id/planBalanceContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/paymentPlanDetailSectionHorizontalMargin"
                     android:layout_marginStart="@dimen/paymentPlanDetailSectionHorizontalMargin"
-                    android:paddingBottom="@dimen/paymentPlanDetailSectionVerticalPadding"
-                    android:paddingTop="@dimen/paymentPlanDetailSectionVerticalPadding">
+                    android:layout_marginEnd="@dimen/paymentPlanDetailSectionHorizontalMargin"
+                    android:paddingTop="@dimen/paymentPlanDetailSectionVerticalPadding"
+                    android:paddingBottom="@dimen/paymentPlanDetailSectionVerticalPadding">
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/planBalance"
@@ -460,8 +460,8 @@
                     android:id="@+id/planBalanceSeparator"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_1dp"
-                    android:layout_marginEnd="@dimen/paymentPlanDividerVerticalMargin"
                     android:layout_marginStart="@dimen/paymentPlanDividerVerticalMargin"
+                    android:layout_marginEnd="@dimen/paymentPlanDividerVerticalMargin"
                     android:background="@color/divider_color" />
 
                 <LinearLayout
@@ -474,9 +474,9 @@
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/itemDashboardFieldMargin"
                         android:layout_marginStart="@dimen/dashboardLabelStartMargin"
                         android:layout_marginTop="@dimen/dashboardLabelTopMargin"
+                        android:layout_marginBottom="@dimen/itemDashboardFieldMargin"
                         android:textAllCaps="true"
                         android:textColor="@color/textview_default_textcolor"
                         android:textSize="@dimen/dashboardLabelTextSize"
@@ -487,11 +487,11 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:layout_marginEnd="@dimen/paymentPlanDetailSectionHorizontalMargin"
                         android:layout_marginStart="@dimen/paymentPlanDetailSectionHorizontalMargin"
-                        android:paddingBottom="@dimen/paymentPlanDetailSectionVerticalPadding"
-                        android:paddingTop="@dimen/paymentPlanDetailSectionVerticalPadding">
+                        android:layout_marginEnd="@dimen/paymentPlanDetailSectionHorizontalMargin"
+                        android:gravity="center_vertical"
+                        android:paddingTop="@dimen/paymentPlanDetailSectionVerticalPadding"
+                        android:paddingBottom="@dimen/paymentPlanDetailSectionVerticalPadding">
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                             android:id="@+id/scheduledPaymentMessage"
@@ -511,8 +511,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/itemDashboardFieldMargin"
                             android:background="@drawable/blue_border_rounded_button_selector"
-                            android:paddingBottom="@dimen/itemDashboardButtonVerticalPadding"
                             android:paddingTop="@dimen/itemDashboardButtonVerticalPadding"
+                            android:paddingBottom="@dimen/itemDashboardButtonVerticalPadding"
                             android:textColor="@color/colorPrimary"
                             android:textSize="@dimen/itemDashboardButtonTextSize"
                             app:customAssetFont="gotham_rounded_medium"

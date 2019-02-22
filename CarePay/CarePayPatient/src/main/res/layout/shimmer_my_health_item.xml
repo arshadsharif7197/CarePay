@@ -7,7 +7,7 @@
     android:layout_marginEnd="@dimen/dimen_17dp"
     android:layout_marginStart="@dimen/dimen_17dp"
     android:layout_marginTop="@dimen/dimen_10dp"
-    android:background="@drawable/my_health_no_data_background"
+    android:background="@drawable/no_data_background"
     android:orientation="vertical"
     android:padding="@dimen/dimen_20dp"
     android:paddingBottom="@dimen/dimen_40dp"
