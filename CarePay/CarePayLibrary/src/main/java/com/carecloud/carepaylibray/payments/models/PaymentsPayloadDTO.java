@@ -7,6 +7,7 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
+import com.carecloud.carepaylibray.base.dtos.BasePayloadDto;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.base.models.UserAuthModel;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItemPayload;
@@ -33,7 +34,7 @@ import java.util.Map;
  * Created by Rahul on 11/30/16
  */
 
-public class PaymentsPayloadDTO implements Serializable {
+public class PaymentsPayloadDTO extends BasePayloadDto implements Serializable {
 
 
     @SerializedName("providers")
@@ -709,8 +710,8 @@ public class PaymentsPayloadDTO implements Serializable {
     }
 
     public UserPracticeDTO getUserPractice(String practiceId) {
-        for(UserPracticeDTO userPracticeDTO : userPractices){
-            if(userPracticeDTO.getPracticeId().equals(practiceId)){
+        for (UserPracticeDTO userPracticeDTO : userPractices) {
+            if (userPracticeDTO.getPracticeId().equals(practiceId)) {
                 return userPracticeDTO;
             }
         }

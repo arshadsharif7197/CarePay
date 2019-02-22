@@ -116,16 +116,16 @@ public class WorkflowServiceHelper {
     private Map<String, String> getHeaders(Map<String, String> customHeaders) {
         Map<String, String> headers = getUserAuthenticationHeaders();
 
+        if ((applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PATIENT)
+                && (ApplicationPreferences.getInstance().getProfileId() != null)
+                && (!ApplicationPreferences.getInstance().getProfileId().isEmpty())) {
+            headers.put("username_patient", ApplicationPreferences.getInstance().getProfileId());
+        }
+
         // Add auth headers to custom in case custom has old auth headers
         if (customHeaders != null) {
-            if(customHeaders.containsKey("Authorization")){
+            if (customHeaders.containsKey("Authorization")) {
                 headers.remove("Authorization");
-            }
-            //this can cause a delegate issue in patient app as of 12.28.18
-            // TODO remove this once delegeate is reimplemented
-            if(applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PATIENT &&
-                    customHeaders.containsKey("username_patient")){
-                customHeaders.remove("username_patient");
             }
 
             customHeaders.putAll(headers);
@@ -618,10 +618,11 @@ public class WorkflowServiceHelper {
     }
 
 
-    private static @NonNull String capitalizeMessage(String message) {
-        if(message == null || message.length() == 0){
+    private static @NonNull
+    String capitalizeMessage(String message) {
+        if (message == null || message.length() == 0) {
             return "";
         }
-        return message.substring(0,1).toUpperCase() + message.substring(1);
+        return message.substring(0, 1).toUpperCase() + message.substring(1);
     }
 }

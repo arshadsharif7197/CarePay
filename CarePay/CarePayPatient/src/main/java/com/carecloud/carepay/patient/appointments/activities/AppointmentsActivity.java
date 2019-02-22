@@ -27,6 +27,8 @@ import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.profile.Profile;
+import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -196,5 +198,15 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     @Override
     public DTO getDto() {
         return appointmentsResultModel;
+    }
+
+    @Override
+    protected void onProfileChanged(ProfileDto profile) {
+        callAppointmentService();
+    }
+
+    @Override
+    protected Profile getCurrentProfile() {
+        return appointmentsResultModel.getPayload().getDelegate();
     }
 }

@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AlertDialog;
-import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
@@ -32,6 +31,8 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.profile.Profile;
+import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -256,6 +257,16 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
         TransitionDTO getPdfTransition = myHealthDto.getMetadata().getLinks().getLabsPdf();
         String url = String.format("%s?%s=%s", getPdfTransition.getUrl(), "labs_id", lab.getId());
         FileDownloadUtil.downloadPdf(getContext(), url, lab.getName(), ".pdf", lab.getPractice());
+    }
+
+    @Override
+    protected void onProfileChanged(ProfileDto profile) {
+        callMyHealthService(null);
+    }
+
+    @Override
+    protected Profile getCurrentProfile() {
+        return myHealthDto.getPayload().getDelegate();
     }
 
 }

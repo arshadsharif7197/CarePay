@@ -16,6 +16,17 @@
             layout="@layout/nav_header_navigation" />
 
         <LinearLayout
+            android:id="@+id/profilesContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/menuHeader"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/mainMenuItemContainerTopPadding"
+            android:visibility="gone">
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/mainMenuItemContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

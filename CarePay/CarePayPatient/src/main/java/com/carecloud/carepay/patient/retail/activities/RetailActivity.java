@@ -18,6 +18,8 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.profile.Profile;
+import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.interfaces.DTO;
@@ -317,5 +319,15 @@ public class RetailActivity extends MenuPatientActivity implements RetailPatient
     @Override
     public DTO getDto() {
         return retailModel;
+    }
+
+    @Override
+    protected void onProfileChanged(ProfileDto profile) {
+        callRetailService();
+    }
+
+    @Override
+    protected Profile getCurrentProfile() {
+        return retailModel.getPayload().getDelegate();
     }
 }

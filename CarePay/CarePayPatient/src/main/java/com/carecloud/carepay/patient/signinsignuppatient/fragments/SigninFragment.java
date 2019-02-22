@@ -43,7 +43,6 @@ import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTo
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
-import com.carecloud.carepay.service.library.unifiedauth.UserLinks;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.PlainWebViewFragment;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
@@ -240,6 +239,7 @@ public class SigninFragment extends BaseFragment {
     }
 
     private void unifiedSignIn(String userName, String password, TransitionDTO signInTransition) {
+        ApplicationPreferences.getInstance().setProfileId(null);
         UnifiedSignInUser user = new UnifiedSignInUser();
         user.setEmail(userName);
         user.setPassword(password);
@@ -306,7 +306,6 @@ public class SigninFragment extends BaseFragment {
         getAppAuthorizationHelper().setAuthorizationTokens(authTokens);
         getAppAuthorizationHelper().setRefreshTransition(refreshTransition);
         getWorkflowServiceHelper().setAppAuthorizationHelper(getAppAuthorizationHelper());
-        saveDelegates(signInResponse.getPayload().getAuthorizationModel().getUserLinks());
 
         Map<String, String> query = new HashMap<>();
         Map<String, String> header = new HashMap<>();
@@ -314,10 +313,6 @@ public class SigninFragment extends BaseFragment {
         String languageId = getApplicationPreferences().getUserLanguage();
         header.put("Accept-Language", languageId);
         getWorkflowServiceHelper().execute(authenticateTransition, getSignInCallback(user, password), query, header);
-    }
-
-    private void saveDelegates(UserLinks userLinks) {
-        ApplicationPreferences.getInstance().saveDelegates(userLinks);
     }
 
     private WorkflowServiceCallback getSignInCallback(final String user, final String password) {

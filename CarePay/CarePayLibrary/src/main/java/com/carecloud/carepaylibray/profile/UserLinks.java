@@ -1,4 +1,4 @@
-package com.carecloud.carepay.service.library.unifiedauth;
+package com.carecloud.carepaylibray.profile;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -13,24 +13,24 @@ public class UserLinks {
 
     @Expose
     @SerializedName("logged_in_user")
-    private LoggedInUser loggedInUser;
+    private Profile loggedInUser;
     @Expose
     @SerializedName("represented_users")
-    private List<Profile> representedUsers = new ArrayList<>();
+    private List<ProfileDto> representedUsers = new ArrayList<>();
 
-    public LoggedInUser getLoggedInUser() {
+    public Profile getLoggedInUser() {
         return loggedInUser;
     }
 
-    public void setLoggedInUser(LoggedInUser loggedInUser) {
+    public void setLoggedInUser(Profile loggedInUser) {
         this.loggedInUser = loggedInUser;
     }
 
-    public List<Profile> getRepresentedUsers() {
+    public List<ProfileDto> getRepresentedUsers() {
         return representedUsers;
     }
 
-    public void setRepresentedUsers(List<Profile> representedUsers) {
+    public void setRepresentedUsers(List<ProfileDto> representedUsers) {
         this.representedUsers = representedUsers;
     }
 }

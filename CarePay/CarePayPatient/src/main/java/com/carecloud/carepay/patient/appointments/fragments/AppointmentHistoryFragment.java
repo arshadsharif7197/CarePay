@@ -232,7 +232,7 @@ public class AppointmentHistoryFragment extends BaseFragment
                         }
                         isPaging = false;
                         adapter.setLoading(false);
-                        if (showShimmerLayout && ((BaseActivity) getActivity()).isVisible()) {
+                        if (showShimmerLayout && (getActivity() != null) && ((BaseActivity) getActivity()).isVisible()) {
                             hideShimmerEffect();
                         }
                         showErrorNotification(exceptionMessage);
@@ -241,7 +241,7 @@ public class AppointmentHistoryFragment extends BaseFragment
     }
 
     private void hideShimmerEffect() {
-        if(isAdded()) {
+        if (isAdded()) {
             getChildFragmentManager().popBackStackImmediate();
         }
     }

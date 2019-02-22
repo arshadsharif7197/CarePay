@@ -1,6 +1,7 @@
 package com.carecloud.carepay.patient.notifications.models;
 
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
+import com.carecloud.carepaylibray.base.dtos.BasePayloadDto;
 import com.carecloud.carepaylibray.base.models.Paging;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.google.gson.annotations.Expose;
@@ -13,7 +14,7 @@ import java.util.List;
  * Created by lmenendez on 5/11/17.
  */
 
-public class NotificationsPayload {
+public class NotificationsPayload extends BasePayloadDto {
 
     @SerializedName("notifications")
     @Expose

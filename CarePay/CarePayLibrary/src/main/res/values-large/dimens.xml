@@ -32,4 +32,6 @@
     <dimen name="menuItemBadgeSize">25dp</dimen>
     <dimen name="menuItemBadeTextSize">13sp</dimen>
     <dimen name="badgeCounterEndMargin">10dp</dimen>
+    <dimen name="profileListTriggerIconSize">20dp</dimen>
+    <dimen name="profileListTriggerHorizontalMargin">5dp</dimen>
 </resources>

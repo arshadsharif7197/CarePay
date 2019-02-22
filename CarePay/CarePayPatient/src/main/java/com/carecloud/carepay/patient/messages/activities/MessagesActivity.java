@@ -17,6 +17,8 @@ import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.profile.Profile;
+import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.util.ArrayList;
@@ -142,5 +144,15 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
             }
         }
         return null;
+    }
+
+    @Override
+    protected void onProfileChanged(ProfileDto profile) {
+        callMessagingService();
+    }
+
+    @Override
+    protected Profile getCurrentProfile() {
+        return messagingModel.getPayload().getDelegate();
     }
 }

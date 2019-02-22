@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -15,6 +16,7 @@ import java.lang.reflect.Method;
 public class BadgeDrawerToggle extends ActionBarDrawerToggle {
 
     private BadgeDrawerArrowDrawable badgeDrawable;
+    private DrawerInterface callback;
 
     public BadgeDrawerToggle(Activity activity, DrawerLayout drawerLayout,
                              int openDrawerContentDescRes,
@@ -84,9 +86,24 @@ public class BadgeDrawerToggle extends ActionBarDrawerToggle {
             Method getActionBarThemedContextMethod = mActivityImpl.getClass()
                     .getDeclaredMethod("getActionBarThemedContext");
             return (Context) getActionBarThemedContextMethod.invoke(mActivityImpl);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public void onDrawerClosed(View drawerView) {
+        super.onDrawerClosed(drawerView);
+        if (callback != null) {
+            callback.onDrawerClosed(drawerView);
+        }
+    }
+
+    public void setCallback(DrawerInterface callback) {
+        this.callback = callback;
+    }
+
+    public interface DrawerInterface {
+        void onDrawerClosed(View drawerView);
     }
 }

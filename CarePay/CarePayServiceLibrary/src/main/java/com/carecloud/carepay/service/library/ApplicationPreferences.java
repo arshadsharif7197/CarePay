@@ -1,6 +1,7 @@
 package com.carecloud.carepay.service.library;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.carecloud.carepay.service.library.base.IApplicationSession;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -10,7 +11,6 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
-import com.carecloud.carepay.service.library.unifiedauth.UserLinks;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -52,7 +52,7 @@ public class ApplicationPreferences {
     private static final String PREFERENCE_LAST_APP_VERSION_NUM = "last_app_version_num";
     private static final String PREFERENCE_REMIND_LATEST = "remind_latest";
     private static final String PREFERENCE_FORCE_UPDATE = "force_update";
-    private static final String PREFERENCE_DELEGATES = "delegates";
+    private static final String PREFERENCE_PROFILE_ID = "profileId";
 
     private String patientId;
     private String practiceId;
@@ -212,7 +212,7 @@ public class ApplicationPreferences {
             return userId;
         }
 
-        return readStringFromSharedPref(PREFERENCE_USER_ID);
+        return readStringFromSharedPref(PREFERENCE_USER_ID, "");
     }
 
     /**
@@ -294,6 +294,7 @@ public class ApplicationPreferences {
         try {
             return gson.fromJson(readStringFromSharedPref(key), objectClass);
         } catch (Exception ex) {
+            Log.e("Application Preferences", ex.getMessage());
             return null;
         }
     }
@@ -491,11 +492,11 @@ public class ApplicationPreferences {
         }
     }
 
-    public int getLastVersionNum(){
+    public int getLastVersionNum() {
         return readIntFromSharedPref(PREFERENCE_LAST_APP_VERSION_NUM);
     }
 
-    public void setLastVersionNum(int newVersionNum){
+    public void setLastVersionNum(int newVersionNum) {
         writeIntegerToSharedPref(PREFERENCE_LAST_APP_VERSION_NUM, newVersionNum);
         //always reset remind latest for new updates
         setRemindLatest(true);
@@ -513,11 +514,15 @@ public class ApplicationPreferences {
         return readBooleanFromSharedPref(PREFERENCE_FORCE_UPDATE, false);
     }
 
-    public void setForceUpdate(boolean mustForceUpdate){
+    public void setForceUpdate(boolean mustForceUpdate) {
         writeBooleanToSharedPref(PREFERENCE_FORCE_UPDATE, mustForceUpdate);
     }
 
-    public void saveDelegates(UserLinks userLinks) {
-        writeStringToSharedPref(PREFERENCE_DELEGATES, userLinks != null ? new Gson().toJson(userLinks) : null);
+    public String getProfileId() {
+        return readStringFromSharedPref(PREFERENCE_PROFILE_ID, null);
+    }
+
+    public void setProfileId(String profileId) {
+        writeStringToSharedPref(PREFERENCE_PROFILE_ID, profileId);
     }
 }

@@ -61,4 +61,9 @@ public class CustomMenuItem extends RelativeLayout {
         badgeCounter.setText(String.valueOf(counter));
         badgeCounter.setVisibility(VISIBLE);
     }
+
+    public void hideBadgeCounter() {
+        TextView badgeCounter = findViewById(R.id.badgeCounter);
+        badgeCounter.setVisibility(GONE);
+    }
 }

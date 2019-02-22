@@ -3,13 +3,11 @@ package com.carecloud.carepay.patient.consentforms;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
-import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormPracticeFormsFragment;
 import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormProvidersListFragment;
 import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormViewPagerFragment;
 import com.carecloud.carepay.patient.consentforms.fragments.FilledFormFragment;
@@ -18,6 +16,8 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.profile.Profile;
+import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.UserFormDTO;
@@ -163,4 +163,14 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Consent
             Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+    @Override
+    protected void onProfileChanged(ProfileDto profile) {
+        callConsentFormsService(null);
+    }
+
+    @Override
+    protected Profile getCurrentProfile() {
+        return consentFormsDTO.getPayload().getDelegate();
+    }
 }

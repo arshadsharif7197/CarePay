@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.adhoc.AdhocFormsPatientModeInfo;
+import com.carecloud.carepaylibray.base.dtos.BasePayloadDto;
 import com.carecloud.carepaylibray.base.models.PagingDto;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
@@ -23,7 +24,7 @@ import java.util.List;
 /**
  * Model for appointment payload.
  */
-public class AppointmentPayloadModel implements Serializable {
+public class AppointmentPayloadModel extends BasePayloadDto implements Serializable {
 
     @SerializedName("languages")
     @Expose

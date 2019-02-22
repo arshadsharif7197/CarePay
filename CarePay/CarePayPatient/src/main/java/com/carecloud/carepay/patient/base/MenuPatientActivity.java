@@ -10,12 +10,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
@@ -40,12 +41,18 @@ import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.customcomponents.CustomMenuItem;
+import com.carecloud.carepaylibray.profile.Profile;
+import com.carecloud.carepaylibray.profile.ProfileDto;
+import com.carecloud.carepaylibray.profile.UserLinks;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,14 +72,13 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
     private static TransitionDTO transitionMyHealth;
     private static TransitionDTO transitionRetail;
     private static TransitionDTO transitionMessaging;
+    private static UserLinks profileData;
 
-    protected ActionBarDrawerToggle toggle;
-    protected TextView appointmentsDrawerUserIdTextView;
+    protected BadgeDrawerToggle toggle;
     protected NavigationView navigationView;
     protected DrawerLayout drawer;
     protected Toolbar toolbar;
     protected boolean toolbarVisibility = false;
-    private TextView userFullNameTextView;
     private BadgeDrawerArrowDrawable badgeDrawable;
 
     @Override
@@ -82,46 +88,47 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
         toolbar = findViewById(R.id.toolbar);
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
-        appointmentsDrawerUserIdTextView = navigationView.findViewById(R.id.appointmentsDrawerIdTextView);
-        userFullNameTextView = navigationView.findViewById(R.id.userNameTextView);
         inflateDrawer();
         LocalBroadcastManager.getInstance(this).registerReceiver(badgeReceiver,
                 new IntentFilter(CarePayConstants.UPDATE_BADGES_BROADCAST));
         if (getApplicationPreferences().isLandingScreen()) {
             setInitialData();
         }
+        populateProfilesList(profileData.getRepresentedUsers());
     }
 
     private void setInitialData() {
-        MyHealthDto myHealthDto = getConvertedDTO(MyHealthDto.class);
-        List<PracticePatientIdsDTO> practicePatientIds = myHealthDto.getPayload().getPracticePatientIds();
+        MyHealthDto initialDto = getConvertedDTO(MyHealthDto.class);
+        List<PracticePatientIdsDTO> practicePatientIds = initialDto.getPayload().getPracticePatientIds();
         if (!practicePatientIds.isEmpty()) {
             getApplicationPreferences().writeObjectToSharedPreference(
                     CarePayConstants.KEY_PRACTICE_PATIENT_IDS, practicePatientIds);
         }
-        setTransitionBalance(myHealthDto.getMetadata().getLinks().getPatientBalances());
-        setTransitionLogout(myHealthDto.getMetadata().getTransitions().getLogout());
-        setTransitionProfile(myHealthDto.getMetadata().getLinks().getProfileUpdate());
-        setTransitionAppointments(myHealthDto.getMetadata().getLinks().getAppointments());
-        setTransitionNotifications(myHealthDto.getMetadata().getLinks().getNotifications());
-        setTransitionMyHealth(myHealthDto.getMetadata().getLinks().getMyHealth());
-        setTransitionRetail(myHealthDto.getMetadata().getLinks().getRetail());
-        setTransitionForms(myHealthDto.getMetadata().getLinks().getUserForms());
-        setTransitionMessaging(myHealthDto.getMetadata().getLinks().getMessaging());
+        setTransitionBalance(initialDto.getMetadata().getLinks().getPatientBalances());
+        setTransitionLogout(initialDto.getMetadata().getTransitions().getLogout());
+        setTransitionProfile(initialDto.getMetadata().getLinks().getProfileUpdate());
+        setTransitionAppointments(initialDto.getMetadata().getLinks().getAppointments());
+        setTransitionNotifications(initialDto.getMetadata().getLinks().getNotifications());
+        setTransitionMyHealth(initialDto.getMetadata().getLinks().getMyHealth());
+        setTransitionRetail(initialDto.getMetadata().getLinks().getRetail());
+        setTransitionForms(initialDto.getMetadata().getLinks().getUserForms());
+        setTransitionMessaging(initialDto.getMetadata().getLinks().getMessaging());
+        setProfileData(initialDto.getPayload().getUserLinks());
 
         ApplicationPreferences.getInstance().writeObjectToSharedPreference(CarePayConstants
-                .DEMOGRAPHICS_ADDRESS_BUNDLE, myHealthDto.getPayload().getDemographicDTO().getPayload().getAddress());
+                .DEMOGRAPHICS_ADDRESS_BUNDLE, initialDto.getPayload().getDemographicDTO().getPayload().getAddress());
 
-        ApplicationPreferences.getInstance().setPracticesWithBreezeEnabled(myHealthDto.getPayload()
+        ApplicationPreferences.getInstance().setPracticesWithBreezeEnabled(initialDto.getPayload()
                 .getPracticeInformation());
-        ApplicationPreferences.getInstance().setUserPractices(myHealthDto.getPayload()
+        ApplicationPreferences.getInstance().setUserPractices(initialDto.getPayload()
                 .getPracticeInformation());
 
         ApplicationPreferences.getInstance().setUserFullName(StringUtil
-                .getCapitalizedUserName(myHealthDto.getPayload().getDemographicDTO().getPayload().getPersonalDetails().getFirstName(),
-                        myHealthDto.getPayload().getDemographicDTO().getPayload().getPersonalDetails().getLastName()));
+                .getCapitalizedUserName(initialDto.getPayload().getDemographicDTO().getPayload()
+                                .getPersonalDetails().getFirstName(),
+                        initialDto.getPayload().getDemographicDTO().getPayload().getPersonalDetails().getLastName()));
 
-        String userImageUrl = myHealthDto.getPayload().getDemographicDTO().getPayload()
+        String userImageUrl = initialDto.getPayload().getDemographicDTO().getPayload()
                 .getPersonalDetails().getProfilePhoto();
         if (userImageUrl != null) {
             getApplicationPreferences().setUserPhotoUrl(userImageUrl);
@@ -129,6 +136,9 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
         getApplicationPreferences().setLandingScreen(false);
     }
 
+    private void setProfileData(UserLinks userLinks) {
+        profileData = userLinks;
+    }
 
     protected void inflateDrawer() {
         setSupportActionBar(toolbar);
@@ -138,6 +148,12 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
         toggle.setDrawerArrowDrawable(badgeDrawable);
         toggle.getDrawerArrowDrawable().setColor(ContextCompat.getColor(this, R.color.white));
         drawer.addDrawerListener(toggle);
+        toggle.setCallback(new BadgeDrawerToggle.DrawerInterface() {
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                resetViews();
+            }
+        });
         toggle.syncState();
 
         navigationView.findViewById(R.id.appointmentMenuItem).setOnClickListener(menuItemClickListener);
@@ -149,10 +165,130 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
         navigationView.findViewById(R.id.notificationsMenuItem).setOnClickListener(menuItemClickListener);
         navigationView.findViewById(R.id.settingsMenuItem).setOnClickListener(menuItemClickListener);
         navigationView.findViewById(R.id.logOutMenuItem).setOnClickListener(menuItemClickListener);
+
+        final ImageView profileListTriggerIcon = findViewById(R.id.profileListTriggerIcon);
+        profileListTriggerIcon.setSelected(false);
+        profileListTriggerIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleProfileList(profileListTriggerIcon);
+            }
+        });
     }
 
-    private void setUserImage() {
-        String imageUrl = ApplicationPreferences.getInstance().getUserPhotoUrl();
+    private void resetViews() {
+        View mainMenuItemContainer = findViewById(R.id.mainMenuItemContainer);
+        View profilesContainer = findViewById(R.id.profilesContainer);
+        mainMenuItemContainer.setVisibility(View.VISIBLE);
+        profilesContainer.setVisibility(View.INVISIBLE);
+    }
+
+    private void populateProfilesList(List<ProfileDto> representedUsers) {
+        if (profileData.getRepresentedUsers().size() > 0) {
+            LinearLayout profilesContainer = findViewById(R.id.profilesContainer);
+            profilesContainer.removeAllViews();
+            for (final ProfileDto profile : representedUsers) {
+                View row = LayoutInflater.from(getContext()).inflate(R.layout.layout_item_menu, null, false);
+                row.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        enableBadge(profile);
+                        updateProfileInfo(profile);
+                        updateProfileView();
+                        updateProfileList(profile);
+                        updateBadgeCounterViews();
+                        onProfileChanged(profile);
+                        closeMenu();
+                    }
+                });
+                TextView nameTextView = row.findViewById(R.id.menuIconLabelTextView);
+                nameTextView.setText(StringUtil.capitalize(profile.getProfile().getName()));
+                profilesContainer.addView(row);
+            }
+        } else {
+            findViewById(R.id.profileListTriggerIcon).setVisibility(View.GONE);
+        }
+    }
+
+    private void enableBadge(ProfileDto profile) {
+        toggle.setBadgeEnabled(profile.getProfile().isDelegate());
+    }
+
+    protected void updateProfileList(ProfileDto selectedProfile) {
+        List<ProfileDto> profileList = new ArrayList<>();
+        for (ProfileDto profileDto : profileData.getRepresentedUsers()) {
+            if (!profileDto.getProfile().getId().equals(selectedProfile.getProfile().getId())) {
+                profileList.add(profileDto);
+            }
+        }
+
+        Profile profile = getCurrentProfile();
+        ProfileDto profileDto = new ProfileDto();
+        if (profile == null) {
+            profile = profileData.getLoggedInUser();
+            profile.setDelegate(true);
+            profile.setId("");
+            profile.setName(StringUtil
+                    .getCapitalizedUserName(profile.getDemographics().getPayload()
+                            .getPersonalDetails().getFirstName(), profile.getDemographics()
+                            .getPayload().getPersonalDetails().getLastName()));
+        } else {
+            profile.setId(profile.getProfileId());
+            profile.setName(profile.getProfileName());
+        }
+        profileDto.setProfile(profile);
+        profileList.add(profileDto);
+
+        Collections.sort(profileList, new Comparator<ProfileDto>() {
+            @Override
+            public int compare(ProfileDto o1, ProfileDto o2) {
+                return o1.getProfile().getName().compareTo(o2.getProfile().getName());
+            }
+        });
+        profileData.setRepresentedUsers(profileList);
+        populateProfilesList(profileData.getRepresentedUsers());
+    }
+
+    protected abstract Profile getCurrentProfile();
+
+    private void toggleProfileList(ImageView profileListTriggerIcon) {
+        View mainMenuItemContainer = findViewById(R.id.mainMenuItemContainer);
+        View profilesContainer = findViewById(R.id.profilesContainer);
+        if (profileListTriggerIcon.isSelected()) {
+            //Hide
+            profilesContainer.setVisibility(View.INVISIBLE);
+            mainMenuItemContainer.setVisibility(View.VISIBLE);
+        } else {
+            //Show
+            profilesContainer.setVisibility(View.VISIBLE);
+            mainMenuItemContainer.setVisibility(View.INVISIBLE);
+        }
+        profileListTriggerIcon.setSelected(!profileListTriggerIcon.isSelected());
+    }
+
+    private void updateProfileInfo(ProfileDto profile) {
+        ApplicationPreferences.getInstance().setProfileId(profile.getProfile().getId());
+        ApplicationPreferences.getInstance().setUserFullName(StringUtil
+                .getCapitalizedUserName(profile.getProfile().getDemographics().getPayload()
+                        .getPersonalDetails().getFirstName(), profile.getProfile().getDemographics()
+                        .getPayload().getPersonalDetails().getLastName()));
+        ApplicationPreferences.getInstance().setUserId(profile.getProfile().getDemographics().getPayload()
+                .getPersonalDetails().getEmailAddress());
+        ApplicationPreferences.getInstance().setUserPhotoUrl(profile.getProfile().getDemographics().getPayload()
+                .getPersonalDetails().getProfilePhoto());
+    }
+
+    private void updateProfileView() {
+        TextView userFullNameTextView = navigationView.findViewById(R.id.userNameTextView);
+        userFullNameTextView.setText(ApplicationPreferences.getInstance().getFullName());
+        TextView menuUserEmailTextView = navigationView.findViewById(R.id.menuUserEmailTextView);
+        menuUserEmailTextView.setText(getApplicationPreferences().getUserId());
+        setUserImage(ApplicationPreferences.getInstance().getUserPhotoUrl());
+    }
+
+    protected abstract void onProfileChanged(ProfileDto profile);
+
+    private void setUserImage(String imageUrl) {
         ImageView userImageView = navigationView.findViewById(R.id.appointmentDrawerIdImageView);
         if (!StringUtil.isNullOrEmpty(imageUrl)) {
             Picasso.with(this)
@@ -168,21 +304,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        setUserImage();
         updateBadgeCounterViews();
-        setUserFullName();
-        if (appointmentsDrawerUserIdTextView != null) {
-            String userId = getApplicationPreferences().getUserId();
-            if (userId != null) {
-                appointmentsDrawerUserIdTextView.setText(userId);
-            } else {
-                appointmentsDrawerUserIdTextView.setText("");
-            }
-        }
-    }
-
-    private void setUserFullName() {
-        userFullNameTextView.setText(ApplicationPreferences.getInstance().getFullName());
+        updateProfileView();
     }
 
     @Override
@@ -248,11 +371,11 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
                     payload = new Gson().toJson(signInDTO);
                     break;
                 default:
-                    drawer.closeDrawer(GravityCompat.START);
+                    closeMenu();
             }
 
             if (transition == null || transition.getUrl() == null) {
-                drawer.closeDrawer(GravityCompat.START);
+                closeMenu();
                 return;
             }
 
@@ -267,9 +390,14 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
                 getWorkflowServiceHelper().execute(transition, callback, queryMap, headersMap);
             }
 
-            drawer.closeDrawer(GravityCompat.START);
+            closeMenu();
         }
     };
+
+    private void closeMenu() {
+        findViewById(R.id.profileListTriggerIcon).setSelected(false);
+        drawer.closeDrawer(GravityCompat.START);
+    }
 
     private void startActivity(Class<?> clazz) {
         Intent intent = new Intent(this, clazz);
@@ -307,6 +435,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             getAppAuthorizationHelper().setAccessToken(null);
+            ApplicationPreferences.getInstance().setProfileId(null);
             navigateToWorkflow(workflowDTO);
         }
 
@@ -468,25 +597,30 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
     }
 
     protected void updateBadgeCounterViews() {
-        int messageBadgeCounter = ApplicationPreferences.getInstance().getMessagesBadgeCounter();
         CustomMenuItem messageMenuItem = navigationView.findViewById(R.id.messagesMenuItem);
-        if (messageBadgeCounter > 0) {
-            messageMenuItem.setAlertCounter(messageBadgeCounter);
-        }
-
-        int formBadgeCounter = ApplicationPreferences.getInstance().getFormsBadgeCounter();
         CustomMenuItem formsBadgeCounter = navigationView.findViewById(R.id.formsMenuItem);
-        if (formBadgeCounter > 0) {
-            formsBadgeCounter.setAlertCounter(formBadgeCounter);
-        }
+        if (StringUtil.isNullOrEmpty(ApplicationPreferences.getInstance().getProfileId())) {
+            int messageBadgeCounter = ApplicationPreferences.getInstance().getMessagesBadgeCounter();
+            if (messageBadgeCounter > 0) {
+                messageMenuItem.setAlertCounter(messageBadgeCounter);
+            }
 
-        int badgeSums = messageBadgeCounter + formBadgeCounter;
-        if (badgeSums > 0) {
-            //Uncomment this for showing the number of pending badges in the hamburger menu
+            int formBadgeCounter = ApplicationPreferences.getInstance().getFormsBadgeCounter();
+            if (formBadgeCounter > 0) {
+                formsBadgeCounter.setAlertCounter(formBadgeCounter);
+            }
+
+            int badgeSums = messageBadgeCounter + formBadgeCounter;
+            if (badgeSums > 0) {
+                //Uncomment this for showing the number of pending badges in the hamburger menu
 //            badgeDrawable.setText(String.valueOf(badgeSums));
-            badgeDrawable.setEnabled(true);
+                badgeDrawable.setEnabled(true);
+            } else {
+                badgeDrawable.setEnabled(false);
+            }
         } else {
-            badgeDrawable.setEnabled(false);
+            messageMenuItem.hideBadgeCounter();
+            formsBadgeCounter.hideBadgeCounter();
         }
     }
 

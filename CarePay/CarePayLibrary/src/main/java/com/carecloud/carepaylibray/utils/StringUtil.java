@@ -388,6 +388,9 @@ public class StringUtil {
      * @return modified String
      */
     public static String capitalize(String capString) {
+        if (isNullOrEmpty(capString)) {
+            return "";
+        }
         StringBuffer capBuffer = new StringBuffer();
         Matcher capMatcher = Pattern.compile("([a-z])([a-z]*)", Pattern.CASE_INSENSITIVE).matcher(capString);
         while (capMatcher.find()) {

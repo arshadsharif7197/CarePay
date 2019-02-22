@@ -1,5 +1,6 @@
-package com.carecloud.carepay.service.library.unifiedauth;
+package com.carecloud.carepaylibray.profile;
 
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -23,6 +24,17 @@ public class Profile {
     @Expose
     @SerializedName("user_id")
     private String userId;
+    @Expose
+    @SerializedName("profile_id")
+    private String profileId;
+    @Expose
+    @SerializedName("profile_name")
+    private String profileName;
+    @Expose
+    @SerializedName("demographics")
+    private DemographicPayloadInfoDTO demographics;
+
+    private transient boolean delegate;
 
     public String getId() {
         return id;
@@ -62,5 +74,37 @@ public class Profile {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(String profileId) {
+        this.profileId = profileId;
+    }
+
+    public String getProfileName() {
+        return profileName;
+    }
+
+    public void setProfileName(String profileName) {
+        this.profileName = profileName;
+    }
+
+    public DemographicPayloadInfoDTO getDemographics() {
+        return demographics;
+    }
+
+    public void setDemographics(DemographicPayloadInfoDTO demographics) {
+        this.demographics = demographics;
+    }
+
+    public boolean isDelegate() {
+        return delegate;
+    }
+
+    public void setDelegate(boolean delegate) {
+        this.delegate = delegate;
     }
 }
