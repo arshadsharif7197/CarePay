@@ -41,7 +41,7 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
     protected ScheduleAppointmentInterface callback;
     protected AppointmentsResultModel appointmentModelDto;
     protected AppointmentDTO appointmentDTO;
-    private UserPracticeDTO selectedPractice;
+    protected UserPracticeDTO selectedPractice;
     protected boolean autoScheduleAppointments;
     protected String patientId;
     protected Button requestAppointmentButton;
