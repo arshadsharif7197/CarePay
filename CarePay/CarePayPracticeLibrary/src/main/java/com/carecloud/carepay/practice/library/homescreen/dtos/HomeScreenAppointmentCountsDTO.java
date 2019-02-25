@@ -10,20 +10,20 @@ import com.google.gson.annotations.SerializedName;
 public class HomeScreenAppointmentCountsDTO {
     @SerializedName("Pending")
     @Expose
-    private Integer pendingCount;
+    private int pendingCount;
     @SerializedName("Checked-In")
     @Expose
-    private Integer checkedInCount;
+    private int checkedInCount;
 
     @SerializedName("Cancelled")
     @Expose
-    private Integer cancelledCount;
+    private int cancelledCount;
     @SerializedName("Requested")
     @Expose
-    private Integer requestedCount;
+    private int requestedCount;
     @SerializedName("Checking-In")
     @Expose
-    private Integer checkingInCount;
+    private int checkingInCount;
 
 
 
@@ -32,8 +32,8 @@ public class HomeScreenAppointmentCountsDTO {
      * @return
      * The pendingCount
      */
-    public Integer getPendingCount() {
-        return pendingCount ==null?0: pendingCount;
+    public int getPendingCount() {
+        return pendingCount;
     }
 
     /**
@@ -41,7 +41,7 @@ public class HomeScreenAppointmentCountsDTO {
      * @param pendingCount
      * The Pending
      */
-    public void setPendingCount(Integer pendingCount) {
+    public void setPendingCount(int pendingCount) {
         this.pendingCount = pendingCount;
     }
 
@@ -50,8 +50,8 @@ public class HomeScreenAppointmentCountsDTO {
      * @return
      * The checkedInCount
      */
-    public Integer getCheckedInCount() {
-        return checkedInCount ==null?0: checkedInCount;
+    public int getCheckedInCount() {
+        return checkedInCount;
     }
 
     /**
@@ -59,31 +59,31 @@ public class HomeScreenAppointmentCountsDTO {
      * @param checkedInCount
      * The Checked-In
      */
-    public void setCheckedInCount(Integer checkedInCount) {
+    public void setCheckedInCount(int checkedInCount) {
         this.checkedInCount = checkedInCount;
     }
 
-    public Integer getCancelledCount() {
+    public int getCancelledCount() {
         return cancelledCount;
     }
 
-    public void setCancelledCount(Integer cancelledCount) {
+    public void setCancelledCount(int cancelledCount) {
         this.cancelledCount = cancelledCount;
     }
 
-    public Integer getRequestedCount() {
+    public int getRequestedCount() {
         return requestedCount;
     }
 
-    public void setRequestedCount(Integer requestedCount) {
+    public void setRequestedCount(int requestedCount) {
         this.requestedCount = requestedCount;
     }
 
-    public Integer getCheckingInCount() {
+    public int getCheckingInCount() {
         return checkingInCount;
     }
 
-    public void setCheckingInCount(Integer checkingInCount) {
+    public void setCheckingInCount(int checkingInCount) {
         this.checkingInCount = checkingInCount;
     }
 }

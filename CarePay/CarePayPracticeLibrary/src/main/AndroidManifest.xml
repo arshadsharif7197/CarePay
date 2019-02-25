@@ -17,6 +17,7 @@
             android:name=".adhocforms.AdHocFormsActivity"
             android:screenOrientation="sensorLandscape" />
         <service android:name=".payments.IntegratedPaymentsQueueUploadService" android:enabled="true"/>
+        <service android:name=".homescreen.AppointmentCountUpdateService" android:enabled="true" />
     </application>
 
 </manifest>
