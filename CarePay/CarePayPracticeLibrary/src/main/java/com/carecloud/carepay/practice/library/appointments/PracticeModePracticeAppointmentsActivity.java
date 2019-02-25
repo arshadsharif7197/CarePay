@@ -452,6 +452,9 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         } else if (appointmentPayloadDTO.canCheckOut()) {
             dialogStyle = AppointmentDisplayStyle.CHECKED_IN;
 
+        } else if (appointmentPayloadDTO.isAppointmentOver() && appointmentPayloadDTO.getAppointmentStatus().getCode().equals(CarePayConstants.PENDING)) {
+            dialogStyle = AppointmentDisplayStyle.MISSED;
+
         } else if (appointmentPayloadDTO.isAppointmentOver() || appointmentPayloadDTO.isAppointmentFinished()) {
             //todo finished appt options, Doing nothing for now
 
@@ -616,8 +619,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
         if (appointmentPayloadDTO.getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
             rejectAppointment(appointmentDTO);
-        } else if (appointmentPayloadDTO.isAppointmentOver()) {
-            //TODO Add future logic
         } else {
             CancelAppointmentConfirmDialogFragment fragment = CancelAppointmentConfirmDialogFragment
                     .newInstance(appointmentDTO);
