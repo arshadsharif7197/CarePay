@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.notifications.models;
 
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.base.dtos.BasePayloadDto;
 import com.carecloud.carepaylibray.base.models.Paging;
@@ -25,6 +26,9 @@ public class NotificationsPayload extends BasePayloadDto {
     @SerializedName("demographics")
     @Expose
     private DemographicPayloadDTO demographicDTO = new DemographicPayloadDTO();
+    @SerializedName("practice_information")
+    @Expose
+    private List<UserPracticeDTO> practiceInformation = new ArrayList<>();
 
     @SerializedName("page_details")
     @Expose
@@ -60,5 +64,13 @@ public class NotificationsPayload extends BasePayloadDto {
 
     public void setPaging(Paging paging) {
         this.paging = paging;
+    }
+
+    public List<UserPracticeDTO> getPracticeInformation() {
+        return practiceInformation;
+    }
+
+    public void setPracticeInformation(List<UserPracticeDTO> practiceInformation) {
+        this.practiceInformation = practiceInformation;
     }
 }

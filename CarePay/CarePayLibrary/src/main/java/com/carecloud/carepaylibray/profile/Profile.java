@@ -31,6 +31,9 @@ public class Profile {
     @SerializedName("profile_name")
     private String profileName;
     @Expose
+    @SerializedName("breeze_user")
+    private boolean breezeUser;
+    @Expose
     @SerializedName("demographics")
     private DemographicPayloadInfoDTO demographics;
 
@@ -106,5 +109,13 @@ public class Profile {
 
     public void setDelegate(boolean delegate) {
         this.delegate = delegate;
+    }
+
+    public boolean isBreezeUser() {
+        return breezeUser;
+    }
+
+    public void setBreezeUser(boolean breezeUser) {
+        this.breezeUser = breezeUser;
     }
 }

@@ -27,18 +27,20 @@ import com.carecloud.carepay.patient.myhealth.fragments.MedicationDetailFragment
 import com.carecloud.carepay.patient.myhealth.fragments.MyHealthListFragment;
 import com.carecloud.carepay.patient.myhealth.fragments.MyHealthMainFragment;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.profile.Profile;
-import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.profile.Profile;
+import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.FileDownloadUtil;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -104,7 +106,7 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
         super.onResume();
         selectMenuItem(R.id.myHealthMenuItem);
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-            displayToolbar(true, Label.getLabel("navigation_link_my_health"));
+            displayToolbar(true, getScreenTitle(Label.getLabel("navigation_link_my_health")));
         }
     }
 
@@ -269,4 +271,16 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
         return myHealthDto.getPayload().getDelegate();
     }
 
+    @Override
+    protected String getScreenTitle(String mainTitle) {
+        if (StringUtil.isNullOrEmpty(ApplicationPreferences.getInstance().getProfileId())) {
+            return mainTitle;
+        } else {
+            if (ApplicationPreferences.getInstance().getUserLanguage().equals("en")) {
+                return String.format("%s's %s", profileName, Label.getLabel("my_health_delegate_title"));
+            } else {
+                return String.format("%s de %s", Label.getLabel("my_health_delegate_title"), profileName);
+            }
+        }
+    }
 }

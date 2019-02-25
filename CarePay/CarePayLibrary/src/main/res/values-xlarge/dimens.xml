@@ -37,4 +37,5 @@
     <dimen name="badgeCounterEndMargin">10dp</dimen>
     <dimen name="profileListTriggerIconSize">20dp</dimen>
     <dimen name="profileListTriggerHorizontalMargin">5dp</dimen>
+    <dimen name="profileListTriggerIconPadding">5dp</dimen>
 </resources>

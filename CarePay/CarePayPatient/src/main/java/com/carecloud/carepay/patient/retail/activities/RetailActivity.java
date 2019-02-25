@@ -18,8 +18,6 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.profile.Profile;
-import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.interfaces.DTO;
@@ -28,6 +26,8 @@ import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.profile.Profile;
+import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.retail.fragments.RetailFragment;
 import com.carecloud.carepaylibray.retail.models.RetailModel;
 import com.carecloud.carepaylibray.retail.models.RetailPracticeDTO;
@@ -113,7 +113,7 @@ public class RetailActivity extends MenuPatientActivity implements RetailPatient
     protected void onResume() {
         super.onResume();
         selectMenuItem(R.id.shopMenuItem);
-        title = Label.getLabel("shop_button");
+        title = getScreenTitle(Label.getLabel("shop_button"));
         if (!hideToolbar) {
             displayToolbar(true);
         }

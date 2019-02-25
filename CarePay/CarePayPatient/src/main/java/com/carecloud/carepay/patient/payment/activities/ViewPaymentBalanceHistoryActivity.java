@@ -28,8 +28,6 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.profile.Profile;
-import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
@@ -68,6 +66,8 @@ import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
+import com.carecloud.carepaylibray.profile.Profile;
+import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
@@ -75,12 +75,12 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.gms.wallet.MaskedWallet;
 
-import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_BALANCES;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_BALANCES;
 
 /**
  * Created by jorge on 29/12/16
@@ -102,7 +102,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        toolBarTitle = Label.getLabel("payment_patient_balance_toolbar");
+        toolBarTitle = getScreenTitle(Label.getLabel("payment_patient_balance_toolbar"));
         displayToolbar(true, toolBarTitle);
         paymentsDTO = getConvertedDTO(PaymentsModel.class);
         inflateDrawer();
@@ -699,7 +699,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                     .newInstance(workflowDTO, isOneTimePayment);
             displayDialogFragment(confirmationFragment, false);
 
-            if(isOneTimePayment){
+            if (isOneTimePayment) {
                 MixPanelUtil.incrementPeopleProperty(getString(R.string.count_one_time_payments_completed), 1);
             }
         }

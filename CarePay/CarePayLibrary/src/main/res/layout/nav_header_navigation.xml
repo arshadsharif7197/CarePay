@@ -40,8 +40,10 @@
         android:layout_height="@dimen/profileListTriggerIconSize"
         android:layout_below="@id/userNameTextView"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="@dimen/profileListTriggerHorizontalMargin"
-        android:src="@drawable/icon_drop_down" />
+        android:background="?selectableItemBackground"
+        android:paddingTop="@dimen/profileListTriggerIconPadding"
+        android:paddingBottom="@dimen/profileListTriggerIconPadding"
+        android:src="@drawable/ic_profile_arrow" />
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/menuUserEmailTextView"

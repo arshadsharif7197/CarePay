@@ -7,12 +7,14 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.patientsplash.SplashActivity;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.profile.Profile;
 import com.carecloud.carepaylibray.profile.ProfileDto;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 /**
  * Created by lmenendez on 7/20/17
@@ -30,8 +32,13 @@ public class NotificationProxyActivity extends MenuPatientActivity {
             intent.putExtra(CarePayConstants.OPEN_NOTIFICATIONS, true);
             startActivity(intent);
         } else {
-            TransitionDTO transition = getTransitionNotifications();
-            getWorkflowServiceHelper().execute(transition, notificationCallback);
+            if (StringUtil.isNullOrEmpty(ApplicationPreferences.getInstance().getProfileId())) {
+                TransitionDTO transition = getTransitionNotifications();
+                getWorkflowServiceHelper().execute(transition, notificationCallback);
+            } else {
+                //disable notification click functionality when the user is on a different profile than the logged one
+                finish();
+            }
         }
     }
 

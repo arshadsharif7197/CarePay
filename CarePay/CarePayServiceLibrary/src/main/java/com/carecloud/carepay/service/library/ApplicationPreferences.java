@@ -231,7 +231,7 @@ public class ApplicationPreferences {
             return photoUrl;
         }
 
-        return readStringFromSharedPref(PREFERENCE_PATIENT_PHOTO_URL);
+        return readStringFromSharedPref(PREFERENCE_PATIENT_PHOTO_URL, "");
     }
 
     /**

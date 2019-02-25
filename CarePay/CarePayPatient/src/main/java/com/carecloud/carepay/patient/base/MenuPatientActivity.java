@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -46,6 +48,7 @@ import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.profile.UserLinks;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -80,6 +83,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
     protected Toolbar toolbar;
     protected boolean toolbarVisibility = false;
     private BadgeDrawerArrowDrawable badgeDrawable;
+    protected static String profileName;
 
     @Override
     protected void onCreate(Bundle icicle) {
@@ -94,7 +98,9 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
         if (getApplicationPreferences().isLandingScreen()) {
             setInitialData();
         }
-        populateProfilesList(profileData.getRepresentedUsers());
+        if (profileData != null) {
+            populateProfilesList(profileData.getRepresentedUsers());
+        }
     }
 
     private void setInitialData() {
@@ -172,11 +178,17 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
             @Override
             public void onClick(View v) {
                 toggleProfileList(profileListTriggerIcon);
+                rotateIcon(v);
             }
         });
     }
 
     private void resetViews() {
+        View profileListTriggerIcon = findViewById(R.id.profileListTriggerIcon);
+        if (profileListTriggerIcon.isSelected()) {
+            profileListTriggerIcon.setSelected(false);
+            rotateIcon(profileListTriggerIcon);
+        }
         View mainMenuItemContainer = findViewById(R.id.mainMenuItemContainer);
         View profilesContainer = findViewById(R.id.profilesContainer);
         mainMenuItemContainer.setVisibility(View.VISIBLE);
@@ -198,15 +210,32 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
                         updateProfileList(profile);
                         updateBadgeCounterViews();
                         onProfileChanged(profile);
+                        updateMenu(profile);
                         closeMenu();
                     }
                 });
                 TextView nameTextView = row.findViewById(R.id.menuIconLabelTextView);
                 nameTextView.setText(StringUtil.capitalize(profile.getProfile().getName()));
+                TextView userShortNameTextView = row.findViewById(R.id.userShortName);
+                userShortNameTextView.setText(StringUtil.getShortName(profile.getProfile().getName()));
+                userShortNameTextView.setVisibility(View.VISIBLE);
+                PicassoHelper.get().loadImage(getContext(), (ImageView) row.findViewById(R.id.menuIconImageView),
+                        userShortNameTextView, profile.getProfile().getDemographics().getPayload()
+                                .getPersonalDetails().getProfilePhoto(),
+                        getContext().getResources().getDimensionPixelSize(R.dimen.menuIconSize));
+
                 profilesContainer.addView(row);
             }
         } else {
             findViewById(R.id.profileListTriggerIcon).setVisibility(View.GONE);
+        }
+    }
+
+    private void updateMenu(ProfileDto profile) {
+        if (profile.getProfile().isBreezeUser()) {
+            navigationView.findViewById(R.id.settingsMenuItem).setVisibility(View.VISIBLE);
+        } else {
+            navigationView.findViewById(R.id.settingsMenuItem).setVisibility(View.GONE);
         }
     }
 
@@ -251,6 +280,19 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
 
     protected abstract Profile getCurrentProfile();
 
+    private void rotateIcon(View view) {
+        Animation rotation;
+        if (view.isSelected()) {
+            rotation = AnimationUtils.loadAnimation(this, R.anim.ic_profile_arrow_rotation);
+        } else {
+            rotation = AnimationUtils.loadAnimation(this, R.anim.ic_profile_arrow_rotation_unselected);
+        }
+        rotation.setRepeatCount(0);
+        rotation.setDuration(250);
+        view.startAnimation(rotation);
+        rotation.setFillAfter(true);
+    }
+
     private void toggleProfileList(ImageView profileListTriggerIcon) {
         View mainMenuItemContainer = findViewById(R.id.mainMenuItemContainer);
         View profilesContainer = findViewById(R.id.profilesContainer);
@@ -276,6 +318,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
                 .getPersonalDetails().getEmailAddress());
         ApplicationPreferences.getInstance().setUserPhotoUrl(profile.getProfile().getDemographics().getPayload()
                 .getPersonalDetails().getProfilePhoto());
+        profileName = StringUtil.capitalize(profile.getProfile().getDemographics().getPayload()
+                .getPersonalDetails().getFirstName());
     }
 
     private void updateProfileView() {
@@ -298,6 +342,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
                     .centerCrop()
                     .transform(new CircleImageTransform())
                     .into(userImageView);
+        } else {
+            userImageView.setImageDrawable(getResources().getDrawable(R.drawable.icn_placeholder_user_profile_png));
         }
     }
 
@@ -395,7 +441,9 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
     };
 
     private void closeMenu() {
-        findViewById(R.id.profileListTriggerIcon).setSelected(false);
+        View profileListTriggerIcon = findViewById(R.id.profileListTriggerIcon);
+        profileListTriggerIcon.setSelected(false);
+        rotateIcon(profileListTriggerIcon);
         drawer.closeDrawer(GravityCompat.START);
     }
 
@@ -636,6 +684,18 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
         super.onDestroy();
         if (badgeReceiver != null) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(badgeReceiver);
+        }
+    }
+
+    protected String getScreenTitle(String mainTitle) {
+        if (StringUtil.isNullOrEmpty(ApplicationPreferences.getInstance().getProfileId())) {
+            return mainTitle;
+        } else {
+            if (ApplicationPreferences.getInstance().getUserLanguage().equals("en")) {
+                return String.format("%s's %s", profileName, mainTitle);
+            } else {
+                return String.format("%s de %s", mainTitle, profileName);
+            }
         }
     }
 }

@@ -58,7 +58,6 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         } else {
             resumeOnCreate();
         }
-
     }
 
     private void callAppointmentService() {
@@ -120,7 +119,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         super.onResume();
         selectMenuItem(R.id.appointmentMenuItem);
         if (!toolbarHidden) {
-            displayToolbar(true, Label.getLabel("navigation_link_appointments"));
+            displayToolbar(true, getScreenTitle(Label.getLabel("navigation_link_appointments")));
         }
     }
 
@@ -202,6 +201,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
     @Override
     protected void onProfileChanged(ProfileDto profile) {
+        displayToolbar(true, getScreenTitle(Label.getLabel("navigation_link_appointments")));
         callAppointmentService();
     }
 

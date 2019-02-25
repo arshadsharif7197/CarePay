@@ -20,6 +20,20 @@
         android:tint="@color/Feldgrau" />
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/userShortName"
+        android:layout_width="@dimen/menuIconSize"
+        android:layout_height="@dimen/menuIconSize"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/menuIconStartMargin"
+        android:layout_gravity="center"
+        android:background="@drawable/round_list_tv_dark"
+        android:src="@drawable/icn_placeholder_user_profile_png"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_15"
+        android:visibility="gone"
+        app:customAssetFont="gotham_rounded_medium" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/badgeCounter"
         android:layout_width="@dimen/menuItemBadgeSize"
         android:layout_height="@dimen/menuItemBadgeSize"

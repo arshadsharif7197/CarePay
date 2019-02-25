@@ -74,7 +74,12 @@ public class PicassoHelper {
     }
 
     public void loadImage(Context context, final ImageView imageView, final View viewToHide, String photoUrl) {
-        int size = context.getResources().getDimensionPixelSize(R.dimen.payment_details_dialog_icon_size);
+        loadImage(context, imageView, viewToHide, photoUrl,
+                context.getResources().getDimensionPixelSize(R.dimen.payment_details_dialog_icon_size));
+    }
+
+    public void loadImage(Context context, final ImageView imageView, final View viewToHide, String photoUrl,
+                          int size) {
         Picasso.with(context).load(photoUrl)
                 .resize(size, size)
                 .centerCrop()

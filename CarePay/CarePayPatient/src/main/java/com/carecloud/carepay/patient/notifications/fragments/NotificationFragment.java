@@ -264,7 +264,12 @@ public class NotificationFragment extends BaseFragment
 
     @Override
     public UserPracticeDTO getUserPracticeById(String practiceId) {
-        return getApplicationPreferences().getUserPractice(practiceId);
+        for (UserPracticeDTO practice : notificationsDTO.getPayload().getPracticeInformation()) {
+            if (practice.getPracticeId().equals(practiceId)) {
+                return practice;
+            }
+        }
+        return null;
     }
 
     private void loadNextPage(boolean refresh) {

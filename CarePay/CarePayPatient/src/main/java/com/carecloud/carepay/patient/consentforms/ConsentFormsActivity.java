@@ -16,14 +16,14 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.profile.Profile;
-import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.UserFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.profile.Profile;
+import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.util.HashMap;
@@ -89,7 +89,7 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Consent
         super.onResume();
         selectMenuItem(R.id.formsMenuItem);
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-            displayToolbar(true, Label.getLabel("adhoc_show_forms_button_label"));
+            displayToolbar(true, getScreenTitle(Label.getLabel("adhoc_show_forms_button_label")));
         }
     }
 
@@ -98,7 +98,7 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Consent
     public void onBackPressed() {
         super.onBackPressed();
         if (getSupportFragmentManager().getBackStackEntryCount() < 1) {
-            displayToolbar(true, Label.getLabel("adhoc_show_forms_button_label"));
+            displayToolbar(true, getScreenTitle(Label.getLabel("adhoc_show_forms_button_label")));
         }
     }
 
@@ -166,6 +166,7 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Consent
 
     @Override
     protected void onProfileChanged(ProfileDto profile) {
+        displayToolbar(true, getScreenTitle(Label.getLabel("adhoc_show_forms_button_label")));
         callConsentFormsService(null);
     }
 
