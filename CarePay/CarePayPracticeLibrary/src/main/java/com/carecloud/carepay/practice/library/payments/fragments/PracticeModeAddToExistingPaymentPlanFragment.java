@@ -232,9 +232,8 @@ public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePa
     }
 
     private int getRemainingPayments() {
-        int remaining = paymentPlan.getPayload().getPaymentPlanDetails().getInstallments() -
+        return paymentPlan.getPayload().getPaymentPlanDetails().getInstallments() -
                 paymentPlan.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
-        return remaining < 2 ? 2 : remaining;
     }
 
 }
