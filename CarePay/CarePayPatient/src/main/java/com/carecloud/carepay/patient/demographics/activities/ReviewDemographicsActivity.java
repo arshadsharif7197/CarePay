@@ -133,7 +133,6 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
                             Label.getLabel("checkin_confirm_exit_message"),
                             Label.getLabel("button_no"),
                             Label.getLabel("button_yes"));
-            fragment.setNegativeAction(true);
             fragment.setCallback(this);
             displayDialogFragment(fragment, false);
             return true;
