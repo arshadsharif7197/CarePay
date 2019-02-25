@@ -111,8 +111,7 @@ public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePa
             selectedDateOptions = dayOfWeekOptions;
         }
         paymentDateEditText.setText(dateOption.getLabel());
-        installmentsEditText.setText(String.valueOf(paymentPlan.getPayload()
-                .getPaymentPlanDetails().getInstallments()));
+        installmentsEditText.setText(String.valueOf(getRemainingPayments()));
     }
 
     @Override
@@ -177,7 +176,8 @@ public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePa
         PaymentPlanModel paymentPlanModel = new PaymentPlanModel();
         paymentPlanModel.setAmount(amounthPayment);
         paymentPlanModel.setFrequencyCode(frequencyOption.getName());
-        paymentPlanModel.setInstallments(installments);
+        paymentPlanModel.setInstallments(installments +
+                paymentPlan.getPayload().getPaymentPlanDetails().getFilteredHistory().size());
         paymentPlanModel.setEnabled(true);
 
         if (frequencyOption.getName().equals(PaymentPlanModel.FREQUENCY_MONTHLY)) {
@@ -230,4 +230,10 @@ public class PracticeModeAddToExistingPaymentPlanFragment extends PracticeModePa
             }
         }, new Gson().toJson(postModel), queryMap);
     }
+
+    private int getRemainingPayments() {
+        return paymentPlan.getPayload().getPaymentPlanDetails().getInstallments() -
+                paymentPlan.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
+    }
+
 }

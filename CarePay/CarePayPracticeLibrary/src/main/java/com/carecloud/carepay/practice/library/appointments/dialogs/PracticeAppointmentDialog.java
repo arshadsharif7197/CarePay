@@ -198,6 +198,12 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
                 rightActionLabel = Label.getLabel("start_checkout_label");
                 middleActionLabel = Label.getLabel("adhoc_show_forms_button_label");
                 break;
+            case MISSED:
+                headerColor = R.color.dark_blue;
+                timeColor = R.color.white;
+                leftActionLabel = Label.getLabel("cancel_appointment_short_label");
+                rightActionLabel = Label.getLabel("start_checkin_label");
+                middleActionLabel = Label.getLabel("adhoc_show_forms_button_label");
             default:
                 headerColor = R.color.dark_blue;
                 timeColor = R.color.white;
@@ -250,6 +256,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
                     enableById(R.id.button_left_action, false);
                 }
                 break;
+            case MISSED:
             default:
                 enableById(R.id.button_left_action, true);
                 enableById(R.id.button_right_action, true);
