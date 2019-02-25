@@ -161,6 +161,12 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
             }
         });
         locationCard = locationContainer.findViewById(R.id.stepContainer);
+        locationCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFragment(LocationListFragment.newInstance(selectedPractice, selectedVisitType, selectedResource));
+            }
+        });
         ImageView profilePicImageView = locationCard.findViewById(R.id.profilePicImageView);
         profilePicImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_step_location));
     }
@@ -178,6 +184,12 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
             }
         });
         visitTypeCard = visitTypeContainer.findViewById(R.id.stepContainer);
+        visitTypeCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFragment(VisitTypeListFragment.newInstance(selectedPractice, selectedLocation, selectedResource));
+            }
+        });
         ImageView profilePicImageView = visitTypeCard.findViewById(R.id.profilePicImageView);
         profilePicImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_visit_type_placeholder));
 
@@ -196,6 +208,12 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
             }
         });
         providerCard = providerContainer.findViewById(R.id.stepContainer);
+        providerCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFragment(ProviderListFragment.newInstance(selectedPractice, selectedVisitType, selectedLocation));
+            }
+        });
     }
 
     @Override
