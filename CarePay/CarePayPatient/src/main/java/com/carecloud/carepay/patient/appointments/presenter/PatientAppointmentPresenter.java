@@ -312,7 +312,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                             PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
                                     .newInstance(paymentsModel, Double.parseDouble(cancellationFee.getAmount()),
                                             Label.getLabel("appointment_cancellation_fee_title"));
-                            viewHandler.replaceFragment(prepaymentFragment, true);
+                            viewHandler.addFragment(prepaymentFragment, true);
 
                             String[] params = {getString(R.string.param_payment_amount),
                                     getString(R.string.param_provider_id),
