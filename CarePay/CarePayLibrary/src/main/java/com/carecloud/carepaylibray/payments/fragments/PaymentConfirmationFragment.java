@@ -99,15 +99,19 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
             workflowDTO = DtoHelper.getConvertedDTO(WorkflowDTO.class, args);
             paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             patientPaymentPayload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
-            AppointmentsResultModel appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
-            appointmentDTO = getAppointmentDto(appointmentsResultModel);
+            appointmentDTO = getAppointmentDto(workflowDTO);
         }
         currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
     }
 
-    private AppointmentDTO getAppointmentDto(AppointmentsResultModel appointmentsResultModel) {
-        if (appointmentsResultModel.getPayload().getAppointments().size() > 0) {
-            return appointmentsResultModel.getPayload().getAppointments().get(0);
+    private AppointmentDTO getAppointmentDto(WorkflowDTO workflowDTO) {
+        try {
+            AppointmentsResultModel appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
+            if (appointmentsResultModel.getPayload().getAppointments().size() > 0) {
+                return appointmentsResultModel.getPayload().getAppointments().get(0);
+            }
+        } catch (Exception e) {
+            appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, workflowDTO.getPayload().getAsJsonObject("appointments"));
         }
         return null;
     }
