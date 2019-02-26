@@ -2,6 +2,7 @@ package com.carecloud.carepay.patient.appointments.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -106,6 +107,16 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             case PaymentConstants.REQUEST_CODE_FULL_WALLET:
             case PaymentConstants.REQUEST_CODE_GOOGLE_PAYMENT:
                 presenter.forwardAndroidPayResult(requestCode, resultCode, data);
+                break;
+            case PatientAppointmentPresenter.CHECK_IN_FLOW_REQUEST_CODE:
+                if (resultCode == RESULT_CANCELED) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            refreshAppointments();
+                        }
+                    }, 100);
+                }
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);

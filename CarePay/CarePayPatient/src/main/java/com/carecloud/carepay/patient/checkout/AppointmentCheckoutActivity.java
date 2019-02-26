@@ -505,8 +505,9 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
                     queryMap,
                     header);
         } else {
-            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO,
-                    getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO));
+            Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
+            extra.putBoolean(CarePayConstants.REFRESH, true);
+            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, extra);
         }
     }
 
@@ -578,8 +579,12 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
                 if (workflowDTO.getState().equals(NavigationStateConstants.SURVEYS_CHECKOUT)) {
                     expectsResult = true;
                 }
+
+                Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
+                extra.putBoolean(CarePayConstants.REFRESH, true);
+
                 PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, expectsResult,
-                        SurveyActivity.FLAG_SURVEY_FLOW, getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO));
+                        SurveyActivity.FLAG_SURVEY_FLOW, extra);
 
                 completeCheckout(paymentMade, paymentAmount, expectsResult, completedPaymentPlan);
             }
