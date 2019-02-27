@@ -202,6 +202,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
                 if (onlySelectMode) {
                     callback.onCreditCardSelected(selectedCreditCard);
                 } else {
+                    nextButton.setEnabled(false);
                     IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
                     if (postModel != null && postModel.getAmount() > 0) {
                         processPayment(postModel);
@@ -350,6 +351,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
+            nextButton.setEnabled(true);
 
             PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
@@ -376,6 +378,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             showErrorNotification(exceptionMessage);
+            nextButton.setEnabled(true);
             System.out.print(exceptionMessage);
 
             String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
