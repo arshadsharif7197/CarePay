@@ -381,7 +381,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_1dp"
                     android:layout_below="@id/phoneValueTextView"
-                    android:background="@color/light_gray" />
+                    android:background="@color/light_gray"
+                    android:visibility="gone" />
 
             </RelativeLayout>
 
@@ -403,6 +404,7 @@
                 android:paddingTop="@dimen/dimen_10dp"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_14"
+                android:visibility="gone"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="my_health_download_medical_record_button_label"
                 tools:text="DOWNLOAD MEDICAL RECORD" />
