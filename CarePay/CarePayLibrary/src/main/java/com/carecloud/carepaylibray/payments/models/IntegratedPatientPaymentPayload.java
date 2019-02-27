@@ -36,7 +36,7 @@ public class IntegratedPatientPaymentPayload {
     private PapiPaymentMethod paymentMethod;
 
     @SerializedName("metadata")
-    private IntegratedPatientPaymentMetadata metadata;
+    private IntegratedPatientPaymentMetadata metadata = new IntegratedPatientPaymentMetadata();
 
     public double getAmount() {
         return amount;
