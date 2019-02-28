@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.library.homescreen;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
@@ -30,7 +31,7 @@ public class AppointmentCountUpdateService extends IntentService {
     public static final String KEY_PRACTICE_ID = "practice_id";
     public static final String KEY_PRACTICE_MGMT = "practice_mgmt";
 
-    public static final int INTERVAL = 1000 * 30; //30s
+    public static final int INTERVAL = 1000 * 60; //30s
 
     private String transition;
     private String practiceId;
@@ -87,16 +88,41 @@ public class AppointmentCountUpdateService extends IntentService {
         }
     }
 
+    private static PendingIntent getPendingService(Context context, IntentParams params) {
+        Intent scheduledService = new Intent(context, AppointmentCountUpdateService.class);
+        if(params != null) {
+            scheduledService.putExtra(AppointmentCountUpdateService.KEY_TRANSITION, params.transition);
+            scheduledService.putExtra(AppointmentCountUpdateService.KEY_PRACTICE_ID, params.practiceId);
+            scheduledService.putExtra(AppointmentCountUpdateService.KEY_PRACTICE_MGMT, params.practiceMgmt);
+        }
+        return PendingIntent.getService(context, 0x222, scheduledService, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
     private void scheduleAppointmentCountUpdate() {
-        Intent scheduledService = new Intent(getBaseContext(), AppointmentCountUpdateService.class);
-        scheduledService.putExtra(AppointmentCountUpdateService.KEY_TRANSITION, transition);
-        scheduledService.putExtra(AppointmentCountUpdateService.KEY_PRACTICE_ID, practiceId);
-        scheduledService.putExtra(AppointmentCountUpdateService.KEY_PRACTICE_MGMT, practiceMgmt);
-        PendingIntent pendingIntent = PendingIntent.getService(getBaseContext(), 0x222, scheduledService, PendingIntent.FLAG_UPDATE_CURRENT);
+        IntentParams params = new IntentParams();
+        params.transition = transition;
+        params.practiceId = practiceId;
+        params.practiceMgmt = practiceMgmt;
+
+        PendingIntent pendingIntent = getPendingService(getBaseContext(), params);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         if (alarmManager != null) {
             alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + INTERVAL, pendingIntent);
         }
+    }
+
+    public static void cancelScheduledServiceRun(Context context) {
+        PendingIntent pendingIntent = getPendingService(context, null);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+        if (alarmManager != null) {
+            alarmManager.cancel(pendingIntent);
+        }
+    }
+
+    private class IntentParams {
+        String transition;
+        String practiceId;
+        String practiceMgmt;
     }
 
 }

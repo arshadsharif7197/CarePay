@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -141,7 +140,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         }
 
         changeScreenMode(homeScreenMode);
-        registerReceiver(newCheckedInReceiver, new IntentFilter("NEW_CHECKEDIN_NOTIFICATION"));
         getNews();
     }
 
@@ -335,12 +333,13 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         if (shouldUpdateNow) {
             updateCheckinCounts();
         } else {
+            handler.removeCallbacksAndMessages(null);
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     setAppointmentCounts(false);
                 }
-            }, 1000 * 30);//30s
+            }, 1000 * 60);//30s
         }
     }
 
@@ -426,7 +425,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(newCheckedInReceiver);
+        handler.removeCallbacksAndMessages(null);
     }
 
     @Override
@@ -454,6 +453,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     protected void onResume() {
         super.onResume();
         disableUnavailableItems();
+        updateCheckinCounts();
     }
 
     private void disableUnavailableItems() {
@@ -682,6 +682,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
                 PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, extra);
             } else {
                 PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+                AppointmentCountUpdateService.cancelScheduledServiceRun(CloverMainActivity.this);
             }
         }
 
