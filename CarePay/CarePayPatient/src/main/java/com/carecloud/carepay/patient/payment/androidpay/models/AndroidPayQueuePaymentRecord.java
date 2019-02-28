@@ -10,7 +10,7 @@ import android.arch.persistence.room.PrimaryKey;
 public class AndroidPayQueuePaymentRecord {
 
     @PrimaryKey(autoGenerate = true)
-    private int fakeId;
+    private int id;
     private String patientID;
     private String practiceID;
     private String practiceMgmt;
@@ -76,11 +76,11 @@ public class AndroidPayQueuePaymentRecord {
         this.username = username;
     }
 
-    public int getFakeId() {
-        return fakeId;
+    public int getId() {
+        return id;
     }
 
-    public void setFakeId(int fakeId) {
-        this.fakeId = fakeId;
+    public void setId(int id) {
+        this.id = id;
     }
 }

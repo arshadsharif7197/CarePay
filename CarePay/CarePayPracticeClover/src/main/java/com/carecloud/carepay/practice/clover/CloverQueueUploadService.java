@@ -33,7 +33,6 @@ public class CloverQueueUploadService extends IntentService {
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
-     *
      */
     public CloverQueueUploadService() {
         super(CloverQueueUploadService.class.getName());
@@ -43,8 +42,9 @@ public class CloverQueueUploadService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         Gson gson = new Gson();
 
-        List<CloverQueuePaymentRecord> queueRecords =  CloverQueuePaymentRecord.listAll(CloverQueuePaymentRecord.class);
-        for(CloverQueuePaymentRecord queueRecord : queueRecords){
+        BreezeDataBase dataBase = BreezeDataBase.getDatabase(getApplicationContext());
+        List<CloverQueuePaymentRecord> queueRecords = dataBase.getCloverPaymentDao().getAllRecords();
+        for (CloverQueuePaymentRecord queueRecord : queueRecords) {
             TransitionDTO transitionDTO = gson.fromJson(queueRecord.getQueueTransition(), TransitionDTO.class);
 
             Map<String, String> queryMap = new HashMap<>();
@@ -53,27 +53,27 @@ public class CloverQueueUploadService extends IntentService {
             queryMap.put("practice_mgmt", queueRecord.getPracticeMgmt());
 
             String jsonBody = EncryptionUtil.decrypt(this, queueRecord.getPaymentModelJsonEnc(), queueRecord.getPracticeID());
-            if(jsonBody == null){
+            if (jsonBody == null) {
                 jsonBody = queueRecord.getPaymentModelJson();
             }
 
             boolean isSubmitted = executeWebCall(transitionDTO, jsonBody, queryMap, queueRecord.getUsername());
-            if(isSubmitted){
-                queueRecord.delete();
+            if (isSubmitted) {
+                dataBase.getCloverPaymentDao().insert(queueRecord);
             }
         }
 
         Intent scheduledService = new Intent(getBaseContext(), CloverQueueUploadService.class);
         PendingIntent pendingIntent = PendingIntent.getService(getBaseContext(), 0x222, scheduledService, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+INTERVAL, pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + INTERVAL, pendingIntent);
 //        alarmManager.cancel(pendingIntent);
 //        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, 1000 * 60, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
 
     }
 
-    private boolean executeWebCall(TransitionDTO transitionDTO, String jsonBody, Map<String, String> queryMap, String username){
-        if(StringUtil.isNullOrEmpty(jsonBody)){
+    private boolean executeWebCall(TransitionDTO transitionDTO, String jsonBody, Map<String, String> queryMap, String username) {
+        if (StringUtil.isNullOrEmpty(jsonBody)) {
             return false;
         }
 
@@ -87,7 +87,7 @@ public class CloverQueueUploadService extends IntentService {
         try {
             Response<WorkflowDTO> response = call.execute();
             return response.isSuccessful();
-        }catch (IOException ioe){
+        } catch (IOException ioe) {
             ioe.printStackTrace();
             return false;
         }

@@ -1,17 +1,18 @@
-package com.carecloud.carepay.patient.payment.androidpay;
+package com.carecloud.carepay.practice.clover;
 
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-import com.carecloud.carepay.patient.payment.androidpay.models.AndroidPayQueuePaymentRecord;
+import com.carecloud.carepay.practice.clover.models.CloverPaymentQueueRecordDao;
+import com.carecloud.carepay.practice.clover.models.CloverQueuePaymentRecord;
 
 
 /**
  * @author pjohnson on 2/27/19.
  */
-@Database(entities = {AndroidPayQueuePaymentRecord.class}, version = 1)
+@Database(entities = {CloverQueuePaymentRecord.class}, version = 1)
 public abstract class BreezeDataBase extends RoomDatabase {
 
     private static volatile BreezeDataBase INSTANCE;
@@ -21,7 +22,7 @@ public abstract class BreezeDataBase extends RoomDatabase {
             synchronized (BreezeDataBase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            BreezeDataBase.class, "breeze_database")
+                            BreezeDataBase.class, "clover_breeze_database")
                             .build();
                 }
             }
@@ -29,5 +30,5 @@ public abstract class BreezeDataBase extends RoomDatabase {
         return INSTANCE;
     }
 
-    public abstract AndroidPayQueuePaymentRecordDao getAndroidPayDao();
+    public abstract CloverPaymentQueueRecordDao getCloverPaymentDao();
 }

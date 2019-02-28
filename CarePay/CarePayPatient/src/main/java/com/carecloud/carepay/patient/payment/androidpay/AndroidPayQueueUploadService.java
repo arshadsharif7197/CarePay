@@ -41,8 +41,7 @@ public class AndroidPayQueueUploadService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         Gson gson = new Gson();
         BreezeDataBase database = BreezeDataBase.getDatabase(getApplicationContext());
-        List<AndroidPayQueuePaymentRecord> queueRecords = database.androidPayDao().getAllRecords();
-//        List<AndroidPayQueuePaymentRecord> queueRecords = AndroidPayQueuePaymentRecord.listAll(AndroidPayQueuePaymentRecord.class);
+        List<AndroidPayQueuePaymentRecord> queueRecords = database.getAndroidPayDao().getAllRecords();
         for (AndroidPayQueuePaymentRecord queueRecord : queueRecords) {
 
             Map<String, String> queryMap = new HashMap<>();
@@ -57,19 +56,16 @@ public class AndroidPayQueueUploadService extends IntentService {
 
             TransitionDTO transitionDTO = gson.fromJson(queueRecord.getQueueTransition(), TransitionDTO.class);
             if (transitionDTO.getUrl() == null) {
-                database.androidPayDao().delete(queueRecord);
-//                queueRecord.delete();
+                database.getAndroidPayDao().delete(queueRecord);
                 continue;
             }
             boolean isSubmitted = executeWebCall(transitionDTO, jsonBody, queryMap, queueRecord.getUsername());
             if (isSubmitted) {
-                database.androidPayDao().delete(queueRecord);
-//                queueRecord.delete();
+                database.getAndroidPayDao().delete(queueRecord);
             }
         }
 
-//        queueRecords = AndroidPayQueuePaymentRecord.listAll(AndroidPayQueuePaymentRecord.class);
-        queueRecords = database.androidPayDao().getAllRecords();
+        queueRecords = database.getAndroidPayDao().getAllRecords();
         if (!queueRecords.isEmpty()) {//only reschedule the service if required
             Intent scheduledService = new Intent(getBaseContext(), AndroidPayQueueUploadService.class);
             PendingIntent pendingIntent = PendingIntent.getService(getBaseContext(), 0x222, scheduledService, PendingIntent.FLAG_UPDATE_CURRENT);

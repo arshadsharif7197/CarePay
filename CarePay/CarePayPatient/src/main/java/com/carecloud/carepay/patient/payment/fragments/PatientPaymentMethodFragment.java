@@ -542,7 +542,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
             paymentRecord.setPaymentModelJson(paymentModelJson);
         }
         BreezeDataBase database = BreezeDataBase.getDatabase(getContext());
-        database.androidPayDao().insert(paymentRecord);
+        database.getAndroidPayDao().insert(paymentRecord);
 
         Intent intent = new Intent(getContext(), AndroidPayQueueUploadService.class);
         getContext().startService(intent);

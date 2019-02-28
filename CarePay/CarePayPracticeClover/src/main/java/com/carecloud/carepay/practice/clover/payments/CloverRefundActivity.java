@@ -9,6 +9,7 @@ import android.os.IInterface;
 import android.os.RemoteException;
 import android.util.Log;
 
+import com.carecloud.carepay.practice.clover.BreezeDataBase;
 import com.carecloud.carepay.practice.clover.CloverQueueUploadService;
 import com.carecloud.carepay.practice.clover.R;
 import com.carecloud.carepay.practice.clover.models.CloverPaymentDTO;
@@ -634,7 +635,8 @@ public class CloverRefundActivity extends BaseActivity {
         if(StringUtil.isNullOrEmpty(paymentModelJsonEnc)){
             paymentRecord.setPaymentModelJson(refundModelJson);
         }
-        paymentRecord.save();
+        BreezeDataBase dataBase = BreezeDataBase.getDatabase(getApplicationContext());
+        dataBase.getCloverPaymentDao().insert(paymentRecord);
 
         Intent intent = new Intent(getContext(), CloverQueueUploadService.class);
         startService(intent);
