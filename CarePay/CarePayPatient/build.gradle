@@ -49,17 +49,15 @@ android {
             buildConfigField 'String', 'WEBCLIENT_URL', '"WSS://STAR-CLUSTER.DEVELOPMENT.CARECLOUD.COM"'
             buildConfigField 'String', 'MESSAGING_BASE_URL', '"https://messaging.development.carecloud.com"'
             buildConfigField 'String', 'FORMS_BASE_URL', '"https://settings.development.gobreeze.com"'
+            buildConfigField 'String', 'RETAIL_URL', '"https://web.development.gobreeze.com"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AA11d2bb94e604c1b3a506dcda65bd7dfa9995d110"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"458b4517bf5c86c62df069f82fc49aa3"'
 
             buildConfigField 'String', 'ENVIRONMENT', '"Development"'
 
-            def hostname = "web.development.gobreeze.com"
-            manifestPlaceholders = [hostName:hostname]
+            manifestPlaceholders = [hostName:"web.development.gobreeze.com"]
 
-            def retailUrl = '"https://'+ hostname + '"'
-            buildConfigField 'String', 'RETAIL_URL', retailUrl
         }
         qa {
             applicationId "com.carecloud.carepay.patient"
@@ -69,17 +67,15 @@ android {
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
             buildConfigField 'String', 'MESSAGING_BASE_URL', '"https://messaging.qa.carecloud.com"'
             buildConfigField 'String', 'FORMS_BASE_URL', '"https://settings.qa.gobreeze.com"'
+            buildConfigField 'String', 'RETAIL_URL', '"https://web.qa.gobreeze.com"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AAb24320f2a02bf87d9faf0d7aff73bbeca08d264f"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"458b4517bf5c86c62df069f82fc49aa3"'
 
             buildConfigField 'String', 'ENVIRONMENT', '"QA"'
 
-            def hostname = "web.qa.gobreeze.com"
-            manifestPlaceholders = [hostName:hostname]
+            manifestPlaceholders = [hostName:"web.qa.gobreeze.com"]
 
-            def retailUrl = '"https://'+ hostname + '"'
-            buildConfigField 'String', 'RETAIL_URL', retailUrl
         }
         staging {
             applicationId "com.carecloud.carepay.patient"
@@ -89,17 +85,15 @@ android {
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
             buildConfigField 'String', 'MESSAGING_BASE_URL', '"https://messaging-staging.carecloud.com"'
             buildConfigField 'String', 'FORMS_BASE_URL', '"https://settings.staging.gobreeze.com"'
+            buildConfigField 'String', 'RETAIL_URL', '"https://web.staging.gobreeze.com"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AAb24320f2a02bf87d9faf0d7aff73bbeca08d264f"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"458b4517bf5c86c62df069f82fc49aa3"'
 
             buildConfigField 'String', 'ENVIRONMENT', '"Staging"'
 
-            def hostname = "web.staging.gobreeze.com"
-            manifestPlaceholders = [hostName:hostname]
+            manifestPlaceholders = [hostName:"web.staging.gobreeze.com"]
 
-            def retailUrl = '"https://'+ hostname + '"'
-            buildConfigField 'String', 'RETAIL_URL', retailUrl
         }
         demo {
             applicationId "com.carecloud.carepay.patient"
@@ -109,17 +103,15 @@ android {
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
             buildConfigField 'String', 'MESSAGING_BASE_URL', '"https://messaging.careclouddemo.com"'
             buildConfigField 'String', 'FORMS_BASE_URL', '"https://settings.gobreeze.com"'
+            buildConfigField 'String', 'RETAIL_URL', '"https://web.gobreeze.com"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AAb24320f2a02bf87d9faf0d7aff73bbeca08d264f"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"458b4517bf5c86c62df069f82fc49aa3"'
 
             buildConfigField 'String', 'ENVIRONMENT', '"Demo"'
 
-            def hostname = "web.gobreeze.com"
-            manifestPlaceholders = [hostName:hostname]
+            manifestPlaceholders = [hostName:"web.gobreeze.com"]
 
-            def retailUrl = '"https://'+ hostname + '"'
-            buildConfigField 'String', 'RETAIL_URL', retailUrl
         }
         production {
             applicationId "com.carecloud.carepay.patient"
@@ -129,17 +121,15 @@ android {
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
             buildConfigField 'String', 'MESSAGING_BASE_URL', '"https://messaging.carecloud.com"'
             buildConfigField 'String', 'FORMS_BASE_URL', '"https://settings.gobreeze.com"'
+            buildConfigField 'String', 'RETAIL_URL', '"https://web.gobreeze.com"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AA2faf2a0d9f02e9595012ede7e6a30ddda5e1b250"'
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"38fc517bbd790b9d00044891934205a4"'
 
             buildConfigField 'String', 'ENVIRONMENT', '"Production"'
 
-            def hostname = "web.gobreeze.com"
-            manifestPlaceholders = [hostName:hostname]
+            manifestPlaceholders = [hostName:"web.gobreeze.com"]
 
-            def retailUrl = '"https://'+ hostname + '"'
-            buildConfigField 'String', 'RETAIL_URL', retailUrl
         }
     }
     lintOptions {
