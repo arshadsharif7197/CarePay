@@ -1,13 +1,16 @@
 package com.carecloud.carepay.patient.payment.androidpay.models;
 
-import com.orm.SugarRecord;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 
 /**
  * Created by lmenendez on 4/19/17.
  */
+@Entity(tableName = "AndroidPayQueuePaymentRecord")
+public class AndroidPayQueuePaymentRecord {
 
-public class AndroidPayQueuePaymentRecord extends SugarRecord {
-
+    @PrimaryKey(autoGenerate = true)
+    private int fakeId;
     private String patientID;
     private String practiceID;
     private String practiceMgmt;
@@ -15,10 +18,6 @@ public class AndroidPayQueuePaymentRecord extends SugarRecord {
     private String paymentModelJsonEnc;
     private String paymentModelJson;
     private String username;
-
-    public AndroidPayQueuePaymentRecord(){
-
-    }
 
 
     public String getPatientID() {
@@ -75,5 +74,13 @@ public class AndroidPayQueuePaymentRecord extends SugarRecord {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public int getFakeId() {
+        return fakeId;
+    }
+
+    public void setFakeId(int fakeId) {
+        this.fakeId = fakeId;
     }
 }

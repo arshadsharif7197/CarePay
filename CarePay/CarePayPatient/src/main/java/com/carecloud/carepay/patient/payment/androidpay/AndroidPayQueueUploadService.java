@@ -32,7 +32,6 @@ public class AndroidPayQueueUploadService extends IntentService {
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
-     *
      */
     public AndroidPayQueueUploadService() {
         super(AndroidPayQueueUploadService.class.getName());
@@ -41,9 +40,10 @@ public class AndroidPayQueueUploadService extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         Gson gson = new Gson();
-
-        List<AndroidPayQueuePaymentRecord> queueRecords =  AndroidPayQueuePaymentRecord.listAll(AndroidPayQueuePaymentRecord.class);
-        for(AndroidPayQueuePaymentRecord queueRecord : queueRecords){
+        BreezeDataBase database = BreezeDataBase.getDatabase(getApplicationContext());
+        List<AndroidPayQueuePaymentRecord> queueRecords = database.androidPayDao().getAllRecords();
+//        List<AndroidPayQueuePaymentRecord> queueRecords = AndroidPayQueuePaymentRecord.listAll(AndroidPayQueuePaymentRecord.class);
+        for (AndroidPayQueuePaymentRecord queueRecord : queueRecords) {
 
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("patient_id", queueRecord.getPatientID());
@@ -51,23 +51,26 @@ public class AndroidPayQueueUploadService extends IntentService {
             queryMap.put("practice_mgmt", queueRecord.getPracticeMgmt());
 
             String jsonBody = EncryptionUtil.decrypt(this, queueRecord.getPaymentModelJsonEnc(), queueRecord.getPracticeID());
-            if(jsonBody == null){
+            if (jsonBody == null) {
                 jsonBody = queueRecord.getPaymentModelJson();
             }
 
             TransitionDTO transitionDTO = gson.fromJson(queueRecord.getQueueTransition(), TransitionDTO.class);
-            if(transitionDTO.getUrl() == null){
-                queueRecord.delete();
+            if (transitionDTO.getUrl() == null) {
+                database.androidPayDao().delete(queueRecord);
+//                queueRecord.delete();
                 continue;
             }
             boolean isSubmitted = executeWebCall(transitionDTO, jsonBody, queryMap, queueRecord.getUsername());
-            if(isSubmitted){
-                queueRecord.delete();
+            if (isSubmitted) {
+                database.androidPayDao().delete(queueRecord);
+//                queueRecord.delete();
             }
         }
 
-        queueRecords =  AndroidPayQueuePaymentRecord.listAll(AndroidPayQueuePaymentRecord.class);
-        if(!queueRecords.isEmpty()) {//only reschedule the service if required
+//        queueRecords = AndroidPayQueuePaymentRecord.listAll(AndroidPayQueuePaymentRecord.class);
+        queueRecords = database.androidPayDao().getAllRecords();
+        if (!queueRecords.isEmpty()) {//only reschedule the service if required
             Intent scheduledService = new Intent(getBaseContext(), AndroidPayQueueUploadService.class);
             PendingIntent pendingIntent = PendingIntent.getService(getBaseContext(), 0x222, scheduledService, PendingIntent.FLAG_UPDATE_CURRENT);
             AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -75,8 +78,8 @@ public class AndroidPayQueueUploadService extends IntentService {
         }
     }
 
-    private boolean executeWebCall(TransitionDTO transitionDTO, String jsonBody, Map<String, String> queryMap, String username){
-        if(StringUtil.isNullOrEmpty(jsonBody)){
+    private boolean executeWebCall(TransitionDTO transitionDTO, String jsonBody, Map<String, String> queryMap, String username) {
+        if (StringUtil.isNullOrEmpty(jsonBody)) {
             return false;
         }
 
@@ -90,7 +93,7 @@ public class AndroidPayQueueUploadService extends IntentService {
         try {
             Response<WorkflowDTO> response = call.execute();
             return response.isSuccessful();
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             return false;
         }
