@@ -69,6 +69,9 @@ public class PatientModeRequestAppointmentDialog extends BaseRequestAppointmentD
 
 //        setDialogTitle(dateUtil.getDateAsDayMonthDayOrdinalYear(Label.getLabel("appointments_web_today_heading")));
 
+        TextView appointment_date = view.findViewById(R.id.content_view_header_title);
+        appointment_date.setText(dateUtil.getDateAsDayMonthDayOrdinalYear(Label.getLabel("appointments_web_today_heading")));
+
         TextView appointmentTimeTextView = view.findViewById(R.id.appointment_time);
         appointmentTimeTextView.setText(dateUtil.getTime12Hour());
 
@@ -88,7 +91,8 @@ public class PatientModeRequestAppointmentDialog extends BaseRequestAppointmentD
         appointmentPlaceNameTextView.setText(appointmentDTO.getPayload().getLocation().getName());
 
         TextView appointmentAddressTextView = view.findViewById(R.id.provider_place_address);
-        appointmentAddressTextView.setText(appointmentDTO.getPayload().getLocation().getAddress().getPlaceAddressString());
+        appointmentAddressTextView.setText(appointmentDTO.getPayload().getLocation().getAddress()
+                .geAddressStringWithShortZipWOCounty2Lines());
 
         VisitTypeDTO visitTypeDTO = appointmentDTO.getPayload().getVisitType();
         TextView visitTypeTextView = view.findViewById(R.id.reasonTextView);
@@ -123,7 +127,7 @@ public class PatientModeRequestAppointmentDialog extends BaseRequestAppointmentD
 
     private boolean getAutomaticallyApproveRequests() {
         AppointmentsSettingDTO appointmentsSettingDTO = appointmentModelDto.getPayload()
-                .getAppointmentsSetting(appointmentDTO.getMetadata().getPracticeId());
+                .getAppointmentsSetting(selectedPractice.getPracticeId());
         if (appointmentsSettingDTO == null) {
             return false;
         }

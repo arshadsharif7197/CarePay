@@ -403,6 +403,17 @@ public class PaymentsPayloadDTO extends BasePayloadDto implements Serializable {
     }
 
     /**
+     * Verify is pratice has payment methods enabled
+     * 
+     * @param practiceId
+     * @return true if practice has at least one payment method enabled
+     */
+    public boolean hasPaymentMethods(String practiceId) {
+        PaymentsPayloadSettingsDTO settingsDTO = getPaymentSetting(practiceId);
+        return settingsDTO.getPayload().getRegularPayments().getPaymentMethods().size() > 0;
+    }
+
+    /**
      * get only valid plans
      *
      * @param practiceId - optional, if provided will first filter plans by practice

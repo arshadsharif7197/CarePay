@@ -96,9 +96,8 @@ public class AddExistingPaymentPlanFragment extends PaymentPlanFragment {
     }
 
     private int getRemainingPayments() {
-        int remaining = existingPlan.getPayload().getPaymentPlanDetails().getInstallments() -
+        return existingPlan.getPayload().getPaymentPlanDetails().getInstallments() -
                 existingPlan.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
-        return remaining < 2 ? 2 : remaining;
     }
 
 

@@ -127,7 +127,6 @@ public class WorkflowServiceHelper {
             if (customHeaders.containsKey("Authorization")) {
                 headers.remove("Authorization");
             }
-
             customHeaders.putAll(headers);
 
             return customHeaders;

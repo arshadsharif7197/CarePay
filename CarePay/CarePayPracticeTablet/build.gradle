@@ -2,14 +2,13 @@ apply plugin: 'com.android.application'
 apply plugin: 'newrelic'
 android {
     compileSdkVersion 26
-    buildToolsVersion "27.0.3"
 
     defaultConfig {
         applicationId "com.carecloud.carepay.practice.tablet"
         minSdkVersion 17
         targetSdkVersion 26
-        versionCode 119
-        versionName "1.2.23.1"
+        versionCode 121
+        versionName "1.2.24"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -136,5 +135,5 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':CarePayPracticeLibrary')
-    implementation 'com.newrelic.agent.android:android-agent:5.12.3'
+    implementation 'com.newrelic.agent.android:android-agent:5.22.0'
 }

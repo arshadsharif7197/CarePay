@@ -53,6 +53,7 @@ public class ApplicationPreferences {
     private static final String PREFERENCE_REMIND_LATEST = "remind_latest";
     private static final String PREFERENCE_FORCE_UPDATE = "force_update";
     private static final String PREFERENCE_PROFILE_ID = "profileId";
+    public static final String PREFERENCE_APPOINTMENT_COUNTS = "appointment_counts";
 
     private String patientId;
     private String practiceId;
@@ -396,6 +397,8 @@ public class ApplicationPreferences {
                     locationsSet.add(location.getGuid());
                 }
                 editor.putStringSet(PREFERENCE_LOCATION + practice.getPracticeId(), locationsSet);
+            } else {
+                editor.putStringSet(PREFERENCE_LOCATION + practice.getPracticeId(), null);
             }
         }
         editor.apply();
@@ -524,5 +527,13 @@ public class ApplicationPreferences {
 
     public void setProfileId(String profileId) {
         writeStringToSharedPref(PREFERENCE_PROFILE_ID, profileId);
+    }
+
+    public void setAppointmentCounts(Object appointmentCounts) {
+        writeObjectToSharedPreference(PREFERENCE_APPOINTMENT_COUNTS, appointmentCounts);
+    }
+
+    public Object getAppointmentCounts(Class appointmentCountsClass) {
+        return getObjectFromSharedPreferences(PREFERENCE_APPOINTMENT_COUNTS, appointmentCountsClass);
     }
 }

@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 
+import com.carecloud.carepay.practice.library.homescreen.AppointmentCountUpdateService;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
@@ -28,7 +29,13 @@ public class CarePayPracticeApplication extends CarePayApplication
     @Override
     public void onCreate() {
         super.onCreate();
-        start();
+        start();this.onTerminate();
+    }
+
+    @Override
+    public void onTerminate(){
+        AppointmentCountUpdateService.cancelScheduledServiceRun(this);
+        super.onTerminate();
     }
 
     /**

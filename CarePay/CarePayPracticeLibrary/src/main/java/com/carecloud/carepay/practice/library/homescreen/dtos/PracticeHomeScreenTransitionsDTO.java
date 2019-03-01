@@ -40,6 +40,9 @@ public class PracticeHomeScreenTransitionsDTO {
     @SerializedName(value = "language_metadata", alternate = "language")
     @Expose
     private TransitionDTO language = new TransitionDTO();
+    @SerializedName("appointment_counts")
+    @Expose
+    private TransitionDTO appointmentCounts = new TransitionDTO();
 
     /**
      * @return The patientMode
@@ -177,5 +180,13 @@ public class PracticeHomeScreenTransitionsDTO {
 
     public void setLanguage(TransitionDTO language) {
         this.language = language;
+    }
+
+    public TransitionDTO getAppointmentCounts() {
+        return appointmentCounts;
+    }
+
+    public void setAppointmentCounts(TransitionDTO appointmentCounts) {
+        this.appointmentCounts = appointmentCounts;
     }
 }

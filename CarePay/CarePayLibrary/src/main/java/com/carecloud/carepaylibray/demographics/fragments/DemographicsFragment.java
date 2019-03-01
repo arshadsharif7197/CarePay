@@ -445,9 +445,9 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
             } else if (employmentInfoSection.isRequired()) {
                 employmentStatusRequired.setVisibility(View.VISIBLE);
             }
-            if (employmentInfoSection.isRequired()) {
-                view.findViewById(R.id.employmentInfoRequiredTextView).setVisibility(View.VISIBLE);
-            }
+//            if (employmentInfoSection.isRequired()) {
+//                view.findViewById(R.id.employmentInfoRequiredTextView).setVisibility(View.VISIBLE);
+//            }
 
         } else {
             view.findViewById(R.id.employmentStatusDemographicsLayout).setVisibility(View.GONE);

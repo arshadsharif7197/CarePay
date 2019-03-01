@@ -168,8 +168,6 @@ public class FilledFormFragment extends BaseWebFormFragment {
         queries.put("patient_id", formDto.getMetadata().getPatientId());
 
         Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
-        header.put("username_patient", formDto.getMetadata().getUsername());
-
         Gson gson = new Gson();
         String body = gson.toJson(jsonFormSaveResponseArray);
         TransitionDTO transitionDTO = consentFormDto.getMetadata().getLinks().getUpdateForms();

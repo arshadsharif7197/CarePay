@@ -615,6 +615,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             setSignInButtonClickable(true);
+            getApplicationPreferences().setAppointmentCounts(null);
             navigateToWorkFlow(workflowDTO);
         }
 

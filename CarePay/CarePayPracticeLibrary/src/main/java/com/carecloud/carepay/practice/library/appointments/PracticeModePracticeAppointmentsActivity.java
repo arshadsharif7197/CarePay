@@ -452,6 +452,9 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         } else if (appointmentPayloadDTO.canCheckOut()) {
             dialogStyle = AppointmentDisplayStyle.CHECKED_IN;
 
+        } else if (appointmentPayloadDTO.isAppointmentOver() && appointmentPayloadDTO.getAppointmentStatus().getCode().equals(CarePayConstants.PENDING)) {
+            dialogStyle = AppointmentDisplayStyle.MISSED;
+
         } else if (appointmentPayloadDTO.isAppointmentOver() || appointmentPayloadDTO.isAppointmentFinished()) {
             //todo finished appt options, Doing nothing for now
 
@@ -473,28 +476,29 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     private void confirmAppointment(AppointmentDTO appointmentDTO) {
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getConfirmAppointment();
         confirmationMessageText = "appointment_schedule_success_message_HTML";
-        transitionAppointment(transitionDTO, appointmentDTO, true, getString(R.string.event_appointment_accepted));
+        transitionAppointment(transitionDTO, appointmentDTO, true, getString(R.string.event_appointment_accepted), false);
     }
 
     private void rejectAppointment(AppointmentDTO appointmentDTO) {
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getDismissAppointment();
         confirmationMessageText = "appointment_rejection_success_message_HTML";
-        transitionAppointment(transitionDTO, appointmentDTO, false, getString(R.string.event_appointment_rejected));
+        transitionAppointment(transitionDTO, appointmentDTO, false, getString(R.string.event_appointment_rejected), true);
     }
 
     private void transitionAppointment(TransitionDTO transitionDTO,
                                        AppointmentDTO appointmentDTO,
                                        boolean updateOnSuccess,
-                                       String event) {
+                                       String event,
+                                       boolean shouldRefresh) {
         this.updateOnSuccess = updateOnSuccess;
 
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("appointment_id", appointmentDTO.getPayload().getId());
 
-        getWorkflowServiceHelper().execute(transitionDTO, getAppointmentsServiceCallback(event, appointmentDTO), queryMap);
+        getWorkflowServiceHelper().execute(transitionDTO, getAppointmentsServiceCallback(event, appointmentDTO, shouldRefresh), queryMap);
     }
 
-    WorkflowServiceCallback getAppointmentsServiceCallback(final String event, final AppointmentDTO appointmentDTO) {
+    WorkflowServiceCallback getAppointmentsServiceCallback(final String event, final AppointmentDTO appointmentDTO, final boolean shouldRefresh) {
         return new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
@@ -509,6 +513,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                 DtoHelper.putExtra(getIntent(), checkInDTO);
                 initializeCheckinDto();
                 applyFilter();
+                if (shouldRefresh) { refreshData(); }
 
                 updateOnSuccess = false;
 
@@ -616,8 +621,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
         if (appointmentPayloadDTO.getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
             rejectAppointment(appointmentDTO);
-        } else if (appointmentPayloadDTO.isAppointmentOver()) {
-            //TODO Add future logic
         } else {
             CancelAppointmentConfirmDialogFragment fragment = CancelAppointmentConfirmDialogFragment
                     .newInstance(appointmentDTO);
@@ -760,7 +763,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     public void cancelAppointment(AppointmentDTO appointmentDTO) {
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getCancelAppointment();
         confirmationMessageText = "appointment_cancellation_success_message_HTML";
-        transitionAppointment(transitionDTO, appointmentDTO, false, getString(R.string.event_appointment_cancelled));
+        transitionAppointment(transitionDTO, appointmentDTO, false, getString(R.string.event_appointment_cancelled), false);
     }
 
     @Override
