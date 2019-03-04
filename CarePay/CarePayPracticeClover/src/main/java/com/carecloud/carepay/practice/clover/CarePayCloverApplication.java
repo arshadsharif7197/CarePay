@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 
+import com.carecloud.carepay.practice.clover.utils.ChipInterceptorUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
@@ -69,12 +70,13 @@ public class CarePayCloverApplication extends CarePayApplication
 
     @Override
     public void onActivityResumed(Activity activity) {
-
+        ChipInterceptorUtil.getInstance().startIntercept(this,
+                ChipInterceptorUtil.CLOVER_CARD_INTERCEPT_ACTION);
     }
 
     @Override
     public void onActivityPaused(Activity activity) {
-
+        ChipInterceptorUtil.getInstance().stopIntercept(this);
     }
 
     @Override
