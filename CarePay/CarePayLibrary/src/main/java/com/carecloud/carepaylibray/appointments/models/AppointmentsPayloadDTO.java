@@ -9,7 +9,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Model for appointment payload.
@@ -738,21 +737,6 @@ public class AppointmentsPayloadDTO {
             default:
                 return false;
         }
-    }
-
-
-    public boolean isRescheduleEnabled(String practiceId, List<PortalSettingDTO> portalSettings) {
-        for (PortalSettingDTO portalSettingsDto : portalSettings) {
-            if (portalSettingsDto.getMetadata().getPracticeId().equals(practiceId)) {
-                for (PortalSetting portalSetting : portalSettingsDto.getPayload()) {
-                    if ("scheduling".equals(portalSetting.getTypeName().toLowerCase())
-                            && "appointments".equals(portalSetting.getLabel().toLowerCase())) {
-                        return "A".equals(portalSetting.getStatus());
-                    }
-                }
-            }
-        }
-        return false;
     }
 
     public void setReasonForVisit(String reasonForVisit) {

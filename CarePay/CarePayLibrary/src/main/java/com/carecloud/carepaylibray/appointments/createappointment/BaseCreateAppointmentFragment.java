@@ -270,8 +270,13 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         ImageView picImageView = view.findViewById(R.id.picImageView);
         if (showImage) {
             shortNameTextView.setText(StringUtil.getShortName(title));
-            PicassoHelper.get().loadImage(getContext(), picImageView,
-                    shortNameTextView, imageUrl);
+            if (!StringUtil.isNullOrEmpty(imageUrl)) {
+                PicassoHelper.get().loadImage(getContext(), picImageView,
+                        shortNameTextView, imageUrl);
+            } else {
+                shortNameTextView.setVisibility(View.VISIBLE);
+                picImageView.setVisibility(View.INVISIBLE);
+            }
         } else {
             shortNameTextView.setVisibility(View.GONE);
             picImageView.setVisibility(View.GONE);

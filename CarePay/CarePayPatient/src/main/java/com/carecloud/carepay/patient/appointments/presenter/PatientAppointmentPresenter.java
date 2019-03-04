@@ -35,7 +35,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPa
 import com.carecloud.carepaylibray.appointments.models.AppointmentCancellationFee;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsPrePaymentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
@@ -276,8 +275,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         patientId = appointmentDTO.getMetadata().getPatientId();
         AppointmentDetailDialog detailDialog = AppointmentDetailDialog
                 .newInstance(appointmentDTO, getPracticeInfo(appointmentDTO).isBreezePractice(),
-                        appointmentDTO.getPayload().isRescheduleEnabled(appointmentDTO.getMetadata().getPracticeId(),
-                                appointmentsResultModel.getPayload().getPortalSettings()));
+                        appointmentsResultModel.getPayload().isRescheduleEnabled(appointmentDTO.getMetadata().getPracticeId()));
         viewHandler.displayDialogFragment(detailDialog, false);
     }
 

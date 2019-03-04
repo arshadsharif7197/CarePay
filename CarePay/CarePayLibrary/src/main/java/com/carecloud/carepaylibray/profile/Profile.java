@@ -4,6 +4,8 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadI
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * @author pjohnson on 2/19/19.
  */
@@ -36,6 +38,9 @@ public class Profile {
     @Expose
     @SerializedName("demographics")
     private DemographicPayloadInfoDTO demographics;
+    @Expose
+    @SerializedName("links")
+    private List<ProfileLink> links;
 
     private transient boolean delegate;
 
@@ -117,5 +122,24 @@ public class Profile {
 
     public void setBreezeUser(boolean breezeUser) {
         this.breezeUser = breezeUser;
+    }
+
+    public List<ProfileLink> getLinks() {
+        return links;
+    }
+
+    public void setLinks(List<ProfileLink> links) {
+        this.links = links;
+    }
+
+    public ProfileLink getProfileLink(String practiceId) {
+        if (links != null) {
+            for (ProfileLink link : links) {
+                if (link.getPracticeId().equals(practiceId)) {
+                    return link;
+                }
+            }
+        }
+        return null;
     }
 }

@@ -13,6 +13,7 @@ import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
+import com.carecloud.carepaylibray.profile.ProfileLink;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -360,5 +361,31 @@ public class AppointmentPayloadModel extends BasePayloadDto implements Serializa
             }
         }
         return null;
+    }
+
+    public boolean isRescheduleEnabled(String practiceId) {
+        boolean rescheduleEnabled = false;
+        for (PortalSettingDTO portalSettingsDto : portalSettings) {
+            if (portalSettingsDto.getMetadata().getPracticeId().equals(practiceId)) {
+                for (PortalSetting portalSetting : portalSettingsDto.getPayload()) {
+                    if ("scheduling".equals(portalSetting.getTypeName().toLowerCase())
+                            && "appointments".equals(portalSetting.getLabel().toLowerCase())) {
+                        rescheduleEnabled = "A".equals(portalSetting.getStatus());
+                    }
+                }
+            }
+        }
+
+        if (!rescheduleEnabled) {
+            return false;
+        }
+
+        if (getDelegate() == null) {
+            return true;
+        }
+
+        ProfileLink profileLink = getDelegate().getProfileLink(practiceId);
+        return profileLink.getPermissionDto().getPermissions().getViewAppointments().isEnabled()
+                && profileLink.getPermissionDto().getPermissions().getScheduleAppointments().isEnabled();
     }
 }
