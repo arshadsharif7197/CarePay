@@ -2,6 +2,7 @@ package com.carecloud.carepay.patient.appointments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -32,6 +33,7 @@ import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +51,7 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
 
     private PatientAppointmentNavigationCallback callback;
     private FloatingActionButton floatingActionButton;
+    private boolean canScheduleAppointments;
 
     public static AppointmentsListFragment newInstance(AppointmentsResultModel appointmentsResultModel) {
         Bundle args = new Bundle();
@@ -122,7 +125,8 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
 
         Button newAppointmentClassicButton = view.findViewById(R.id.newAppointmentClassicButton);
         floatingActionButton = view.findViewById(R.id.fab);
-        if (canScheduleAppointments()) {
+        canScheduleAppointments = canScheduleAppointments();
+        if (canScheduleAppointments) {
             floatingActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -153,15 +157,49 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
     }
 
     private void loadAppointmentList() {
-        if (appointmentsResultModel != null && appointmentsResultModel.getPayload().getAppointments().size() > 0) {
-            appointmentsItems = appointmentsResultModel.getPayload().getAppointments();
-            noAppointmentView.setVisibility(View.GONE);
-            floatingActionButton.setVisibility(View.VISIBLE);
-            appointmentRecyclerView.setVisibility(View.VISIBLE);
-            setAdapter(appointmentsItems);
+        if (canViewAnyAppointment(appointmentsResultModel.getPayload().getAppointments(),
+                appointmentsResultModel.getPayload().getUserPractices())) {
+            if (appointmentsResultModel.getPayload().getAppointments().size() > 0) {
+                appointmentsItems = appointmentsResultModel.getPayload().getAppointments();
+                noAppointmentView.setVisibility(View.GONE);
+                floatingActionButton.setVisibility(canScheduleAppointments ? View.VISIBLE : View.GONE);
+                appointmentRecyclerView.setVisibility(View.VISIBLE);
+                setAdapter(appointmentsItems);
+            } else {
+                showNoAppointmentScreen();
+            }
         } else {
-            showNoAppointmentScreen();
+            showNoPermissionScreen();
         }
+    }
+
+    private void showNoPermissionScreen() {
+        appointmentRecyclerView.setVisibility(View.GONE);
+        floatingActionButton.setVisibility(View.GONE);
+        noAppointmentView.setVisibility(View.VISIBLE);
+        ((TextView) noAppointmentView.findViewById(R.id.no_apt_message_title))
+                .setText(Label.getLabel("appointments.list.history.noPermission.title"));
+        noAppointmentView.findViewById(R.id.no_apt_message_desc).setVisibility(View.GONE);
+    }
+
+    private boolean canViewAnyAppointment(@NonNull List<AppointmentDTO> appointments,
+                                          List<UserPracticeDTO> userPractices) {
+        for (UserPracticeDTO practice : userPractices) {
+            if (!appointmentsResultModel.getPayload().canViewAppointments(practice.getPracticeId())) {
+                appointments = filterAppointments(appointments, practice.getPracticeId());
+            }
+        }
+        return appointments.size() > 0;
+    }
+
+    private List<AppointmentDTO> filterAppointments(List<AppointmentDTO> appointments, String practiceId) {
+        List<AppointmentDTO> filteredList = new ArrayList<>();
+        for (AppointmentDTO appointmentDTO : appointments) {
+            if (!appointmentDTO.getMetadata().getPracticeId().equals(practiceId)) {
+                filteredList.add(appointmentDTO);
+            }
+        }
+        return filteredList;
     }
 
     private void setAdapter(List<AppointmentDTO> appointmentsItems) {

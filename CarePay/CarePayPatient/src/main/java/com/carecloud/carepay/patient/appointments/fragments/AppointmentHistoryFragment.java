@@ -181,7 +181,7 @@ public class AppointmentHistoryFragment extends BaseFragment
         practicesRecyclerView.setAdapter(adapter);
     }
 
-    private void callAppointmentService(UserPracticeDTO userPracticeDTO,
+    private void callAppointmentService(final UserPracticeDTO userPracticeDTO,
                                         final boolean refresh,
                                         final boolean showShimmerLayout) {
         long currentPage;
@@ -237,6 +237,9 @@ public class AppointmentHistoryFragment extends BaseFragment
                                 .getPayload().getAppointments());
                         if (appointments.size() > 0) {
                             showHistoricAppointments(appointmentDto.getPayload().getAppointments(), refresh);
+                        } else if (!appointmentDto.getPayload().canViewAppointments(userPracticeDTO.getPracticeId())) {
+                            //when there are no permissions to see appointments, MW sends no appointments
+                            showNoPermissionsLayout();
                         } else {
                             showNoAppointmentsLayout();
                         }
@@ -269,6 +272,16 @@ public class AppointmentHistoryFragment extends BaseFragment
                         R.layout.shimmer_default_item))
                 .addToBackStack(null)
                 .commit();
+    }
+
+    private void showNoPermissionsLayout() {
+        historicAppointmentsRecyclerView.setVisibility(View.GONE);
+        View noAppointmentsLayout = getView().findViewById(R.id.noAppointmentsLayout);
+        noAppointmentsLayout.setVisibility(View.VISIBLE);
+        noAppointmentsLayout.findViewById(R.id.newAppointmentClassicButton).setVisibility(View.GONE);
+        TextView no_apt_message_title = noAppointmentsLayout.findViewById(R.id.no_apt_message_title);
+        no_apt_message_title.setText(Label.getLabel("appointments.list.history.noPermission.title"));
+        noAppointmentsLayout.findViewById(R.id.no_apt_message_desc).setVisibility(View.GONE);
     }
 
     private void showNoAppointmentsLayout() {
