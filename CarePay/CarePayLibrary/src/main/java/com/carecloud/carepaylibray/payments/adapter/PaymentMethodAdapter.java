@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
@@ -68,7 +69,8 @@ public class PaymentMethodAdapter extends BaseAdapter {
         }
 
         CarePayTextView paymentMethodText = (CarePayTextView) convertView.findViewById(R.id.payment_method_text);
-        paymentMethodText.setText(paymentMethodsList.get(position).getLabel());
+        String methodLabel = Label.getLabel("payment_method_" + paymentMethodsList.get(position).getType());
+        paymentMethodText.setText(methodLabel);
 
         ImageView paymentMethodImage = (ImageView) convertView.findViewById(R.id.payment_method_image);
         Integer drawable = paymentTypeMap.get(paymentMethodsList.get(position).getType());

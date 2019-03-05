@@ -474,7 +474,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
                 && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             Fragment fragment = ChooseCreditCardFragment.newInstance(paymentsModel,
-                    selectedPaymentMethod.getLabel(), amount);
+                    Label.getLabel("credit_card_heading"), amount);
             viewHandler.replaceFragment(fragment, true);
         } else {
             showAddCard(amount, paymentsModel);
