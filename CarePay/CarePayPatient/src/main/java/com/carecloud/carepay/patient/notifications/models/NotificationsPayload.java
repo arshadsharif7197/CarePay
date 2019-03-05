@@ -87,4 +87,16 @@ public class NotificationsPayload extends BasePayloadDto {
 
         return profileLink.getPermissionDto().getPermissions().getViewAndSubmitSurveys().isEnabled();
     }
+
+    public boolean canViewNotifications(String practiceId) {
+        if (getDelegate() == null) {
+            return true;
+        }
+
+        ProfileLink profileLink = getDelegate().getProfileLink(practiceId);
+        if (profileLink == null) {
+            return false;
+        }
+        return profileLink.getPermissionDto().getPermissions().getViewNotifications().isEnabled();
+    }
 }

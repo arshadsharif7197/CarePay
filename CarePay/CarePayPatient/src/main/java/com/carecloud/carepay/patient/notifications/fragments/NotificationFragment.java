@@ -111,8 +111,6 @@ public class NotificationFragment extends BaseFragment
                 supportedNotificationTypes);
         paging = notificationsDTO.getPayload().getPaging();
         addAppStatusNotification();
-
-
         handler = new Handler();
     }
 
@@ -124,7 +122,7 @@ public class NotificationFragment extends BaseFragment
     @Override
     public void onViewCreated(View view, Bundle icicle) {
         noNotificationLayout = view.findViewById(R.id.no_notification_layout);
-        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+        refreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -134,7 +132,7 @@ public class NotificationFragment extends BaseFragment
         });
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        notificationsRecycler = (RecyclerView) view.findViewById(R.id.notifications_recycler);
+        notificationsRecycler = view.findViewById(R.id.notifications_recycler);
         notificationsRecycler.setLayoutManager(linearLayoutManager);
 
         SwipeHelper swipeHelper = new SwipeHelper(this);
@@ -229,21 +227,50 @@ public class NotificationFragment extends BaseFragment
 
 
     private void setAdapter() {
-        if (!notificationItems.isEmpty()) {
-            if (notificationsAdapter == null) {
-                notificationsAdapter = new NotificationsAdapter(getContext(), notificationItems, this);
-                notificationsRecycler.setAdapter(notificationsAdapter);
+        if (canViewAnyNotification(notificationsDTO.getPayload().getPracticeInformation(),
+                notificationItems)) {
+            if (!notificationItems.isEmpty()) {
+                if (notificationsAdapter == null) {
+                    notificationsAdapter = new NotificationsAdapter(getContext(), notificationItems, this);
+                    notificationsRecycler.setAdapter(notificationsAdapter);
+                } else {
+                    notificationsAdapter.setNotificationItems(notificationItems);
+                }
+
+                refreshLayout.setVisibility(View.VISIBLE);
+                noNotificationLayout.setVisibility(View.GONE);
+
             } else {
-                notificationsAdapter.setNotificationItems(notificationItems);
+                refreshLayout.setVisibility(View.GONE);
+                noNotificationLayout.setVisibility(View.VISIBLE);
             }
-
-            refreshLayout.setVisibility(View.VISIBLE);
-            noNotificationLayout.setVisibility(View.GONE);
-
         } else {
             refreshLayout.setVisibility(View.GONE);
             noNotificationLayout.setVisibility(View.VISIBLE);
+            
+
         }
+    }
+
+    private boolean canViewAnyNotification(List<UserPracticeDTO> userPractices,
+                                           List<NotificationItem> notifications) {
+        for (UserPracticeDTO practice : userPractices) {
+            if (!notificationsDTO.getPayload().canViewNotifications(practice.getPracticeId())) {
+                notifications = filterNotificationsByPermissions(notifications, practice.getPracticeId());
+            }
+        }
+        return notifications.size() > 0;
+    }
+
+    private List<NotificationItem> filterNotificationsByPermissions(List<NotificationItem> notifications,
+                                                                    String practiceId) {
+        List<NotificationItem> filteredList = new ArrayList<>();
+        for (NotificationItem notificationItem : notifications) {
+            if (!notificationItem.getMetadata().getPracticeId().equals(practiceId)) {
+                filteredList.add(notificationItem);
+            }
+        }
+        return filteredList;
     }
 
     @Override

@@ -55,8 +55,6 @@ public class NotificationActivity extends MenuPatientActivity
         } else {
             resumeOnCreate(icicle);
         }
-
-
     }
 
     private void callNotificationService(final Bundle icicle) {
