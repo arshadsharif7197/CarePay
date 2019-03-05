@@ -380,12 +380,30 @@ public class AppointmentPayloadModel extends BasePayloadDto implements Serializa
             return false;
         }
 
+        return canScheduleAppointments(practiceId);
+    }
+
+    public boolean canScheduleAppointments(String practiceId) {
         if (getDelegate() == null) {
             return true;
         }
 
         ProfileLink profileLink = getDelegate().getProfileLink(practiceId);
-        return profileLink.getPermissionDto().getPermissions().getViewAppointments().isEnabled()
-                && profileLink.getPermissionDto().getPermissions().getScheduleAppointments().isEnabled();
+        if (profileLink == null) {
+            return false;
+        }
+        return profileLink.getPermissionDto().getPermissions().getScheduleAppointments().isEnabled()
+                && canViewAppointments(practiceId);
+    }
+
+    public boolean canViewAppointments(String practiceId) {
+        if (getDelegate() == null) {
+            return true;
+        }
+        ProfileLink profileLink = getDelegate().getProfileLink(practiceId);
+        if (profileLink == null) {
+            return false;
+        }
+        return profileLink.getPermissionDto().getPermissions().getViewAppointments().isEnabled();
     }
 }

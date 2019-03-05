@@ -143,12 +143,26 @@ public class AppointmentHistoryFragment extends BaseFragment
         }
 
         FloatingActionButton floatingActionButton = view.findViewById(com.carecloud.carepaylibrary.R.id.fab);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.newAppointment();
+        if (canScheduleAppointments()) {
+            floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callback.newAppointment();
+                }
+            });
+        } else {
+            floatingActionButton.setVisibility(View.GONE);
+        }
+
+    }
+
+    private boolean canScheduleAppointments() {
+        for (UserPracticeDTO practiceDTO : appointmentDto.getPayload().getUserPractices()) {
+            if (appointmentDto.getPayload().canScheduleAppointments(practiceDTO.getPracticeId())) {
+                return true;
             }
-        });
+        }
+        return false;
     }
 
     private void showPracticeToolbar(View view) {

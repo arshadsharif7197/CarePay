@@ -21,6 +21,7 @@ import com.carecloud.carepay.patient.appointments.adapters.AppointmentListAdapte
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
@@ -116,23 +117,39 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
 
         noAppointmentView = view.findViewById(R.id.no_appointment_layout);
         ((TextView) view.findViewById(R.id.no_apt_message_title)).setText(noAptMessageTitle);
-        ((TextView) view.findViewById(R.id.no_apt_message_desc)).setText(noAptMessageText);
+        TextView noAppointmentMessage = view.findViewById(R.id.no_apt_message_desc);
+        noAppointmentMessage.setText(noAptMessageText);
 
-        floatingActionButton = view.findViewById(R.id.fab);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.newAppointment();
-            }
-        });
         Button newAppointmentClassicButton = view.findViewById(R.id.newAppointmentClassicButton);
-        newAppointmentClassicButton.setVisibility(View.VISIBLE);
-        newAppointmentClassicButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callback.newAppointment();
+        floatingActionButton = view.findViewById(R.id.fab);
+        if (canScheduleAppointments()) {
+            floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callback.newAppointment();
+                }
+            });
+            newAppointmentClassicButton.setVisibility(View.VISIBLE);
+            newAppointmentClassicButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callback.newAppointment();
+                }
+            });
+        } else {
+            floatingActionButton.setVisibility(View.GONE);
+            noAppointmentMessage.setVisibility(View.GONE);
+            newAppointmentClassicButton.setVisibility(View.GONE);
+        }
+    }
+
+    private boolean canScheduleAppointments() {
+        for (UserPracticeDTO practiceDTO : appointmentsResultModel.getPayload().getUserPractices()) {
+            if (appointmentsResultModel.getPayload().canScheduleAppointments(practiceDTO.getPracticeId())) {
+                return true;
             }
-        });
+        }
+        return false;
     }
 
     private void loadAppointmentList() {
