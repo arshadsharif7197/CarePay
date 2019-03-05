@@ -102,8 +102,8 @@ public class NotificationFragment extends BaseFragment
         supportedNotificationTypes.add(NotificationType.appointment);
         supportedNotificationTypes.add(NotificationType.pending_forms);
         supportedNotificationTypes.add(NotificationType.payments);
-        supportedNotificationTypes.add(NotificationType.pending_survey);
         supportedNotificationTypes.add(NotificationType.secure_message);
+        supportedNotificationTypes.add(NotificationType.pending_survey);
         setHasOptionsMenu(true);
         Bundle args = getArguments();
         notificationsDTO = DtoHelper.getConvertedDTO(NotificationsDTO.class, args);
@@ -414,6 +414,11 @@ public class NotificationFragment extends BaseFragment
                 if (notificationType.equals(NotificationType.pending_forms)
                         && notificationItem.getPayload().getPracticeName() == null) {
                     //Prevent showing old notifications without pending form data
+                    continue;
+                }
+                if (notificationType.equals(NotificationType.pending_survey)
+                        && (!notificationsDTO.getPayload()
+                        .canViewSurveyNotifications(notificationItem.getMetadata().getPracticeId()))) {
                     continue;
                 }
                 filteredList.add(notificationItem);
