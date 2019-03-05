@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.notifications.adapters.NotificationsAdapter;
@@ -247,8 +248,8 @@ public class NotificationFragment extends BaseFragment
         } else {
             refreshLayout.setVisibility(View.GONE);
             noNotificationLayout.setVisibility(View.VISIBLE);
-            
-
+            TextView titleTextView = noNotificationLayout.findViewById(R.id.no_notification_message_title);
+            titleTextView.setText(Label.getLabel("appointments.list.history.noPermission.title"));
         }
     }
 
