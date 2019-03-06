@@ -239,13 +239,13 @@
     <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:id="@+id/medication_allergies_continue_button"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_48dp"
-        android:layout_margin="@dimen/dimen_20dp"
+        android:layout_height="@dimen/commonButtonHeight"
+        android:layout_margin="@dimen/distributionButtonContainersPadding"
         android:background="@drawable/green_rounded_button_selector_always_click"
         android:enabled="true"
         android:gravity="center"
         android:textColor="@color/white"
-        android:textSize="@dimen/text_size_22"
+        android:textSize="@dimen/respons_button_text_size"
         app:customAssetFont="gotham_rounded_medium"
         breeze:textKey="demographics_review_next_button"/>
 

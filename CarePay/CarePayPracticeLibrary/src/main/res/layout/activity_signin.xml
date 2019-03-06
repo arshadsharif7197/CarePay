@@ -187,11 +187,11 @@
 
         <ImageView
             android:id="@+id/shadowImageView"
-            android:layout_width="400dp"
+            android:layout_width="@dimen/signInShadowWidth"
             android:layout_height="wrap_content"
             android:layout_below="@id/mainLayout"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="-48dp"
+            android:layout_marginTop="@dimen/signInShadowTopMargin"
             android:src="@drawable/home_shadow" />
 
     </RelativeLayout>

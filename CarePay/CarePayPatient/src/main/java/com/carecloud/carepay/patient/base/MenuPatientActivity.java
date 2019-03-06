@@ -81,12 +81,12 @@ public abstract class MenuPatientActivity extends BasePatientActivity
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.activity_navigation);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        appointmentsDrawerUserIdTextView = (TextView) navigationView.getHeaderView(0)
+        toolbar = findViewById(R.id.toolbar);
+        drawer = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+        appointmentsDrawerUserIdTextView = navigationView.getHeaderView(0)
                 .findViewById(R.id.appointmentsDrawerIdTextView);
-        userFullNameTextView = (TextView) navigationView.getHeaderView(0)
+        userFullNameTextView = navigationView.getHeaderView(0)
                 .findViewById(R.id.userNameTextView);
         inflateDrawer();
         LocalBroadcastManager.getInstance(this).registerReceiver(badgeReceiver,
@@ -160,7 +160,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
 
     private void setUserImage() {
         String imageUrl = ApplicationPreferences.getInstance().getUserPhotoUrl();
-        ImageView userImageView = (ImageView) navigationView.getHeaderView(0)
+        ImageView userImageView = navigationView.getHeaderView(0)
                 .findViewById(R.id.appointmentDrawerIdImageView);
         if (!StringUtil.isNullOrEmpty(imageUrl)) {
             Picasso.with(this)
@@ -428,7 +428,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
      * @param visibility the visibility
      */
     public void displayToolbar(boolean visibility, String toolBarTitle) {
-        TextView toolbarText = (TextView) findViewById(R.id.toolbar_title);
+        TextView toolbarText = findViewById(R.id.toolbar_title);
         if (toolBarTitle != null) {
             toolbarText.setText(StringUtil.isNullOrEmpty(toolBarTitle) ? CarePayConstants.NOT_DEFINED : toolBarTitle);
         }
@@ -473,8 +473,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity
 
     protected void updateBadgeCounterViews() {
         int messageBadgeCounter = ApplicationPreferences.getInstance().getMessagesBadgeCounter();
-        TextView messageBadgeCounterTextView = ((TextView) navigationView.getMenu()
-                .findItem(R.id.nav_messages).getActionView().findViewById(R.id.badgeCounter));
+        TextView messageBadgeCounterTextView = navigationView.getMenu()
+                .findItem(R.id.nav_messages).getActionView().findViewById(R.id.badgeCounter);
         if (messageBadgeCounter > 0) {
             messageBadgeCounterTextView.setText(String.valueOf(messageBadgeCounter));
             messageBadgeCounterTextView.setVisibility(View.VISIBLE);
@@ -483,8 +483,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         }
 
         int formBadgeCounter = ApplicationPreferences.getInstance().getFormsBadgeCounter();
-        TextView formBadgeCounterTextView = ((TextView) navigationView.getMenu()
-                .findItem(R.id.nav_forms).getActionView().findViewById(R.id.badgeCounter));
+        TextView formBadgeCounterTextView = navigationView.getMenu()
+                .findItem(R.id.nav_forms).getActionView().findViewById(R.id.badgeCounter);
         if (formBadgeCounter > 0) {
             formBadgeCounterTextView.setText(String.valueOf(formBadgeCounter));
             formBadgeCounterTextView.setVisibility(View.VISIBLE);

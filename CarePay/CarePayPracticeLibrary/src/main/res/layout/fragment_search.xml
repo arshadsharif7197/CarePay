@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:focusable="true"
     android:focusableInTouchMode="true"
-    android:focusable="true">
+    android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/closeViewLayout"
@@ -38,9 +37,8 @@
         android:id="@+id/search_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/dimen_26dp"
         android:layout_marginStart="@dimen/dimen_26dp"
-        android:layout_toRightOf="@+id/closeViewLayout"
+        android:layout_marginEnd="@dimen/dimen_26dp"
         android:orientation="vertical">
 
         <FrameLayout
@@ -50,7 +48,7 @@
 
             <include
                 android:id="@+id/search_toolbar"
-                layout="@layout/toolbar_title_only"/>
+                layout="@layout/toolbar_title_only" />
 
         </FrameLayout>
 
@@ -59,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:padding="@dimen/dimen_20dp">
+            android:padding="@dimen/addPaymentItemSearchPadding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePaySearchView
                 android:id="@+id/search_entry_view"
@@ -68,7 +66,7 @@
                 android:background="@drawable/search_rounded_border"
                 android:theme="@style/SearchViewStyleDark_NoLine"
                 app:customAssetFont="proxima_nova_regular"
-                app:iconifiedByDefault="false"/>
+                app:iconifiedByDefault="false" />
 
         </FrameLayout>
 
@@ -81,24 +79,24 @@
                 android:id="@+id/search_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="@dimen/padding_xlarge"/>
+                android:padding="@dimen/addPaymentItemListPadding" />
 
             <FrameLayout
                 android:id="@+id/emptyStateScreen"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingStart="@dimen/dimen_60dp"
-                android:paddingEnd="@dimen/dimen_60dp"
+                android:paddingStart="@dimen/addPaymentItemEmptyScreenPadding"
+                android:paddingEnd="@dimen/addPaymentItemEmptyScreenPadding"
                 android:visibility="gone">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/no_results_message"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_size_18sp"
                     android:gravity="center"
                     android:textColor="@color/optional_gray"
-                    app:customAssetFont="gotham_rounded_medium"/>
+                    android:textSize="@dimen/addPaymentItemEmptyScreenTextSize"
+                    app:customAssetFont="gotham_rounded_medium" />
 
             </FrameLayout>
 
@@ -109,8 +107,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_toRightOf="@+id/search_content"
+        android:orientation="vertical"
         android:visibility="invisible">
 
 

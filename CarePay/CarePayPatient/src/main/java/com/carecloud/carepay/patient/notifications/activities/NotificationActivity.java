@@ -25,6 +25,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
@@ -82,7 +83,7 @@ public class NotificationActivity extends MenuPatientActivity
     protected void resumeOnCreate(Bundle icicle) {
         if (icicle == null) {
             NotificationFragment notificationFragment = NotificationFragment.newInstance(notificationsDTO);
-            navigateToFragment(notificationFragment, false);
+            this.replaceFragment(notificationFragment, false);
         }
         initPresenter(null);
     }
@@ -222,7 +223,12 @@ public class NotificationActivity extends MenuPatientActivity
     }
 
     @Override
-    public void navigateToFragment(Fragment fragment, boolean addToBackStack) {
+    public void addFragment(Fragment fragment, boolean addToBackStack) {
+        addFragment(R.id.container_main, fragment, addToBackStack);
+    }
+
+    @Override
+    public void replaceFragment(Fragment fragment, boolean addToBackStack) {
         replaceFragment(R.id.container_main, fragment, addToBackStack);
         if (fragment instanceof PaymentMethodPrepaymentFragment) {
             displayToolbar(false, null);
@@ -245,7 +251,12 @@ public class NotificationActivity extends MenuPatientActivity
 
     @Override
     public void refreshAppointments() {
+        displayToolbar(true, null);
+    }
 
+    @Override
+    public void newAppointment() {
+        //Not apply on this flow
     }
 
     private void initPresenter(final AppointmentDTO appointmentDTO) {
@@ -330,7 +341,8 @@ public class NotificationActivity extends MenuPatientActivity
         }
     };
 
-    private void replaceFragment(Fragment fragment, boolean addToStack) {
-        replaceFragment(com.carecloud.carepaylibrary.R.id.container_main, fragment, addToStack);
+    @Override
+    public DTO getDto() {
+        return null;
     }
 }

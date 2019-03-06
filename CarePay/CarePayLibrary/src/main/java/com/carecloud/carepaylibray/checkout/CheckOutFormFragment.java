@@ -164,7 +164,6 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            callback.navigateToWorkflow(workflowDTO);
             nextButton.setEnabled(true);
             if (NavigationStateConstants.APPOINTMENTS.equals(workflowDTO.getState())
                     || NavigationStateConstants.PATIENT_HOME.equals(workflowDTO.getState())) {

@@ -12,10 +12,16 @@
         android:layout_height="wrap_content"
         android:background="@drawable/practice_mode_dialog_header_bg"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/paymentPlanConfirmationHeaderBottomPadding"
-        android:paddingEnd="@dimen/paymentPlanConfirmationHeaderHorizontalPadding"
         android:paddingStart="@dimen/paymentPlanConfirmationHeaderHorizontalPadding"
-        android:paddingTop="@dimen/paymentPlanConfirmationHeaderTopPadding">
+        android:paddingTop="@dimen/paymentPlanConfirmationHeaderTopPadding"
+        android:paddingEnd="@dimen/paymentPlanConfirmationHeaderHorizontalPadding"
+        android:paddingBottom="@dimen/paymentPlanConfirmationHeaderBottomPadding">
+
+        <View
+            android:id="@+id/dialog_close_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -95,8 +101,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:paddingTop="@dimen/confirmationDataVerticalPadding"
+                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/confirmationDataLabelTextSize"
                 app:customAssetFont="proxima_nova_regular"
@@ -109,8 +115,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:paddingTop="@dimen/confirmationDataVerticalPadding"
+                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/confirmationDataValueTextSize"
                 app:customAssetFont="proxima_nova_semi_bold"
@@ -135,8 +141,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:paddingTop="@dimen/confirmationDataVerticalPadding"
+                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/confirmationDataLabelTextSize"
                 app:customAssetFont="proxima_nova_regular"
@@ -149,8 +155,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:paddingTop="@dimen/confirmationDataVerticalPadding"
+                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/confirmationDataValueTextSize"
                 app:customAssetFont="proxima_nova_semi_bold" />
@@ -174,8 +180,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:paddingTop="@dimen/confirmationDataVerticalPadding"
+                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/confirmationDataLabelTextSize"
                 app:customAssetFont="proxima_nova_regular"
@@ -188,8 +194,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:paddingTop="@dimen/confirmationDataVerticalPadding"
+                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/confirmationDataValueTextSize"
                 app:customAssetFont="proxima_nova_semi_bold" />

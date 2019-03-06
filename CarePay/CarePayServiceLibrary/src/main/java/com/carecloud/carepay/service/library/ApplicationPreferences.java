@@ -51,6 +51,7 @@ public class ApplicationPreferences {
     private static final String PREFERENCE_LAST_APP_VERSION_NUM = "last_app_version_num";
     private static final String PREFERENCE_REMIND_LATEST = "remind_latest";
     private static final String PREFERENCE_FORCE_UPDATE = "force_update";
+    public static final String PREFERENCE_APPOINTMENT_COUNTS = "appointment_counts";
 
     private String patientId;
     private String practiceId;
@@ -393,6 +394,8 @@ public class ApplicationPreferences {
                     locationsSet.add(location.getGuid());
                 }
                 editor.putStringSet(PREFERENCE_LOCATION + practice.getPracticeId(), locationsSet);
+            } else {
+                editor.putStringSet(PREFERENCE_LOCATION + practice.getPracticeId(), null);
             }
         }
         editor.apply();
@@ -489,11 +492,11 @@ public class ApplicationPreferences {
         }
     }
 
-    public int getLastVersionNum(){
+    public int getLastVersionNum() {
         return readIntFromSharedPref(PREFERENCE_LAST_APP_VERSION_NUM);
     }
 
-    public void setLastVersionNum(int newVersionNum){
+    public void setLastVersionNum(int newVersionNum) {
         writeIntegerToSharedPref(PREFERENCE_LAST_APP_VERSION_NUM, newVersionNum);
         //always reset remind latest for new updates
         setRemindLatest(true);
@@ -511,7 +514,15 @@ public class ApplicationPreferences {
         return readBooleanFromSharedPref(PREFERENCE_FORCE_UPDATE, false);
     }
 
-    public void setForceUpdate(boolean mustForceUpdate){
+    public void setForceUpdate(boolean mustForceUpdate) {
         writeBooleanToSharedPref(PREFERENCE_FORCE_UPDATE, mustForceUpdate);
+    }
+
+    public void setAppointmentCounts(Object appointmentCounts) {
+        writeObjectToSharedPreference(PREFERENCE_APPOINTMENT_COUNTS, appointmentCounts);
+    }
+
+    public Object getAppointmentCounts(Class appointmentCountsClass) {
+        return getObjectFromSharedPreferences(PREFERENCE_APPOINTMENT_COUNTS, appointmentCountsClass);
     }
 }

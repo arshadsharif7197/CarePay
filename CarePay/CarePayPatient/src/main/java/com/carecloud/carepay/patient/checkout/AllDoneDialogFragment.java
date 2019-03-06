@@ -48,7 +48,7 @@ public class AllDoneDialogFragment extends BaseDialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button button = (Button) view.findViewById(R.id.okButton);
+        Button button = view.findViewById(R.id.okButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

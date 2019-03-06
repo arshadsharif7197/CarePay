@@ -59,9 +59,7 @@ public class SelectAmountFragment extends BaseDialogFragment {
         TextView footer = (TextView) findViewById(R.id.maxAmountTextView);
         footer.setText(String.format(Label.getLabel("payment.selectAmount.label.label.maxAmount"),
                 currencyFormat.format(maxAmount)));
-//        footer.setText(String.format("Max amount %s",
-//                currencyFormat.format(maxAmount)));
-        applyAmountButton = (Button) view.findViewById(R.id.enterAmountButton);
+        applyAmountButton = view.findViewById(R.id.enterAmountButton);
         applyAmountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,9 +67,9 @@ public class SelectAmountFragment extends BaseDialogFragment {
                 callback.onAmountSelected(Double.parseDouble(numberStr));
             }
         });
-        amountTextView = (TextView) view.findViewById(R.id.enterAmountTextView);
+        amountTextView = view.findViewById(R.id.enterAmountTextView);
         String symbol = currencyFormat.getCurrency().getSymbol();
-        amountSymbol = (TextView) view.findViewById(R.id.amountSymbolTextView);
+        amountSymbol = view.findViewById(R.id.amountSymbolTextView);
         amountSymbol.setText(symbol);
         setEntryListeners(view);
         View close = view.findViewById(R.id.closeViewLayout);
@@ -159,11 +157,11 @@ public class SelectAmountFragment extends BaseDialogFragment {
                 }
             }
             if (numberStr.length() < 5) {
-                amountTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 80);
+                amountTextView.setTextSize(getResources().getDimension(R.dimen.amountCalculatorEntryTextSizeBig));
             } else if (numberStr.length() < 7) {
-                amountTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 65);
+                amountTextView.setTextSize(getResources().getDimension(R.dimen.amountCalculatorEntryTextSize65));
             } else if (numberStr.length() < 10) {
-                amountTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 50);
+                amountTextView.setTextSize(getResources().getDimension(R.dimen.amountCalculatorEntryTextSize50));
             }
             enableApplyAmountButton(numberStr);
         }

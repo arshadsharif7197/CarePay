@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:descendantFocusability="beforeDescendants"
-    tools:context="com.carecloud.carepaylibray.checkout.NextAppointmentFragment">
+    tools:context="com.carecloud.carepaylibray.checkout.BaseNextAppointmentFragment">
 
     <include
         android:id="@+id/toolbar_layout"
@@ -114,102 +114,220 @@
                     app:customAssetFont="gotham_rounded_medium" />
             </RelativeLayout>
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
-                android:id="@+id/providerTextInputLayout"
-                style="@style/TextInputLayoutStyle"
-                android:layout_below="@id/providerContainer"
-                android:paddingStart="@dimen/dimen_10dp"
-                android:paddingTop="@dimen/dimen_5dp"
-                android:paddingEnd="@dimen/dimen_10dp"
-                app:customAssetFont="proxima_nova_semi_bold"
-                app:hintTextAppearance="@style/FloatingLabelStyle">
+            <RelativeLayout
+                android:id="@+id/providerFieldContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/providerContainer">
 
-                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
-                    android:id="@+id/providerTextView"
-                    style="@style/EditTextStyle"
-                    android:background="@null"
-                    android:cursorVisible="false"
-                    android:drawableEnd="@drawable/icon_drop_down"
-                    android:editable="false"
-                    android:focusableInTouchMode="false"
-                    android:imeOptions="actionNext"
+                <ImageView
+                    android:id="@+id/providerResetImage"
+                    android:layout_width="@dimen/nextAppointmentResetFieldImageSize"
+                    android:layout_height="@dimen/nextAppointmentResetFieldImageSize"
+                    android:layout_alignBottom="@id/providerTextInputLayout"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="@dimen/nextAppointmentResetFieldEndMargin"
+                    android:layout_marginBottom="@dimen/nextAppointmentResetFieldBottomMargin"
+                    android:background="?selectableItemBackground"
+                    android:padding="@dimen/nextAppointmentResetFieldPadding"
+                    android:src="@drawable/ic_delete" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                    android:id="@+id/providerTextInputLayout"
+                    style="@style/TextInputLayoutStyle"
+                    android:layout_alignParentStart="true"
+                    android:layout_toStartOf="@id/providerResetImage"
+                    android:paddingStart="@dimen/dimen_10dp"
+                    android:paddingTop="@dimen/dimen_5dp"
+                    android:paddingEnd="@dimen/dimen_10dp"
                     app:customAssetFont="proxima_nova_semi_bold"
-                    breeze:hintKey="next_appointment_provider_hint" />
+                    app:hintTextAppearance="@style/FloatingLabelStyle">
 
-            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+                    <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                        android:id="@+id/providerTextView"
+                        style="@style/EditTextStyle"
+                        android:background="@null"
+                        android:cursorVisible="false"
+                        android:editable="false"
+                        android:focusableInTouchMode="false"
+                        android:imeOptions="actionNext"
+                        app:customAssetFont="proxima_nova_semi_bold"
+                        breeze:hintKey="next_appointment_provider_hint" />
+
+                </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+            </RelativeLayout>
 
             <View
                 android:id="@+id/separator1"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_1dp"
-                android:layout_below="@id/providerTextInputLayout"
+                android:layout_below="@id/providerFieldContainer"
                 android:layout_marginStart="@dimen/dimen_10dp"
                 android:layout_marginEnd="@dimen/dimen_10dp"
                 android:background="@color/light_gray" />
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
-                android:id="@+id/visitTypeTextInputLayout"
-                style="@style/TextInputLayoutStyle"
-                android:layout_below="@id/separator1"
-                android:paddingStart="@dimen/dimen_10dp"
-                android:paddingTop="@dimen/dimen_5dp"
-                android:paddingEnd="@dimen/dimen_10dp"
-                app:customAssetFont="proxima_nova_semi_bold"
-                app:hintTextAppearance="@style/FloatingLabelStyle">
+            <RelativeLayout
+                android:id="@+id/locationFieldContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/separator1">
 
-                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
-                    android:id="@+id/visitTypeTextView"
-                    style="@style/EditTextStyle"
-                    android:background="@null"
-                    android:cursorVisible="false"
-                    android:drawableEnd="@drawable/icon_drop_down"
-                    android:editable="false"
-                    android:focusableInTouchMode="false"
-                    android:imeOptions="actionNext"
+                <ImageView
+                    android:id="@+id/locationResetImage"
+                    android:layout_width="@dimen/nextAppointmentResetFieldImageSize"
+                    android:layout_height="@dimen/nextAppointmentResetFieldImageSize"
+                    android:layout_alignBottom="@id/locationTextInputLayout"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="@dimen/nextAppointmentResetFieldEndMargin"
+                    android:layout_marginBottom="@dimen/nextAppointmentResetFieldBottomMargin"
+                    android:background="?selectableItemBackground"
+                    android:padding="@dimen/nextAppointmentResetFieldPadding"
+                    android:src="@drawable/ic_delete" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                    android:id="@+id/locationTextInputLayout"
+                    style="@style/TextInputLayoutStyle"
+                    android:layout_alignParentStart="true"
+                    android:layout_toStartOf="@id/locationResetImage"
+                    android:paddingStart="@dimen/dimen_10dp"
+                    android:paddingTop="@dimen/dimen_5dp"
+                    android:paddingEnd="@dimen/dimen_10dp"
                     app:customAssetFont="proxima_nova_semi_bold"
-                    breeze:hintKey="next_appointment_choose_visit_type_hint" />
+                    app:hintTextAppearance="@style/FloatingLabelStyle">
 
-            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+                    <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                        android:id="@+id/locationTextView"
+                        style="@style/EditTextStyle"
+                        android:background="@null"
+                        android:cursorVisible="false"
+                        android:editable="false"
+                        android:focusableInTouchMode="false"
+                        android:imeOptions="actionNext"
+                        app:customAssetFont="proxima_nova_semi_bold"
+                        breeze:hintKey="add_appointment_location"
+                        tools:text="Select Location" />
+
+                </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/separator2"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_1dp"
+                android:layout_below="@id/locationFieldContainer"
+                android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_marginEnd="@dimen/dimen_10dp"
+                android:background="@color/light_gray" />
+
+            <RelativeLayout
+                android:id="@+id/visitTypeFieldContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/separator2">
+
+                <ImageView
+                    android:id="@+id/visitTypeResetImage"
+                    android:layout_width="@dimen/nextAppointmentResetFieldImageSize"
+                    android:layout_height="@dimen/nextAppointmentResetFieldImageSize"
+                    android:layout_alignBottom="@id/visitTypeTextInputLayout"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="@dimen/nextAppointmentResetFieldEndMargin"
+                    android:layout_marginBottom="@dimen/nextAppointmentResetFieldBottomMargin"
+                    android:background="?selectableItemBackground"
+                    android:padding="@dimen/nextAppointmentResetFieldPadding"
+                    android:src="@drawable/ic_delete"
+                    android:visibility="gone" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                    android:id="@+id/visitTypeTextInputLayout"
+                    style="@style/TextInputLayoutStyle"
+                    android:layout_alignParentStart="true"
+                    android:layout_toStartOf="@id/visitTypeResetImage"
+                    android:paddingStart="@dimen/dimen_10dp"
+                    android:paddingTop="@dimen/dimen_5dp"
+                    android:paddingEnd="@dimen/dimen_10dp"
+                    app:customAssetFont="proxima_nova_semi_bold"
+                    app:hintTextAppearance="@style/FloatingLabelStyle">
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                        android:id="@+id/visitTypeTextView"
+                        style="@style/EditTextStyle"
+                        android:background="@null"
+                        android:cursorVisible="false"
+                        android:drawableEnd="@drawable/icon_drop_down"
+                        android:editable="false"
+                        android:focusableInTouchMode="false"
+                        android:imeOptions="actionNext"
+                        app:customAssetFont="proxima_nova_semi_bold"
+                        breeze:hintKey="next_appointment_choose_visit_type_hint" />
+
+                </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+            </RelativeLayout>
 
             <View
                 android:id="@+id/separator"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_1dp"
-                android:layout_below="@id/visitTypeTextInputLayout"
+                android:layout_below="@id/visitTypeFieldContainer"
                 android:layout_marginStart="@dimen/dimen_10dp"
                 android:layout_marginEnd="@dimen/dimen_10dp"
                 android:background="@color/light_gray" />
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
-                android:id="@+id/visitTimeTextInputLayout"
-                style="@style/TextInputLayoutStyle"
-                android:layout_below="@id/separator"
-                android:paddingStart="@dimen/dimen_10dp"
-                android:paddingTop="@dimen/dimen_5dp"
-                android:paddingEnd="@dimen/dimen_10dp"
-                app:customAssetFont="proxima_nova_semi_bold"
-                app:hintTextAppearance="@style/FloatingLabelStyle">
+            <RelativeLayout
+                android:id="@+id/visitTimeFieldContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/separator">
 
-                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
-                    android:id="@+id/visitTimeTextView"
-                    style="@style/EditTextStyle"
-                    android:background="@null"
-                    android:cursorVisible="false"
-                    android:drawableEnd="@drawable/icon_drop_down"
-                    android:editable="false"
-                    android:enabled="false"
-                    android:focusableInTouchMode="false"
-                    android:imeOptions="actionDone"
+                <ImageView
+                    android:id="@+id/visitTimeResetImage"
+                    android:layout_width="@dimen/nextAppointmentResetFieldImageSize"
+                    android:layout_height="@dimen/nextAppointmentResetFieldImageSize"
+                    android:layout_alignBottom="@id/visitTimeTextInputLayout"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="@dimen/nextAppointmentResetFieldEndMargin"
+                    android:layout_marginBottom="@dimen/nextAppointmentResetFieldBottomMargin"
+                    android:background="?selectableItemBackground"
+                    android:padding="@dimen/nextAppointmentResetFieldPadding"
+                    android:src="@drawable/ic_delete"
+                    android:visibility="gone" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                    android:id="@+id/visitTimeTextInputLayout"
+                    style="@style/TextInputLayoutStyle"
+                    android:layout_alignParentStart="true"
+                    android:layout_toStartOf="@id/visitTimeResetImage"
+                    android:paddingStart="@dimen/dimen_10dp"
+                    android:paddingTop="@dimen/dimen_5dp"
+                    android:paddingEnd="@dimen/dimen_10dp"
                     app:customAssetFont="proxima_nova_semi_bold"
-                    breeze:hintKey="next_appointment_choose_when_hint" />
+                    app:hintTextAppearance="@style/FloatingLabelStyle">
 
-            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+                    <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                        android:id="@+id/visitTimeTextView"
+                        style="@style/EditTextStyle"
+                        android:background="@null"
+                        android:cursorVisible="false"
+                        android:drawableEnd="@drawable/icon_drop_down"
+                        android:editable="false"
+                        android:enabled="false"
+                        android:focusableInTouchMode="false"
+                        android:imeOptions="actionDone"
+                        app:customAssetFont="proxima_nova_semi_bold"
+                        breeze:hintKey="next_appointment_choose_when_hint" />
+
+                </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+            </RelativeLayout>
 
             <View
                 android:id="@+id/finalSeparator"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_1dp"
-                android:layout_below="@id/visitTimeTextInputLayout"
+                android:layout_below="@id/visitTimeFieldContainer"
                 android:layout_marginStart="@dimen/dimen_10dp"
                 android:layout_marginEnd="@dimen/dimen_10dp"
                 android:background="@color/light_gray" />
@@ -244,8 +362,8 @@
                 android:gravity="top"
                 android:lines="4"
                 android:maxLength="100"
-                android:textColor="@color/payne_gray"
                 android:padding="@dimen/reasonForVisitHorizontalMargin"
+                android:textColor="@color/payne_gray"
                 android:textColorHint="@color/gray"
                 app:customAssetFont="proxima_nova_semi_bold"
                 breeze:hintKey="appointment.request.visitTypeReason.hint.typeHint" />

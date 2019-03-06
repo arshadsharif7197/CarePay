@@ -290,6 +290,7 @@
     <dimen name="apt_available_hours_list_padding">16dp</dimen>
     <dimen name="apt_available_hours_list_header_padding_top">26dp</dimen>
     <dimen name="apt_available_hours_date_picker_padding">18dp</dimen>
+    <dimen name="availableHourListHeaderTextSize">14sp</dimen>
 
     <dimen name="apt_popup_parent_padding">14dp</dimen>
     <dimen name="apt_popup_icon_margin">8dp</dimen>
@@ -453,9 +454,6 @@
     <dimen name="list_dialog_min_height">400dp</dimen>
     <dimen name="list_dialog_min_height_small">200dp</dimen>
     <dimen name="checkin_complete_divider_width">350dp</dimen>
-    <dimen name="completeCheckInItemTextSize">22sp</dimen>
-    <dimen name="completeCheckInItemValueTextSize">16sp</dimen>
-    <dimen name="completeCheckInItemMargin">14dp</dimen>
     <dimen name="dimen_50dp">50dp</dimen>
     <dimen name="confirmationNumberTextSize">11sp</dimen>
     <dimen name="icon_check_size">130dp</dimen>
@@ -471,14 +469,67 @@
     <dimen name="paymentDetailLabelTextSize">16sp</dimen>
     <dimen name="paymentDetailAmountTextSize">15sp</dimen>
     <dimen name="paymentDetailDateTextSize">12sp</dimen>
+    <dimen name="nextAppointmentProviderImageSize">80dp</dimen>
+    <dimen name="availableHourItemTextSize">14sp</dimen>
     <dimen name="reasonForVisitHorizontalMargin">14dp</dimen>
     <dimen name="visitTypeContainerVerticalPadding">15dp</dimen>
     <dimen name="reasonForVisitTopMargin">10dp</dimen>
-    <dimen name="nextAppointmentProviderImageSize">80dp</dimen>
     <dimen name="optionalLabelRightMargin">38dp</dimen>
     <dimen name="optionalLabelTextSize">9sp</dimen>
     <dimen name="itemCreditCardImageSize">36dp</dimen>
     <dimen name="demographicErrorImageHeight">30dp</dimen>
     <dimen name="demographicErrorViewWidth">22dp</dimen>
+
+    <dimen name="homeButtonIconBottomPadding">30dp</dimen>
+    <dimen name="homeButtonIconStartPadding">30dp</dimen>
+    <dimen name="ssoWebViewOpenOffset">240dp</dimen>
+
+    <!--Create appointment flow-->
+    <dimen name="createAppointmentNoDataTextViewHeight">90dp</dimen>
+    <dimen name="createAppointmentHeaderVerticalMargin">10dp</dimen>
+    <dimen name="createAppointmentMainPadding">15dp</dimen>
+    <dimen name="createAppointmentNoDataVerticalMargin">10dp</dimen>
+    <dimen name="createAppointmentNoDataPadding">20dp</dimen>
+    <dimen name="createAppointmentNoDataTextSize">15sp</dimen>
+    <dimen name="createAppointmentHeaderTopMargin">40dp</dimen>
+    <dimen name="itemVisitTypePadding">15dp</dimen>
+    <dimen name="visitTypeItemTextSize">17sp</dimen>
+    <dimen name="visitTypeAlertImageStartMargin">5dp</dimen>
+    <dimen name="visitTypePrepaymentAmountTextSize">14sp</dimen>
+    <dimen name="createAppointmentDataTextViewHeight">100dp</dimen>
+    <dimen name="createAppointmentSectionImageSize">35dp</dimen>
+    <dimen name="nextAppointmentResetFieldImageSize">25dp</dimen>
+    <dimen name="nextAppointmentResetFieldEndMargin">20dp</dimen>
+    <dimen name="nextAppointmentResetFieldBottomMargin">15dp</dimen>
+    <dimen name="nextAppointmentResetFieldPadding">5dp</dimen>
+    <dimen name="createAppointmentSectionTextSize">22sp</dimen>
+    <dimen name="emptyScreenSubtitleHorizontalPadding">35dp</dimen>
+    <dimen name="emptyScreenSubTitleTextSize">15sp</dimen>
+    <dimen name="emptyScreenTitleTextSize">21sp</dimen>
+    <dimen name="emptyScreenTitlePadding">10dp</dimen>
+    <dimen name="itemProviderVerticalMargin">12dp</dimen>
+    <dimen name="locationItemHorizontalMargin">15dp</dimen>
+    <dimen name="timeSlotItemPadding">18dp</dimen>
+    <dimen name="timeSlotItemTextSize">20sp</dimen>
+    <dimen name="locationItemHeight">80dp</dimen>
+
+    <!--Check In Screen-->
+    <dimen name="checkinPlanTotalHeaderTextHeight">100dp</dimen>
+    <dimen name="checkinPlanTotalHeaderTextSize">90sp</dimen>
+    <dimen name="checkinPlanParametersTextPadding">100dp</dimen>
+    <dimen name="checkinPlanParametersTextSize">12sp</dimen>
+    <dimen name="checkinPlanParametersTextPaddingTopBottom">10dp</dimen>
+    <dimen name="checkinPlanHeaderMessageMargin">10dp</dimen>
+    <dimen name="checkinPlanTitleTextSize">30sp</dimen>
+    <dimen name="checkinPlanFooterButtonHeight">48dp</dimen>
+    <dimen name="checkinPlanFooterButtonMargin">10dp</dimen>
+    <dimen name="checkinPlanMainContainerSidePadding">150dp</dimen>
+    <dimen name="separatorHeight">1dp</dimen>
+
+    <!--Complete Screen-->
+    <dimen name="completeCheckInItemMargin">14dp</dimen>
+    <dimen name="completeCheckInItemTextSize">22sp</dimen>
+    <dimen name="completeCheckInItemValueTextSize">16sp</dimen>
+
 
 </resources>

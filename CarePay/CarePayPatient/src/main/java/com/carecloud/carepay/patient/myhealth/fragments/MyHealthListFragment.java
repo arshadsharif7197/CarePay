@@ -94,7 +94,7 @@ public class MyHealthListFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Toolbar toolbar = (Toolbar) view.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,10 +103,10 @@ public class MyHealthListFragment extends BaseFragment {
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.actionButton);
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.myHealthRecyclerView);
+        FloatingActionButton fab = view.findViewById(R.id.actionButton);
+        RecyclerView recyclerView = view.findViewById(R.id.myHealthRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
+        TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
         switch (type) {
             case CARE_TEAM:
                 List<MyHealthProviderDto> providers = myHealthDto.getPayload().getMyHealthData()

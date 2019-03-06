@@ -3,4 +3,5 @@
     <item name="edit_insurance_close_button" type="id"/>
     <item name="search_header_title" type="id"/>
     <item name="search_header_subtitle" type="id"/>
+    <item name="add_unlisted_border" type="id"/>
 </resources>

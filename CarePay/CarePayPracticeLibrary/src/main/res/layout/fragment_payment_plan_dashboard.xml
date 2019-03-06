@@ -105,9 +105,9 @@
                     android:id="@+id/completedLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/itemDashboardFieldMargin"
                     android:layout_marginStart="@dimen/dashboardLabelStartMargin"
                     android:layout_marginTop="@dimen/dashboardLabelTopMargin"
+                    android:layout_marginBottom="@dimen/itemDashboardFieldMargin"
                     android:textAllCaps="true"
                     android:textColor="@color/textview_default_textcolor"
                     android:textSize="@dimen/dashboardLabelTextSize"
@@ -124,12 +124,12 @@
                     android:id="@+id/canceledLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dimen_15dp"
-                    android:layout_marginTop="@dimen/dimen_25dp"
-                    android:layout_marginBottom="@dimen/dimen_10dp"
+                    android:layout_marginStart="@dimen/dashboardLabelStartMargin"
+                    android:layout_marginTop="@dimen/dashboardLabelTopMargin"
+                    android:layout_marginBottom="@dimen/itemDashboardFieldMargin"
                     android:textAllCaps="true"
                     android:textColor="@color/textview_default_textcolor"
-                    android:textSize="@dimen/text_size_18sp"
+                    android:textSize="@dimen/dashboardLabelTextSize"
                     app:customAssetFont="proxima_nova_semi_bold"
                     breeze:textKey="payment.paymentPlanDashboard.section.title.canceled"
                     tools:text="Canceled" />
@@ -152,8 +152,8 @@
             android:background="@drawable/patient_mode_dialog_body_bg"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingEnd="@dimen/dimen_40dp"
             android:paddingStart="@dimen/dimen_40dp"
+            android:paddingEnd="@dimen/dimen_40dp"
             android:visibility="gone">
 
             <ImageView

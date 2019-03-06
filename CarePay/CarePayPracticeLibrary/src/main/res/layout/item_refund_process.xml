@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/payment_info_row"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_81dp"
+        android:layout_height="@dimen/distributionItemHeight"
         android:orientation="horizontal">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
@@ -21,7 +19,7 @@
             android:background="@color/white"
             android:button="@null"
             android:drawableEnd="@drawable/cell_checkbox"
-            android:padding="@dimen/dimen_10dp"/>
+            android:padding="@dimen/dimen_10dp" />
 
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -29,26 +27,26 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:padding="@dimen/dimen_8dp"
             android:background="@color/white"
-            android:maxLines="2"
             android:ellipsize="end"
             android:gravity="start|center_vertical"
-            android:textSize="@dimen/text_size_16sp"
+            android:maxLines="2"
+            android:padding="@dimen/distributionCellPadding"
             android:textColor="@color/Feldgrau"
-            tools:text="Co-pay"
-            app:customAssetFont="proxima_nova_regular"/>
+            android:textSize="@dimen/distributionItemTextSize"
+            app:customAssetFont="proxima_nova_regular"
+            tools:text="Co-pay" />
 
         <View
             android:layout_width="@dimen/dimen_1dp"
             android:layout_height="match_parent"
-            android:background="@color/light_gray"/>
+            android:background="@color/light_gray" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@color/white"
             android:layout_weight="2"
+            android:background="@color/white"
             android:padding="@dimen/dimen_8dp">
 
             <FrameLayout
@@ -58,21 +56,21 @@
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/provider_short_name"
-                    android:layout_width="@dimen/dimen_50dp"
-                    android:layout_height="@dimen/dimen_50dp"
+                    android:layout_width="@dimen/distributionItemShortNameSize"
+                    android:layout_height="@dimen/distributionItemShortNameSize"
                     android:layout_gravity="center"
                     android:background="@drawable/round_list_tv_dark"
                     android:src="@drawable/icn_placeholder_user_profile_png"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_15"
-                    app:customAssetFont="gotham_rounded_medium"/>
+                    app:customAssetFont="gotham_rounded_medium" />
 
                 <ImageView
                     android:id="@+id/provider_image"
-                    android:layout_width="@dimen/dimen_50dp"
-                    android:layout_height="@dimen/dimen_50dp"
+                    android:layout_width="@dimen/distributionItemShortNameSize"
+                    android:layout_height="@dimen/distributionItemShortNameSize"
                     android:layout_gravity="center"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
             </FrameLayout>
 
@@ -81,77 +79,75 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:paddingStart="@dimen/dimen_8dp"
-                android:paddingEnd="@dimen/dimen_8dp"
-                android:maxLines="2"
                 android:ellipsize="end"
                 android:gravity="start|center_vertical"
-                android:textSize="@dimen/text_size_16sp"
+                android:maxLines="2"
+                android:paddingStart="@dimen/distributionCellPadding"
+                android:paddingEnd="@dimen/distributionCellPadding"
                 android:textColor="@color/pastel_blue"
-                tools:text="Dr. Nina Simone"
-                app:customAssetFont="proxima_nova_regular"/>
+                android:textSize="@dimen/distributionItemTextSize"
+                app:customAssetFont="proxima_nova_regular"
+                tools:text="Dr. Nina Simone" />
 
         </LinearLayout>
 
         <View
             android:layout_width="@dimen/dimen_1dp"
             android:layout_height="match_parent"
-            android:background="@color/light_gray"/>
+            android:background="@color/light_gray" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@color/white"
             android:layout_weight="2"
+            android:background="@color/white"
             android:padding="@dimen/dimen_8dp">
-
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:src="@drawable/icn_location_payment"
-                android:visibility="visible"/>
-
+                android:visibility="visible" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/location_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
                 android:layout_gravity="center_vertical"
-                android:paddingStart="@dimen/dimen_8dp"
-                android:paddingEnd="@dimen/dimen_8dp"
-                android:maxLines="2"
+                android:layout_weight="2"
                 android:ellipsize="end"
                 android:gravity="start|center_vertical"
-                android:textSize="@dimen/text_size_16sp"
+                android:maxLines="2"
+                android:paddingEnd="@dimen/distributionCellPadding"
+                android:paddingStart="@dimen/distributionCellPadding"
                 android:textColor="@color/pastel_blue"
-                tools:text="Miami, FL"
-                app:customAssetFont="proxima_nova_regular"/>
+                android:textSize="@dimen/distributionItemTextSize"
+                app:customAssetFont="proxima_nova_regular"
+                tools:text="Miami, FL" />
 
         </LinearLayout>
 
         <View
             android:layout_width="@dimen/dimen_1dp"
             android:layout_height="match_parent"
-            android:background="@color/light_gray"/>
+            android:background="@color/light_gray" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/refund_amount"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@color/white"
             android:layout_weight="1.5"
-            android:padding="@dimen/dimen_8dp"
-            android:maxLines="1"
+            android:background="@color/white"
             android:ellipsize="end"
-            android:inputType="numberDecimal"
             android:gravity="center"
-            android:textSize="@dimen/text_size_20"
+            android:inputType="numberDecimal"
+            android:maxLines="1"
+            android:padding="@dimen/distributionCellPadding"
             android:textColor="@color/colorPrimary"
-            tools:text="$55555.00"
-            app:customAssetFont="proxima_nova_semi_bold"/>
+            android:textSize="@dimen/distributionItemAmountTextSize"
+            app:customAssetFont="proxima_nova_semi_bold"
+            tools:text="$55555.00" />
 
 
     </LinearLayout>
@@ -160,6 +156,6 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_1dp"
-        android:background="@color/light_gray"/>
+        android:background="@color/light_gray" />
 
 </LinearLayout>

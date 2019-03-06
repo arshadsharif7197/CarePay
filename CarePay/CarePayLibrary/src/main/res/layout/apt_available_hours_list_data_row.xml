@@ -4,40 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/textview_timeslot"
-            style="@style/AppointmentAvailableHoursListRowText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:gravity="start"
-            android:padding="@dimen/apt_available_hours_list_row_padding"
-            app:customAssetFont="proxima_nova_regular"
-            tools:text="12:00 PM" />
-
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/textview_location"
-            style="@style/AppointmentAvailableLocationsListRowText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_gravity="end"
-            android:layout_toEndOf="@id/textview_timeslot"
-            android:ellipsize="end"
-            android:gravity="end"
-            android:lines="1"
-            android:maxLines="1"
-            android:padding="@dimen/apt_available_hours_list_row_padding"
-            app:customAssetFont="proxima_nova_regular"
-            tools:text="MAIN MEDICAL BLA BLA BLA" />
-
-    </RelativeLayout>
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/textview_timeslot"
+        style="@style/AppointmentAvailableHoursListRowText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:gravity="start"
+        android:padding="@dimen/timeSlotItemPadding"
+        android:textSize="@dimen/timeSlotItemTextSize"
+        app:customAssetFont="proxima_nova_regular"
+        tools:text="12:00 PM" />
 
     <View
         android:layout_width="match_parent"
