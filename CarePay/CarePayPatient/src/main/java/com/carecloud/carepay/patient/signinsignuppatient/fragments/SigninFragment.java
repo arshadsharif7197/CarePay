@@ -343,7 +343,7 @@ public class SigninFragment extends BaseFragment {
                 ApplicationPreferences.getInstance().setUserPassword(encryptedPassword);
 
                 MyHealthDto myHealthDto = DtoHelper.getConvertedDTO(MyHealthDto.class, workflowDTO);
-                String userId = myHealthDto.getPayload().getPracticePatientIds().get(0).getUserId();
+                String userId = myHealthDto.getPayload().getUserLinks().getLoggedInUser().getUserId();
                 MixPanelUtil.setUser(getContext(), userId, myHealthDto.getPayload().getDemographicDTO().getPayload());
 
                 MixPanelUtil.logEvent(getString(R.string.event_signin_loginSuccess),

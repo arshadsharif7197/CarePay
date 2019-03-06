@@ -256,6 +256,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
         if (profile == null) {
             profile = profileData.getLoggedInUser();
             profile.setDelegate(true);
+            profile.setBreezeUser(true);
             profile.setId("");
             profile.setName(StringUtil
                     .getCapitalizedUserName(profile.getDemographics().getPayload()
