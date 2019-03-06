@@ -59,7 +59,7 @@ public class CloverQueueUploadService extends IntentService {
 
             boolean isSubmitted = executeWebCall(transitionDTO, jsonBody, queryMap, queueRecord.getUsername());
             if (isSubmitted) {
-                dataBase.getCloverPaymentDao().insert(queueRecord);
+                dataBase.getCloverPaymentDao().delete(queueRecord);
             }
         }
 
