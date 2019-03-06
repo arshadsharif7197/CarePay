@@ -51,6 +51,10 @@ public class IntegratedPaymentsQueueUploadService extends IntentService {
             queryMap.put("practice_mgmt", queueRecord.getPracticeMgmt());
             queryMap.put("deepstream_record_id", queueRecord.getDeepstreamId());
 
+            if(queueRecord.isRecordOnly()) {
+                queryMap.put("record_only", String.valueOf(queueRecord.isRecordOnly()));
+            }
+
 
             TransitionDTO transitionDTO = gson.fromJson(queueRecord.getQueueTransition(), TransitionDTO.class);
             boolean isSubmitted = executeWebCall(transitionDTO, queryMap, queueRecord.getUsername());

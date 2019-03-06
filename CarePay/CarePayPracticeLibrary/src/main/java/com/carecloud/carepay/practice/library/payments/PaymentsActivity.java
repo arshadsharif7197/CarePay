@@ -530,7 +530,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 getString(R.string.param_balance_amount),
                 getString(R.string.param_is_add_existing)};
         Object[] values = {selectedBalance.getMetadata().getPracticeId(),
-                selectedBalance.getPayload().get(0).getAmount(),
+                selectedBalance.getPayload().get(0).getAmount() - selectedBalance.getPayload().get(0).getPaymentPlansAmount(),
                 false};
 
         MixPanelUtil.logEvent(getString(R.string.event_paymentplan_started), params, values);
@@ -585,6 +585,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                     UpdatePatientBalancesDTO.class);
         }
         hidePaymentDistributionFragment(updatePatientBalance);
+        onRangeSelected(new Date(), new Date());
     }
 
     private void hidePaymentDistributionFragment(UpdatePatientBalancesDTO updatePatientBalance) {
@@ -883,13 +884,17 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         });
         displayDialogFragment(fragment, false);
 
-        String[] params = {getString(com.carecloud.carepaylibrary.R.string.param_practice_id),
-                getString(com.carecloud.carepaylibrary.R.string.param_payment_plan_id),
-                getString(com.carecloud.carepaylibrary.R.string.param_payment_plan_amount)};
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_payment_plan_id),
+                getString(R.string.param_payment_plan_payment),
+                getString(R.string.param_patient_id)
+        };
         Object[] values = {
                 paymentPlanDTO.getMetadata().getPracticeId(),
                 paymentPlanDTO.getMetadata().getPaymentPlanId(),
-                paymentPlanDTO.getPayload().getAmount()};
+                paymentsModel.getPaymentPayload().getPaymentPostModel().getAmount(),
+                paymentPlanDTO.getMetadata().getPatientId()
+        };
         MixPanelUtil.logEvent(getString(R.string.event_paymentplan_onetime_payment), params, values);
     }
 
@@ -992,6 +997,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
         showSuccessToast(message);
 
+        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payments_scheduled), 1);
     }
 
     @Override
@@ -1004,6 +1010,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                         .setDateRaw(scheduledPaymentPayload.getPaymentDate())
                         .toStringWithFormatMmSlashDdSlashYyyy()));
         completePaymentProcess(workflowDTO);
+
+        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_scheduled_payments_deleted), 1);
     }
 
     @Override
@@ -1027,6 +1035,10 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
                     .newInstance(workflowDTO, isOneTimePayment);
             displayDialogFragment(confirmationFragment, false);
+
+            if(isOneTimePayment){
+                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_one_time_payments_completed), 1);
+            }
         }
     }
 
@@ -1233,6 +1245,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void onAddBalanceToExistingPlan(final PaymentsModel paymentsModel, PaymentPlanDTO paymentPlan) {
+        PendingBalanceDTO selectedBalance = paymentsModel.getPaymentPayload()
+                .getPatientBalances().get(0).getBalances().get(0);
         PracticeModeAddToExistingPaymentPlanFragment fragment = PracticeModeAddToExistingPaymentPlanFragment
                 .newInstance(paymentsModel, paymentPlan);
         fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -1242,6 +1256,14 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             }
         });
         displayDialogFragment(fragment, false);
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_balance_amount),
+                getString(R.string.param_is_add_existing)};
+        Object[] values = {selectedBalance.getMetadata().getPracticeId(),
+                selectedBalance.getPayload().get(0).getAmount() - selectedBalance.getPayload().get(0).getPaymentPlansAmount(),
+                true};
+
+        MixPanelUtil.logEvent(getString(R.string.event_paymentplan_started), params, values);
     }
 
     @Override

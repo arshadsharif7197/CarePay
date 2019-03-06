@@ -112,6 +112,8 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
                 break;
             }
             case PENDING: {
+                holder.todayTimeMessage.setVisibility(View.VISIBLE);
+                holder.todayTimeMessage.setText(Label.getLabel("appointment_status_pending"));
                 holder.todayTimeLayout.setVisibility(View.VISIBLE);
                 holder.todayTimeTextView.setText(dateUtil.getTime12Hour());
                 holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.emerald));
@@ -161,7 +163,7 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
             case PENDING_UPCOMING: {
                 holder.upcomingDateLayout.setVisibility(View.VISIBLE);
                 holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
-                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDayOrdinal());
+                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDay());
                 holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
                 holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.grayRound));
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.emerald));
@@ -172,7 +174,7 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
             case REQUESTED_UPCOMING: {
                 holder.upcomingDateLayout.setVisibility(View.VISIBLE);
                 holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
-                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDayOrdinal());
+                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDay());
                 holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
                 holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.lightning_yellow));
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
@@ -184,7 +186,7 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
             case CANCELED_UPCOMING: {
                 holder.upcomingDateLayout.setVisibility(View.VISIBLE);
                 holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
-                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDayOrdinal());
+                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDay());
                 holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
                 holder.doctorName.setTextColor(ContextCompat.getColor(context, R.color.pastel_blue));
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
@@ -250,8 +252,8 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
     }
 
     protected boolean shouldShowCheckOutButton(AppointmentDTO appointmentDTO,
-                                             Set<String> enabledLocations,
-                                             boolean isBreezePractice) {
+                                               Set<String> enabledLocations,
+                                               boolean isBreezePractice) {
         boolean isTheLocationWithBreezeEnabled = enabledLocations == null;
         if (enabledLocations != null) {
             for (String locationId : enabledLocations) {
@@ -291,32 +293,32 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
         ViewHolder(View itemView) {
             super(itemView);
             //Header view
-            sectionHeaderTitle = (TextView) itemView.findViewById(R.id.appointments_section_header_title);
+            sectionHeaderTitle = itemView.findViewById(R.id.appointments_section_header_title);
             if (sectionHeaderTitle != null) {//skip looking up all the other views which will be null anyway
                 return;
             }
 
             //Appointment Views
-            cellAvatar = (ImageView) itemView.findViewById(R.id.cellAvatarImageView);
-            profileImage = (ImageView) itemView.findViewById(R.id.providerPicImageView);
-            initials = (TextView) itemView.findViewById(R.id.avatarTextView);
-            doctorName = (TextView) itemView.findViewById(R.id.doctor_name);
-            doctorType = (TextView) itemView.findViewById(R.id.doctor_type);
+            cellAvatar = itemView.findViewById(R.id.cellAvatarImageView);
+            profileImage = itemView.findViewById(R.id.providerPicImageView);
+            initials = itemView.findViewById(R.id.avatarTextView);
+            doctorName = itemView.findViewById(R.id.doctor_name);
+            doctorType = itemView.findViewById(R.id.doctor_type);
 
             // Today
             todayTimeLayout = itemView.findViewById(R.id.todayTimeLayout);
-            todayTimeTextView = (TextView) itemView.findViewById(R.id.todayTimeTextView);
-            todayTimeMessage = (TextView) itemView.findViewById(R.id.todayTimeMessage);
+            todayTimeTextView = itemView.findViewById(R.id.todayTimeTextView);
+            todayTimeMessage = itemView.findViewById(R.id.todayTimeMessage);
 
             // Upcoming
             upcomingDateLayout = itemView.findViewById(R.id.upcomingDateLayout);
-            upcomingDateTextView = (TextView) itemView.findViewById(R.id.upcomingDateTextView);
-            upcomingMonthTextView = (TextView) itemView.findViewById(R.id.upcomingMonthTextView);
-            upcomingTimeTextView = (TextView) itemView.findViewById(R.id.upcomingTimeTextView);
+            upcomingDateTextView = itemView.findViewById(R.id.upcomingDateTextView);
+            upcomingMonthTextView = itemView.findViewById(R.id.upcomingMonthTextView);
+            upcomingTimeTextView = itemView.findViewById(R.id.upcomingTimeTextView);
 
             //Check-Out
-            checkOutButton = (Button) itemView.findViewById(R.id.check_out_button);
-            checkedOutLabel = (TextView) itemView.findViewById(R.id.checked_out_label);
+            checkOutButton = itemView.findViewById(R.id.check_out_button);
+            checkedOutLabel = itemView.findViewById(R.id.checked_out_label);
 
             listItemDivider = itemView.findViewById(R.id.appointment_list_item_divider);
 

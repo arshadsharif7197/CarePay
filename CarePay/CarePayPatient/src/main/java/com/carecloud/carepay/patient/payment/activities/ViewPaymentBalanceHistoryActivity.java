@@ -73,12 +73,12 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.gms.wallet.MaskedWallet;
 
+import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_BALANCES;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_BALANCES;
 
 /**
  * Created by jorge on 29/12/16
@@ -189,6 +189,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
             case PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_FULL_WALLET:
+            case PaymentConstants.REQUEST_CODE_GOOGLE_PAYMENT:
                 forwardAndroidPayResult(requestCode, resultCode, data);
                 break;
             default:
@@ -215,6 +216,10 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
         new PartialPaymentDialog(this, paymentsDTO, selectedBalance).show();
+
+        MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment),
+                getString(R.string.param_practice_id),
+                selectedBalance.getMetadata().getPracticeId());
     }
 
     @Override
@@ -223,7 +228,14 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         replaceFragment(PatientPaymentMethodFragment
                 .newInstance(paymentsModel, amount, false), true);
         displayToolbar(false, toolBarTitle);
-        MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment));
+        String[] params = {getString(R.string.param_balance_amount),
+                getString(R.string.param_practice_id)
+        };
+
+        Object[] values = {amount,
+                selectedBalancesItem.getMetadata().getPracticeId()
+        };
+        MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment), params, values);
     }
 
     @Override
@@ -339,7 +351,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void showPaymentPendingConfirmation(PaymentsModel paymentsModel) {
-        new CustomMessageToast(this, Label.getLabel("payments_external_pending"),
+        new CustomMessageToast(this, Label.getLabel("payment_queued_patient"),
                 CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
         initFragments();
     }
@@ -553,11 +565,15 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
         String[] params = {getString(R.string.param_practice_id),
                 getString(R.string.param_payment_plan_id),
-                getString(R.string.param_payment_plan_amount)};
+                getString(R.string.param_payment_plan_payment),
+                getString(R.string.param_patient_id)
+        };
         Object[] values = {
                 paymentPlanDTO.getMetadata().getPracticeId(),
                 paymentPlanDTO.getMetadata().getPaymentPlanId(),
-                paymentPlanDTO.getPayload().getAmount()};
+                paymentsModel.getPaymentPayload().getPaymentPostModel().getAmount(),
+                paymentPlanDTO.getMetadata().getPatientId()
+        };
         MixPanelUtil.logEvent(getString(R.string.event_paymentplan_onetime_payment), params, values);
 
     }
@@ -641,6 +657,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                 DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
         showSuccessToast(message);
 
+        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payments_scheduled), 1);
+
     }
 
     @Override
@@ -654,6 +672,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                         .setDateRaw(scheduledPaymentPayload.getPaymentDate())
                         .toStringWithFormatMmSlashDdSlashYyyy()));
         completePaymentProcess(workflowDTO);
+
+        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_scheduled_payments_deleted), 1);
     }
 
     @Override
@@ -676,6 +696,10 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
             PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
                     .newInstance(workflowDTO, isOneTimePayment);
             displayDialogFragment(confirmationFragment, false);
+
+            if(isOneTimePayment){
+                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_one_time_payments_completed), 1);
+            }
         }
     }
 

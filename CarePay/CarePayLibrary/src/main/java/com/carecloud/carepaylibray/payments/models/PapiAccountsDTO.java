@@ -25,6 +25,9 @@ public class PapiAccountsDTO {
     @SerializedName("default_bank_account_token")
     @Expose
     private String defaultBankAccountToken;
+    @SerializedName("default_bank_account_mid")
+    @Expose
+    private String defaultBankAccountMid;
     @SerializedName("bank_account")
     @Expose
     private PapiBankAccountDTO bankAccount = new PapiBankAccountDTO();
@@ -138,6 +141,14 @@ public class PapiAccountsDTO {
      */
     public void setDefaultBankAccountToken(String defaultBankAccountToken) {
         this.defaultBankAccountToken = defaultBankAccountToken;
+    }
+
+    public String getDefaultBankAccountMid() {
+        return defaultBankAccountMid;
+    }
+
+    public void setDefaultBankAccountMid(String defaultBankAccountMid) {
+        this.defaultBankAccountMid = defaultBankAccountMid;
     }
 
     /**

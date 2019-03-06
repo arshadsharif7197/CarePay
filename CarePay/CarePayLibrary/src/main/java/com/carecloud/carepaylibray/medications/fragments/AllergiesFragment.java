@@ -304,13 +304,15 @@ public class AllergiesFragment extends BaseCheckinFragment implements
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            onUpdate(callback, workflowDTO);
 
             List<AllergiesObject> modifiedAllergies = getAllModifiedAllergies();
             if (!modifiedAllergies.isEmpty()) {
                 MixPanelUtil.logEvent(getString(R.string.event_updated_allergies), getString(R.string.param_allergies_count), modifiedAllergies.size());
             }
 
+            MixPanelUtil.endTimer(getString(R.string.timer_allergies));
+
+            onUpdate(callback, workflowDTO);
         }
 
         @Override

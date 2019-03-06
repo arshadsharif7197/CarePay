@@ -66,6 +66,12 @@ public class LinksDTO extends BaseLinks {
     @SerializedName("shop")
     @Expose
     private TransitionDTO shop = new TransitionDTO();
+    @Expose
+    @SerializedName("visit_summary")
+    private TransitionDTO visitSummary = new TransitionDTO();
+    @Expose
+    @SerializedName("visit_summary_status")
+    private TransitionDTO visitSummaryStatus = new TransitionDTO();
 
     /**
      * @return The demographics
@@ -128,9 +134,9 @@ public class LinksDTO extends BaseLinks {
     }
 
     /*
-    *
-    * @return resourcesToSchedule
-    */
+     *
+     * @return resourcesToSchedule
+     */
     public TransitionDTO getResourcesToSchedule() {
         return resourcesToSchedule;
     }
@@ -224,5 +230,21 @@ public class LinksDTO extends BaseLinks {
 
     public void setShop(TransitionDTO shop) {
         this.shop = shop;
+    }
+
+    public TransitionDTO getVisitSummary() {
+        return visitSummary;
+    }
+
+    public void setVisitSummary(TransitionDTO visitSummary) {
+        this.visitSummary = visitSummary;
+    }
+
+    public TransitionDTO getVisitSummaryStatus() {
+        return visitSummaryStatus;
+    }
+
+    public void setVisitSummaryStatus(TransitionDTO visitSummaryStatus) {
+        this.visitSummaryStatus = visitSummaryStatus;
     }
 }

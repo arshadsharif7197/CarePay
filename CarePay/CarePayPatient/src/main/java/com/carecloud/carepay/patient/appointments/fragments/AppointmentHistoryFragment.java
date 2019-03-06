@@ -17,6 +17,7 @@ import com.carecloud.carepay.patient.appointments.adapters.PracticesAdapter;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -24,6 +25,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.models.Paging;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -54,6 +56,7 @@ public class AppointmentHistoryFragment extends BaseFragment
     private boolean isPaging;
     private Paging paging;
     private UserPracticeDTO selectedPractice;
+    private List<String> excludedAppointmentStates;
 
     public static AppointmentHistoryFragment newInstance() {
         return new AppointmentHistoryFragment();
@@ -87,6 +90,10 @@ public class AppointmentHistoryFragment extends BaseFragment
         });
         selectedPractice = appointmentDto.getPayload().getUserPractices().get(0);
         callAppointmentService(selectedPractice, true, true);
+        excludedAppointmentStates = new ArrayList<>();
+        excludedAppointmentStates.add(CarePayConstants.PENDING);
+        excludedAppointmentStates.add(CarePayConstants.REQUESTED);
+        excludedAppointmentStates.add(CarePayConstants.CHECKING_IN);
     }
 
     @Nullable
@@ -225,7 +232,7 @@ public class AppointmentHistoryFragment extends BaseFragment
                         }
                         isPaging = false;
                         adapter.setLoading(false);
-                        if (showShimmerLayout) {
+                        if (showShimmerLayout && ((BaseActivity) getActivity()).isVisible()) {
                             hideShimmerEffect();
                         }
                         showErrorNotification(exceptionMessage);
@@ -234,7 +241,9 @@ public class AppointmentHistoryFragment extends BaseFragment
     }
 
     private void hideShimmerEffect() {
-        getChildFragmentManager().popBackStackImmediate();
+        if(isAdded()) {
+            getChildFragmentManager().popBackStackImmediate();
+        }
     }
 
     private void showShimmerEffect() {
@@ -259,7 +268,18 @@ public class AppointmentHistoryFragment extends BaseFragment
     private void showHistoricAppointments(List<AppointmentDTO> appointments, boolean refresh) {
         getView().findViewById(R.id.noAppointmentsLayout).setVisibility(View.GONE);
         historicAppointmentsRecyclerView.setVisibility(View.VISIBLE);
+        appointments = filterAppointments(appointments);
         adapter.setData(appointments, refresh);
+    }
+
+    private List<AppointmentDTO> filterAppointments(List<AppointmentDTO> appointments) {
+        List<AppointmentDTO> filteredAppointments = new ArrayList<>();
+        for (AppointmentDTO appointment : appointments) {
+            if (!excludedAppointmentStates.contains(appointment.getPayload().getAppointmentStatus().getCode())) {
+                filteredAppointments.add(appointment);
+            }
+        }
+        return filteredAppointments;
     }
 
     @Override

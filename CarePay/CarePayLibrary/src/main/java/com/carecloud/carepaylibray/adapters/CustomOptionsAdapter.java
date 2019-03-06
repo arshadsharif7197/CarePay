@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepay.service.library.base.OptionNameInterface;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 
 import java.util.ArrayList;
@@ -16,25 +17,24 @@ import java.util.List;
 public class CustomOptionsAdapter extends BaseAdapter {
 
     Context context = null;
-    List<? extends DemographicsOption> optionsList = new ArrayList<>();
+    List<? extends OptionNameInterface> optionsList = new ArrayList<>();
 
     /**
      * @param context context
      * @param list list
      */
-    public CustomOptionsAdapter(Context context, List<? extends DemographicsOption> list) {
+    public CustomOptionsAdapter(Context context, List<? extends OptionNameInterface> list) {
         this.context = context;
         this.optionsList = list;
     }
 
     @Override
     public int getCount() {
-
         return optionsList.size();
     }
 
     @Override
-    public DemographicsOption getItem(int position) {
+    public OptionNameInterface getItem(int position) {
         return optionsList.get(position);
     }
 
@@ -49,13 +49,13 @@ public class CustomOptionsAdapter extends BaseAdapter {
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.alert_list_row, container, false);
-            holder.titlename = (TextView) convertView.findViewById(R.id.textviewName);
+            holder.titlename = convertView.findViewById(R.id.textviewName);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        String dataValue = optionsList.get(position).getLabel();
+        String dataValue = optionsList.get(position).getDisplayName();
         holder.titlename.setText(dataValue);
 
         return convertView;

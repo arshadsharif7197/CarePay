@@ -17,6 +17,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
@@ -26,6 +27,8 @@ import com.carecloud.carepaylibray.survey.model.SurveyDTO;
 import com.carecloud.carepaylibray.survey.model.SurveyModel;
 import com.carecloud.carepaylibray.survey.model.SurveyQuestionDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.ValidationHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,6 +48,7 @@ public class SurveyActivity extends BasePracticeActivity implements FragmentActi
         initializeLanguageSpinner();
         initializeHomeButton();
         replaceFragment(SurveyFragment.newInstance(), false);
+        logSurveyEvent(getString(R.string.event_survey_started));
     }
 
     private void initializeLanguageSpinner() {
@@ -150,6 +154,7 @@ public class SurveyActivity extends BasePracticeActivity implements FragmentActi
                 fragment.setCallback(new ConfirmationCallback() {
                     @Override
                     public void onConfirm() {
+                        logSurveyEvent(getString(R.string.event_survey_canceled));
                         callContinueService();
                     }
                 });
@@ -206,4 +211,27 @@ public class SurveyActivity extends BasePracticeActivity implements FragmentActi
     public void onBackPressed() {
         //disable action
     }
+
+    private void logSurveyEvent(String event) {
+        boolean isGuest = !ValidationHelper.isValidEmail(getAppAuthorizationHelper().getCurrUser());
+        AppointmentDTO appointmentDTO = surveyDTO.getPayload().getSurvey().getAppointment();
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_provider_id),
+                getString(R.string.param_location_id),
+                getString(R.string.param_is_guest),
+                getString(R.string.param_survey_access)
+        };
+        Object[] values = {surveyDTO.getPayload().getSurvey().getMetadata().getPracticeId(),
+                appointmentDTO.getPayload().getProvider().getGuid(),
+                appointmentDTO.getPayload().getLocation().getGuid(),
+                isGuest,
+                getString(R.string.survey_access_mode_checkout)
+        };
+        MixPanelUtil.logEvent(event, params, values);
+
+        if (getString(R.string.event_survey_started).equals(event)) {
+            MixPanelUtil.startTimer(getString(R.string.timer_survey));
+        }
+    }
+
 }

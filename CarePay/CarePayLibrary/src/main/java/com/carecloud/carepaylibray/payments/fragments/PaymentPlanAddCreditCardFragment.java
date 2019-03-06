@@ -40,7 +40,7 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
     protected PaymentPlanDTO paymentPlanDTO;
     protected LargeAlertDialog.LargeAlertInterface largeAlertInterface;
 
-    private Date paymentDate;
+    protected Date paymentDate;
 
     /**
      * @param paymentsModel        payment model
@@ -157,6 +157,7 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
             IntegratedPaymentPostModel postModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
             postModel.setPapiPaymentMethod(papiPaymentMethod);
             postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
+            amountToMakePayment = postModel.getAmount();
 
             if(paymentDate != null){
                 DateUtil.getInstance().setDate(paymentDate);

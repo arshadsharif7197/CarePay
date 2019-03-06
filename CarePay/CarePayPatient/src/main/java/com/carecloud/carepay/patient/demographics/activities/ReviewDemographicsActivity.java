@@ -35,7 +35,10 @@ import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
 import com.carecloud.carepaylibray.interfaces.IcicleInterface;
 import com.carecloud.carepaylibray.media.MediaResultListener;
+import com.carecloud.carepaylibray.medications.fragments.AllergiesFragment;
+import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragment;
 import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
+import com.carecloud.carepaylibray.medications.fragments.MedicationsFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
@@ -99,6 +102,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
             case PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_FULL_WALLET:
+            case PaymentConstants.REQUEST_CODE_GOOGLE_PAYMENT:
                 paymentPresenter.forwardAndroidPayResult(requestCode, resultCode, data);
                 break;
             default:
@@ -324,8 +328,17 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
             currentStep = getString(R.string.step_health_insurance);
         } else if (currentFragment instanceof FormsFragment) {
             currentStep = getString(R.string.step_consent_forms);
-        } else if (currentFragment instanceof MedicationsAllergyFragment) {
+        } else if (currentFragment instanceof MedicationsAllergyFragment ||
+                currentFragment instanceof MedicationsFragment ||
+                (currentFragment instanceof MedicationsAllergiesEmptyFragment &&
+                        ((MedicationsAllergiesEmptyFragment) currentFragment).getSelectedMode() ==
+                                MedicationsAllergiesEmptyFragment.MEDICATION_MODE)) {
             currentStep = getString(R.string.step_medications);
+        } else if (currentFragment instanceof AllergiesFragment ||
+                (currentFragment instanceof MedicationsAllergiesEmptyFragment &&
+                        ((MedicationsAllergiesEmptyFragment) currentFragment).getSelectedMode() ==
+                                MedicationsAllergiesEmptyFragment.ALLERGY_MODE)) {
+            currentStep = getString(R.string.step_allegies);
         } else if (currentFragment instanceof IntakeFormsFragment) {
             currentStep = getString(R.string.step_intake);
         }
@@ -340,11 +353,17 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
             String[] params = {getString(R.string.param_practice_id),
                     getString(R.string.param_appointment_id),
                     getString(R.string.param_appointment_type),
-                    getString(R.string.param_is_guest)};
+                    getString(R.string.param_is_guest),
+                    getString(R.string.param_provider_id),
+                    getString(R.string.param_location_id)
+            };
             Object[] values = {getAppointment().getMetadata().getPracticeId(),
                     getAppointmentId(),
                     getAppointment().getPayload().getVisitType().getName(),
-                    false};
+                    false,
+                    getAppointment().getPayload().getProvider().getGuid(),
+                    getAppointment().getPayload().getLocation().getGuid()
+            };
             MixPanelUtil.logEvent(getString(R.string.event_checkin_completed), params, values);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_checkin_completed), 1);
             MixPanelUtil.endTimer(getString(R.string.timer_checkin));
