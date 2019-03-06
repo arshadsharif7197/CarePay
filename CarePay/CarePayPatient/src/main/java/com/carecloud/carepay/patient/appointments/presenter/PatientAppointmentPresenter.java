@@ -85,7 +85,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     private String practiceMgmt;
     private String practiceName;
     private AppointmentDTO appointmentDTO;
-    private AppointmentsSlotsDTO appointmentSlot;
 
     private Fragment androidPayTargetFragment;
 
@@ -401,7 +400,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     @Override
     public void startPrepaymentProcess(ScheduleAppointmentRequestDTO appointmentRequestDTO,
                                        AppointmentsSlotsDTO appointmentSlot, double amount) {
-        this.appointmentSlot = appointmentSlot;
         if (StringUtil.isNullOrEmpty(patientId)) {
             patientId = appointmentRequestDTO.getAppointment().getPatient().getId();
         }

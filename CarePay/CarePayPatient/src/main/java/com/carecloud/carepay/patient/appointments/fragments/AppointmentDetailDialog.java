@@ -99,6 +99,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private Handler statusHandler;
     private long enqueueId;
     private int retryIntent = 0;
+    private AppointmentsResultModel appointmentResultModel;
 
 
     /**
@@ -157,6 +158,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
             isBreezePractice = args.getBoolean(KEY_BREEZE_PRACTICE);
             isRescheduleEnabled = args.getBoolean(KEY_RESCHEDULE_ENABLED);
         }
+        appointmentResultModel = (AppointmentsResultModel) callback.getDto();
     }
 
     @Override
@@ -281,7 +283,9 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                         if (shouldShowCancelButton(enabledLocations)) {
                             cancelAppointment.setVisibility(View.VISIBLE);
                         }
-                        if (isLocationWithBreezeEnabled(enabledLocations)) {
+                        if (isLocationWithBreezeEnabled(enabledLocations)
+                                && appointmentResultModel.getPayload()
+                                .canCheckInCheckOut(appointmentDTO.getMetadata().getPracticeId())) {
                             leftButton.setVisibility(View.VISIBLE);
                             leftButton.setText(Label.getLabel("sigin_how_check_in_scan_qr_code"));
                             leftButton.setOnClickListener(scanClick);
@@ -343,7 +347,9 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                         if (shouldShowCancelButton(enabledLocations)) {
                             cancelAppointment.setVisibility(View.VISIBLE);
                         }
-                        if (isLocationWithBreezeEnabled(enabledLocations)) {
+                        if (isLocationWithBreezeEnabled(enabledLocations)
+                                && appointmentResultModel.getPayload()
+                                .canCheckInCheckOut(appointmentDTO.getMetadata().getPracticeId())) {
                             actionsLayout.setVisibility(View.VISIBLE);
                             rightButton.setVisibility(View.VISIBLE);
                             rightButton.setText(Label.getLabel("appointments_check_in_early"));
@@ -379,7 +385,9 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
 
     private void showCheckoutButton(Set<String> enabledLocations) {
         if (isLocationWithBreezeEnabled(enabledLocations)
-                && appointmentDTO.getPayload().canCheckOut()) {
+                && appointmentDTO.getPayload().canCheckOut()
+                && appointmentResultModel.getPayload()
+                .canCheckInCheckOut(appointmentDTO.getMetadata().getPracticeId())) {
             actionsLayout.setVisibility(View.VISIBLE);
             leftButton.setVisibility(View.VISIBLE);
             leftButton.setText(Label.getLabel("appointment_request_checkout_now"));
@@ -400,15 +408,15 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         }
     }
 
-    private boolean shouldShowVisitSummary(){
+    private boolean shouldShowVisitSummary() {
         AppointmentsResultModel appointmentModelDto = ((PatientAppointmentPresenter) callback).getMainAppointmentDto();
-        UserPracticeDTO appointmentPractice= null;
+        UserPracticeDTO appointmentPractice = null;
         for (UserPracticeDTO userPracticeDTO : appointmentModelDto.getPayload().getUserPractices()) {
-            if(userPracticeDTO.getPracticeId().equals(appointmentDTO.getMetadata().getPracticeId())) {
+            if (userPracticeDTO.getPracticeId().equals(appointmentDTO.getMetadata().getPracticeId())) {
                 appointmentPractice = userPracticeDTO;
             }
         }
-        if(appointmentPractice != null && appointmentPractice.isVisitSummaryEnabled()) {
+        if (appointmentPractice != null && appointmentPractice.isVisitSummaryEnabled()) {
             for (PortalSettingDTO portalSettingDTO : appointmentModelDto.getPayload().getPortalSettings()) {
                 if (appointmentPractice.getPracticeId().equals(portalSettingDTO.getMetadata().getPracticeId())) {
                     for (PortalSetting portalSetting : portalSettingDTO.getPayload()) {
@@ -612,7 +620,6 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                 ((BaseActivity) getActivity()).hideProgressDialog();
                 rightButton.setEnabled(false);
                 rightButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.processing"));
-//                rightButton.setProgressEnabled(true);
                 callVisitSummaryStatusService(visitSummaryDTO.getPayload().getVisitSummaryRequest().getJobId());
             }
 
@@ -639,7 +646,6 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                         if (retryIntent > VisitSummaryDialogFragment.MAX_NUMBER_RETRIES) {
                             retryIntent = 0;
                             rightButton.setEnabled(true);
-//                            rightButton.setProgressEnabled(false);
                             rightButton.setText(Label.getLabel("visitSummary.appointments.button.label.visitSummary"));
                             showErrorNotification(Label.getLabel("practice_patient_settings_intake_forms_print_status_error"));
                         } else if (status.equals("queued") || status.equals("working")) {
@@ -731,7 +737,6 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
 //                    int reasonIndex = cursor.getColumnIndex(DownloadManager.COLUMN_REASON);
                     if (DownloadManager.STATUS_SUCCESSFUL == cursor.getInt(columnIndex)) {
                         rightButton.setEnabled(true);
-//                        rightButton.setProgressEnabled(false);
                         rightButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.openFile"));
                         rightButton.setOnClickListener(new View.OnClickListener() {
                             @Override

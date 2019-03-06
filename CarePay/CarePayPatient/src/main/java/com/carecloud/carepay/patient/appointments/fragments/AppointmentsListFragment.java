@@ -157,7 +157,8 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
     }
 
     private void loadAppointmentList() {
-        if (canViewAnyAppointment(appointmentsResultModel.getPayload().getAppointments(),
+        if ((appointmentsResultModel.getPayload().getAppointments().isEmpty())
+                || canViewAnyAppointment(appointmentsResultModel.getPayload().getAppointments(),
                 appointmentsResultModel.getPayload().getUserPractices())) {
             if (appointmentsResultModel.getPayload().getAppointments().size() > 0) {
                 appointmentsItems = appointmentsResultModel.getPayload().getAppointments();
@@ -297,12 +298,8 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
     }
 
     @Override
-    public String getPracticeId(String appointmentId) {
-        for (AppointmentDTO appointmentDTO : appointmentsItems) {
-            if (appointmentDTO.getPayload().getId().equals(appointmentId)) {
-                return appointmentDTO.getMetadata().getPracticeId();
-            }
-        }
-        return null;
+    public boolean canCheckOut(AppointmentDTO appointmentDTO) {
+        return appointmentsResultModel.getPayload()
+                .canCheckInCheckOut(appointmentDTO.getMetadata().getPracticeId());
     }
 }

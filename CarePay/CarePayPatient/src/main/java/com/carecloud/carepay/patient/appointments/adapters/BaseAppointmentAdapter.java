@@ -41,6 +41,7 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
     protected List<AppointmentDTO> sortedAppointments = new ArrayList<>();
     protected List<UserPracticeDTO> userPracticeDTOs;
     protected Map<String, Set<String>> enabledPracticeLocations;
+    protected SelectAppointmentCallback callback;
 
 
     @Override
@@ -264,7 +265,9 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
             }
         }
 
-        return isBreezePractice && isTheLocationWithBreezeEnabled && appointmentDTO.getPayload().canCheckOut();
+        return isBreezePractice && isTheLocationWithBreezeEnabled
+                && appointmentDTO.getPayload().canCheckOut()
+                && callback.canCheckOut(appointmentDTO);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -324,5 +327,13 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
 
         }
 
+    }
+
+    public interface SelectAppointmentCallback {
+        void onItemTapped(AppointmentDTO appointmentDTO);
+
+        void onCheckoutTapped(AppointmentDTO appointmentDTO);
+
+        boolean canCheckOut(AppointmentDTO appointmentDTO);
     }
 }

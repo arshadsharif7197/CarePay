@@ -335,4 +335,10 @@ public class AppointmentHistoryFragment extends BaseFragment
     private boolean hasMorePages() {
         return paging.getCurrentPage() < paging.getTotalPages();
     }
+
+    @Override
+    public boolean canCheckOut(AppointmentDTO appointmentDTO) {
+        return appointmentDto.getPayload()
+                .canCheckInCheckOut(appointmentDTO.getMetadata().getPracticeId());
+    }
 }

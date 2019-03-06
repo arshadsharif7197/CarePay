@@ -163,7 +163,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             fragmentManager.popBackStackImmediate();
         }
         MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_appointments);
-        displayToolbar(true, menuItem.getTitle().toString());
+        displayToolbar(true, getScreenTitle(Label.getLabel("navigation_link_appointments")));
         toolbarHidden = false;
         refreshAppointments();
         if (showSuccess) {

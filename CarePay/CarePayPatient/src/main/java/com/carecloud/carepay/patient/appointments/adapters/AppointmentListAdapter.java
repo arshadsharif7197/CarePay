@@ -23,7 +23,7 @@ import java.util.Set;
  */
 
 public class AppointmentListAdapter extends BaseAppointmentAdapter {
-    private SelectAppointmentCallback callback;
+
     private List<AppointmentDTO> appointmentItems;
 
     /**
@@ -176,14 +176,6 @@ public class AppointmentListAdapter extends BaseAppointmentAdapter {
 
             sortedAppointments.add(appointmentDTO);
         }
-    }
-
-    public interface SelectAppointmentCallback {
-        void onItemTapped(AppointmentDTO appointmentDTO);
-
-        void onCheckoutTapped(AppointmentDTO appointmentDTO);
-
-        String getPracticeId(String appointmentId);
     }
 
 

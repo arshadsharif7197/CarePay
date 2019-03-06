@@ -406,4 +406,15 @@ public class AppointmentPayloadModel extends BasePayloadDto implements Serializa
         }
         return profileLink.getPermissionDto().getPermissions().getViewAppointments().isEnabled();
     }
+
+    public boolean canCheckInCheckOut(String practiceId) {
+        if (getDelegate() == null) {
+            return true;
+        }
+        ProfileLink profileLink = getDelegate().getProfileLink(practiceId);
+        if (profileLink == null) {
+            return false;
+        }
+        return profileLink.getPermissionDto().getPermissions().getCheckInAndCheckOut().isEnabled();
+    }
 }

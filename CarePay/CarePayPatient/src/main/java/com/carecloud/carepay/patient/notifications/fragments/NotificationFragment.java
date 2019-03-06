@@ -228,8 +228,9 @@ public class NotificationFragment extends BaseFragment
 
 
     private void setAdapter() {
-        if (canViewAnyNotification(notificationsDTO.getPayload().getPracticeInformation(),
-                notificationItems)) {
+        boolean canViewNotifications = canViewAnyNotification(notificationsDTO.getPayload()
+                .getPracticeInformation(), notificationItems);
+        if (canViewNotifications || notificationItems.isEmpty()) {
             if (!notificationItems.isEmpty()) {
                 if (notificationsAdapter == null) {
                     notificationsAdapter = new NotificationsAdapter(getContext(), notificationItems, this);
@@ -250,6 +251,7 @@ public class NotificationFragment extends BaseFragment
             noNotificationLayout.setVisibility(View.VISIBLE);
             TextView titleTextView = noNotificationLayout.findViewById(R.id.no_notification_message_title);
             titleTextView.setText(Label.getLabel("appointments.list.history.noPermission.title"));
+            noNotificationLayout.findViewById(R.id.no_notificaton_message_desc).setVisibility(View.GONE);
         }
     }
 
