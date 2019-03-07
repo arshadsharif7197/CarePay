@@ -153,6 +153,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         queries.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
         queries.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
         queries.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
+        if (appointmentsResultModel.getPayload().getDelegate() != null) {
+            queries.put("patient_id", appointmentDTO.getMetadata().getPatientId());
+        }
 
         Map<String, String> header = viewHandler.getWorkflowServiceHelper().getPreferredLanguageHeader();
         header.put("transition", "true");
