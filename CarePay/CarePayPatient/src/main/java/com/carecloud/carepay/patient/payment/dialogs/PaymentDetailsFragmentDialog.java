@@ -59,7 +59,6 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                                                            PendingBalancePayloadDTO paymentPayload,
                                                            PendingBalanceDTO selectedBalance,
                                                            boolean showPaymentButtons) {
-        // Supply inputs as an argument
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPayload);
@@ -136,7 +135,8 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                 break;
             }
         }
-        if (statement != null && !statement.getStatements().isEmpty()) {
+        if (statement != null && !statement.getStatements().isEmpty()
+                && paymentReceiptModel.getPaymentPayload().canSeeStatement(selectedBalance.getMetadata().getPracticeId())) {
             View statementButton = view.findViewById(R.id.statement_button);
             statementButton.setVisibility(View.VISIBLE);
             finalStatement = statement;

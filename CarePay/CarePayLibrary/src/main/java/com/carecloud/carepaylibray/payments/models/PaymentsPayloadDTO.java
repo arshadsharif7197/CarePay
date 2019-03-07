@@ -15,6 +15,7 @@ import com.carecloud.carepaylibray.payments.models.history.PaymentsTransactionHi
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
+import com.carecloud.carepaylibray.profile.ProfileLink;
 import com.carecloud.carepaylibray.retail.models.RetailProductsModel;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -727,5 +728,16 @@ public class PaymentsPayloadDTO extends BasePayloadDto implements Serializable {
             }
         }
         return null;
+    }
+
+    public boolean canSeeStatement(String practiceId) {
+        if (getDelegate() == null) {
+            return true;
+        }
+        ProfileLink profileLink = getDelegate().getProfileLink(practiceId);
+        if (profileLink == null) {
+            return false;
+        }
+        return profileLink.getPermissionDto().getPermissions().getViewPatientStatements().isEnabled();
     }
 }
