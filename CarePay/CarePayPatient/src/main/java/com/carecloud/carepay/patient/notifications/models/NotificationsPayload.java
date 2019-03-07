@@ -2,10 +2,9 @@ package com.carecloud.carepay.patient.notifications.models;
 
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
-import com.carecloud.carepaylibray.base.dtos.BasePayloadDto;
+import com.carecloud.carepaylibray.base.dtos.DelegatePermissionBasePayloadDto;
 import com.carecloud.carepaylibray.base.models.Paging;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
-import com.carecloud.carepaylibray.profile.ProfileLink;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -16,7 +15,7 @@ import java.util.List;
  * Created by lmenendez on 5/11/17.
  */
 
-public class NotificationsPayload extends BasePayloadDto {
+public class NotificationsPayload extends DelegatePermissionBasePayloadDto {
 
     @SerializedName("notifications")
     @Expose
@@ -73,30 +72,5 @@ public class NotificationsPayload extends BasePayloadDto {
 
     public void setPracticeInformation(List<UserPracticeDTO> practiceInformation) {
         this.practiceInformation = practiceInformation;
-    }
-
-    public boolean canViewSurveyNotifications(String practiceId) {
-        if (getDelegate() == null) {
-            return true;
-        }
-
-        ProfileLink profileLink = getDelegate().getProfileLink(practiceId);
-        if (profileLink == null) {
-            return false;
-        }
-
-        return profileLink.getPermissionDto().getPermissions().getViewAndSubmitSurveys().isEnabled();
-    }
-
-    public boolean canViewNotifications(String practiceId) {
-        if (getDelegate() == null) {
-            return true;
-        }
-
-        ProfileLink profileLink = getDelegate().getProfileLink(practiceId);
-        if (profileLink == null) {
-            return false;
-        }
-        return profileLink.getPermissionDto().getPermissions().getViewNotifications().isEnabled();
     }
 }

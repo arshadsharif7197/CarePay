@@ -100,7 +100,8 @@ public class MyHealthMainFragment extends BaseFragment {
                         for (PortalSetting portalSetting : portalSettingDTO.getPayload()) {
                             if (portalSetting.getName().toLowerCase().equals("visit summary")
                                     && portalSetting.getStatus().toLowerCase().equals("a")) {
-                                isVisitSummaryEnabled = true;
+                                isVisitSummaryEnabled = myHealthDto.getPayload()
+                                        .canViewAndCreateVisitSummaries(userPracticeDTO.getPracticeId());
                                 break;
                             }
                         }

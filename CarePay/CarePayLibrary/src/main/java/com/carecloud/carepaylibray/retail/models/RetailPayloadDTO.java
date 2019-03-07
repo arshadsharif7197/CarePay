@@ -1,7 +1,7 @@
 package com.carecloud.carepaylibray.retail.models;
 
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
-import com.carecloud.carepaylibray.base.dtos.BasePayloadDto;
+import com.carecloud.carepaylibray.base.dtos.DelegatePermissionBasePayloadDto;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.payments.models.PatientPaymentsDTO;
@@ -17,7 +17,7 @@ import java.util.List;
  * Created by lmenendez on 11/20/17
  */
 
-public class RetailPayloadDTO extends BasePayloadDto {
+public class RetailPayloadDTO extends DelegatePermissionBasePayloadDto {
 
     @SerializedName("languages")
     private List<OptionDTO> languages = new ArrayList<>();

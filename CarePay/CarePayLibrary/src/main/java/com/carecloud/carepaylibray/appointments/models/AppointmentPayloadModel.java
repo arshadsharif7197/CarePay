@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.adhoc.AdhocFormsPatientModeInfo;
-import com.carecloud.carepaylibray.base.dtos.BasePayloadDto;
+import com.carecloud.carepaylibray.base.dtos.DelegatePermissionBasePayloadDto;
 import com.carecloud.carepaylibray.base.models.PagingDto;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
@@ -13,7 +13,6 @@ import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
-import com.carecloud.carepaylibray.profile.ProfileLink;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -25,7 +24,7 @@ import java.util.List;
 /**
  * Model for appointment payload.
  */
-public class AppointmentPayloadModel extends BasePayloadDto implements Serializable {
+public class AppointmentPayloadModel extends DelegatePermissionBasePayloadDto implements Serializable {
 
     @SerializedName("languages")
     @Expose
@@ -381,40 +380,5 @@ public class AppointmentPayloadModel extends BasePayloadDto implements Serializa
         }
 
         return canScheduleAppointments(practiceId);
-    }
-
-    public boolean canScheduleAppointments(String practiceId) {
-        if (getDelegate() == null) {
-            return true;
-        }
-
-        ProfileLink profileLink = getDelegate().getProfileLink(practiceId);
-        if (profileLink == null) {
-            return false;
-        }
-        return profileLink.getPermissionDto().getPermissions().getScheduleAppointments().isEnabled()
-                && canViewAppointments(practiceId);
-    }
-
-    public boolean canViewAppointments(String practiceId) {
-        if (getDelegate() == null) {
-            return true;
-        }
-        ProfileLink profileLink = getDelegate().getProfileLink(practiceId);
-        if (profileLink == null) {
-            return false;
-        }
-        return profileLink.getPermissionDto().getPermissions().getViewAppointments().isEnabled();
-    }
-
-    public boolean canCheckInCheckOut(String practiceId) {
-        if (getDelegate() == null) {
-            return true;
-        }
-        ProfileLink profileLink = getDelegate().getProfileLink(practiceId);
-        if (profileLink == null) {
-            return false;
-        }
-        return profileLink.getPermissionDto().getPermissions().getCheckInAndCheckOut().isEnabled();
     }
 }

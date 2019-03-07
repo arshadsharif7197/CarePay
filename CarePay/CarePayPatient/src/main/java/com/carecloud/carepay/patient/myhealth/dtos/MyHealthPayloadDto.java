@@ -4,7 +4,7 @@ import com.carecloud.carepay.patient.patientsplash.dtos.OptionsDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.models.PortalSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
-import com.carecloud.carepaylibray.base.dtos.BasePayloadDto;
+import com.carecloud.carepaylibray.base.dtos.DelegatePermissionBasePayloadDto;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @author pjohnson on 17/07/17.
  */
-public class MyHealthPayloadDto extends BasePayloadDto {
+public class MyHealthPayloadDto extends DelegatePermissionBasePayloadDto {
 
     @SerializedName("languages")
     @Expose

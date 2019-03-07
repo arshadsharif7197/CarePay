@@ -1,6 +1,6 @@
 package com.carecloud.carepay.patient.messages.models;
 
-import com.carecloud.carepaylibray.base.dtos.BasePayloadDto;
+import com.carecloud.carepaylibray.base.dtos.DelegatePermissionBasePayloadDto;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.List;
  * Created by lmenendez on 6/30/17
  */
 
-public class MessagingDataModel extends BasePayloadDto {
+public class MessagingDataModel extends DelegatePermissionBasePayloadDto {
 
     @SerializedName("messages")
     private Messages messages = new Messages();

@@ -1,7 +1,7 @@
 package com.carecloud.carepaylibray.consentforms.models.payload;
 
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
-import com.carecloud.carepaylibray.base.dtos.BasePayloadDto;
+import com.carecloud.carepaylibray.base.dtos.DelegatePermissionBasePayloadDto;
 import com.carecloud.carepaylibray.consentforms.models.UserFormDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.google.gson.annotations.Expose;
@@ -14,7 +14,7 @@ import java.util.List;
  * Created by Rahul on 11/13/16.
  */
 
-public class ConsentFormPayloadDTO extends BasePayloadDto {
+public class ConsentFormPayloadDTO extends DelegatePermissionBasePayloadDto {
 
     @SerializedName("appointments")
     @Expose

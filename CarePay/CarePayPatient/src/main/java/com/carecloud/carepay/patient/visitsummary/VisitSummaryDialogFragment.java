@@ -306,7 +306,8 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                     if (userPracticeDTO.getPracticeId().equals(portalSettingDTO.getMetadata().getPracticeId())) {
                         for (PortalSetting portalSetting : portalSettingDTO.getPayload()) {
                             if (portalSetting.getName().toLowerCase().equals("visit summary")
-                                    && portalSetting.getStatus().toLowerCase().equals("a")) {
+                                    && portalSetting.getStatus().toLowerCase().equals("a")
+                                    && myHealthDto.getPayload().canViewAndCreateVisitSummaries(userPracticeDTO.getPracticeId())) {
                                 filteredPractices.add(userPracticeDTO);
                                 break;
                             }
@@ -321,7 +322,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
     private void enableExportButton() {
         boolean wasEnabled = exportButton.isEnabled();
         exportButton.setEnabled(formIsValid());
-        if(!wasEnabled && exportButton.isEnabled()) {
+        if (!wasEnabled && exportButton.isEnabled()) {
             resetExportButton();
         }
     }
@@ -343,7 +344,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         return (pdfOption.isChecked() || xmlOption.isChecked()) && !isExporting;
     }
 
-    private void resetExportButton(){
+    private void resetExportButton() {
         exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.export"));
         exportButton.setOnClickListener(exportSummaryListener);
     }
@@ -353,7 +354,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         if (flag == TO_DATE) {
             calendar.setTimeInMillis(fromDate.getTime());
         } else {
-            calendar.set(1900, 1,1);
+            calendar.set(1900, 1, 1);
         }
         Calendar dueCal = Calendar.getInstance();
         dueCal.add(Calendar.DATE, 1);
@@ -496,7 +497,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                 String status = visitSummaryDTO.getPayload().getVisitSummary().getStatus();
                 if (retryIntent > MAX_NUMBER_RETRIES) {
                     retryIntent = 0;
-                    isExporting =false;
+                    isExporting = false;
                     exportButton.setEnabled(true);
 //                    exportButton.setProgressEnabled(false);
                     exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.export"));
@@ -586,7 +587,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         resetExportButton();
     }

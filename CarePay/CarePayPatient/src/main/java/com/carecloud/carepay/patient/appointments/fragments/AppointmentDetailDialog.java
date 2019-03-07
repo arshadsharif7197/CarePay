@@ -416,7 +416,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                 appointmentPractice = userPracticeDTO;
             }
         }
-        if (appointmentPractice != null && appointmentPractice.isVisitSummaryEnabled()) {
+        if (appointmentPractice != null && appointmentPractice.isVisitSummaryEnabled()
+                && appointmentModelDto.getPayload().canViewAndCreateVisitSummaries(appointmentPractice.getPracticeId())) {
             for (PortalSettingDTO portalSettingDTO : appointmentModelDto.getPayload().getPortalSettings()) {
                 if (appointmentPractice.getPracticeId().equals(portalSettingDTO.getMetadata().getPracticeId())) {
                     for (PortalSetting portalSetting : portalSettingDTO.getPayload()) {

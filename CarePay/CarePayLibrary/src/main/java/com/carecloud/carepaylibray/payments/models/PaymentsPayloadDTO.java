@@ -7,7 +7,7 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
-import com.carecloud.carepaylibray.base.dtos.BasePayloadDto;
+import com.carecloud.carepaylibray.base.dtos.DelegatePermissionBasePayloadDto;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.base.models.UserAuthModel;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItemPayload;
@@ -15,7 +15,6 @@ import com.carecloud.carepaylibray.payments.models.history.PaymentsTransactionHi
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
-import com.carecloud.carepaylibray.profile.ProfileLink;
 import com.carecloud.carepaylibray.retail.models.RetailProductsModel;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -35,7 +34,7 @@ import java.util.Map;
  * Created by Rahul on 11/30/16
  */
 
-public class PaymentsPayloadDTO extends BasePayloadDto implements Serializable {
+public class PaymentsPayloadDTO extends DelegatePermissionBasePayloadDto implements Serializable {
 
 
     @SerializedName("providers")
@@ -728,16 +727,5 @@ public class PaymentsPayloadDTO extends BasePayloadDto implements Serializable {
             }
         }
         return null;
-    }
-
-    public boolean canSeeStatement(String practiceId) {
-        if (getDelegate() == null) {
-            return true;
-        }
-        ProfileLink profileLink = getDelegate().getProfileLink(practiceId);
-        if (profileLink == null) {
-            return false;
-        }
-        return profileLink.getPermissionDto().getPermissions().getViewPatientStatements().isEnabled();
     }
 }
