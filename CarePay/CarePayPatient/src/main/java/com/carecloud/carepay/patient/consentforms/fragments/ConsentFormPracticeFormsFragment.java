@@ -96,7 +96,7 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         selectedForms = new ArrayList<>();
-        signSelectedFormsButton = (Button) view.findViewById(R.id.signSelectedFormsButton);
+        signSelectedFormsButton = view.findViewById(R.id.signSelectedFormsButton);
         if (mode == ConsentFormViewPagerFragment.PENDING_MODE) {
             signSelectedFormsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -116,21 +116,18 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
 
     protected void setUpRecyclerView(View view) {
         UserFormDTO userFormDto = consentFormDto.getPayload().getUserForms().get(selectedPracticeIndex);
-        RecyclerView practiceConsentFormsRecyclerView = (RecyclerView) view
+        RecyclerView practiceConsentFormsRecyclerView = view
                 .findViewById(R.id.providerConsentFormsRecyclerView);
         practiceConsentFormsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         List<PracticeForm> practiceForms = getPracticeForms(userFormDto);
-        if (practiceForms.isEmpty()) {
-            view.findViewById(R.id.emptyStateScreen).setVisibility(View.VISIBLE);
-            TextView title = (TextView) view.findViewById(R.id.emptyStateTitleTextView);
-            title.setText(Label.getLabel(mode == ConsentFormViewPagerFragment.HISTORIC_MODE ?
-                    "adhoc.historyforms.empty.label.title" : "adhoc.pendingforms.empty.label.title"));
+        if (!consentFormDto.getPayload().canViewForms(userFormDto.getMetadata().getPracticeId())) {
+            showNoPermissionScreen(view);
             practiceConsentFormsRecyclerView.setVisibility(View.GONE);
-            signSelectedFormsButton.setVisibility(View.GONE);
-            ((TextView) view.findViewById(R.id.emptyStateSubTitleTextView)).setText(
-                    mode == ConsentFormViewPagerFragment.HISTORIC_MODE ?
-                            Label.getLabel("adhoc.historyforms.empty.label.description") :
-                            Label.getLabel("adhoc.forms.empty.label.description"));
+            return;
+        }
+        if (practiceForms.isEmpty()) {
+            showEmptyScreen(view);
+            practiceConsentFormsRecyclerView.setVisibility(View.GONE);
             return;
         }
         adapter = new ConsentFormsAdapter(getContext(), this, practiceForms, mode);
@@ -140,6 +137,26 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
             paging = userFormDto.getHistoryForms().getPaging();
             practiceConsentFormsRecyclerView.addOnScrollListener(scrollListener);
         }
+    }
+
+    private void showNoPermissionScreen(View view) {
+        view.findViewById(R.id.emptyStateScreen).setVisibility(View.VISIBLE);
+        TextView title = view.findViewById(R.id.emptyStateTitleTextView);
+        title.setText(Label.getLabel("appointments.list.history.noPermission.title"));
+        signSelectedFormsButton.setVisibility(View.GONE);
+        view.findViewById(R.id.emptyStateSubTitleTextView).setVisibility(View.GONE);
+    }
+
+    private void showEmptyScreen(View view) {
+        view.findViewById(R.id.emptyStateScreen).setVisibility(View.VISIBLE);
+        TextView title = view.findViewById(R.id.emptyStateTitleTextView);
+        title.setText(Label.getLabel(mode == ConsentFormViewPagerFragment.HISTORIC_MODE ?
+                "adhoc.historyforms.empty.label.title" : "adhoc.pendingforms.empty.label.title"));
+        signSelectedFormsButton.setVisibility(View.GONE);
+        ((TextView) view.findViewById(R.id.emptyStateSubTitleTextView)).setText(
+                mode == ConsentFormViewPagerFragment.HISTORIC_MODE ?
+                        Label.getLabel("adhoc.historyforms.empty.label.description") :
+                        Label.getLabel("adhoc.forms.empty.label.description"));
     }
 
     private List<PracticeForm> getPracticeForms(UserFormDTO userFormDTO) {
