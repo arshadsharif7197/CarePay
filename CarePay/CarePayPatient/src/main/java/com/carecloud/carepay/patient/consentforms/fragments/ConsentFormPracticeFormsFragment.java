@@ -108,7 +108,9 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
                     callback.showForms(selectedForms, localSelectedFormResponse, selectedPracticeIndex, true);
                 }
             });
-            signSelectedFormsButton.setVisibility(View.VISIBLE);
+            if (canReviewForms()) {
+                signSelectedFormsButton.setVisibility(View.VISIBLE);
+            }
         }
 
         setUpRecyclerView(view);
@@ -202,6 +204,13 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
         callback.showForms(localSelectedForm, localSelectedFormResponse, selectedPracticeIndex, false);
     }
 
+    @Override
+    public boolean canReviewForms() {
+        String practiceId = consentFormDto.getPayload().getUserForms()
+                .get(selectedPracticeIndex).getMetadata().getPracticeId();
+        return consentFormDto.getPayload().canReviewForms(practiceId);
+    }
+
     private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -214,7 +223,6 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
                     isPaging = true;
                 }
             }
-
         }
     };
 

@@ -126,4 +126,15 @@ public class DelegatePermissionBasePayloadDto {
         }
         return profileLink.getPermissionDto().getPermissions().getViewForms().isEnabled();
     }
+
+    public boolean canReviewForms(String practiceId) {
+        if (getDelegate() == null) {
+            return true;
+        }
+        ProfileLink profileLink = getDelegate().getProfileLink(practiceId);
+        if (profileLink == null) {
+            return false;
+        }
+        return profileLink.getPermissionDto().getPermissions().getReviewForms().isEnabled();
+    }
 }
