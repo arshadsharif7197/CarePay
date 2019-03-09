@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
+import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -61,27 +62,26 @@ public class SurveyActivity extends BasePracticeActivity implements FragmentActi
         }
 
         final TextView languageSwitch = findViewById(R.id.languageSpinner);
-        final View languageContainer = findViewById(R.id.languageContainer);
+        final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), true);
         languageSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                languageContainer.setVisibility(languageContainer.getVisibility() == View.VISIBLE
-                        ? View.GONE : View.VISIBLE);
+                int offsetX = view.getWidth() / 2 - popupPickerLanguage.getWidth() / 2;
+                int offsetY = -view.getHeight() - popupPickerLanguage.getHeight();
+                popupPickerLanguage.showAsDropDown(view, offsetX, offsetY);
             }
         });
         languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
         final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
         headers.put("username", getApplicationPreferences().getUserName());
         headers.put("username_patient", getApplicationPreferences().getPatientId());
-        RecyclerView languageList = findViewById(R.id.languageList);
         LanguageAdapter languageAdapter = new LanguageAdapter(surveyDTO.getPayload().getLanguages(),
                 selectedLanguage);
-        languageList.setAdapter(languageAdapter);
-        languageList.setLayoutManager(new LinearLayoutManager(getContext()));
+        popupPickerLanguage.setAdapter(languageAdapter);
         languageAdapter.setCallback(new LanguageAdapter.LanguageInterface() {
             @Override
             public void onLanguageSelected(OptionDTO language) {
-                languageContainer.setVisibility(View.GONE);
+                popupPickerLanguage.dismiss();
                 TransitionDTO transition = surveyDTO.getMetadata().getLinks().getLanguage();
                 changeLanguage(transition, language.getCode().toLowerCase(), headers, new SimpleCallback() {
                     @Override

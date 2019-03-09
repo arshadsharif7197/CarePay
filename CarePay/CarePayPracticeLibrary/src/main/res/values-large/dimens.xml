@@ -30,7 +30,8 @@
     <dimen name="langSpinnerTextSize">15sp</dimen>
     <dimen name="languageSpinnerWidth">85dp</dimen>
     <dimen name="languageSpinnerHeight">30dp</dimen>
-    <dimen name="languageContainerWidth">120dp</dimen>
+    <dimen name="languageContainerWidth">140dp</dimen>
+    <dimen name="languageContainerHeight">127dp</dimen>
     <dimen name="languageContainerMarginTop">13dp</dimen>
     <dimen name="languageIndicatorSize">20dp</dimen>
     <dimen name="languageItemStartMargin">10dp</dimen>

@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckOutFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
+import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientModeAddExistingPaymentPlanFullFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientModePaymentPlanFullFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
@@ -114,8 +116,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     private boolean paymentStarted = false;
     private boolean completedPaymentPlan = false;
 
-    private boolean isUserInteraction = false;
-
     private WorkflowDTO continuePaymentsDTO;
     private boolean isCashPayment = false;
 
@@ -134,19 +134,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         initViews();
         initializeLanguageSpinner();
         logCheckoutStarted();
-    }
-
-    @Override
-    public void onUserInteraction() {
-        super.onUserInteraction();
-        isUserInteraction = true;
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                findViewById(R.id.languageContainer).setVisibility(View.GONE);
-            }
-        }, 25);
     }
 
     /**
@@ -189,30 +176,26 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         }
 
         final TextView languageSwitch = (TextView) findViewById(R.id.languageSpinner);
-        final View languageContainer = findViewById(R.id.languageContainer);
+        final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), true);
         languageSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                languageContainer.setVisibility(languageContainer.getVisibility() == View.VISIBLE
-                        ? View.GONE : View.VISIBLE);
+                int offsetX = view.getWidth() / 2 - popupPickerLanguage.getWidth() / 2;
+                int offsetY = -view.getHeight() - popupPickerLanguage.getHeight();
+                popupPickerLanguage.showAsDropDown(view, offsetX, offsetY);
             }
         });
         languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
         final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
         headers.put("username", getApplicationPreferences().getUserName());
         headers.put("username_patient", getApplicationPreferences().getPatientId());
-        RecyclerView languageList = (RecyclerView) findViewById(R.id.languageList);
         LanguageAdapter languageAdapter = new LanguageAdapter(appointmentsResultModel.getPayload().getLanguages(),
                 selectedLanguage);
-        languageList.setAdapter(languageAdapter);
-        languageList.setLayoutManager(new LinearLayoutManager(getContext()));
+        popupPickerLanguage.setAdapter(languageAdapter);
         languageAdapter.setCallback(new LanguageAdapter.LanguageInterface() {
             @Override
             public void onLanguageSelected(OptionDTO language) {
-                languageContainer.setVisibility(View.GONE);
-                if (!isUserInteraction) {
-                    return;
-                }
+                popupPickerLanguage.dismiss();
                 TransitionDTO transition;
                 if (appointmentsResultModel != null) {
                     transition = appointmentsResultModel.getMetadata().getLinks().getLanguage();

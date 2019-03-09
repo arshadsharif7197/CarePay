@@ -13,12 +13,17 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +31,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
+import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionUserPractice;
 import com.carecloud.carepay.practice.library.signin.fragments.ChoosePracticeLocationFragment;
@@ -96,8 +102,6 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     private TextView languageSwitch;
     private View showPasswordButton;
 
-    private boolean isUserInteraction = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,20 +139,6 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             fragment.setCallback(this);
             displayDialogFragment(fragment, false);
         }
-    }
-
-
-    @Override
-    public void onUserInteraction() {
-        super.onUserInteraction();
-        isUserInteraction = true;
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                findViewById(R.id.languageContainer).setVisibility(View.GONE);
-            }
-        }, 25);
     }
 
     /**
@@ -195,29 +185,23 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         }
 
         languageSwitch = (TextView) findViewById(R.id.languageSpinner);
-        final View languageContainer = findViewById(R.id.languageContainer);
+        final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), false);
         languageSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                languageContainer.setVisibility(languageContainer.getVisibility() == View.VISIBLE
-                        ? View.GONE : View.VISIBLE);
+                popupPickerLanguage.showAsDropDown(view);
             }
         });
         languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
         final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
         headers.put("username", getApplicationPreferences().getUserName());
         headers.put("username_patient", getApplicationPreferences().getPatientId());
-        RecyclerView languageList = (RecyclerView) findViewById(R.id.languageList);
         LanguageAdapter languageAdapter = new LanguageAdapter(signinDTO.getPayload().getLanguages(), selectedLanguage);
-        languageList.setAdapter(languageAdapter);
-        languageList.setLayoutManager(new LinearLayoutManager(getContext()));
+        popupPickerLanguage.setAdapter(languageAdapter);
         languageAdapter.setCallback(new LanguageAdapter.LanguageInterface() {
             @Override
             public void onLanguageSelected(OptionDTO language) {
-                languageContainer.setVisibility(View.GONE);
-                if (!isUserInteraction) {
-                    return;
-                }
+                popupPickerLanguage.dismiss();
                 changeLanguage(signinDTO.getMetadata().getLinks().getLanguage(),
                         language.getCode().toLowerCase(), getWorkflowServiceHelper().getApplicationStartHeaders());
             }

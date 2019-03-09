@@ -39,6 +39,7 @@ import com.carecloud.carepay.practice.library.homescreen.dtos.PatientHomeScreenT
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenPayloadDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenTransitionsDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLinksDTO;
+import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -72,8 +73,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private TextView languageSpinner;
 
     private Handler handler = new Handler();
-
-    private boolean isUserInteraction = false;
 
     public enum HomeScreenMode {
         PATIENT_HOME, PRACTICE_HOME
@@ -143,22 +142,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         getNews();
     }
 
-    @Override
-    public void onUserInteraction() {
-        super.onUserInteraction();
-        isUserInteraction = true;
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                View language = findViewById(R.id.languageContainer);
-                if (language != null) {
-                    language.setVisibility(View.GONE);
-                }
-            }
-        }, 25);
-    }
-
     private void populateLanguageSpinner() {
         JsonObject payloadAsJsonObject = homeScreenDTO.getPayload();
         Gson gson = new Gson();
@@ -176,14 +159,12 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             }
         }
 
-        final View languageContainer = findViewById(R.id.languageContainer);
-        if (languageContainer != null) {
+        final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), false);
             languageSpinner = findViewById(R.id.languageSpinner);
             languageSpinner.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    languageContainer.setVisibility(languageContainer.getVisibility() == View.VISIBLE
-                            ? View.GONE : View.VISIBLE);
+                    popupPickerLanguage.showAsDropDown(view);
                 }
             });
             languageSpinner.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
@@ -193,22 +174,16 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
             headers.put("username", getApplicationPreferences().getUserName());
             headers.put("username_patient", getApplicationPreferences().getPatientId());
-            RecyclerView languageList = findViewById(R.id.languageList);
             LanguageAdapter languageAdapter = new LanguageAdapter(languages, selectedLanguage);
-            languageList.setAdapter(languageAdapter);
-            languageList.setLayoutManager(new LinearLayoutManager(getContext()));
+            popupPickerLanguage.setAdapter(languageAdapter);
             languageAdapter.setCallback(new LanguageAdapter.LanguageInterface() {
                 @Override
                 public void onLanguageSelected(OptionDTO language) {
-                    languageContainer.setVisibility(View.GONE);
-                    if (!isUserInteraction) {
-                        return;
-                    }
+                    popupPickerLanguage.dismiss();
                     changeLanguage(transitionsDTO.getLanguage(),
                             language.getCode().toLowerCase(), headers);
                 }
             });
-        }
     }
 
     private void initUIFields() {
