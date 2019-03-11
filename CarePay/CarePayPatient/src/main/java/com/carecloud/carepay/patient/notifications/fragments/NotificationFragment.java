@@ -230,7 +230,7 @@ public class NotificationFragment extends BaseFragment
     private void setAdapter() {
         boolean canViewNotifications = canViewAnyNotification(notificationsDTO.getPayload()
                 .getPracticeInformation(), notificationItems);
-        if (canViewNotifications || notificationItems.isEmpty()) {
+        if (canViewNotifications) {
             if (!notificationItems.isEmpty()) {
                 if (notificationsAdapter == null) {
                     notificationsAdapter = new NotificationsAdapter(getContext(), notificationItems, this);
@@ -257,16 +257,20 @@ public class NotificationFragment extends BaseFragment
 
     private boolean canViewAnyNotification(List<UserPracticeDTO> userPractices,
                                            List<NotificationItem> notifications) {
+        boolean atLeastOneHasPermission = false;
         for (UserPracticeDTO practice : userPractices) {
-            if (!notificationsDTO.getPayload().canViewNotifications(practice.getPracticeId())) {
-                notifications = filterNotificationsByPermissions(notifications, practice.getPracticeId());
+            if (notificationsDTO.getPayload().canViewNotifications(practice.getPracticeId())) {
+                atLeastOneHasPermission = true;
+            } else {
+                notifications = removeNotifications(notifications, practice.getPracticeId());
             }
         }
-        return notifications.size() > 0;
+        notificationsDTO.getPayload().setNotifications(notifications);
+        return atLeastOneHasPermission;
     }
 
-    private List<NotificationItem> filterNotificationsByPermissions(List<NotificationItem> notifications,
-                                                                    String practiceId) {
+    private List<NotificationItem> removeNotifications(List<NotificationItem> notifications,
+                                                       String practiceId) {
         List<NotificationItem> filteredList = new ArrayList<>();
         for (NotificationItem notificationItem : notifications) {
             if (!notificationItem.getMetadata().getPracticeId().equals(practiceId)) {

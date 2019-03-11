@@ -185,12 +185,16 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
 
     private boolean canViewAnyAppointment(@NonNull List<AppointmentDTO> appointments,
                                           List<UserPracticeDTO> userPractices) {
+        boolean atLeastOneHasPermission = false;
         for (UserPracticeDTO practice : userPractices) {
-            if (!appointmentsResultModel.getPayload().canViewAppointments(practice.getPracticeId())) {
+            if (appointmentsResultModel.getPayload().canViewAppointments(practice.getPracticeId())) {
+                atLeastOneHasPermission = true;
+            } else {
                 appointments = filterAppointments(appointments, practice.getPracticeId());
             }
         }
-        return appointments.size() > 0;
+        appointmentsResultModel.getPayload().setAppointments(appointments);
+        return atLeastOneHasPermission;
     }
 
     private List<AppointmentDTO> filterAppointments(List<AppointmentDTO> appointments, String practiceId) {
