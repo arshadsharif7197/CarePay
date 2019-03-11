@@ -157,8 +157,7 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
     }
 
     private void loadAppointmentList() {
-        if ((appointmentsResultModel.getPayload().getAppointments().isEmpty())
-                || canViewAnyAppointment(appointmentsResultModel.getPayload().getAppointments(),
+        if (canViewAnyAppointment(appointmentsResultModel.getPayload().getAppointments(),
                 appointmentsResultModel.getPayload().getUserPractices())) {
             if (appointmentsResultModel.getPayload().getAppointments().size() > 0) {
                 appointmentsItems = appointmentsResultModel.getPayload().getAppointments();
@@ -194,7 +193,7 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
             }
         }
         appointmentsResultModel.getPayload().setAppointments(appointments);
-        return atLeastOneHasPermission;
+        return atLeastOneHasPermission || userPractices.isEmpty();
     }
 
     private List<AppointmentDTO> filterAppointments(List<AppointmentDTO> appointments, String practiceId) {

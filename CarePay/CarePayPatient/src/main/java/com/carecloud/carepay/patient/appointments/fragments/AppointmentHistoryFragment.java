@@ -88,8 +88,6 @@ public class AppointmentHistoryFragment extends BaseFragment
                 return object1.getPracticeName().compareTo(object2.getPracticeName());
             }
         });
-        selectedPractice = appointmentDto.getPayload().getUserPractices().get(0);
-        callAppointmentService(selectedPractice, true, true);
         excludedAppointmentStates = new ArrayList<>();
         excludedAppointmentStates.add(CarePayConstants.PENDING);
         excludedAppointmentStates.add(CarePayConstants.REQUESTED);
@@ -106,6 +104,14 @@ public class AppointmentHistoryFragment extends BaseFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         historicAppointmentsRecyclerView = view.findViewById(R.id.historicAppointmentsRecyclerView);
+
+        if (appointmentDto.getPayload().getUserPractices().isEmpty()) {
+            showNoAppointmentsLayout();
+        } else {
+            selectedPractice = appointmentDto.getPayload().getUserPractices().get(0);
+            callAppointmentService(selectedPractice, true, true);
+        }
+
         Map<String, Set<String>> enabledPracticeLocations = new HashMap<>();
         for (AppointmentDTO appointmentDTO : appointmentDto.getPayload().getAppointments()) {
             String practiceId = appointmentDTO.getMetadata().getPracticeId();

@@ -159,7 +159,6 @@ public class NotificationFragment extends BaseFragment
                 }
             }
         });
-
         setAdapter();
     }
 
@@ -243,16 +242,19 @@ public class NotificationFragment extends BaseFragment
                 noNotificationLayout.setVisibility(View.GONE);
 
             } else {
-                refreshLayout.setVisibility(View.GONE);
-                noNotificationLayout.setVisibility(View.VISIBLE);
+                showEmptyScreen();
             }
         } else {
-            refreshLayout.setVisibility(View.GONE);
-            noNotificationLayout.setVisibility(View.VISIBLE);
+            showEmptyScreen();
             TextView titleTextView = noNotificationLayout.findViewById(R.id.no_notification_message_title);
             titleTextView.setText(Label.getLabel("appointments.list.history.noPermission.title"));
             noNotificationLayout.findViewById(R.id.no_notificaton_message_desc).setVisibility(View.GONE);
         }
+    }
+
+    private void showEmptyScreen() {
+        refreshLayout.setVisibility(View.GONE);
+        noNotificationLayout.setVisibility(View.VISIBLE);
     }
 
     private boolean canViewAnyNotification(List<UserPracticeDTO> userPractices,
@@ -266,7 +268,7 @@ public class NotificationFragment extends BaseFragment
             }
         }
         notificationsDTO.getPayload().setNotifications(notifications);
-        return atLeastOneHasPermission;
+        return atLeastOneHasPermission || userPractices.isEmpty();
     }
 
     private List<NotificationItem> removeNotifications(List<NotificationItem> notifications,
