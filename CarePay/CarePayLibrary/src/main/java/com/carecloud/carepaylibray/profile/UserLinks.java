@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.profile;
 
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -17,6 +18,9 @@ public class UserLinks {
     @Expose
     @SerializedName("represented_users")
     private List<ProfileDto> representedUsers = new ArrayList<>();
+    @SerializedName("practice_information")
+    @Expose
+    private List<UserPracticeDTO> delegatePracticeInformation = new ArrayList<>();
 
     public Profile getLoggedInUser() {
         return loggedInUser;
@@ -32,5 +36,13 @@ public class UserLinks {
 
     public void setRepresentedUsers(List<ProfileDto> representedUsers) {
         this.representedUsers = representedUsers;
+    }
+
+    public List<UserPracticeDTO> getDelegatePracticeInformation() {
+        return delegatePracticeInformation;
+    }
+
+    public void setDelegatePracticeInformation(List<UserPracticeDTO> delegatePracticeInformation) {
+        this.delegatePracticeInformation = delegatePracticeInformation;
     }
 }

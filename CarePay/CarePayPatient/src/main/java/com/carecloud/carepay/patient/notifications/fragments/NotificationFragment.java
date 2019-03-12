@@ -227,8 +227,9 @@ public class NotificationFragment extends BaseFragment
 
 
     private void setAdapter() {
-        boolean canViewNotifications = canViewAnyNotification(notificationsDTO.getPayload()
-                .getPracticeInformation(), notificationItems);
+        boolean canViewNotifications = canViewAnyNotification(notificationsDTO.getPayload().getDelegate() == null ?
+                notificationsDTO.getPayload().getPracticeInformation()
+                : notificationsDTO.getPayload().getUserLinks().getDelegatePracticeInformation(), notificationItems);
         if (canViewNotifications) {
             if (!notificationItems.isEmpty()) {
                 if (notificationsAdapter == null) {
@@ -263,23 +264,11 @@ public class NotificationFragment extends BaseFragment
         for (UserPracticeDTO practice : userPractices) {
             if (notificationsDTO.getPayload().canViewNotifications(practice.getPracticeId())) {
                 atLeastOneHasPermission = true;
-            } else {
-                notifications = removeNotifications(notifications, practice.getPracticeId());
             }
         }
         notificationsDTO.getPayload().setNotifications(notifications);
-        return atLeastOneHasPermission || userPractices.isEmpty();
-    }
-
-    private List<NotificationItem> removeNotifications(List<NotificationItem> notifications,
-                                                       String practiceId) {
-        List<NotificationItem> filteredList = new ArrayList<>();
-        for (NotificationItem notificationItem : notifications) {
-            if (!notificationItem.getMetadata().getPracticeId().equals(practiceId)) {
-                filteredList.add(notificationItem);
-            }
-        }
-        return filteredList;
+        return atLeastOneHasPermission
+                || (userPractices.isEmpty() && notificationsDTO.getPayload().getDelegate() == null);
     }
 
     @Override

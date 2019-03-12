@@ -18,7 +18,6 @@ import com.carecloud.carepay.patient.notifications.models.CustomNotificationItem
 import com.carecloud.carepay.patient.notifications.models.NotificationItem;
 import com.carecloud.carepay.patient.notifications.models.NotificationItemMetadata;
 import com.carecloud.carepay.patient.notifications.models.NotificationType;
-import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
@@ -194,9 +193,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.header.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
         holder.header.setText(Label.getLabel("survey.notificationList.item.title.newSurvey"));
         String message = Label.getLabel("survey.notificationList.item.message.newSurvey");
-        UserPracticeDTO practice = ApplicationPreferences.getInstance()
-                .getUserPractice(notificationItem.getMetadata().getPracticeId());
-        String practiceName = practice.getPracticeName();
+        String practiceName = callback.getUserPracticeById(notificationItem.getMetadata().getPracticeId())
+                .getPracticeName();
         holder.message.setTextColor(ContextCompat.getColor(context, R.color.charcoal));
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder(String
                 .format(message, practiceName));
@@ -221,7 +219,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                         try {
                             context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
                         } catch (android.content.ActivityNotFoundException anfe) {
-                            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                            context.startActivity(new Intent(Intent.ACTION_VIEW,
+                                    Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
                         }
                     }
                 });
@@ -361,9 +360,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.cellAvatar.setVisibility(View.VISIBLE);
         holder.header.setText(Label.getLabel("notifications.notificationList.statement.newStatementTitle"));
         holder.header.setTextColor(ContextCompat.getColor(context, R.color.emerald));
-        UserPracticeDTO practice = ApplicationPreferences.getInstance()
-                .getUserPractice(notificationItem.getMetadata().getPracticeId());
-        String practiceName = practice.getPracticeName();
+        String practiceName = notificationItem.getPayload().getPracticeName();
         holder.message.setText(String.format(Label
                 .getLabel("notifications.notificationList.statement.newStatementMessage"), practiceName));
         holder.initials.setBackgroundResource(R.drawable.round_list_tv_green);
@@ -388,7 +385,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.initials.setText(StringUtil.getShortName(provider.getName()));
         holder.header.setText("Notification");
 
-        AppointmentDisplayStyle displayStyle = AppointmentDisplayUtil.determineDisplayStyle(appointment.getPayload(), false);
+        AppointmentDisplayStyle displayStyle = AppointmentDisplayUtil
+                .determineDisplayStyle(appointment.getPayload(), false);
         notificationItem.getPayload().getAppointment().getPayload().setDisplayStyle(displayStyle);
 
         switch (displayStyle) {
