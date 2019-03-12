@@ -137,4 +137,59 @@ public class DelegatePermissionBasePayloadDto {
         }
         return profileLink.getPermissionDto().getPermissions().getReviewForms().isEnabled();
     }
+
+    public boolean canViewCareTeam(String practiceId) {
+        if (getDelegate() == null) {
+            return true;
+        }
+        ProfileLink profileLink = getDelegate().getProfileLink(practiceId);
+        if (profileLink == null) {
+            return false;
+        }
+        return profileLink.getPermissionDto().getPermissions().getViewCareTeam().isEnabled();
+    }
+
+    public boolean canViewConditions(String practiceId) {
+        if (getDelegate() == null) {
+            return true;
+        }
+        ProfileLink profileLink = getDelegate().getProfileLink(practiceId);
+        if (profileLink == null) {
+            return false;
+        }
+        return profileLink.getPermissionDto().getPermissions().getViewConditions().isEnabled();
+    }
+
+    public boolean canViewAllergies(String practiceId) {
+        if (getDelegate() == null) {
+            return true;
+        }
+        ProfileLink profileLink = getDelegate().getProfileLink(practiceId);
+        if (profileLink == null) {
+            return false;
+        }
+        return profileLink.getPermissionDto().getPermissions().getViewAllergies().isEnabled();
+    }
+
+    public boolean canViewMedications(String practiceId) {
+        if (getDelegate() == null) {
+            return true;
+        }
+        ProfileLink profileLink = getDelegate().getProfileLink(practiceId);
+        if (profileLink == null) {
+            return false;
+        }
+        return profileLink.getPermissionDto().getPermissions().getViewMedications().isEnabled();
+    }
+
+    public boolean canViewLabs(String practiceId) {
+        if (getDelegate() == null) {
+            return true;
+        }
+        ProfileLink profileLink = getDelegate().getProfileLink(practiceId);
+        if (profileLink == null) {
+            return false;
+        }
+        return profileLink.getPermissionDto().getPermissions().getViewLabResults().isEnabled();
+    }
 }
