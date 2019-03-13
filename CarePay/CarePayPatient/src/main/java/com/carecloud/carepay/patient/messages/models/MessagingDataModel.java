@@ -1,6 +1,8 @@
 package com.carecloud.carepay.patient.messages.models;
 
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.base.dtos.DelegatePermissionBasePayloadDto;
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -20,6 +22,9 @@ public class MessagingDataModel extends DelegatePermissionBasePayloadDto {
 
     @SerializedName("contacts")
     private List<ProviderContact> providerContacts = new ArrayList<>();
+
+    @SerializedName(value = "practice_information", alternate = "user_practices")
+    private List<UserPracticeDTO> userPractices = new ArrayList<>();
 
     public Messages getMessages() {
         return messages;
@@ -43,5 +48,13 @@ public class MessagingDataModel extends DelegatePermissionBasePayloadDto {
 
     public void setProviderContacts(List<ProviderContact> providerContacts) {
         this.providerContacts = providerContacts;
+    }
+
+    public List<UserPracticeDTO> getUserPractices() {
+        return userPractices;
+    }
+
+    public void setUserPractices(List<UserPracticeDTO> userPractices) {
+        this.userPractices = userPractices;
     }
 }
