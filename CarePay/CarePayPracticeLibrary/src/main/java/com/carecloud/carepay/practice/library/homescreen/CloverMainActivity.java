@@ -147,43 +147,29 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         Gson gson = new Gson();
         PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO
                 = gson.fromJson(payloadAsJsonObject, PracticeHomeScreenPayloadDTO.class);
-        final List<OptionDTO> languages = new ArrayList<>();
-        for (OptionDTO language : practiceHomeScreenPayloadDTO.getLanguages()) {
-            languages.add(language);
-        }
-        String selectedLanguageStr = getApplicationPreferences().getUserLanguage();
-        OptionDTO selectedLanguage = languages.get(0);
-        for (OptionDTO language : languages) {
-            if (selectedLanguageStr.equals(language.getCode())) {
-                selectedLanguage = language;
-            }
-        }
+        JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getLinks();
+        final PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject,
+                PracticeHomeScreenTransitionsDTO.class);
+        final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
+        headers.put("username", getApplicationPreferences().getUserName());
+        headers.put("username_patient", getApplicationPreferences().getPatientId());
 
-        final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), false);
-            languageSpinner = findViewById(R.id.languageSpinner);
-            languageSpinner.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    popupPickerLanguage.showAsDropDown(view);
-                }
-            });
-            languageSpinner.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
-            JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getLinks();
-            final PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject,
-                    PracticeHomeScreenTransitionsDTO.class);
-            final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
-            headers.put("username", getApplicationPreferences().getUserName());
-            headers.put("username_patient", getApplicationPreferences().getPatientId());
-            LanguageAdapter languageAdapter = new LanguageAdapter(languages, selectedLanguage);
-            popupPickerLanguage.setAdapter(languageAdapter);
-            languageAdapter.setCallback(new LanguageAdapter.LanguageInterface() {
-                @Override
-                public void onLanguageSelected(OptionDTO language) {
-                    popupPickerLanguage.dismiss();
-                    changeLanguage(transitionsDTO.getLanguage(),
-                            language.getCode().toLowerCase(), headers);
-                }
-            });
+        final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), false,
+                practiceHomeScreenPayloadDTO.getLanguages(), new LanguageAdapter.LanguageInterface() {
+            @Override
+            public void onLanguageSelected(OptionDTO language) {
+                changeLanguage(transitionsDTO.getLanguage(),
+                        language.getCode().toLowerCase(), headers);
+            }
+        });
+        languageSpinner = findViewById(R.id.languageSpinner);
+        languageSpinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popupPickerLanguage.showAsDropDown(view);
+            }
+        });
+        languageSpinner.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
     }
 
     private void initUIFields() {
