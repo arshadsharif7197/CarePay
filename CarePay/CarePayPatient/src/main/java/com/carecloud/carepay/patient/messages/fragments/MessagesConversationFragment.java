@@ -52,6 +52,7 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
     private RecyclerView recyclerView;
     private EditText messageTextInput;
     private View sendButton;
+    private View messageInputContainer;
 
     private boolean refreshing = true;
 
@@ -128,6 +129,11 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
 
         messageTextInput = (EditText) view.findViewById(R.id.message_input);
         messageTextInput.addTextChangedListener(messageInputListener);
+
+        messageInputContainer = view.findViewById(R.id.messageInputContainer);
+        if (!callback.canSendProvidersMessages()) {
+            messageInputContainer.setVisibility(View.GONE);
+        }
     }
 
     @Override

@@ -30,4 +30,6 @@ public interface MessageNavigationCallback {
 
     String lookupName(Messages.Reply thread, String userId);
 
+    boolean canSendProvidersMessages();
+
 }

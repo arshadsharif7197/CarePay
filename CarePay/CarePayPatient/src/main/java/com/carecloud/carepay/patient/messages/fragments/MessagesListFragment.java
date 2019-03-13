@@ -125,11 +125,10 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
             recyclerView.setAdapter(adapter);
         }
         Profile delegateUser = messagingDataModel.getDelegate();
-        boolean test = canSendProvidersMessages();
         if (!threads.isEmpty()) {
             noMessagesLayout.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
-            actionButton.setVisibility(delegateUser != null && !canSendProvidersMessages() ? View.GONE : View.VISIBLE);
+            actionButton.setVisibility(delegateUser != null && !callback.canSendProvidersMessages() ? View.GONE : View.VISIBLE);
             refreshLayoutView.setEnabled(true);
         } else if (delegateUser != null && !canViewAnyMessages()){
             noMessagesLayout.setVisibility(View.VISIBLE);
@@ -144,7 +143,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
             recyclerView.setVisibility(View.GONE);
             actionButton.setVisibility(View.GONE);
             refreshLayoutView.setEnabled(false);
-            if (delegateUser != null && !canSendProvidersMessages()) {
+            if (delegateUser != null && !callback.canSendProvidersMessages()) {
                 butonNewMessage.setVisibility(View.GONE);
             }
         }
@@ -315,16 +314,8 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         boolean viewAnyMessages = false;
         for (UserPracticeDTO practiceDTO : messagingDataModel.getUserPractices()) {
             viewAnyMessages = messagingDataModel.canViewMessages(practiceDTO.getPracticeId());
+            if (viewAnyMessages == true) break;
         }
         return viewAnyMessages;
     }
-
-    private boolean canSendProvidersMessages() {
-        boolean sendMessages = false;
-        for (UserPracticeDTO practiceDTO : messagingDataModel.getUserPractices()) {
-            sendMessages = messagingDataModel.canMessageProviders(practiceDTO.getPracticeId());
-        }
-        return sendMessages;
-    }
-
 }
