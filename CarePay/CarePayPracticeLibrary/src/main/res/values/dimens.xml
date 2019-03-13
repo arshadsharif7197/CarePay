@@ -254,7 +254,7 @@
     <dimen name="signInButtonTextSize">22sp</dimen>
     <dimen name="langSpinnerTextSize">20sp</dimen>
     <dimen name="languageContainerWidth">165dp</dimen>
-    <dimen name="languageContainerHeight">138dp</dimen>
+    <dimen name="languageContainerHeight">50dp</dimen>
     <dimen name="languageContainerMarginTop">15dp</dimen>
     <dimen name="languageIndicatorSize">25dp</dimen>
     <dimen name="languageItemStartMargin">20dp</dimen>

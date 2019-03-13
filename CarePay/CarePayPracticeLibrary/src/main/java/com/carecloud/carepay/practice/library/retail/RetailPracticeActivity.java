@@ -1,11 +1,8 @@
 package com.carecloud.carepay.practice.library.retail;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
@@ -26,10 +23,10 @@ import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterf
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.retail.models.RetailModel;
-import com.carecloud.carepaylibray.retail.models.RetailPracticeDTO;
 import com.carecloud.carepaylibray.retail.fragments.RetailFragment;
 import com.carecloud.carepaylibray.retail.interfaces.RetailInterface;
+import com.carecloud.carepaylibray.retail.models.RetailModel;
+import com.carecloud.carepaylibray.retail.models.RetailPracticeDTO;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
@@ -73,11 +70,11 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
     }
 
     private void setLeftPanelTexts() {
-        TextView retailMessageTextView = (TextView) findViewById(R.id.retailMessageTextView);
+        TextView retailMessageTextView = findViewById(R.id.retailMessageTextView);
         retailMessageTextView.setText(String
                 .format(Label.getLabel("retail.patientModeRetail.leftPanel.message.title"),
                         retailModel.getPayload().getPracticeInformation().get(0).getPracticeName()));
-        TextView retailSubMessageTextView = (TextView) findViewById(R.id.retailSubMessageTextView);
+        TextView retailSubMessageTextView = findViewById(R.id.retailSubMessageTextView);
         retailSubMessageTextView.setText(Label.getLabel("retail.patientModeRetail.leftPanel.message.subtitle"));
 
     }
@@ -105,34 +102,14 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
     }
 
     private void initializeLanguageSpinner(List<OptionDTO> languages, final TransitionDTO languageTransition) {
-        String selectedLanguageStr = getApplicationPreferences().getUserLanguage();
-        OptionDTO selectedLanguage = languages.get(0);
-        for (OptionDTO language : languages) {
-            if (selectedLanguageStr.equals(language.getCode())) {
-                selectedLanguage = language;
-            }
-        }
-
-        final TextView languageSwitch = (TextView) findViewById(R.id.languageSpinner);
-        final PopupPickerLanguage popupPickerLanguage  = new PopupPickerLanguage(getContext(), true);
-        languageSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int offsetX = view.getWidth() / 2 - popupPickerLanguage.getWidth() / 2;
-                int offsetY = -view.getHeight() - popupPickerLanguage.getHeight();
-                popupPickerLanguage.showAsDropDown(view, offsetX, offsetY);
-            }
-        });
-        languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
+        final TextView languageSwitch = findViewById(R.id.languageSpinner);
         final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
         headers.put("username", getApplicationPreferences().getUserName());
         headers.put("username_patient", getApplicationPreferences().getPatientId());
-        LanguageAdapter languageAdapter = new LanguageAdapter(languages, selectedLanguage);
-        popupPickerLanguage.setAdapter(languageAdapter);
-        languageAdapter.setCallback(new LanguageAdapter.LanguageInterface() {
+        final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), true,
+                languages, new LanguageAdapter.LanguageInterface() {
             @Override
             public void onLanguageSelected(OptionDTO language) {
-                popupPickerLanguage.dismiss();
                 changeLanguage(languageTransition, language.getCode().toLowerCase(), headers, new BasePracticeActivity.SimpleCallback() {
                     @Override
                     public void callback() {
@@ -142,6 +119,15 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
                 });
             }
         });
+        languageSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int offsetX = view.getWidth() / 2 - popupPickerLanguage.getWidth() / 2;
+                int offsetY = -view.getHeight() - popupPickerLanguage.getHeight();
+                popupPickerLanguage.showAsDropDown(view, offsetX, offsetY);
+            }
+        });
+        languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
     }
 
     @Override

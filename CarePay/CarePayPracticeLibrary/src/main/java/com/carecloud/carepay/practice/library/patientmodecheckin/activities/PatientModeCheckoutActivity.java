@@ -3,15 +3,11 @@ package com.carecloud.carepay.practice.library.patientmodecheckin.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
@@ -167,35 +163,14 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     private void initializeLanguageSpinner() {
-        String selectedLanguageStr = getApplicationPreferences().getUserLanguage();
-        OptionDTO selectedLanguage = appointmentsResultModel.getPayload().getLanguages().get(0);
-        for (OptionDTO language : appointmentsResultModel.getPayload().getLanguages()) {
-            if (selectedLanguageStr.equals(language.getCode())) {
-                selectedLanguage = language;
-            }
-        }
-
-        final TextView languageSwitch = (TextView) findViewById(R.id.languageSpinner);
-        final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), true);
-        languageSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int offsetX = view.getWidth() / 2 - popupPickerLanguage.getWidth() / 2;
-                int offsetY = -view.getHeight() - popupPickerLanguage.getHeight();
-                popupPickerLanguage.showAsDropDown(view, offsetX, offsetY);
-            }
-        });
-        languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
+        final TextView languageSwitch = findViewById(R.id.languageSpinner);
         final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
         headers.put("username", getApplicationPreferences().getUserName());
         headers.put("username_patient", getApplicationPreferences().getPatientId());
-        LanguageAdapter languageAdapter = new LanguageAdapter(appointmentsResultModel.getPayload().getLanguages(),
-                selectedLanguage);
-        popupPickerLanguage.setAdapter(languageAdapter);
-        languageAdapter.setCallback(new LanguageAdapter.LanguageInterface() {
+        final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), true,
+                appointmentsResultModel.getPayload().getLanguages(), new LanguageAdapter.LanguageInterface() {
             @Override
             public void onLanguageSelected(OptionDTO language) {
-                popupPickerLanguage.dismiss();
                 TransitionDTO transition;
                 if (appointmentsResultModel != null) {
                     transition = appointmentsResultModel.getMetadata().getLinks().getLanguage();
@@ -220,6 +195,15 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                 });
             }
         });
+        languageSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int offsetX = view.getWidth() / 2 - popupPickerLanguage.getWidth() / 2;
+                int offsetY = -view.getHeight() - popupPickerLanguage.getHeight();
+                popupPickerLanguage.showAsDropDown(view, offsetX, offsetY);
+            }
+        });
+        languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
     }
 
     private void changeLeftMenuLabels() {

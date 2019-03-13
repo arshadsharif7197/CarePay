@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -53,35 +51,14 @@ public class SurveyActivity extends BasePracticeActivity implements FragmentActi
     }
 
     private void initializeLanguageSpinner() {
-        String selectedLanguageStr = getApplicationPreferences().getUserLanguage();
-        OptionDTO selectedLanguage = surveyDTO.getPayload().getLanguages().get(0);
-        for (OptionDTO language : surveyDTO.getPayload().getLanguages()) {
-            if (selectedLanguageStr.equals(language.getCode())) {
-                selectedLanguage = language;
-            }
-        }
-
         final TextView languageSwitch = findViewById(R.id.languageSpinner);
-        final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), true);
-        languageSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int offsetX = view.getWidth() / 2 - popupPickerLanguage.getWidth() / 2;
-                int offsetY = -view.getHeight() - popupPickerLanguage.getHeight();
-                popupPickerLanguage.showAsDropDown(view, offsetX, offsetY);
-            }
-        });
-        languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
         final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
         headers.put("username", getApplicationPreferences().getUserName());
         headers.put("username_patient", getApplicationPreferences().getPatientId());
-        LanguageAdapter languageAdapter = new LanguageAdapter(surveyDTO.getPayload().getLanguages(),
-                selectedLanguage);
-        popupPickerLanguage.setAdapter(languageAdapter);
-        languageAdapter.setCallback(new LanguageAdapter.LanguageInterface() {
+        final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), true,
+                surveyDTO.getPayload().getLanguages(), new LanguageAdapter.LanguageInterface() {
             @Override
             public void onLanguageSelected(OptionDTO language) {
-                popupPickerLanguage.dismiss();
                 TransitionDTO transition = surveyDTO.getMetadata().getLinks().getLanguage();
                 changeLanguage(transition, language.getCode().toLowerCase(), headers, new SimpleCallback() {
                     @Override
@@ -93,6 +70,15 @@ public class SurveyActivity extends BasePracticeActivity implements FragmentActi
                 });
             }
         });
+        languageSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int offsetX = view.getWidth() / 2 - popupPickerLanguage.getWidth() / 2;
+                int offsetY = -view.getHeight() - popupPickerLanguage.getHeight();
+                popupPickerLanguage.showAsDropDown(view, offsetX, offsetY);
+            }
+        });
+        languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
     }
 
     private void loadSurvey() {

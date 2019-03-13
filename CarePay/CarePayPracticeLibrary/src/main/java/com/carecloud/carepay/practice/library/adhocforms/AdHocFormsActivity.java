@@ -2,7 +2,6 @@ package com.carecloud.carepay.practice.library.adhocforms;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -80,12 +79,12 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
                 }
             }
         }
-        RecyclerView formsNamesRecyclerView = (RecyclerView) findViewById(R.id.formsNamesRecyclerView);
+        RecyclerView formsNamesRecyclerView = findViewById(R.id.formsNamesRecyclerView);
         formsNamesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new AdHocRecyclerViewAdapter(forms);
         formsNamesRecyclerView.setAdapter(adapter);
 
-        TextView header = (TextView) findViewById(R.id.adhoc_forms_header);
+        TextView header = findViewById(R.id.adhoc_forms_header);
         header.setText(Label.getLabel(forms.size() > 1 ?
                 "adhoc_form_left_message" : "adhoc_form_left_message_singular"));
 
@@ -104,35 +103,12 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
     }
 
     private void initializeLanguageSpinner() {
-        String selectedLanguageStr = getApplicationPreferences().getUserLanguage();
-        OptionDTO selectedLanguage = adhocFormsModel.getPayload().getLanguages().get(0);
-        for (OptionDTO language : adhocFormsModel.getPayload().getLanguages()) {
-            if (selectedLanguageStr.equals(language.getCode())) {
-                selectedLanguage = language;
-            }
-        }
-
-        final TextView languageSwitch = (TextView) findViewById(R.id.languageSpinner);
-        final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), true);
-        languageSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int offsetX = view.getWidth() / 2 - popupPickerLanguage.getWidth() / 2;
-                int offsetY = -view.getHeight() - popupPickerLanguage.getHeight();
-                popupPickerLanguage.showAsDropDown(view, offsetX, offsetY);
-            }
-        });
-        languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
         final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
-//        headers.put("username", getApplicationPreferences().getUserName());
         headers.put("username_patient", getApplicationPreferences().getPatientId());
-        LanguageAdapter languageAdapter = new LanguageAdapter(adhocFormsModel.getPayload().getLanguages(),
-                selectedLanguage);
-        popupPickerLanguage.setAdapter(languageAdapter);
-        languageAdapter.setCallback(new LanguageAdapter.LanguageInterface() {
+        final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), true,
+                adhocFormsModel.getPayload().getLanguages(), new LanguageAdapter.LanguageInterface() {
             @Override
             public void onLanguageSelected(OptionDTO language) {
-                popupPickerLanguage.dismiss();
                 changeLanguage(adhocFormsModel.getMetadata().getLinks().getLanguage(),
                         language.getCode().toLowerCase(), headers, new SimpleCallback() {
                             @Override
@@ -143,6 +119,16 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
 
             }
         });
+        final TextView languageSwitch = findViewById(R.id.languageSpinner);
+        languageSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int offsetX = view.getWidth() / 2 - popupPickerLanguage.getWidth() / 2;
+                int offsetY = -view.getHeight() - popupPickerLanguage.getHeight();
+                popupPickerLanguage.showAsDropDown(view, offsetX, offsetY);
+            }
+        });
+        languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
     }
 
     private void refreshSelfDto() {
