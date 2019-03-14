@@ -323,6 +323,7 @@ public class RetailActivity extends MenuPatientActivity implements RetailPatient
 
     @Override
     protected void onProfileChanged(ProfileDto profile) {
+        displayToolbar(true, title);
         callRetailService();
     }
 

@@ -144,7 +144,7 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
     private void showNoPermissionScreen(View view) {
         view.findViewById(R.id.emptyStateScreen).setVisibility(View.VISIBLE);
         TextView title = view.findViewById(R.id.emptyStateTitleTextView);
-        title.setText(Label.getLabel("appointments.list.history.noPermission.title"));
+        title.setText(Label.getLabel("patient.delegation.delegates.permissions.label.noPermission"));
         signSelectedFormsButton.setVisibility(View.GONE);
         view.findViewById(R.id.emptyStateSubTitleTextView).setVisibility(View.GONE);
     }

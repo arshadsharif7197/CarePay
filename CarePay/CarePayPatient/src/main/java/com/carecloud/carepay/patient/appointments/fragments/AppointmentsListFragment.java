@@ -178,7 +178,7 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
         floatingActionButton.setVisibility(View.GONE);
         noAppointmentView.setVisibility(View.VISIBLE);
         ((TextView) noAppointmentView.findViewById(R.id.no_apt_message_title))
-                .setText(Label.getLabel("appointments.list.history.noPermission.title"));
+                .setText(Label.getLabel("patient.delegation.delegates.permissions.label.noPermission"));
         noAppointmentView.findViewById(R.id.no_apt_message_desc).setVisibility(View.GONE);
     }
 

@@ -347,6 +347,7 @@ public class NotificationActivity extends MenuPatientActivity
 
     @Override
     protected void onProfileChanged(ProfileDto profile) {
+        displayToolbar(true, getScreenTitle(Label.getLabel("notifications_heading")));
         callNotificationService(null);
     }
 

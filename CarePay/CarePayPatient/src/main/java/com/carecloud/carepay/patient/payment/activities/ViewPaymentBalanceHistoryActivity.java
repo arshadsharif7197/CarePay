@@ -901,6 +901,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     protected void onProfileChanged(ProfileDto profile) {
+        displayToolbar(true, toolBarTitle);
         callPaymentsService();
     }
 

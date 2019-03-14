@@ -248,7 +248,7 @@ public class NotificationFragment extends BaseFragment
         } else {
             showEmptyScreen();
             TextView titleTextView = noNotificationLayout.findViewById(R.id.no_notification_message_title);
-            titleTextView.setText(Label.getLabel("appointments.list.history.noPermission.title"));
+            titleTextView.setText(Label.getLabel("patient.delegation.delegates.permissions.label.noPermission"));
             noNotificationLayout.findViewById(R.id.no_notificaton_message_desc).setVisibility(View.GONE);
         }
     }

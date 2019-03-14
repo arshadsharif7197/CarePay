@@ -286,7 +286,7 @@ public class AppointmentHistoryFragment extends BaseFragment
         noAppointmentsLayout.setVisibility(View.VISIBLE);
         noAppointmentsLayout.findViewById(R.id.newAppointmentClassicButton).setVisibility(View.GONE);
         TextView no_apt_message_title = noAppointmentsLayout.findViewById(R.id.no_apt_message_title);
-        no_apt_message_title.setText(Label.getLabel("appointments.list.history.noPermission.title"));
+        no_apt_message_title.setText(Label.getLabel("patient.delegation.delegates.permissions.label.noPermission"));
         noAppointmentsLayout.findViewById(R.id.no_apt_message_desc).setVisibility(View.GONE);
     }
 

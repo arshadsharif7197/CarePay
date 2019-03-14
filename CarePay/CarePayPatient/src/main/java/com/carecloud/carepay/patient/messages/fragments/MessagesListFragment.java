@@ -133,7 +133,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         } else if (delegateUser != null && !canViewAnyMessages()){
             noMessagesLayout.setVisibility(View.VISIBLE);
             noMessagesDescription.setVisibility(View.GONE);
-            noMessagesTitle.setText(Label.getLabel("appointments.list.history.noPermission.title"));
+            noMessagesTitle.setText(Label.getLabel("patient.delegation.delegates.permissions.label.noPermission"));
             butonNewMessage.setVisibility(View.GONE);
             recyclerView.setVisibility(View.GONE);
             actionButton.setVisibility(View.GONE);

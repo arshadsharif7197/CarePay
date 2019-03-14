@@ -263,6 +263,7 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
 
     @Override
     protected void onProfileChanged(ProfileDto profile) {
+        displayToolbar(true, getScreenTitle(Label.getLabel("navigation_link_my_health")));
         callMyHealthService(null);
     }
 

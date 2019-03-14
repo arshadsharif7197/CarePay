@@ -448,7 +448,7 @@ public class MyHealthMainFragment extends BaseFragment {
         View noPermissionView = view.findViewById(noDataContainer);
         noPermissionView.setVisibility(View.VISIBLE);
         TextView noDataTitleTextView = noPermissionView.findViewById(noDataTitle);
-        noDataTitleTextView.setText(Label.getLabel("appointments.list.history.noPermission.title"));
+        noDataTitleTextView.setText(Label.getLabel("patient.delegation.delegates.permissions.label.noPermission"));
         noPermissionView.findViewById(noDataSubtitle).setVisibility(View.GONE);
     }
 
