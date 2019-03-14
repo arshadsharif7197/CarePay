@@ -214,4 +214,15 @@ public class DelegatePermissionBasePayloadDto {
         }
         return profileLink.getPermissionDto().getPermissions().getMessageProviders().isEnabled();
     }
+
+    public boolean canViewBalanceAndHistoricalPayments(String practiceId) {
+        if (getDelegate() == null) {
+            return true;
+        }
+        ProfileLink profileLink = getDelegate().getProfileLink(practiceId);
+        if (profileLink == null) {
+            return false;
+        }
+        return profileLink.getPermissionDto().getPermissions().getViewBalanceAndHistoricalPayments().isEnabled();
+    }
 }

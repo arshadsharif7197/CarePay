@@ -30,7 +30,6 @@ public class PaymentBalanceHistoryFragment extends BaseFragment {
     int requestedPage;
 
     /**
-     *
      * @return a new instance of PaymentBalanceHistoryFragment
      */
     public static PaymentBalanceHistoryFragment newInstance(int displayPage) {
@@ -42,7 +41,7 @@ public class PaymentBalanceHistoryFragment extends BaseFragment {
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
         requestedPage = args.getInt(KEY_INDEX, PAGE_BALANCES);
@@ -61,9 +60,9 @@ public class PaymentBalanceHistoryFragment extends BaseFragment {
     }
 
     private void setupViewPager(View balanceHistoryView) {
-        ViewPager viewPager = (ViewPager) balanceHistoryView.findViewById(R.id.historyPager);
+        ViewPager viewPager = balanceHistoryView.findViewById(R.id.historyPager);
 
-        TabLayout tabs = (TabLayout) balanceHistoryView.findViewById(R.id.balance_history_tabs);
+        TabLayout tabs = balanceHistoryView.findViewById(R.id.balance_history_tabs);
         tabs.setSelectedTabIndicatorColor(Color.WHITE);
         tabs.setTabTextColors(Color.LTGRAY, Color.WHITE);
         tabs.setupWithViewPager(viewPager);
@@ -82,12 +81,12 @@ public class PaymentBalanceHistoryFragment extends BaseFragment {
         viewPager.setAdapter(adapter);
 
         TabLayout.Tab pending = tabs.getTabAt(0);
-        if(pending != null){
+        if (pending != null) {
             pending.setCustomView(R.layout.page_tab_layout);
             setTabTitle(pending, pendingTabTitle);
         }
         TabLayout.Tab history = tabs.getTabAt(1);
-        if(history != null){
+        if (history != null) {
             history.setCustomView(R.layout.page_tab_layout);
             setTabTitle(history, historyTabTitle);
         }
@@ -95,14 +94,14 @@ public class PaymentBalanceHistoryFragment extends BaseFragment {
         viewPager.setCurrentItem(requestedPage);
     }
 
-    private void setShadow(View view){
+    private void setShadow(View view) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             view.setElevation(getResources().getDimension(R.dimen.respons_toolbar_elevation));
         }
     }
 
-    private void setTabTitle(TabLayout.Tab tab, String title){
-        TextView textView = (TextView) tab.getCustomView().findViewById(R.id.tab_title);
+    private void setTabTitle(TabLayout.Tab tab, String title) {
+        TextView textView = tab.getCustomView().findViewById(R.id.tab_title);
         textView.setText(title);
     }
 
@@ -114,7 +113,7 @@ public class PaymentBalanceHistoryFragment extends BaseFragment {
             activity.displayToolbar(true, null);
 
             ActionBar supportActionBar = activity.getSupportActionBar();
-            if(supportActionBar != null){
+            if (supportActionBar != null) {
                 supportActionBar.setElevation(0);
             }
 

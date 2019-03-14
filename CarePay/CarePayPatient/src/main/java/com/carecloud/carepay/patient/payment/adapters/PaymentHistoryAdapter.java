@@ -33,8 +33,7 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
     private final Map<String, UserPracticeDTO> practiceMap;
     private Context context;
     private HistoryItemClickListener callback;
-    private List<PaymentHistoryItem> paymentHistoryItems = new ArrayList<>();
-    private List<UserPracticeDTO> userPractices = new ArrayList<>();
+    private List<PaymentHistoryItem> paymentHistoryItems;
     private boolean isLoading = false;
     private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 
@@ -82,28 +81,6 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
         final PaymentHistoryItem item = paymentHistoryItems.get(position);
 
         holder.picImageView.setVisibility(View.GONE);
-
-//        if (userPracticeDTO != null) {
-//            holder.locationName.setText(userPracticeDTO.getPracticeName());
-//            holder.shortName.setText(StringUtil.getShortName(userPracticeDTO.getPracticeName()));
-//            Picasso.with(context)
-//                    .load(userPracticeDTO.getPracticePhoto())
-//                    .resize(60, 60)
-//                    .centerCrop()
-//                    .transform(new CircleImageTransform())
-//                    .into(holder.picImageView, new Callback() {
-//                        @Override
-//                        public void onSuccess() {
-//                            holder.picImageView.setVisibility(View.VISIBLE);
-//                        }
-//
-//                        @Override
-//                        public void onError() {
-//                            holder.picImageView.setVisibility(View.GONE);
-//                        }
-//                    });
-//        }
-
         holder.historyPlanName.setVisibility(View.GONE);
         holder.dateLabel.setVisibility(View.GONE);
         double totalPaid = item.getPayload().getTotalPaid();
@@ -224,14 +201,14 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
         ViewHolder(View itemView) {
             super(itemView);
 
-            locationName = (TextView) itemView.findViewById(R.id.historyLocation);
-            amount = (TextView) itemView.findViewById(R.id.historyTotalAmount);
-            paymentDate = (TextView) itemView.findViewById(R.id.historyDateTextView);
-            shortName = (TextView) itemView.findViewById(R.id.historyAvatarTextView);
-            picImageView = (ImageView) itemView.findViewById(R.id.historyImageView);
-            transactionFlag = (TextView) itemView.findViewById(R.id.historyTransactionFlag);
-            historyPlanName = (TextView) itemView.findViewById(R.id.historyPlanName);
-            dateLabel = (TextView) itemView.findViewById(R.id.completedLabel);
+            locationName = itemView.findViewById(R.id.historyLocation);
+            amount = itemView.findViewById(R.id.historyTotalAmount);
+            paymentDate = itemView.findViewById(R.id.historyDateTextView);
+            shortName = itemView.findViewById(R.id.historyAvatarTextView);
+            picImageView = itemView.findViewById(R.id.historyImageView);
+            transactionFlag = itemView.findViewById(R.id.historyTransactionFlag);
+            historyPlanName = itemView.findViewById(R.id.historyPlanName);
+            dateLabel = itemView.findViewById(R.id.completedLabel);
         }
     }
 }

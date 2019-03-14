@@ -32,8 +32,6 @@ import java.util.Map;
 
 import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_HISTORY;
 
-import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_HISTORY;
-
 /**
  * Created by jorge on 02/01/17
  */
@@ -74,7 +72,8 @@ public class PatientPaymentHistoryFragment extends BaseFragment
         paymentsModel = (PaymentsModel) callback.getDto();
         paging = paymentsModel.getPaymentPayload().getTransactionHistory().getPageDetails();
         paymentHistoryItems = filterPaymentHistory(paymentsModel.getPaymentPayload()
-                .getTransactionHistory().getPaymentHistoryList());
+                        .getTransactionHistory().getPaymentHistoryList(),
+                paymentsModel.getPaymentPayload().getUserPractices());
     }
 
     @Override
@@ -131,12 +130,19 @@ public class PatientPaymentHistoryFragment extends BaseFragment
         noPaymentsLayout.setVisibility(View.VISIBLE);
     }
 
-    private List<PaymentHistoryItem> filterPaymentHistory(List<PaymentHistoryItem> paymentHistoryItems) {
+    private List<PaymentHistoryItem> filterPaymentHistory(List<PaymentHistoryItem> paymentHistoryItems,
+                                                          List<UserPracticeDTO> userPractices) {
         List<PaymentHistoryItem> output = new ArrayList<>();
         for (PaymentHistoryItem item : paymentHistoryItems) {
-            if (item.getPayload().getTotalPaid() > 0
-                    || item.getPayload().getProcessingErrors().isEmpty()) {
-                output.add(item);
+            for (UserPracticeDTO userPracticeDTO : userPractices) {
+                if (paymentsModel.getPaymentPayload().canViewBalanceAndHistoricalPayments(userPracticeDTO.getPracticeId())) {
+                    if ((item.getPayload().getTotalPaid() > 0
+                            || item.getPayload().getProcessingErrors().isEmpty())
+                            && item.getMetadata().getPracticeId().equals(userPracticeDTO.getPracticeId())) {
+                        output.add(item);
+                    }
+
+                }
             }
         }
         return output;
@@ -189,13 +195,16 @@ public class PatientPaymentHistoryFragment extends BaseFragment
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             adapter.setLoading(false);
-            PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-            Paging nextPage = paymentsModel.getPaymentPayload().getTransactionHistory().getPageDetails();
+            PaymentsModel localPaymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+            Paging nextPage = localPaymentsModel.getPaymentPayload().getTransactionHistory().getPageDetails();
             if (nextPage.getCurrentPage() != paging.getCurrentPage()) {
                 paging = nextPage;
-                List<PaymentHistoryItem> newItems = paymentsModel.getPaymentPayload()
+                List<PaymentHistoryItem> newItems = localPaymentsModel.getPaymentPayload()
                         .getTransactionHistory().getPaymentHistoryList();
-                List<PaymentHistoryItem> filteredItems = filterPaymentHistory(newItems);
+                List<PaymentHistoryItem> filteredItems = filterPaymentHistory(newItems,
+                        localPaymentsModel.getPaymentPayload().getDelegate() == null
+                                ? paymentsModel.getPaymentPayload().getUserPractices()
+                                : localPaymentsModel.getPaymentPayload().getUserLinks().getDelegatePracticeInformation());
                 setAdapter(filteredItems);
                 paymentHistoryItems.addAll(filteredItems);
             }

@@ -141,9 +141,25 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     private void initFragments() {
         if (hasPayments() || hasPaymentPlans() || hasCharges()) {
             replaceFragment(PaymentBalanceHistoryFragment.newInstance(displayPage), false);
+        } else if (!canViewBalanceAndHistoricalPayments(paymentsDTO.getPaymentPayload().getUserPractices())) {
+            showNoPermissionsLayout();
         } else {
             showNoPaymentsLayout();
         }
+    }
+
+    private void showNoPermissionsLayout() {
+        replaceFragment(NoPaymentsFragment.newInstance(true), false);
+    }
+
+    private boolean canViewBalanceAndHistoricalPayments(List<UserPracticeDTO> userPractices) {
+        boolean canViewBalanceAndHistoricalPayments = true;
+        for (UserPracticeDTO userPracticeDTO : userPractices) {
+            if (!paymentsDTO.getPaymentPayload().canViewBalanceAndHistoricalPayments(userPracticeDTO.getPracticeId())) {
+                canViewBalanceAndHistoricalPayments = false;
+            }
+        }
+        return canViewBalanceAndHistoricalPayments;
     }
 
     private boolean hasCharges() {
@@ -384,7 +400,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     public void showNoPaymentsLayout() {
-        replaceFragment(NoPaymentsFragment.newInstance(), false);
+        replaceFragment(NoPaymentsFragment.newInstance(false), false);
     }
 
     @Override
