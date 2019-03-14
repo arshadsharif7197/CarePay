@@ -225,4 +225,15 @@ public class DelegatePermissionBasePayloadDto {
         }
         return profileLink.getPermissionDto().getPermissions().getViewBalanceAndHistoricalPayments().isEnabled();
     }
+
+    public boolean canViewBalanceDetails(String practiceId) {
+        if (getDelegate() == null) {
+            return true;
+        }
+        ProfileLink profileLink = getDelegate().getProfileLink(practiceId);
+        if (profileLink == null) {
+            return false;
+        }
+        return profileLink.getPermissionDto().getPermissions().getViewBalanceDetails().isEnabled();
+    }
 }

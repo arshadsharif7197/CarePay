@@ -157,12 +157,13 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
     }
 
     private void setUpDetails(View view) {
-        RecyclerView paymentDetailsRecyclerView = view
-                .findViewById(R.id.payment_receipt_details_view);
-        paymentDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        PaymentItemsListAdapter adapter = new PaymentItemsListAdapter(getContext(),
-                paymentPayload.getDetails());
-        paymentDetailsRecyclerView.setAdapter(adapter);
+        if (paymentReceiptModel.getPaymentPayload().canViewBalanceDetails(selectedBalance.getMetadata().getPracticeId())) {
+            RecyclerView paymentDetailsRecyclerView = view.findViewById(R.id.payment_receipt_details_view);
+            paymentDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            PaymentItemsListAdapter adapter = new PaymentItemsListAdapter(getContext(),
+                    paymentPayload.getDetails());
+            paymentDetailsRecyclerView.setAdapter(adapter);
+        }
     }
 
     private void setUpBottomSheet(View view, boolean canMakePayments) {
@@ -176,7 +177,8 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
         });
 
         View partialPaymentContainer = view.findViewById(R.id.partialPaymentContainer);
-        partialPaymentContainer.setVisibility(isPartialPayAvailable(selectedBalance.getMetadata().getPracticeId(), paymentPayload.getAmount())
+        partialPaymentContainer.setVisibility(isPartialPayAvailable(selectedBalance.getMetadata()
+                .getPracticeId(), paymentPayload.getAmount())
                 ? View.VISIBLE : View.GONE);
         partialPaymentContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -187,7 +189,8 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
         });
 
         View paymentPlanContainer = view.findViewById(R.id.paymentPlanContainer);
-        paymentPlanContainer.setVisibility(isPaymentPlanAvailable(selectedBalance.getMetadata().getPracticeId(), paymentPayload.getAmount())
+        paymentPlanContainer.setVisibility(isPaymentPlanAvailable(selectedBalance.getMetadata()
+                .getPracticeId(), paymentPayload.getAmount())
                 ? View.VISIBLE : View.GONE);
         paymentPlanContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -202,9 +205,8 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
         }
 
         boolean showPaymentButtons = getArguments().getBoolean("showPaymentButtons", false);
-        if (showPaymentButtons && canMakePayments) {
-            view.findViewById(R.id.consolidatedPaymentButton).setVisibility(View.VISIBLE);
-        }
+        view.findViewById(R.id.consolidatedPaymentButton)
+                .setVisibility(showPaymentButtons && canMakePayments ? View.VISIBLE : View.GONE);
 
         final View shadow = view.findViewById(R.id.shadow);
         LinearLayout llBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);

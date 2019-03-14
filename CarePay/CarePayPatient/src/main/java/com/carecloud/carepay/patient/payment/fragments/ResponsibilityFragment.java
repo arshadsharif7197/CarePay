@@ -82,6 +82,8 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getPaymentInformation();
+        hasPermissionToViewBalanceDetails = paymentDTO.getPaymentPayload()
+                .canViewBalanceDetails(selectedBalance.getMetadata().getPracticeId());
     }
 
     @Override
@@ -92,7 +94,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,7 +104,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         });
         toolbar.setTitle("");
         getPaymentLabels();
-        TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
+        TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
         if (getArguments().getString("title") != null) {
             paymentsTitleString = getArguments().getString("title");
         }
@@ -117,13 +119,13 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         fillDetailAdapter(view, selectedBalance.getPayload());
         for (PendingBalancePayloadDTO payment : selectedBalance.getPayload()) {
             total = SystemUtil.safeAdd(total, payment.getAmount());
-            if(!payment.getType().equals(PendingBalancePayloadDTO.PATIENT_BALANCE)){
+            if (!payment.getType().equals(PendingBalancePayloadDTO.PATIENT_BALANCE)) {
                 //not an amount that can be added to a plan
                 nonBalanceTotal = SystemUtil.safeAdd(nonBalanceTotal, payment.getAmount());
             }
         }
         currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
-        TextView responseTotal = (TextView) view.findViewById(R.id.respons_total);
+        TextView responseTotal = view.findViewById(R.id.respons_total);
         responseTotal.setText(currencyFormat.format(total));
 
         setUpBottomSheet(view);
@@ -194,7 +196,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
             }
         });
         if (mustAddToExisting) {
-            TextView paymentPlanTextView = (TextView) paymentPlanContainer.findViewById(R.id.paymentPlanTextView);
+            TextView paymentPlanTextView = paymentPlanContainer.findViewById(R.id.paymentPlanTextView);
             paymentPlanTextView.setText(Label.getLabel("payment_plan_add_existing"));
         }
 
@@ -212,7 +214,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
                 shadow.setAlpha(slideOffset);
             }
         });
-        Button consolidatedPaymentButton = (Button) view.findViewById(R.id.consolidatedPaymentButton);
+        Button consolidatedPaymentButton = view.findViewById(R.id.consolidatedPaymentButton);
         consolidatedPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -220,7 +222,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
             }
         });
 
-        Button cancelButton = (Button) view.findViewById(R.id.cancelButton);
+        Button cancelButton = view.findViewById(R.id.cancelButton);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -228,7 +230,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
             }
         });
 
-        TextView totalPatientResponsibilityValue = (TextView) view.findViewById(R.id.totalPatientResponsibilityValue);
+        TextView totalPatientResponsibilityValue = view.findViewById(R.id.totalPatientResponsibilityValue);
         totalPatientResponsibilityValue.setText(currencyFormat.format(total));
     }
 

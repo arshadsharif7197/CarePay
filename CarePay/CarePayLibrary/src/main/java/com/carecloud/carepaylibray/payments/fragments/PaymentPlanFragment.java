@@ -470,7 +470,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         if (balanceRecycler != null && selectedBalance != null) {
             balanceRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
             PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(),
-                    selectedBalance.getPayload(), this);
+                    selectedBalance.getPayload(), this, true);
             balanceRecycler.setAdapter(adapter);
         }
     }

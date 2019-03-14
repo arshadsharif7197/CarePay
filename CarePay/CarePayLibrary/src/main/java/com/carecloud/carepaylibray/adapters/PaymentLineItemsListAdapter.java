@@ -2,7 +2,6 @@ package com.carecloud.carepaylibray.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import java.util.List;
 
 public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLineItemsListAdapter.ViewHolder> {
 
+    private boolean canViewBalanceDetails;
     private Context context;
     private List<PendingBalancePayloadDTO> detailsList;
     private PaymentLineItemCallback callback;
@@ -24,14 +24,16 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
     /**
      * Constructor
      *
-     * @param context     context
-     * @param detailsList details list
+     * @param context               context
+     * @param detailsList           details list
+     * @param canViewBalanceDetails
      */
     public PaymentLineItemsListAdapter(Context context, List<PendingBalancePayloadDTO> detailsList,
-                                       PaymentLineItemCallback callback) {
+                                       PaymentLineItemCallback callback, boolean canViewBalanceDetails) {
         this.context = context;
         this.detailsList = detailsList;
         this.callback = callback;
+        this.canViewBalanceDetails = canViewBalanceDetails;
     }
 
     @Override
@@ -53,8 +55,9 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
         holder.paymentDetailAmount.setText(StringUtil.getFormattedBalanceAmount(paymentLineItem.getAmount()));
         if (callback != null) {
             holder.lineItemNameLabelDetails.setText(Label.getLabel("payment_responsibility_details"));
-            boolean patientBalance = paymentLineItem.getType().equals(PendingBalancePayloadDTO.PATIENT_BALANCE);
-            holder.lineItemNameLabelDetails.setVisibility(patientBalance ? View.VISIBLE : View.INVISIBLE);
+            canViewBalanceDetails = canViewBalanceDetails && paymentLineItem.getType()
+                    .equals(PendingBalancePayloadDTO.PATIENT_BALANCE);
+            holder.lineItemNameLabelDetails.setVisibility(canViewBalanceDetails ? View.VISIBLE : View.INVISIBLE);
             holder.lineItemNameLabelDetails.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -66,6 +69,10 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
         }
     }
 
+    public interface PaymentLineItemCallback {
+        void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem);
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
 
         private CarePayTextView paymentDetailLabel;
@@ -75,13 +82,9 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
         ViewHolder(View itemView) {
             super(itemView);
 
-            paymentDetailLabel = (CarePayTextView) itemView.findViewById(R.id.lineItemNameLabel);
-            paymentDetailAmount = (CarePayTextView) itemView.findViewById(R.id.lineItemAmountLabel);
-            lineItemNameLabelDetails = (CarePayTextView) itemView.findViewById(R.id.lineItemNameLabelDetails);
+            paymentDetailLabel = itemView.findViewById(R.id.lineItemNameLabel);
+            paymentDetailAmount = itemView.findViewById(R.id.lineItemAmountLabel);
+            lineItemNameLabelDetails = itemView.findViewById(R.id.lineItemNameLabelDetails);
         }
-    }
-
-    public interface PaymentLineItemCallback {
-        void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem);
     }
 }

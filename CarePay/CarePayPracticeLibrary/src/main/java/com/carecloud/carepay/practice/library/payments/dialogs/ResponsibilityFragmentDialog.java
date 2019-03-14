@@ -180,7 +180,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
     private void initializePaymentLines(View view, List<PendingBalanceDTO> balances) {
         RecyclerView amountDetails = view.findViewById(R.id.payment_responsibility_balance_details);
         amountDetails.setLayoutManager(new LinearLayoutManager(getContext()));
-        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(getContext(), getAllPendingBalancePayloads(balances), this);
+        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(getContext(), getAllPendingBalancePayloads(balances), this, true);
         amountDetails.setAdapter(adapter);
     }
 

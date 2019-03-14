@@ -16,6 +16,7 @@ import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityI
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.payments.fragments.PaymentHistoryDetailFragment;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -31,6 +32,7 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
 
     private PaymentFragmentActivityInterface callback;
     private UserPracticeDTO userPracticeDTO;
+    private PaymentsModel paymentsModel;
 
     /**
      * Get new instance of PaymentHistoryDetailDialogFragment
@@ -65,6 +67,7 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
         super.onCreate(icicle);
         Bundle args = getArguments();
         userPracticeDTO = DtoHelper.getConvertedDTO(UserPracticeDTO.class, args);
+        paymentsModel = (PaymentsModel) callback.getDto();
     }
 
     @Override
@@ -84,7 +87,7 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
 
         String paymentMethod = getPaymentMethod(historyItem.getPayload().getPapiPaymentMethod());
         View paymentPlanDetailsButton = view.findViewById(R.id.paymentPlanDetailsButton);
-        TextView paymentPlanNameTextView = (TextView) view.findViewById(R.id.paymentPlanNameTextView);
+        TextView paymentPlanNameTextView = view.findViewById(R.id.paymentPlanNameTextView);
         if (historyItem.getPayload().getMetadata().getPaymentPlan() != null) {
             paymentPlanDetailsButton.setVisibility(View.VISIBLE);
             paymentPlanDetailsButton.setOnClickListener(new View.OnClickListener() {
@@ -98,32 +101,32 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
             paymentPlanNameTextView.setText(historyItem.getPayload().getMetadata()
                     .getPaymentPlan().getDescription());
             paymentPlanNameTextView.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             paymentPlanDetailsButton.setVisibility(View.GONE);
             paymentPlanNameTextView.setVisibility(View.GONE);
         }
-        TextView transactionType = (TextView) view.findViewById(R.id.transaction_type);
+        TextView transactionType = view.findViewById(R.id.transaction_type);
         transactionType.setText(paymentMethod);
 
-        TextView practiceName = (TextView) view.findViewById(R.id.practice_name);
+        TextView practiceName = view.findViewById(R.id.practice_name);
         practiceName.setText(userPracticeDTO.getPracticeName());
 
         DateUtil dateUtil = DateUtil.getInstance().setDateRaw(historyItem.getPayload().getDate())
                 .shiftDateToGMT();
-        TextView transactionDate = (TextView) view.findViewById(R.id.transaction_date);
+        TextView transactionDate = view.findViewById(R.id.transaction_date);
         transactionDate.setText(dateUtil.getDateAsMonthLiteralDayOrdinalYear());
 
-        TextView transactionNumber = (TextView) view.findViewById(R.id.transaction_number);
+        TextView transactionNumber = view.findViewById(R.id.transaction_number);
         transactionNumber.setText(historyItem.getPayload().getConfirmation());
 
-        TextView transactionTotal = (TextView) view.findViewById(R.id.transaction_total);
+        TextView transactionTotal = view.findViewById(R.id.transaction_total);
         transactionTotal.setText(NumberFormat.getCurrencyInstance(Locale.US).format(totalPaid));
 
-        RecyclerView itemsRecycler = (RecyclerView) view.findViewById(R.id.items_recycler);
+        RecyclerView itemsRecycler = view.findViewById(R.id.items_recycler);
         itemsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         initItemsRecycler(itemsRecycler);
 
-        final NestedScrollView scrollView = (NestedScrollView) view.findViewById(R.id.scrollView);
+        final NestedScrollView scrollView = view.findViewById(R.id.scrollView);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -136,7 +139,7 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
             View refundLayout = view.findViewById(R.id.refund_layout);
             refundLayout.setVisibility(View.VISIBLE);
 
-            TextView refundAmount = (TextView) view.findViewById(R.id.transaction_refunded);
+            TextView refundAmount = view.findViewById(R.id.transaction_refunded);
             refundAmount.setText(NumberFormat.getCurrencyInstance(Locale.US)
                     .format(historyItem.getPayload().getTotalRefunded()));
         }
@@ -145,7 +148,9 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
 
     @Override
     protected void initItemsRecycler(RecyclerView recycler) {
-        itemsRecycler = recycler;
-        setAdapter();
+        if (paymentsModel.getPaymentPayload().canViewBalanceDetails(userPracticeDTO.getPracticeId())) {
+            itemsRecycler = recycler;
+            setAdapter();
+        }
     }
 }

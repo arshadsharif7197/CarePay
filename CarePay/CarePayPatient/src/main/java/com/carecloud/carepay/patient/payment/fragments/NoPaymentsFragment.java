@@ -47,7 +47,7 @@ public class NoPaymentsFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         if (getArguments().getBoolean("noPermission", false)) {
             TextView titleTextView = view.findViewById(R.id.no_payment_message_title);
-            titleTextView.setText(Label.getLabel("appointments.list.history.noPermission.title"));
+            titleTextView.setText(Label.getLabel("patient.delegation.delegates.permissions.label.noPermission"));
             view.findViewById(R.id.no_payment_message_desc).setVisibility(View.GONE);
         }
     }
