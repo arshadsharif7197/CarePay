@@ -153,13 +153,14 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     private boolean canViewBalanceAndHistoricalPayments(List<UserPracticeDTO> userPractices) {
-        boolean canViewBalanceAndHistoricalPayments = true;
+        boolean atLeastOneHasPermission = false;
         for (UserPracticeDTO userPracticeDTO : userPractices) {
-            if (!paymentsDTO.getPaymentPayload().canViewBalanceAndHistoricalPayments(userPracticeDTO.getPracticeId())) {
-                canViewBalanceAndHistoricalPayments = false;
+            if (paymentsDTO.getPaymentPayload().canViewBalanceAndHistoricalPayments(userPracticeDTO.getPracticeId())) {
+                atLeastOneHasPermission = true;
             }
         }
-        return canViewBalanceAndHistoricalPayments;
+        return atLeastOneHasPermission
+                || (userPractices.isEmpty() && paymentsDTO.getPaymentPayload().getDelegate() == null);
     }
 
     private boolean hasCharges() {

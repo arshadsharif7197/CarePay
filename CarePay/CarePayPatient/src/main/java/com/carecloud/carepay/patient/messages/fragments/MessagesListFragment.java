@@ -112,7 +112,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
     public void onResume() {
         super.onResume();
         refreshing = true;
-        getThreads(0,0);
+        getThreads(0, 0);
     }
 
     private void setAdapters() {
@@ -130,7 +130,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
             recyclerView.setVisibility(View.VISIBLE);
             actionButton.setVisibility(delegateUser != null && !callback.canSendProvidersMessages() ? View.GONE : View.VISIBLE);
             refreshLayoutView.setEnabled(true);
-        } else if (delegateUser != null && !canViewAnyMessages()){
+        } else if (delegateUser != null && !canViewAnyMessages()) {
             noMessagesLayout.setVisibility(View.VISIBLE);
             noMessagesDescription.setVisibility(View.GONE);
             noMessagesTitle.setText(Label.getLabel("patient.delegation.delegates.permissions.label.noPermission"));
@@ -208,7 +208,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         public void onRefresh() {
             refreshing = true;
             refreshLayoutView.setRefreshing(refreshing);
-            getThreads(0,0);
+            getThreads(0, 0);
         }
     };
 
@@ -264,8 +264,8 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
                 Paging paging = messagingDataModel.getMessages().getPaging();
                 if (messagesListAdapter.getItemCount() == 0) {
                     setAdapters();
-                }else if(paging.getResultsPerPage() % messagesListAdapter.getItemCount() < BOTTOM_ROW_OFFSET &&
-                        hasMorePages()){
+                } else if (paging.getResultsPerPage() % messagesListAdapter.getItemCount() < BOTTOM_ROW_OFFSET &&
+                        hasMorePages()) {
 //                    callback.getMessageThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage());
                     getThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage());
                 }
@@ -273,7 +273,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         }
     }
 
-    private void getThreads(long page, long size){
+    private void getThreads(long page, long size) {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("page", String.valueOf(page < 1 ? 1 : page));//first page is 1
         queryMap.put("limit", String.valueOf(size < 15 ? 15 : size));//default size if 15, should not be less than that
@@ -311,11 +311,11 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
     }
 
     private boolean canViewAnyMessages() {
-        boolean viewAnyMessages = false;
         for (UserPracticeDTO practiceDTO : messagingDataModel.getUserPractices()) {
-            viewAnyMessages = messagingDataModel.canViewMessages(practiceDTO.getPracticeId());
-            if (viewAnyMessages == true) break;
+            if (messagingDataModel.canViewMessages(practiceDTO.getPracticeId())) {
+                return true;
+            }
         }
-        return viewAnyMessages;
+        return false;
     }
 }

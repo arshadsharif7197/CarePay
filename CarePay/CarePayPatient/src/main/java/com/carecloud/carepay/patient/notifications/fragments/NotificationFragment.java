@@ -229,7 +229,7 @@ public class NotificationFragment extends BaseFragment
     private void setAdapter() {
         boolean canViewNotifications = canViewAnyNotification(notificationsDTO.getPayload().getDelegate() == null ?
                 notificationsDTO.getPayload().getPracticeInformation()
-                : notificationsDTO.getPayload().getUserLinks().getDelegatePracticeInformation(), notificationItems);
+                : notificationsDTO.getPayload().getUserLinks().getDelegatePracticeInformation());
         if (canViewNotifications) {
             if (!notificationItems.isEmpty()) {
                 if (notificationsAdapter == null) {
@@ -258,15 +258,13 @@ public class NotificationFragment extends BaseFragment
         noNotificationLayout.setVisibility(View.VISIBLE);
     }
 
-    private boolean canViewAnyNotification(List<UserPracticeDTO> userPractices,
-                                           List<NotificationItem> notifications) {
+    private boolean canViewAnyNotification(List<UserPracticeDTO> userPractices) {
         boolean atLeastOneHasPermission = false;
         for (UserPracticeDTO practice : userPractices) {
             if (notificationsDTO.getPayload().canViewNotifications(practice.getPracticeId())) {
                 atLeastOneHasPermission = true;
             }
         }
-        notificationsDTO.getPayload().setNotifications(notifications);
         return atLeastOneHasPermission
                 || (userPractices.isEmpty() && notificationsDTO.getPayload().getDelegate() == null);
     }
