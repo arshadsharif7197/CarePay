@@ -430,9 +430,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     @Override
     public void onPaymentDismissed() {
         startCancelationFeePayment = false;
-        if (appointmentDTO != null && appointmentSlot != null) {
-            onHoursAndLocationSelected(appointmentSlot, null);
-        } else {
+        if (appointmentDTO != null ) {
             viewHandler.refreshAppointments();
         }
     }
