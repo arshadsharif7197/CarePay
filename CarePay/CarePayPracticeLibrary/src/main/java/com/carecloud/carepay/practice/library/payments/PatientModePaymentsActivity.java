@@ -91,7 +91,6 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
 
     private PaymentsModel paymentResultModel;
     private PatientBalanceDTO selectedBalance;
-    private PaymentBalancesAdapter paymentBalancesAdapter;
     private PaymentPlanDTO paymentPlan;
 
     @Override
@@ -115,7 +114,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
                 goToHome(paymentResultModel.getPaymentsMetadata().getPaymentsTransitions().getLogout());
             }
         });
-        TextView logoutTextview = (TextView) findViewById(R.id.logoutTextview);
+        TextView logoutTextview = findViewById(R.id.logoutTextview);
         logoutTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -146,12 +145,12 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
     }
 
     private void showPayments(PaymentsModel paymentsModel) {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.appointmentsRecyclerView);
+        RecyclerView recyclerView = findViewById(R.id.appointmentsRecyclerView);
         recyclerView.setVisibility(View.VISIBLE);
         findViewById(R.id.emptyPaymentsImageView).setVisibility(View.GONE);
         recyclerView.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.HORIZONTAL, false));
-        paymentBalancesAdapter = new PaymentBalancesAdapter(this,
+        PaymentBalancesAdapter paymentBalancesAdapter = new PaymentBalancesAdapter(this,
                 paymentsModel, getBalances(paymentsModel),
                 paymentsModel.getPaymentPayload().getUserPractices().get(0), this);
         recyclerView.setAdapter(paymentBalancesAdapter);
