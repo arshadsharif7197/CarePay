@@ -26,7 +26,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
-import com.carecloud.carepay.practice.library.customdialog.ChangeModeDialog;
+import com.carecloud.carepay.practice.library.customdialog.ChangeModeDialogFragment;
 import com.carecloud.carepay.practice.library.customdialog.ConfirmationPinDialog;
 import com.carecloud.carepay.practice.library.homescreen.adapters.OfficeNewsListAdapter;
 import com.carecloud.carepay.practice.library.homescreen.dialogs.OfficeNewsDetailsDialog;
@@ -67,7 +67,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private HomeScreenDTO homeScreenDTO;
     private LinearLayout homeCheckInLl;
     private LinearLayout homeAlertLinearLl;
-    private List<String> modeSwitchOptions = new ArrayList<>();
     private HomeScreenMode homeScreenMode;
     private TextView languageSpinner;
 
@@ -94,8 +93,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         // init UI fields
         initUIFields();
-        createChangeModeDialog();
-        populateWithLabels();
         populateLanguageSpinner();
 
         if (modeSwitchImageView != null) {
@@ -220,10 +217,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     private void populateWithLabels() {
-        // load mode switch options
-        modeSwitchOptions.clear();
-        modeSwitchOptions.add(Label.getLabel("patient_mode_button"));
-        modeSwitchOptions.add(Label.getLabel("logout_button"));
     }
 
     private void changeScreenMode(HomeScreenMode homeScreenMode) {
@@ -627,30 +620,15 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
     private void navigateToPatientHome() {
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-            createChangeModeDialog().show();
+            createChangeModeDialog();
         } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
             // add transitions
         }
     }
 
-    private ChangeModeDialog createChangeModeDialog() {
-        Gson gson = new Gson();
-        JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
-        final PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
-        return new ChangeModeDialog(this, new ChangeModeDialog.PatientModeClickListener() {
-            @Override
-            public void onPatientModeSelected() {
-                Map<String, String> query = new HashMap<>();
-                query.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
-                query.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
-                getWorkflowServiceHelper().execute(transitionsDTO.getPatientMode(), commonTransitionCallback, query);
-            }
-        }, new ChangeModeDialog.LogoutClickListener() {
-            @Override
-            public void onLogoutSelected() {
-                logOut(transitionsDTO.getLogout());
-            }
-        }, modeSwitchOptions);
+    private void createChangeModeDialog() {
+        String transitionsAsString = homeScreenDTO.getMetadata().getTransitions().toString();
+        ChangeModeDialogFragment.newInstance(transitionsAsString).show(getSupportFragmentManager(), ChangeModeDialogFragment.class.getName());
     }
 
     /**
@@ -661,7 +639,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private void logOut(TransitionDTO transitionsDTO) {
         Map<String, String> query = new HashMap<>();
         Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
-
         query.put("transition", "true");
         getWorkflowServiceHelper().execute(transitionsDTO, logOutCall, query, headers);
     }
@@ -868,7 +845,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
     @Override
     public void onBackPressed() {
-
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
             Gson gson = new Gson();
             JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
@@ -878,8 +854,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             getAppAuthorizationHelper().setUser(null);
             getApplicationMode().setUserPracticeDTO(getAppAuthorizationHelper(), null);
         }
-
-//        super.onBackPressed();
     }
 
 }

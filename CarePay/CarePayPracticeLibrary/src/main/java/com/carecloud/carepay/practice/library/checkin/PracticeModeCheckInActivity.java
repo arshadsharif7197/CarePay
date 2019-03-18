@@ -77,7 +77,7 @@ import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
-import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
@@ -1099,7 +1099,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
                 }
             }
         });
-        fragment.setChangePaymentMethodListener(new LargeAlertDialog.LargeAlertInterface() {
+        fragment.setChangePaymentMethodListener(new LargeAlertDialogFragment.LargeAlertInterface() {
             @Override
             public void onActionButton() {
                 PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
