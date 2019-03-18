@@ -26,6 +26,7 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
@@ -375,7 +376,12 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     private void postPayment(String paymentModelJson, JsonElement rawResponse) {
         Map<String, String> queries = new HashMap<>();
         UserPracticeDTO userPracticeDTO = callback.getPracticeInfo(paymentsModel);
-        if (userPracticeDTO != null) {
+        AppointmentDTO appointment = callback.getAppointment();
+        if(appointment != null){
+            queries.put("practice_mgmt", appointment.getMetadata().getPracticeMgmt());
+            queries.put("practice_id", appointment.getMetadata().getPracticeId());
+            queries.put("patient_id", appointment.getMetadata().getPatientId());
+        }else if (userPracticeDTO != null) {
             queries.put("practice_mgmt", userPracticeDTO.getPracticeMgmt());
             queries.put("practice_id", userPracticeDTO.getPracticeId());
             queries.put("patient_id", getPatientId(userPracticeDTO.getPracticeId()));
