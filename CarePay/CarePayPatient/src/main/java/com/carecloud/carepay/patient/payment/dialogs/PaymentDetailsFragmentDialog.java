@@ -202,9 +202,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
         }
 
         boolean showPaymentButtons = getArguments().getBoolean("showPaymentButtons", false);
-        if (showPaymentButtons && canMakePayments) {
-            view.findViewById(R.id.consolidatedPaymentButton).setVisibility(View.VISIBLE);
-        }
+        view.findViewById(R.id.consolidatedPaymentButton).setVisibility((showPaymentButtons && canMakePayments) ? View.VISIBLE : View.GONE);
 
         final View shadow = view.findViewById(R.id.shadow);
         LinearLayout llBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);

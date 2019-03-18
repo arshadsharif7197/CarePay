@@ -96,6 +96,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     private Fragment androidPayTargetFragment;
     private int displayPage = PAGE_BALANCES;
     private PaymentPlanDTO paymentPlan;
+    private boolean paymentEnabled;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -209,7 +210,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         ft.addToBackStack(null);
         PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
                 .newInstance(paymentsModel, selectedBalancesItem.getPayload().get(0),
-                        selectedBalancesItem, true);
+                        selectedBalancesItem, paymentEnabled);
         dialog.show(ft, tag);
     }
 
@@ -392,8 +393,10 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                 DtoHelper.getStringDTO(selectedBalancesItem.getMetadata()));
         String practiceId = selectedBalancesItem.getMetadata().getPracticeId();
         if (paymentDTO.getPaymentPayload().canMakePayments(practiceId) && paymentDTO.getPaymentPayload().hasPaymentMethods(practiceId)) {
+            paymentEnabled = true;
             startPaymentProcess(paymentDTO);
         } else {
+            paymentEnabled = false;
             PaymentDisabledAlertDialogFragment fragment = PaymentDisabledAlertDialogFragment
                     .newInstance(Label.getLabel("payments.pendingPayments.patientFeedbackPopup.label.title"),
                             Label.getLabel("payments.pendingPayments.patientFeedbackPopup.label.description"),
