@@ -35,7 +35,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPa
 import com.carecloud.carepaylibray.appointments.models.AppointmentCancellationFee;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsPrePaymentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
@@ -81,6 +80,9 @@ import java.util.Map;
 
 public class PatientAppointmentPresenter extends AppointmentPresenter
         implements PatientAppointmentNavigationCallback, PatientPaymentMethodInterface {
+
+    public static final int CHECK_IN_FLOW_REQUEST_CODE = 201;
+
     private String patientId;
     private String practiceId;
     private String practiceMgmt;
@@ -387,7 +389,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                 viewHandler.hideProgressDialog();
                 Bundle info = new Bundle();
                 DtoHelper.bundleDto(info, appointmentDTO);
-                PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, info);
+                PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, true, CHECK_IN_FLOW_REQUEST_CODE, info);
             }
 
             @Override
