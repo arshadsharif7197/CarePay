@@ -18,6 +18,7 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayAdapter;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayQueueUploadService;
+import com.carecloud.carepay.patient.payment.androidpay.BreezeDataBase;
 import com.carecloud.carepay.patient.payment.androidpay.models.AndroidPayQueuePaymentRecord;
 import com.carecloud.carepay.patient.payment.androidpay.models.PayeezyAndroidPayResponse;
 import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
@@ -546,7 +547,8 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         if (StringUtil.isNullOrEmpty(paymentModelJsonEnc)) {
             paymentRecord.setPaymentModelJson(paymentModelJson);
         }
-        paymentRecord.save();
+        BreezeDataBase database = BreezeDataBase.getDatabase(getContext());
+        database.getAndroidPayDao().insert(paymentRecord);
 
         Intent intent = new Intent(getContext(), AndroidPayQueueUploadService.class);
         getContext().startService(intent);
