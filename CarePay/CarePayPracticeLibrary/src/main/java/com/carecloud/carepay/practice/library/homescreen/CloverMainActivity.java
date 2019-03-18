@@ -39,6 +39,7 @@ import com.carecloud.carepay.practice.library.homescreen.dtos.PatientHomeScreenT
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenPayloadDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenTransitionsDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLinksDTO;
+import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -71,8 +72,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private TextView languageSpinner;
 
     private Handler handler = new Handler();
-
-    private boolean isUserInteraction = false;
 
     public enum HomeScreenMode {
         PATIENT_HOME, PRACTICE_HOME
@@ -140,72 +139,34 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         getNews();
     }
 
-    @Override
-    public void onUserInteraction() {
-        super.onUserInteraction();
-        isUserInteraction = true;
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                View language = findViewById(R.id.languageContainer);
-                if (language != null) {
-                    language.setVisibility(View.GONE);
-                }
-            }
-        }, 25);
-    }
-
     private void populateLanguageSpinner() {
         JsonObject payloadAsJsonObject = homeScreenDTO.getPayload();
         Gson gson = new Gson();
         PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO
                 = gson.fromJson(payloadAsJsonObject, PracticeHomeScreenPayloadDTO.class);
-        final List<OptionDTO> languages = new ArrayList<>();
-        for (OptionDTO language : practiceHomeScreenPayloadDTO.getLanguages()) {
-            languages.add(language);
-        }
-        String selectedLanguageStr = getApplicationPreferences().getUserLanguage();
-        OptionDTO selectedLanguage = languages.get(0);
-        for (OptionDTO language : languages) {
-            if (selectedLanguageStr.equals(language.getCode())) {
-                selectedLanguage = language;
-            }
-        }
+        JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getLinks();
+        final PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject,
+                PracticeHomeScreenTransitionsDTO.class);
+        final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
+        headers.put("username", getApplicationPreferences().getUserName());
+        headers.put("username_patient", getApplicationPreferences().getPatientId());
 
-        final View languageContainer = findViewById(R.id.languageContainer);
-        if (languageContainer != null) {
-            languageSpinner = findViewById(R.id.languageSpinner);
-            languageSpinner.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    languageContainer.setVisibility(languageContainer.getVisibility() == View.VISIBLE
-                            ? View.GONE : View.VISIBLE);
-                }
-            });
-            languageSpinner.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
-            JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getLinks();
-            final PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject,
-                    PracticeHomeScreenTransitionsDTO.class);
-            final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
-            headers.put("username", getApplicationPreferences().getUserName());
-            headers.put("username_patient", getApplicationPreferences().getPatientId());
-            RecyclerView languageList = findViewById(R.id.languageList);
-            LanguageAdapter languageAdapter = new LanguageAdapter(languages, selectedLanguage);
-            languageList.setAdapter(languageAdapter);
-            languageList.setLayoutManager(new LinearLayoutManager(getContext()));
-            languageAdapter.setCallback(new LanguageAdapter.LanguageInterface() {
-                @Override
-                public void onLanguageSelected(OptionDTO language) {
-                    languageContainer.setVisibility(View.GONE);
-                    if (!isUserInteraction) {
-                        return;
-                    }
-                    changeLanguage(transitionsDTO.getLanguage(),
-                            language.getCode().toLowerCase(), headers);
-                }
-            });
-        }
+        final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), false,
+                practiceHomeScreenPayloadDTO.getLanguages(), new LanguageAdapter.LanguageInterface() {
+            @Override
+            public void onLanguageSelected(OptionDTO language) {
+                changeLanguage(transitionsDTO.getLanguage(),
+                        language.getCode().toLowerCase(), headers);
+            }
+        });
+        languageSpinner = findViewById(R.id.languageSpinner);
+        languageSpinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popupPickerLanguage.showAsDropDown(view);
+            }
+        });
+        languageSpinner.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
     }
 
     private void initUIFields() {

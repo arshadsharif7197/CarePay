@@ -76,36 +76,6 @@
 
             </RelativeLayout>
 
-            <FrameLayout
-                android:id="@+id/languageContainer"
-                android:layout_width="@dimen/languageContainerWidth"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/optionsLayout"
-                android:layout_marginStart="@dimen/checkInLanguageContainerStartMargin"
-                android:animateLayoutChanges="true"
-                android:visibility="gone">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/languageContainerMarginTop"
-                    android:background="@drawable/bottom_rounded_white"
-                    android:minHeight="@dimen/dimen_60dp">
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/languageList"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                </RelativeLayout>
-
-                <ImageView
-                    android:layout_width="@dimen/dimen_25dp"
-                    android:layout_height="@dimen/dimen_25dp"
-                    android:layout_gravity="center|bottom"
-                    android:src="@drawable/sort_down" />
-            </FrameLayout>
-
         </RelativeLayout>
 
         <ImageView
