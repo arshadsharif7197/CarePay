@@ -1,8 +1,6 @@
 package com.carecloud.carepay.practice.library.payments.dialogs;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,10 +10,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -183,8 +178,10 @@ public class FindPatientDialog extends BaseDialogFragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            findViewById(R.id.patient_searched_list).setVisibility(View.GONE);
-            findViewById(R.id.patient_not_found_text).setVisibility(View.VISIBLE);
+            if(isAdded()) {
+                findViewById(R.id.patient_searched_list).setVisibility(View.GONE);
+                findViewById(R.id.patient_not_found_text).setVisibility(View.VISIBLE);
+            }
         }
 
         private void sortPatients(List<PatientModel> patients) {
