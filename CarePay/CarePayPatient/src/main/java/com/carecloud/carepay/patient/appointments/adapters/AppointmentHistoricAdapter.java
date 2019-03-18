@@ -11,6 +11,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -61,14 +62,18 @@ public class AppointmentHistoricAdapter extends BaseAppointmentAdapter {
                 }
             }
         });
-
         holder.checkOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 callback.onCheckoutTapped(sortedAppointments.get(position));
             }
         });
-
+        Date appointmentTime = DateUtil.getInstance().setDateRaw(appointmentsPayload.getStartTime()).getDate();
+        Date now = DateUtil.getInstance().setToCurrent().getDate();
+        Long hoursElapsed = DateUtil.getHoursElapsed(appointmentTime, now);
+        if (hoursElapsed > 24) {
+            holder.checkOutButton.setVisibility(View.GONE);
+        }
     }
 
     @Override
