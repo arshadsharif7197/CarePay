@@ -191,9 +191,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
     private void setUpPrepaymentMessage(View view) {
         TextView prepaymentMessage = view.findViewById(R.id.prepaymentMessage);
         if (prepaymentMessage != null) {
-            //TODO: uncomment this for 3.22
-//            double visitTypeAmount =getVisitTypeAmount(selectedProviderReason.getId());
-            double visitTypeAmount = selectedProviderReason.getAmount();
+            double visitTypeAmount = getVisitTypeAmount(selectedProviderReason.getId());
             if (visitTypeAmount > 0) {
                 String message = Label.getLabel("appointments_prepayment_message")
                         + NumberFormat.getCurrencyInstance(Locale.US).format(visitTypeAmount);
@@ -205,7 +203,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
         }
     }
 
-    private double getVisitTypeAmount(int visitTypeId) {
+    private double getVisitTypeAmount(String visitTypeId) {
         List<AppointmentsSettingDTO> appointmentsSettingsList = appointmentModelDto.getPayload()
                 .getAppointmentsSettings();
         for (AppointmentsSettingDTO appointmentsSettingDTO : appointmentsSettingsList) {
