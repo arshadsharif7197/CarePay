@@ -53,7 +53,8 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
         holder.paymentDetailAmount.setText(StringUtil.getFormattedBalanceAmount(paymentLineItem.getAmount()));
         if (callback != null) {
             holder.lineItemNameLabelDetails.setText(Label.getLabel("payment_responsibility_details"));
-            holder.lineItemNameLabelDetails.setVisibility(View.VISIBLE);
+            boolean patientBalance = paymentLineItem.getType().equals(PendingBalancePayloadDTO.PATIENT_BALANCE);
+            holder.lineItemNameLabelDetails.setVisibility(patientBalance ? View.VISIBLE : View.INVISIBLE);
             holder.lineItemNameLabelDetails.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
