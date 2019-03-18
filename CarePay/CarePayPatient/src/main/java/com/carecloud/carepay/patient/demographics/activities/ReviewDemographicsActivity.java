@@ -374,8 +374,8 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
                     getAppointment().getPayload().getLocation().getGuid(),
                     paymentMade,
                     paymentPlanCreated,
-                    paymentsModel.getPaymentPayload().getPaymentSetting(getAppointment().getMetadata().getPracticeId())
-                            .getPayload().getRegularPayments().isAllowPartialPayments()
+                    paymentsModel != null ? paymentsModel.getPaymentPayload().getPaymentSetting(getAppointment().getMetadata().getPracticeId())
+                            .getPayload().getRegularPayments().isAllowPartialPayments() : null
             };
             MixPanelUtil.logEvent(getString(R.string.event_checkin_completed), params, values);
             MixPanelUtil.incrementPeopleProperty(getString(R.string.count_checkin_completed), 1);
