@@ -472,9 +472,11 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private void unlockPracticeMode() {
         Gson gson = new Gson();
         PatientModeLinksDTO pinPadObject = gson.fromJson(homeScreenDTO.getMetadata().getLinks(), PatientModeLinksDTO.class);
-        ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this,
-                pinPadObject.getPinpad(), false, pinPadObject.getLanguage());
-        confirmationPinDialog.show();
+        ConfirmationPinDialog confirmationPinDialog = ConfirmationPinDialog.newInstance(
+                pinPadObject.getPinpad(),
+                false,
+                pinPadObject.getLanguage());
+        displayDialogFragment(confirmationPinDialog, false);
     }
 
     private void getNews() {
@@ -747,9 +749,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             = new OfficeNewsListAdapter.OnOfficeNewsClickedListener() {
         @Override
         public void onOfficeNewsSelected(List<HomeScreenOfficeNewsDTO> officeNewsList, int position) {
-            OfficeNewsDetailsDialog detailsDialog = new OfficeNewsDetailsDialog(
-                    CloverMainActivity.this, officeNewsList, position);
-            detailsDialog.show();
+            OfficeNewsDetailsDialog detailsDialog = OfficeNewsDetailsDialog.newInstance(officeNewsList, position);
+            displayDialogFragment(detailsDialog, false);
         }
     };
 

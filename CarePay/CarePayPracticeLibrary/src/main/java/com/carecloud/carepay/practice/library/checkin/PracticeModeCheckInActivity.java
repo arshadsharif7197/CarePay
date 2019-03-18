@@ -580,11 +580,9 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     @Override
     public void onCheckInItemClick(AppointmentsPayloadDTO appointmentPayloadDTO, int theRoom) {
         patientId = appointmentPayloadDTO.getPatient().getPatientId();
-        AppointmentDetailDialog dialog = new AppointmentDetailDialog(getContext(),
-                checkInDTO, getPatientBalanceDTOs(appointmentPayloadDTO.getPatient().getPatientId()),
-                appointmentPayloadDTO, theRoom, this);
-        dialog.setOwnerActivity(this);
-        dialog.show();
+        AppointmentDetailDialog dialog = AppointmentDetailDialog.newInstance(checkInDTO, getPatientBalanceDTOs(appointmentPayloadDTO.getPatient().getPatientId()),
+                appointmentPayloadDTO, theRoom);
+        displayDialogFragment(dialog, false);
     }
 
     @Override
