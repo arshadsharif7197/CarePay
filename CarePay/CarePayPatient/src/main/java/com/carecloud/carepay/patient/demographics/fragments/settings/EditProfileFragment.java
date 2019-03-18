@@ -112,6 +112,9 @@ public class EditProfileFragment extends BaseFragment implements MediaViewInterf
 
         mediaScannerPresenter = new MediaScannerPresenter(getContext(), this, profileImageView,
                 CarePayCameraPreview.CameraType.CAPTURE_PHOTO);
+        if (demographicsSettingsDTO.getPayload().getDelegate() != null) {
+            view.findViewById(R.id.editAccountCredentialsContainer).setVisibility(View.GONE);
+        }
     }
 
     private void getPersonalDetails() {
