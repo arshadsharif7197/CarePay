@@ -54,6 +54,9 @@ android {
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"458b4517bf5c86c62df069f82fc49aa3"'
 
             buildConfigField 'String', 'ENVIRONMENT', '"Development"'
+
+            manifestPlaceholders = [hostName:"web.development.gobreeze.com"]
+
         }
         qa {
             applicationId "com.carecloud.carepay.patient"
@@ -69,6 +72,9 @@ android {
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"458b4517bf5c86c62df069f82fc49aa3"'
 
             buildConfigField 'String', 'ENVIRONMENT', '"QA"'
+
+            manifestPlaceholders = [hostName:"web.qa.gobreeze.com"]
+
         }
         staging {
             applicationId "com.carecloud.carepay.patient"
@@ -84,6 +90,9 @@ android {
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"458b4517bf5c86c62df069f82fc49aa3"'
 
             buildConfigField 'String', 'ENVIRONMENT', '"Staging"'
+
+            manifestPlaceholders = [hostName:"web.staging.gobreeze.com"]
+
         }
         demo {
             applicationId "com.carecloud.carepay.patient"
@@ -99,6 +108,9 @@ android {
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"458b4517bf5c86c62df069f82fc49aa3"'
 
             buildConfigField 'String', 'ENVIRONMENT', '"Demo"'
+
+            manifestPlaceholders = [hostName:"web.gobreeze.com"]
+
         }
         production {
             applicationId "com.carecloud.carepay.patient"
@@ -114,6 +126,9 @@ android {
             buildConfigField 'String', 'MIX_PANEL_TOKEN', '"38fc517bbd790b9d00044891934205a4"'
 
             buildConfigField 'String', 'ENVIRONMENT', '"Production"'
+
+            manifestPlaceholders = [hostName:"web.gobreeze.com"]
+
         }
     }
     lintOptions {
