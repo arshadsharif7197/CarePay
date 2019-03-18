@@ -16,31 +16,44 @@
     android:orientation="horizontal"
     android:padding="@dimen/dimen_5dp">
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginEnd="@dimen/patientImageNameMargin">
+        android:layout_height="wrap_content">
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/patient_short_name"
-            android:layout_width="@dimen/profile_pic_size"
-            android:layout_height="@dimen/profile_pic_size"
+    <ImageView
+        android:id="@+id/cellAvatarImageView"
+        android:layout_width="@dimen/dimen_22dp"
+        android:layout_height="@dimen/dimen_22dp"
+        android:layout_alignParentTop="true"
+        android:elevation="@dimen/apt_lst_img_elevation"/>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@drawable/round_list_tv"
-            android:src="@drawable/icn_placeholder_user_profile_png"
-            android:textColor="@color/lightSlateGray"
-            android:textSize="@dimen/patientShortNameTextSize"
-            app:customAssetFont="gotham_rounded_medium" />
+            android:layout_marginEnd="@dimen/patientImageNameMargin">
 
-        <ImageView
-            android:id="@+id/patient_pic_image_view"
-            android:layout_width="@dimen/profile_pic_size"
-            android:layout_height="@dimen/profile_pic_size"
-            android:layout_gravity="center"
-            android:visibility="gone" />
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/patient_short_name"
+                android:layout_width="@dimen/profile_pic_size"
+                android:layout_height="@dimen/profile_pic_size"
+                android:layout_gravity="center"
+                android:background="@drawable/round_list_tv"
+                android:src="@drawable/icn_placeholder_user_profile_png"
+                android:textColor="@color/lightSlateGray"
+                android:textSize="@dimen/patientShortNameTextSize"
+                app:customAssetFont="gotham_rounded_medium" />
 
-    </FrameLayout>
+            <ImageView
+                android:id="@+id/patient_pic_image_view"
+                android:layout_width="@dimen/profile_pic_size"
+                android:layout_height="@dimen/profile_pic_size"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+        </FrameLayout>
+    </RelativeLayout>
+
 
     <RelativeLayout
         android:layout_width="match_parent"
