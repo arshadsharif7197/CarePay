@@ -200,6 +200,10 @@ public class DemographicsSettingsFragment extends BaseFragment {
         pushNotificationCheckBox.setOnClickListener(checkBoxClickListener);
         emailNotificationCheckBox.setOnClickListener(checkBoxClickListener);
         smsNotificationCheckBox.setOnClickListener(checkBoxClickListener);
+
+        if (demographicsSettingsDTO.getPayload().getDelegate() != null) {
+            view.findViewById(R.id.creditCardLayout).setVisibility(View.GONE);
+        }
     }
 
     private void updateNotificationPreferences() {
