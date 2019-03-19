@@ -165,6 +165,7 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
     protected View.OnClickListener selectDateButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(final View view) {
+            schedulePaymentDateText.setClickable(false);
             showCalendar();
         }
     };
@@ -221,11 +222,12 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
 
                     @Override
                     public void onDateRangeCancelled() {
-                        //Not Implemented
+                        schedulePaymentDateText.setClickable(true);
                     }
 
                     @Override
                     public void onDateSelected(Date selectedDate) {
+                        schedulePaymentDateText.setClickable(true);
                         setSelectedDate(selectedDate);
                         showDialog();
                     }

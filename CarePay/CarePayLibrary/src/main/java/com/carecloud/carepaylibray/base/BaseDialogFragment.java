@@ -28,7 +28,7 @@ import fr.tvbarthel.lib.blurdialogfragment.BlurDialogEngine;
 
 public abstract class BaseDialogFragment extends DialogFragment implements ISession {
     private static final int FULLSCREEN_VALUE = 0x10000000;
-    public static final float DOWN_SCALE_FACTOR = 8.0F;
+    public static final float DOWN_SCALE_FACTOR = 16.0F;
     public static final int BLUR_RADIUS = 8;
 
     private Dialog dialog;
@@ -68,8 +68,8 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         mBlurEngine.setBlurRadius(BLUR_RADIUS);
         mBlurEngine.setDownScaleFactor(DOWN_SCALE_FACTOR);
         mBlurEngine.debug(false);
-        mBlurEngine.setBlurActionBar(true);
-        mBlurEngine.setUseRenderScript(false);
+        mBlurEngine.setBlurActionBar(false);
+        mBlurEngine.setUseRenderScript(true);
     }
 
     @Override

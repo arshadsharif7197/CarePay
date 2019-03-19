@@ -11,7 +11,8 @@ android {
         versionName "1.2.24"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        renderscriptTargetApi 22
+        renderscriptSupportModeEnabled true
     }
     dexOptions {
         maxProcessCount 4
