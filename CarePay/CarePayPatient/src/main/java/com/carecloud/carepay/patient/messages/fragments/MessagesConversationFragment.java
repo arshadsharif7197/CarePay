@@ -172,6 +172,7 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
         String message = messageTextInput.getText().toString();
         if (!StringUtil.isNullOrEmpty(message)) {
 //            callback.postMessage(thread, message);
+            message = message.replace("\n", "<br/>");
             refreshing = true;
 
             Map<String, String> queryMap = new HashMap<>();
