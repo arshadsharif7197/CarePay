@@ -180,7 +180,8 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
     private void initializePaymentLines(View view, List<PendingBalanceDTO> balances) {
         RecyclerView amountDetails = view.findViewById(R.id.payment_responsibility_balance_details);
         amountDetails.setLayoutManager(new LinearLayoutManager(getContext()));
-        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(getContext(), getAllPendingBalancePayloads(balances), this, true);
+        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(getContext(),
+                getAllPendingBalancePayloads(balances), this, true);
         amountDetails.setAdapter(adapter);
     }
 
@@ -360,7 +361,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
         PaymentsPayloadSettingsDTO settingsDTO = paymentsModel.getPaymentPayload()
                 .getPaymentSettings().get(0);
         PaymentsSettingsPaymentPlansDTO paymentPlanSettings = settingsDTO.getPayload().getPaymentPlans();
-        if(!paymentPlanSettings.isPaymentPlansEnabled()){
+        if (!paymentPlanSettings.isPaymentPlansEnabled()) {
             return false;
         }
 
@@ -373,10 +374,10 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
             if (maxAllowablePayment >= rule.getMinBalance().getValue() &&
                     maxAllowablePayment <= rule.getMaxBalance().getValue()) {
                 //found a valid rule that covers this balance
-                if(paymentsModel.getPaymentPayload().getActivePlans(practiceId).isEmpty()){
+                if (paymentsModel.getPaymentPayload().getActivePlans(practiceId).isEmpty()) {
                     //don't already have an existing plan so this is the first plan
                     return true;
-                }else if(paymentPlanSettings.isCanHaveMultiple()){
+                } else if (paymentPlanSettings.isCanHaveMultiple()) {
                     // already have a plan so need to see if I can create a new one
                     return true;
                 }
@@ -389,7 +390,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
         if (minAllowablePayment > balance) {
             minAllowablePayment = balance;
         }
-        if(paymentPlanSettings.isAddBalanceToExisting() &&
+        if (paymentPlanSettings.isAddBalanceToExisting() &&
                 !paymentsModel.getPaymentPayload().getValidPlans(practiceId, minAllowablePayment).isEmpty()) {
             mustAddToExisting = true;
             return true;

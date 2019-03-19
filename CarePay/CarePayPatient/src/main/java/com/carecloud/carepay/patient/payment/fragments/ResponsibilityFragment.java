@@ -25,6 +25,8 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class ResponsibilityFragment extends ResponsibilityBaseFragment {
@@ -32,17 +34,6 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
     private PendingBalanceDTO selectedBalance;
     private PaymentFragmentActivityInterface toolbarCallback;
     private NumberFormat currencyFormat;
-
-    /**
-     * @param paymentsDTO              the payments DTO
-     * @param payLaterButtonVisibility a boolean that indicates the visibility of the pay later button
-     * @return an instance of ResponsibilityFragment
-     */
-    public static ResponsibilityFragment newInstance(PaymentsModel paymentsDTO,
-                                                     PendingBalanceDTO selectedBalance,
-                                                     boolean payLaterButtonVisibility) {
-        return newInstance(paymentsDTO, selectedBalance, payLaterButtonVisibility, null);
-    }
 
     /**
      * @param paymentsDTO              the payments DTO
@@ -116,7 +107,8 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
 
 
         total = 0;
-        fillDetailAdapter(view, selectedBalance.getPayload());
+
+        fillDetailAdapter(view, filterBalances(selectedBalance.getPayload()));
         for (PendingBalancePayloadDTO payment : selectedBalance.getPayload()) {
             total = SystemUtil.safeAdd(total, payment.getAmount());
             if (!payment.getType().equals(PendingBalancePayloadDTO.PATIENT_BALANCE)) {
@@ -130,6 +122,21 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
 
         setUpBottomSheet(view);
 
+    }
+
+    private List<PendingBalancePayloadDTO> filterBalances(List<PendingBalancePayloadDTO> balances) {
+        List<PendingBalancePayloadDTO> filteredList = new ArrayList<>();
+        for (PendingBalancePayloadDTO balance : balances) {
+            if (balance.getType().equals(PendingBalancePayloadDTO.PATIENT_BALANCE)) {
+                if (paymentDTO.getPaymentPayload().havePermissionsToMakePayments(selectedBalance
+                        .getMetadata().getPracticeId())) {
+                    filteredList.add(balance);
+                }
+            } else {
+                filteredList.add(balance);
+            }
+        }
+        return filteredList;
     }
 
     protected void setUpBottomSheet(final View view) {
@@ -151,13 +158,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
             partialPaymentContainer.setEnabled(true);
             payLaterContainer.setEnabled(true);
             payLaterContainer.setEnabled(true);
-
-//            payTotalAmountContainer.setTextColor(Color.WHITE);
-            int color = ContextCompat.getColor(getContext(), R.color.colorPrimary);
-//            partialPaymentContainer.setTextColor(color);
-//            payLaterContainer.setTextColor(color);
         }
-
 
         payTotalAmountContainer.setOnClickListener(new View.OnClickListener() {
             @Override

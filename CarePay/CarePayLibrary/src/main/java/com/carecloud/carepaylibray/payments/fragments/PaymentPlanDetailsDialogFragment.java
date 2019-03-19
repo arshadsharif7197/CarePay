@@ -97,7 +97,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
 
         UserPracticeDTO practice = paymentReceiptModel.getPaymentPayload()
                 .getUserPractice(paymentPlanDTO.getMetadata().getPracticeId());
-        if(!StringUtil.isNullOrEmpty(practice.getPracticePhoto())){
+        if (!StringUtil.isNullOrEmpty(practice.getPracticePhoto())) {
             PicassoHelper.get().loadImage(getContext(), (ImageView) view.findViewById(R.id.practiceImageView),
                     practiceInitials, practice.getPracticePhoto());
         }
@@ -106,14 +106,13 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
         planName.setText(paymentPlanDTO.getPayload().getDescription());
 
 
-
         String paymentsMadeOf = Label.getLabel("payment_plan_payments_made_value");
         int paymentCount = planPayload.getPaymentPlanDetails().getFilteredHistory().size();
         int installmentTotal = planPayload.getPaymentPlanDetails().getInstallments();
         int oneTimePayments = paymentPlanDTO.getPayload().getPaymentPlanDetails()
                 .getOneTimePayments().size();
         StringBuilder paymentsMadeBuilder = new StringBuilder().append(String.format(paymentsMadeOf, paymentCount, installmentTotal));
-        if(oneTimePayments > 0){
+        if (oneTimePayments > 0) {
             paymentsMadeBuilder.append(" + ")
                     .append(oneTimePayments)
                     .append(" ")
@@ -166,8 +165,8 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
 
         final ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload().
                 findScheduledPayment(paymentPlanDTO);
+        View scheduledPaymentLayout = view.findViewById(R.id.scheduledPaymentLayout);
         if (scheduledPayment != null) {
-            View scheduledPaymentLayout = view.findViewById(R.id.scheduledPaymentLayout);
             scheduledPaymentLayout.setVisibility(View.VISIBLE);
             TextView scheduledPaymentMessage = view.findViewById(R.id.scheduledPaymentMessage);
             DateUtil.getInstance().setDateRaw(scheduledPayment.getPayload().getPaymentDate());
@@ -182,6 +181,13 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
                     dismiss();
                 }
             });
+        }
+
+        if (!paymentsModel.getPaymentPayload().havePermissionsToMakePayments(paymentPlanDTO
+                .getMetadata().getPracticeId())) {
+            payButton.setVisibility(View.GONE);
+            editPlanButton.setVisibility(View.GONE);
+            scheduledPaymentLayout.setVisibility(View.GONE);
         }
     }
 

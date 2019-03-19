@@ -122,7 +122,12 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
 
         setUpStatementButton(view);
         setUpDetails(view);
-        setUpBottomSheet(view, canMakePayments);
+        if (paymentReceiptModel.getPaymentPayload().havePermissionsToMakePayments(selectedBalance
+                .getMetadata().getPracticeId())) {
+            setUpBottomSheet(view, canMakePayments);
+        } else {
+            view.findViewById(R.id.consolidatedPaymentButton).setVisibility(View.GONE);
+        }
     }
 
     private void setUpStatementButton(View view) {

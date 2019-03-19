@@ -20,7 +20,6 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
@@ -44,7 +43,6 @@ import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
@@ -73,7 +71,8 @@ public class PatientPaymentPresenter extends PaymentPresenter
 
     @Override
     public void startPaymentProcess(PaymentsModel paymentsModel) {
-        ResponsibilityFragment responsibilityFragment = ResponsibilityFragment.newInstance(paymentsModel, null, true);
+        ResponsibilityFragment responsibilityFragment = ResponsibilityFragment.newInstance(paymentsModel,
+                null, true, null);
         viewHandler.navigateToFragment(responsibilityFragment, true);
     }
 
@@ -135,7 +134,7 @@ public class PatientPaymentPresenter extends PaymentPresenter
         viewHandler.exitPaymentProcess(true, paymentPlanCreated, false);
 
         double amount = 0D;
-        for(PendingBalancePayloadDTO balancePayloadDTO : pendingBalanceDTO.getPayload()){
+        for (PendingBalancePayloadDTO balancePayloadDTO : pendingBalanceDTO.getPayload()) {
             amount += balancePayloadDTO.getAmount();
         }
 
@@ -146,9 +145,9 @@ public class PatientPaymentPresenter extends PaymentPresenter
     public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
         String practiceId = null;
         toplevel:
-        for(PatientBalanceDTO patientBalanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()){
-            for(PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()){
-                if(patientId != null && patientId.equals(pendingBalanceDTO.getMetadata().getPatientId())){
+        for (PatientBalanceDTO patientBalanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()) {
+            for (PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()) {
+                if (patientId != null && patientId.equals(pendingBalanceDTO.getMetadata().getPatientId())) {
                     practiceId = pendingBalanceDTO.getMetadata().getPracticeId();
                     break toplevel;
                 }
@@ -184,7 +183,7 @@ public class PatientPaymentPresenter extends PaymentPresenter
     @Override
     public void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
         boolean addExisting = false;
-        if(paymentsModel.getPaymentPayload().mustAddToExisting(amount, selectedBalance)){
+        if (paymentsModel.getPaymentPayload().mustAddToExisting(amount, selectedBalance)) {
             onAddBalanceToExistingPlan(paymentsModel, selectedBalance, amount);
             addExisting = true;
         } else {
@@ -255,7 +254,7 @@ public class PatientPaymentPresenter extends PaymentPresenter
         }
     }
 
-    private String getString(int id){
+    private String getString(int id) {
         return viewHandler.getContext().getString(id);
     }
 
@@ -267,7 +266,7 @@ public class PatientPaymentPresenter extends PaymentPresenter
 
     @Override
     public void onDismissPaymentPlan(PaymentsModel paymentsModel) {
-        ((Activity)viewHandler.getContext()).onBackPressed();
+        ((Activity) viewHandler.getContext()).onBackPressed();
     }
 
     @Override
@@ -357,7 +356,7 @@ public class PatientPaymentPresenter extends PaymentPresenter
         public void onPostExecute(WorkflowDTO workflowDTO) {
             viewHandler.getISession().hideProgressDialog();
             Bundle info = new Bundle();
-            if(getAppointment() != null) {
+            if (getAppointment() != null) {
                 DtoHelper.bundleDto(info, getAppointment());
             }
             PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);

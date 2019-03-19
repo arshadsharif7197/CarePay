@@ -28,8 +28,10 @@ public class PaymentLineItemsListAdapter extends RecyclerView.Adapter<PaymentLin
      * @param detailsList           details list
      * @param canViewBalanceDetails
      */
-    public PaymentLineItemsListAdapter(Context context, List<PendingBalancePayloadDTO> detailsList,
-                                       PaymentLineItemCallback callback, boolean canViewBalanceDetails) {
+    public PaymentLineItemsListAdapter(Context context,
+                                       List<PendingBalancePayloadDTO> detailsList,
+                                       PaymentLineItemCallback callback,
+                                       boolean canViewBalanceDetails) {
         this.context = context;
         this.detailsList = detailsList;
         this.callback = callback;
