@@ -131,9 +131,6 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
         messageTextInput.addTextChangedListener(messageInputListener);
 
         messageInputContainer = view.findViewById(R.id.messageInputContainer);
-        if (!callback.canSendProvidersMessages()) {
-            messageInputContainer.setVisibility(View.GONE);
-        }
     }
 
     @Override

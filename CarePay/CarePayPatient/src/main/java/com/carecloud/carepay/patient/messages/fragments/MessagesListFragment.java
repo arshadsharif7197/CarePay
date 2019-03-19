@@ -20,7 +20,6 @@ import com.carecloud.carepay.patient.messages.models.MessagingDataModel;
 import com.carecloud.carepay.patient.messages.models.MessagingModel;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
@@ -128,9 +127,9 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         if (!threads.isEmpty()) {
             noMessagesLayout.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
-            actionButton.setVisibility(delegateUser != null && !callback.canSendProvidersMessages() ? View.GONE : View.VISIBLE);
+            actionButton.setVisibility(messagingDataModel.getUserPractices().size() == 0 ? View.GONE : View.VISIBLE);
             refreshLayoutView.setEnabled(true);
-        } else if (delegateUser != null && !canViewAnyMessages()) {
+        } else if (delegateUser != null && !callback.canSendProvidersMessages()){
             noMessagesLayout.setVisibility(View.VISIBLE);
             noMessagesDescription.setVisibility(View.GONE);
             noMessagesTitle.setText(Label.getLabel("patient.delegation.delegates.permissions.label.noPermission"));
@@ -143,7 +142,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
             recyclerView.setVisibility(View.GONE);
             actionButton.setVisibility(View.GONE);
             refreshLayoutView.setEnabled(false);
-            if (delegateUser != null && !callback.canSendProvidersMessages()) {
+            if (messagingDataModel.getUserPractices().size() == 0) {
                 butonNewMessage.setVisibility(View.GONE);
             }
         }
@@ -308,14 +307,5 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
 
         TransitionDTO deleteMessage = callback.getDto().getMetadata().getLinks().getDeleteMessage();
         getWorkflowServiceHelper().execute(deleteMessage, getMessageThreadsCallback, queryMap);
-    }
-
-    private boolean canViewAnyMessages() {
-        for (UserPracticeDTO practiceDTO : messagingDataModel.getUserPractices()) {
-            if (messagingDataModel.canViewMessages(practiceDTO.getPracticeId())) {
-                return true;
-            }
-        }
-        return false;
     }
 }
