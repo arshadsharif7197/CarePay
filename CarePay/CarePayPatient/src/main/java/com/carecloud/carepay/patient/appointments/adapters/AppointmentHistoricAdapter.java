@@ -97,12 +97,16 @@ public class AppointmentHistoricAdapter extends BaseAppointmentAdapter {
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
                 break;
             }
-            case CHECKED_OUT:
-                holder.checkedOutLabel.setVisibility(View.GONE);
-                holder.upcomingDateLayout.setVisibility(View.VISIBLE);
-                holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
-                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDay());
-                holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
+            default:
+                if (style.equals(AppointmentDisplayStyle.CHECKED_OUT) ||
+                        style.equals(AppointmentDisplayStyle.CHECKED_IN) && !DateUtil.getInstance().isWithinHours(24)){
+                    holder.checkedOutLabel.setVisibility(View.GONE);
+                    holder.upcomingDateLayout.setVisibility(View.VISIBLE);
+                    holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
+                    holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDay());
+                    holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
+                }
+
         }
     }
 

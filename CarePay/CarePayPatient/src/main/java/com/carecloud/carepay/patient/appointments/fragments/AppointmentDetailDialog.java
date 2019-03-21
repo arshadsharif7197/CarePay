@@ -379,7 +379,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
 
     private void showCheckoutButton(Set<String> enabledLocations) {
         if (isLocationWithBreezeEnabled(enabledLocations)
-                && appointmentDTO.getPayload().canCheckOut()) {
+                && appointmentDTO.getPayload().canCheckOut() && DateUtil.getInstance().isWithinHours(24)) {
             actionsLayout.setVisibility(View.VISIBLE);
             leftButton.setVisibility(View.VISIBLE);
             leftButton.setText(Label.getLabel("appointment_request_checkout_now"));
