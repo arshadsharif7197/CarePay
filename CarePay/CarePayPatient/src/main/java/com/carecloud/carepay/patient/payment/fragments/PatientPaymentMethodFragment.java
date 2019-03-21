@@ -53,10 +53,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.newrelic.agent.android.NewRelic;
 
-import static com.carecloud.carepay.patient.R.id.paymentAmount;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.carecloud.carepay.patient.R.id.paymentAmount;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -127,7 +127,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     @Override
     public void onResume() {
         super.onResume();
-        if(shouldInitAndroidPay) {
+        if (shouldInitAndroidPay) {
             initAndroidPay();
         }
     }
@@ -250,8 +250,10 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     @Override
     public void onAndroidPayReady() {
         showOrHideProgressDialog(false);
-        addAndroidPayPaymentMethod();
-        getPapiAccount();
+        if (getActivity() != null) {
+            addAndroidPayPaymentMethod();
+            getPapiAccount();
+        }
     }
 
     private void getPapiAccount() {
@@ -276,7 +278,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         public void onPostExecute(WorkflowDTO workflowDTO) {
             PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             papiAccount = paymentsModel.getPaymentPayload().getPapiAccountByType(PaymentConstants.ANDROID_PAY_PAPI_ACCOUNT_TYPE);
-            if(papiAccount.getDefaultBankAccountMid() != null) {
+            if (papiAccount.getDefaultBankAccountMid() != null) {
                 androidPayButton.setVisibility(View.VISIBLE);
                 androidPayButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -362,7 +364,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
             postModel.setPapiPaymentMethod(papiPaymentMethod);
 
             IntegratedPaymentMetadata postModelMetadata = postModel.getMetadata();
-            if(StringUtil.isNullOrEmpty(postModel.getMetadata().getAppointmentId()) &&
+            if (StringUtil.isNullOrEmpty(postModel.getMetadata().getAppointmentId()) &&
                     postModel.getMetadata().getAppointmentRequestDTO() == null) {
                 postModelMetadata.setAppointmentId(callback.getAppointmentId());
             }
@@ -546,11 +548,11 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         getContext().startService(intent);
     }
 
-    private String getPatientId(String practiceId){
-        for(PatientBalanceDTO balanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()){
-            for(PendingBalanceDTO pendingBalanceDTO : balanceDTO.getBalances()){
-                if(pendingBalanceDTO.getMetadata().getPracticeId().equals(practiceId)){
-                  return pendingBalanceDTO.getMetadata().getPatientId();
+    private String getPatientId(String practiceId) {
+        for (PatientBalanceDTO balanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()) {
+            for (PendingBalanceDTO pendingBalanceDTO : balanceDTO.getBalances()) {
+                if (pendingBalanceDTO.getMetadata().getPracticeId().equals(practiceId)) {
+                    return pendingBalanceDTO.getMetadata().getPatientId();
                 }
             }
         }
