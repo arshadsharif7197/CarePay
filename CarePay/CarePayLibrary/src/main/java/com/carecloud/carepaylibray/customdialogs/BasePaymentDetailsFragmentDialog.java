@@ -3,15 +3,15 @@ package com.carecloud.carepaylibray.customdialogs;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.View;
 
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentDetailInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
-public abstract class BasePaymentDetailsFragmentDialog extends BaseDialogFragment implements View.OnClickListener {
+public abstract class BasePaymentDetailsFragmentDialog extends BaseDialogFragment {
 
     protected PaymentsModel paymentReceiptModel;
     protected PendingBalancePayloadDTO paymentPayload;
@@ -55,18 +55,4 @@ public abstract class BasePaymentDetailsFragmentDialog extends BaseDialogFragmen
         paymentPayload = DtoHelper.getConvertedDTO(PendingBalancePayloadDTO.class, getArguments());
         paymentReceiptModel = DtoHelper.getConvertedDTO(PaymentsModel.class, getArguments());
     }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        onInitialization(view);
-    }
-
-    protected abstract void onInitialization(View view);
-
-    @Override
-    protected String getCancelString() {
-        return null;
-    }
-
 }

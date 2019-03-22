@@ -50,31 +50,14 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-        View closeView = view.findViewById(R.id.closeViewLayout);
-        if (closeView != null) {
-            closeView.setOnClickListener(this);
-        }
-        TextView closeText = (TextView) view.findViewById(R.id.closeTextView);
-        if (closeText != null) {
-            closeText.setText(getCancelString());
-        }
-        ImageView cancelImage = (ImageView) view.findViewById(R.id.cancel_img);
-        if (cancelImage != null) {
-            cancelImage.setImageResource(getCancelImageResource());
-        }
-
-        return view;
+        return inflater.inflate(R.layout.fragment_dialog_payment_details, container, false);
     }
 
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        onInitialization(view);
-    }
 
-    protected void onInitialization(final View view) {
         view.findViewById(R.id.closeButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,7 +88,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                 .get(0).getDemographics().getPayload().getPersonalDetails();
         final String name = personalDetails.getFirstName();
         final String lastName = personalDetails.getLastName();
-        final ImageView profilePictureImageView = (ImageView) view.findViewById(R.id.patient_profile_photo);
+        final ImageView profilePictureImageView = view.findViewById(R.id.patient_profile_photo);
         Picasso.with(getContext()).load(personalDetails.getProfilePhoto())
                 .transform(new CircleImageTransform())
                 .resize(60, 60)
@@ -130,21 +113,12 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
 
 
         payNowButton.setText(Label.getLabel("payment_pay_total_button"));
-        RecyclerView paymentDetailsRecyclerView = ((RecyclerView) view.findViewById(R.id.payment_receipt_details_view));
+        RecyclerView paymentDetailsRecyclerView = view.findViewById(R.id.payment_receipt_details_view);
         paymentDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         PaymentItemsListAdapter adapter = new PaymentItemsListAdapter(getContext(), paymentPayload.getDetails());
         paymentDetailsRecyclerView.setAdapter(adapter);
     }
 
-    @Override
-    protected int getCancelImageResource() {
-        return R.drawable.icn_arrow_left;
-    }
-
-    @Override
-    protected int getContentLayout() {
-        return R.layout.fragment_dialog_payment_details;
-    }
 
 }
