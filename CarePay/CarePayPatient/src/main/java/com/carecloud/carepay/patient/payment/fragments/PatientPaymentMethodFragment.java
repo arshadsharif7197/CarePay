@@ -380,14 +380,18 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         Map<String, String> queries = new HashMap<>();
         UserPracticeDTO userPracticeDTO = callback.getPracticeInfo(paymentsModel);
         AppointmentDTO appointment = callback.getAppointment();
-        if(appointment != null){
+        if (appointment != null) {
             queries.put("practice_mgmt", appointment.getMetadata().getPracticeMgmt());
             queries.put("practice_id", appointment.getMetadata().getPracticeId());
             queries.put("patient_id", appointment.getMetadata().getPatientId());
-        }else if (userPracticeDTO != null) {
+        } else if (userPracticeDTO != null) {
             queries.put("practice_mgmt", userPracticeDTO.getPracticeMgmt());
             queries.put("practice_id", userPracticeDTO.getPracticeId());
-            queries.put("patient_id", getPatientId(userPracticeDTO.getPracticeId()));
+            if (userPracticeDTO.getPatientId() != null) {
+                queries.put("patient_id", userPracticeDTO.getPatientId());
+            } else {
+                queries.put("patient_id", findPatientId(userPracticeDTO.getPracticeId()));
+            }
         } else {
             PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
             queries.put("practice_mgmt", metadata.getPracticeMgmt());
@@ -456,7 +460,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         if (userPracticeDTO != null) {
             patientId = userPracticeDTO.getPracticeMgmt();
             practiceId = userPracticeDTO.getPracticeId();
-            practiceMgmt = getPatientId(userPracticeDTO.getPracticeId());
+            practiceMgmt = findPatientId(userPracticeDTO.getPracticeId());
         } else {
             PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
             patientId = metadata.getPracticeMgmt();
@@ -556,7 +560,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         getContext().startService(intent);
     }
 
-    private String getPatientId(String practiceId) {
+    private String findPatientId(String practiceId) {
         for (PatientBalanceDTO balanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()) {
             for (PendingBalanceDTO pendingBalanceDTO : balanceDTO.getBalances()) {
                 if (pendingBalanceDTO.getMetadata().getPracticeId().equals(practiceId)) {
