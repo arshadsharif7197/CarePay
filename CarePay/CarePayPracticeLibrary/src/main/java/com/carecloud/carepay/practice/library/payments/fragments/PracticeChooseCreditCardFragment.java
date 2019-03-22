@@ -47,7 +47,7 @@ public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
             String label = Label.getLabel("payment_user_credit_card_title");
             titleLabel = name + label;
         }else{
-            titleLabel = Label.getLabel("payment_choose_credit_card");
+            titleLabel = Label.getLabel("credit_card_heading");
         }
     }
 

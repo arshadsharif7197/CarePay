@@ -321,7 +321,7 @@
     <dimen name="creditCardFieldBottomPadding">20dp</dimen>
     <dimen name="creditCardFieldTextSize">13sp</dimen>
     <dimen name="payment_pick_date_label_text_size">10sp</dimen>
-    <dimen name="addNewCreditCardTextFieldSize">18sp</dimen>
+    <dimen name="addNewCreditCardTextFieldSize">15sp</dimen>
 
     <!--Payment Plan Confirmation-->
     <dimen name="paymentPlanConfirmationHeaderHorizontalPadding">5dp</dimen>
