@@ -68,12 +68,6 @@ public class AppointmentHistoricAdapter extends BaseAppointmentAdapter {
                 callback.onCheckoutTapped(sortedAppointments.get(position));
             }
         });
-        Date appointmentTime = DateUtil.getInstance().setDateRaw(appointmentsPayload.getStartTime()).getDate();
-        Date now = DateUtil.getInstance().setToCurrent().getDate();
-        Long hoursElapsed = DateUtil.getHoursElapsed(appointmentTime, now);
-        if (hoursElapsed > 24) {
-            holder.checkOutButton.setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -97,16 +91,24 @@ public class AppointmentHistoricAdapter extends BaseAppointmentAdapter {
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
                 break;
             }
-            default:
-                if (style.equals(AppointmentDisplayStyle.CHECKED_OUT) ||
-                        style.equals(AppointmentDisplayStyle.CHECKED_IN) && !DateUtil.getInstance().isWithinHours(24)){
-                    holder.checkedOutLabel.setVisibility(View.GONE);
-                    holder.upcomingDateLayout.setVisibility(View.VISIBLE);
-                    holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
-                    holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDay());
-                    holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
-                }
-
+            case CHECKED_IN:
+                holder.checkOutButton.setVisibility(View.GONE);
+                holder.checkedOutLabel.setVisibility(View.GONE);
+                holder.upcomingDateLayout.setVisibility(View.VISIBLE);
+                holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
+                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDay());
+                holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
+            case CHECKED_OUT:
+                holder.checkedOutLabel.setVisibility(View.GONE);
+                holder.upcomingDateLayout.setVisibility(View.VISIBLE);
+                holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
+                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDay());
+                holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
+        }
+        DateUtil.getInstance().setDateRaw(appointmentsPayload.getEndTime());
+        if (style.equals(AppointmentDisplayStyle.CHECKED_IN) && DateUtil.getInstance().isWithinHours(24) && shouldShowCheckoutButton){
+            holder.checkOutButton.setVisibility(View.VISIBLE);
+            holder.upcomingDateLayout.setVisibility(View.GONE);
         }
     }
 
