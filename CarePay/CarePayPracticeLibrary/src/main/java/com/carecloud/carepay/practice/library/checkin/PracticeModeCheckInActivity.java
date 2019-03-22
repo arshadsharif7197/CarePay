@@ -582,7 +582,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         patientId = appointmentPayloadDTO.getPatient().getPatientId();
         AppointmentDetailDialog dialog = AppointmentDetailDialog.newInstance(checkInDTO, getPatientBalanceDTOs(appointmentPayloadDTO.getPatient().getPatientId()),
                 appointmentPayloadDTO, theRoom);
-        displayDialogFragment(dialog, false);
+        displayDialogFragment(dialog, true);
     }
 
     @Override
@@ -1188,7 +1188,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
                     .newInstance(workflowDTO, isOneTimePayment);
             displayDialogFragment(confirmationFragment, false);
 
-            if(isOneTimePayment){
+            if (isOneTimePayment) {
                 MixPanelUtil.incrementPeopleProperty(getString(R.string.count_one_time_payments_completed), 1);
             }
         }
@@ -1442,5 +1442,15 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
             }
         });
         displayDialogFragment(fragment, false);
+    }
+
+    @Override
+    public void addFragment(Fragment fragment, boolean addToBackStack) {
+        //NA
+    }
+
+    @Override
+    public void replaceFragment(Fragment fragment, boolean addToBackStack) {
+        //NA
     }
 }
