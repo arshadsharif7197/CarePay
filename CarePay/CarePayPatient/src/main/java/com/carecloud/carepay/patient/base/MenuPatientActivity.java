@@ -38,14 +38,15 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
-import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
-import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
-import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
 import com.carecloud.carepaylibray.customcomponents.CustomMenuItem;
+import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.profile.Profile;
 import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.profile.UserLinks;
+import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInDTO;
+import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInResponse;
+import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.PicassoHelper;
@@ -95,15 +96,40 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
         inflateDrawer();
         LocalBroadcastManager.getInstance(this).registerReceiver(badgeReceiver,
                 new IntentFilter(CarePayConstants.UPDATE_BADGES_BROADCAST));
+        ProfileDto selectedProfileDto = null;
         if (getApplicationPreferences().isLandingScreen()) {
-            setInitialData();
+            MyHealthDto initialDto = setInitialData();
+            Profile selectedProfile = initialDto.getPayload().getDelegate();
+            if (selectedProfile != null) {
+                selectedProfile.setName(getProfileName(selectedProfile.getDemographics()));
+                selectedProfile.setId(selectedProfile.getProfileId());
+                profileName = StringUtil.capitalize(selectedProfile.getDemographics().getPayload()
+                        .getPersonalDetails().getFirstName());
+                selectedProfileDto = new ProfileDto();
+                selectedProfileDto.setProfile(selectedProfile);
+            }
         }
         if (profileData != null) {
-            populateProfilesList(profileData.getRepresentedUsers());
+            if (selectedProfileDto != null) {
+                Profile loggedInUser = profileData.getLoggedInUser();
+                loggedInUser.setBreezeUser(true);
+                loggedInUser.setDelegate(true);
+                loggedInUser.setProfileName(getProfileName(loggedInUser.getDemographics()));
+                loggedInUser.setProfileId("");
+                updateProfileList(selectedProfileDto, loggedInUser);
+            }
+            populateProfilesList(profileData);
         }
     }
 
-    private void setInitialData() {
+    private String getProfileName(DemographicPayloadInfoDTO demographics) {
+        return StringUtil
+                .getCapitalizedUserName(demographics.getPayload()
+                        .getPersonalDetails().getFirstName(), demographics
+                        .getPayload().getPersonalDetails().getLastName());
+    }
+
+    private MyHealthDto setInitialData() {
         MyHealthDto initialDto = getConvertedDTO(MyHealthDto.class);
         List<PracticePatientIdsDTO> practicePatientIds = initialDto.getPayload().getPracticePatientIds();
         if (!practicePatientIds.isEmpty()) {
@@ -129,10 +155,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
         ApplicationPreferences.getInstance().setUserPractices(initialDto.getPayload()
                 .getPracticeInformation());
 
-        ApplicationPreferences.getInstance().setUserFullName(StringUtil
-                .getCapitalizedUserName(initialDto.getPayload().getDemographicDTO().getPayload()
-                                .getPersonalDetails().getFirstName(),
-                        initialDto.getPayload().getDemographicDTO().getPayload().getPersonalDetails().getLastName()));
+        ApplicationPreferences.getInstance().setUserFullName(getProfileName(initialDto.getPayload().getDemographicDTO()));
 
         String userImageUrl = initialDto.getPayload().getDemographicDTO().getPayload()
                 .getPersonalDetails().getProfilePhoto();
@@ -140,6 +163,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
             getApplicationPreferences().setUserPhotoUrl(userImageUrl);
         }
         getApplicationPreferences().setLandingScreen(false);
+
+        return initialDto;
     }
 
     private void setProfileData(UserLinks userLinks) {
@@ -195,23 +220,16 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
         profilesContainer.setVisibility(View.INVISIBLE);
     }
 
-    private void populateProfilesList(List<ProfileDto> representedUsers) {
-        if (profileData.getRepresentedUsers().size() > 0) {
+    private void populateProfilesList(UserLinks profileData) {
+        if (MenuPatientActivity.profileData.getRepresentedUsers().size() > 0) {
             LinearLayout profilesContainer = findViewById(R.id.profilesContainer);
             profilesContainer.removeAllViews();
-            for (final ProfileDto profile : representedUsers) {
+            for (final ProfileDto profile : profileData.getRepresentedUsers()) {
                 View row = LayoutInflater.from(getContext()).inflate(R.layout.layout_item_menu, null, false);
                 row.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        enableBadge(profile);
-                        updateProfileInfo(profile);
-                        updateProfileView();
-                        updateProfileList(profile);
-                        updateBadgeCounterViews();
-                        onProfileChanged(profile);
-                        updateMenu(profile);
-                        closeMenu();
+                        onProfileClicked(profile);
                     }
                 });
                 TextView nameTextView = row.findViewById(R.id.menuIconLabelTextView);
@@ -231,6 +249,17 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
         }
     }
 
+    private void onProfileClicked(ProfileDto profile) {
+        enableBadge(profile);
+        updateProfileInfo(profile);
+        updateProfileView();
+        updateProfileList(profile);
+        updateBadgeCounterViews();
+        onProfileChanged(profile);
+        updateMenu(profile);
+        closeMenu();
+    }
+
     private void updateMenu(ProfileDto profile) {
         if (profile.getProfile().isBreezeUser()) {
             navigationView.findViewById(R.id.settingsMenuItem).setVisibility(View.VISIBLE);
@@ -244,6 +273,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
     }
 
     protected void updateProfileList(ProfileDto selectedProfile) {
+        updateProfileList(selectedProfile, getCurrentProfile());
+    }
+
+    protected void updateProfileList(ProfileDto selectedProfile, Profile currentProfile) {
         List<ProfileDto> profileList = new ArrayList<>();
         for (ProfileDto profileDto : profileData.getRepresentedUsers()) {
             if (!profileDto.getProfile().getId().equals(selectedProfile.getProfile().getId())) {
@@ -251,22 +284,18 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
             }
         }
 
-        Profile profile = getCurrentProfile();
         ProfileDto profileDto = new ProfileDto();
-        if (profile == null) {
-            profile = profileData.getLoggedInUser();
-            profile.setDelegate(true);
-            profile.setBreezeUser(true);
-            profile.setId("");
-            profile.setName(StringUtil
-                    .getCapitalizedUserName(profile.getDemographics().getPayload()
-                            .getPersonalDetails().getFirstName(), profile.getDemographics()
-                            .getPayload().getPersonalDetails().getLastName()));
+        if (currentProfile == null) {
+            currentProfile = profileData.getLoggedInUser();
+            currentProfile.setDelegate(true);
+            currentProfile.setBreezeUser(true);
+            currentProfile.setId("");
+            currentProfile.setName(getProfileName(currentProfile.getDemographics()));
         } else {
-            profile.setId(profile.getProfileId());
-            profile.setName(profile.getProfileName());
+            currentProfile.setId(currentProfile.getProfileId());
+            currentProfile.setName(currentProfile.getProfileName());
         }
-        profileDto.setProfile(profile);
+        profileDto.setProfile(currentProfile);
         profileList.add(profileDto);
 
         Collections.sort(profileList, new Comparator<ProfileDto>() {
@@ -276,7 +305,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
             }
         });
         profileData.setRepresentedUsers(profileList);
-        populateProfilesList(profileData.getRepresentedUsers());
+        populateProfilesList(profileData);
     }
 
     protected abstract Profile getCurrentProfile();
@@ -311,10 +340,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
 
     private void updateProfileInfo(ProfileDto profile) {
         ApplicationPreferences.getInstance().setProfileId(profile.getProfile().getId());
-        ApplicationPreferences.getInstance().setUserFullName(StringUtil
-                .getCapitalizedUserName(profile.getProfile().getDemographics().getPayload()
-                        .getPersonalDetails().getFirstName(), profile.getProfile().getDemographics()
-                        .getPayload().getPersonalDetails().getLastName()));
+        ApplicationPreferences.getInstance().setUserFullName(getProfileName(profile.getProfile().getDemographics()));
         ApplicationPreferences.getInstance().setUserId(profile.getProfile().getDemographics().getPayload()
                 .getPersonalDetails().getEmailAddress());
         ApplicationPreferences.getInstance().setUserPhotoUrl(profile.getProfile().getDemographics().getPayload()

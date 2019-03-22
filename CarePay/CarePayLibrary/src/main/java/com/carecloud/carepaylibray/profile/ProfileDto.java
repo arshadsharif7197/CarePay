@@ -20,4 +20,9 @@ public class ProfileDto {
     public void setProfile(Profile profile) {
         this.profile = profile;
     }
+
+    @Override
+    public String toString() {
+        return profile != null ? profile.getDemographics().getPayload().getPersonalDetails().getFullName() : "";
+    }
 }

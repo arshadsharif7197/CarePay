@@ -16,4 +16,6 @@
     <dimen name="encryptedCheckBoxVerticalMargin">10dp</dimen>
     <dimen name="mainMenuItemContainerTopPadding">5dp</dimen>
     <dimen name="menuItemSeparatorVerticalMargin">5dp</dimen>
+    <dimen name="profileImageViewSize">60dp</dimen>
+    <dimen name="profileHeaderHeight">50dp</dimen>
 </resources>

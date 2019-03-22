@@ -17,8 +17,8 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
+import com.carecloud.carepay.service.library.unifiedauth.RefreshTokenDto;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
-import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -496,9 +496,9 @@ public class WorkflowServiceHelper {
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 Gson gson = new Gson();
                 String signInResponseString = gson.toJson(workflowDTO);
-                UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString, UnifiedSignInResponse.class);
-                if (signInResponse != null) {
-                    UnifiedAuthenticationTokens authTokens = signInResponse.getPayload()
+                RefreshTokenDto refreshTokenDto = gson.fromJson(signInResponseString, RefreshTokenDto.class);
+                if (refreshTokenDto != null) {
+                    UnifiedAuthenticationTokens authTokens = refreshTokenDto.getPayload()
                             .getAuthorizationModel().getCognito().getAuthenticationTokens();
                     appAuthorizationHelper.setAuthorizationTokens(authTokens);
                 }

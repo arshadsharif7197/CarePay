@@ -1,4 +1,4 @@
-package com.carecloud.carepay.service.library.unifiedauth;
+package com.carecloud.carepaylibray.unifiedauth;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

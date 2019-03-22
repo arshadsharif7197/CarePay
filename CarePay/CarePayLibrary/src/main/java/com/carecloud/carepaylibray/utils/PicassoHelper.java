@@ -80,27 +80,34 @@ public class PicassoHelper {
 
     public void loadImage(Context context, final ImageView imageView, final View viewToHide, String photoUrl,
                           int size) {
-        Picasso.with(context).load(photoUrl)
-                .resize(size, size)
-                .centerCrop()
-                .transform(new CircleImageTransform())
-                .into(imageView, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        imageView.setVisibility(View.VISIBLE);
-                        if (viewToHide != null) {
-                            viewToHide.setVisibility(View.GONE);
+        if (!StringUtil.isNullOrEmpty(photoUrl)) {
+            Picasso.with(context).load(photoUrl)
+                    .resize(size, size)
+                    .centerCrop()
+                    .transform(new CircleImageTransform())
+                    .into(imageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            imageView.setVisibility(View.VISIBLE);
+                            if (viewToHide != null) {
+                                viewToHide.setVisibility(View.GONE);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onError() {
-                        if (viewToHide != null) {
-                            viewToHide.setVisibility(View.VISIBLE);
+                        @Override
+                        public void onError() {
+                            if (viewToHide != null) {
+                                viewToHide.setVisibility(View.VISIBLE);
+                            }
+                            imageView.setVisibility(View.INVISIBLE);
                         }
-                        imageView.setVisibility(View.GONE);
-                    }
-                });
+                    });
+        } else {
+            if (viewToHide != null) {
+                viewToHide.setVisibility(View.VISIBLE);
+            }
+            imageView.setVisibility(View.INVISIBLE);
+        }
     }
 
 }
