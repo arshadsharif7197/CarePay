@@ -75,8 +75,13 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
     }
 
     protected void onInitialization(final View view) {
-
-        Button payNowButton = (Button) view.findViewById(R.id.payment_details_pay_now_button);
+        view.findViewById(R.id.closeButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cancel();
+            }
+        });
+        Button payNowButton = view.findViewById(R.id.payment_details_pay_now_button);
         payNowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

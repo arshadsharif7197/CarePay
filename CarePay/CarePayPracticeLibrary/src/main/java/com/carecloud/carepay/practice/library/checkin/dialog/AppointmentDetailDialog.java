@@ -6,9 +6,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,12 +39,12 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.CheckinStatusDTO;
 import com.carecloud.carepaylibray.appointments.models.QueueDTO;
 import com.carecloud.carepaylibray.appointments.models.QueueStatusPayloadDTO;
-import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTypefaceSpan;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -76,7 +73,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
 
     private static final String TAG = "AppointmentDetailDialog";
 
-    public interface AppointmentDialogCallback {
+    public interface AppointmentDialogCallback extends FragmentActivityInterface {
         void showPaymentDistributionDialog(PaymentsModel paymentsModel);
 
         void onFailure(String errorMessage);
@@ -124,10 +121,9 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
 
     /**
      * Constructor.
-     *
      */
     public static AppointmentDetailDialog newInstance(CheckInDTO checkInDTO, PendingBalanceDTO pendingBalanceDTO,
-                                   AppointmentsPayloadDTO payloadDTO, int theRoom) {
+                                                      AppointmentsPayloadDTO payloadDTO, int theRoom) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, checkInDTO);
         DtoHelper.bundleDto(args, pendingBalanceDTO);
@@ -373,9 +369,9 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
     private View.OnClickListener pageActionListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (pickerWindow.isShowing()){
+            if (pickerWindow.isShowing()) {
                 pickerWindow.dismiss();
-            }else{
+            } else {
                 int offset = view.getWidth() / 2 - pickerWindow.getWidth() / 2;
                 pickerWindow.showAsDropDown(view, offset, 10);
             }
@@ -877,22 +873,15 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
 
     @Override
     public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
-        String tag = PaymentDetailsFragmentDialog.class.getName();
-        FragmentManager fragmentManager = ((BaseActivity) getContext()).getSupportFragmentManager();
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        Fragment prev = fragmentManager.findFragmentByTag(tag);
-        if (prev != null) {
-            ft.remove(prev);
-        }
         PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
                 .newInstance(paymentDetailsModel, paymentLineItem, true);
-        dialog.addOnDismissListener(new DialogInterface.OnDismissListener() {
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
-            public void onDismiss(DialogInterface dialog) {
+            public void onCancel(DialogInterface dialogInterface) {
                 showDialog();
             }
         });
-        dialog.show(ft, tag);
+        callback.displayDialogFragment(dialog, false);
         hideDialog();
     }
 }

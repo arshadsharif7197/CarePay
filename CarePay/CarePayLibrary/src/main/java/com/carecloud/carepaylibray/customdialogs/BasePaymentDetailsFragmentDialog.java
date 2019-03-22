@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.customdialogs;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -17,9 +16,6 @@ public abstract class BasePaymentDetailsFragmentDialog extends BaseDialogFragmen
     protected PaymentsModel paymentReceiptModel;
     protected PendingBalancePayloadDTO paymentPayload;
     protected PaymentDetailInterface callback;
-
-    private DialogInterface.OnDismissListener dismissListener;
-
 
     @Override
     public void onAttach(Context context) {
@@ -44,9 +40,6 @@ public abstract class BasePaymentDetailsFragmentDialog extends BaseDialogFragmen
         super.onResume();
         if (callback == null) {
             attachCallback(getContext());
-        }
-        if(getDialog() != null && dismissListener != null){
-            getDialog().setOnDismissListener(dismissListener);
         }
     }
 
@@ -74,30 +67,6 @@ public abstract class BasePaymentDetailsFragmentDialog extends BaseDialogFragmen
     @Override
     protected String getCancelString() {
         return null;
-    }
-
-    @Override
-    protected boolean getCancelable() {
-        return false;
-    }
-
-    @Override
-    protected void onDialogCancel() {
-        dismiss();
-        if(dismissListener == null) {
-            callback.onDetailCancelClicked(paymentReceiptModel);
-        }
-    }
-
-    /**
-     * Set Dismiss Listener when dialog is shown
-     * @param dismissListener dismissListener
-     */
-    public void addOnDismissListener(DialogInterface.OnDismissListener dismissListener){
-        this.dismissListener = dismissListener;
-        if(getDialog() != null){
-            getDialog().setOnDismissListener(dismissListener);
-        }
     }
 
 }
