@@ -3,11 +3,7 @@ package com.carecloud.carepay.practice.library.payments.dialogs;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
@@ -47,10 +43,9 @@ public class PatientModePaymentPlanDetailsDialogFragment extends PaymentPlanDeta
     }
 
     @Override
-    protected void onInitialization(View view) {
-        super.onInitialization(view);
-        //handle cancel button
-        View closeButton = view.findViewById(R.id.closeViewLayout);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        View closeButton = view.findViewById(R.id.closeButton);
         if (closeButton != null) {
             closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -62,47 +57,12 @@ public class PatientModePaymentPlanDetailsDialogFragment extends PaymentPlanDeta
                 }
             });
         }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-        if (view != null) {
-            View closeView = view.findViewById(R.id.closeViewLayout);
-            if (closeView != null) {
-                closeView.setOnClickListener(this);
-            }
-            TextView closeText = view.findViewById(R.id.closeTextView);
-            if (closeText != null) {
-                closeText.setText(getCancelString());
-            }
-            ImageView cancelImage = view.findViewById(R.id.cancel_img);
-            if (cancelImage != null) {
-                cancelImage.setImageResource(getCancelImageResource());
-            }
-        }
-
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         if (((BasePracticeActivity) getActivity()).getApplicationMode().getApplicationType()
                 == ApplicationMode.ApplicationType.PRACTICE) {
             payButton.setEnabled(paymentReceiptModel.getPaymentPayload().getUserAuthModel()
                     .getUserAuthPermissions().canMakePayment
                     && getArguments().getBoolean("enablePayNowButton", true));
         }
-    }
-
-    @Override
-    protected int getCancelImageResource() {
-        if (dismissListener != null) {
-            return R.drawable.icn_arrow_left;
-        }
-        return R.drawable.icn_close;
     }
 
     /**
