@@ -56,6 +56,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Executors;
 
 
 /**
@@ -604,7 +605,7 @@ public class CloverPaymentActivity extends BaseActivity {
 
 
         //store in local DB
-        CloverQueuePaymentRecord paymentRecord = new CloverQueuePaymentRecord();
+        final CloverQueuePaymentRecord paymentRecord = new CloverQueuePaymentRecord();
         paymentRecord.setPatientID(patientID);
         paymentRecord.setPracticeID(practiceId);
         paymentRecord.setPracticeMgmt(practiceMgmt);
@@ -617,13 +618,16 @@ public class CloverPaymentActivity extends BaseActivity {
         if (StringUtil.isNullOrEmpty(paymentModelJsonEnc)) {
             paymentRecord.setPaymentModelJson(paymentModelJson);
         }
-        BreezeDataBase dataBase = BreezeDataBase.getDatabase(getApplicationContext());
-        dataBase.getCloverPaymentDao().insert(paymentRecord);
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                BreezeDataBase dataBase = BreezeDataBase.getDatabase(getApplicationContext());
+                dataBase.getCloverPaymentDao().insert(paymentRecord);
+            }
+        });
 
         Intent intent = new Intent(getContext(), CloverQueueUploadService.class);
         startService(intent);
-
-
     }
 
     void logPaymentMixpanel(String event) {

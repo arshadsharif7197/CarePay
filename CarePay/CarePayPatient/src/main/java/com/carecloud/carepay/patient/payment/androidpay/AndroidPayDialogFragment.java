@@ -51,6 +51,7 @@ import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -523,7 +524,7 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
 
 
         //store in local DB
-        AndroidPayQueuePaymentRecord paymentRecord = new AndroidPayQueuePaymentRecord();
+        final AndroidPayQueuePaymentRecord paymentRecord = new AndroidPayQueuePaymentRecord();
         paymentRecord.setPatientID(patientID);
         paymentRecord.setPracticeID(practiceId);
         paymentRecord.setPracticeMgmt(practiceMgmt);
@@ -536,8 +537,14 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
         if (StringUtil.isNullOrEmpty(paymentModelJsonEnc)) {
             paymentRecord.setPaymentModelJson(paymentModelJson);
         }
-        BreezeDataBase database = BreezeDataBase.getDatabase(getContext());
-        database.getAndroidPayDao().insert(paymentRecord);
+
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                BreezeDataBase database = BreezeDataBase.getDatabase(getContext());
+                database.getAndroidPayDao().insert(paymentRecord);
+            }
+        });
 
         Intent intent = new Intent(getContext(), AndroidPayQueueUploadService.class);
         getContext().startService(intent);
