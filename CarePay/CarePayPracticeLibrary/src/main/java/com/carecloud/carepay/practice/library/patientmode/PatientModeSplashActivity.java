@@ -78,7 +78,11 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
 
             String welcomeLogoUrl = patientModeSplashDTO.getPayload().getPractice()
                     .getWelcomeScreen().getWelcomePhoto();
-            Picasso.with(this).load(welcomeLogoUrl).into(practicelogo);
+            if (welcomeLogoUrl != null) {
+                Picasso.with(this).load(welcomeLogoUrl).error(R.drawable.ic_splash_logo).into(practicelogo);
+            } else {
+                practicelogo.setImageDrawable(getResources().getDrawable(R.drawable.ic_splash_logo));
+            }
 
             if (patientModePayloadDTO != null) {
                 // set the languages spinner
