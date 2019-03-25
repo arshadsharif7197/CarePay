@@ -163,7 +163,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
         return false;
     }
 
-    private void showAppointmentConfirmationFragment(AppointmentsSlotsDTO slot) {
+    protected void showAppointmentConfirmationFragment(AppointmentsSlotsDTO slot) {
         AppointmentsPayloadDTO payloadDTO = new AppointmentsPayloadDTO();
         payloadDTO.setStartTime(slot.getStartTime());
         payloadDTO.setEndTime(slot.getEndTime());
@@ -183,7 +183,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
 
         AppointmentDTO appointmentDTO = new AppointmentDTO();
         appointmentDTO.setPayload(payloadDTO);
-        callback.showAppointmentConfirmationFragment(appointmentDTO);
+        callback.showAppointmentConfirmationFragment(appointmentDTO, this);
     }
 
     protected abstract void selectDateRange();

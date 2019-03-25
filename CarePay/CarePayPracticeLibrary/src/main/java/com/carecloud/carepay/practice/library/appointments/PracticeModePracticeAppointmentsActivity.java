@@ -38,6 +38,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.appointments.createappointment.CreateAppointmentFragmentInterface;
+import com.carecloud.carepaylibray.appointments.createappointment.availabilityhour.BaseAvailabilityHourFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
@@ -513,7 +514,9 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                 DtoHelper.putExtra(getIntent(), checkInDTO);
                 initializeCheckinDto();
                 applyFilter();
-                if (shouldRefresh) { refreshData(); }
+                if (shouldRefresh) {
+                    refreshData();
+                }
 
                 updateOnSuccess = false;
 
@@ -854,7 +857,15 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     @Override
-    public void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO) {
-        showFragment(PracticeModeRequestAppointmentDialog.newInstance(appointmentDTO, getPatient()));
+    public void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO,
+                                                    final BaseAvailabilityHourFragment baseAvailabilityHourFragment) {
+        PracticeModeRequestAppointmentDialog fragment = PracticeModeRequestAppointmentDialog.newInstance(appointmentDTO, getPatient());
+        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                baseAvailabilityHourFragment.showDialog();
+            }
+        });
+        showFragment(fragment);
     }
 }
