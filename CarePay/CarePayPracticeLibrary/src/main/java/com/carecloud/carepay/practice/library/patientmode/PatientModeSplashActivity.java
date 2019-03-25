@@ -31,8 +31,8 @@ import java.util.Map;
 public class PatientModeSplashActivity extends BasePracticeActivity {
 
     private TextView getStartedButton;
-    private TextView praticewelcomeText;
-    private ImageView practicelogo;
+    private TextView praticeWelcomeText;
+    private ImageView practiceLogo;
     private ImageView lockIcnImageView;
     private List<String> languages = new ArrayList<>();
 
@@ -62,8 +62,8 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
 
     private void initViews() {
         getStartedButton = findViewById(R.id.getstartedTextview);
-        praticewelcomeText = findViewById(R.id.welcomeTitleTextview);
-        practicelogo = findViewById(R.id.practicelogo);
+        praticeWelcomeText = findViewById(R.id.welcomeTitleTextview);
+        practiceLogo = findViewById(R.id.practicelogo);
         lockIcnImageView = findViewById(R.id.lockicnimageView);
         langSpinner = findViewById(R.id.splashPatientLangSpinner);
     }
@@ -73,15 +73,15 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
             patientModePayloadDTO = patientModeSplashDTO.getPayload();
             getStartedButton.setText(Label.getLabel("get_started_heading"));
 
-            praticewelcomeText.setText(patientModeSplashDTO.getPayload().getPractice()
+            praticeWelcomeText.setText(patientModeSplashDTO.getPayload().getPractice()
                     .getWelcomeScreen().getMessage());
 
             String welcomeLogoUrl = patientModeSplashDTO.getPayload().getPractice()
                     .getWelcomeScreen().getWelcomePhoto();
             if (welcomeLogoUrl != null) {
-                Picasso.with(this).load(welcomeLogoUrl).error(R.drawable.ic_splash_logo).into(practicelogo);
+                Picasso.with(this).load(welcomeLogoUrl).error(R.drawable.ic_splash_logo).into(practiceLogo);
             } else {
-                practicelogo.setImageDrawable(getResources().getDrawable(R.drawable.ic_splash_logo));
+                practiceLogo.setImageDrawable(getResources().getDrawable(R.drawable.ic_splash_logo));
             }
 
             if (patientModePayloadDTO != null) {
