@@ -263,7 +263,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
 
-        checkinCompleted();
+        presenter.logCheckinCompleted(false, false, null);
     }
 
     @Override
@@ -471,7 +471,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             finish();
         }
 
-        checkinCompleted();
+        presenter.logCheckinCompleted(false, false, null);
     }
 
     WorkflowServiceCallback continueCallback = new WorkflowServiceCallback() {
@@ -814,30 +814,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         getWorkflowServiceHelper().execute(transition, getCashPaymentCallback(paymentsModel), queryMap);
     }
 
-    private void checkinCompleted() {
-        //Log Check-in Completed
-        if (getAppointment() != null) {
-            boolean isGuest = !ValidationHelper.isValidEmail(getAppAuthorizationHelper().getCurrUser());
-            String[] params = {getString(R.string.param_practice_id),
-                    getString(R.string.param_appointment_id),
-                    getString(R.string.param_appointment_type),
-                    getString(R.string.param_is_guest),
-                    getString(R.string.param_provider_id),
-                    getString(R.string.param_location_id)
-            };
-            Object[] values = {getAppointment().getMetadata().getPracticeId(),
-                    getAppointmentId(),
-                    getAppointment().getPayload().getVisitType().getName(),
-                    isGuest,
-                    getAppointment().getPayload().getProvider().getGuid(),
-                    getAppointment().getPayload().getLocation().getGuid()
-            };
-            MixPanelUtil.logEvent(getString(R.string.event_checkin_completed), params, values);
-            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_checkin_completed), 1);
-            MixPanelUtil.endTimer(getString(R.string.timer_checkin));
-        }
-    }
-
     @Override
     public void completePaymentPlanProcess(WorkflowDTO workflowDTO) {
         if (continuePaymentsDTO != null) {
@@ -903,7 +879,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                     completeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(completeIntent);
 
-                    checkinCompleted();
+                    presenter.logCheckinCompleted(false, false, null);
 
                 }
             }
@@ -954,7 +930,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
 
-                checkinCompleted();
+                presenter.logCheckinCompleted(false, false, null);
             }
 
             @Override

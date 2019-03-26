@@ -256,7 +256,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         Bundle bundle = new Bundle();
         bundle.putBoolean(CarePayConstants.REFRESH, true);
         navigateToWorkflow(workflowDTO, bundle);
-        checkinCompleted(false, false);
+        demographicsPresenter.logCheckinCompleted(false, false, null);
     }
 
     @Override
@@ -274,8 +274,8 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         if (getCallingActivity() != null) {
             setResult(cancelled ? RESULT_CANCELED : RESULT_OK);
         }
+        demographicsPresenter.logCheckinCompleted(paymentPlanCreated, paymentMade, paymentsModel);
         finish();
-        checkinCompleted(paymentPlanCreated, paymentMade);
     }
 
     @Nullable
@@ -318,70 +318,8 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
     @Override
     public void onConfirm() {
+        demographicsPresenter.logCheckinCancelled();
         finish();
-
-        Fragment currentFragment = demographicsPresenter.getCurrentFragment();
-        String currentStep = null;
-        if (currentFragment instanceof PersonalInfoFragment) {
-            currentStep = getString(R.string.step_personal_info);
-        } else if (currentFragment instanceof AddressFragment) {
-            currentStep = getString(R.string.step_address);
-        } else if (currentFragment instanceof DemographicsFragment) {
-            currentStep = getString(R.string.step_demographics);
-        } else if (currentFragment instanceof IdentificationFragment) {
-            currentStep = getString(R.string.step_identity);
-        } else if (currentFragment instanceof HealthInsuranceFragment ||
-                currentFragment instanceof InsuranceEditDialog) {
-            currentStep = getString(R.string.step_health_insurance);
-        } else if (currentFragment instanceof FormsFragment) {
-            currentStep = getString(R.string.step_consent_forms);
-        } else if (currentFragment instanceof MedicationsAllergyFragment ||
-                currentFragment instanceof MedicationsFragment ||
-                (currentFragment instanceof MedicationsAllergiesEmptyFragment &&
-                        ((MedicationsAllergiesEmptyFragment) currentFragment).getSelectedMode() ==
-                                MedicationsAllergiesEmptyFragment.MEDICATION_MODE)) {
-            currentStep = getString(R.string.step_medications);
-        } else if (currentFragment instanceof AllergiesFragment ||
-                (currentFragment instanceof MedicationsAllergiesEmptyFragment &&
-                        ((MedicationsAllergiesEmptyFragment) currentFragment).getSelectedMode() ==
-                                MedicationsAllergiesEmptyFragment.ALLERGY_MODE)) {
-            currentStep = getString(R.string.step_allegies);
-        } else if (currentFragment instanceof IntakeFormsFragment) {
-            currentStep = getString(R.string.step_intake);
-        }
-        if (currentStep != null) {
-            MixPanelUtil.logEvent(getString(R.string.event_checkin_cancelled), getString(R.string.param_last_completed_step), currentStep);
-        }
-    }
-
-    private void checkinCompleted(boolean paymentPlanCreated, boolean paymentMade) {
-        //Log Check-in Completed
-        if (getAppointment() != null) {
-            String[] params = {getString(R.string.param_practice_id),
-                    getString(R.string.param_appointment_id),
-                    getString(R.string.param_appointment_type),
-                    getString(R.string.param_is_guest),
-                    getString(R.string.param_provider_id),
-                    getString(R.string.param_location_id),
-                    getString(R.string.param_payment_made),
-                    getString(R.string.param_payment_plan_created),
-                    getString(R.string.param_partial_pay_available)
-            };
-            Object[] values = {getAppointment().getMetadata().getPracticeId(),
-                    getAppointmentId(),
-                    getAppointment().getPayload().getVisitType().getName(),
-                    false,
-                    getAppointment().getPayload().getProvider().getGuid(),
-                    getAppointment().getPayload().getLocation().getGuid(),
-                    paymentMade,
-                    paymentPlanCreated,
-                    paymentsModel.getPaymentPayload().getPaymentSetting(getAppointment().getMetadata().getPracticeId())
-                            .getPayload().getRegularPayments().isAllowPartialPayments()
-            };
-            MixPanelUtil.logEvent(getString(R.string.event_checkin_completed), params, values);
-            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_checkin_completed), 1);
-            MixPanelUtil.endTimer(getString(R.string.timer_checkin));
-        }
     }
 
 }
