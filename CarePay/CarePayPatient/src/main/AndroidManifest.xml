@@ -34,6 +34,7 @@
 
         <activity
             android:name=".patientsplash.SplashActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="sensorPortrait"
             android:theme="@style/Theme.AppCompat.Translucent">
             <intent-filter>
@@ -45,6 +46,17 @@
                 <action android:name="com.carecloud.carepay.restart" />
 
                 <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter android:label="@string/app_name">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="${hostName}"
+                    android:pathPrefix="/login"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
         <activity
@@ -145,7 +157,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_path"/>
+                android:resource="@xml/file_path" />
         </provider>
     </application>
 

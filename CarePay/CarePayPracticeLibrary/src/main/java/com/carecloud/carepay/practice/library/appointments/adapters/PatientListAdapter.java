@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.appointments.adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,7 +14,11 @@ import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.models.MapFilterModel;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
+import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
+import com.carecloud.carepaylibray.appointments.AppointmentDisplayUtil;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
@@ -54,6 +59,11 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private int sizeFilteredPatients;
     private int sizeFilteredPendingPatients;
+    private Section currentSection;
+    private enum Section {
+        APPOINTMENTS,
+        PAYMENTS
+    }
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
 
@@ -69,6 +79,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
      */
     public PatientListAdapter(Context context, PaymentsModel paymentsModel) {
         this.context = context;
+        this.currentSection = Section.PAYMENTS;
         loadPatients(paymentsModel);
         applyFilter();
     }
@@ -81,6 +92,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
      */
     public PatientListAdapter(Context context, CheckInDTO checkInDTO) {
         this.context = context;
+        this.currentSection = Section.APPOINTMENTS;
         loadPatients(checkInDTO);
         applyFilter();
     }
@@ -134,6 +146,12 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         holder.bind(patient, tapListener);
         holder.setTimeView(patient);
         holder.itemView.setContentDescription(patient.name);
+        if (this.currentSection == Section.APPOINTMENTS) {
+            holder.setCellAvatar(patient);
+            holder.cellAvatar.setVisibility(View.VISIBLE);
+        } else {
+            holder.cellAvatar.setVisibility(View.INVISIBLE);
+        }
 
         if (!TextUtils.isEmpty(patient.photoUrl)) {
             Picasso.with(context).load(patient.photoUrl)
@@ -390,6 +408,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         CarePayTextView balance;
         CarePayTextView timeTextView;
         ImageView profilePicture;
+        ImageView cellAvatar;
 
         /**
          * Constructor.
@@ -404,6 +423,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             balance = (CarePayTextView) view.findViewById(R.id.amount_text_view);
             timeTextView = (CarePayTextView) view.findViewById(R.id.timeTextView);
             profilePicture = (ImageView) view.findViewById(R.id.patient_pic_image_view);
+            cellAvatar = view.findViewById(R.id.cellAvatarImageView);
         }
 
         void bind(final CardViewPatient patient, final OnItemTappedListener tapListener) {
@@ -432,6 +452,70 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
 
             timeTextView.setVisibility(View.VISIBLE);
+        }
+
+        void setCellAvatar(CardViewPatient patient) {
+            AppointmentDisplayStyle style = AppointmentDisplayUtil.determineDisplayStyle(((AppointmentDTO) patient.raw).getPayload());
+            switch (style) {
+                case CHECKED_IN: {
+                    initials.setTextColor(ContextCompat.getColor(context, R.color.white));
+                    initials.setBackgroundResource(R.drawable.round_list_tv_green);
+                    cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_checked_in);
+                    break;
+                }
+                case PENDING: {
+                    initials.setTextColor(ContextCompat.getColor(context, R.color.emerald));
+                    initials.setBackgroundResource(R.drawable.round_list_tv_green_border);
+                    cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_upcoming);
+                    break;
+                }
+                case REQUESTED: {
+                    initials.setTextColor(ContextCompat.getColor(context, R.color.white));
+                    initials.setBackgroundResource(R.drawable.round_list_tv_orange);
+                    cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_pending);
+                    break;
+                }
+                case MISSED: {
+                    initials.setTextColor(ContextCompat.getColor(context, R.color.white));
+                    initials.setBackgroundResource(R.drawable.round_list_tv_red);
+                    cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_missed);
+                    break;
+                }
+                case CANCELED: {
+                    initials.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
+                    initials.setBackgroundResource(R.drawable.round_list_tv);
+                    cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_canceled);
+                    break;
+                }
+                case PENDING_UPCOMING: {
+                    initials.setTextColor(ContextCompat.getColor(context, R.color.emerald));
+                    initials.setBackgroundResource(R.drawable.round_list_tv_green_border);
+                    cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_upcoming);
+                    break;
+                }
+                case REQUESTED_UPCOMING: {
+                    initials.setTextColor(ContextCompat.getColor(context, R.color.white));
+                    initials.setBackgroundResource(R.drawable.round_list_tv_orange);
+                    cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_pending);
+                    break;
+                }
+                case CANCELED_UPCOMING: {
+                    initials.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
+                    initials.setBackgroundResource(R.drawable.round_list_tv);
+                    cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_canceled);
+                    break;
+                }
+                case CHECKED_OUT: {
+                    initials.setTextColor(ContextCompat.getColor(context, R.color.white));
+                    initials.setBackgroundResource(R.drawable.round_tv);
+                    cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_checked_out);
+                    break;
+                }
+                default: {
+                    cellAvatar.setVisibility(View.GONE);
+                }
+            }
+
         }
     }
 

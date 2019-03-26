@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -147,7 +148,9 @@ public class CheckOutFormFragment extends BaseWebFormFragment {
 
         Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
         header.put("transition", "true");
-        header.put("username_patient", appointmentDTO.getMetadata().getUsername());
+        if (getApplicationMode().getApplicationType() != ApplicationMode.ApplicationType.PATIENT) {
+            header.put("username_patient", appointmentDTO.getMetadata().getUsername());
+        }
 
         Gson gson = new Gson();
         String body = gson.toJson(jsonFormSaveResponseArray);

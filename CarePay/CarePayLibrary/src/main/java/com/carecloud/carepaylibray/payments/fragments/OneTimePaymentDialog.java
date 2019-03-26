@@ -14,12 +14,14 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.common.DatePickerFragment;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentDetailInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.Calendar;
@@ -32,8 +34,7 @@ import java.util.Date;
 public class OneTimePaymentDialog extends PartialPaymentDialog {
 
     protected PaymentPlanDTO paymentPlanDTO;
-    protected PaymentsModel paymentsDTO;
-    protected Context context;
+    protected PaymentsModel paymentsDTOpaymentsDTO;
     protected OneTimePaymentInterface callback;
 
     protected Date paymentDate;
@@ -42,27 +43,39 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
     protected long minDate;
 
     /**
-     * Contructor
      *
-     * @param context        context must implement PayNowClickListener
      * @param paymentsDTO    payment model
      * @param paymentPlanDTO payment plan
      */
-    public OneTimePaymentDialog(Context context,
-                                PaymentsModel paymentsDTO,
-                                PaymentPlanDTO paymentPlanDTO,
-                                OneTimePaymentInterface callback) {
-        super(context, paymentsDTO, null);
-        this.context = context;
-        this.paymentsDTO = paymentsDTO;
-        this.paymentPlanDTO = paymentPlanDTO;
-        this.callback = callback;
+    public static OneTimePaymentDialog newInstance(PaymentsModel paymentsDTO,
+                                PaymentPlanDTO paymentPlanDTO) {
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, paymentsDTO);
+        DtoHelper.bundleDto(args, paymentPlanDTO);
+        OneTimePaymentDialog dialog = new OneTimePaymentDialog();
+        dialog.setArguments(args);
+        return dialog;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            callback = (OneTimePaymentInterface) context;
+        } catch (ClassCastException cce) {
+            throw new ClassCastException("Attached Context must implement PaymentDetailInterface");
+        }
     }
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        if (args != null) {
+            paymentsDTO = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
+            paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
+        }
         DateUtil.getInstance().setDate(new Date());
         paymentDate = DateUtil.getInstance().getDate();
         minDate = System.currentTimeMillis();
@@ -123,7 +136,7 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
             dismiss();
         } catch (NumberFormatException nfe) {
             nfe.printStackTrace();
-            Toast.makeText(context, "Please enter valid amount!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Please enter valid amount!", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -189,7 +202,7 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
                                 setSelectedDate(selectedDate);
                             }
                         });
-        SystemUtil.hideSoftKeyboard(context, getCurrentFocus());
+        SystemUtil.hideSoftKeyboard(getContext(), getActivity().getCurrentFocus());
         ((FragmentActivityInterface) callback).displayDialogFragment(fragment, true);
     }
 
