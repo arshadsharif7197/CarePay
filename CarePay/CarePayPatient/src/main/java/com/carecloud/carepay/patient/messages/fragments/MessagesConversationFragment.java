@@ -340,6 +340,6 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
                 .appendQueryParameter("nodeid", attachment.getDocument().getDocumentHandler())
                 .build();
         DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(uri.toString(), true);
-        callback.addFragment(fragment, true);
+        fragment.show(getFragmentManager(), "detail");
     }
 }

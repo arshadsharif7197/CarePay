@@ -102,6 +102,10 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
     @Override
     public void onResume() {
         super.onResume();
+        refreshListMessages();
+    }
+
+    public void refreshListMessages() {
         refreshing = true;
         getThreads(0, 0);
     }
@@ -209,7 +213,6 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
                 int last = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
                 if (last > recyclerView.getAdapter().getItemCount() - BOTTOM_ROW_OFFSET && !isPaging) {
                     Paging paging = messagingModel.getPayload().getMessages().getPaging();
-//                    callback.getMessageThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage());
                     getThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage());
                     isPaging = true;
                 }
@@ -240,7 +243,6 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
             if (deleteThread != null) {
                 MessagesListAdapter messagesListAdapter = (MessagesListAdapter) recyclerView.getAdapter();
                 messagesListAdapter.finalizeMessageRemoval(deleteThread);
-//                callback.deleteMessageThread(deleteThread);
                 deleteMessageThread(deleteThread);
                 //reset delete thread
                 deleteThread = null;

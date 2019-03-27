@@ -35,7 +35,7 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
         super.onCreate(icicle);
         messagingModel = getConvertedDTO(MessagingModel.class);
         if (messagingModel == null) {
-            callMessagingService();
+            callMessagingService(true);
         } else {
             resumeOnCreate();
         }
@@ -52,11 +52,13 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
         replaceFragment(new MessagesListFragment(), false);
     }
 
-    private void callMessagingService() {
+    private void callMessagingService(final boolean showShimmerEffect) {
         getWorkflowServiceHelper().execute(getTransitionMessaging(), new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
-                replaceFragment(ShimmerFragment.newInstance(R.layout.shimmer_default_item), false);
+                if (showShimmerEffect) {
+                    replaceFragment(ShimmerFragment.newInstance(R.layout.shimmer_default_item), false);
+                }
             }
 
             @Override
@@ -97,10 +99,14 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
     }
 
     @Override
-    public void displayThreadMessages(Messages.Reply thread, boolean dismissDialogs) {
-        if (dismissDialogs) {
+    public void displayThreadMessages(Messages.Reply thread, boolean dismissAndRefresh) {
+        if (dismissAndRefresh) {
             getSupportFragmentManager().popBackStackImmediate();
             getSupportFragmentManager().popBackStackImmediate();
+            if (getSupportFragmentManager().findFragmentById(R.id.container_main) instanceof MessagesListFragment) {
+                ((MessagesListFragment) getSupportFragmentManager().findFragmentById(R.id.container_main))
+                        .refreshListMessages();
+            }
         }
         if (!thread.isRead()) {
             ApplicationPreferences.getInstance()
