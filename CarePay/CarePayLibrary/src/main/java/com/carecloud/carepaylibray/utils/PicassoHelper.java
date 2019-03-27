@@ -48,6 +48,7 @@ public class PicassoHelper {
         Picasso.Builder builder = new Picasso.Builder(context);
         builder.downloader(new CustomOkHttpDownloader(context));
         picasso = builder.build();
+        picasso.setLoggingEnabled(true);
 
         return picasso;
     }

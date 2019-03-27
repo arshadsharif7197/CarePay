@@ -11,11 +11,9 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.models.Messages;
 import com.carecloud.carepaylibray.customcomponents.SwipeViewHolder;
-import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +31,7 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
     }
 
     private Context context;
-    private List<Messages.Reply> threads = new ArrayList<>();
+    private List<Messages.Reply> threads;
     private SelectMessageThreadCallback callback;
     private String userId;
     private List<Messages.Reply> removeThreads = new ArrayList<>();
@@ -105,7 +103,10 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
         }
 
         if (!StringUtil.isNullOrEmpty(provider.getPhoto())) {
-            loadImage(holder, provider.getPhoto());
+            PicassoHelper.get().loadImage(context, holder.providerImage, holder.providerInitials, provider.getPhoto());
+        } else {
+            holder.providerImage.setVisibility(View.INVISIBLE);
+            holder.providerInitials.setVisibility(View.VISIBLE);
         }
     }
 
@@ -199,27 +200,6 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
         }
 
         return null;
-    }
-
-    private void loadImage(final MessagesListAdapter.ViewHolder holder, String photoUrl) {
-        int size = context.getResources().getDimensionPixelSize(R.dimen.payment_details_dialog_icon_size);
-        Picasso.with(context).load(photoUrl)
-                .resize(size, size)
-                .centerCrop()
-                .transform(new CircleImageTransform())
-                .into(holder.providerImage, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        holder.providerImage.setVisibility(View.VISIBLE);
-                        holder.providerInitials.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onError() {
-                        holder.providerImage.setVisibility(View.GONE);
-                        holder.providerInitials.setVisibility(View.VISIBLE);
-                    }
-                });
     }
 
     class ViewHolder extends SwipeViewHolder {

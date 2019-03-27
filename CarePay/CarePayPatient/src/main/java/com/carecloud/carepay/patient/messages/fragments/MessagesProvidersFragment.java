@@ -2,6 +2,7 @@ package com.carecloud.carepay.patient.messages.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.MessageNavigationCallback;
 import com.carecloud.carepay.patient.messages.adapters.MessagesProvidersAdapter;
+import com.carecloud.carepay.patient.messages.models.MessagingModel;
 import com.carecloud.carepay.patient.messages.models.ProviderContact;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
@@ -30,24 +32,35 @@ public class MessagesProvidersFragment extends BaseFragment implements MessagesP
 
     private List<ProviderContact> providers = new ArrayList<>();
     private MessageNavigationCallback callback;
+    private MessagingModel messagingModel;
+
+    public static Fragment newInstance() {
+        return new MessagesProvidersFragment();
+    }
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
-        try{
+        try {
             callback = (MessageNavigationCallback) context;
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement MessageNavigationCallback");
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
+    public void onCreate(Bundle icicle) {
+        super.onCreate(icicle);
+        messagingModel = (MessagingModel) callback.getDto();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_messages_provider_list, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         initToolbar(view);
 
         providersRecycler = view.findViewById(R.id.providers_recycler);
@@ -57,12 +70,12 @@ public class MessagesProvidersFragment extends BaseFragment implements MessagesP
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         callback.displayToolbar(false, null);
     }
 
-    private void initToolbar(View view){
+    private void initToolbar(View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(Label.getLabel("messaging_providers_title"));
@@ -77,8 +90,8 @@ public class MessagesProvidersFragment extends BaseFragment implements MessagesP
 
     }
 
-    private void setAdapter(){
-        providers = callback.getProvidersList();
+    private void setAdapter() {
+        providers = messagingModel.getPayload().getProviderContacts();
         MessagesProvidersAdapter adapter = new MessagesProvidersAdapter(getContext(), providers, this);
         providersRecycler.setAdapter(adapter);
     }
@@ -86,16 +99,17 @@ public class MessagesProvidersFragment extends BaseFragment implements MessagesP
 
     /**
      * Set or update the list of providers
+     *
      * @param providers providers list
      */
-    public void updateProvidersList(List<ProviderContact> providers){
+    public void updateProvidersList(List<ProviderContact> providers) {
         this.providers = providers;
         setAdapter();
     }
 
     @Override
     public void onProviderSelected(ProviderContact provider) {
-        callback.replaceFragment(MessagesNewThreadFragment.newInstance(provider), true);
+        callback.addFragment(MessagesNewThreadFragment.newInstance(provider), true);
     }
 
 }
