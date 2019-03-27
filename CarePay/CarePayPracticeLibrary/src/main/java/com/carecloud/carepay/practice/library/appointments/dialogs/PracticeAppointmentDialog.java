@@ -41,6 +41,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     private String rightActionLabel;
     private String middleActionLabel;
     private AppointmentDisplayStyle style;
+    private GradientDrawable drawable;
 
     private View headerView;
 
@@ -113,8 +114,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         initializeViews(view);
-        GradientDrawable drawable = (GradientDrawable) headerView.getBackground();
-        drawable.setColor(ContextCompat.getColor(getContext(), headerColor));
+        drawable = (GradientDrawable) headerView.getBackground();
 
         TextView apptTime = view.findViewById(R.id.appointment_start_time);
         apptTime.setTextColor(ContextCompat.getColor(getContext(), timeColor));
@@ -174,6 +174,18 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         Picasso.with(getActivity()).load(photoUrl).transform(new CircleImageTransform())
                 .resize(58, 58).into(profileImage);
         profileImage.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        drawable.setColor(ContextCompat.getColor(getContext(), headerColor));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        drawable.setColor(getResources().getColor(R.color.colorPrimary));
     }
 
     private void setupDialogStyle() {

@@ -510,12 +510,12 @@
     <dimen name="appointmentDialogPhoneHorizontalMargin">100dp</dimen>
     <dimen name="appointmentDialogPhoneVerticalPadding">20dp</dimen>
     <dimen name="appointmentDialogPhoneTextSize">24sp</dimen>
-    <dimen name="visitTypeContainerHorizontalPadding">24dp</dimen>
+    <dimen name="visitTypeContainerHorizontalPadding">80dp</dimen>
     <dimen name="visitTypeContainerBottomPadding">40dp</dimen>
     <dimen name="visitTypeLabelTextSize">24sp</dimen>
     <dimen name="visitTypeValueTextSize">20sp</dimen>
     <dimen name="visitTypeLabelEndMargin">10dp</dimen>
-    <dimen name="visitTypeValueHeight">25dp</dimen>
+    <dimen name="visitTypeValueHeight">20dp</dimen>
     <dimen name="appointmentSeparatorTopMargin">20dp</dimen>
     <dimen name="appointmentDialogButtonTextSize">22sp</dimen>
 
