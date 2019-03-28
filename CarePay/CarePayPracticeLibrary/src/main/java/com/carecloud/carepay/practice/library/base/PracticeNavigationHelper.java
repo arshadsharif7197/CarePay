@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.carecloud.carepay.practice.library.adhocforms.AdHocFormsActivity;
-import com.carecloud.carepay.practice.library.appointments.PatientModePracticeAppointmentActivity;
+import com.carecloud.carepay.practice.library.appointments.PatientModeAppointmentActivity;
 import com.carecloud.carepay.practice.library.appointments.PracticeModePracticeAppointmentsActivity;
 import com.carecloud.carepay.practice.library.checkin.PatientModeCheckInCheckOutActivity;
 import com.carecloud.carepay.practice.library.checkin.PracticeModeCheckInActivity;
@@ -117,7 +117,7 @@ public class PracticeNavigationHelper {
                 @Defs.AppointmentNavigationTypeDef int navigationOption = applicationPreferences.getAppointmentNavigationOption();
                 switch (navigationOption) {
                     case Defs.NAVIGATE_APPOINTMENT:
-                        intent = new Intent(context, PatientModePracticeAppointmentActivity.class);
+                        intent = new Intent(context, PatientModeAppointmentActivity.class);
                         break;
                     case Defs.NAVIGATE_CHECKIN:
                     case Defs.NAVIGATE_CHECKOUT:

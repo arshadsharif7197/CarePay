@@ -9,9 +9,9 @@ import android.support.v7.widget.Toolbar;
  */
 
 public interface FragmentActivityInterface extends DTOInterface {
-    void replaceFragment(Fragment fragment, boolean addToBackStack);
-
     void addFragment(Fragment fragment, boolean addToBackStack);
+
+    void replaceFragment(Fragment fragment, boolean addToBackStack);
 
     void showErrorToast(String exceptionMessage);
 

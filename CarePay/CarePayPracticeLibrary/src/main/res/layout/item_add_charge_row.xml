@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingTop="@dimen/dimen_16dp"
-        android:paddingBottom="@dimen/dimen_16dp">
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/addChargeItemVerticalPadding"
+        android:paddingBottom="@dimen/addChargeItemVerticalPadding">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/charge_item_description"
@@ -21,24 +20,24 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="start"
-            android:textSize="@dimen/text_size_22sp"
             android:textColor="@color/textview_default_textcolor"
-            tools:text="Description of Product"
-            app:customAssetFont="gotham_rounded_book"/>
+            android:textSize="@dimen/addChargeItemTextSize"
+            app:customAssetFont="gotham_rounded_book"
+            tools:text="Description of Product" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/charge_item_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_17"
-            tools:text="$00.00"
             android:textColor="@color/textview_default_textcolor"
-            app:customAssetFont="gotham_rounded_medium"/>
+            android:textSize="@dimen/addChargeItemAmountTextSize"
+            app:customAssetFont="gotham_rounded_medium"
+            tools:text="$00.00" />
 
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_1dp"
-        android:background="@color/light_gray"/>
+        android:background="@color/light_gray" />
 </LinearLayout>

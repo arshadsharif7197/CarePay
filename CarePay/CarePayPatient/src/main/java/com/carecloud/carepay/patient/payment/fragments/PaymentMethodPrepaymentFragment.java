@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.appointments.interfaces.AppointmentPrepaymentCallback;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
@@ -47,7 +48,7 @@ public class PaymentMethodPrepaymentFragment extends PatientPaymentMethodFragmen
     public void attachCallback(Context context) {
         super.attachCallback(context);
         try {
-             if (context instanceof AppointmentViewHandler){
+            if (context instanceof AppointmentViewHandler) {
                 callback = (AppointmentPrepaymentCallback) ((AppointmentViewHandler) context).getAppointmentPresenter();
             } else {
                 callback = (AppointmentPrepaymentCallback) context;
@@ -70,7 +71,7 @@ public class PaymentMethodPrepaymentFragment extends PatientPaymentMethodFragmen
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
 
         TextView prepaymentAmount = view.findViewById(R.id.prepaymentAmount);
@@ -79,7 +80,7 @@ public class PaymentMethodPrepaymentFragment extends PatientPaymentMethodFragmen
     }
 
     @Override
-    public void setupTitleViews(View view){
+    public void setupTitleViews(View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         if (toolbar != null) {
             TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
@@ -94,6 +95,9 @@ public class PaymentMethodPrepaymentFragment extends PatientPaymentMethodFragmen
                     callback.onPaymentDismissed();
                 }
             });
+            if (callback instanceof PatientAppointmentPresenter) {
+                ((PatientAppointmentPresenter) callback).displayToolbar(false, null);
+            }
         }
 
     }

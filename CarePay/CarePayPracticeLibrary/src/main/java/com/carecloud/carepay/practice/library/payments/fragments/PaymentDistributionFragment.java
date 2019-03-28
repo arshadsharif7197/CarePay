@@ -94,6 +94,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     private View actionButton;
     private View retailChargesLayout;
     private RecyclerView retailChargesRecycler;
+    private Button paymentPlanEmptyButton;
 
     private BounceHelper balanceViewSwipeHelper;
     private BounceHelper chargeViewSwipeHelper;
@@ -168,8 +169,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
         balanceTextView = view.findViewById(R.id.balance_value);
         unAppliedTextView = view.findViewById(R.id.unapplied_value);
-
-        scrollView = view.findViewById(R.id.nested_scroller);
+        scrollView = (NestedScrollView) view.findViewById(R.id.nested_scroller);
 
         unappliedLayout = view.findViewById(R.id.unapplied_layout);
 
@@ -246,7 +246,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         });
 
         View addButton = view.findViewById(R.id.add_item_button);
-        View addButtonEmpty = view.findViewById(R.id.add_item_button_empty);
         View.OnClickListener addItem = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -258,10 +257,10 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             }
         };
         addButton.setOnClickListener(addItem);
-        addButtonEmpty.setOnClickListener(addItem);
 
         Button paymentPlanButton = view.findViewById(R.id.payment_left_button);
-        paymentPlanButton.setOnClickListener(new View.OnClickListener() {
+        paymentPlanEmptyButton = view.findViewById(R.id.payment_plans_empty_button);
+        View.OnClickListener displayPlans =  new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 clearPickers();
@@ -269,7 +268,10 @@ public class PaymentDistributionFragment extends BaseDialogFragment
                 callback.showPaymentPlanDashboard(paymentsModel);
                 hideDialog();
             }
-        });
+        };
+
+        paymentPlanButton.setOnClickListener(displayPlans);
+        paymentPlanEmptyButton.setOnClickListener(displayPlans);
 
         payButton = view.findViewById(R.id.payment_pay_button);
         payButton.setOnClickListener(new View.OnClickListener() {
@@ -318,7 +320,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
         payButton.setEnabled(authPermissions.canMakePayment);
         addButton.setEnabled(authPermissions.canAddCharges);
-        addButtonEmpty.setEnabled(authPermissions.canAddCharges);
     }
 
     private void setInitialValues(View view) {
@@ -415,6 +416,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
         if (balanceItems.isEmpty() && chargeItems.isEmpty() && retailItems.isEmpty()) {
             emptyBalanceLayout.setVisibility(View.VISIBLE);
+            if (paymentsModel.getPaymentPayload().getPatientPaymentPlans().size() > 0) {
+                paymentPlanEmptyButton.setVisibility(View.VISIBLE);
+            }
             paymentTotalTextView.setClickable(false);
         } else {
             if (balanceItems.isEmpty()) {

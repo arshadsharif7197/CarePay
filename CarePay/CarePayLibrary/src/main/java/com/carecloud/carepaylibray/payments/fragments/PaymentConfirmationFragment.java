@@ -9,11 +9,15 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentCompletedInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -21,13 +25,15 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPo
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.ValidationHelper;
+
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import static com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod.PAYMENT_METHOD_ACCOUNT;
 import static com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod.PAYMENT_METHOD_CARD;
 import static com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod.PAYMENT_METHOD_NEW_CARD;
-
-import java.text.NumberFormat;
-import java.util.Locale;
 
 /**
  * Created by lmenendez on 3/24/17
@@ -44,6 +50,7 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
     private IntegratedPatientPaymentPayload patientPaymentPayload;
 
     private NumberFormat currencyFormatter;
+    private AppointmentDTO appointmentDTO;
 
     public static PaymentConfirmationFragment newInstance(WorkflowDTO workflowDTO, boolean isOneTimePayment) {
         Bundle args = new Bundle();
@@ -84,14 +91,6 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (callback == null) {
-            attachCallback(getContext());
-        }
-    }
-
-    @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
@@ -100,8 +99,21 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
             workflowDTO = DtoHelper.getConvertedDTO(WorkflowDTO.class, args);
             paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             patientPaymentPayload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
+            appointmentDTO = getAppointmentDto(workflowDTO);
         }
         currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
+    }
+
+    private AppointmentDTO getAppointmentDto(WorkflowDTO workflowDTO) {
+        try {
+            AppointmentsResultModel appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
+            if (appointmentsResultModel.getPayload().getAppointments().size() > 0) {
+                return appointmentsResultModel.getPayload().getAppointments().get(0);
+            }
+        } catch (Exception e) {
+            appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, workflowDTO.getPayload().getAsJsonObject("appointments"));
+        }
+        return null;
     }
 
     @Override
@@ -111,7 +123,7 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
 
     @Override
     public void onViewCreated(View view, Bundle icicle) {
-        Button okButton = (Button) view.findViewById(R.id.button_ok);
+        Button okButton = view.findViewById(R.id.button_ok);
         okButton.setOnClickListener(dismissPopupListener);
         if (getArguments().getString(KEY_BUTTON_LABEL) != null) {
             okButton.setText(getArguments().getString(KEY_BUTTON_LABEL));
@@ -123,29 +135,29 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
         }
 
         if (getArguments().getString(KEY_PAYMENT_TYPE) != null) {
-            TextView typeTextView = (TextView) view.findViewById(R.id.payment_confirm_type_value);
+            TextView typeTextView = view.findViewById(R.id.payment_confirm_type_value);
             typeTextView.setText(getArguments().getString(KEY_PAYMENT_TYPE));
         }
 
 
-        TextView methodTextView = (TextView) view.findViewById(R.id.payment_confirm_method_value);
+        TextView methodTextView = view.findViewById(R.id.payment_confirm_method_value);
         methodTextView.setText(getPaymentMethod(patientPaymentPayload));
 
-        TextView totalTextView = (TextView) view.findViewById(R.id.payment_confirm_total_value);
+        TextView totalTextView = view.findViewById(R.id.payment_confirm_total_value);
         totalTextView.setText(currencyFormatter.format(patientPaymentPayload.getTotalPaid()));
 
-        TextView confirmationTextView = (TextView) view.findViewById(R.id.payment_confirm_value);
+        TextView confirmationTextView = view.findViewById(R.id.payment_confirm_value);
         confirmationTextView.setText(patientPaymentPayload.getConfirmation());
 
         DateUtil dateUtil = DateUtil.getInstance().setToCurrent();
-        TextView date = (TextView) view.findViewById(R.id.payment_confirm_date);
+        TextView date = view.findViewById(R.id.payment_confirm_date);
         date.setText(dateUtil.getDateAsMonthLiteralDayOrdinalYear());
 
-        TextView practice = (TextView) view.findViewById(R.id.payment_confirm_practice_name);
+        TextView practice = view.findViewById(R.id.payment_confirm_practice_name);
         String practiceName = getPracticeName(patientPaymentPayload.getMetadata().getBusinessEntityId());
         practice.setText(practiceName);
 
-        if(getArguments().getBoolean(KEY_ONE_TIME_PAYMENT, false)){
+        if (getArguments().getBoolean(KEY_ONE_TIME_PAYMENT, false)) {
             practice.setText(Label.getLabel("payment_queued_patient"));
         }
 
@@ -153,13 +165,60 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (callback == null) {
+            attachCallback(getContext());
+        }
+    }
+
     private View.OnClickListener dismissPopupListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             dismiss();
+            if (appointmentDTO != null) {
+                logAppointmentScheduledToMixPanel(appointmentDTO);
+            }
             callback.completePaymentProcess(workflowDTO);
         }
     };
+
+    private void logAppointmentScheduledToMixPanel(AppointmentDTO appointmentDTO) {
+        boolean isGuest = getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE)
+                && !ValidationHelper.isValidEmail(((ISession) getContext()).getAppAuthorizationHelper().getCurrUser());
+        String[] params = {getString(R.string.param_appointment_type),
+                getString(R.string.param_practice_id),
+                getString(R.string.param_practice_name),
+                getString(R.string.param_provider_id),
+                getString(R.string.param_patient_id),
+                getString(R.string.param_location_id),
+                getString(R.string.param_reason_visit),
+                getString(R.string.param_is_guest),
+                //make sure this is the last item in case we need to null it out to prevent it from sending
+                getString(R.string.param_payment_made)
+        };
+        Object[] values = {appointmentDTO.getPayload().getVisitType().getName(),
+                appointmentDTO.getMetadata().getPracticeId(),
+                getPracticeName(appointmentDTO.getMetadata().getPracticeId()),
+                appointmentDTO.getPayload().getProvider().getGuid(),
+                appointmentDTO.getMetadata().getPatientId(),
+                appointmentDTO.getPayload().getLocation().getGuid(),
+                appointmentDTO.getPayload().getComments(),
+                isGuest,
+                patientPaymentPayload.getTotalPaid()
+        };
+        if (patientPaymentPayload.getTotalPaid() <= 0) {
+            params[params.length - 1] = null;
+        }
+
+        if (getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PRACTICE)) {
+            MixPanelUtil.logEvent(getString(R.string.event_appointment_scheduled), params, values);
+        } else {
+            MixPanelUtil.logEvent(getString(R.string.event_appointment_requested), params, values);
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_requested), 1);
+        }
+    }
 
 
     /**
@@ -169,7 +228,7 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
      * @return label
      */
     public static String getPaymentMethod(IntegratedPatientPaymentPayload patientPaymentPayload) {
-        if(patientPaymentPayload.getPaymentMethod() == null){
+        if (patientPaymentPayload.getPaymentMethod() == null) {
             return Label.getLabel("payment_method_creditcard");
         }
         switch (patientPaymentPayload.getPaymentMethod().getPaymentMethodType()) {
@@ -178,7 +237,7 @@ public class PaymentConfirmationFragment extends BasePaymentDialogFragment {
             case PAYMENT_METHOD_CARD:
             case PAYMENT_METHOD_NEW_CARD:
             default:
-                if(patientPaymentPayload.getExecution().equals(IntegratedPaymentPostModel.EXECUTION_ANDROID)){
+                if (patientPaymentPayload.getExecution().equals(IntegratedPaymentPostModel.EXECUTION_ANDROID)) {
                     return CarePayConstants.TYPE_GOOGLE_PAY;
                 }
                 return Label.getLabel("payment_method_creditcard");

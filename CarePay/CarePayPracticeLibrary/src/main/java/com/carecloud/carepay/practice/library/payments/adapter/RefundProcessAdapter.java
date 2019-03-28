@@ -24,7 +24,6 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -45,22 +44,23 @@ public class RefundProcessAdapter extends RecyclerView.Adapter<RefundProcessAdap
     }
 
     private Context context;
-    private List<PaymentHistoryLineItem> lineItems = new ArrayList<>();
+    private List<PaymentHistoryLineItem> lineItems;
     private RefundItemActionCallback callback;
     private Map<String, ProviderDTO> providerMap = new HashMap<>();
     private Map<String, LocationDTO> locationMap = new HashMap<>();
 
     /**
      * Constructor
-     * @param context context
+     *
+     * @param context   context
      * @param lineItems line items
-     * @param callback callback
+     * @param callback  callback
      */
-    public RefundProcessAdapter(Context context, PaymentsModel paymentsModel, List<PaymentHistoryLineItem> lineItems, RefundItemActionCallback callback){
+    public RefundProcessAdapter(Context context, PaymentsModel paymentsModel, List<PaymentHistoryLineItem> lineItems, RefundItemActionCallback callback) {
         this.context = context;
         this.lineItems = getSortedLineItems(lineItems);
         this.callback = callback;
-        if(paymentsModel != null){
+        if (paymentsModel != null) {
             initLocationsMap(paymentsModel);
             initProviderMap(paymentsModel);
         }
@@ -81,12 +81,12 @@ public class RefundProcessAdapter extends RecyclerView.Adapter<RefundProcessAdap
         holder.description.setText(parseDescription(lineItem.getDescription()));
 
         LocationDTO locationDTO = locationMap.get(lineItem.getLocationID());
-        if(locationDTO != null) {
+        if (locationDTO != null) {
             holder.location.setText(locationDTO.getName());
         }
 
         ProviderDTO providerDTO = providerMap.get(lineItem.getProviderID());
-        if(providerDTO != null) {
+        if (providerDTO != null) {
             holder.provider.setText(providerDTO.getName());
             holder.providerInitials.setText(StringUtil.getShortName(providerDTO.getName()));
 
@@ -133,11 +133,11 @@ public class RefundProcessAdapter extends RecyclerView.Adapter<RefundProcessAdap
             }
         });
 
-        if(!lineItem.isChecked()){
+        if (!lineItem.isChecked()) {
             int disabled = ContextCompat.getColor(context, R.color.pastel_blue);
             holder.description.setTextColor(disabled);
             holder.amount.setTextColor(disabled);
-        }else{
+        } else {
             holder.description.setTextColor(ContextCompat.getColor(context, R.color.Feldgrau));
             holder.amount.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
         }
@@ -149,19 +149,19 @@ public class RefundProcessAdapter extends RecyclerView.Adapter<RefundProcessAdap
     }
 
 
-    private void initProviderMap(PaymentsModel paymentsModel){
+    private void initProviderMap(PaymentsModel paymentsModel) {
         for (ProviderDTO providerDTO : paymentsModel.getPaymentPayload().getProviders()) {
             providerMap.put(providerDTO.getGuid(), providerDTO);
         }
     }
 
-    private void initLocationsMap(PaymentsModel paymentsModel){
+    private void initLocationsMap(PaymentsModel paymentsModel) {
         for (LocationDTO locationDTO : paymentsModel.getPaymentPayload().getLocations()) {
             locationMap.put(locationDTO.getGuid(), locationDTO);
         }
     }
 
-    private List<PaymentHistoryLineItem> getSortedLineItems(List<PaymentHistoryLineItem> lineItems){
+    private List<PaymentHistoryLineItem> getSortedLineItems(List<PaymentHistoryLineItem> lineItems) {
         Collections.sort(lineItems, new Comparator<PaymentHistoryLineItem>() {
             @Override
             public int compare(PaymentHistoryLineItem left, PaymentHistoryLineItem right) {
@@ -171,11 +171,11 @@ public class RefundProcessAdapter extends RecyclerView.Adapter<RefundProcessAdap
         return lineItems;
     }
 
-    private static String parseDescription(String description){
-        if(description == null){
+    private static String parseDescription(String description) {
+        if (description == null) {
             return "";
         }
-        switch (description){
+        switch (description) {
             case IntegratedPaymentLineItem.TYPE_COPAY:
                 return Label.getLabel("payment_history_item_copay");
             case IntegratedPaymentLineItem.TYPE_COINSURANCE:
@@ -192,7 +192,7 @@ public class RefundProcessAdapter extends RecyclerView.Adapter<RefundProcessAdap
     }
 
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
         CheckBox checkBox;
         TextView description;
         TextView provider;
@@ -204,13 +204,13 @@ public class RefundProcessAdapter extends RecyclerView.Adapter<RefundProcessAdap
 
         public ViewHolder(View itemView) {
             super(itemView);
-            checkBox = (CheckBox) itemView.findViewById(R.id.refund_check);
-            description = (TextView) itemView.findViewById(R.id.payment_detail_description);
-            provider = (TextView) itemView.findViewById(R.id.provider_name);
-            providerInitials = (TextView) itemView.findViewById(R.id.provider_short_name);
-            providerImage = (ImageView) itemView.findViewById(R.id.provider_image);
-            location = (TextView) itemView.findViewById(R.id.location_name);
-            amount = (TextView) itemView.findViewById(R.id.refund_amount);
+            checkBox = itemView.findViewById(R.id.refund_check);
+            description = itemView.findViewById(R.id.payment_detail_description);
+            provider = itemView.findViewById(R.id.provider_name);
+            providerInitials = itemView.findViewById(R.id.provider_short_name);
+            providerImage = itemView.findViewById(R.id.provider_image);
+            location = itemView.findViewById(R.id.location_name);
+            amount = itemView.findViewById(R.id.refund_amount);
             divider = itemView.findViewById(R.id.divider);
         }
 

@@ -32,6 +32,7 @@ import com.carecloud.carepaylibray.medications.fragments.MedicationsFragment;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.ValidationHelper;
 
 import java.util.List;
 
@@ -209,8 +210,17 @@ public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl 
             currentStep = demographicsView.getContext().getString(R.string.step_intake);
         }
         if (currentStep != null) {
+            boolean isGuest = !ValidationHelper.isValidEmail(((ISession) demographicsView.getContext()).getAppAuthorizationHelper().getCurrUser());
+            String[] params = {
+                    demographicsView.getContext().getString(R.string.param_last_completed_step),
+                    demographicsView.getContext().getString(R.string.param_is_guest)
+            };
+            Object[] values ={
+                    currentStep,
+                    isGuest,
+            };
             MixPanelUtil.logEvent(demographicsView.getContext().getString(R.string.event_checkin_cancelled),
-                    demographicsView.getContext().getString(R.string.param_last_completed_step), currentStep);
+            params, values);
         }
 
     }

@@ -428,6 +428,8 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
             queryMap.put("patient_id", signInResponse.getPayload().getSignIn().getMetadata().getPatientId());
             getApplicationMode().setPatientId(signInResponse.getPayload().getSignIn().getMetadata().getPatientId());
+            ApplicationPreferences.getInstance().setPatientId(signInResponse.getPayload().getSignIn()
+                    .getMetadata().getPatientId());
             getWorkflowServiceHelper().execute(transitionDTO, signInCallback, queryMap);
 
             identifyPatientUser(signInResponse.getPayload().getSignIn().getMetadata().getUserId());
@@ -613,6 +615,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             setSignInButtonClickable(true);
+            getApplicationPreferences().setAppointmentCounts(null);
             navigateToWorkFlow(workflowDTO);
         }
 

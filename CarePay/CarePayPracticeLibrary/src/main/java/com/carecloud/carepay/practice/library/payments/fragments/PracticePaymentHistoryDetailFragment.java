@@ -39,10 +39,11 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
 
     /**
      * Get new instance of PracticePaymentHistoryDetailFragment
+     *
      * @param historyItem history item
      * @return new instance of PracticePaymentHistoryDetailFragment
      */
-    public static PracticePaymentHistoryDetailFragment newInstance(PaymentHistoryItem historyItem, PaymentsModel paymentsModel){
+    public static PracticePaymentHistoryDetailFragment newInstance(PaymentHistoryItem historyItem, PaymentsModel paymentsModel) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, historyItem);
         DtoHelper.bundleDto(args, paymentsModel);
@@ -53,16 +54,16 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
     }
 
     @Override
-    protected void attachCallback(Context context){
-        try{
+    protected void attachCallback(Context context) {
+        try {
             callback = (PracticePaymentHistoryCallback) context;
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implememnt PracticePaymentHistoryCallback");
         }
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
         paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
@@ -76,12 +77,12 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_payment_history_details, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         View closeButton = view.findViewById(R.id.closeViewLayout);
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,30 +94,29 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
 
         DateUtil dateUtil = DateUtil.getInstance().setDateRaw(historyItem.getPayload().getDate());
 
-        TextView transactionDate = (TextView) view.findViewById(R.id.transaction_date);
-        transactionDate.setText(dateUtil.getDateAsMonthLiteralDayOrdinalYear());
+        TextView transactionDate = view.findViewById(R.id.transaction_date);
+        transactionDate.setText(String.format("%s - %s",
+                dateUtil.getDateAsMonthLiteralDayOrdinalYear(),
+                dateUtil.getTime12Hour()));
 
-        TextView transactionTime = (TextView) view.findViewById(R.id.transaction_time);
-        transactionTime.setText(dateUtil.getTime12Hour());
-
-        TextView transactionNumber = (TextView) view.findViewById(R.id.transaction_number);
+        TextView transactionNumber = view.findViewById(R.id.transaction_number);
         transactionNumber.setText(historyItem.getPayload().getConfirmation());
 
-        TextView transactionType = (TextView) view.findViewById(R.id.transaction_payment_type);
+        TextView transactionType = view.findViewById(R.id.transaction_payment_type);
         transactionType.setText(getPaymentMethod(historyItem.getPayload().getPapiPaymentMethod()));
 
-        TextView transactionTotal = (TextView) view.findViewById(R.id.transaction_total);
+        TextView transactionTotal = view.findViewById(R.id.transaction_total);
         transactionTotal.setText(NumberFormat.getCurrencyInstance(Locale.US).format(totalPaid));
 
-        RecyclerView itemsRecycler = (RecyclerView) view.findViewById(R.id.items_recycler);
+        RecyclerView itemsRecycler = view.findViewById(R.id.items_recycler);
         itemsRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         initItemsRecycler(itemsRecycler);
 
-        final NestedScrollView scrollView = (NestedScrollView) view.findViewById(R.id.scrollView);
+        final NestedScrollView scrollView = view.findViewById(R.id.scrollView);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                scrollView.scrollTo(0,0);
+                scrollView.scrollTo(0, 0);
             }
         }, 100);
 
@@ -133,27 +133,27 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
                 paymentsModel.getPaymentPayload().getUserAuthModel().getUserAuthPermissions().canMakeRefund);
 
         double refundedAmount = historyItem.getPayload().getTotalRefunded();
-        if(refundedAmount > 0D){
+        if (refundedAmount > 0D) {
             View refundLayout = view.findViewById(R.id.refund_layout);
             refundLayout.setVisibility(View.VISIBLE);
 
-            TextView refundAmount = (TextView) view.findViewById(R.id.transaction_refunded);
+            TextView refundAmount = view.findViewById(R.id.transaction_refunded);
             refundAmount.setText(NumberFormat.getCurrencyInstance(Locale.US).format(historyItem.getPayload().getTotalRefunded()));
 
-            if(refundedAmount >= totalPaid){
+            if (refundedAmount >= totalPaid) {
                 refundButton.setVisibility(View.GONE);
             }
         }
 
     }
 
-    private void processRefund(){
+    private void processRefund() {
         boolean isCloverPayment = historyItem.getPayload().getMetadata().isExternallyProcessed() && historyItem.getPayload().getExecution().equals(IntegratedPaymentPostModel.EXECUTION_CLOVER);
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE) ||
                 HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_2_DEVICE);
-        if(isCloverPayment && !isCloverDevice){
+        if (isCloverPayment && !isCloverDevice) {
             new CustomMessageToast(getContext(), Label.getLabel("payment_refund_clover_error"), CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
-        }else {
+        } else {
             dismiss();
             callback.startRefundProcess(historyItem, paymentsModel);
         }

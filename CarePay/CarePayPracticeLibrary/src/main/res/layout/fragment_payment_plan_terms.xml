@@ -4,7 +4,7 @@
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/dialog_height"
+    android:layout_height="@dimen/commonPracticeDialogHeight"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -35,9 +35,9 @@
 
     <LinearLayout
         android:layout_width="@dimen/dialog_width"
-        android:layout_height="@dimen/dialog_height"
-        android:layout_marginEnd="@dimen/dimen_26dp"
+        android:layout_height="@dimen/commonPracticeDialogHeight"
         android:layout_marginStart="@dimen/dimen_26dp"
+        android:layout_marginEnd="@dimen/dimen_26dp"
         android:orientation="vertical">
 
         <FrameLayout
@@ -46,8 +46,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/patient_mode_dialog_header_bg"
             android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:padding="@dimen/dimen_10dp">
+            android:focusableInTouchMode="true">
 
             <include
                 android:id="@+id/toolbar_layout"
@@ -102,17 +101,18 @@
             android:layout_height="wrap_content"
             android:background="@drawable/patient_mode_dialog_body_bg"
             android:orientation="horizontal"
-            android:padding="@dimen/dimen_10dp">
+            android:padding="@dimen/distributionButtonContainersPadding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/swipeCreditCarNowButton"
                 style="@style/BreezeButtonStyleDark"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_10dp"
+                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:layout_weight="1"
                 android:background="@drawable/blue_border_rounded_button_selector"
                 android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/respons_button_text_size"
                 android:visibility="gone"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="payment_clover_swipe_now_button_label" />
@@ -120,8 +120,8 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/createButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_10dp"
+                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:layout_weight="1"
                 android:background="@drawable/green_rounded_button_selector"
                 android:enabled="false"

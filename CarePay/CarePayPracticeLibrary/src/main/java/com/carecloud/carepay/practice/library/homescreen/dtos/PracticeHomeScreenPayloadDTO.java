@@ -19,9 +19,12 @@ public class PracticeHomeScreenPayloadDTO {
     @SerializedName("alerts")
     @Expose
     private HomeScreenAlertsDTO alerts = new HomeScreenAlertsDTO();
-    @SerializedName(value="user_practices", alternate = "practice_information")
+    @SerializedName(value="user_practices")
     @Expose
     private List<UserPracticeDTO> userPractices = new ArrayList<>();
+    @SerializedName(value="practice_information")
+    @Expose
+    private List<UserPracticeDTO> practiceInfo = new ArrayList<>();
     @SerializedName("office_news")
     @Expose
     private List<HomeScreenOfficeNewsDTO> officeNews = null;
@@ -116,5 +119,13 @@ public class PracticeHomeScreenPayloadDTO {
 
     public void setLanguages(List<OptionDTO> languages) {
         this.languages = languages;
+    }
+
+    public List<UserPracticeDTO> getPracticeInfo() {
+        return practiceInfo;
+    }
+
+    public void setPracticeInfo(List<UserPracticeDTO> practiceInfo) {
+        this.practiceInfo = practiceInfo;
     }
 }

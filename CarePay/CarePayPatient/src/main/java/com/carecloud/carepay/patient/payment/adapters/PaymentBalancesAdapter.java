@@ -85,8 +85,9 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
                     listener.onBalanceListItemClickListener(pendingBalance);
                 }
             });
-
-            boolean canPay = paymentsModel.getPaymentPayload().canMakePayments(pendingBalance.getMetadata().getPracticeId());
+            String pendingPracticeId = pendingBalance.getMetadata().getPracticeId();
+            boolean canPay = paymentsModel.getPaymentPayload().canMakePayments(pendingPracticeId) &&
+                    paymentsModel.getPaymentPayload().hasPaymentMethods(pendingPracticeId);
             holder.payLabel.setVisibility(canPay ? View.VISIBLE : View.GONE);
             practiceId = pendingBalance.getMetadata().getPracticeId();
         } else {

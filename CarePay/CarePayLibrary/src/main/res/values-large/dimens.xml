@@ -8,5 +8,19 @@
     <dimen name="reasonForVisitHorizontalMargin">14dp</dimen>
     <dimen name="visitTypeContainerVerticalPadding">15dp</dimen>
     <dimen name="reasonForVisitTopMargin">10dp</dimen>
-    <dimen name="nextAppointmentProviderImageSize">100dp</dimen>
+    <dimen name="itemProviderVerticalMargin">6dp</dimen>
+    <dimen name="nextAppointmentProviderImageSize">80dp</dimen>
+
+    <!--Available hours-->
+    <dimen name="availableHourListHeaderTextSize">12sp</dimen>
+    <dimen name="apt_available_hours_list_row_padding">10dp</dimen>
+    <dimen name="availableHourItemTextSize">12sp</dimen>
+
+    <dimen name="homeButtonIconBottomPadding">15dp</dimen>
+    <dimen name="homeButtonIconStartPadding">15dp</dimen>
+    <dimen name="separatorHeight">0.5dp</dimen>
+    <dimen name="locationItemHorizontalMargin">6dp</dimen>
+    <dimen name="timeSlotItemPadding">10dp</dimen>
+    <dimen name="timeSlotItemTextSize">14sp</dimen>
+    <dimen name="locationItemHeight">80dp</dimen>
 </resources>

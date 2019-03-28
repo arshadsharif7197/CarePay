@@ -37,8 +37,8 @@
     <LinearLayout
         android:layout_width="@dimen/dialog_amount_width"
         android:layout_height="@dimen/dialog_amount_height"
-        android:layout_marginEnd="@dimen/amountDialogHorizontalMargin"
         android:layout_marginStart="@dimen/amountDialogHorizontalMargin"
+        android:layout_marginEnd="@dimen/amountDialogHorizontalMargin"
         android:orientation="vertical">
 
         <LinearLayout
@@ -54,9 +54,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:maxLines="2"
-                android:paddingEnd="@dimen/partialPaymentHeaderHorizontalPadding"
                 android:paddingStart="@dimen/partialPaymentHeaderHorizontalPadding"
                 android:paddingTop="@dimen/partialPaymentHeaderTopPadding"
+                android:paddingEnd="@dimen/partialPaymentHeaderHorizontalPadding"
                 android:textColor="@color/white"
                 android:textSize="@dimen/partialPaymentHeaderTextSize"
                 app:customAssetFont="gotham_rounded_book"
@@ -66,8 +66,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginEnd="@dimen/amountContainerHorizontalMargin"
                 android:layout_marginStart="@dimen/amountContainerHorizontalMargin"
+                android:layout_marginEnd="@dimen/amountContainerHorizontalMargin"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -106,9 +106,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:maxLines="2"
-                android:paddingBottom="@dimen/partialPaymentHeaderBottomMargin"
-                android:paddingEnd="@dimen/partialPaymentHeaderBottomHorizontalPadding"
                 android:paddingStart="@dimen/partialPaymentHeaderBottomHorizontalPadding"
+                android:paddingEnd="@dimen/partialPaymentHeaderBottomHorizontalPadding"
+                android:paddingBottom="@dimen/partialPaymentHeaderBottomMargin"
                 android:textColor="@color/white"
                 android:textSize="@dimen/partialPaymentHeaderBottomTextSize"
                 android:visibility="gone"
@@ -129,8 +129,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/schedulePaymentDateTopMargin"
-                android:paddingEnd="@dimen/schedulePaymentDateHorizontalPadding"
-                android:paddingStart="@dimen/schedulePaymentDateHorizontalPadding">
+                android:paddingStart="@dimen/schedulePaymentDateHorizontalPadding"
+                android:paddingEnd="@dimen/schedulePaymentDateHorizontalPadding">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                     android:id="@+id/schedulePaymentDateInputLayout"
@@ -171,8 +171,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="@dimen/pendingAmountVerticalMargin"
                     android:layout_marginTop="@dimen/pendingAmountVerticalMargin"
+                    android:layout_marginBottom="@dimen/pendingAmountVerticalMargin"
                     android:textColor="@color/grayRound"
                     android:textSize="@dimen/pendingAmountTextSize"
                     android:visibility="gone"

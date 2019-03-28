@@ -25,4 +25,10 @@ public abstract class PaymentPresenter implements PaymentNavigationCallback {
         this.patientId = patientId;
     }
 
+    public void setPaymentPresenter(PaymentViewHandler viewHandler, PaymentsModel paymentsModel, String patientId){
+        this.viewHandler = viewHandler;
+        this.paymentsModel = paymentsModel;
+        this.patientId = patientId;
+    }
+
 }
