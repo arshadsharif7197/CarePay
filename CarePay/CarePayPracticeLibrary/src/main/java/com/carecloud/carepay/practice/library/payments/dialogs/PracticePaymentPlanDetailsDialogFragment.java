@@ -203,7 +203,7 @@ public class PracticePaymentPlanDetailsDialogFragment extends BaseDialogFragment
         PracticeEditOneTimePaymentFragment fragment = PracticeEditOneTimePaymentFragment
                 .newInstance(paymentsModel, 0, paymentPlan, scheduledPayment);
         fragment.setOnCancelListener(onDialogCancelListener);
-        callback.displayDialogFragment(fragment, false);
+        callback.displayDialogFragment(fragment, true);
         hideDialog();
     }
 
@@ -265,7 +265,7 @@ public class PracticePaymentPlanDetailsDialogFragment extends BaseDialogFragment
         PracticeOneTimePaymentFragment fragment = PracticeOneTimePaymentFragment.newInstance(paymentsModel,
                 0, paymentPlan);
         fragment.setOnCancelListener(onDialogCancelListener);
-        callback.displayDialogFragment(fragment, false);
+        callback.displayDialogFragment(fragment, true);
         hideDialog();
     }
 

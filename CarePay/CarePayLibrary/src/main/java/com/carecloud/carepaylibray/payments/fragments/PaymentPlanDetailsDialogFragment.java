@@ -42,7 +42,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
     protected PaymentPlanDTO paymentPlanDTO;
     private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 
-    private PaymentPlanEditInterface callback;
+    protected PaymentPlanEditInterface callback;
     protected View payButton;
 
     /**
@@ -159,8 +159,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
         payButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.onMakeOneTimePayment(paymentsModel, paymentPlanDTO);
-                dismiss();
+                onMakeOneTimePayment(paymentsModel, paymentPlanDTO);
             }
         });
 
@@ -168,8 +167,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
         editPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onEditPaymentPlan(paymentsModel, paymentPlanDTO);
-                dismiss();
+                onEditPaymentPlan(paymentsModel, paymentPlanDTO);
             }
         });
 
@@ -187,11 +185,26 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
             scheduledPaymentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    callback.onStartEditScheduledPayment(paymentsModel, paymentPlanDTO, scheduledPayment);
-                    dismiss();
+                    onStartEditScheduledPayment(paymentsModel, paymentPlanDTO, scheduledPayment);
                 }
             });
         }
+    }
+
+    protected void onMakeOneTimePayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+        callback.onMakeOneTimePayment(paymentsModel, paymentPlanDTO);
+        dismiss();
+    }
+
+    protected void onEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+        callback.onEditPaymentPlan(paymentsModel, paymentPlanDTO);
+        dismiss();
+    }
+
+    protected void onStartEditScheduledPayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO,
+                                               ScheduledPaymentModel scheduledPayment) {
+        callback.onStartEditScheduledPayment(paymentsModel, paymentPlanDTO, scheduledPayment);
+        dismiss();
     }
 
     private String getNextDate(PaymentPlanPayloadDTO planPayload) {

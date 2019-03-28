@@ -14,6 +14,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -132,8 +133,36 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
 
     @Override
     protected void onPaymentClick(double amount) {
-        callback.onPaymentPlanAmount(paymentsModel, selectedBalance, amount);
-        dismiss();
+        boolean addExisting = false;
+        if (paymentsModel.getPaymentPayload().mustAddToExisting(amount, selectedBalance)) {
+            onAddBalanceToExistingPlan(paymentsModel, selectedBalance, amount);
+            addExisting = true;
+        } else {
+            PatientModePaymentPlanFragment fragment = PatientModePaymentPlanFragment
+                    .newInstance(paymentsModel, selectedBalance, amount);
+            fragment.setOnCancelListener(onDialogCancelListener);
+            callback.displayDialogFragment(fragment, true);
+            hideDialog();
+        }
+
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_balance_amount),
+                getString(R.string.param_is_add_existing)};
+        Object[] values = {selectedBalance.getMetadata().getPracticeId(),
+                selectedBalance.getPayload().get(0).getAmount(),
+                addExisting};
+
+        MixPanelUtil.logEvent(getString(R.string.event_paymentplan_started), params, values);
+    }
+
+    private void onAddBalanceToExistingPlan(PaymentsModel paymentsModel,
+                                            PendingBalanceDTO selectedBalance,
+                                            double amount) {
+        PracticeValidPlansFragment fragment = PracticeValidPlansFragment
+                .newInstance(paymentsModel, selectedBalance, amount);
+        fragment.setOnCancelListener(onDialogCancelListener);
+        callback.displayDialogFragment(fragment, true);
+        hideDialog();
     }
 
     private double calculateFullAmount() {

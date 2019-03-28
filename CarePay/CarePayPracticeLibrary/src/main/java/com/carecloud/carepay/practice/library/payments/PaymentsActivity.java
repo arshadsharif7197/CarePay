@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -51,7 +50,6 @@ import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
-import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
@@ -1114,17 +1112,18 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void showCancelPaymentPlanConfirmDialog(ConfirmationCallback confirmationCallback, boolean isDeleted) {
-        String title = Label.getLabel("payment.cancelPaymentPlan.confirmation.popup.title");
-        String message = Label.getLabel("payment.cancelPaymentPlan.confirmation.popup.message");
-        if (isDeleted) {
-            title = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.title");
-            message = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.message");
-        }
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(title, message);
-        confirmDialogFragment.setCallback(confirmationCallback);
-        String tag = confirmDialogFragment.getClass().getName();
-        confirmDialogFragment.show(ft, tag);
+        //TODO: Delete this when refactor. This code is not used anymore
+//        String title = Label.getLabel("payment.cancelPaymentPlan.confirmation.popup.title");
+//        String message = Label.getLabel("payment.cancelPaymentPlan.confirmation.popup.message");
+//        if (isDeleted) {
+//            title = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.title");
+//            message = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.message");
+//        }
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(title, message);
+//        confirmDialogFragment.setCallback(confirmationCallback);
+//        String tag = confirmDialogFragment.getClass().getName();
+//        confirmDialogFragment.show(ft, tag);
     }
 
     @Override

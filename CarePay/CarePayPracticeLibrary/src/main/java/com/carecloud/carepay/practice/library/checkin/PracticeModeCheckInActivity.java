@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -62,7 +61,6 @@ import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
-import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
@@ -631,6 +629,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     public void onPaymentPlanAmount(PaymentsModel paymentsModel,
                                     PendingBalanceDTO selectedBalance,
                                     double amount) {
+        //Not used anymore
     }
 
     @Override
@@ -908,7 +907,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
                 showPaymentPlanDetail(paymentsModel, paymentPlanDTO, false);
             }
         });
-        displayDialogFragment(fragment, false);
+        displayDialogFragment(fragment, true);
     }
 
     @Override
@@ -1287,17 +1286,18 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void showCancelPaymentPlanConfirmDialog(ConfirmationCallback confirmationCallback, boolean isDeletion) {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        String title = Label.getLabel("payment.cancelPaymentPlan.confirmation.popup.title");
-        String message = Label.getLabel("payment.cancelPaymentPlan.confirmation.popup.message");
-        if (isDeletion) {
-            title = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.title");
-            message = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.message");
-        }
-        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(title, message);
-        confirmDialogFragment.setCallback(confirmationCallback);
-        String tag = confirmDialogFragment.getClass().getName();
-        confirmDialogFragment.show(ft, tag);
+        //TODO: Delete this when refactor. This code is not used anymore
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        String title = Label.getLabel("payment.cancelPaymentPlan.confirmation.popup.title");
+//        String message = Label.getLabel("payment.cancelPaymentPlan.confirmation.popup.message");
+//        if (isDeletion) {
+//            title = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.title");
+//            message = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.message");
+//        }
+//        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(title, message);
+//        confirmDialogFragment.setCallback(confirmationCallback);
+//        String tag = confirmDialogFragment.getClass().getName();
+//        confirmDialogFragment.show(ft, tag);
     }
 
     @Override

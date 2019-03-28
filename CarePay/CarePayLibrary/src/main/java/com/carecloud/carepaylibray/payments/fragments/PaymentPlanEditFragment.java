@@ -143,7 +143,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
                     .getDayOfTheWeek(paymentPlanDTO.getPayload().getPaymentPlanDetails().getDayOfWeek()));
         }
 
-        TextView headerMessage = (TextView) view.findViewById(R.id.headerMessage);
+        TextView headerMessage = view.findViewById(R.id.headerMessage);
         if (headerMessage != null) {
             headerMessage.setVisibility(View.GONE);
         }
@@ -173,7 +173,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
 
     @Override
     protected void setupButtons(final View view) {
-        editPaymentPlanButton = (Button) view.findViewById(R.id.editPaymentPlanButton);
+        editPaymentPlanButton = view.findViewById(R.id.editPaymentPlanButton);
         super.setupButtons(view);
         createPlanButton.setVisibility(View.GONE);
         view.findViewById(R.id.editButtonsLayout).setVisibility(View.VISIBLE);
@@ -190,7 +190,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
                 }
             }
         });
-        Button cancelPaymentPlanButton = (Button) view.findViewById(R.id.cancelPaymentPlanButton);
+        Button cancelPaymentPlanButton = view.findViewById(R.id.cancelPaymentPlanButton);
         boolean deletePaymentPlan = false;
         if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanHistoryList().isEmpty()) {
             deletePaymentPlan = true;
@@ -224,7 +224,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         }, deletePaymentPlan);
     }
 
-    private void cancelPaymentPlan(final boolean deletePaymentPlan) {
+    protected void cancelPaymentPlan(final boolean deletePaymentPlan) {
         TransitionDTO updatePaymentTransition = paymentsModel.getPaymentsMetadata()
                 .getPaymentsTransitions().getDeletePaymentPlan();
         Map<String, String> queryMap = new HashMap<>();
@@ -268,8 +268,8 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         }
         View paymentMethodContainer = view.findViewById(R.id.paymentMethodContainer);
         paymentMethodContainer.setVisibility(View.VISIBLE);
-        TextInputLayout paymentMethodInputLayout = (TextInputLayout) view.findViewById(R.id.paymentMethodInputLayout);
-        paymentMethodEditText = (EditText) view.findViewById(R.id.creditCardNumberTextView);
+        TextInputLayout paymentMethodInputLayout = view.findViewById(R.id.paymentMethodInputLayout);
+        paymentMethodEditText = view.findViewById(R.id.creditCardNumberTextView);
         paymentMethodEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(paymentMethodInputLayout, null));
         if (creditCard != null) {
@@ -278,10 +278,14 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         paymentMethodEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onEditPaymentPlanPaymentMethod(paymentsModel, paymentPlanDTO);
-                hideDialog();
+                onEditPaymentPlanPaymentMethod(paymentsModel, paymentPlanDTO);
             }
         });
+    }
+
+    protected void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+        callback.onEditPaymentPlanPaymentMethod(paymentsModel, paymentPlanDTO);
+        hideDialog();
     }
 
     private void setCreditCardInfo(PaymentCreditCardsPayloadDTO creditCard,

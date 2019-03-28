@@ -9,7 +9,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
-import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
@@ -134,7 +134,7 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
         //hide swipe card because these cards are not reusable
         Button swipeCreditCarNowButton = view.findViewById(R.id.swipeCreditCarNowButton);
         View swipeCreditCardNowLayout = view.findViewById(R.id.swipeCreditCardNowLayout);
-        if(swipeCreditCarNowButton.isEnabled() && paymentPlanDTO != null && (paymentDate == null || DateUtil.isToday(paymentDate))) {
+        if (swipeCreditCarNowButton.isEnabled() && paymentPlanDTO != null && (paymentDate == null || DateUtil.isToday(paymentDate))) {
             swipeCreditCardNowLayout.setVisibility(View.VISIBLE);
         } else {
             swipeCreditCardNowLayout.setVisibility(View.GONE);
@@ -148,9 +148,9 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
             @Override
             public void onClick(View view) {
                 cancel();
-                if (!onlySelectMode && onCancelListener == null) {
-                    dialogCallback.onDismissPaymentMethodDialog(paymentsModel);
-                }
+//                if (!onlySelectMode && onCancelListener == null) {
+//                    dialogCallback.onDismissPaymentMethodDialog(paymentsModel);
+//                }
             }
         });
     }
@@ -163,16 +163,82 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
                 break;
             case CarePayConstants.TYPE_CREDIT_CARD:
                 if (paymentPlanPostModel != null) {
-                    callback.onSelectPaymentPlanMethod(paymentMethod, paymentsModel, paymentPlanPostModel, onlySelectMode);
+                    onSelectPaymentPlanMethod(paymentMethod, paymentsModel, paymentPlanPostModel, onlySelectMode);
                 }
                 if (paymentPlanDTO != null) {
-                    ((OneTimePaymentInterface) callback).onSelectPaymentPlanMethod(paymentMethod, paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
+                    onSelectPaymentPlanMethod(paymentMethod, paymentsModel,
+                            paymentPlanDTO, onlySelectMode, paymentDate);
                 }
                 logPaymentMethodSelection(getString(R.string.payment_credit_card));
-                dismiss();
                 break;
             default:
         }
+    }
+
+    private void onSelectPaymentPlanMethod(PaymentsMethodsDTO paymentMethod,
+                                           PaymentsModel paymentsModel,
+                                           PaymentPlanPostModel paymentPlanPostModel,
+                                           boolean onlySelectMode) {
+        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
+                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            PracticePaymentPlanChooseCreditCardFragment fragment = PracticePaymentPlanChooseCreditCardFragment
+                    .newInstance(paymentsModel, paymentMethod.getLabel(), paymentPlanPostModel);
+            fragment.setOnCancelListener(onDialogCancelListener);
+            callback.displayDialogFragment(fragment, true);
+            hideDialog();
+        } else {
+            onAddPaymentPlanCard(paymentsModel, paymentPlanPostModel, onlySelectMode);
+        }
+    }
+
+    private void onAddPaymentPlanCard(final PaymentsModel paymentsModel,
+                                      final PaymentPlanPostModel paymentPlanPostModel,
+                                      boolean onlySelectMode) {
+        PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
+                .newInstance(paymentsModel, paymentPlanPostModel);
+        fragment.setChangePaymentMethodListener(new LargeAlertDialogFragment.LargeAlertInterface() {
+            @Override
+            public void onActionButton() {
+                cancel();
+            }
+        });
+        callback.displayDialogFragment(fragment, true);
+        hideDialog();
+    }
+
+    private void onSelectPaymentPlanMethod(PaymentsMethodsDTO paymentMethod,
+                                           PaymentsModel paymentsModel,
+                                           PaymentPlanDTO paymentPlanDTO,
+                                           boolean onlySelectMode,
+                                           Date paymentDate) {
+        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
+                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            PracticePaymentPlanChooseCreditCardFragment fragment = PracticePaymentPlanChooseCreditCardFragment
+                    .newInstance(paymentsModel, paymentMethod.getLabel(), paymentPlanDTO,
+                            onlySelectMode, paymentDate);
+            fragment.setOnCancelListener(onDialogCancelListener);
+            callback.displayDialogFragment(fragment, true);
+        } else {
+            onAddPaymentPlanCard(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
+        }
+    }
+
+
+    public void onAddPaymentPlanCard(final PaymentsModel paymentsModel,
+                                     final PaymentPlanDTO paymentPlanDTO,
+                                     boolean onlySelectMode,
+                                     final Date paymentDate) {
+        PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
+                .newInstance(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
+        fragment.setOnCancelListener(onDialogCancelListener);
+        fragment.setChangePaymentMethodListener(new LargeAlertDialogFragment.LargeAlertInterface() {
+            @Override
+            public void onActionButton() {
+                cancel();
+            }
+        });
+        callback.displayDialogFragment(fragment, false);
+        hideDialog();
     }
 
     @Override

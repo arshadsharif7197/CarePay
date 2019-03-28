@@ -105,7 +105,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
             holder.payButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    callback.onPaymentPlanButonClicked(paymentPlanDTO);
+                    callback.onPaymentPlanButtonClicked(paymentPlanDTO);
                 }
             });
         }
@@ -185,7 +185,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
     public interface PaymentRecyclerViewCallback {
         void onBalancePayButtonClicked(PatientBalanceDTO patientBalanceDTO);
 
-        void onPaymentPlanButonClicked(PaymentPlanDTO paymentPlanDTO);
+        void onPaymentPlanButtonClicked(PaymentPlanDTO paymentPlanDTO);
     }
 
 }
