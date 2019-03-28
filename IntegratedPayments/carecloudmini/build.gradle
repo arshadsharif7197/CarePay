@@ -3,7 +3,6 @@ apply plugin: 'newrelic'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '27.0.3'
     flavorDimensions "default"
     defaultConfig {
         applicationId "com.carecloud.carepay.mini"
@@ -25,8 +24,11 @@ android {
         development {
             applicationId "com.carecloud.carepay.mini"
             buildConfigField 'String', 'X_API_KEY', '"jLA75b9L3I5r5lkuqMZQF2v41kyPBMLZ29OvGciV"'
-            buildConfigField 'String', 'API_BASE_URL', '"https://payments.development.carecloud.com/"'
-            buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream.development.carecloud.com:443"'
+//            buildConfigField 'String', 'API_BASE_URL', '"http://7af1f5c6.ngrok.io/shamrock-payments/"'
+//            buildConfigField 'String', 'API_BASE_URL', '"https://payments.development.carecloud.com/"'
+//            buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream.development.carecloud.com:443"'
+            buildConfigField 'String', 'API_BASE_URL', '"https://10.0.0.28:9000/"'
+            buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://10.0.0.28:9001"'
             buildConfigField 'String', 'ENVIRONMENT', '"Development"'
 
             buildConfigField 'String', 'NEW_RELIC_ID', '"AAd42346a8ad752df162926e940501caaac45776d0"'
@@ -84,7 +86,7 @@ dependencies {
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation 'com.newrelic.agent.android:android-agent:5.+'
+    implementation 'com.newrelic.agent.android:android-agent:5.22.1'
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support:support-v4:26.1.0'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
