@@ -7,8 +7,8 @@ android {
         applicationId "com.carecloud.carepay.patient"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 114
-        versionName "1.1.24"
+        versionCode 116
+        versionName "1.1.25"
         multiDexEnabled true
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         renderscriptTargetApi 22
@@ -44,6 +44,8 @@ android {
     productFlavors {
         development {
             applicationId "com.carecloud.carepay.patient"
+//            buildConfigField 'String', 'API_BASE_URL', '"http://10.0.2.2:8082"'
+//            buildConfigField 'String', 'API_START_URL', '"http://10.0.2.2:8082/workflow_engine/workflow/shamrock/patient_app/language_selection/start"'
             buildConfigField 'String', 'API_BASE_URL', '"https://breeze-entry.development.carecloud.com"'
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.development.carecloud.com/workflow/shamrock/patient_app/language_selection/start"'
             buildConfigField 'String', 'X_API_KEY', '"PhrvB0D7Bw9EbQ3aEXTCj3FvYtPDzbGr7X71uYJT"'

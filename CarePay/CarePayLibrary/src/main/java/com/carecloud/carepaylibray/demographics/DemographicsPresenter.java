@@ -11,6 +11,7 @@ import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.interfaces.DemographicExtendedInterface;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
 import com.carecloud.carepaylibray.medications.interfaces.MedicationAllergyCallback;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 
 public interface DemographicsPresenter extends HealthInsuranceFragment.InsuranceDocumentScannerListener,
         MedicationAllergyCallback,
@@ -58,5 +59,9 @@ public interface DemographicsPresenter extends HealthInsuranceFragment.Insurance
     void navigateToThirdParty(WorkflowDTO workflowDTO);
 
     Fragment getCurrentFragment();
+
+    void logCheckinCancelled();
+
+    void logCheckinCompleted(boolean paymentPlanCreated, boolean paymentMade, PaymentsModel paymentsModel);
 
 }

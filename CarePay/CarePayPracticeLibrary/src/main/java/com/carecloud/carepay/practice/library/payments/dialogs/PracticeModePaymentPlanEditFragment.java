@@ -27,6 +27,7 @@ import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
@@ -170,7 +171,7 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
                     if (selectedCreditCard != null && selectedCreditCard.getCreditCardsId() == null) {
                         authorizeCreditCard();
                     } else {
-                        updatePaymentPlan();
+                        mainButtonAction();
                     }
                 }
             }
@@ -325,5 +326,26 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
 
             }
         }, new Gson().toJson(postModel), queryMap);
+    }
+
+    @Override
+    protected void mainButtonAction() {
+        updatePaymentPlan();
+    }
+
+    @Override
+    protected void selectDefaultCreditCard(List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList) {
+        if (paymentPlanDTO.getPayload().getPaymentMethod().getPaymentMethodType()
+                .equals(PapiPaymentMethod.PAYMENT_METHOD_CARD)) {
+            for (PaymentsPatientsCreditCardsPayloadListDTO creditCard : creditCardList) {
+                if (creditCard.getPayload().getCreditCardsId()
+                        .equals(paymentPlanDTO.getPayload().getPaymentMethod().getPapiPaymentID())) {
+                    selectedCreditCard = creditCard.getPayload();
+                    return;
+                }
+            }
+        } else {
+            super.selectDefaultCreditCard(creditCardList);
+        }
     }
 }

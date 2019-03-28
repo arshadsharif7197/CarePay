@@ -55,10 +55,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.newrelic.agent.android.NewRelic;
 
-import static com.carecloud.carepay.patient.R.id.paymentAmount;
-
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
+
+import static com.carecloud.carepay.patient.R.id.paymentAmount;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -129,7 +130,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     @Override
     public void onResume() {
         super.onResume();
-        if(shouldInitAndroidPay) {
+        if (shouldInitAndroidPay) {
             initAndroidPay();
         }
     }
@@ -252,8 +253,10 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     @Override
     public void onAndroidPayReady() {
         showOrHideProgressDialog(false);
-        addAndroidPayPaymentMethod();
-        getPapiAccount();
+        if (getActivity() != null) {
+            addAndroidPayPaymentMethod();
+            getPapiAccount();
+        }
     }
 
     private void getPapiAccount() {
@@ -278,7 +281,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         public void onPostExecute(WorkflowDTO workflowDTO) {
             PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             papiAccount = paymentsModel.getPaymentPayload().getPapiAccountByType(PaymentConstants.ANDROID_PAY_PAPI_ACCOUNT_TYPE);
-            if(papiAccount.getDefaultBankAccountMid() != null) {
+            if (papiAccount.getDefaultBankAccountMid() != null) {
                 androidPayButton.setVisibility(View.VISIBLE);
                 androidPayButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -364,7 +367,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
             postModel.setPapiPaymentMethod(papiPaymentMethod);
 
             IntegratedPaymentMetadata postModelMetadata = postModel.getMetadata();
-            if(StringUtil.isNullOrEmpty(postModel.getMetadata().getAppointmentId()) &&
+            if (StringUtil.isNullOrEmpty(postModel.getMetadata().getAppointmentId()) &&
                     postModel.getMetadata().getAppointmentRequestDTO() == null) {
                 postModelMetadata.setAppointmentId(callback.getAppointmentId());
             }
@@ -378,14 +381,18 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         Map<String, String> queries = new HashMap<>();
         UserPracticeDTO userPracticeDTO = callback.getPracticeInfo(paymentsModel);
         AppointmentDTO appointment = callback.getAppointment();
-        if(appointment != null){
+        if (appointment != null) {
             queries.put("practice_mgmt", appointment.getMetadata().getPracticeMgmt());
             queries.put("practice_id", appointment.getMetadata().getPracticeId());
             queries.put("patient_id", appointment.getMetadata().getPatientId());
-        }else if (userPracticeDTO != null) {
+        } else if (userPracticeDTO != null) {
             queries.put("practice_mgmt", userPracticeDTO.getPracticeMgmt());
             queries.put("practice_id", userPracticeDTO.getPracticeId());
-            queries.put("patient_id", getPatientId(userPracticeDTO.getPracticeId()));
+            if (userPracticeDTO.getPatientId() != null) {
+                queries.put("patient_id", userPracticeDTO.getPatientId());
+            } else {
+                queries.put("patient_id", findPatientId(userPracticeDTO.getPracticeId()));
+            }
         } else {
             PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
             queries.put("practice_mgmt", metadata.getPracticeMgmt());
@@ -454,7 +461,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         if (userPracticeDTO != null) {
             patientId = userPracticeDTO.getPracticeMgmt();
             practiceId = userPracticeDTO.getPracticeId();
-            practiceMgmt = getPatientId(userPracticeDTO.getPracticeId());
+            practiceMgmt = findPatientId(userPracticeDTO.getPracticeId());
         } else {
             PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
             patientId = metadata.getPracticeMgmt();
@@ -534,7 +541,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
 
 
         //store in local DB
-        AndroidPayQueuePaymentRecord paymentRecord = new AndroidPayQueuePaymentRecord();
+        final AndroidPayQueuePaymentRecord paymentRecord = new AndroidPayQueuePaymentRecord();
         paymentRecord.setPatientID(patientID);
         paymentRecord.setPracticeID(practiceId);
         paymentRecord.setPracticeMgmt(practiceMgmt);
@@ -547,18 +554,23 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         if (StringUtil.isNullOrEmpty(paymentModelJsonEnc)) {
             paymentRecord.setPaymentModelJson(paymentModelJson);
         }
-        BreezeDataBase database = BreezeDataBase.getDatabase(getContext());
-        database.getAndroidPayDao().insert(paymentRecord);
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                BreezeDataBase database = BreezeDataBase.getDatabase(getContext());
+                database.getAndroidPayDao().insert(paymentRecord);
+            }
+        });
 
         Intent intent = new Intent(getContext(), AndroidPayQueueUploadService.class);
         getContext().startService(intent);
     }
 
-    private String getPatientId(String practiceId){
-        for(PatientBalanceDTO balanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()){
-            for(PendingBalanceDTO pendingBalanceDTO : balanceDTO.getBalances()){
-                if(pendingBalanceDTO.getMetadata().getPracticeId().equals(practiceId)){
-                  return pendingBalanceDTO.getMetadata().getPatientId();
+    private String findPatientId(String practiceId) {
+        for (PatientBalanceDTO balanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()) {
+            for (PendingBalanceDTO pendingBalanceDTO : balanceDTO.getBalances()) {
+                if (pendingBalanceDTO.getMetadata().getPracticeId().equals(practiceId)) {
+                    return pendingBalanceDTO.getMetadata().getPatientId();
                 }
             }
         }

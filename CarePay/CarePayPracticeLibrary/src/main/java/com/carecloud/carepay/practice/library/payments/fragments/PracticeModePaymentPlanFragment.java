@@ -258,10 +258,11 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         }
         creditCardsListAdapter = new CreditCardsListAdapter(getContext(),
                 creditCardList, this, true);
+        creditCardsListAdapter.setSelectedCreditCard(selectedCreditCard);
         creditCardsRecyclerView.setAdapter(creditCardsListAdapter);
     }
 
-    private void selectDefaultCreditCard(List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList) {
+    protected void selectDefaultCreditCard(List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList) {
         for (PaymentsPatientsCreditCardsPayloadListDTO creditCard : creditCardList) {
             if (creditCard.getPayload().isDefault()) {
                 selectedCreditCard = creditCard.getPayload();

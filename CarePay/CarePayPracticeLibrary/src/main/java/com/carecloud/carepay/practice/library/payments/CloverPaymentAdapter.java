@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 /**
  * Created by lmenendez on 3/28/17.
@@ -375,7 +376,7 @@ public class CloverPaymentAdapter {
 
     //store in local DB
     private void queuePayment(String paymentRequestId, boolean recordOnly) {
-        IntegratedPaymentQueueRecord paymentQueueRecord = new IntegratedPaymentQueueRecord();
+        final IntegratedPaymentQueueRecord paymentQueueRecord = new IntegratedPaymentQueueRecord();
         paymentQueueRecord.setPracticeID(practiceInfo.getPracticeId());
         paymentQueueRecord.setPracticeMgmt(practiceInfo.getPracticeMgmt());
         paymentQueueRecord.setPatientID(practiceInfo.getPatientId());
@@ -386,8 +387,13 @@ public class CloverPaymentAdapter {
         Gson gson = new Gson();
         paymentQueueRecord.setQueueTransition(gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getQueuePayment()));
 
-        BreezeDataBase database = BreezeDataBase.getDatabase(activity);
-        database.getIntegratedAndroidPayDao().insert(paymentQueueRecord);
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                BreezeDataBase database = BreezeDataBase.getDatabase(activity);
+                database.getIntegratedAndroidPayDao().insert(paymentQueueRecord);
+            }
+        });
 
         Intent intent = new Intent(activity, IntegratedPaymentsQueueUploadService.class);
         activity.startService(intent);

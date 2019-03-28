@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibrary.R;
@@ -25,7 +24,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
     private Dialog dialog;
     private View view;
     private boolean isPracticeAppPatientMode;
-    private BlurDialogEngine mBlurEngine;
+    private BlurDialogEngine mBlurEngine = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,7 +56,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
         if (isPracticeAppPatientMode) {
             setNavigationBarVisibility();
         }
-        setUpBlur();
+//        setUpBlur();
     }
 
     private void setUpBlur() {

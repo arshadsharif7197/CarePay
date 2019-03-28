@@ -193,6 +193,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
         if (prepaymentMessage != null) {
             double visitTypeAmount = getVisitTypeAmount(selectedProviderReason.getId());
             if (visitTypeAmount > 0) {
+                selectedProviderReason.setAmount(visitTypeAmount);
                 String message = Label.getLabel("appointments_prepayment_message")
                         + NumberFormat.getCurrencyInstance(Locale.US).format(visitTypeAmount);
                 prepaymentMessage.setText(message);
