@@ -3,14 +3,11 @@ package com.carecloud.carepay.practice.library.patientmodecheckin.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -25,6 +22,7 @@ import com.carecloud.carepay.practice.library.patientmodecheckin.PatientModeDemo
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
+import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientModeAddExistingPaymentPlanFullFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientModePaymentPlanFullFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
@@ -119,48 +117,15 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     }
 
-    @Override
-    public void onUserInteraction() {
-        super.onUserInteraction();
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                findViewById(R.id.languageContainer).setVisibility(View.GONE);
-            }
-        }, 25);
-    }
-
     private void initializeLanguageSpinner() {
-        String selectedLanguageStr = getApplicationPreferences().getUserLanguage();
-        OptionDTO selectedLanguage = presenter.getLanguages().get(0);
-        for (OptionDTO language : presenter.getLanguages()) {
-            if (selectedLanguageStr.equals(language.getCode())) {
-                selectedLanguage = language;
-            }
-        }
-
         final TextView languageSwitch = findViewById(R.id.languageSpinner);
-        final View languageContainer = findViewById(R.id.languageContainer);
-        languageSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                languageContainer.setVisibility(languageContainer.getVisibility() == View.VISIBLE
-                        ? View.GONE : View.VISIBLE);
-            }
-        });
-        languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
         final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
         headers.put("username", getApplicationPreferences().getUserName());
         headers.put("username_patient", getApplicationPreferences().getPatientId());
-        RecyclerView languageList = findViewById(R.id.languageList);
-        LanguageAdapter languageAdapter = new LanguageAdapter(presenter.getLanguages(), selectedLanguage);
-        languageList.setAdapter(languageAdapter);
-        languageList.setLayoutManager(new LinearLayoutManager(getContext()));
-        languageAdapter.setCallback(new LanguageAdapter.LanguageInterface() {
+        final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), true,
+                presenter.getLanguages(), new LanguageAdapter.LanguageInterface() {
             @Override
             public void onLanguageSelected(OptionDTO language) {
-                languageContainer.setVisibility(View.GONE);
                 changeLanguage(presenter.getLanguageLink(), language.getCode().toLowerCase(), headers,
                         new SimpleCallback() {
                             @Override
@@ -170,6 +135,15 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                         });
             }
         });
+        languageSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int offsetX = view.getWidth() / 2 - popupPickerLanguage.getWidth() / 2;
+                int offsetY = -view.getHeight() - popupPickerLanguage.getHeight();
+                popupPickerLanguage.showAsDropDown(view, offsetX, offsetY);
+            }
+        });
+        languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
     }
 
     private void callSelfService(final TextView languageSwitch) {
@@ -263,7 +237,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
 
-        checkinCompleted();
+        presenter.logCheckinCompleted(false, false, null);
     }
 
     @Override
@@ -471,7 +445,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             finish();
         }
 
-        checkinCompleted();
+        presenter.logCheckinCompleted(false, false, null);
     }
 
     WorkflowServiceCallback continueCallback = new WorkflowServiceCallback() {
@@ -814,30 +788,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         getWorkflowServiceHelper().execute(transition, getCashPaymentCallback(paymentsModel), queryMap);
     }
 
-    private void checkinCompleted() {
-        //Log Check-in Completed
-        if (getAppointment() != null) {
-            boolean isGuest = !ValidationHelper.isValidEmail(getAppAuthorizationHelper().getCurrUser());
-            String[] params = {getString(R.string.param_practice_id),
-                    getString(R.string.param_appointment_id),
-                    getString(R.string.param_appointment_type),
-                    getString(R.string.param_is_guest),
-                    getString(R.string.param_provider_id),
-                    getString(R.string.param_location_id)
-            };
-            Object[] values = {getAppointment().getMetadata().getPracticeId(),
-                    getAppointmentId(),
-                    getAppointment().getPayload().getVisitType().getName(),
-                    isGuest,
-                    getAppointment().getPayload().getProvider().getGuid(),
-                    getAppointment().getPayload().getLocation().getGuid()
-            };
-            MixPanelUtil.logEvent(getString(R.string.event_checkin_completed), params, values);
-            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_checkin_completed), 1);
-            MixPanelUtil.endTimer(getString(R.string.timer_checkin));
-        }
-    }
-
     @Override
     public void completePaymentPlanProcess(WorkflowDTO workflowDTO) {
         if (continuePaymentsDTO != null) {
@@ -903,7 +853,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                     completeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(completeIntent);
 
-                    checkinCompleted();
+                    presenter.logCheckinCompleted(false, false, null);
 
                 }
             }
@@ -954,7 +904,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
 
-                checkinCompleted();
+                presenter.logCheckinCompleted(false, false, null);
             }
 
             @Override

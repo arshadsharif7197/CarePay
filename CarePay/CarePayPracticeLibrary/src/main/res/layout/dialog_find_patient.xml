@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/find_patient_bg">
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/dialog_height"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/find_patient_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/findPatientDialogTitleBottomMargin"
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:textSize="@dimen/findPatientDialogTitleTextSize"
+        app:customAssetFont="gotham_rounded_medium"
+        breeze:textKey="practice_payments_filter_find_patient_by_name" />
 
     <LinearLayout
         android:id="@+id/searchContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:orientation="horizontal">
 
         <ImageButton
@@ -50,24 +62,9 @@
 
     </LinearLayout>
 
-    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-        android:id="@+id/find_patient_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/searchContainer"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/findPatientDialogTitleBottomMargin"
-        android:gravity="center_horizontal"
-        android:textColor="@color/white"
-        android:textSize="@dimen/findPatientDialogTitleTextSize"
-        app:customAssetFont="gotham_rounded_medium"
-        breeze:textKey="practice_payments_filter_find_patient_by_name" />
-
     <LinearLayout
         android:layout_width="@dimen/findPatientSearchBoxWidth"
         android:layout_height="wrap_content"
-        android:layout_below="@id/searchContainer"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/findPatientDialogResultsTopMargin"
         android:orientation="vertical">
 
@@ -79,7 +76,7 @@
             android:contentDescription="@string/content_description_patient_list"
             android:paddingLeft="@dimen/findPatientDialogResultsHorizontalPadding"
             android:paddingRight="@dimen/findPatientDialogResultsHorizontalPadding"
-            android:visibility="gone" />
+            android:visibility="invisible" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/patient_not_found_text"
@@ -96,4 +93,4 @@
             breeze:textKey="practice_filter_patient_not_found" />
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

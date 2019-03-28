@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
@@ -22,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:src="@drawable/icn_patient_mode_nav_close"/>
+            android:src="@drawable/icn_patient_mode_nav_close" />
 
     </FrameLayout>
 
@@ -47,19 +46,19 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
-                android:paddingEnd="@dimen/dimen_10dp"
                 android:paddingStart="@dimen/dimen_10dp"
                 android:paddingTop="@dimen/dimen_10dp"
-                tools:text="How much will you be paying today?"
+                android:paddingEnd="@dimen/dimen_10dp"
                 android:textColor="@color/glitter"
                 app:customAssetFont="gotham_rounded_book"
-                breeze:textKey="payment_how_much_text" />
+                breeze:textKey="payment_how_much_text"
+                tools:text="How much will you be paying today?" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/dimen_100dp"
-                android:layout_margin="@dimen/dimen_15dp"
                 android:layout_gravity="center"
+                android:layout_margin="@dimen/dimen_15dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -68,12 +67,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:textColor="@color/white_transparent"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    tools:text="$"
+                    android:textColor="@color/white_transparent"
                     android:textSize="@dimen/payment_header_amount_size"
-                    app:customAssetFont="gotham_rounded_medium" />
+                    app:customAssetFont="gotham_rounded_medium"
+                    tools:text="$" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                     android:id="@+id/enterPartialAmountEditText"
@@ -82,9 +81,9 @@
                     android:background="@android:color/transparent"
                     android:hint="0.00"
                     android:inputType="numberDecimal"
-                    android:textCursorDrawable="@color/transparent_apt"
                     android:textColor="@color/white"
                     android:textColorHint="@color/white_transparent"
+                    android:textCursorDrawable="@color/transparent_apt"
                     android:textSize="@dimen/payment_header_amount_size"
                     app:customAssetFont="gotham_rounded_medium" />
             </LinearLayout>
@@ -95,13 +94,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
-                android:paddingEnd="@dimen/dimen_10dp"
                 android:paddingStart="@dimen/dimen_10dp"
+                android:paddingEnd="@dimen/dimen_10dp"
                 android:paddingBottom="@dimen/dimen_5dp"
                 android:textColor="@color/glitter"
                 android:visibility="gone"
-                tools:text="Enter amount between\n $100 and $500"
-                app:customAssetFont="gotham_rounded_book" />
+                app:customAssetFont="gotham_rounded_book"
+                tools:text="Enter amount between\n $100 and $500" />
 
         </LinearLayout>
 
@@ -110,11 +109,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="@dimen/dimen_20dp"
             android:layout_marginTop="@dimen/dimen_20dp"
+            android:layout_marginBottom="@dimen/dimen_20dp"
             android:gravity="center_horizontal"
-            android:textSize="@dimen/text_size_16"
             android:textColor="@color/payne_gray"
+            android:textSize="@dimen/text_size_16"
             app:customAssetFont="proxima_nova_semi_bold" />
 
         <LinearLayout
@@ -129,14 +128,15 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/payPartialButton"
+                style="@style/ResponsButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/ResponsButtonStyle"
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:layout_marginBottom="@dimen/dimen_20dp"
-                tools:text="PAY PARTIAL AMOUNT"
+                android:background="@drawable/bg_green_selector"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="payment_partial_amount_button" />
+                breeze:textKey="payment_partial_amount_button"
+                tools:text="PAY PARTIAL AMOUNT" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

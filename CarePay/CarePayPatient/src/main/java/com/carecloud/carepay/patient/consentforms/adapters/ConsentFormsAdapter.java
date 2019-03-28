@@ -72,7 +72,7 @@ public class ConsentFormsAdapter extends RecyclerView.Adapter<ConsentFormsAdapte
         holder.container.setOnClickListener(null);
         holder.formNameTextView.setText(form.getPayload().get("title").getAsString());
         SpannableStringBuilder sb = new SpannableStringBuilder();
-        if (form.getPendingMetadata() != null) {
+        if (form.getPendingMetadata().getCreatedDate() != null) {
             sb.append(String.format(Label.getLabel("consentForms.providersFormList.item.status.receivedOn"),
                     DateUtil.getInstance().setDateRaw(form.getPendingMetadata().getCreatedDate())
                             .toStringWithFormatMmSlashDdSlashYyyy()));

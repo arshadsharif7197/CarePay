@@ -46,6 +46,8 @@ import com.carecloud.carepaylibray.medications.fragments.MedicationsFragment;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesObject;
 import com.carecloud.carepaylibray.medications.models.MedicationsAllergiesResultsModel;
 import com.carecloud.carepaylibray.medications.models.MedicationsObject;
+import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.third_party.models.ThirdPartyWorkflowDto;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
@@ -131,6 +133,85 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     @Override
     public Fragment getCurrentFragment() {
         return currentFragment;
+    }
+
+    @Override
+    public void logCheckinCancelled() {
+        Fragment currentFragment = getCurrentFragment();
+        String currentStep = null;
+        if (currentFragment instanceof PersonalInfoFragment) {
+            currentStep = demographicsView.getContext().getString(R.string.step_personal_info);
+        } else if (currentFragment instanceof AddressFragment) {
+            currentStep = demographicsView.getContext().getString(R.string.step_address);
+        } else if (currentFragment instanceof DemographicsFragment) {
+            currentStep = demographicsView.getContext().getString(R.string.step_demographics);
+        } else if (currentFragment instanceof IdentificationFragment) {
+            currentStep = demographicsView.getContext().getString(R.string.step_identity);
+        } else if (currentFragment instanceof HealthInsuranceFragment ||
+                currentFragment instanceof InsuranceEditDialog) {
+            currentStep = demographicsView.getContext().getString(R.string.step_health_insurance);
+        } else if (currentFragment instanceof FormsFragment) {
+            currentStep = demographicsView.getContext().getString(R.string.step_consent_forms);
+        } else if (currentFragment instanceof MedicationsAllergyFragment ||
+                currentFragment instanceof MedicationsFragment ||
+                (currentFragment instanceof MedicationsAllergiesEmptyFragment &&
+                        ((MedicationsAllergiesEmptyFragment) currentFragment).getSelectedMode() ==
+                                MedicationsAllergiesEmptyFragment.MEDICATION_MODE)) {
+            currentStep = demographicsView.getContext().getString(R.string.step_medications);
+        } else if (currentFragment instanceof AllergiesFragment ||
+                (currentFragment instanceof MedicationsAllergiesEmptyFragment &&
+                        ((MedicationsAllergiesEmptyFragment) currentFragment).getSelectedMode() ==
+                                MedicationsAllergiesEmptyFragment.ALLERGY_MODE)) {
+            currentStep = demographicsView.getContext().getString(R.string.step_allegies);
+        } else if (currentFragment instanceof IntakeFormsFragment) {
+            currentStep = demographicsView.getContext().getString(R.string.step_intake);
+        }
+        if (currentStep != null) {
+            boolean isGuest = !ValidationHelper.isValidEmail(((ISession) demographicsView.getContext()).getAppAuthorizationHelper().getCurrUser());
+            String[] params = {
+                    demographicsView.getContext().getString(R.string.param_last_completed_step),
+                    demographicsView.getContext().getString(R.string.param_is_guest)
+            };
+            Object[] values ={
+                    currentStep,
+                    isGuest,
+            };
+            MixPanelUtil.logEvent(demographicsView.getContext().getString(R.string.event_checkin_cancelled),
+                    params, values);
+        }
+        if (currentFragment instanceof ResponsibilityBaseFragment) {
+            logCheckinCompleted(false,false, null);
+        }
+    }
+
+    @Override
+    public void logCheckinCompleted(boolean paymentPlanCreated, boolean paymentMade, PaymentsModel paymentsModel) {
+        if (getAppointment() != null) {
+            String[] params = {getString(R.string.param_practice_id),
+                    getString(R.string.param_appointment_id),
+                    getString(R.string.param_appointment_type),
+                    getString(R.string.param_is_guest),
+                    getString(R.string.param_provider_id),
+                    getString(R.string.param_location_id),
+                    getString(R.string.param_payment_made),
+                    getString(R.string.param_payment_plan_created),
+                    getString(R.string.param_partial_pay_available)
+            };
+            Object[] values = {getAppointment().getMetadata().getPracticeId(),
+                    getAppointmentId(),
+                    getAppointment().getPayload().getVisitType().getName(),
+                    false,
+                    getAppointment().getPayload().getProvider().getGuid(),
+                    getAppointment().getPayload().getLocation().getGuid(),
+                    !isPatientMode ? paymentMade : null,
+                    !isPatientMode ? paymentPlanCreated : null,
+                    paymentsModel != null ? paymentsModel.getPaymentPayload().getPaymentSetting(getAppointment().getMetadata().getPracticeId())
+                            .getPayload().getRegularPayments().isAllowPartialPayments() : null
+            };
+            MixPanelUtil.logEvent(getString(R.string.event_checkin_completed), params, values);
+            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_checkin_completed), 1);
+            MixPanelUtil.endTimer(getString(R.string.timer_checkin));
+        }
     }
 
     public void displayFragment(WorkflowDTO workflowDTO) {
