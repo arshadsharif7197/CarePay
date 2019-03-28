@@ -39,7 +39,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     protected DialogInterface.OnCancelListener onCancelListener;
 
     private long lastFullScreenSet;
-    private BlurDialogEngine mBlurEngine;
+    private BlurDialogEngine mBlurEngine = null;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -60,7 +60,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         if (isPracticeAppPatientMode) {
             setNavigationBarVisibility();
         }
-        setUpBlur();
+//        setUpBlur();
     }
 
     private void setUpBlur() {
