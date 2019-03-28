@@ -47,6 +47,7 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
 
     private Button editPaymentPlanButton;
     private PaymentPlanDTO paymentPlanDTO;
+    private PaymentPlanEditInterface callback;
 
     public static PracticeModePaymentPlanEditFragment newInstance(PaymentsModel paymentsModel,
                                                                   PaymentPlanDTO paymentPlanDTO) {
@@ -231,10 +232,9 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
-                dismiss();
-                ((PaymentPlanEditInterface) callback).onPaymentPlanCanceled(workflowDTO, isDeleted);
-
                 MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payment_plans_cancelled), 1);
+                dismiss();
+                callback.onPaymentPlanCanceled(workflowDTO, isDeleted);
             }
 
             @Override
@@ -313,7 +313,7 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
                 dismiss();
-                ((PaymentPlanEditInterface) callback).onPaymentPlanEdited(workflowDTO);
+                callback.onPaymentPlanEdited(workflowDTO);
             }
 
             @Override

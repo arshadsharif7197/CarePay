@@ -2,7 +2,10 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,12 +19,12 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class PaymentPlanAmountDialog extends PartialPaymentDialog {
 
     private PaymentsModel paymentsModel;
-    private Context context;
     private PendingBalanceDTO selectedBalance;
     private PaymentDetailInterface callback;
 
@@ -33,30 +36,43 @@ public class PaymentPlanAmountDialog extends PartialPaymentDialog {
     private double minimumPaymentAmount = 0D;
     private double maximumPaymentAmount = 0D;
 
-    /**
-     * Contructor
-     *
-     * @param context         context must implement PayNowClickListener
-     * @param paymentsModel   payment model
-     * @param selectedBalance selected balance
-     * @param callback        callback
-     */
-    public PaymentPlanAmountDialog(Context context,
-                                   PaymentsModel paymentsModel,
-                                   PendingBalanceDTO selectedBalance,
-                                   PaymentDetailInterface callback) {
-        super(context, paymentsModel, null);
-        this.context = context;
-        this.paymentsModel = paymentsModel;
-        this.selectedBalance = selectedBalance;
-        this.callback = callback;
-        this.practiceId = selectedBalance.getMetadata().getPracticeId();
+    public static PaymentPlanAmountDialog newInstance(PaymentsModel paymentsModel,
+                                   PendingBalanceDTO selectedBalance) {
+
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, paymentsModel);
+        DtoHelper.bundleDto(args, selectedBalance);
+        PaymentPlanAmountDialog dialog = new PaymentPlanAmountDialog();
+        dialog.setArguments(args);
+        return dialog;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            callback = (PaymentDetailInterface) context;
+        } catch (ClassCastException cce) {
+            throw new ClassCastException("Attached Context must implement PaymentDetailInterface");
+        }
+    }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        if (args != null) {
+            paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
+            selectedBalance = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
+        }
+        practiceId = selectedBalance.getMetadata().getPracticeId();
         determineParameters();
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         Button payButton = (Button) findViewById(R.id.payPartialButton);
         payButton.setText(Label.getLabel("payment_create_payment_plan"));
         TextView header = (TextView) findViewById(R.id.partialPaymentHeader);
@@ -135,7 +151,7 @@ public class PaymentPlanAmountDialog extends PartialPaymentDialog {
             dismiss();
         } catch (NumberFormatException nfe) {
             nfe.printStackTrace();
-            Toast.makeText(context, "Please enter valid amount!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Please enter valid amount!", Toast.LENGTH_LONG).show();
         }
     }
 

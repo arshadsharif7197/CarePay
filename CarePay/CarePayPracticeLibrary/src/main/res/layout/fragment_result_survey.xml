@@ -52,7 +52,7 @@
         android:textSize="@dimen/text_size_22sp"
         android:visibility="gone"
         app:customAssetFont="gotham_rounded_medium"
-        breeze:textKey="ok"
+        breeze:textKey="survey.form.button.title.done"
         tools:text="Ok" />
 
     <LinearLayout

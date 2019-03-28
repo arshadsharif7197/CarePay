@@ -20,12 +20,16 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import fr.tvbarthel.lib.blurdialogfragment.BlurDialogEngine;
+
 /**
  * Created by cocampo on 2/6/17
  */
 
 public abstract class BaseDialogFragment extends DialogFragment implements ISession {
     private static final int FULLSCREEN_VALUE = 0x10000000;
+    public static final float DOWN_SCALE_FACTOR = 16.0F;
+    public static final int BLUR_RADIUS = 8;
 
     private Dialog dialog;
     private boolean isPracticeAppPatientMode;
@@ -35,6 +39,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     protected DialogInterface.OnCancelListener onCancelListener;
 
     private long lastFullScreenSet;
+    private BlurDialogEngine mBlurEngine;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -55,15 +60,16 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         if (isPracticeAppPatientMode) {
             setNavigationBarVisibility();
         }
-
+        setUpBlur();
     }
 
-    @Override
-    public void onDismiss(DialogInterface dialogInterface) {
-        super.onDismiss(dialogInterface);
-        if (onDismissListener != null) {
-            onDismissListener.onDismiss(dialogInterface);
-        }
+    private void setUpBlur() {
+        mBlurEngine = new BlurDialogEngine(getActivity());
+        mBlurEngine.setBlurRadius(BLUR_RADIUS);
+        mBlurEngine.setDownScaleFactor(DOWN_SCALE_FACTOR);
+        mBlurEngine.debug(false);
+        mBlurEngine.setBlurActionBar(false);
+        mBlurEngine.setUseRenderScript(true);
     }
 
     @Override
@@ -72,12 +78,12 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         if (dialog != null) {
             View decorView = dialog.getWindow().getDecorView();
             hideKeyboardOnViewTouch(decorView);
-            if(isPracticeAppPatientMode){
+            if (isPracticeAppPatientMode) {
                 decorView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
                         long now = System.currentTimeMillis();
-                        if(now - lastFullScreenSet > 1000) {
+                        if (now - lastFullScreenSet > 1000) {
                             Log.d("Base", "Hide Nav Bar");
                             setNavigationBarVisibility();
                             lastFullScreenSet = now;
@@ -86,7 +92,37 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
                 });
             }
         }
+        if (mBlurEngine != null) {
+            mBlurEngine.onResume(getRetainInstance());
+        }
         setLastInteraction(System.currentTimeMillis());
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialogInterface) {
+        super.onDismiss(dialogInterface);
+        if (onDismissListener != null) {
+            onDismissListener.onDismiss(dialogInterface);
+        }
+        if (mBlurEngine != null) {
+            mBlurEngine.onDismiss();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mBlurEngine != null) {
+            mBlurEngine.onDetach();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (getDialog() != null) {
+            getDialog().setDismissMessage(null);
+        }
+        super.onDestroyView();
     }
 
     @Override
@@ -112,31 +148,11 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         this.onCancelListener = cancelListener;
     }
 
-    public void cancel(){
+    public void cancel() {
         if (onCancelListener != null && getDialog() != null) {
             onCancelListener.onCancel(getDialog());
         }
         dismiss();
-    }
-
-
-    public boolean enableViewById(int id) {
-        return setEnabledViewById(id, true);
-    }
-
-    public boolean disableViewById(int id) {
-        return setEnabledViewById(id, true);
-    }
-
-    private boolean setEnabledViewById(int id, boolean enabled) {
-        View view = findViewById(id);
-        if (null == view) {
-            return false;
-        }
-
-        view.setEnabled(enabled);
-
-        return true;
     }
 
     public boolean showViewById(int id) {
@@ -286,7 +302,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
 
     @Override
     public void setNavigationBarVisibility() {
-        if(getDialog().getWindow() != null) {
+        if (getDialog().getWindow() != null) {
             View decorView = getDialog().getWindow().getDecorView();
             int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -295,5 +311,4 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
             decorView.setSystemUiVisibility(uiOptions);
         }
     }
-
 }

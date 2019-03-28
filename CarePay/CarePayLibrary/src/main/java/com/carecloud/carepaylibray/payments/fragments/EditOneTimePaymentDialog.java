@@ -3,9 +3,12 @@ package com.carecloud.carepaylibray.payments.fragments;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -26,6 +29,7 @@ import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -41,24 +45,42 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
     private EditText amountEditText;
 
     /**
-     * Contructor
      *
-     * @param context        context must implement PayNowClickListener
      * @param paymentsDTO    payment model
      * @param paymentPlanDTO payment plan
-     * @param callback
      */
-    public EditOneTimePaymentDialog(Context context, PaymentsModel paymentsDTO,
+    public static EditOneTimePaymentDialog newInstance(PaymentsModel paymentsDTO,
                                     PaymentPlanDTO paymentPlanDTO,
-                                    ScheduledPaymentModel scheduledPaymentModel,
-                                    OneTimePaymentInterface callback) {
-        super(context, paymentsDTO, paymentPlanDTO, callback);
-        this.scheduledPaymentModel = scheduledPaymentModel;
+                                    ScheduledPaymentModel scheduledPaymentModel) {
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, paymentsDTO);
+        DtoHelper.bundleDto(args, paymentPlanDTO);
+        DtoHelper.bundleDto(args, scheduledPaymentModel);
+        EditOneTimePaymentDialog dialog = new EditOneTimePaymentDialog();
+        dialog.setArguments(args);
+        return dialog;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(getContentLayout(), container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+        Bundle args = getArguments();
+        if (args != null) {
+            paymentsDTO = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
+            paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
+            scheduledPaymentModel =  DtoHelper.getConvertedDTO(ScheduledPaymentModel.class, args);
+        }
         String dateString = scheduledPaymentModel.getPayload().getPaymentDate();
         paymentDate = DateUtil.getInstance().setDateRaw(dateString).getDate();
 
@@ -91,7 +113,7 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SystemUtil.hideSoftKeyboard(context, view);
+                SystemUtil.hideSoftKeyboard(getContext(), view);
                 deletePayment();
             }
         });
@@ -111,14 +133,14 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
                 Label.getLabel("button_yes"));
         confirmDialogFragment.setCallback(confirmDeleteCallback);
         confirmDialogFragment.setNegativeAction(true);
-        confirmDialogFragment.setOnCancelListener(new OnCancelListener() {
+        confirmDialogFragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                show();
+                showDialog();
             }
         });
-        confirmDialogFragment.show(((AppCompatActivity) context).getSupportFragmentManager(), null);
-        hide();
+        confirmDialogFragment.show(((AppCompatActivity) getContext()).getSupportFragmentManager(), null);
+        hideDialog();
     }
 
     private ConfirmationCallback confirmDeleteCallback = new ConfirmationCallback() {
@@ -132,7 +154,7 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
 
             TransitionDTO transitionDTO = paymentsDTO.getPaymentsMetadata()
                     .getPaymentsTransitions().getDeleteScheduledPayment();
-            ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO,
+            ((ISession) getContext()).getWorkflowServiceHelper().execute(transitionDTO,
                     deleteScheduledPaymentCallback, queryMap);
         }
     };
@@ -162,31 +184,31 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
 
             TransitionDTO transitionDTO = paymentsDTO.getPaymentsMetadata()
                     .getPaymentsTransitions().getUpdateScheduledPayment();
-            ((ISession) context).getWorkflowServiceHelper().execute(transitionDTO,
+            ((ISession) getContext()).getWorkflowServiceHelper().execute(transitionDTO,
                     editScheduledPaymentCallback, payload, queryMap);
         } catch (NumberFormatException nfe) {
             nfe.printStackTrace();
-            Toast.makeText(context, "Please enter valid amount!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Please enter valid amount!", Toast.LENGTH_LONG).show();
         }
     }
 
     private WorkflowServiceCallback deleteScheduledPaymentCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ((ISession) context).showProgressDialog();
+            ((ISession) getContext()).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ((ISession) context).hideProgressDialog();
+            ((ISession) getContext()).hideProgressDialog();
             dismiss();
             callback.showDeleteScheduledPaymentConfirmation(workflowDTO, scheduledPaymentModel.getPayload());
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ((ISession) context).hideProgressDialog();
-            ((ISession) context).showErrorNotification(exceptionMessage);
+            ((ISession) getContext()).hideProgressDialog();
+            ((ISession) getContext()).showErrorNotification(exceptionMessage);
 
         }
     };
@@ -194,20 +216,20 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
     private WorkflowServiceCallback editScheduledPaymentCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ((ISession) context).showProgressDialog();
+            ((ISession) getContext()).showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ((ISession) context).hideProgressDialog();
+            ((ISession) getContext()).hideProgressDialog();
             callback.showScheduledPaymentConfirmation(workflowDTO);
             dismiss();
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ((ISession) context).hideProgressDialog();
-            ((ISession) context).showErrorNotification(exceptionMessage);
+            ((ISession) getContext()).hideProgressDialog();
+            ((ISession) getContext()).showErrorNotification(exceptionMessage);
 
         }
     };

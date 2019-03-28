@@ -66,6 +66,14 @@
                         breeze:hintKey="payment_name_on_card_text" />
 
                 </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+                <include
+                    layout="@layout/layout_required_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_marginEnd="@dimen/dimen_48dp"/>
+
             </FrameLayout>
 
             <View
@@ -117,6 +125,14 @@
                     android:textSize="@dimen/signup_optional_label_text_size"
                     android:visibility="gone"
                     app:customAssetFont="proxima_nova_semi_bold" />
+                <include
+                    layout="@layout/layout_required_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_marginEnd="@dimen/dimen_48dp"/>
+
             </FrameLayout>
 
             <View
@@ -164,6 +180,14 @@
                     android:textColor="@color/yellowGreen"
                     android:textSize="@dimen/signup_optional_label_text_size"
                     app:customAssetFont="proxima_nova_semi_bold" />
+                <include
+                    layout="@layout/layout_required_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_marginEnd="@dimen/dimen_48dp"/>
+
             </FrameLayout>
 
             <View
@@ -172,36 +196,50 @@
                 android:layout_marginBottom="@dimen/payment_method_layout_label_margin_top"
                 android:background="@color/cadet_gray" />
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
-                android:id="@+id/expirationDateInputLayout"
-                style="@style/PaymentEditTextHint"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/payment_method_layout_checkbox_margin"
-                android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
-                android:layout_marginRight="@dimen/payment_method_layout_checkbox_margin"
-                android:textColorHint="@color/payne_gray"
-                app:customAssetFont="proxima_nova_regular">
+                android:layout_height="wrap_content">
 
-                <com.carecloud.carepaylibray.customcomponents.CarePayEditText
-                    android:id="@+id/expirationDateEditText"
-                    style="@style/PaymentAddCreditCardInputStyle"
-                    android:clickable="false"
-                    android:cursorVisible="false"
-                    android:drawableEnd="@drawable/icon_drop_down"
-                    android:editable="false"
-                    android:focusableInTouchMode="false"
-                    android:imeOptions="actionNext"
-                    android:paddingTop="@dimen/dimen_10dp"
-                    android:paddingStart="@dimen/dimen_10dp"
-                    android:paddingEnd="@dimen/dimen_10dp"
-                    android:paddingBottom="@dimen/dimen_20dp"
-                    app:customAssetFont="proxima_nova_regular"
-                    app:hintTextAppearance="@style/FloatingLabelStyle"
-                    breeze:hintKey="payment_expiration_date"
-                    tools:hint="Expiration Date" />
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+                    android:id="@+id/expirationDateInputLayout"
+                    style="@style/PaymentEditTextHint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/payment_method_layout_checkbox_margin"
+                    android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
+                    android:layout_marginRight="@dimen/payment_method_layout_checkbox_margin"
+                    android:textColorHint="@color/payne_gray"
+                    app:customAssetFont="proxima_nova_regular">
 
-            </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+                    <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                        android:id="@+id/expirationDateEditText"
+                        style="@style/PaymentAddCreditCardInputStyle"
+                        android:clickable="false"
+                        android:cursorVisible="false"
+                        android:drawableEnd="@drawable/icon_drop_down"
+                        android:editable="false"
+                        android:focusableInTouchMode="false"
+                        android:imeOptions="actionNext"
+                        android:paddingTop="@dimen/dimen_10dp"
+                        android:paddingStart="@dimen/dimen_10dp"
+                        android:paddingEnd="@dimen/dimen_10dp"
+                        android:paddingBottom="@dimen/dimen_20dp"
+                        app:customAssetFont="proxima_nova_regular"
+                        app:hintTextAppearance="@style/FloatingLabelStyle"
+                        breeze:hintKey="payment_expiration_date"
+                        tools:hint="Expiration Date" />
+
+                </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+                <include
+                    layout="@layout/layout_required_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_marginEnd="@dimen/dimen_48dp"/>
+
+            </FrameLayout>
 
             <View
                 android:layout_width="match_parent"

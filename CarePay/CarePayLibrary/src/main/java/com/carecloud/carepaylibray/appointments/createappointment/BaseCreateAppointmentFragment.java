@@ -104,7 +104,14 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
 
     private void setUpUI(View view) {
         providersNoDataTextView = view.findViewById(R.id.providersNoDataTextView);
+        providerContainer = view.findViewById(R.id.providerContainer);
         providersNoDataTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showProviderList(selectedPractice, selectedVisitType, selectedLocation);
+            }
+        });
+        providerContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showProviderList(selectedPractice, selectedVisitType, selectedLocation);
@@ -112,23 +119,36 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         });
 
         visitTypeNoDataTextView = view.findViewById(R.id.visitTypeNoDataTextView);
+        visitTypeContainer = view.findViewById(R.id.visitTypeContainer);
         visitTypeNoDataTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showVisitTypeList(selectedPractice, selectedResource, selectedLocation);
             }
         });
+        visitTypeContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showVisitTypeList(selectedPractice, selectedResource, selectedLocation);
+            }
+        });
+
 
         locationNoDataTextView = view.findViewById(R.id.locationNoDataTextView);
+        locationContainer = view.findViewById(R.id.locationContainer);
         locationNoDataTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showLocationList(selectedPractice, selectedResource, selectedVisitType);
             }
         });
-        providerContainer = view.findViewById(R.id.providerContainer);
-        visitTypeContainer = view.findViewById(R.id.visitTypeContainer);
-        locationContainer = view.findViewById(R.id.locationContainer);
+        locationContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLocationList(selectedPractice, selectedResource, selectedVisitType);
+            }
+        });
+
         checkAvailabilityButton = view.findViewById(R.id.checkAvailabilityButton);
         checkAvailabilityButton.setOnClickListener(new View.OnClickListener() {
             @Override

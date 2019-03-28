@@ -112,6 +112,14 @@
                         android:textColor="@color/yellowGreen"
                         android:textSize="@dimen/signup_optional_label_text_size"
                         app:customAssetFont="proxima_nova_semi_bold" />
+
+                    <include
+                        layout="@layout/layout_required_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="visible"
+                        android:layout_gravity="center_vertical|end"
+                        android:layout_marginEnd="@dimen/dimen_42dp"/>
                 </FrameLayout>
 
                 <View
@@ -167,6 +175,15 @@
                         android:textSize="@dimen/signup_optional_label_text_size"
                         android:visibility="gone"
                         app:customAssetFont="proxima_nova_semi_bold" />
+
+                    <include
+                        layout="@layout/layout_required_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="visible"
+                        android:layout_gravity="center_vertical|end"
+                        android:layout_marginEnd="@dimen/dimen_42dp"/>
+
                 </FrameLayout>
 
                 <View
@@ -218,6 +235,13 @@
                         android:textColor="@color/yellowGreen"
                         android:textSize="@dimen/signup_optional_label_text_size"
                         app:customAssetFont="proxima_nova_semi_bold" />
+                    <include
+                        layout="@layout/layout_required_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="visible"
+                        android:layout_gravity="center_vertical|end"
+                        android:layout_marginEnd="@dimen/dimen_42dp"/>
                 </FrameLayout>
 
                 <View
@@ -226,6 +250,10 @@
                     android:layout_marginBottom="@dimen/addNewCreditCardMainSeparatorBottomMargin"
                     android:layout_marginTop="1dp"
                     android:background="@color/cadet_gray" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                     android:id="@+id/expirationDateInputLayout"
@@ -259,6 +287,14 @@
                         tools:hint="Expiration Date" />
 
                 </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+                    <include
+                        layout="@layout/layout_required_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="visible"
+                        android:layout_gravity="center_vertical|end"
+                        android:layout_marginEnd="@dimen/dimen_42dp"/>
+                </FrameLayout>
 
                 <View
                     android:layout_width="match_parent"

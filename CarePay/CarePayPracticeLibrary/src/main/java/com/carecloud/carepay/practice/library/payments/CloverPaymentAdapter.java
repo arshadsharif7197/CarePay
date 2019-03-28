@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.base.BreezeDataBase;
 import com.carecloud.carepay.practice.library.payments.models.IntegratedPaymentQueueRecord;
 import com.carecloud.carepay.practice.library.payments.models.ShamrockPaymentMetadata;
 import com.carecloud.carepay.practice.library.payments.models.ShamrockPaymentModel;
@@ -42,6 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 /**
  * Created by lmenendez on 3/28/17.
@@ -62,10 +64,11 @@ public class CloverPaymentAdapter {
 
     /**
      * Constructor
-     * @param activity Activity
+     *
+     * @param activity      Activity
      * @param paymentsModel payment model
      */
-    public CloverPaymentAdapter(BaseActivity activity, PaymentsModel paymentsModel, String appointmentId, PaymentConfirmationInterface callback){
+    public CloverPaymentAdapter(BaseActivity activity, PaymentsModel paymentsModel, String appointmentId, PaymentConfirmationInterface callback) {
         this.activity = activity;
         this.paymentsModel = paymentsModel;
         this.appointmentId = appointmentId;
@@ -77,9 +80,10 @@ public class CloverPaymentAdapter {
 
     /**
      * Set Generic Payment
+     *
      * @param amount amount to pay
      */
-    public void setCloverConnectorPayment(double amount){
+    public void setCloverConnectorPayment(double amount) {
         IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
         paymentLineItem.setAmount(amount);
         paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_UNAPPLIED);
@@ -99,6 +103,7 @@ public class CloverPaymentAdapter {
 
     /**
      * Set Applied Payment
+     *
      * @param postModel payment model for payment application
      */
     public void setCloverConnectorPayment(IntegratedPaymentPostModel postModel) {
@@ -112,7 +117,7 @@ public class CloverPaymentAdapter {
         double paymentAmount = postModel.getAmount();
         intent.putExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, paymentAmount);
 
-        if(appointmentId != null) {
+        if (appointmentId != null) {
             intent.putExtra(CarePayConstants.APPOINTMENT_ID, appointmentId);
         }
 
@@ -157,7 +162,7 @@ public class CloverPaymentAdapter {
 
     }
 
-    private void initCloverPayment(IntegratedPaymentPostModel postModel){
+    private void initCloverPayment(IntegratedPaymentPostModel postModel) {
         //release old client before each payment to prevent a stale connection or Socket Exception
         DevicePayment.releasePaymentConnection();
 
@@ -289,7 +294,7 @@ public class CloverPaymentAdapter {
         }
     };
 
-    private void postPaymentRequest(String paymentRequestId, JsonElement paymentPayload){
+    private void postPaymentRequest(String paymentRequestId, JsonElement paymentPayload) {
         Map<String, String> headerMap = new HashMap<>();
         headerMap.put("x-api-key", HttpConstants.getPaymentsApiKey());
 
@@ -319,9 +324,9 @@ public class CloverPaymentAdapter {
             @Override
             public void onFailure(String errorMessage) {
                 activity.hideProgressDialog();
-                if(shouldRetryShamrock(errorMessage)){
+                if (shouldRetryShamrock(errorMessage)) {
                     postPaymentRequest(paymentRequestId, paymentPayload);
-                }else {
+                } else {
                     activity.showErrorNotification(errorMessage);
                     queuePayment(paymentRequestId, false);
                 }
@@ -369,8 +374,9 @@ public class CloverPaymentAdapter {
         };
     }
 
+    //store in local DB
     private void queuePayment(String paymentRequestId, boolean recordOnly) {
-        IntegratedPaymentQueueRecord paymentQueueRecord = new IntegratedPaymentQueueRecord();
+        final IntegratedPaymentQueueRecord paymentQueueRecord = new IntegratedPaymentQueueRecord();
         paymentQueueRecord.setPracticeID(practiceInfo.getPracticeId());
         paymentQueueRecord.setPracticeMgmt(practiceInfo.getPracticeMgmt());
         paymentQueueRecord.setPatientID(practiceInfo.getPatientId());
@@ -381,14 +387,20 @@ public class CloverPaymentAdapter {
         Gson gson = new Gson();
         paymentQueueRecord.setQueueTransition(gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getQueuePayment()));
 
-        paymentQueueRecord.save();
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                BreezeDataBase database = BreezeDataBase.getDatabase(activity);
+                database.getIntegratedAndroidPayDao().insert(paymentQueueRecord);
+            }
+        });
 
         Intent intent = new Intent(activity, IntegratedPaymentsQueueUploadService.class);
         activity.startService(intent);
 
     }
 
-    private boolean shouldRetryShamrock(String errorMessage){
+    private boolean shouldRetryShamrock(String errorMessage) {
         return !errorMessage.contains("payment request has already been completed") && retryCount < POST_SHAMROCK_RETRY_MAX;
     }
 
