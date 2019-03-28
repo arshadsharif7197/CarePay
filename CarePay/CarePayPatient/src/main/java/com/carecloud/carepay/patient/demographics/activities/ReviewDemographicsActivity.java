@@ -255,7 +255,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         bundle.putBoolean(CarePayConstants.REFRESH, true);
         navigateToWorkflow(workflowDTO, bundle);
         paymentsModel = initPaymentPresenter(workflowDTO.toString());
-        demographicsPresenter.logCheckinCompleted(false, false, null);
+        demographicsPresenter.logCheckinCompleted(false, false, paymentsModel);
     }
 
     @Override
