@@ -1,8 +1,8 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -131,8 +131,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
     private DemographicPayloadDTO patientDemographics;
 
-    private boolean isDialogHidden = false;
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -169,7 +167,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
         balanceTextView = view.findViewById(R.id.balance_value);
         unAppliedTextView = view.findViewById(R.id.unapplied_value);
-        scrollView = (NestedScrollView) view.findViewById(R.id.nested_scroller);
+        scrollView = view.findViewById(R.id.nested_scroller);
 
         unappliedLayout = view.findViewById(R.id.unapplied_layout);
 
@@ -251,21 +249,21 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             public void onClick(View view) {
                 clearPickers();
                 clearLastSwipeView();
-                callback.lookupChargeItem(paymentsModel.getPaymentPayload().getSimpleChargeItems(),
-                        PaymentDistributionFragment.this);
-                hideDialog();
+                showAddChargeDialog(paymentsModel.getPaymentPayload().getSimpleChargeItems());
             }
         };
         addButton.setOnClickListener(addItem);
 
         Button paymentPlanButton = view.findViewById(R.id.payment_left_button);
         paymentPlanEmptyButton = view.findViewById(R.id.payment_plans_empty_button);
-        View.OnClickListener displayPlans =  new View.OnClickListener() {
+        View.OnClickListener displayPlans = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 clearPickers();
                 clearLastSwipeView();
-                callback.showPaymentPlanDashboard(paymentsModel);
+                PaymentPlanDashboardFragment fragment = PaymentPlanDashboardFragment.newInstance(paymentsModel);
+                fragment.setOnCancelListener(cancelDialogListener);
+                callback.displayDialogFragment(fragment, true);
                 hideDialog();
             }
         };
@@ -284,7 +282,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
                     generatePaymentsModel();
                     if (!hasPaymentError) {
-                        callback.onPayButtonClicked(round(paymentAmount + chargesAmount + retailAmount), paymentsModel);
+                        callback.onPayButtonClicked(round(paymentAmount + chargesAmount + retailAmount),
+                                paymentsModel);
                         hideDialog();
                     }
                 }
@@ -297,9 +296,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             public void onClick(View view) {
                 clearPickers();
                 clearLastSwipeView();
-                callback.showAmountEntry(PaymentDistributionFragment.this,
-                        null, null);
-                hideDialog();
+                showAmountEntryDialog(null, null);
             }
         });
         actionButton = view.findViewById(R.id.action_button);
@@ -320,6 +317,21 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
         payButton.setEnabled(authPermissions.canMakePayment);
         addButton.setEnabled(authPermissions.canAddCharges);
+    }
+
+    private void showAmountEntryDialog(BalanceItemDTO balanceItem,
+                                       SimpleChargeItem chargeItem) {
+        PaymentDistributionEntryFragment entryFragment = new PaymentDistributionEntryFragment();
+        entryFragment.setOnCancelListener(cancelDialogListener);
+        if (balanceItem != null) {
+            entryFragment.setBalanceItem(balanceItem);
+        }
+        if (chargeItem != null) {
+            entryFragment.setChargeItem(chargeItem);
+        }
+        entryFragment.setCallback(this);
+        hideDialog();
+        callback.displayDialogFragment(entryFragment, false);
     }
 
     private void setInitialValues(View view) {
@@ -621,7 +633,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         }
     }
 
-
     private void updatePaymentAmount() {
         if (paymentAmount >= balanceAmount) {
             paymentTotalTextView.setBackgroundResource(R.drawable.bg_green_border_trans);
@@ -715,7 +726,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     public void pickAmount(BalanceItemDTO balanceItem) {
         clearPickers();
         clearLastSwipeView();
-        callback.showAmountEntry(this, balanceItem, null);
+        showAmountEntryDialog(balanceItem, null);
         hideDialog();
     }
 
@@ -762,19 +773,17 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     }
 
     @Override
-    public void onDismissEntryDialog() {
-        showDialog();
-    }
-
-    @Override
     public void addChargeItem(SimpleChargeItem chargeItem) {
-        callback.showAmountEntry(this, null, chargeItem);
+        showAmountEntryDialog(null, chargeItem);
         hideDialog();
     }
 
     @Override
     public void addRetailItem(RetailItemDto retailItem) {
-        callback.showRetailItemOptions(retailItem, this);
+        RetailItemOptionsFragment fragment = RetailItemOptionsFragment.newInstance(retailItem);
+        fragment.setOnCancelListener(cancelDialogListener);
+        fragment.setCallback(this);
+        callback.displayDialogFragment(fragment, true);
         hideDialog();
     }
 
@@ -808,11 +817,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         updatePaymentAmount();
         setAdapter();
         setRetailLayoutVisibility();
-        showDialog();
-    }
-
-    @Override
-    public void onDismissAddItemFragment() {
         showDialog();
     }
 
@@ -1113,16 +1117,30 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
     @Override
     public void onHistoryAction() {
-        callback.showPaymentHistory(paymentsModel);
         actionButton.setSelected(false);
+        PaymentHistoryFragment fragment = PaymentHistoryFragment.newInstance(paymentsModel);
+        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                showDialog();
+            }
+        });
+        callback.displayDialogFragment(fragment, true);
         hideDialog();
     }
 
     @Override
     public void onAddChargeAction() {
-        callback.lookupChargeItem(paymentsModel.getPaymentPayload().getSimpleChargeItems(),
-                PaymentDistributionFragment.this);
+        showAddChargeDialog(paymentsModel.getPaymentPayload().getSimpleChargeItems());
         actionButton.setSelected(false);
+        hideDialog();
+    }
+
+    private void showAddChargeDialog(List<SimpleChargeItem> simpleChargeItems) {
+        AddPaymentItemFragment fragment = AddPaymentItemFragment.newInstance(simpleChargeItems);
+        fragment.setOnCancelListener(cancelDialogListener);
+        fragment.setCallback(this);
+        callback.displayDialogFragment(fragment, true);
         hideDialog();
     }
 
@@ -1139,10 +1157,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             TransitionDTO getProducts = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getProducts();
             getWorkflowServiceHelper().execute(getProducts, getRetailProductsCallback, queryMap);
         } else {
-            callback.showRetailItems(paymentsModel, PaymentDistributionFragment.this);
+            showRetailItems(paymentsModel);
         }
     }
-
 
     private WorkflowServiceCallback getRetailProductsCallback = new WorkflowServiceCallback() {
         @Override
@@ -1156,7 +1173,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             PaymentsModel retailPaymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             RetailProductsModel retailProductsModel = retailPaymentsModel.getPaymentPayload().getRetailProducts();
             paymentsModel.getPaymentPayload().setRetailProducts(retailProductsModel);
-            callback.showRetailItems(paymentsModel, PaymentDistributionFragment.this);
+            showRetailItems(paymentsModel);
         }
 
         @Override
@@ -1166,36 +1183,24 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         }
     };
 
+    private void showRetailItems(PaymentsModel paymentsModel) {
+        AddRetailItemFragment fragment = AddRetailItemFragment.getInstance(paymentsModel);
+        fragment.setOnCancelListener(cancelDialogListener);
+        fragment.setCallback(this);
+        callback.displayDialogFragment(fragment, true);
+        hideDialog();
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.clear();
     }
 
-    @Override
-    public void hideDialog(){
-        super.hideDialog();
-        isDialogHidden = true;
-    }
-
-    @Override
-    public void showDialog(){
-        super.showDialog();
-        isDialogHidden = false;
-    }
-
-    @Override
-    public void onResume(){
-        if(isDialogHidden){
-            hideDialog();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    showDialog();
-                }
-            }, 1500);
+    private DialogInterface.OnCancelListener cancelDialogListener = new DialogInterface.OnCancelListener() {
+        @Override
+        public void onCancel(DialogInterface dialogInterface) {
+            showDialog();
         }
-        super.onResume();
-    }
-
+    };
 }

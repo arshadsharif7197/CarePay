@@ -494,27 +494,28 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
     public void onAddPaymentPlanCard(final PaymentsModel paymentsModel,
                                      final PaymentPlanPostModel paymentPlanPostModel,
                                      boolean onlySelectMode) {
-        PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
-                .newInstance(paymentsModel, paymentPlanPostModel);
-        fragment.setChangePaymentMethodListener(new LargeAlertDialogFragment.LargeAlertInterface() {
-            @Override
-            public void onActionButton() {
-                PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
-                        .newInstance(paymentsModel, paymentPlanPostModel);
-                fragment.setOnCancelListener(new Dialog.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialogg) {
-                        ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel
-                                .newClinicHeader(paymentsModel);
-                        ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
-                                .newInstance(paymentsModel, headerModel, selectedBalance);
-                        displayDialogFragment(dialog, false);
-                    }
-                });
-                displayDialogFragment(fragment, false);
-            }
-        });
-        displayDialogFragment(fragment, false);
+        //TODO: Delete this when refactor. This code is not used anymore
+//        PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
+//                .newInstance(paymentsModel, paymentPlanPostModel);
+//        fragment.setChangePaymentMethodListener(new LargeAlertDialogFragment.LargeAlertInterface() {
+//            @Override
+//            public void onActionButton() {
+//                PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
+//                        .newInstance(paymentsModel, paymentPlanPostModel);
+//                fragment.setOnCancelListener(new Dialog.OnCancelListener() {
+//                    @Override
+//                    public void onCancel(DialogInterface dialogg) {
+//                        ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel
+//                                .newClinicHeader(paymentsModel);
+//                        ResponsibilityFragmentDialog dialog = ResponsibilityFragmentDialog
+//                                .newInstance(paymentsModel, headerModel, selectedBalance);
+//                        displayDialogFragment(dialog, false);
+//                    }
+//                });
+//                displayDialogFragment(fragment, false);
+//            }
+//        });
+//        displayDialogFragment(fragment, false);
     }
 
     @Override
@@ -603,29 +604,30 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
                                      final PaymentPlanDTO paymentPlanDTO,
                                      boolean onlySelectMode,
                                      final Date paymentDate) {
-        PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
-                .newInstance(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
-        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                onPaymentPlanButonClicked(paymentPlanDTO);
-            }
-        });
-        fragment.setChangePaymentMethodListener(new LargeAlertDialogFragment.LargeAlertInterface() {
-            @Override
-            public void onActionButton() {
-                PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
-                        .newInstance(paymentsModel, paymentPlan, false, paymentDate);
-                fragment.setOnCancelListener(new Dialog.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        onMakeOneTimePayment(paymentsModel, paymentPlanDTO);
-                    }
-                });
-                displayDialogFragment(fragment, true);
-            }
-        });
-        displayDialogFragment(fragment, false);
+        //TODO: Delete this when refactor. This code is not used anymore
+//        PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
+//                .newInstance(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
+//        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+//            @Override
+//            public void onCancel(DialogInterface dialog) {
+//                onPaymentPlanButonClicked(paymentPlanDTO);
+//            }
+//        });
+//        fragment.setChangePaymentMethodListener(new LargeAlertDialogFragment.LargeAlertInterface() {
+//            @Override
+//            public void onActionButton() {
+//                PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
+//                        .newInstance(paymentsModel, paymentPlan, false, paymentDate);
+//                fragment.setOnCancelListener(new Dialog.OnCancelListener() {
+//                    @Override
+//                    public void onCancel(DialogInterface dialog) {
+//                        onMakeOneTimePayment(paymentsModel, paymentPlanDTO);
+//                    }
+//                });
+//                displayDialogFragment(fragment, true);
+//            }
+//        });
+//        displayDialogFragment(fragment, false);
     }
 
     @Override
@@ -779,15 +781,15 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
 
     @Override
     public void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel, final PaymentPlanDTO paymentPlanDTO) {
-        PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
-                .newInstance(paymentsModel, paymentPlanDTO, true);
-        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                onPaymentPlanButonClicked(paymentPlanDTO);
-            }
-        });
-        displayDialogFragment(fragment, false);
+//        PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
+//                .newInstance(paymentsModel, paymentPlanDTO, true);
+//        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+//            @Override
+//            public void onCancel(DialogInterface dialog) {
+//                onPaymentPlanButonClicked(paymentPlanDTO);
+//            }
+//        });
+//        displayDialogFragment(fragment, false);
     }
 
     @Override

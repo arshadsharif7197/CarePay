@@ -1,5 +1,7 @@
 package com.carecloud.carepaylibray.payments.interfaces;
 
+import android.support.v4.app.DialogFragment;
+
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
@@ -28,5 +30,7 @@ public interface OneTimePaymentInterface extends PaymentMethodInterface {
     void showDeleteScheduledPaymentConfirmation(WorkflowDTO workflowDTO, ScheduledPaymentPayload scheduledPaymentPayload);
 
     void showPaymentConfirmation(WorkflowDTO workflowDTO, boolean isOneTimePayment);
+
+    void displayDialogFragment(DialogFragment fragment, boolean addToBackStack);
 
 }

@@ -542,9 +542,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     public void onAddPaymentPlanCard(PaymentsModel paymentsModel,
                                      PaymentPlanPostModel paymentPlanPostModel,
                                      boolean onlySelectMode) {
-        PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
-                .newInstance(paymentsModel, paymentPlanPostModel);
-        displayDialogFragment(fragment, true);
+        //TODO: Delete this when refactor. This code is not used anymore
+//        PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
+//                .newInstance(paymentsModel, paymentPlanPostModel);
+//        displayDialogFragment(fragment, true);
     }
 
     @Override

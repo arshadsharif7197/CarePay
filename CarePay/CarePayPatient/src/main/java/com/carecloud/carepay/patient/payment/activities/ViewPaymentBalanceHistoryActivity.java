@@ -570,13 +570,13 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
         String[] params = {getString(R.string.param_practice_id),
                 getString(R.string.param_payment_plan_id),
-                getString(R.string.param_payment_plan_payment),
+                getString(R.string.param_payment_plan_amount),
                 getString(R.string.param_patient_id)
         };
         Object[] values = {
                 paymentPlanDTO.getMetadata().getPracticeId(),
                 paymentPlanDTO.getMetadata().getPaymentPlanId(),
-                paymentsModel.getPaymentPayload().getPaymentPostModel().getAmount(),
+                paymentPlanDTO.getPayload().getAmount(),
                 paymentPlanDTO.getMetadata().getPatientId()
         };
         MixPanelUtil.logEvent(getString(R.string.event_paymentplan_onetime_payment), params, values);

@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
@@ -175,15 +177,46 @@ public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseC
         @Override
         public void onClick(View view) {
             if (paymentPlanPostModel != null) {
-                callback.onAddPaymentPlanCard(paymentsModel, paymentPlanPostModel, onlySelectMode);
+                onAddPaymentPlanCard(paymentsModel, paymentPlanPostModel, onlySelectMode);
             }
             if (paymentPlanDTO != null) {
-                ((OneTimePaymentInterface) callback).onAddPaymentPlanCard(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
+                onAddPaymentPlanCard(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
             }
-
-            dismiss();
         }
     };
+
+    private void onAddPaymentPlanCard(PaymentsModel paymentsModel,
+                                      PaymentPlanPostModel paymentPlanPostModel,
+                                      boolean onlySelectMode) {
+        PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
+                .newInstance(paymentsModel, (PaymentPlanDTO) null, onlySelectMode);
+        callback.displayDialogFragment(fragment, false);
+        hideDialog();
+    }
+
+    private void onAddPaymentPlanCard(final PaymentsModel paymentsModel,
+                                      final PaymentPlanDTO paymentPlanDTO,
+                                      boolean onlySelectMode,
+                                      final Date paymentDate) {
+        PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
+                .newInstance(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
+        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                showDialog();
+            }
+        });
+        fragment.setChangePaymentMethodListener(new LargeAlertDialogFragment.LargeAlertInterface() {
+            @Override
+            public void onActionButton() {
+                PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
+                        .newInstance(paymentsModel, paymentPlanDTO, false, paymentDate);
+                callback.displayDialogFragment(fragment, false);
+            }
+        });
+        callback.displayDialogFragment(fragment, false);
+        hideDialog();
+    }
 
     private View.OnClickListener nextButtonListener = new View.OnClickListener() {
         @Override
@@ -206,8 +239,7 @@ public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseC
                         paymentPlanPostModel.setPapiPaymentMethod(papiPaymentMethod);
                         paymentPlanPostModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
 
-                        callback.onDisplayPaymentPlanTerms(paymentsModel, paymentPlanPostModel);
-                        dismiss();
+                        onDisplayPaymentPlanTerms(paymentsModel, paymentPlanPostModel);
                     }
 
                     if (paymentPlanDTO != null) {
@@ -226,6 +258,14 @@ public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseC
             }
         }
     };
+
+    private void onDisplayPaymentPlanTerms(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
+        PracticePaymentPlanTermsFragment fragment = PracticePaymentPlanTermsFragment
+                .newInstance(paymentsModel, paymentPlanPostModel);
+        fragment.setOnCancelListener(onDialogCancelListener);
+        callback.displayDialogFragment(fragment, false);
+        hideDialog();
+    }
 
     private void makePlanPayment() {
         Map<String, String> queries = new HashMap<>();

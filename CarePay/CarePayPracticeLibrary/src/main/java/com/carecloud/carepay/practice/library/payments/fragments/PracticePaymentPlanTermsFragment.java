@@ -44,8 +44,9 @@ public class PracticePaymentPlanTermsFragment extends PaymentPlanTermsFragment {
             close.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    dismiss();
-                    callback.onStartPaymentPlan(paymentsModel, paymentPlanPostModel);
+                    cancel();
+//                    dismiss();
+//                    callback.onStartPaymentPlan(paymentsModel, paymentPlanPostModel);
                 }
             });
         }

@@ -40,6 +40,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
 
     private long lastFullScreenSet;
     private BlurDialogEngine mBlurEngine;
+    private boolean blurDismissed;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -106,6 +107,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         }
         if (mBlurEngine != null) {
             mBlurEngine.onDismiss();
+            blurDismissed = true;
         }
     }
 
@@ -113,6 +115,9 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     public void onDestroy() {
         super.onDestroy();
         if (mBlurEngine != null) {
+            if (!blurDismissed) {
+                mBlurEngine.onDismiss();
+            }
             mBlurEngine.onDetach();
         }
     }
@@ -311,4 +316,11 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
             decorView.setSystemUiVisibility(uiOptions);
         }
     }
+
+    protected DialogInterface.OnCancelListener onDialogCancelListener = new DialogInterface.OnCancelListener() {
+        @Override
+        public void onCancel(DialogInterface dialogInterface) {
+            showDialog();
+        }
+    };
 }

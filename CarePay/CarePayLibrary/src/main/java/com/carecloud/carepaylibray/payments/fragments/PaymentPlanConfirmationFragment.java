@@ -126,23 +126,23 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
         }
 
         DateUtil dateUtil = DateUtil.getInstance().setToCurrent();
-        TextView date = (TextView) view.findViewById(R.id.payment_confirm_date);
+        TextView date = view.findViewById(R.id.payment_confirm_date);
         date.setText(dateUtil.getDateAsMonthLiteralDayOrdinalYear());
 
-        TextView totalAmount = (TextView) view.findViewById(R.id.payment_confirm_amount_value);
+        TextView totalAmount = view.findViewById(R.id.payment_confirm_amount_value);
         totalAmount.setText(currencyFormatter.format(paymentPlanPayloadDTO.getAmount()));
 
-        TextView installments = (TextView) view.findViewById(R.id.payment_confirm_installments_value);
+        TextView installments = view.findViewById(R.id.payment_confirm_installments_value);
         installments.setText(String.valueOf(paymentPlanPayloadDTO
                 .getPaymentPlanDetails().getInstallments()));
 
         String paymentAmountString = currencyFormatter.format(paymentPlanPayloadDTO
                 .getPaymentPlanDetails().getAmount()) +
                 paymentPlanPayloadDTO.getPaymentPlanDetails().getFrequencyString();
-        TextView paymentAmount = (TextView) view.findViewById(R.id.payment_confirm_payment_value);
+        TextView paymentAmount = view.findViewById(R.id.payment_confirm_payment_value);
         paymentAmount.setText(paymentAmountString);
 
-        TextView dueDate = (TextView) view.findViewById(R.id.payment_confirm_due_value);
+        TextView dueDate = view.findViewById(R.id.payment_confirm_due_value);
         String dueDateString;
         if (paymentPlanPayloadDTO.getPaymentPlanDetails().getFrequencyCode()
                 .equals(PaymentPlanDetailsDTO.FREQUENCY_MONTHLY)) {
@@ -155,13 +155,13 @@ public class PaymentPlanConfirmationFragment extends BasePaymentDialogFragment {
         }
         dueDate.setText(dueDateString);
 
-        TextView title = (TextView) view.findViewById(R.id.payment_confirm_message);
+        TextView title = view.findViewById(R.id.payment_confirm_message);
         title.setText(getMessageLabel());
 
-        TextView confirmation = (TextView) view.findViewById(R.id.payment_confirm_value);
+        TextView confirmation = view.findViewById(R.id.payment_confirm_value);
         confirmation.setText(paymentPlanMetadataDTO.getIndex().getConfirmation());
 
-        TextView practiceNameTextView = (TextView) view.findViewById(R.id.payment_confirm_practice_name);
+        TextView practiceNameTextView = view.findViewById(R.id.payment_confirm_practice_name);
         if (practiceNameTextView != null) {
             String practiceName = userPracticeDTO.getPracticeName();
             practiceNameTextView.setText(practiceName);
