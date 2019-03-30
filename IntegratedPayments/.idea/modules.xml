@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/IntegratedPayments.iml" filepath="$PROJECT_DIR$/IntegratedPayments.iml" />
       <module fileurl="file://$PROJECT_DIR$/carecloudmini/carecloudmini.iml" filepath="$PROJECT_DIR$/carecloudmini/carecloudmini.iml" />
       <module fileurl="file://$PROJECT_DIR$/fontviews/fontviews.iml" filepath="$PROJECT_DIR$/fontviews/fontviews.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../shamrock_android_sdk/shamrocksdk/shamrocksdk.iml" filepath="$PROJECT_DIR$/../../shamrock_android_sdk/shamrocksdk/shamrocksdk.iml" />
     </modules>
   </component>
 </project>
