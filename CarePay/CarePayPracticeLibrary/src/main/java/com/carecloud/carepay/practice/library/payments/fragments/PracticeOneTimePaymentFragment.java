@@ -165,7 +165,7 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
                 showDialog();
             }
         });
-        callback.displayDialogFragment(fragment, false);
+        callback.displayDialogFragment(fragment, true);
         hideDialog();
     }
 

@@ -51,6 +51,7 @@ public class PracticePaymentPlanTermsFragment extends PaymentPlanTermsFragment {
 
     }
 
+    @Override
     protected void onPaymentPlanSubmitted(WorkflowDTO workflowDTO) {
         super.onPaymentPlanSubmitted(workflowDTO);
         dismiss();

@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.payments.interfaces;
 
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -20,15 +21,21 @@ public interface PaymentMethodInterface {
 
     /**
      * Callback to proceed to select card view once payment method is selected
+     *
      * @param selectedPaymentMethod Selected Payment Method
      * @param amount                amount to pay
      */
     void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount, PaymentsModel paymentsModel);
 
-    @Nullable String getAppointmentId();
+    @Nullable
+    String getAppointmentId();
 
-    @Nullable AppointmentDTO getAppointment();
+    @Nullable
+    AppointmentDTO getAppointment();
 
     UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel);
 
+    void onPaymentCashFinished();
+
+    void displayDialogFragment(DialogFragment fragment, boolean addToBackStack);
 }

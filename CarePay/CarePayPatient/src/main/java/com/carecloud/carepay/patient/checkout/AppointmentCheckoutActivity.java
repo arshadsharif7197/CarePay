@@ -275,11 +275,6 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     }
 
     @Override
-    public void onDetailCancelClicked(PaymentsModel paymentsModel) {
-        showResponsibilityFragment();
-    }
-
-    @Override
     public void onPaymentPlanAction(PaymentsModel paymentsModel) {
         PendingBalanceDTO selectedBalancesItem = paymentsModel.getPaymentPayload()
                 .getPatientBalances().get(0).getBalances().get(0);//this should be a safe assumption for checkin
@@ -438,7 +433,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
             displayDialogFragment(confirmationFragment, false);
 
             //this is a prepayment
-            if(!paymentStarted) {
+            if (!paymentStarted) {
                 MixPanelUtil.incrementPeopleProperty(getString(R.string.count_prepayments_completed), 1);
             }
         }
@@ -492,6 +487,11 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         userPracticeDTO.setPracticeMgmt(getAppointment().getMetadata().getPracticeMgmt());
         userPracticeDTO.setPatientId(patientId);
         return userPracticeDTO;
+    }
+
+    @Override
+    public void onPaymentCashFinished() {
+        //NA
     }
 
     @Nullable
@@ -635,11 +635,13 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
         IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
         postModel.setAmount(amount);
+
         IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
         paymentLineItem.setAmount(amount);
         paymentLineItem.setProviderID(appointmentRequestDTO.getAppointment().getProviderGuid());
         paymentLineItem.setLocationID(appointmentRequestDTO.getAppointment().getLocationGuid());
         paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_PREPAYMENT);
+
         postModel.addLineItem(paymentLineItem);
         postModel.getMetadata().setAppointmentRequestDTO(appointmentRequestDTO.getAppointment());
 

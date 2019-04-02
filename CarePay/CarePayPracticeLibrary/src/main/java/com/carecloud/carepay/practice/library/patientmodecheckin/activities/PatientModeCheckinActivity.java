@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -20,16 +19,11 @@ import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
 import com.carecloud.carepay.practice.library.patientmodecheckin.PatientModeDemographicsPresenter;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
-import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
-import com.carecloud.carepay.practice.library.payments.fragments.PatientModeAddExistingPaymentPlanFullFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientModePaymentPlanFullFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePartialPaymentDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanAddCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanAmountFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanConfirmationFragment;
@@ -74,7 +68,6 @@ import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
-import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -372,20 +365,22 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod,
                                       double amount,
                                       PaymentsModel paymentsModel) {
-        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
-                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
-            DialogFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel,
-                    selectedPaymentMethod.getLabel(), amount);
-            displayDialogFragment(fragment, false);
-        } else {
-            showAddCard(amount, paymentsModel);
-        }
+        //TODO: Delete this when refactor. This code is not used anymore
+//        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
+//                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+//            DialogFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel,
+//                    selectedPaymentMethod.getLabel(), amount);
+//            displayDialogFragment(fragment, false);
+//        } else {
+//            showAddCard(amount, paymentsModel);
+//        }
     }
 
     @Override
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
-        PracticeAddNewCreditCardFragment fragment = PracticeAddNewCreditCardFragment.newInstance(paymentsModel, amount);
-        displayDialogFragment(fragment, false);
+        //TODO: Delete this when refactor. This code is not used anymore
+//        PracticeAddNewCreditCardFragment fragment = PracticeAddNewCreditCardFragment.newInstance(paymentsModel, amount);
+//        displayDialogFragment(fragment, false);
     }
 
     @Override
@@ -482,6 +477,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         return null;
     }
 
+    @Override
+    public void onPaymentCashFinished() {
+
+    }
+
     @Nullable
     @Override
     public String getAppointmentId() {
@@ -513,9 +513,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void onStartPaymentPlan(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
-        PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
-                .newInstance(paymentsModel, paymentPlanPostModel);
-        displayDialogFragment(fragment, false);
+        //TODO: Delete this when refactor. This code is not used anymore
+//        PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
+//                .newInstance(paymentsModel, paymentPlanPostModel);
+//        displayDialogFragment(fragment, false);
     }
 
     @Override
@@ -581,18 +582,20 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                                     PendingBalanceDTO selectedBalance,
                                     PaymentPlanDTO selectedPlan,
                                     double amount) {
-        PatientModeAddExistingPaymentPlanFullFragment fragment = PatientModeAddExistingPaymentPlanFullFragment
-                .newInstance(paymentsModel, selectedBalance, selectedPlan, amount);
-        presenter.navigateToFragment(fragment, true);
+        //TODO: Delete this when refactor. This code is not used anymore
+//        PatientModeAddExistingPaymentPlanFullFragment fragment = PatientModeAddExistingPaymentPlanFullFragment
+//                .newInstance(paymentsModel, selectedBalance, selectedPlan, amount);
+//        presenter.navigateToFragment(fragment, true);
     }
 
     @Override
     public void displayBalanceDetails(PaymentsModel paymentsModel,
                                       PendingBalancePayloadDTO paymentLineItem,
                                       PendingBalanceDTO selectedBalance) {
-        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-                .newInstance(paymentDTO, paymentLineItem, false);
-        displayDialogFragment(dialog, false);
+        //TODO: Delete this when refactor. This code is not used anymore
+//        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
+//                .newInstance(paymentDTO, paymentLineItem, false);
+//        displayDialogFragment(dialog, false);
     }
 
     @Override
@@ -763,17 +766,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             displayDialogFragment(dialogFragment, false);
 
         }
-    }
-
-
-    @Override
-    public void onDetailCancelClicked(PaymentsModel paymentsModel) {
-
-    }
-
-    @Override
-    public void onDismissPaymentMethodDialog(PaymentsModel paymentsModel) {
-
     }
 
     @Override

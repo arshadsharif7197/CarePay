@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 
 import com.carecloud.carepay.patient.R;
@@ -80,7 +81,7 @@ public class PatientPaymentPresenter extends PaymentPresenter
     @Override
     public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
         PartialPaymentDialog dialog=  PartialPaymentDialog.newInstance(paymentsModel, selectedBalance);
-        viewHandler.displayDialogFragment(dialog,false);
+        displayDialogFragment(dialog,false);
 
         MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment),
                 getString(R.string.param_practice_id),
@@ -103,6 +104,11 @@ public class PatientPaymentPresenter extends PaymentPresenter
     @Override
     public void navigateToWorkflow(WorkflowDTO workflowDTO) {
         PatientNavigationHelper.navigateToWorkflow(viewHandler.getContext(), workflowDTO);
+    }
+
+    @Override
+    public void displayDialogFragment(DialogFragment fragment, boolean addToBaskStack) {
+        viewHandler.displayDialogFragment(fragment, addToBaskStack);
     }
 
     @Override
@@ -163,6 +169,11 @@ public class PatientPaymentPresenter extends PaymentPresenter
         return new UserPracticeDTO();
     }
 
+    @Override
+    public void onPaymentCashFinished() {
+        //NA
+    }
+
     @Nullable
     @Override
     public String getAppointmentId() {
@@ -180,7 +191,7 @@ public class PatientPaymentPresenter extends PaymentPresenter
         PendingBalanceDTO selectedBalancesItem = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);//this should be a safe assumption for checkin
         PendingBalanceDTO reducedBalancesItem = paymentsModel.getPaymentPayload().reduceBalanceItems(selectedBalancesItem, false);
         PaymentPlanAmountDialog dialog = PaymentPlanAmountDialog.newInstance(paymentsModel, reducedBalancesItem);
-        viewHandler.displayDialogFragment(dialog, false);
+        displayDialogFragment(dialog, false);
     }
 
     @Override
@@ -219,7 +230,7 @@ public class PatientPaymentPresenter extends PaymentPresenter
             ((ISession) viewHandler.getContext()).showErrorNotification(builder.toString());
         } else {
             PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment.newInstance(workflowDTO);
-            viewHandler.displayDialogFragment(confirmationFragment, false);
+            displayDialogFragment(confirmationFragment, false);
         }
     }
 
@@ -237,11 +248,6 @@ public class PatientPaymentPresenter extends PaymentPresenter
     @Override
     public Fragment getAndroidPayTargetFragment() {
         return androidPayTargetFragment;
-    }
-
-    @Override
-    public void onDetailCancelClicked(PaymentsModel paymentsModel) {
-        startPaymentProcess(paymentsModel);
     }
 
     @Override
@@ -303,7 +309,7 @@ public class PatientPaymentPresenter extends PaymentPresenter
         PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment
                 .newInstance(workflowDTO, getPracticeInfo(paymentsModel),
                         PaymentPlanConfirmationFragment.MODE_CREATE);
-        viewHandler.displayDialogFragment(confirmationFragment, false);
+        displayDialogFragment(confirmationFragment, false);
     }
 
     @Override
@@ -322,7 +328,7 @@ public class PatientPaymentPresenter extends PaymentPresenter
     public void displayBalanceDetails(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem, PendingBalanceDTO selectedBalance) {
         PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
                 .newInstance(paymentsModel, paymentLineItem, selectedBalance, false);
-        viewHandler.displayDialogFragment(dialog, false);
+        displayDialogFragment(dialog, false);
     }
 
     @Override
@@ -330,7 +336,7 @@ public class PatientPaymentPresenter extends PaymentPresenter
         PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment
                 .newInstance(workflowDTO, getPracticeInfo(paymentsModel),
                         PaymentPlanConfirmationFragment.MODE_ADD);
-        viewHandler.displayDialogFragment(confirmationFragment, false);
+        displayDialogFragment(confirmationFragment, false);
     }
 
     @Override

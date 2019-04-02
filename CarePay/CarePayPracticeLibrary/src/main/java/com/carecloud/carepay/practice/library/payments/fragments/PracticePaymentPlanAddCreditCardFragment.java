@@ -159,7 +159,7 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
         PracticePaymentPlanTermsFragment fragment = PracticePaymentPlanTermsFragment
                 .newInstance(paymentsModel, paymentPlanPostModel);
         fragment.setOnCancelListener(onDialogCancelListener);
-        callback.displayDialogFragment(fragment, false);
+        callback.displayDialogFragment(fragment, true);
         hideDialog();
     }
 

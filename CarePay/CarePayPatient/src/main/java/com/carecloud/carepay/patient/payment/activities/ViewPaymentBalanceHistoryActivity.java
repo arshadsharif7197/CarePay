@@ -73,12 +73,12 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.gms.wallet.MaskedWallet;
 
-import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_BALANCES;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_BALANCES;
 
 /**
  * Created by jorge on 29/12/16
@@ -292,6 +292,11 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         return selectedUserPractice;
     }
 
+    @Override
+    public void onPaymentCashFinished() {
+        //NA
+    }
+
     @Nullable
     @Override
     public String getAppointmentId() {
@@ -451,11 +456,6 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
             }
         });
         displayDialogFragment(planHistoryFragment, false);
-    }
-
-    @Override
-    public void onDetailCancelClicked(PaymentsModel paymentsModel) {
-        loadPaymentAmountScreen(null, paymentsModel);
     }
 
     private void setPendingBalance(PaymentsBalancesItem selectedBalancesItem) {
@@ -702,7 +702,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                     .newInstance(workflowDTO, isOneTimePayment);
             displayDialogFragment(confirmationFragment, false);
 
-            if(isOneTimePayment){
+            if (isOneTimePayment) {
                 MixPanelUtil.incrementPeopleProperty(getString(R.string.count_one_time_payments_completed), 1);
             }
         }

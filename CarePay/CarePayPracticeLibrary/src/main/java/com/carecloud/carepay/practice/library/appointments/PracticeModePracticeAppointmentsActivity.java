@@ -700,13 +700,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         };
     }
 
-    @Override
-    public void onDetailItemClick(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem) {
-        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-                .newInstance(paymentsModel, paymentLineItem, false);
-        displayDialogFragment(dialog, false);
-    }
-
 
     private void launchPatientModeCheckin(AppointmentDTO appointmentDTO) {
         getApplicationPreferences().setAppointmentNavigationOption(Defs.NAVIGATE_CHECKIN);
@@ -766,11 +759,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     @Override
-    public void onDetailCancelClicked(PaymentsModel paymentsModel) {
-        showResponsibilityFragment(paymentsModel);
-    }
-
-    @Override
     public void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
 
     }
@@ -794,7 +782,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     public void displayBalanceDetails(PaymentsModel paymentsModel,
                                       PendingBalancePayloadDTO paymentLineItem,
                                       PendingBalanceDTO selectedBalance) {
-        onDetailItemClick(paymentsModel, paymentLineItem);
+        //TODO: Delete this when refactor. This code is not used anymore
+//        onDetailItemClick(paymentsModel, paymentLineItem);
     }
 
     @Override
@@ -855,5 +844,10 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     @Override
     public void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO) {
         showFragment(PracticeModeRequestAppointmentDialog.newInstance(appointmentDTO, getPatient()));
+    }
+
+    @Override
+    public void onPaymentCashFinished() {
+
     }
 }

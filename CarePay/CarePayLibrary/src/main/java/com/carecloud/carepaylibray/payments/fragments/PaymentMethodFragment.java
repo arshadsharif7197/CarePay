@@ -152,6 +152,7 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
                 fragment.setLargeAlertInterface(new LargeAlertDialogFragment.LargeAlertInterface() {
                     @Override
                     public void onActionButton() {
+                        onPaymentCashFinished();
                     }
                 });
                 fragment.show(getFragmentManager(), LargeAlertDialogFragment.class.getName());
@@ -159,7 +160,7 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
                 break;
 
             case CarePayConstants.TYPE_CREDIT_CARD:
-                callback.onPaymentMethodAction(paymentMethod, amount, paymentsModel);
+                onPaymentMethodAction(paymentMethod, amount, paymentsModel);
                 logPaymentMethodSelection(getString(R.string.payment_credit_card));
                 break;
 
@@ -167,6 +168,16 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
                 break;
         }
 
+    }
+
+    protected void onPaymentMethodAction(PaymentsMethodsDTO paymentMethod,
+                                       double amount,
+                                       PaymentsModel paymentsModel) {
+        callback.onPaymentMethodAction(paymentMethod, amount, paymentsModel);
+    }
+
+    protected void onPaymentCashFinished() {
+        //do nothing for patient app
     }
 
     private View.OnClickListener createPaymentPlanButtonListener = new View.OnClickListener() {

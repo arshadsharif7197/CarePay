@@ -131,6 +131,15 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
     private DemographicPayloadDTO patientDemographics;
 
+    public static PaymentDistributionFragment newInstance(PaymentsModel paymentsModel) {
+        Bundle args = new Bundle();
+        Gson gson = new Gson();
+        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(paymentsModel));
+        PaymentDistributionFragment fragment = new PaymentDistributionFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -239,7 +248,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dismiss();
+                cancel();
             }
         });
 
@@ -282,8 +291,10 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
                     generatePaymentsModel();
                     if (!hasPaymentError) {
-                        callback.onPayButtonClicked(round(paymentAmount + chargesAmount + retailAmount),
-                                paymentsModel);
+                        PracticePaymentMethodDialogFragment fragment = PracticePaymentMethodDialogFragment
+                                .newInstance(paymentsModel, paymentAmount + chargesAmount + retailAmount);
+                        fragment.setOnCancelListener(onDialogCancelListener);
+                        callback.displayDialogFragment(fragment, true);
                         hideDialog();
                     }
                 }
@@ -1147,7 +1158,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     @Override
     public void onAddRetailAction() {
         actionButton.setSelected(false);
-        hideDialog();
         if (paymentsModel.getPaymentPayload().getRetailProducts().getProducts().getItems().isEmpty()) {
             UserPracticeDTO practiceDTO = callback.getPracticeInfo(paymentsModel);
             Map<String, String> queryMap = new HashMap<>();

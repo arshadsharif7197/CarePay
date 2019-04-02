@@ -306,6 +306,11 @@ public class RetailActivity extends MenuPatientActivity implements RetailPatient
     }
 
     @Override
+    public void onPaymentCashFinished() {
+        //NA
+    }
+
+    @Override
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
         Fragment fragment = AddNewCreditCardFragment.newInstance(paymentsModel, amount);
         replaceFragment(fragment, true);

@@ -35,7 +35,7 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
     protected PaymentPlanCreateInterface callback;
     protected PaymentsModel paymentsModel;
     protected PendingBalanceDTO selectedBalance;
-    private double paymentPlanAmount;
+    protected double paymentPlanAmount;
 
 
     public static ValidPlansFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {

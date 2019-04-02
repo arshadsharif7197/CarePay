@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckoutActivity;
+import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
@@ -169,6 +170,8 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
 
     @Override
     public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
-        actionCallback.displayBalanceDetails(paymentDTO, paymentLineItem, null);
+        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
+                .newInstance(paymentDTO, paymentLineItem, false);
+        actionCallback.displayDialogFragment(dialog, true);
     }
 }

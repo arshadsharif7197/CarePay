@@ -637,6 +637,11 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     @Override
+    public void onPaymentCashFinished() {
+        //NA
+    }
+
+    @Override
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
         if (startCancelationFeePayment) {
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_cancellation_success_message_HTML"));

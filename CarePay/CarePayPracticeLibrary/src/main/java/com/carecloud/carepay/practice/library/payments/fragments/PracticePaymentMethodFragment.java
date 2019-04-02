@@ -11,6 +11,7 @@ import android.widget.Button;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.CloverPaymentAdapter;
+import com.carecloud.carepay.practice.library.payments.dialogs.IntegratedPaymentsChooseDeviceFragment;
 import com.carecloud.carepay.practice.library.payments.interfaces.ShamrockPaymentsCallback;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.RestCallServiceCallback;
@@ -69,11 +70,11 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
     }
 
     @Override
-    public void attachCallback(Context context){
+    public void attachCallback(Context context) {
         super.attachCallback(context);
-        try{
+        try {
             shamrockCallback = (ShamrockPaymentsCallback) context;
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             cce.printStackTrace();
         }
     }
@@ -88,16 +89,16 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
                 HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_2_DEVICE);
         final boolean isPracticeMode = getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE;
         final boolean isDemo = HttpConstants.getEnvironment().equalsIgnoreCase("Demo");
-        Button swipeCreditCarNowButton = (Button) view.findViewById(R.id.swipeCreditCarNowButton);
+        Button swipeCreditCarNowButton = view.findViewById(R.id.swipeCreditCarNowButton);
         View swipeCreditCardNowLayout = view.findViewById(R.id.swipeCreditCardNowLayout);
         swipeCreditCarNowButton.setEnabled(isCloverDevice || (isPracticeMode && !isDemo));
         swipeCreditCardNowLayout.setVisibility(isCloverDevice || (isPracticeMode && !isDemo) ? View.VISIBLE : View.GONE);
         swipeCreditCarNowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isCloverDevice) {
+                if (isCloverDevice) {
                     handleSwipeCard();
-                }else if(isPracticeMode){
+                } else if (isPracticeMode) {
                     handleIntegratedPayment();
                 }
             }
@@ -106,7 +107,8 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
     }
 
     protected void handleSwipeCard() {
-        CloverPaymentAdapter cloverPaymentAdapter = new CloverPaymentAdapter((BaseActivity) getActivity(), paymentsModel, callback.getAppointmentId(), (PaymentConfirmationInterface) callback);
+        CloverPaymentAdapter cloverPaymentAdapter = new CloverPaymentAdapter((BaseActivity) getActivity(),
+                paymentsModel, callback.getAppointmentId(), (PaymentConfirmationInterface) callback);
         IntegratedPaymentPostModel paymentPostModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
         if (paymentPostModel == null) {
             cloverPaymentAdapter.setCloverConnectorPayment(amountToMakePayment);
@@ -116,22 +118,32 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
         logPaymentMethodSelection(getString(R.string.payment_clover));
     }
 
-    private void checkIntegratedPayments(){
-        String endpoint = String.format(getString(R.string.carepay_locations), getApplicationMode().getUserPracticeDTO().getPracticeId());
+    private void checkIntegratedPayments() {
+        String endpoint = String.format(getString(R.string.carepay_locations),
+                getApplicationMode().getUserPracticeDTO().getPracticeId());
         String url = HttpConstants.getPaymentsUrl();
 
         Map<String, String> headers = new HashMap<>();
         headers.put("x-api-key", HttpConstants.getPaymentsApiKey());
 
         RestCallServiceHelper restCallServiceHelper = new RestCallServiceHelper(getAppAuthorizationHelper(), getApplicationMode());
-        restCallServiceHelper.executeRequest(RestDef.GET, url, integratedPaymentsReadyCallback, true, false, null, null, headers, "", endpoint);
+        restCallServiceHelper.executeRequest(RestDef.GET, url, integratedPaymentsReadyCallback, true,
+                false, null, null, headers, "", endpoint);
     }
 
-    protected void handleIntegratedPayment(){
-        if(shamrockCallback != null) {
-            shamrockCallback.showChooseDeviceList(paymentsModel, amountToMakePayment);
+    protected void handleIntegratedPayment() {
+        if (shamrockCallback != null) {
+            showChooseDeviceList(paymentsModel, amountToMakePayment);
             logPaymentMethodSelection(getString(R.string.payment_clover));
         }
+    }
+
+    private void showChooseDeviceList(PaymentsModel paymentsModel, double amountToMakePayment) {
+        IntegratedPaymentsChooseDeviceFragment fragment = IntegratedPaymentsChooseDeviceFragment
+                .newInstance(paymentsModel, amountToMakePayment);
+        fragment.setOnCancelListener(onDialogCancelListener);
+        callback.displayDialogFragment(fragment, true);
+        hideDialog();
     }
 
     private RestCallServiceCallback integratedPaymentsReadyCallback = new RestCallServiceCallback() {

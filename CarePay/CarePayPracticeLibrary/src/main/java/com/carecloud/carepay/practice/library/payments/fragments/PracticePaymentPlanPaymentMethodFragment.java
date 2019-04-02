@@ -196,6 +196,7 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
                                       boolean onlySelectMode) {
         PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
                 .newInstance(paymentsModel, paymentPlanPostModel);
+        fragment.setOnCancelListener(onDialogCancelListener);
         fragment.setChangePaymentMethodListener(new LargeAlertDialogFragment.LargeAlertInterface() {
             @Override
             public void onActionButton() {
@@ -218,6 +219,7 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
                             onlySelectMode, paymentDate);
             fragment.setOnCancelListener(onDialogCancelListener);
             callback.displayDialogFragment(fragment, true);
+            hideDialog();
         } else {
             onAddPaymentPlanCard(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
         }
