@@ -167,7 +167,11 @@ public class CloverPaymentAdapter {
         DevicePayment.releasePaymentConnection();
 
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("patient_id", practiceInfo.getPatientId());
+        String patientId = practiceInfo.getPatientId();
+        if(patientId == null && !paymentsModel.getPaymentPayload().getPatientBalances().isEmpty()){
+            patientId = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getMetadata().getPatientId();
+        }
+        queryMap.put("patient_id", patientId);
 
         ShamrockPaymentsPostModel shamrockPaymentsPostModel = new ShamrockPaymentsPostModel().setIntegratedPaymentPostModel(postModel);
         shamrockPaymentsPostModel.setOrganizationId(paymentsModel.getPaymentPayload().getOrganizationId());
