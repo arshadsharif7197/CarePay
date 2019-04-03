@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -20,7 +19,6 @@ import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.payments.adapter.PaymentMethodAdapter;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodInterface;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
@@ -171,8 +169,8 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
     }
 
     protected void onPaymentMethodAction(PaymentsMethodsDTO paymentMethod,
-                                       double amount,
-                                       PaymentsModel paymentsModel) {
+                                         double amount,
+                                         PaymentsModel paymentsModel) {
         callback.onPaymentMethodAction(paymentMethod, amount, paymentsModel);
     }
 

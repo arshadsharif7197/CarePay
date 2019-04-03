@@ -103,6 +103,7 @@ public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFr
             dismiss();
         } else {
             super.handlePaymentButton(paymentMethod, amount);
+            hideDialog();
         }
     }
 
