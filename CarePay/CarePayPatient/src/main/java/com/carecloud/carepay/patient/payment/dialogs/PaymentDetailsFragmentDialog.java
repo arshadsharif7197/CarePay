@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.payment.fragments.PatientPaymentPlanAmountDialog;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.adapters.PaymentItemsListAdapter;
@@ -169,6 +170,21 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
     }
 
     private void setUpBottomSheet(View view, boolean canMakePayments) {
+        final View shadow = view.findViewById(R.id.shadow);
+        LinearLayout llBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
+        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                shadow.setAlpha(slideOffset);
+            }
+        });
+
         View payTotalAmountContainer = view.findViewById(R.id.payTotalAmountContainer);
         payTotalAmountContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,13 +206,20 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
         });
 
         View paymentPlanContainer = view.findViewById(R.id.paymentPlanContainer);
-        paymentPlanContainer.setVisibility(isPaymentPlanAvailable(selectedBalance.getMetadata().getPracticeId(), paymentPayload.getAmount())
+        paymentPlanContainer.setVisibility(isPaymentPlanAvailable(selectedBalance.getMetadata()
+                .getPracticeId(), paymentPayload.getAmount())
                 ? View.VISIBLE : View.GONE);
         paymentPlanContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dismiss();
-                callback.onPaymentPlanAction(paymentReceiptModel);
+                PendingBalanceDTO reducedBalancesItem = paymentReceiptModel.getPaymentPayload()
+                        .reduceBalanceItems(selectedBalance, false);
+                PatientPaymentPlanAmountDialog fragment = PatientPaymentPlanAmountDialog
+                        .newInstance(paymentReceiptModel, reducedBalancesItem);
+                fragment.setOnCancelListener(onDialogCancelListener);
+                callback.displayDialogFragment(fragment, true);
+                hideDialog();
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             }
         });
         if (mustAddToExisting) {
@@ -205,22 +228,10 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
         }
 
         boolean showPaymentButtons = getArguments().getBoolean("showPaymentButtons", false);
-        view.findViewById(R.id.consolidatedPaymentButton).setVisibility((showPaymentButtons && canMakePayments) ? View.VISIBLE : View.GONE);
+        view.findViewById(R.id.consolidatedPaymentButton).setVisibility((showPaymentButtons && canMakePayments)
+                ? View.VISIBLE : View.GONE);
 
-        final View shadow = view.findViewById(R.id.shadow);
-        LinearLayout llBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
-        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-            }
 
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                shadow.setAlpha(slideOffset);
-            }
-        });
         Button consolidatedPaymentButton = view.findViewById(R.id.consolidatedPaymentButton);
         consolidatedPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -140,7 +140,7 @@ public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseC
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
 
-        Button addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
+        Button addNewCardButton = view.findViewById(R.id.addNewCardButton);
         addNewCardButton.setOnClickListener(addNewCardButtonListener);
 
         nextButton.setOnClickListener(nextButtonListener);
@@ -153,9 +153,6 @@ public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseC
             @Override
             public void onClick(View v) {
                 cancel();
-//                if (paymentPlanPostModel != null) {
-//                    callback.onStartPaymentPlan(paymentsModel, paymentPlanPostModel);
-//                }
             }
         });
 

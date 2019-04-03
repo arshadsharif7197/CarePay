@@ -52,7 +52,7 @@ import java.util.regex.Pattern;
  * @author pjohnson on 9/02/18.
  */
 
-public class PaymentPlanEditFragment extends PaymentPlanFragment
+public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
         implements PayeezyRequestTask.AuthorizeCreditCardCallback,
         BaseAddCreditCardFragment.IAuthoriseCreditCardResponse {
 
@@ -62,22 +62,6 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
     protected PaymentPlanEditInterface callback;
     protected Button editPaymentPlanButton;
     protected EditText paymentMethodEditText;
-
-    /**
-     * @param paymentsModel  the payment model
-     * @param paymentPlanDTO the plan to be edited
-     * @return an PaymentPlanFragment instance with the payment plan data filled for editing a payment plan
-     */
-    public static PaymentPlanEditFragment newInstance(PaymentsModel paymentsModel,
-                                                      PaymentPlanDTO paymentPlanDTO) {
-        Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
-        DtoHelper.bundleDto(args, paymentPlanDTO);
-
-        PaymentPlanEditFragment fragment = new PaymentPlanEditFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     protected void attachCallback(Context context) {
@@ -283,10 +267,7 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
         });
     }
 
-    protected void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
-        callback.onEditPaymentPlanPaymentMethod(paymentsModel, paymentPlanDTO);
-        hideDialog();
-    }
+    protected abstract void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
 
     private void setCreditCardInfo(PaymentCreditCardsPayloadDTO creditCard,
                                    EditText paymentMethodEditText) {

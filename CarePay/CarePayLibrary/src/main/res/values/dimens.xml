@@ -531,5 +531,7 @@
     <dimen name="completeCheckInItemTextSize">22sp</dimen>
     <dimen name="completeCheckInItemValueTextSize">16sp</dimen>
 
+    <dimen name="paymentDetailDialogMargin">10dp</dimen>
+
 
 </resources>

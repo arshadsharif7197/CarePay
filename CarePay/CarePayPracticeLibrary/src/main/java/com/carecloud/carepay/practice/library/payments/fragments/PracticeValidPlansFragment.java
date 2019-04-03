@@ -16,11 +16,15 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 
 public class PracticeValidPlansFragment extends ValidPlansFragment {
 
-    public static PracticeValidPlansFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
+    public static PracticeValidPlansFragment newInstance(PaymentsModel paymentsModel,
+                                                         PendingBalanceDTO selectedBalance,
+                                                         double amount,
+                                                         boolean showModalResult) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
         args.putDouble(KEY_PLAN_AMOUNT, amount);
+        args.putBoolean("showModalResult", showModalResult);
 
         PracticeValidPlansFragment fragment = new PracticeValidPlansFragment();
         fragment.setArguments(args);
@@ -41,11 +45,18 @@ public class PracticeValidPlansFragment extends ValidPlansFragment {
 
     @Override
     public void onPaymentPlanItemSelected(PaymentPlanDTO paymentPlan) {
-        PatientModeAddExistingPaymentPlanFragment fragment = PatientModeAddExistingPaymentPlanFragment
+        if (getArguments().getBoolean("showModalResult", false)) {
+            PatientModeAddExistingPaymentPlanFragment fragment = PatientModeAddExistingPaymentPlanFragment
+                    .newInstance(paymentsModel, selectedBalance, paymentPlan, paymentPlanAmount);
+            fragment.setOnCancelListener(onDialogCancelListener);
+            callback.displayDialogFragment(fragment, true);
+            hideDialog();
+        } else {
+            dismiss();
+            PatientModeAddExistingPaymentPlanFullFragment fragment = PatientModeAddExistingPaymentPlanFullFragment
                 .newInstance(paymentsModel, selectedBalance, paymentPlan, paymentPlanAmount);
-        fragment.setOnCancelListener(onDialogCancelListener);
-        callback.displayDialogFragment(fragment, true);
-        hideDialog();
+            callback.navigateToFragment(fragment, true);
+        }
     }
 
 

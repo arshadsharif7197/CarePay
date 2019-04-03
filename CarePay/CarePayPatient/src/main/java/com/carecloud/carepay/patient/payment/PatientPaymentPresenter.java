@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
@@ -25,6 +26,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.AddExistingPaymentPlanFragment;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
@@ -107,6 +109,36 @@ public class PatientPaymentPresenter extends PaymentPresenter
     }
 
     @Override
+    public void addFragment(Fragment fragment, boolean addToBackStack) {
+
+    }
+
+    @Override
+    public void replaceFragment(Fragment fragment, boolean addToBackStack) {
+
+    }
+
+    @Override
+    public void showErrorToast(String exceptionMessage) {
+
+    }
+
+    @Override
+    public void setToolbar(Toolbar toolbar) {
+
+    }
+
+    @Override
+    public void showSuccessToast(String successMessage) {
+
+    }
+
+    @Override
+    public void setActionBarTitle(String title) {
+
+    }
+
+    @Override
     public void displayDialogFragment(DialogFragment fragment, boolean addToBaskStack) {
         viewHandler.displayDialogFragment(fragment, addToBaskStack);
     }
@@ -186,34 +218,29 @@ public class PatientPaymentPresenter extends PaymentPresenter
         return viewHandler.getAppointment();
     }
 
-    @Override
-    public void onPaymentPlanAction(PaymentsModel paymentsModel) {
-        PendingBalanceDTO selectedBalancesItem = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);//this should be a safe assumption for checkin
-        PendingBalanceDTO reducedBalancesItem = paymentsModel.getPaymentPayload().reduceBalanceItems(selectedBalancesItem, false);
-        PaymentPlanAmountDialog dialog = PaymentPlanAmountDialog.newInstance(paymentsModel, reducedBalancesItem);
-        displayDialogFragment(dialog, false);
-    }
-
-    @Override
-    public void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
-        boolean addExisting = false;
-        if(paymentsModel.getPaymentPayload().mustAddToExisting(amount, selectedBalance)){
-            onAddBalanceToExistingPlan(paymentsModel, selectedBalance, amount);
-            addExisting = true;
-        } else {
-            PaymentPlanFragment fragment = PaymentPlanFragment.newInstance(paymentsModel, selectedBalance, amount);
-            viewHandler.navigateToFragment(fragment, true);
-        }
-
-        String[] params = {getString(R.string.param_practice_id),
-                getString(R.string.param_balance_amount),
-                getString(R.string.param_is_add_existing)};
-        Object[] values = {selectedBalance.getMetadata().getPracticeId(),
-                selectedBalance.getPayload().get(0).getAmount(),
-                addExisting};
-
-        MixPanelUtil.logEvent(getString(R.string.event_paymentplan_started), params, values);
-    }
+//    @Override
+//    public void onPaymentPlanAmount(PaymentsModel paymentsModel,
+//                                    PendingBalanceDTO selectedBalance,
+//                                    double amount) {
+    //TODO: Delete this when refactor. This code is not used anymore
+//        boolean addExisting = false;
+//        if(paymentsModel.getPaymentPayload().mustAddToExisting(amount, selectedBalance)){
+//            onAddBalanceToExistingPlan(paymentsModel, selectedBalance, amount);
+//            addExisting = true;
+//        } else {
+//            PaymentPlanFragment fragment = PaymentPlanFragment.newInstance(paymentsModel, selectedBalance, amount);
+//            viewHandler.navigateToFragment(fragment, true);
+//        }
+//
+//        String[] params = {getString(R.string.param_practice_id),
+//                getString(R.string.param_balance_amount),
+//                getString(R.string.param_is_add_existing)};
+//        Object[] values = {selectedBalance.getMetadata().getPracticeId(),
+//                selectedBalance.getPayload().get(0).getAmount(),
+//                addExisting};
+//
+//        MixPanelUtil.logEvent(getString(R.string.event_paymentplan_started), params, values);
+//    }
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
@@ -279,31 +306,6 @@ public class PatientPaymentPresenter extends PaymentPresenter
     }
 
     @Override
-    public void onSelectPaymentPlanMethod(PaymentsMethodsDTO selectedPaymentMethod, PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel, boolean onlySelectMode) {
-        if ((paymentsModel.getPaymentPayload().getPatientCreditCards() != null)
-                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
-            PaymentPlanChooseCreditCardFragment fragment = PaymentPlanChooseCreditCardFragment
-                    .newInstance(paymentsModel, selectedPaymentMethod.getLabel(), paymentPlanPostModel, onlySelectMode);
-            viewHandler.navigateToFragment(fragment, true);
-        } else {
-            onAddPaymentPlanCard(paymentsModel, paymentPlanPostModel, onlySelectMode);
-        }
-    }
-
-    @Override
-    public void onAddPaymentPlanCard(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel, boolean onlySelectMode) {
-        PaymentPlanAddCreditCardFragment fragment = PaymentPlanAddCreditCardFragment
-                .newInstance(paymentsModel, paymentPlanPostModel, onlySelectMode);
-        viewHandler.navigateToFragment(fragment, true);
-    }
-
-    @Override
-    public void onDisplayPaymentPlanTerms(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
-        PaymentPlanTermsFragment fragment = PaymentPlanTermsFragment.newInstance(paymentsModel, paymentPlanPostModel);
-        viewHandler.navigateToFragment(fragment, true);
-    }
-
-    @Override
     public void onSubmitPaymentPlan(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment
@@ -313,22 +315,8 @@ public class PatientPaymentPresenter extends PaymentPresenter
     }
 
     @Override
-    public void onAddBalanceToExistingPlan(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
-        ValidPlansFragment fragment = ValidPlansFragment.newInstance(paymentsModel, selectedBalance, amount);
-        viewHandler.navigateToFragment(fragment, true);
-    }
-
-    @Override
-    public void onSelectedPlanToAdd(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO selectedPlan, double amount) {
-        AddExistingPaymentPlanFragment fragment = AddExistingPaymentPlanFragment.newInstance(paymentsModel, selectedBalance, selectedPlan, amount);
-        viewHandler.navigateToFragment(fragment, true);
-    }
-
-    @Override
     public void displayBalanceDetails(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem, PendingBalanceDTO selectedBalance) {
-        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-                .newInstance(paymentsModel, paymentLineItem, selectedBalance, false);
-        displayDialogFragment(dialog, false);
+
     }
 
     @Override
@@ -385,4 +373,13 @@ public class PatientPaymentPresenter extends PaymentPresenter
         }
     };
 
+    @Override
+    public DTO getDto() {
+        return null;
+    }
+
+    @Override
+    public void navigateToFragment(Fragment fragment, boolean addToBackStack) {
+
+    }
 }

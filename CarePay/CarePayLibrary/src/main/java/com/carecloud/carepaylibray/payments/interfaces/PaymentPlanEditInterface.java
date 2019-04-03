@@ -14,18 +14,10 @@ import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
 public interface PaymentPlanEditInterface extends PaymentPlanCompletedInterface, PaymentPlanCreateInterface,
         OneTimePaymentInterface, DTOInterface {
 
-    void onEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
-
     void onPaymentPlanEdited(WorkflowDTO workflowDTO);
-
-    void onDismissEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
 
     void onPaymentPlanCanceled(WorkflowDTO workflowDTO, boolean isDeleted);
 
     void showCancelPaymentPlanConfirmDialog(ConfirmationCallback confirmationCallback, boolean isGoingToDelete);
-
-    void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
-
-    void onStartEditScheduledPayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO, ScheduledPaymentModel scheduledPaymentModel);
 
 }

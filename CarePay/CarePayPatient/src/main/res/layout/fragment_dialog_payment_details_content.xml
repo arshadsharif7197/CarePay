@@ -24,16 +24,16 @@
             tools:ignore="ContentDescription" />
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/round_white_background"
-        android:orientation="vertical">
+        android:background="@drawable/round_white_background">
 
         <RelativeLayout
             android:id="@+id/header"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/payment_details_dialog_header_height">
+            android:layout_height="@dimen/payment_details_dialog_header_height"
+            android:layout_alignParentTop="true">
 
             <LinearLayout
                 android:id="@+id/header_layout"
@@ -55,8 +55,8 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_below="@+id/header_layout"
+                android:layout_alignParentBottom="true"
                 android:background="@color/white" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -81,26 +81,34 @@
 
         </RelativeLayout>
 
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/consolidatedPaymentButton"
+            style="@style/ResponsButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="0dp"
+            android:background="@drawable/bg_green_selector"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="payment_options_button" />
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_above="@id/consolidatedPaymentButton"
+            android:layout_below="@id/header"
             android:paddingBottom="@dimen/dimen_5dp">
 
             <include layout="@layout/payment_details_view" />
 
         </FrameLayout>
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayButton
-            android:id="@+id/consolidatedPaymentButton"
-            style="@style/ResponsButtonStyle"
+        <View
+            android:id="@+id/shadow"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_50dp"
-            android:layout_margin="0dp"
-            android:background="@drawable/bg_green_selector"
-            app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="payment_options_button" />
+            android:layout_height="match_parent"
+            android:alpha="0"
+            android:background="@color/black_opacity_90" />
 
-    </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>

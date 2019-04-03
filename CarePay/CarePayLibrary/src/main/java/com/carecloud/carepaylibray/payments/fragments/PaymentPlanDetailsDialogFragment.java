@@ -16,6 +16,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customdialogs.BasePaymentDetailsFragmentDialog;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
@@ -36,38 +37,20 @@ import java.util.Locale;
  * Created by lmenendez on 1/26/18
  */
 
-public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragmentDialog {
+public abstract class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragmentDialog {
 
     private PaymentsModel paymentsModel;
     protected PaymentPlanDTO paymentPlanDTO;
     private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 
-    protected PaymentPlanEditInterface callback;
+    protected FragmentActivityInterface callback;
     protected View payButton;
-
-    /**
-     * @param paymentsModel  the payment model
-     * @param paymentPlanDTO the Payment Plan Dto
-     * @return new instance of a PaymentPlanDetailsDialogFragment
-     */
-    public static PaymentPlanDetailsDialogFragment newInstance(PaymentsModel paymentsModel,
-                                                               PaymentPlanDTO paymentPlanDTO) {
-        // Supply inputs as an argument
-        Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
-        DtoHelper.bundleDto(args, paymentPlanDTO);
-
-        PaymentPlanDetailsDialogFragment dialog = new PaymentPlanDetailsDialogFragment();
-        dialog.setArguments(args);
-
-        return dialog;
-    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (PaymentPlanEditInterface) context;
+            callback = (FragmentActivityInterface) context;
         } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement PaymentPlanEditInterface");
         }
@@ -91,7 +74,8 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         PaymentPlanPayloadDTO planPayload = paymentPlanDTO.getPayload();
-        UserPracticeDTO userPracticeDTO = callback.getPracticeInfo(paymentsModel);
+        UserPracticeDTO userPracticeDTO = paymentsModel.getPaymentPayload()
+                .getUserPractice(paymentPlanDTO.getMetadata().getPracticeId());
 
         TextView installmentDetail = view.findViewById(R.id.planInstallmentDetail);
         installmentDetail.setText(currencyFormatter.format(planPayload.getPaymentPlanDetails().getAmount()));
@@ -191,19 +175,15 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
         }
     }
 
-    protected void onMakeOneTimePayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
-        callback.onMakeOneTimePayment(paymentsModel, paymentPlanDTO);
-        dismiss();
-    }
+    protected abstract void onMakeOneTimePayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
 
-    protected void onEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
-        callback.onEditPaymentPlan(paymentsModel, paymentPlanDTO);
-        dismiss();
-    }
+    protected abstract void onEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
 
     protected void onStartEditScheduledPayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO,
                                                ScheduledPaymentModel scheduledPayment) {
-        callback.onStartEditScheduledPayment(paymentsModel, paymentPlanDTO, scheduledPayment);
+        EditOneTimePaymentDialog dialog = EditOneTimePaymentDialog.newInstance(paymentsModel, paymentPlanDTO,
+                scheduledPayment);
+        callback.displayDialogFragment(dialog, false);
         dismiss();
     }
 

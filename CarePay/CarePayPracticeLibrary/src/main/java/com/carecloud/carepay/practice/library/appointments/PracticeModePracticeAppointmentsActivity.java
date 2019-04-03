@@ -759,11 +759,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     @Override
-    public void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
-
-    }
-
-    @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
 
     }
@@ -776,14 +771,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     @Override
     public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
 
-    }
-
-    @Override
-    public void displayBalanceDetails(PaymentsModel paymentsModel,
-                                      PendingBalancePayloadDTO paymentLineItem,
-                                      PendingBalanceDTO selectedBalance) {
-        //TODO: Delete this when refactor. This code is not used anymore
-//        onDetailItemClick(paymentsModel, paymentLineItem);
     }
 
     @Override
@@ -849,5 +836,10 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     @Override
     public void onPaymentCashFinished() {
 
+    }
+
+    @Override
+    public void navigateToFragment(Fragment fragment, boolean addToBackStack) {
+        //NA
     }
 }

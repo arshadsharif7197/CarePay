@@ -196,11 +196,6 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
     }
 
     @Override
-    public void onPaymentPlanAction(PaymentsModel paymentsModel) {
-
-    }
-
-    @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount,
                                       PaymentsModel paymentsModel) {
 //        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null

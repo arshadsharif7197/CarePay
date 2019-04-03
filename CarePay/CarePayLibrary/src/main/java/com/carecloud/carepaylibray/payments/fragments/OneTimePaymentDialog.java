@@ -14,7 +14,6 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.common.DatePickerFragment;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentDetailInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -22,6 +21,7 @@ import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.Calendar;
@@ -31,31 +31,15 @@ import java.util.Date;
  * Created by lmenendez on 2/5/18
  */
 
-public class OneTimePaymentDialog extends PartialPaymentDialog {
+public abstract class OneTimePaymentDialog extends PartialPaymentDialog {
 
     protected PaymentPlanDTO paymentPlanDTO;
-    protected PaymentsModel paymentsDTOpaymentsDTO;
     protected OneTimePaymentInterface callback;
 
     protected Date paymentDate;
     protected EditText schedulePaymentDateText;
     protected Button paymentButton;
     protected long minDate;
-
-    /**
-     *
-     * @param paymentsDTO    payment model
-     * @param paymentPlanDTO payment plan
-     */
-    public static OneTimePaymentDialog newInstance(PaymentsModel paymentsDTO,
-                                PaymentPlanDTO paymentPlanDTO) {
-        Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsDTO);
-        DtoHelper.bundleDto(args, paymentPlanDTO);
-        OneTimePaymentDialog dialog = new OneTimePaymentDialog();
-        dialog.setArguments(args);
-        return dialog;
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -129,15 +113,25 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
             double amount = Double.parseDouble(enterPartialAmountEditText.getText().toString());
             createPaymentModel(amount);
             if (DateUtil.isSameDay(paymentDate, new Date())) {
-                callback.onStartOneTimePayment(paymentsDTO, paymentPlanDTO);
+                onStartOneTimePayment(paymentsDTO, paymentPlanDTO);
             } else {
-                callback.onScheduleOneTimePayment(paymentsDTO, paymentPlanDTO, paymentDate);
+                onScheduleOneTimePayment(paymentsDTO, paymentPlanDTO, paymentDate);
             }
             dismiss();
         } catch (NumberFormatException nfe) {
             nfe.printStackTrace();
             Toast.makeText(getContext(), "Please enter valid amount!", Toast.LENGTH_LONG).show();
         }
+    }
+
+    protected void onScheduleOneTimePayment(PaymentsModel paymentsDTO,
+                                            PaymentPlanDTO paymentPlanDTO,
+                                            Date paymentDate) {
+        //NA
+    }
+
+    protected void onStartOneTimePayment(PaymentsModel paymentsDTO, PaymentPlanDTO paymentPlanDTO) {
+        //NA
     }
 
     protected void createPaymentModel(double amount) {
@@ -217,6 +211,21 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
             paymentButton.setText(Label.getLabel("payment_plan_schedule_payment"));
         }
 
+    }
+
+    protected void logPaymentPlanOneTimePaymentMixPanelEvent(PaymentPlanDTO paymentPlanDTO) {
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_payment_plan_id),
+                getString(R.string.param_payment_plan_amount),
+                getString(R.string.param_patient_id)
+        };
+        Object[] values = {
+                paymentPlanDTO.getMetadata().getPracticeId(),
+                paymentPlanDTO.getMetadata().getPaymentPlanId(),
+                paymentPlanDTO.getPayload().getAmount(),
+                paymentPlanDTO.getMetadata().getPatientId()
+        };
+        MixPanelUtil.logEvent(getString(R.string.event_paymentplan_onetime_payment), params, values);
     }
 
 }

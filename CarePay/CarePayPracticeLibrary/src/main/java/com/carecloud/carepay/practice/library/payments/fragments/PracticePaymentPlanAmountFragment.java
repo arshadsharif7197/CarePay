@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentDetailInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -37,13 +38,16 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
     /**
      * @param paymentsModel   the payment model
      * @param selectedBalance selected balance
+     * @param showModalResult
      * @return an instance of PracticePaymentPlanAmountFragment
      */
     public static PracticePaymentPlanAmountFragment newInstance(PaymentsModel paymentsModel,
-                                                                PendingBalanceDTO selectedBalance) {
+                                                                PendingBalanceDTO selectedBalance,
+                                                                boolean showModalResult) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
+        args.putBoolean("showModalResult", showModalResult);
 
         PracticePaymentPlanAmountFragment fragment = new PracticePaymentPlanAmountFragment();
         fragment.setArguments(args);
@@ -138,11 +142,20 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
             onAddBalanceToExistingPlan(paymentsModel, selectedBalance, amount);
             addExisting = true;
         } else {
-            PatientModePaymentPlanFragment fragment = PatientModePaymentPlanFragment
-                    .newInstance(paymentsModel, selectedBalance, amount);
-            fragment.setOnCancelListener(onDialogCancelListener);
-            callback.displayDialogFragment(fragment, true);
-            hideDialog();
+            BaseDialogFragment fragment;
+            if (getArguments().getBoolean("showModalResult", false)) {
+                fragment = PatientModePaymentPlanFragment
+                        .newInstance(paymentsModel, selectedBalance, amount);
+                fragment.setOnCancelListener(onDialogCancelListener);
+                callback.displayDialogFragment(fragment, true);
+                hideDialog();
+            } else {
+                dismiss();
+                fragment = PatientModePaymentPlanFullFragment
+                        .newInstance(paymentsModel, selectedBalance, amount);
+                fragment.setOnCancelListener(onDialogCancelListener);
+                callback.navigateToFragment(fragment, true);
+            }
         }
 
         String[] params = {getString(R.string.param_practice_id),
@@ -159,7 +172,7 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
                                             PendingBalanceDTO selectedBalance,
                                             double amount) {
         PracticeValidPlansFragment fragment = PracticeValidPlansFragment
-                .newInstance(paymentsModel, selectedBalance, amount);
+                .newInstance(paymentsModel, selectedBalance, amount, false);
         fragment.setOnCancelListener(onDialogCancelListener);
         callback.displayDialogFragment(fragment, true);
         hideDialog();

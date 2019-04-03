@@ -130,11 +130,6 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     }
 
     @Override
-    public void onPaymentPlanAction(PaymentsModel paymentsModel) {
-
-    }
-
-    @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount,
                                       PaymentsModel paymentsModel) {
         //TODO: Delete this when refactor. This code is not used anymore

@@ -701,11 +701,12 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
     }
 
     protected void onAddBalanceToExistingPlan() {
-        callback.onAddBalanceToExistingPlan(paymentsModel, selectedBalance, paymentPlanAmount);
-        logPaymentPlanStartedMixpanelEvent();
+        ValidPlansFragment fragment = ValidPlansFragment.newInstance(paymentsModel, selectedBalance, paymentPlanAmount);
+        callback.replaceFragment(fragment, true);
+        logPaymentPlanStartedMixPanelEvent();
     }
 
-    protected void logPaymentPlanStartedMixpanelEvent() {
+    protected void logPaymentPlanStartedMixPanelEvent() {
         String[] params = {getString(R.string.param_practice_id),
                 getString(R.string.param_balance_amount),
                 getString(R.string.param_is_add_existing)};
@@ -838,6 +839,10 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
 
     @Override
     public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
+//        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
+//                .newInstance(paymentsModel, paymentLineItem, selectedBalance, false);
+//        displayDialogFragment(dialog, false);
+
         callback.displayBalanceDetails(paymentsModel, paymentLineItem, selectedBalance);
     }
 

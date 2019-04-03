@@ -168,7 +168,8 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
 
     protected void onDisplayPaymentPlanTerms(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
         dismiss();
-        callback.onDisplayPaymentPlanTerms(paymentsModel, paymentPlanPostModel);
+        PaymentPlanTermsFragment fragment = PaymentPlanTermsFragment.newInstance(paymentsModel, paymentPlanPostModel);
+        callback.replaceFragment(fragment, true);
     }
 
     private void makePlanPayment() {

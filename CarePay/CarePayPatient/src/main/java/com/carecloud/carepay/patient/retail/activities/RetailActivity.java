@@ -216,11 +216,6 @@ public class RetailActivity extends MenuPatientActivity implements RetailPatient
     }
 
     @Override
-    public void onPaymentPlanAction(PaymentsModel paymentsModel) {
-        // nothing
-    }
-
-    @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod,
                                       double amount,
                                       PaymentsModel paymentsModel) {
