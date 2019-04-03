@@ -35,7 +35,7 @@ public class PracticeAddNewCreditCardFragment extends AddNewCreditCardFragment {
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE) ||
                 HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_2_DEVICE);
         Button swipeCardButton = (Button) view.findViewById(R.id.swipeCreditCarNowButton);
-        if (isCloverDevice) {
+        if (isCloverDevice && swipeCardButton != null && !paymentsModel.getPaymentPayload().isPrepayment()) {
             swipeCardButton.setVisibility(View.VISIBLE);
             swipeCardButton.setOnClickListener(swipeCreditCarNowButtonClickListener);
         }
