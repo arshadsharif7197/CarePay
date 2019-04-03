@@ -21,10 +21,9 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
 
     /**
-     *
-     * @param paymentsDTO the payment model
+     * @param paymentsDTO                the payment model
      * @param selectedPaymentMethodLabel the selected payment method label
-     * @param amount the amount
+     * @param amount                     the amount
      * @return an instance of PracticeChooseCreditCardFragment
      */
     public static PracticeChooseCreditCardFragment newInstance(PaymentsModel paymentsDTO,
@@ -42,11 +41,11 @@ public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        if(!paymentsModel.getPaymentPayload().getPatientBalances().isEmpty()) {
+        if (!paymentsModel.getPaymentPayload().getPatientBalances().isEmpty()) {
             String name = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getDemographics().getPayload().getPersonalDetails().getFirstName();
             String label = Label.getLabel("payment_user_credit_card_title");
             titleLabel = name + label;
-        }else{
+        } else {
             titleLabel = Label.getLabel("credit_card_heading");
         }
     }
@@ -57,7 +56,7 @@ public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE) ||
                 HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_2_DEVICE);
         Button swipeCardButton = (Button) view.findViewById(R.id.swipeCreditCarNowButton);
-        if (isCloverDevice && swipeCardButton != null) {
+        if (isCloverDevice && swipeCardButton != null && !paymentsModel.getPaymentPayload().isPrepayment()) {
             swipeCardButton.setVisibility(View.VISIBLE);
             swipeCardButton.setOnClickListener(swipeCreditCarNowButtonClickListener);
         }
@@ -79,4 +78,5 @@ public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
             }
         }
     };
+
 }
