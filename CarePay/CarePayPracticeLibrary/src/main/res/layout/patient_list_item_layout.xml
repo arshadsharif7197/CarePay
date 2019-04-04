@@ -25,7 +25,8 @@
         android:layout_width="@dimen/dimen_22dp"
         android:layout_height="@dimen/dimen_22dp"
         android:layout_alignParentTop="true"
-        android:elevation="@dimen/apt_lst_img_elevation"/>
+        android:elevation="@dimen/apt_lst_img_elevation"
+        android:visibility="gone"/>
 
         <FrameLayout
             android:layout_width="wrap_content"
