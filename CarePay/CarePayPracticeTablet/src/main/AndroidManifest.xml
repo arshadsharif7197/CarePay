@@ -109,6 +109,9 @@
         <activity
             android:name="com.carecloud.carepay.practice.library.survey.SurveyResultActivity"
             android:screenOrientation="sensorLandscape"/>
+        <activity
+            android:name="com.carecloud.carepay.practice.library.dobverification.DoBVerificationActivity"
+            android:screenOrientation="sensorLandscape"/>
     </application>
 
 </manifest>

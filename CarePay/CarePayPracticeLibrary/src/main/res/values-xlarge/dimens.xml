@@ -783,4 +783,8 @@
     <dimen name="completeScreenSectionTitleTextSize">18sp</dimen>
     <dimen name="completeScreenSectionTitleVerticalMargin">20dp</dimen>
 
+    <!--DOB Verification-->
+    <dimen name="dobVerificationTitleTextSize">36sp</dimen>
+    <dimen name="dobVerificationSubTitleTextSize">22sp</dimen>
+
 </resources>

@@ -1,10 +1,13 @@
 package com.carecloud.carepay.practice.library.appointments.dialogs;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,20 +15,39 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.adhocforms.AdHocFormsListFragment;
+import com.carecloud.carepay.practice.library.appointments.interfaces.PracticeAppointmentDialogListener;
+import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.practice.library.dobverification.DoBVerificationActivity;
+import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.Defs;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
+import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.base.models.UserAuthPermissions;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class PracticeAppointmentDialog extends BaseDialogFragment {
 
@@ -43,13 +65,27 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     private AppointmentDisplayStyle style;
 
     private View headerView;
+    private AppointmentsResultModel checkInDto;
 
-    public interface PracticeAppointmentDialogListener {
-        void onLeftActionTapped(AppointmentDTO appointmentDTO);
+    /**
+     * @param style           dialog style to determine buttons and colors
+     * @param appointmentDTO  appointment information
+     * @param authPermissions auth permissions
+     * @return instance of PracticeAppointmentDialog
+     */
+    public static PracticeAppointmentDialog newInstance(AppointmentDisplayStyle style,
+                                                        AppointmentDTO appointmentDTO,
+                                                        UserAuthPermissions authPermissions) {
+        // Supply inputs as an argument
+        Bundle args = new Bundle();
+        args.putSerializable("style", style);
+        DtoHelper.bundleDto(args, appointmentDTO);
+        DtoHelper.bundleDto(args, authPermissions);
 
-        void onRightActionTapped(AppointmentDTO appointmentDTO);
+        PracticeAppointmentDialog dialog = new PracticeAppointmentDialog();
+        dialog.setArguments(args);
 
-        void onMiddleActionTapped(AppointmentDTO appointmentDTO);
+        return dialog;
     }
 
     @Override
@@ -59,37 +95,10 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            if (null == callback) {
-                callback = (PracticeAppointmentDialogListener) context;
-            }
+            callback = (PracticeAppointmentDialogListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement PracticeAppointmentDialogListener");
+            throw new ClassCastException(context.toString() + " must implement PracticeAppointmentDialogListener");
         }
-    }
-
-    /**
-     * @param style           dialog style to determine buttons and colors
-     * @param appointmentDTO  appointment information
-     * @param authPermissions auth permissions
-     * @param callback        listener
-     * @return instance of PracticeAppointmentDialog
-     */
-    public static PracticeAppointmentDialog newInstance(AppointmentDisplayStyle style,
-                                                        AppointmentDTO appointmentDTO,
-                                                        UserAuthPermissions authPermissions,
-                                                        PracticeAppointmentDialogListener callback) {
-        // Supply inputs as an argument
-        Bundle args = new Bundle();
-        args.putSerializable("style", style);
-        DtoHelper.bundleDto(args, appointmentDTO);
-        DtoHelper.bundleDto(args, authPermissions);
-
-        PracticeAppointmentDialog dialog = new PracticeAppointmentDialog();
-        dialog.setArguments(args);
-        dialog.setCallback(callback);
-
-        return dialog;
     }
 
     @Override
@@ -97,6 +106,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         super.onCreate(savedInstanceState);
 
         Bundle arguments = getArguments();
+        checkInDto = (AppointmentsResultModel) callback.getDto();
         this.style = (AppointmentDisplayStyle) arguments.getSerializable("style");
         this.appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, arguments);
         this.authPermissions = DtoHelper.getConvertedDTO(UserAuthPermissions.class, arguments);
@@ -215,30 +225,21 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         initializeButton(R.id.button_left_action, leftActionLabel, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (null != callback) {
-                    callback.onLeftActionTapped(appointmentDTO);
-                }
-                dismiss();
+                onLeftActionTapped(appointmentDTO);
             }
         });
 
         initializeButton(R.id.button_right_action, rightActionLabel, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (null != callback) {
-                    callback.onRightActionTapped(appointmentDTO);
-                }
-                dismiss();
+                onRightActionTapped(appointmentDTO);
             }
         });
 
         initializeButton(R.id.button_middle_action, middleActionLabel, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (null != callback) {
-                    callback.onMiddleActionTapped(appointmentDTO);
-                }
-                dismiss();
+                showAdHocFormsDialog(appointmentDTO);
             }
         });
 
@@ -263,11 +264,205 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         }
     }
 
+    private void onLeftActionTapped(AppointmentDTO appointmentDTO) {
+        AppointmentsPayloadDTO appointmentPayloadDTO = appointmentDTO.getPayload();
+
+        if (appointmentPayloadDTO.getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
+            rejectAppointment(appointmentDTO);
+        } else {
+            CancelAppointmentConfirmDialogFragment fragment = CancelAppointmentConfirmDialogFragment
+                    .newInstance(appointmentDTO);
+            fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialogInterface) {
+                    showDialog();
+                }
+            });
+            fragment.show(getFragmentManager(), fragment.getClass().getName());
+            hideDialog();
+        }
+    }
+
+    private void rejectAppointment(AppointmentDTO appointmentDTO) {
+        TransitionDTO transitionDTO = checkInDto.getMetadata().getTransitions().getDismissAppointment();
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("appointment_id", appointmentDTO.getPayload().getId());
+        getWorkflowServiceHelper().execute(transitionDTO, getAppointmentsServiceCallback(appointmentDTO,
+                "appointment_rejection_success_message_HTML",
+                getString(R.string.event_appointment_rejected)), queryMap);
+    }
+
+    private void onRightActionTapped(AppointmentDTO appointmentDTO) {
+        if (appointmentDTO.getPayload().getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
+            confirmAppointment(appointmentDTO);
+        } else if (appointmentDTO.getPayload().canCheckIn()) {
+            launchPatientModeCheckIn(appointmentDTO);
+        } else if (appointmentDTO.getPayload().canCheckOut()) {
+            launchPatientModeCheckOut(appointmentDTO);
+        }
+    }
+
+    private void confirmAppointment(AppointmentDTO appointmentDTO) {
+        TransitionDTO transitionDTO = checkInDto.getMetadata().getTransitions().getConfirmAppointment();
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("appointment_id", appointmentDTO.getPayload().getId());
+        getWorkflowServiceHelper().execute(transitionDTO, getAppointmentsServiceCallback(appointmentDTO,
+                "appointment_schedule_success_message_HTML",
+                getString(R.string.event_appointment_accepted)), queryMap);
+    }
+
+    WorkflowServiceCallback getAppointmentsServiceCallback(final AppointmentDTO appointmentDTO,
+                                                           final String successMessage,
+                                                           final String eventName) {
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                SystemUtil.showSuccessToast(getContext(), Label.getLabel(successMessage));
+                logMixPanelEvent(appointmentDTO, eventName);
+                callback.refreshData();
+                dismiss();
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+                Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+            }
+
+        };
+    }
+
+    private void logMixPanelEvent(AppointmentDTO appointmentDTO, String eventName) {
+        String[] params = {getString(R.string.param_appointment_type),
+                getString(R.string.param_practice_id),
+                getString(R.string.param_practice_name),
+                getString(R.string.param_patient_id),
+                getString(R.string.param_provider_id),
+                getString(R.string.param_location_id)};
+        String[] values = {appointmentDTO.getPayload().getVisitType().getName(),
+                getApplicationMode().getUserPracticeDTO().getPracticeId(),
+                getApplicationMode().getUserPracticeDTO().getPracticeName(),
+                appointmentDTO.getMetadata().getPatientId(),
+                appointmentDTO.getPayload().getProvider().getGuid(),
+                appointmentDTO.getPayload().getLocation().getGuid()};
+        MixPanelUtil.logEvent(eventName, params, values);
+    }
+
+    private void launchPatientModeCheckIn(AppointmentDTO appointmentDTO) {
+        getApplicationPreferences().setAppointmentNavigationOption(Defs.NAVIGATE_CHECKIN);
+
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("appointment_id", appointmentDTO.getPayload().getId());
+        TransitionDTO checkInPatientTransition = checkInDto.getMetadata().getTransitions().getCheckinPatientMode();
+        getWorkflowServiceHelper().execute(checkInPatientTransition, getPatientModeCallback(appointmentDTO), queryMap);
+    }
+
+    private void launchPatientModeCheckOut(AppointmentDTO appointmentDTO) {
+        getApplicationPreferences().setAppointmentNavigationOption(Defs.NAVIGATE_CHECKOUT);
+
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("appointment_id", appointmentDTO.getPayload().getId());
+
+        TransitionDTO checkoutPatientTransition = checkInDto.getMetadata().getTransitions()
+                .getCheckoutPatientMode();
+
+        getWorkflowServiceHelper().execute(checkoutPatientTransition,
+                getPatientModeCallback(appointmentDTO), queryMap);
+    }
+
+    private WorkflowServiceCallback getPatientModeCallback(final AppointmentDTO appointmentDTO) {
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                Bundle appointmentInfo = new Bundle();
+                appointmentInfo.putString(CarePayConstants.APPOINTMENT_ID, appointmentDTO.getPayload().getId());
+
+                if (workflowDTO.getState().equals("demographics_verify")) {
+                    WorkFlowRecord workFlowRecord = new WorkFlowRecord(workflowDTO);
+                    workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
+
+                    Intent intent = new Intent(getContext(), DoBVerificationActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putLong(WorkflowDTO.class.getName(), workFlowRecord.save(getContext()));
+                    intent.putExtras(bundle);
+                    intent.putExtra(NavigationStateConstants.EXTRA_INFO, appointmentInfo);
+                    startActivity(intent);
+                } else {
+                    PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, appointmentInfo);
+                }
+                dismiss();
+                getActivity().finish();
+
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+            }
+        };
+    }
+
     protected void enableById(int id, boolean enabled) {
         View view = findViewById(id);
         if (view != null) {
             view.setEnabled(enabled);
         }
+    }
+
+    private void showAdHocFormsDialog(AppointmentDTO appointmentDTO) {
+        String patientId = appointmentDTO.getMetadata().getPatientId();
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("patient_id", patientId);
+        TransitionDTO adHocForms = checkInDto.getMetadata().getLinks().getAllPracticeForms();
+        getWorkflowServiceHelper().execute(adHocForms, getAdHocServiceCallback(appointmentDTO), queryMap);
+    }
+
+    WorkflowServiceCallback getAdHocServiceCallback(final AppointmentDTO appointmentDTO) {
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                Gson gson = new Gson();
+                AppointmentsResultModel appointmentsResultModel = gson
+                        .fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
+                AdHocFormsListFragment fragment = AdHocFormsListFragment
+                        .newInstance(appointmentsResultModel, appointmentDTO.getMetadata().getPatientId());
+                fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        showDialog();
+                    }
+                });
+                callback.displayDialogFragment(fragment, false);
+                hideDialog();
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+                Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            }
+        };
     }
 
     private void initializeButton(int id, String text, View.OnClickListener listener) {
@@ -279,10 +474,6 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
                 textView.setOnClickListener(listener);
             }
         }
-    }
-
-    public void setCallback(PracticeAppointmentDialogListener callback) {
-        this.callback = callback;
     }
 
     private TextView setTextViewById(int id, String text) {
