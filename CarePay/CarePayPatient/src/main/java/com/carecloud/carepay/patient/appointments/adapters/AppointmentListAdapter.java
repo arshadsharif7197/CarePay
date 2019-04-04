@@ -38,7 +38,7 @@ public class AppointmentListAdapter extends BaseAppointmentAdapter {
                                   List<UserPracticeDTO> userPracticeDTOs,
                                   Map<String, Set<String>> enabledPracticeLocations) {
         this.context = context;
-        this.appointmentItems = getFilteredAppointments(appointmentItems);
+        this.appointmentItems = appointmentItems;
         this.callback = callback;
         this.userPracticeDTOs = userPracticeDTOs;
         this.enabledPracticeLocations = enabledPracticeLocations;
@@ -93,7 +93,7 @@ public class AppointmentListAdapter extends BaseAppointmentAdapter {
      * @param appointmentItems new appt list
      */
     public void setAppointmentItems(List<AppointmentDTO> appointmentItems) {
-        this.appointmentItems = getFilteredAppointments(appointmentItems);
+        this.appointmentItems = appointmentItems;
         sortAppointments();
         notifyDataSetChanged();
     }

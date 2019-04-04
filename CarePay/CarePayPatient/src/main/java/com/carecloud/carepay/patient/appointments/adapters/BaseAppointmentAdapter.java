@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
@@ -232,17 +231,6 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
                         holder.initials.setVisibility(View.VISIBLE);
                     }
                 });
-    }
-
-
-    protected List<AppointmentDTO> getFilteredAppointments(List<AppointmentDTO> baseAppointments){
-        List<AppointmentDTO> filteredAppointments = new ArrayList<>();
-        for(AppointmentDTO appointmentDTO : baseAppointments){
-            if(!CarePayConstants.CANCELLED.equals(appointmentDTO.getPayload().getAppointmentStatus().getCode())){
-                filteredAppointments.add(appointmentDTO);
-            }
-        }
-        return filteredAppointments;
     }
 
     protected AppointmentDisplayStyle getDisplayStyle(AppointmentsPayloadDTO appointmentPayload) {
