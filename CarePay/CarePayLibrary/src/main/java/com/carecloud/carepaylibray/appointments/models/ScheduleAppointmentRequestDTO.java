@@ -38,7 +38,7 @@ public class ScheduleAppointmentRequestDTO {
         private transient String providerGuid;
 
         @SerializedName("visit_reason_id")
-        private int visitReasonId;
+        private String visitReasonId;
 
         @SerializedName("resource_id")
         private int resourceId;
@@ -84,11 +84,11 @@ public class ScheduleAppointmentRequestDTO {
             this.providerId = providerId;
         }
 
-        public int getVisitReasonId() {
+        public String getVisitReasonId() {
             return visitReasonId;
         }
 
-        public void setVisitReasonId(int visitReasonId) {
+        public void setVisitReasonId(String visitReasonId) {
             this.visitReasonId = visitReasonId;
         }
 

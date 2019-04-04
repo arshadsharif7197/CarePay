@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.base.dtos;
 
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,16 +12,16 @@ public class BaseLinks {
 
     @SerializedName("self")
     @Expose
-    private LinkDTO self = new LinkDTO();
+    private TransitionDTO self = new TransitionDTO();
 
-    public LinkDTO getSelf() {
+    public TransitionDTO getSelf() {
         return self;
     }
 
     /**
      * @param self The self
      */
-    public void setSelf(LinkDTO self) {
+    public void setSelf(TransitionDTO self) {
         this.self = self;
     }
 }

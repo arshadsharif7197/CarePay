@@ -3,12 +3,14 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
-import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAddCreditCardFragment;
 import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
@@ -113,6 +115,18 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
                 }
             }
         });
+        boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE) ||
+                HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_2_DEVICE);
+        Button swipeCardButton = view.findViewById(R.id.swipeCreditCarNowButton);
+        if(isCloverDevice && paymentPlanDTO != null && (paymentDate == null || DateUtil.isToday(paymentDate))) {
+            swipeCardButton.setVisibility(View.VISIBLE);
+        } else {
+            swipeCardButton.setVisibility(View.GONE);
+        }
+
+        //temp fix for hiding this until we can handle it properly for one-time payment TODO: CLOVERPAY remove this
+        swipeCardButton.setVisibility(View.GONE);
+
     }
 
     @Override
@@ -129,7 +143,7 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
     }
 
     @Override
-    protected LargeAlertDialog.LargeAlertInterface getLargeAlertInterface() {
+    protected LargeAlertDialogFragment.LargeAlertInterface getLargeAlertInterface() {
         if (largeAlertInterface != null) {
             dismiss();
             return largeAlertInterface;

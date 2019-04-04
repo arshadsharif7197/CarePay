@@ -9,6 +9,7 @@ import android.os.IInterface;
 import android.os.RemoteException;
 import android.util.Log;
 
+import com.carecloud.carepay.practice.clover.BreezeDataBase;
 import com.carecloud.carepay.practice.clover.CloverQueueUploadService;
 import com.carecloud.carepay.practice.clover.R;
 import com.carecloud.carepay.practice.clover.models.CloverPaymentDTO;
@@ -64,6 +65,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -621,7 +623,7 @@ public class CloverRefundActivity extends BaseActivity {
 
 
         //store in local DB
-        CloverQueuePaymentRecord paymentRecord = new CloverQueuePaymentRecord();
+        final CloverQueuePaymentRecord paymentRecord = new CloverQueuePaymentRecord();
         paymentRecord.setPatientID(patientID);
         paymentRecord.setPracticeID(practiceId);
         paymentRecord.setPracticeMgmt(practiceMgmt);
@@ -634,12 +636,17 @@ public class CloverRefundActivity extends BaseActivity {
         if(StringUtil.isNullOrEmpty(paymentModelJsonEnc)){
             paymentRecord.setPaymentModelJson(refundModelJson);
         }
-        paymentRecord.save();
+
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                BreezeDataBase dataBase = BreezeDataBase.getDatabase(getApplicationContext());
+                dataBase.getCloverPaymentDao().insert(paymentRecord);
+            }
+        });
 
         Intent intent = new Intent(getContext(), CloverQueueUploadService.class);
         startService(intent);
-
-
     }
 
 }

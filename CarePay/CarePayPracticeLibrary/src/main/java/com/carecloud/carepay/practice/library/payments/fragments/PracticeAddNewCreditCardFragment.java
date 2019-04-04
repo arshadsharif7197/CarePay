@@ -8,6 +8,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.CloverPaymentAdapter;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
@@ -34,7 +35,7 @@ public class PracticeAddNewCreditCardFragment extends AddNewCreditCardFragment {
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE) ||
                 HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_2_DEVICE);
         Button swipeCardButton = (Button) view.findViewById(R.id.swipeCreditCarNowButton);
-        if (isCloverDevice) {
+        if (isCloverDevice && swipeCardButton != null && !paymentsModel.getPaymentPayload().isPrepayment()) {
             swipeCardButton.setVisibility(View.VISIBLE);
             swipeCardButton.setOnClickListener(swipeCreditCarNowButtonClickListener);
         }
@@ -44,12 +45,12 @@ public class PracticeAddNewCreditCardFragment extends AddNewCreditCardFragment {
     private View.OnClickListener swipeCreditCarNowButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            CloverPaymentAdapter cloverPaymentAdapter = new CloverPaymentAdapter(getActivity(), paymentsModel, callback.getAppointmentId());
+            CloverPaymentAdapter cloverPaymentAdapter = new CloverPaymentAdapter((BaseActivity) getActivity(), paymentsModel, callback.getAppointmentId(), callback);
             IntegratedPaymentPostModel paymentPostModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
             if (paymentPostModel == null) {
-                cloverPaymentAdapter.setCloverPayment(amountToMakePayment);
+                cloverPaymentAdapter.setCloverConnectorPayment(amountToMakePayment);
             } else {
-                cloverPaymentAdapter.setCloverPayment(paymentPostModel);
+                cloverPaymentAdapter.setCloverConnectorPayment(paymentPostModel);
             }
 
             if (getDialog() != null) {

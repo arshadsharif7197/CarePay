@@ -5,8 +5,8 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/fragmentDialogPaddingBottom"
-    android:paddingTop="@dimen/fragmentDialogPaddingTop">
+    android:paddingTop="@dimen/fragmentDialogPaddingTop"
+    android:paddingBottom="@dimen/fragmentDialogPaddingBottom">
 
     <LinearLayout
         android:id="@+id/closeViewLayout"
@@ -41,8 +41,8 @@
             android:layout_marginTop="5dp"
             android:textColor="@color/gray_white"
             android:textSize="12sp"
-            app:customAssetFont="gotham_rounded_bold"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            app:customAssetFont="gotham_rounded_bold" />
     </LinearLayout>
 
     <FrameLayout
@@ -53,8 +53,7 @@
         android:layout_marginStart="26dp"
         android:layout_marginEnd="26dp"
         android:gravity="center"
-        android:orientation="vertical">
-    </FrameLayout>
+        android:orientation="vertical"></FrameLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"

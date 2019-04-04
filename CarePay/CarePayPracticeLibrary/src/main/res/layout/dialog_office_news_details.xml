@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:background="@color/transparent_apt"
+    android:layout_marginTop="@dimen/dimen_20dp"
+    android:layout_marginBottom="@dimen/dimen_20dp"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -28,8 +29,8 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="@dimen/dimen_612dp"
-        android:layout_height="@dimen/dimen_684dp"
+        android:layout_width="@dimen/dialog_width"
+        android:layout_height="@dimen/dialog_height"
         android:layout_marginStart="@dimen/dimen_26dp"
         android:layout_marginEnd="@dimen/dimen_26dp"
         android:background="@drawable/bg_cardview"
@@ -38,26 +39,26 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/office_news_details_header"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_60dp"
+            android:layout_height="@dimen/toolbarLayoutHeight"
             android:background="@drawable/top_left_right_rounded_background"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_23sp"
-            breeze:textKey="news_title"
-            app:customAssetFont="gotham_rounded_medium" />
-        
+            android:textSize="@dimen/toolbarTitleTextSize"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="news_title" />
+
         <RadioGroup
             android:id="@+id/office_news_page_indicator"
             android:layout_width="match_parent"
-            android:orientation="horizontal"
+            android:layout_height="@dimen/dimen_50dp"
             android:gravity="center"
-            android:layout_height="@dimen/dimen_50dp"/>
-
+            android:orientation="horizontal" />
 
         <android.support.v4.view.ViewPager
             android:id="@+id/office_news_viewpager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 
     <LinearLayout

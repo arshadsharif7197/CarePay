@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,10 +26,11 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
-import com.carecloud.carepay.practice.library.customdialog.ChangeModeDialog;
+import com.carecloud.carepay.practice.library.customdialog.ChangeModeDialogFragment;
 import com.carecloud.carepay.practice.library.customdialog.ConfirmationPinDialog;
 import com.carecloud.carepay.practice.library.homescreen.adapters.OfficeNewsListAdapter;
 import com.carecloud.carepay.practice.library.homescreen.dialogs.OfficeNewsDetailsDialog;
+import com.carecloud.carepay.practice.library.homescreen.dtos.AppointmentCountsModel;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenAlertsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenAppointmentCountsDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenDTO;
@@ -39,11 +39,13 @@ import com.carecloud.carepay.practice.library.homescreen.dtos.PatientHomeScreenT
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenPayloadDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenTransitionsDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLinksDTO;
+import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.Defs;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
@@ -66,11 +68,10 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private HomeScreenDTO homeScreenDTO;
     private LinearLayout homeCheckInLl;
     private LinearLayout homeAlertLinearLl;
-    private List<String> modeSwitchOptions = new ArrayList<>();
     private HomeScreenMode homeScreenMode;
     private TextView languageSpinner;
 
-    private boolean isUserInteraction = false;
+    private Handler handler = new Handler();
 
     public enum HomeScreenMode {
         PATIENT_HOME, PRACTICE_HOME
@@ -91,8 +92,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         // init UI fields
         initUIFields();
-        createChangeModeDialog();
-        populateWithLabels();
         populateLanguageSpinner();
 
         if (modeSwitchImageView != null) {
@@ -137,24 +136,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         }
 
         changeScreenMode(homeScreenMode);
-        registerReceiver(newCheckedInReceiver, new IntentFilter("NEW_CHECKEDIN_NOTIFICATION"));
         getNews();
-    }
-
-    @Override
-    public void onUserInteraction() {
-        super.onUserInteraction();
-        isUserInteraction = true;
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                View language = findViewById(R.id.languageContainer);
-                if (language != null) {
-                    language.setVisibility(View.GONE);
-                }
-            }
-        }, 25);
     }
 
     private void populateLanguageSpinner() {
@@ -162,70 +144,44 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         Gson gson = new Gson();
         PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO
                 = gson.fromJson(payloadAsJsonObject, PracticeHomeScreenPayloadDTO.class);
-        final List<OptionDTO> languages = new ArrayList<>();
-        for (OptionDTO language : practiceHomeScreenPayloadDTO.getLanguages()) {
-            languages.add(language);
-        }
-        String selectedLanguageStr = getApplicationPreferences().getUserLanguage();
-        OptionDTO selectedLanguage = languages.get(0);
-        for (OptionDTO language : languages) {
-            if (selectedLanguageStr.equals(language.getCode())) {
-                selectedLanguage = language;
-            }
-        }
+        JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getLinks();
+        final PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject,
+                PracticeHomeScreenTransitionsDTO.class);
+        final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
+        headers.put("username", getApplicationPreferences().getUserName());
+        headers.put("username_patient", getApplicationPreferences().getPatientId());
 
-        final View languageContainer = findViewById(R.id.languageContainer);
-        if (languageContainer != null) {
-            languageSpinner = (TextView) findViewById(R.id.languageSpinner);
-            languageSpinner.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    languageContainer.setVisibility(languageContainer.getVisibility() == View.VISIBLE
-                            ? View.GONE : View.VISIBLE);
-                }
-            });
-            languageSpinner.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
-            JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getLinks();
-            final PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject,
-                    PracticeHomeScreenTransitionsDTO.class);
-            final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
-            headers.put("username", getApplicationPreferences().getUserName());
-            headers.put("username_patient", getApplicationPreferences().getPatientId());
-            RecyclerView languageList = (RecyclerView) findViewById(R.id.languageList);
-            LanguageAdapter languageAdapter = new LanguageAdapter(languages, selectedLanguage);
-            languageList.setAdapter(languageAdapter);
-            languageList.setLayoutManager(new LinearLayoutManager(getContext()));
-            languageAdapter.setCallback(new LanguageAdapter.LanguageInterface() {
-                @Override
-                public void onLanguageSelected(OptionDTO language) {
-                    languageContainer.setVisibility(View.GONE);
-                    if (!isUserInteraction) {
-                        return;
-                    }
-                    changeLanguage(transitionsDTO.getLanguage(),
-                            language.getCode().toLowerCase(), headers);
-                }
-            });
-        }
+        final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), false,
+                practiceHomeScreenPayloadDTO.getLanguages(), new LanguageAdapter.LanguageInterface() {
+            @Override
+            public void onLanguageSelected(OptionDTO language) {
+                changeLanguage(transitionsDTO.getLanguage(),
+                        language.getCode().toLowerCase(), headers);
+            }
+        });
+        languageSpinner = findViewById(R.id.languageSpinner);
+        languageSpinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popupPickerLanguage.showAsDropDown(view);
+            }
+        });
+        languageSpinner.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
     }
 
     private void initUIFields() {
-        homeCheckInLl = (LinearLayout) findViewById(R.id.homeQueueLayout);
-        homeAlertLinearLl = (LinearLayout) findViewById(R.id.homeAlertLayout);
-        homeLockImageView = (ImageView) findViewById(R.id.homeLockIcon);
-        modeSwitchImageView = (ImageView) findViewById(R.id.homeModeSwitchClickable);
-        languageSpinner = (TextView) findViewById(R.id.languageSpinner);
+        homeCheckInLl = findViewById(R.id.homeQueueLayout);
+        homeAlertLinearLl = findViewById(R.id.homeAlertLayout);
+        homeLockImageView = findViewById(R.id.homeLockIcon);
+        modeSwitchImageView = findViewById(R.id.homeModeSwitchClickable);
+        languageSpinner = findViewById(R.id.languageSpinner);
     }
 
     private void populateWithLabels() {
-        // load mode switch options
-        modeSwitchOptions.clear();
-        modeSwitchOptions.add(Label.getLabel("patient_mode_button"));
-        modeSwitchOptions.add(Label.getLabel("logout_button"));
     }
 
     private void changeScreenMode(HomeScreenMode homeScreenMode) {
-        TextView checkinLabelTextView = (TextView) findViewById(R.id.homeCheckinLabel);
+        TextView checkinLabelTextView = findViewById(R.id.homeCheckinLabel);
         if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
             if (homeCheckInLl != null) {
                 homeCheckInLl.setVisibility(View.GONE);
@@ -262,11 +218,11 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
                     shopContainer.setOnClickListener(this);
                     findViewById(R.id.separator).setVisibility(View.VISIBLE);
 
-                    ImageView checkinImageView = (ImageView) findViewById(R.id.homeCheckinImageView);
+                    ImageView checkinImageView = findViewById(R.id.homeCheckinImageView);
                     redesignTopLayouts(checkinLabelTextView, checkinImageView, R.id.checkInFakeCenter);
 
-                    TextView checkOutLabelTextView = (TextView) findViewById(R.id.homeCheckoutLabel);
-                    ImageView checkoutImageView = (ImageView) findViewById(R.id.checkoutImageView);
+                    TextView checkOutLabelTextView = findViewById(R.id.homeCheckoutLabel);
+                    ImageView checkoutImageView = findViewById(R.id.checkoutImageView);
                     redesignTopLayouts(checkOutLabelTextView, checkoutImageView, R.id.checkoutFakeCenter);
                 }
             }
@@ -296,7 +252,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
                 PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO
                         = gson.fromJson(payloadAsJsonObject, PracticeHomeScreenPayloadDTO.class);
                 setPracticeUser(practiceHomeScreenPayloadDTO);
-                setAppointmentCount(practiceHomeScreenPayloadDTO);
+                setAppointmentCounts(true);
                 setAlertCount(practiceHomeScreenPayloadDTO);
             }
         }
@@ -318,23 +274,55 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         imageView.setLayoutParams(imageViewParams);
     }
 
-    private void setAppointmentCount(PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO) {
-        HomeScreenAppointmentCountsDTO homeScreenAppointmentCountsDTO = practiceHomeScreenPayloadDTO
-                .getAppointmentCounts();
-        if (homeScreenAppointmentCountsDTO != null) {
-            int checkinCounter = homeScreenAppointmentCountsDTO.getCheckingInCount() != null ?
-                    homeScreenAppointmentCountsDTO.getCheckingInCount() : 0;
-            TextView counter = (TextView) findViewById(R.id.checkedInCounterTextview);
+    private void setAppointmentCounts(boolean shouldUpdateNow) {
+        HomeScreenAppointmentCountsDTO appointmentCounts = (HomeScreenAppointmentCountsDTO) getApplicationPreferences().getAppointmentCounts(HomeScreenAppointmentCountsDTO.class);
+        if (appointmentCounts != null) {
+            int checkinCounter = appointmentCounts.getCheckingInCount();
+            TextView counter = findViewById(R.id.checkedInCounterTextview);
             if (counter != null) {
                 counter.setText(String.valueOf(checkinCounter));
             }
         }
+
+        if (shouldUpdateNow) {
+            updateCheckinCounts();
+        } else {
+            handler.removeCallbacksAndMessages(null);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    setAppointmentCounts(false);
+                }
+            }, 1000 * 60);//30s
+        }
+    }
+
+    private void updateCheckinCounts() {
+        JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getLinks();
+        Gson gson = new Gson();
+
+        UserPracticeDTO practiceDTO = getApplicationMode().getUserPracticeDTO();
+        Set<String> locationsSavedFilteredIds = getApplicationPreferences()
+                .getSelectedLocationsIds(practiceDTO.getPracticeId(), practiceDTO.getUserId());
+
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_id", practiceDTO.getPracticeId());
+        queryMap.put("practice_mgmt", practiceDTO.getPracticeMgmt());
+
+        if (locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()) {
+            queryMap.put("location_ids", StringUtil.getListAsCommaDelimitedString(locationsSavedFilteredIds));
+        }
+
+        PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
+        TransitionDTO transitionDTO = transitionsDTO.getAppointmentCounts();
+
+        getWorkflowServiceHelper().execute(transitionDTO, getAppointmentCounts(transitionDTO), queryMap);
     }
 
     private void setAlertCount(PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO) {
         HomeScreenAlertsDTO alertsDTO = practiceHomeScreenPayloadDTO.getAlerts();
         if (alertsDTO != null) {
-            TextView alertText = (TextView) findViewById(R.id.alertTextView);
+            TextView alertText = findViewById(R.id.alertTextView);
             if (alertText != null) {
                 int alertCounter = alertsDTO.getCount();
                 alertText.setText(String.valueOf(alertCounter));
@@ -381,7 +369,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         @Override
         public void onReceive(Context context, Intent intent) {
             String count = intent.getExtras().getString("appointments_checking_in");
-            TextView counter = ((TextView) findViewById(R.id.checkedInCounterTextview));
+            TextView counter = findViewById(R.id.checkedInCounterTextview);
             if (count != null) {
                 counter.setText(count);
             }
@@ -391,7 +379,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(newCheckedInReceiver);
+        handler.removeCallbacksAndMessages(null);
     }
 
     @Override
@@ -419,6 +407,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     protected void onResume() {
         super.onResume();
         disableUnavailableItems();
+        updateCheckinCounts();
     }
 
     private void disableUnavailableItems() {
@@ -444,9 +433,11 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private void unlockPracticeMode() {
         Gson gson = new Gson();
         PatientModeLinksDTO pinPadObject = gson.fromJson(homeScreenDTO.getMetadata().getLinks(), PatientModeLinksDTO.class);
-        ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this,
-                pinPadObject.getPinpad(), false, pinPadObject.getLanguage());
-        confirmationPinDialog.show();
+        ConfirmationPinDialog confirmationPinDialog = ConfirmationPinDialog.newInstance(
+                pinPadObject.getPinpad(),
+                false,
+                pinPadObject.getLanguage());
+        displayDialogFragment(confirmationPinDialog, false);
     }
 
     private void getNews() {
@@ -592,30 +583,15 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
     private void navigateToPatientHome() {
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-            createChangeModeDialog().show();
+            createChangeModeDialog();
         } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
             // add transitions
         }
     }
 
-    private ChangeModeDialog createChangeModeDialog() {
-        Gson gson = new Gson();
-        JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
-        final PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
-        return new ChangeModeDialog(this, new ChangeModeDialog.PatientModeClickListener() {
-            @Override
-            public void onPatientModeSelected() {
-                Map<String, String> query = new HashMap<>();
-                query.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
-                query.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
-                getWorkflowServiceHelper().execute(transitionsDTO.getPatientMode(), commonTransitionCallback, query);
-            }
-        }, new ChangeModeDialog.LogoutClickListener() {
-            @Override
-            public void onLogoutSelected() {
-                logOut(transitionsDTO.getLogout());
-            }
-        }, modeSwitchOptions);
+    private void createChangeModeDialog() {
+        String transitionsAsString = homeScreenDTO.getMetadata().getTransitions().toString();
+        ChangeModeDialogFragment.newInstance(transitionsAsString).show(getSupportFragmentManager(), ChangeModeDialogFragment.class.getName());
     }
 
     /**
@@ -626,7 +602,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private void logOut(TransitionDTO transitionsDTO) {
         Map<String, String> query = new HashMap<>();
         Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
-
         query.put("transition", "true");
         getWorkflowServiceHelper().execute(transitionsDTO, logOutCall, query, headers);
     }
@@ -647,6 +622,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
                 PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, extra);
             } else {
                 PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+                AppointmentCountUpdateService.cancelScheduledServiceRun(CloverMainActivity.this);
             }
         }
 
@@ -696,7 +672,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
                     PracticeHomeScreenPayloadDTO.class);
             List<HomeScreenOfficeNewsDTO> officeNews = practiceHomePayloadDTO.getOfficeNews();
             if (!officeNews.isEmpty()) {
-                RecyclerView newsListRecyclerView = (RecyclerView) findViewById(R.id.office_news_list);
+                RecyclerView newsListRecyclerView = findViewById(R.id.office_news_list);
                 if (newsListRecyclerView != null) {
                     newsListRecyclerView.setVisibility(View.VISIBLE);
                     findViewById(R.id.office_news_header).setVisibility(View.VISIBLE);
@@ -734,9 +710,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             = new OfficeNewsListAdapter.OnOfficeNewsClickedListener() {
         @Override
         public void onOfficeNewsSelected(List<HomeScreenOfficeNewsDTO> officeNewsList, int position) {
-            OfficeNewsDetailsDialog detailsDialog = new OfficeNewsDetailsDialog(
-                    CloverMainActivity.this, officeNewsList, position);
-            detailsDialog.show();
+            OfficeNewsDetailsDialog detailsDialog = OfficeNewsDetailsDialog.newInstance(officeNewsList, position);
+            displayDialogFragment(detailsDialog, false);
         }
     };
 
@@ -801,10 +776,37 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         }
     };
 
+    private WorkflowServiceCallback getAppointmentCounts(final TransitionDTO transitionDTO) {
+        return new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                AppointmentCountsModel countsModel = DtoHelper.getConvertedDTO(AppointmentCountsModel.class, workflowDTO);
+                HomeScreenAppointmentCountsDTO appointmentCounts = countsModel.getAppointmentCountsPayload().getAppointmentCounts();
+                getApplicationPreferences().setAppointmentCounts(appointmentCounts);
+                setAppointmentCounts(false);
+
+                Intent intent = new Intent(CloverMainActivity.this, AppointmentCountUpdateService.class);
+                intent.putExtra(AppointmentCountUpdateService.KEY_TRANSITION, DtoHelper.getStringDTO(transitionDTO));
+                intent.putExtra(AppointmentCountUpdateService.KEY_PRACTICE_ID, getApplicationMode().getUserPracticeDTO().getPracticeId());
+                intent.putExtra(AppointmentCountUpdateService.KEY_PRACTICE_MGMT, getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+                startService(intent);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                //set anyway to trigger future updates
+                setAppointmentCounts(false);
+            }
+        };
+    }
 
     @Override
     public void onBackPressed() {
-
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
             Gson gson = new Gson();
             JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
@@ -814,8 +816,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             getAppAuthorizationHelper().setUser(null);
             getApplicationMode().setUserPracticeDTO(getAppAuthorizationHelper(), null);
         }
-
-//        super.onBackPressed();
     }
 
 }

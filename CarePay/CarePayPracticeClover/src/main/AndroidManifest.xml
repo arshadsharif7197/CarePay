@@ -71,7 +71,7 @@
             android:name="com.carecloud.carepay.practice.library.checkin.PatientModeCheckInCheckOutActivity"
             android:screenOrientation="sensorLandscape" />
         <activity
-            android:name="com.carecloud.carepay.practice.library.appointments.PatientModePracticeAppointmentActivity"
+            android:name="com.carecloud.carepay.practice.library.appointments.PatientModeAppointmentActivity"
             android:screenOrientation="sensorLandscape" />
         <activity
             android:name="com.carecloud.carepay.practice.library.checkin.activities.PersonalInformationActivity"
@@ -132,6 +132,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name="com.carecloud.shamrocksdk.payment.activities.CloverPaymentConnectorActivity"
+                  android:theme="@style/Theme.AppCompat.Translucent"
+                  tools:replace="android:theme"/>
         <service android:name=".CloverQueueUploadService" android:enabled="true" />
     </application>
 

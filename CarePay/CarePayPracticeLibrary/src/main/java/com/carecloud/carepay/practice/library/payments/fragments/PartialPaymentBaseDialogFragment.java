@@ -34,13 +34,13 @@ public abstract class PartialPaymentBaseDialogFragment extends BaseDialogFragmen
     @Override
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
-        amountTextView = (TextView) view.findViewById(R.id.enter_amount_text);
+        amountTextView = view.findViewById(R.id.enter_amount_text);
 
         currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
         String symbol = currencyFormat.getCurrency().getSymbol();
-        amountSymbol = (TextView) view.findViewById(R.id.amountSymbolTextView);
+        amountSymbol = view.findViewById(R.id.amountSymbolTextView);
         amountSymbol.setText(symbol);
-        applyButton = (Button) view.findViewById(R.id.enter_amount_button);
+        applyButton = view.findViewById(R.id.enter_amount_button);
         applyButton.setOnClickListener(this);
         View close = view.findViewById(R.id.closeViewLayout);
         close.setOnClickListener(this);
@@ -118,12 +118,12 @@ public abstract class PartialPaymentBaseDialogFragment extends BaseDialogFragmen
                     amountSymbol.setTextColor(getResources().getColor(R.color.white));
                 }
             }
-            if (numberStr.length() < 5) {
-                amountTextView.setTextSize(getResources().getDimension(R.dimen.amountCalculatorEntryTextSizeBig));
-            } else if (numberStr.length() < 7) {
-                amountTextView.setTextSize(getResources().getDimension(R.dimen.amountCalculatorEntryTextSize65));
-            } else if (numberStr.length() < 10) {
+            if (amountTextView.getText().length() > 10) {
                 amountTextView.setTextSize(getResources().getDimension(R.dimen.amountCalculatorEntryTextSize50));
+            } else if (amountTextView.getText().length() > 6) {
+                amountTextView.setTextSize(getResources().getDimension(R.dimen.amountCalculatorEntryTextSize65));
+            } else if (amountTextView.getText().length() > 0) {
+                amountTextView.setTextSize(getResources().getDimension(R.dimen.amountCalculatorEntryTextSizeBig));
             }
 
             updateLayout();

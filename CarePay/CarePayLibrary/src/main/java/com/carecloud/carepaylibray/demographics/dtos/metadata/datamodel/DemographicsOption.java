@@ -52,6 +52,6 @@ public class DemographicsOption implements OptionNameInterface {
 
     @Override
     public String getDisplayName() {
-        return name;
+        return getLabel() != null ? getLabel() : name;
     }
 }

@@ -91,7 +91,6 @@ public class AppointmentHistoryFragment extends BaseFragment
         selectedPractice = appointmentDto.getPayload().getUserPractices().get(0);
         callAppointmentService(selectedPractice, true, true);
         excludedAppointmentStates = new ArrayList<>();
-        excludedAppointmentStates.add(CarePayConstants.PENDING);
         excludedAppointmentStates.add(CarePayConstants.REQUESTED);
         excludedAppointmentStates.add(CarePayConstants.CHECKING_IN);
     }
@@ -146,7 +145,7 @@ public class AppointmentHistoryFragment extends BaseFragment
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.getAppointmentPresenter().newAppointment();
+                callback.newAppointment();
             }
         });
     }
@@ -218,7 +217,10 @@ public class AppointmentHistoryFragment extends BaseFragment
                         if (appointmentDto.getPayload().getPagingInfo().size() > 0) {
                             paging = appointmentDto.getPayload().getPagingInfo().get(0).getPaging();
                         }
-                        if (appointmentDto.getPayload().getAppointments().size() > 0) {
+
+                        List<AppointmentDTO> appointments = filterAppointments(appointmentDto
+                                .getPayload().getAppointments());
+                        if (appointments.size() > 0) {
                             showHistoricAppointments(appointmentDto.getPayload().getAppointments(), refresh);
                         } else {
                             showNoAppointmentsLayout();
@@ -268,7 +270,6 @@ public class AppointmentHistoryFragment extends BaseFragment
     private void showHistoricAppointments(List<AppointmentDTO> appointments, boolean refresh) {
         getView().findViewById(R.id.noAppointmentsLayout).setVisibility(View.GONE);
         historicAppointmentsRecyclerView.setVisibility(View.VISIBLE);
-        appointments = filterAppointments(appointments);
         adapter.setData(appointments, refresh);
     }
 

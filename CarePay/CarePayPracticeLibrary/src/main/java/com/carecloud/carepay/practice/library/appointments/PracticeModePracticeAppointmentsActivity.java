@@ -4,14 +4,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.adhocforms.AdHocFormsListFragment;
+import com.carecloud.carepay.practice.library.appointments.createappointment.AvailabilityHourFragment;
+import com.carecloud.carepay.practice.library.appointments.createappointment.CreateAppointmentFragment;
 import com.carecloud.carepay.practice.library.appointments.dialogs.CancelAppointmentConfirmDialogFragment;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAppointmentDialog;
+import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeModeRequestAppointmentDialog;
 import com.carecloud.carepay.practice.library.appointments.dtos.PracticeAppointmentDTO;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
@@ -34,13 +39,17 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
+import com.carecloud.carepaylibray.appointments.createappointment.CreateAppointmentFragmentInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.appointments.models.LinksDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
+import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentDetailInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -351,12 +360,11 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             public void onClick(View view) {
                 needsToConfirmAppointmentCreation = needsConfirmation;
                 TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getFindPatient();
-                FindPatientDialog findPatientDialog = new FindPatientDialog(getContext(),
-                        transitionDTO,
+                FindPatientDialog findPatientDialog = FindPatientDialog.newInstance(transitionDTO,
                         Label.getLabel(needsConfirmation ? "practice_checkin_filter_find_patient_by_name"
                                 : "practice_filter_find_patient_first"));
                 findPatientDialog.setClickedListener(getFindPatientDialogListener());
-                findPatientDialog.show();
+                displayDialogFragment(findPatientDialog, false);
             }
         };
     }
@@ -368,46 +376,46 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                 setPatient(patient);
                 getPatientBalances(patient, needsToConfirmAppointmentCreation);
             }
+        };
+    }
 
-            private void getPatientBalances(PatientModel patient, boolean needsToConfirmAppointmentCreation) {
-                Map<String, String> queryMap = new HashMap<>();
-                queryMap.put("patient_id", patient.getPatientId());
-                TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getPatientBalances();
-                getWorkflowServiceHelper().execute(transitionDTO,
-                        getPatientBalancesCallback(patient, needsToConfirmAppointmentCreation), queryMap);
+    private void getPatientBalances(PatientModel patient, boolean needsToConfirmAppointmentCreation) {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("patient_id", patient.getPatientId());
+        TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getPatientBalances();
+        getWorkflowServiceHelper().execute(transitionDTO,
+                getPatientBalancesCallback(patient, needsToConfirmAppointmentCreation), queryMap);
+    }
+
+    private WorkflowServiceCallback getPatientBalancesCallback(final PatientModel patient,
+                                                               final boolean needsToConfirmAppointmentCreation) {
+        return new WorkflowServiceCallback() {
+
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
             }
 
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                PaymentsModel patientDetails = DtoHelper
+                        .getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
+                patient.setProfilePhoto(patientDetails.getPaymentPayload().getPatientBalances().get(0)
+                        .getDemographics().getPayload().getPersonalDetails().getProfilePhoto());
+                patient.setPhoneNumber(patientDetails.getPaymentPayload().getPatientBalances().get(0)
+                        .getDemographics().getPayload().getAddress().getPhone());
+                if (needsToConfirmAppointmentCreation) {
+                    showResponsibilityFragment(patientDetails);
+                } else {
+                    newAppointment();
+                }
+            }
 
-            private WorkflowServiceCallback getPatientBalancesCallback(final PatientModel patient,
-                                                                       final boolean needsToConfirmAppointmentCreation) {
-                return new WorkflowServiceCallback() {
-
-                    @Override
-                    public void onPreExecute() {
-                        showProgressDialog();
-                    }
-
-                    @Override
-                    public void onPostExecute(WorkflowDTO workflowDTO) {
-                        hideProgressDialog();
-                        PaymentsModel patientDetails = DtoHelper
-                                .getConvertedDTO(PaymentsModel.class, workflowDTO.toString());
-                        patient.setProfilePhoto(patientDetails.getPaymentPayload().getPatientBalances().get(0)
-                                .getDemographics().getPayload().getPersonalDetails().getProfilePhoto());
-                        patient.setPhoneNumber(patientDetails.getPaymentPayload().getPatientBalances().get(0)
-                                .getDemographics().getPayload().getAddress().getPhone());
-                        if (needsToConfirmAppointmentCreation) {
-                            showResponsibilityFragment(patientDetails);
-                        } else {
-                            newAppointment();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(String exceptionMessage) {
-                        showErrorNotification(exceptionMessage);
-                    }
-                };
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
             }
         };
     }
@@ -445,6 +453,9 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         } else if (appointmentPayloadDTO.canCheckOut() || appointmentPayloadDTO.getVisitType().hasVideoOption()) {
             dialogStyle = AppointmentDisplayStyle.CHECKED_IN;
 
+        } else if (appointmentPayloadDTO.isAppointmentOver() && appointmentPayloadDTO.getAppointmentStatus().getCode().equals(CarePayConstants.PENDING)) {
+            dialogStyle = AppointmentDisplayStyle.MISSED;
+
         } else if (appointmentPayloadDTO.isAppointmentOver() || appointmentPayloadDTO.isAppointmentFinished()) {
             //todo finished appt options, Doing nothing for now
 
@@ -466,28 +477,29 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     private void confirmAppointment(AppointmentDTO appointmentDTO) {
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getConfirmAppointment();
         confirmationMessageText = "appointment_schedule_success_message_HTML";
-        transitionAppointment(transitionDTO, appointmentDTO, true, getString(R.string.event_appointment_accepted));
+        transitionAppointment(transitionDTO, appointmentDTO, true, getString(R.string.event_appointment_accepted), false);
     }
 
     private void rejectAppointment(AppointmentDTO appointmentDTO) {
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getDismissAppointment();
         confirmationMessageText = "appointment_rejection_success_message_HTML";
-        transitionAppointment(transitionDTO, appointmentDTO, false, getString(R.string.event_appointment_rejected));
+        transitionAppointment(transitionDTO, appointmentDTO, false, getString(R.string.event_appointment_rejected), true);
     }
 
     private void transitionAppointment(TransitionDTO transitionDTO,
                                        AppointmentDTO appointmentDTO,
                                        boolean updateOnSuccess,
-                                       String event) {
+                                       String event,
+                                       boolean shouldRefresh) {
         this.updateOnSuccess = updateOnSuccess;
 
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("appointment_id", appointmentDTO.getPayload().getId());
 
-        getWorkflowServiceHelper().execute(transitionDTO, getAppointmentsServiceCallback(event, appointmentDTO), queryMap);
+        getWorkflowServiceHelper().execute(transitionDTO, getAppointmentsServiceCallback(event, appointmentDTO, shouldRefresh), queryMap);
     }
 
-    WorkflowServiceCallback getAppointmentsServiceCallback(final String event, final AppointmentDTO appointmentDTO) {
+    WorkflowServiceCallback getAppointmentsServiceCallback(final String event, final AppointmentDTO appointmentDTO, final boolean shouldRefresh) {
         return new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
@@ -502,6 +514,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                 DtoHelper.putExtra(getIntent(), checkInDTO);
                 initializeCheckinDto();
                 applyFilter();
+                if (shouldRefresh) { refreshData(); }
 
                 updateOnSuccess = false;
 
@@ -569,7 +582,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         dialog.show(getSupportFragmentManager(), tag);
     }
 
-    @Override
     public void onAppointmentRequestSuccess() {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("start_date", getFormattedDate(startDate));
@@ -612,16 +624,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     @Override
-    protected TransitionDTO getMakeAppointmentTransition() {
-        return checkInDTO.getMetadata().getTransitions().getMakeAppointment();
-    }
-
-    @Override
-    protected LinksDTO getLinks() {
-        return checkInDTO.getMetadata().getLinks();
-    }
-
-    @Override
     public void onLeftActionTapped(PaymentsModel paymentsModel, double owedAmount) {
         getAllPracticeForms(getPatient().getPatientId(), null, paymentsModel);
     }
@@ -632,8 +634,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
         if (appointmentPayloadDTO.getAppointmentStatus().getCode().equals(CarePayConstants.REQUESTED)) {
             rejectAppointment(appointmentDTO);
-        } else if (appointmentPayloadDTO.isAppointmentOver()) {
-            //TODO Add future logic
         } else {
             CancelAppointmentConfirmDialogFragment fragment = CancelAppointmentConfirmDialogFragment
                     .newInstance(appointmentDTO);
@@ -778,7 +778,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     public void cancelAppointment(AppointmentDTO appointmentDTO) {
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getTransitions().getCancelAppointment();
         confirmationMessageText = "appointment_cancellation_success_message_HTML";
-        transitionAppointment(transitionDTO, appointmentDTO, false, getString(R.string.event_appointment_cancelled));
+        transitionAppointment(transitionDTO, appointmentDTO, false, getString(R.string.event_appointment_cancelled), false);
     }
 
     @Override
@@ -807,7 +807,9 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     @Override
-    public void displayBalanceDetails(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem, PendingBalanceDTO selectedBalance) {
+    public void displayBalanceDetails(PaymentsModel paymentsModel,
+                                      PendingBalancePayloadDTO paymentLineItem,
+                                      PendingBalanceDTO selectedBalance) {
         onDetailItemClick(paymentsModel, paymentLineItem);
     }
 
@@ -819,6 +821,56 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     @Override
     public void onCashSelected(PaymentsModel paymentsModel) {
         //TODO handle this from practice mode
+    }
+
+    @Override
+    public DTO getDto() {
+        return appointmentsResultModel;
+    }
+
+    @Override
+    public void appointmentScheduledSuccessfully() {
+        getSupportFragmentManager().popBackStackImmediate(AvailabilityHourFragment.class.getName(),
+                FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        getSupportFragmentManager().popBackStackImmediate();
+        onAppointmentRequestSuccess();
+    }
+
+    @Override
+    public void setAppointmentSlot(AppointmentsSlotsDTO slot) {
+        //Not Apply
+    }
+
+    @Override
+    public void setResourceProvider(AppointmentResourcesItemDTO resource) {
+        Fragment fragment = getSupportFragmentManager()
+                .findFragmentByTag(CreateAppointmentFragment.class.getName());
+        if (fragment instanceof CreateAppointmentFragmentInterface) {
+            ((CreateAppointmentFragmentInterface) fragment).setResourceProvider(resource);
+        }
+    }
+
+    @Override
+    public void setVisitType(VisitTypeDTO visitTypeDTO) {
+        Fragment fragment = getSupportFragmentManager()
+                .findFragmentByTag(CreateAppointmentFragment.class.getName());
+        if (fragment instanceof CreateAppointmentFragmentInterface) {
+            ((CreateAppointmentFragmentInterface) fragment).setVisitType(visitTypeDTO);
+        }
+    }
+
+    @Override
+    public void setLocation(LocationDTO locationDTO) {
+        Fragment fragment = getSupportFragmentManager()
+                .findFragmentByTag(CreateAppointmentFragment.class.getName());
+        if (fragment instanceof CreateAppointmentFragmentInterface) {
+            ((CreateAppointmentFragmentInterface) fragment).setLocation(locationDTO);
+        }
+    }
+
+    @Override
+    public void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO) {
+        showFragment(PracticeModeRequestAppointmentDialog.newInstance(appointmentDTO, getPatient()));
     }
 
     private WorkflowServiceCallback startVideoVisitCallback = new WorkflowServiceCallback() {

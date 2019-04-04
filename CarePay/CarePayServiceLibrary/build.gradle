@@ -2,7 +2,6 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '27.0.3'
 
     defaultConfig {
         minSdkVersion 17
@@ -36,6 +35,6 @@ dependencies {
     api 'com.amazonaws:aws-android-sdk-cognitoidentityprovider:2.3.1'
 
     // MixPanel
-    api "com.mixpanel.android:mixpanel-android:4.+"
+    api 'com.mixpanel.android:mixpanel-android:5.6.0'
 
 }

@@ -31,7 +31,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
-import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.AddExistingPaymentPlanFragment;
@@ -96,6 +96,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     private Fragment androidPayTargetFragment;
     private int displayPage = PAGE_BALANCES;
     private PaymentPlanDTO paymentPlan;
+    private boolean paymentEnabled;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -209,14 +210,14 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         ft.addToBackStack(null);
         PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
                 .newInstance(paymentsModel, selectedBalancesItem.getPayload().get(0),
-                        selectedBalancesItem, true);
+                        selectedBalancesItem, paymentEnabled);
         dialog.show(ft, tag);
     }
 
     @Override
     public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
-        new PartialPaymentDialog(this, paymentsDTO, selectedBalance).show();
-
+        PartialPaymentDialog dialog = PartialPaymentDialog.newInstance(paymentsDTO, selectedBalance);
+        displayDialogFragment(dialog, false);
         MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment),
                 getString(R.string.param_practice_id),
                 selectedBalance.getMetadata().getPracticeId());
@@ -307,15 +308,15 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     public void onPaymentPlanAction(final PaymentsModel paymentsModel) {
         PendingBalanceDTO reducedBalancesItem = paymentsModel.getPaymentPayload()
                 .reduceBalanceItems(selectedBalancesItem, false);
-        Dialog dialog = new PaymentPlanAmountDialog(getContext(), paymentsModel,
-                reducedBalancesItem, this);
+        PaymentPlanAmountDialog dialog = PaymentPlanAmountDialog.newInstance(paymentsModel,
+                reducedBalancesItem);
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
                 startPaymentProcess(paymentsModel);
             }
         });
-        dialog.show();
+        displayDialogFragment(dialog, false);
     }
 
     @Override
@@ -390,9 +391,12 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         setPendingBalance(selectedBalancesItem);
         selectedUserPractice = DtoHelper.getConvertedDTO(UserPracticeDTO.class,
                 DtoHelper.getStringDTO(selectedBalancesItem.getMetadata()));
-        if (paymentDTO.getPaymentPayload().canMakePayments(selectedBalancesItem.getMetadata().getPracticeId())) {
+        String practiceId = selectedBalancesItem.getMetadata().getPracticeId();
+        if (paymentDTO.getPaymentPayload().canMakePayments(practiceId) && paymentDTO.getPaymentPayload().hasPaymentMethods(practiceId)) {
+            paymentEnabled = true;
             startPaymentProcess(paymentDTO);
         } else {
+            paymentEnabled = false;
             PaymentDisabledAlertDialogFragment fragment = PaymentDisabledAlertDialogFragment
                     .newInstance(Label.getLabel("payments.pendingPayments.patientFeedbackPopup.label.title"),
                             Label.getLabel("payments.pendingPayments.patientFeedbackPopup.label.description"),
@@ -518,7 +522,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                                      boolean onlySelectMode) {
         PaymentPlanAddCreditCardFragment fragment = PaymentPlanAddCreditCardFragment
                 .newInstance(paymentsModel, paymentPlanPostModel, onlySelectMode);
-        fragment.setChangePaymentMethodListener(new LargeAlertDialog.LargeAlertInterface() {
+        fragment.setChangePaymentMethodListener(new LargeAlertDialogFragment.LargeAlertInterface() {
             @Override
             public void onActionButton() {
                 PaymentPlanPaymentMethodFragment fragment = PaymentPlanPaymentMethodFragment
@@ -553,7 +557,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void onMakeOneTimePayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
         paymentPlan = paymentPlanDTO;
-        new OneTimePaymentDialog(getContext(), paymentsModel, paymentPlanDTO, this).show();
+        OneTimePaymentDialog dialog = OneTimePaymentDialog.newInstance(paymentsModel, paymentPlanDTO);
+        displayDialogFragment(dialog, false);
     }
 
     @Override
@@ -602,7 +607,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                                      final Date paymentDate) {
         PaymentPlanAddCreditCardFragment fragment = PaymentPlanAddCreditCardFragment
                 .newInstance(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
-        fragment.setChangePaymentMethodListener(new LargeAlertDialog.LargeAlertInterface() {
+        fragment.setChangePaymentMethodListener(new LargeAlertDialogFragment.LargeAlertInterface() {
             @Override
             public void onActionButton() {
                 PaymentPlanPaymentMethodFragment fragment = PaymentPlanPaymentMethodFragment
@@ -791,8 +796,9 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     public void onStartEditScheduledPayment(PaymentsModel paymentsModel,
                                             PaymentPlanDTO paymentPlanDTO,
                                             ScheduledPaymentModel scheduledPaymentModel) {
-        new EditOneTimePaymentDialog(this, paymentsDTO, paymentPlanDTO,
-                scheduledPaymentModel, this).show();
+        EditOneTimePaymentDialog dialog = EditOneTimePaymentDialog.newInstance(paymentsDTO, paymentPlanDTO,
+                scheduledPaymentModel);
+        displayDialogFragment(dialog, false);
     }
 
     @Override

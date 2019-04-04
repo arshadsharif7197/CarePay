@@ -50,37 +50,6 @@
             android:src="?practiceLogoDrawable" />
     </RelativeLayout>
 
-    <FrameLayout
-        android:id="@+id/languageContainer"
-        android:layout_width="@dimen/languageContainerWidth"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@id/headerLayout"
-        android:layout_marginEnd="@dimen/dimen_15dp"
-        android:animateLayoutChanges="true"
-        android:visibility="gone">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/languageContainerMarginTop"
-            android:background="@drawable/bottom_rounded_white"
-            android:minHeight="@dimen/dimen_60dp">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/languageList"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </RelativeLayout>
-
-        <ImageView
-            android:layout_width="@dimen/languageIndicatorSize"
-            android:layout_height="@dimen/languageIndicatorSize"
-            android:layout_gravity="center|top"
-            android:src="@drawable/sort_up" />
-    </FrameLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -88,6 +57,17 @@
         android:layout_marginTop="@dimen/sigin_main_container_margin_top"
         android:paddingBottom="@dimen/dimen_20dp"
         android:paddingTop="@dimen/dimen_20dp">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@id/mainLayout"
+            android:textSize="@dimen/signinHeaderTextSize"
+            android:layout_marginBottom="20dp"
+            android:textColor="@color/white"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="welcome_signin_text"/>
 
         <RelativeLayout
             android:id="@+id/mainLayout"
@@ -187,11 +167,11 @@
 
         <ImageView
             android:id="@+id/shadowImageView"
-            android:layout_width="400dp"
+            android:layout_width="@dimen/signInShadowWidth"
             android:layout_height="wrap_content"
             android:layout_below="@id/mainLayout"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="-48dp"
+            android:layout_marginTop="@dimen/signInShadowTopMargin"
             android:src="@drawable/home_shadow" />
 
     </RelativeLayout>

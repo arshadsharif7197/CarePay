@@ -12,7 +12,7 @@ public class VisitTypeDTO {
 
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private String id;
     @SerializedName("name")
     @Expose
     private String name;
@@ -22,6 +22,9 @@ public class VisitTypeDTO {
     @SerializedName("amount")
     @Expose
     private double amount;
+    @SerializedName("is_for_requests")
+    @Expose
+    private boolean forRequest;
     @SerializedName("video_option")
     @Expose
     private boolean videoOption = false;
@@ -31,7 +34,7 @@ public class VisitTypeDTO {
      *
      * @return the id
      */
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
@@ -40,7 +43,7 @@ public class VisitTypeDTO {
      *
      * @param id the id
      */
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -86,6 +89,14 @@ public class VisitTypeDTO {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public boolean isForRequest() {
+        return forRequest;
+    }
+
+    public void setForRequest(boolean forRequest) {
+        this.forRequest = forRequest;
     }
 
     public boolean hasVideoOption() {

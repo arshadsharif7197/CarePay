@@ -68,7 +68,7 @@ import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
-import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
@@ -189,7 +189,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     private void initializePatientListView() {
-        TwoColumnPatientListView patientListView = (TwoColumnPatientListView) findViewById(R.id.list_patients);
+        TwoColumnPatientListView patientListView = findViewById(R.id.list_patients);
         patientListView.setPaymentsModel(paymentsModel);
         patientListView.setCallback(new TwoColumnPatientListView.TwoColumnPatientListViewListener() {
             @Override
@@ -310,10 +310,9 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             public void onClick(View view) {
                 TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata()
                         .getPaymentsLinks().getFindPatient();
-                FindPatientDialog findPatientDialog = new FindPatientDialog(PaymentsActivity.this,
-                        transitionDTO, Label.getLabel("practice_payments_filter_find_patient_by_name"));
+                FindPatientDialog findPatientDialog = FindPatientDialog.newInstance(transitionDTO, Label.getLabel("practice_payments_filter_find_patient_by_name"));
                 setFindPatientOnItemClickedListener(findPatientDialog);
-                findPatientDialog.show();
+                displayDialogFragment(findPatientDialog, false);
             }
         };
     }
@@ -369,7 +368,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @Override
     public void applyFilter() {
-        TwoColumnPatientListView patientListView = (TwoColumnPatientListView) findViewById(R.id.list_patients);
+        TwoColumnPatientListView patientListView = findViewById(R.id.list_patients);
         patientListView.applyFilter(filter);
     }
 
@@ -457,7 +456,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         }
 
         //reload list data
-        TwoColumnPatientListView patientListView = (TwoColumnPatientListView) findViewById(R.id.list_patients);
+        TwoColumnPatientListView patientListView = findViewById(R.id.list_patients);
         patientListView.setPaymentsModel(paymentsModel);
         setTextViewById(R.id.practice_payment_in_office_count,
                 String.format(Locale.getDefault(), "%1s", paymentsModel.getPaymentPayload()
@@ -585,6 +584,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                     UpdatePatientBalancesDTO.class);
         }
         hidePaymentDistributionFragment(updatePatientBalance);
+        onRangeSelected(new Date(), new Date());
     }
 
     private void hidePaymentDistributionFragment(UpdatePatientBalancesDTO updatePatientBalance) {
@@ -941,7 +941,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 }
             }
         });
-        fragment.setChangePaymentMethodListener(new LargeAlertDialog.LargeAlertInterface() {
+        fragment.setChangePaymentMethodListener(new LargeAlertDialogFragment.LargeAlertInterface() {
             @Override
             public void onActionButton() {
                 PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment

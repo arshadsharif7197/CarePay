@@ -8,7 +8,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -45,7 +44,6 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
 
     private TextView header;
     private TextView subHeader;
-    private ProgressBar appointmentProgressBar;
 
     private @Defs.AppointmentNavigationTypeDef
     int appointmentNavigationType;
@@ -55,19 +53,18 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
         setContentView(R.layout.activity_patient_appointments);
         appointmentNavigationType = getApplicationPreferences().getAppointmentNavigationOption();
 
-        header = (TextView) findViewById(R.id.titleSelectappointmentcheckin);
-        subHeader = (TextView) findViewById(R.id.titleSelectappointmentsubheader);
-        TextView noApptHeader = (TextView) findViewById(R.id.no_apt_message_title);
+        header = findViewById(R.id.titleSelectappointmentcheckin);
+        subHeader = findViewById(R.id.titleSelectappointmentsubheader);
+        TextView noApptHeader = findViewById(R.id.no_apt_message_title);
 
         if (appointmentNavigationType == Defs.NAVIGATE_CHECKOUT) {
             header.setText(Label.getLabel("practice_app_appointment_checkout_heading"));
             noApptHeader.setText(Label.getLabel("no_appointments_checkout_title"));
         }
 
-        appointmentsRecyclerView = (RecyclerView) findViewById(R.id.appointments_recycler_view);
+        appointmentsRecyclerView = findViewById(R.id.appointments_recycler_view);
         appointmentsRecyclerView.setHasFixedSize(true);
 
-        appointmentProgressBar = (ProgressBar) findViewById(R.id.appointmentProgressBar);
         findViewById(R.id.logoutTextview).setOnClickListener(this);
         findViewById(R.id.btnHome).setOnClickListener(this);
 
@@ -175,10 +172,8 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
             RecyclerView.LayoutManager appointmentsLayoutManager = new LinearLayoutManager(
                     PatientModeCheckInCheckOutActivity.this, LinearLayoutManager.HORIZONTAL, false);
             appointmentsRecyclerView.setLayoutManager(appointmentsLayoutManager);
-            appointmentProgressBar.setVisibility(View.GONE);
 
         } else {
-            appointmentProgressBar.setVisibility(View.GONE);
             header.setVisibility(View.INVISIBLE);
             subHeader.setVisibility(View.INVISIBLE);
             findViewById(R.id.no_appointment_layout).setVisibility(View.VISIBLE);

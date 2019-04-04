@@ -2,7 +2,6 @@ package com.carecloud.carepay.practice.library.adhocforms;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +15,7 @@ import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
 import com.carecloud.carepay.practice.library.customdialog.ConfirmationPinDialog;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.CompleteCheckActivity;
+import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -23,12 +23,14 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.adhoc.AdhocFormsPatientModeInfo;
 import com.carecloud.carepaylibray.adhoc.SelectedAdHocForms;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 
 import java.util.ArrayList;
@@ -39,10 +41,11 @@ import java.util.Map;
 public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFormsInterface {
 
     private AdHocFormsModel adhocFormsModel;
+    private SelectedAdHocForms selectedAdHocForms;
     private ArrayList<PracticeForm> forms;
     private AdHocRecyclerViewAdapter adapter;
 
-    private boolean isUserInteraction = false;
+    private AdhocFormsPatientModeInfo patientModeInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +54,19 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
         setContentView(R.layout.activity_ad_hoc_forms);
         adhocFormsModel = getConvertedDTO(AdHocFormsModel.class);
         Bundle bundle = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
-        SelectedAdHocForms selectedAdHocForms = (SelectedAdHocForms) bundle.getSerializable(CarePayConstants.SELECTED_FORMS);
+        selectedAdHocForms = (SelectedAdHocForms) bundle.getSerializable(CarePayConstants.SELECTED_FORMS);
 
         switchToPatientMode();
+        patientModeInfo = adhocFormsModel.getPayload().getAdhocFormsPatientModeInfo();
 
+        initView();
+
+        if (savedInstanceState == null) {
+            addFragment(AdHocFormFragment.newInstance(), false);
+        }
+    }
+
+    private void initView() {
         forms = new ArrayList<>();
         if (selectedAdHocForms != null) {
             for (String uuid : selectedAdHocForms.getForms()) {
@@ -67,12 +79,12 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
                 }
             }
         }
-        RecyclerView formsNamesRecyclerView = (RecyclerView) findViewById(R.id.formsNamesRecyclerView);
+        RecyclerView formsNamesRecyclerView = findViewById(R.id.formsNamesRecyclerView);
         formsNamesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new AdHocRecyclerViewAdapter(forms);
         formsNamesRecyclerView.setAdapter(adapter);
 
-        TextView header = (TextView) findViewById(R.id.adhoc_forms_header);
+        TextView header = findViewById(R.id.adhoc_forms_header);
         header.setText(Label.getLabel(forms.size() > 1 ?
                 "adhoc_form_left_message" : "adhoc_form_left_message_singular"));
 
@@ -83,72 +95,75 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
             }
         };
         findViewById(R.id.goBackImageView).setOnClickListener(goBackClicListener);
-        findViewById(R.id.goBackTextView).setOnClickListener(goBackClicListener);
-        initializeLanguageSpinner();
-        if (savedInstanceState == null) {
-            addFragment(AdHocFormFragment.newInstance(), false);
-        }
-    }
 
-    @Override
-    public void onUserInteraction() {
-        super.onUserInteraction();
-        isUserInteraction = true;
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                findViewById(R.id.languageContainer).setVisibility(View.GONE);
-            }
-        }, 25);
+        TextView backTextView = findViewById(R.id.goBackTextView);
+        backTextView.setText(Label.getLabel("demographics_back_text"));
+        backTextView.setOnClickListener(goBackClicListener);
+        initializeLanguageSpinner();
     }
 
     private void initializeLanguageSpinner() {
-        String selectedLanguageStr = getApplicationPreferences().getUserLanguage();
-        OptionDTO selectedLanguage = adhocFormsModel.getPayload().getLanguages().get(0);
-        for (OptionDTO language : adhocFormsModel.getPayload().getLanguages()) {
-            if (selectedLanguageStr.equals(language.getCode())) {
-                selectedLanguage = language;
-            }
-        }
+        final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
+        headers.put("username_patient", getApplicationPreferences().getPatientId());
+        final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), true,
+                adhocFormsModel.getPayload().getLanguages(), new LanguageAdapter.LanguageInterface() {
+            @Override
+            public void onLanguageSelected(OptionDTO language) {
+                changeLanguage(adhocFormsModel.getMetadata().getLinks().getLanguage(),
+                        language.getCode().toLowerCase(), headers, new SimpleCallback() {
+                            @Override
+                            public void callback() {
+                                refreshSelfDto();
+                            }
+                        });
 
-        final TextView languageSwitch = (TextView) findViewById(R.id.languageSpinner);
-        final View languageContainer = findViewById(R.id.languageContainer);
+            }
+        });
+        final TextView languageSwitch = findViewById(R.id.languageSpinner);
         languageSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                languageContainer.setVisibility(languageContainer.getVisibility() == View.VISIBLE
-                        ? View.GONE : View.VISIBLE);
+                int offsetX = view.getWidth() / 2 - popupPickerLanguage.getWidth() / 2;
+                int offsetY = -view.getHeight() - popupPickerLanguage.getHeight();
+                popupPickerLanguage.showAsDropDown(view, offsetX, offsetY);
             }
         });
         languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
-        final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
-//        headers.put("username", getApplicationPreferences().getUserName());
-        headers.put("username_patient", getApplicationPreferences().getPatientId());
-        RecyclerView languageList = (RecyclerView) findViewById(R.id.languageList);
-        LanguageAdapter languageAdapter = new LanguageAdapter(adhocFormsModel.getPayload().getLanguages(),
-                selectedLanguage);
-        languageList.setAdapter(languageAdapter);
-        languageList.setLayoutManager(new LinearLayoutManager(getContext()));
-        languageAdapter.setCallback(new LanguageAdapter.LanguageInterface() {
-            @Override
-            public void onLanguageSelected(OptionDTO language) {
-                languageContainer.setVisibility(View.GONE);
-                if (!isUserInteraction) {
-                    return;
-                }
-                changeLanguage(adhocFormsModel.getMetadata().getLinks().getLanguage(),
-                        language.getCode().toLowerCase(), headers);
+    }
 
+    private void refreshSelfDto() {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("patient_id", patientModeInfo.getMetadata().getPatientId());
+        TransitionDTO self = adhocFormsModel.getMetadata().getLinks().getSelf();
+        getWorkflowServiceHelper().execute(self, new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
             }
-        });
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                adhocFormsModel = DtoHelper.getConvertedDTO(AdHocFormsModel.class, workflowDTO);
+                adhocFormsModel.getPayload().setAdhocFormsPatientModeInfo(patientModeInfo);
+                initView();
+                addFragment(AdHocFormFragment.newInstance(), false);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
+            }
+        }, queryMap);
     }
 
     private void showPinDialog() {
-        ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(getContext(),
-                adhocFormsModel.getMetadata().getLinks().getPinpad(), false,
+        ConfirmationPinDialog confirmationPinDialog = ConfirmationPinDialog.newInstance(
+                adhocFormsModel.getMetadata().getLinks().getPinpad(),
+                false,
                 adhocFormsModel.getMetadata().getLinks().getLanguage());
-        confirmationPinDialog.show();
+        displayDialogFragment(confirmationPinDialog, false);
     }
 
     @Override

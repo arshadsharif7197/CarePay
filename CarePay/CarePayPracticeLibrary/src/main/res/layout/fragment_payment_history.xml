@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
-    android:gravity="center_horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal">
 
     <FrameLayout
         android:id="@+id/closeViewLayout"
@@ -35,13 +34,13 @@
         android:layout_marginStart="@dimen/dimen_26dp"
         android:layout_marginEnd="@dimen/dimen_26dp"
         android:orientation="vertical">
-        
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/dialog_header_height"
             android:background="@drawable/practice_mode_dialog_header_bg"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="@dimen/dialog_profile_pic_size"
@@ -55,9 +54,9 @@
                     android:gravity="center"
                     android:src="@drawable/icn_placeholder_user_profile_png"
                     android:textColor="@color/lightSlateGray"
-                    android:textSize="@dimen/text_size_38"
-                    tools:text="JJ"
-                    app:customAssetFont="gotham_rounded_medium" />
+                    android:textSize="@dimen/patientProfileShortNameTextSize"
+                    app:customAssetFont="gotham_rounded_medium"
+                    tools:text="JJ" />
 
                 <ImageView
                     android:id="@+id/patient_profile_photo"
@@ -75,9 +74,9 @@
                 android:gravity="center"
                 android:padding="@dimen/dimen_4dp"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_34sp"
-                tools:text="John Jones"
-                app:customAssetFont="proxima_nova_semi_bold" />
+                android:textSize="@dimen/historyFragmentPatientFullNameTextSize"
+                app:customAssetFont="proxima_nova_semi_bold"
+                tools:text="John Jones" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/viewPaymentPlans"
@@ -85,31 +84,25 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/blue_border_rounded_button_selector"
                 android:gravity="center"
-                android:paddingTop="@dimen/dimen_10dp"
-                android:paddingBottom="@dimen/dimen_10dp"
                 android:paddingStart="@dimen/dimen_30dp"
+                android:paddingTop="@dimen/dimen_10dp"
                 android:paddingEnd="@dimen/dimen_30dp"
+                android:paddingBottom="@dimen/dimen_10dp"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_12sp"
                 android:visibility="gone"
                 app:customAssetFont="gotham_rounded_medium"
-                tools:text="3 Payment Plans"/>
+                tools:text="3 Payment Plans" />
 
         </LinearLayout>
 
-        <FrameLayout
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/history_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/patient_mode_dialog_body_bg"
-            android:paddingStart="@dimen/dimen_24dp"
-            android:paddingEnd="@dimen/dimen_24dp">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/history_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-        </FrameLayout>
+            android:paddingStart="@dimen/paymentFragmentListHorizontalMargin"
+            android:paddingEnd="@dimen/paymentFragmentListHorizontalMargin"/>
 
     </LinearLayout>
 

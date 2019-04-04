@@ -1,28 +1,28 @@
 package com.carecloud.carepay.practice.library.homescreen.dialogs;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
-import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenOfficeNewsDTO;
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OfficeNewsDetailsDialog extends Dialog {
+public class OfficeNewsDetailsDialog extends BaseDialogFragment {
 
-    private Context context;
     private List<HomeScreenOfficeNewsDTO> officeNewsList;
     private List<View> officeNewsPages;
     private int position;
@@ -31,30 +31,39 @@ public class OfficeNewsDetailsDialog extends Dialog {
     /**
      * Constructor
      *
-     * @param context        context
      * @param officeNewsList data
      */
-    public OfficeNewsDetailsDialog(Context context, List<HomeScreenOfficeNewsDTO> officeNewsList,
-                                   int position) {
-        super(context);
-        this.context = context;
-        this.position = position;
-        this.officeNewsList = officeNewsList;
+    public static OfficeNewsDetailsDialog newInstance(List<HomeScreenOfficeNewsDTO> officeNewsList,
+                                                      int position) {
+        Bundle args = new Bundle();
+        args.putSerializable("officeNewsList", (Serializable) officeNewsList);
+        args.putInt("position", position);
+        OfficeNewsDetailsDialog fragment = new OfficeNewsDetailsDialog();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @SuppressWarnings("ConstantConditions")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        officeNewsList = (List<HomeScreenOfficeNewsDTO>) args.getSerializable("officeNewsList");
+        position = args.getInt("position");
+    }
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.dialog_office_news_details);
-        setCancelable(false);
-        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-
-        addView();
-        initializeView();
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        addView(view);
+        initializeView(view);
         handleException();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.dialog_office_news_details, container, false);
     }
 
     @SuppressWarnings("AccessStaticViaInstance")
@@ -65,12 +74,10 @@ public class OfficeNewsDetailsDialog extends Dialog {
 
     @SuppressWarnings("deprecation")
     @SuppressLint("SetJavaScriptEnabled")
-    private void initializeView() {
-//        ((TextView) findViewById(R.id.office_news_details_header)).setText(Label.getLabel("news_title"));
-
+    private void initializeView(View view) {
         if (officeNewsList != null && !officeNewsList.isEmpty()) {
             NewsPagerAdapter adapter = new NewsPagerAdapter();
-            ViewPager newsArticle = (ViewPager) findViewById(R.id.office_news_viewpager);
+            ViewPager newsArticle = view.findViewById(R.id.office_news_viewpager);
             newsArticle.setAdapter(adapter);
 
             newsArticle.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -98,21 +105,20 @@ public class OfficeNewsDetailsDialog extends Dialog {
     }
 
     @SuppressWarnings("deprecation")
-    private void addView() {
+    private void addView(View view) {
         officeNewsPages = new ArrayList<>();
-        pages = (RadioGroup) findViewById(R.id.office_news_page_indicator);
+        pages = view.findViewById(R.id.office_news_page_indicator);
         RadioGroup.LayoutParams params;
 
         for (int i = 0; i < officeNewsList.size(); i++) {
             HomeScreenOfficeNewsDTO officeNewsDTO = officeNewsList.get(i);
-            WebView webView = new WebView(context);
+            WebView webView = new WebView(getContext());
             webView.loadUrl(officeNewsDTO.getPayload().getNewsUrl());
             officeNewsPages.add(webView);
 
-            RadioButton newsPages = new RadioButton(context);
+            RadioButton newsPages = new RadioButton(getContext());
             newsPages.setId(i);
-
-            newsPages.setButtonDrawable(context.getResources().getDrawable(R.drawable.office_news_page_indicator));
+            newsPages.setButtonDrawable(getResources().getDrawable(R.drawable.office_news_page_indicator));
             params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(0, 0, 10, 0);
             pages.addView(newsPages, params);

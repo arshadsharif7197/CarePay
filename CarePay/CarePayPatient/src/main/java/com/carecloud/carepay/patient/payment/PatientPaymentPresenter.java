@@ -20,7 +20,9 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.ISession;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.payments.fragments.AddExistingPaymentPlanFragment;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
@@ -42,6 +44,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
@@ -62,6 +65,7 @@ public class PatientPaymentPresenter extends PaymentPresenter
         implements PatientPaymentMethodInterface, PaymentPlanCompletedInterface,
         PaymentPlanCreateInterface {
     private Fragment androidPayTargetFragment;
+    private boolean paymentPlanCreated;
 
     public PatientPaymentPresenter(PaymentViewHandler viewHandler, PaymentsModel paymentsModel, String patientId) {
         super(viewHandler, paymentsModel, patientId);
@@ -75,7 +79,8 @@ public class PatientPaymentPresenter extends PaymentPresenter
 
     @Override
     public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
-        new PartialPaymentDialog(viewHandler.getContext(), paymentsModel, selectedBalance).show();
+        PartialPaymentDialog dialog=  PartialPaymentDialog.newInstance(paymentsModel, selectedBalance);
+        viewHandler.displayDialogFragment(dialog,false);
 
         MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment),
                 getString(R.string.param_practice_id),
@@ -123,12 +128,12 @@ public class PatientPaymentPresenter extends PaymentPresenter
 
     @Override
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
-        viewHandler.exitPaymentProcess(false);
+        viewHandler.exitPaymentProcess(false, paymentPlanCreated, true);
     }
 
     @Override
     public void onPayLaterClicked(PendingBalanceDTO pendingBalanceDTO) {
-        viewHandler.exitPaymentProcess(true);
+        viewHandler.exitPaymentProcess(true, paymentPlanCreated, false);
 
         double amount = 0D;
         for(PendingBalancePayloadDTO balancePayloadDTO : pendingBalanceDTO.getPayload()){
@@ -174,7 +179,8 @@ public class PatientPaymentPresenter extends PaymentPresenter
     public void onPaymentPlanAction(PaymentsModel paymentsModel) {
         PendingBalanceDTO selectedBalancesItem = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0);//this should be a safe assumption for checkin
         PendingBalanceDTO reducedBalancesItem = paymentsModel.getPaymentPayload().reduceBalanceItems(selectedBalancesItem, false);
-        new PaymentPlanAmountDialog(viewHandler.getContext(), paymentsModel, reducedBalancesItem, this).show();
+        PaymentPlanAmountDialog dialog = PaymentPlanAmountDialog.newInstance(paymentsModel, reducedBalancesItem);
+        viewHandler.displayDialogFragment(dialog, false);
     }
 
     @Override
@@ -220,7 +226,7 @@ public class PatientPaymentPresenter extends PaymentPresenter
     @Override
     public void showPaymentPendingConfirmation(PaymentsModel paymentsModel) {
         new CustomMessageToast(viewHandler.getContext(), Label.getLabel("payment_queued_patient"), CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
-        viewHandler.exitPaymentProcess(false);
+        viewHandler.exitPaymentProcess(false, paymentPlanCreated, true);
     }
 
     @Override
@@ -356,7 +362,14 @@ public class PatientPaymentPresenter extends PaymentPresenter
             if(getAppointment() != null) {
                 DtoHelper.bundleDto(info, getAppointment());
             }
-            PatientNavigationHelper.navigateToWorkflow(viewHandler.getContext(), workflowDTO, info);
+            PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+            paymentPlanCreated = paymentsModel.getPaymentPayload().isPaymentPlanCreated();
+            if (workflowDTO.getState().equals(NavigationStateConstants.PAYMENTS)) {
+                PatientNavigationHelper.navigateToWorkflow(viewHandler.getContext(), workflowDTO, info);
+            } else {
+                viewHandler.exitPaymentProcess(false, paymentPlanCreated, false);
+            }
+
         }
 
         @Override
@@ -365,4 +378,5 @@ public class PatientPaymentPresenter extends PaymentPresenter
             viewHandler.getISession().showErrorNotification(exceptionMessage);
         }
     };
+
 }

@@ -94,7 +94,7 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
     @Override
     public void onViewCreated(View view, Bundle icicle) {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        appointmentRecyclerView = (RecyclerView) view.findViewById(R.id.appointments_recycler_view);
+        appointmentRecyclerView = view.findViewById(R.id.appointments_recycler_view);
         appointmentRecyclerView.setLayoutManager(layoutManager);
         // Set Title
         showDefaultActionBar();
@@ -111,21 +111,21 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
         String noAptMessageText = Label.getLabel("no_appointments_message_text");
 
         //Pull down to refresh
-        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+        refreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         setRefreshAction();
 
         noAppointmentView = view.findViewById(R.id.no_appointment_layout);
         ((TextView) view.findViewById(R.id.no_apt_message_title)).setText(noAptMessageTitle);
         ((TextView) view.findViewById(R.id.no_apt_message_desc)).setText(noAptMessageText);
 
-        floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
+        floatingActionButton = view.findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 callback.newAppointment();
             }
         });
-        Button newAppointmentClassicButton = (Button) view.findViewById(R.id.newAppointmentClassicButton);
+        Button newAppointmentClassicButton = view.findViewById(R.id.newAppointmentClassicButton);
         newAppointmentClassicButton.setVisibility(View.VISIBLE);
         newAppointmentClassicButton.setOnClickListener(new View.OnClickListener() {
             @Override

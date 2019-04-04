@@ -30,7 +30,7 @@ public class ProvidersScheduleDTO implements Serializable {
     private String phone;
     @SerializedName("resource")
     @Expose
-    private AppointmentResourceDTO resource = new AppointmentResourceDTO();
+    private AppointmentResourcesItemDTO resource = new AppointmentResourcesItemDTO();
     @SerializedName("reasons")
     @Expose
     private List<ProvidersReasonDTO> reasons = new ArrayList<>();
@@ -151,7 +151,7 @@ public class ProvidersScheduleDTO implements Serializable {
      * @return
      *     The resource
      */
-    public AppointmentResourceDTO getResource() {
+    public AppointmentResourcesItemDTO getResource() {
         return resource;
     }
 
@@ -160,7 +160,7 @@ public class ProvidersScheduleDTO implements Serializable {
      * @param resource
      *     The resource
      */
-    public void setResource(AppointmentResourceDTO resource) {
+    public void setResource(AppointmentResourcesItemDTO resource) {
         this.resource = resource;
     }
 

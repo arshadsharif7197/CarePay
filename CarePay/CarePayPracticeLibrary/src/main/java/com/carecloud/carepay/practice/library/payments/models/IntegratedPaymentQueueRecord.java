@@ -1,23 +1,24 @@
 package com.carecloud.carepay.practice.library.payments.models;
 
-import com.orm.SugarRecord;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 
 /**
  * Created by lmenendez on 11/14/17
  */
 
-public class IntegratedPaymentQueueRecord extends SugarRecord {
+@Entity(tableName = "IntegratedPaymentQueueRecord")
+public class IntegratedPaymentQueueRecord {
 
+    @PrimaryKey(autoGenerate = true)
+    private int id;
     private String patientID;
     private String practiceID;
     private String practiceMgmt;
     private String queueTransition;
     private String deepstreamId;
     private String username;
-
-    public IntegratedPaymentQueueRecord(){
-
-    }
+    private boolean recordOnly;
 
 
     public String getPatientID() {
@@ -66,5 +67,21 @@ public class IntegratedPaymentQueueRecord extends SugarRecord {
 
     public void setDeepstreamId(String deepstreamId) {
         this.deepstreamId = deepstreamId;
+    }
+
+    public boolean isRecordOnly() {
+        return recordOnly;
+    }
+
+    public void setRecordOnly(boolean recordOnly) {
+        this.recordOnly = recordOnly;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

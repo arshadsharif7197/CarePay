@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
+import com.carecloud.carepay.practice.library.base.BreezeDataBase;
 import com.carecloud.carepay.practice.library.payments.models.IntegratedPaymentQueueRecord;
 import com.carecloud.carepay.service.library.ServiceGenerator;
 import com.carecloud.carepay.service.library.WorkflowService;
@@ -32,7 +33,6 @@ public class IntegratedPaymentsQueueUploadService extends IntentService {
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
-     *
      */
     public IntegratedPaymentsQueueUploadService() {
         super(IntegratedPaymentsQueueUploadService.class.getName());
@@ -42,8 +42,9 @@ public class IntegratedPaymentsQueueUploadService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         Gson gson = new Gson();
 
-        List<IntegratedPaymentQueueRecord> queueRecords =  IntegratedPaymentQueueRecord.listAll(IntegratedPaymentQueueRecord.class);
-        for(IntegratedPaymentQueueRecord queueRecord : queueRecords){
+        BreezeDataBase database = BreezeDataBase.getDatabase(getApplicationContext());
+        List<IntegratedPaymentQueueRecord> queueRecords = database.getIntegratedAndroidPayDao().getAllRecords();
+        for (IntegratedPaymentQueueRecord queueRecord : queueRecords) {
 
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("patient_id", queueRecord.getPatientID());
@@ -51,17 +52,21 @@ public class IntegratedPaymentsQueueUploadService extends IntentService {
             queryMap.put("practice_mgmt", queueRecord.getPracticeMgmt());
             queryMap.put("deepstream_record_id", queueRecord.getDeepstreamId());
 
+            if (queueRecord.isRecordOnly()) {
+                queryMap.put("record_only", String.valueOf(queueRecord.isRecordOnly()));
+            }
+
 
             TransitionDTO transitionDTO = gson.fromJson(queueRecord.getQueueTransition(), TransitionDTO.class);
             boolean isSubmitted = executeWebCall(transitionDTO, queryMap, queueRecord.getUsername());
-            if(isSubmitted){
-                queueRecord.delete();
+            if (isSubmitted) {
+                database.getIntegratedAndroidPayDao().delete(queueRecord);
             }
         }
 
-        queueRecords =  IntegratedPaymentQueueRecord.listAll(IntegratedPaymentQueueRecord.class);
+        queueRecords = database.getIntegratedAndroidPayDao().getAllRecords();
 
-        if(!queueRecords.isEmpty()) {//only schedule if required
+        if (!queueRecords.isEmpty()) {//only schedule if required
             Intent scheduledService = new Intent(getBaseContext(), IntegratedPaymentQueueRecord.class);
             PendingIntent pendingIntent = PendingIntent.getService(getBaseContext(), 0x222, scheduledService, PendingIntent.FLAG_UPDATE_CURRENT);
             AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -71,7 +76,7 @@ public class IntegratedPaymentsQueueUploadService extends IntentService {
     }
 
 
-    private boolean executeWebCall(TransitionDTO transitionDTO, Map<String, String> queryMap, String username){
+    private boolean executeWebCall(TransitionDTO transitionDTO, Map<String, String> queryMap, String username) {
         Map<String, String> header = new HashMap<>();
         header.put("x-api-key", HttpConstants.getApiStartKey());
         header.put("username", username);
@@ -82,7 +87,7 @@ public class IntegratedPaymentsQueueUploadService extends IntentService {
         try {
             Response<WorkflowDTO> response = call.execute();
             return response.isSuccessful();
-        }catch (IOException ioe){
+        } catch (IOException ioe) {
             ioe.printStackTrace();
             return false;
         }

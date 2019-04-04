@@ -16,6 +16,7 @@
 #   public *;
 #}
 #-dontobfuscate
+-dontoptimize
 -keepclassmembers class * extends java.lang.Enum {
     <fields>;
     public static **[] values();
@@ -24,7 +25,7 @@
 
 -keep class com.newrelic.** { *; }
 -dontwarn com.newrelic.**
--keepattributes Exceptions, Signature, InnerClasses, LineNumberTable
+-keepattributes Exceptions, Signature, InnerClasses, LineNumberTable, SourceFile, EnclosingMethod
 
 -keep class org.apache.** { *; }
 -dontwarn org.apache.**
@@ -75,6 +76,8 @@
 -keep class com.google.** { *; }
 -keep class com.carecloud.carepaylibray.medications.models.** { *; }
 -keep class com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO { *; }
+-keep class com.carecloud.carepaylibray.demographics.fragments.BaseWebFormFragment** { *; }
+-keep class com.carecloud.carepaylibray.checkout.BaseWebFormFragment** { *; }
 
 # SugarRecord
 -keep class com.carecloud.carepay.service.library.dtos.** { *; }

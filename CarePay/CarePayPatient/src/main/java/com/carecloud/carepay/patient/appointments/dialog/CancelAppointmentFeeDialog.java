@@ -1,28 +1,23 @@
 package com.carecloud.carepay.patient.appointments.dialog;
 
-import android.app.Dialog;
-import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentCancellationFee;
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 
 /**
  * @author pjohnson
  */
-public class CancelAppointmentFeeDialog extends Dialog {
+public class CancelAppointmentFeeDialog extends BaseDialogFragment {
 
-    private final AppointmentCancellationFee cancellationFee;
-    private Context context;
-
+    private String cancellationFeeAmount;
 
     public interface CancelAppointmentFeeDialogListener {
         void onCancelAppointmentFeeAccepted();
@@ -31,36 +26,35 @@ public class CancelAppointmentFeeDialog extends Dialog {
     private CancelAppointmentFeeDialogListener callback;
 
     /**
-     * @param context         the context
      * @param cancellationFee the cancellation fee
-     * @param callback        the callback
      */
-    public CancelAppointmentFeeDialog(Context context,
-                                      AppointmentCancellationFee cancellationFee,
-                                      CancelAppointmentFeeDialogListener callback) {
-        super(context);
-        this.context = context;
-        this.cancellationFee = cancellationFee;
-        this.callback = callback;
+    public static CancelAppointmentFeeDialog newInstance(AppointmentCancellationFee cancellationFee) {
+        Bundle args = new Bundle();
+        args.putString("cancellationFeeAmount", cancellationFee.getAmount());
+        CancelAppointmentFeeDialog fragment = new CancelAppointmentFeeDialog();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.dialog_cancel_appointment_fee);
-        setCancelable(false);
-        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.90);
-        getWindow().setAttributes(params);
+        Bundle args = getArguments();
+        cancellationFeeAmount = args.getString("cancellationFeeAmount");
+    }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.dialog_cancel_appointment_fee, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         TextView cancellationFeeMessageTextView = (TextView) findViewById(R.id.cancellationFeeMessageTextView);
         cancellationFeeMessageTextView.setText(String
-                .format(Label.getLabel("appointment_cancellation_fee_message"), cancellationFee.getAmount()));
-
-
+                .format(Label.getLabel("appointment_cancellation_fee_message"), cancellationFeeAmount));
         Button cancelAppointmentButton = (Button) findViewById(R.id.cancelAppointment);
         cancelAppointmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,12 +63,15 @@ public class CancelAppointmentFeeDialog extends Dialog {
                 cancel();
             }
         });
-
         findViewById(R.id.dialogCloseHeaderImageView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cancel();
             }
         });
+    }
+
+    public void setCancelFeeDialogListener(CancelAppointmentFeeDialogListener callback) {
+        this.callback = callback;
     }
 }

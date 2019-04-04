@@ -5,9 +5,6 @@ import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.carecloud.carepay.service.library.ApplicationPreferences;
-import com.carecloud.carepay.service.library.platform.AndroidPlatform;
-import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepaylibrary.R;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -86,14 +83,14 @@ public class PicassoHelper {
                     @Override
                     public void onSuccess() {
                         imageView.setVisibility(View.VISIBLE);
-                        if(viewToHide!=null){
+                        if (viewToHide != null) {
                             viewToHide.setVisibility(View.GONE);
                         }
                     }
 
                     @Override
                     public void onError() {
-                        if(viewToHide!=null){
+                        if (viewToHide != null) {
                             viewToHide.setVisibility(View.VISIBLE);
                         }
                         imageView.setVisibility(View.GONE);

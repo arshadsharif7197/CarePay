@@ -14,9 +14,9 @@
         android:id="@+id/headerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/home_main_margin_end"
         android:layout_marginStart="@dimen/home_main_margin_start"
-        android:layout_marginTop="@dimen/home_main_margin_top">
+        android:layout_marginTop="@dimen/home_main_margin_top"
+        android:layout_marginEnd="@dimen/home_main_margin_end">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,8 +56,8 @@
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/queueTitleTextView"
                     style="@style/HomeScreenAlertStyle"
-                    android:paddingEnd="@dimen/home_alert_text_padding_end"
                     android:paddingStart="@dimen/home_alert_text_padding_start"
+                    android:paddingEnd="@dimen/home_alert_text_padding_end"
                     app:customAssetFont="gotham_rounded_medium"
                     breeze:textKey="checkingin_notifications"
                     tools:text="Checking In" />
@@ -85,8 +85,8 @@
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/alaertTitleTextView"
                     style="@style/HomeScreenAlertStyle"
-                    android:paddingEnd="@dimen/home_alert_text_padding_end"
                     android:paddingStart="@dimen/home_alert_text_padding_start"
+                    android:paddingEnd="@dimen/home_alert_text_padding_end"
                     app:customAssetFont="gotham_rounded_medium"
                     breeze:textKey="alerts"
                     tools:text="Alerts" />
@@ -104,8 +104,8 @@
 
             <include
                 layout="@layout/lang_spinner"
-                android:layout_width="@dimen/home_spinner_width"
-                android:layout_height="@dimen/home_spinner_height"
+                android:layout_width="@dimen/patientHomeSpinnerWidth"
+                android:layout_height="@dimen/patientHomeSpinnerHeight"
                 android:layout_gravity="center_vertical" />
 
         </LinearLayout>
@@ -121,51 +121,16 @@
 
     </FrameLayout>
 
-    <FrameLayout
-        android:id="@+id/languageContainer"
-        android:layout_width="@dimen/dimen_140dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@id/headerLayout"
-        android:layout_marginEnd="@dimen/dimen_15dp"
-        android:animateLayoutChanges="true"
-        android:visibility="gone">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_15dp"
-            android:background="@drawable/bottom_rounded_white"
-            android:minHeight="@dimen/dimen_60dp">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/languageList"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </RelativeLayout>
-
-        <ImageView
-            android:layout_width="@dimen/dimen_25dp"
-            android:layout_height="@dimen/dimen_25dp"
-            android:layout_gravity="center|top"
-            android:src="@drawable/sort_up" />
-    </FrameLayout>
-
     <LinearLayout
         android:id="@+id/layoutContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginEnd="@dimen/dimen_150dp"
-        android:layout_marginStart="@dimen/dimen_150dp"
-        android:layout_marginTop="@dimen/dimen_120dp"
+        android:layout_marginStart="@dimen/patientHomeLayoutContainerHorizontalMargin"
+        android:layout_marginTop="@dimen/patientHomeLayoutContainerTopMargin"
+        android:layout_marginEnd="@dimen/patientHomeLayoutContainerHorizontalMargin"
         android:background="@drawable/background_very_round_white"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/dimen_10dp"
-        android:paddingEnd="@dimen/dimen_40dp"
-        android:paddingStart="@dimen/dimen_40dp"
-        android:paddingTop="@dimen/dimen_10dp">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -176,8 +141,9 @@
             <RelativeLayout
                 android:id="@+id/homeCheckinClickable"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/patient_home_button_height"
+                android:layout_height="@dimen/patientHomeButtonHeight"
                 android:layout_marginEnd="1dp"
+                android:layout_marginBottom="1dp"
                 android:layout_weight="1"
                 android:background="@drawable/home_button_selector_top_left"
                 android:clickable="true"
@@ -214,16 +180,16 @@
             <View
                 android:layout_width="@dimen/dimen_1dp"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/dimen_10dp"
-                android:layout_marginTop="@dimen/dimen_20dp"
+                android:layout_marginTop="@dimen/patientHomeSeparatorVerticalMargin"
+                android:layout_marginBottom="@dimen/patientHomeSeparatorVerticalMargin"
                 android:background="@color/light_gray" />
 
             <RelativeLayout
                 android:id="@+id/homeCheckoutClickable"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/patient_home_button_height"
-                android:layout_marginEnd="1dp"
+                android:layout_height="@dimen/patientHomeButtonHeight"
                 android:layout_marginStart="1dp"
+                android:layout_marginBottom="1dp"
                 android:layout_weight="1"
                 android:background="@drawable/home_button_selector_top_right"
                 android:clickable="true"
@@ -259,6 +225,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_1dp"
+            android:layout_marginStart="@dimen/patientHomeMainSeparatorHorizontalMargin"
+            android:layout_marginEnd="@dimen/patientHomeMainSeparatorHorizontalMargin"
             android:background="@color/light_gray" />
 
         <LinearLayout
@@ -270,12 +238,13 @@
             <RelativeLayout
                 android:id="@+id/homePaymentsClickable"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/patient_home_button_height"
+                android:layout_height="@dimen/patientHomeButtonHeight"
+                android:layout_marginTop="1dp"
                 android:layout_marginEnd="1dp"
                 android:layout_weight="1"
-                android:background="@drawable/home_button_selector"
+                android:background="@drawable/home_button_selector_bottom_left"
                 android:clickable="true"
-                android:padding="@dimen/dimen_20dp">
+                android:padding="@dimen/patientHomeBottomButtonPadding">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/homePaymentsLabel"
@@ -299,20 +268,23 @@
                 android:id="@+id/separator"
                 android:layout_width="@dimen/dimen_1dp"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/dimen_10dp"
-                android:layout_marginTop="@dimen/dimen_20dp"
+                android:layout_marginTop="@dimen/patientHomeSeparatorVerticalMargin"
+                android:layout_marginBottom="@dimen/patientHomeSeparatorVerticalMargin"
                 android:background="@color/light_gray"
                 android:visibility="gone" />
 
             <RelativeLayout
                 android:id="@+id/homeShopClickable"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/patient_home_button_height"
+                android:layout_height="@dimen/patientHomeButtonHeight"
+                android:layout_marginStart="1dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="1dp"
                 android:layout_weight="1"
                 android:background="?homeButtonSelector"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="@dimen/dimen_20dp"
+                android:padding="@dimen/patientHomeBottomButtonPadding"
                 android:visibility="gone">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -336,18 +308,20 @@
             <View
                 android:layout_width="@dimen/dimen_1dp"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/dimen_10dp"
-                android:layout_marginTop="@dimen/dimen_20dp"
+                android:layout_marginTop="@dimen/patientHomeSeparatorVerticalMargin"
+                android:layout_marginBottom="@dimen/patientHomeSeparatorVerticalMargin"
                 android:background="@color/light_gray" />
 
             <RelativeLayout
                 android:id="@+id/homeAppointmentsClickable"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/patient_home_button_height"
+                android:layout_height="@dimen/patientHomeButtonHeight"
+                android:layout_marginStart="1dp"
+                android:layout_marginTop="1dp"
                 android:layout_weight="1"
-                android:background="?homeButtonSelector"
+                android:background="@drawable/home_button_selector_bottom_right"
                 android:clickable="true"
-                android:padding="@dimen/dimen_20dp">
+                android:padding="@dimen/patientHomeBottomButtonPadding">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/homeAppointmentsLabel"
@@ -402,8 +376,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/dimen_20dp"
         android:background="?newsBackgroundColor"
-        android:paddingBottom="@dimen/dimen_20dp"
         android:paddingTop="@dimen/dimen_20dp"
+        android:paddingBottom="@dimen/dimen_20dp"
         android:visibility="gone" />
 
 </RelativeLayout>

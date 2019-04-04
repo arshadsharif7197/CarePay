@@ -21,7 +21,7 @@ public class AppointmentAvailabilityPayloadDTO implements Serializable {
     private ProvidersReasonDTO visitReason = new ProvidersReasonDTO();
     @SerializedName("resource")
     @Expose
-    private AppointmentResourceDTO resource = new AppointmentResourceDTO();
+    private AppointmentResourcesItemDTO resource = new AppointmentResourcesItemDTO();
     @SerializedName("slots")
     @Expose
     private List<AppointmentsSlotsDTO> slots = new ArrayList<>();
@@ -67,7 +67,7 @@ public class AppointmentAvailabilityPayloadDTO implements Serializable {
      *
      * @return the resource
      */
-    public AppointmentResourceDTO getResource() {
+    public AppointmentResourcesItemDTO getResource() {
         return resource;
     }
 
@@ -76,7 +76,7 @@ public class AppointmentAvailabilityPayloadDTO implements Serializable {
      *
      * @param resource the resource
      */
-    public void setResource(AppointmentResourceDTO resource) {
+    public void setResource(AppointmentResourcesItemDTO resource) {
         this.resource = resource;
     }
 

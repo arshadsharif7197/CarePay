@@ -5,10 +5,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -26,6 +23,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
+import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionUserPractice;
 import com.carecloud.carepay.practice.library.signin.fragments.ChoosePracticeLocationFragment;
@@ -96,8 +94,6 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     private TextView languageSwitch;
     private View showPasswordButton;
 
-    private boolean isUserInteraction = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,11 +117,11 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
 
-        if(getApplicationPreferences().mustForceUpdate() &&
-                getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE){
+        if (getApplicationPreferences().mustForceUpdate() &&
+                getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
             ConfirmDialogFragment fragment = ConfirmDialogFragment
                     .newInstance(Label.getLabel("notifications.custom.forceUpdate.title"),
                             Label.getLabel("notifications.custom.forceUpdate.message.android"),
@@ -137,39 +133,25 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         }
     }
 
-
-    @Override
-    public void onUserInteraction() {
-        super.onUserInteraction();
-        isUserInteraction = true;
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                findViewById(R.id.languageContainer).setVisibility(View.GONE);
-            }
-        }, 25);
-    }
-
     /**
      * Initailizing the view
      */
     private void initViews(SignInScreenMode signInScreenMode) {
-        signInButton = (Button) findViewById(R.id.signinButton);
-        homeButton = (ImageView) findViewById(R.id.signInHome);
-        goBackButton = (CarePayButton) findViewById(R.id.goBackButton);
-        forgotPasswordTextView = (TextView) findViewById(R.id.forgot_passwordTextview);
-        passwordEditText = (EditText) findViewById(R.id.passwordpracticeEditText);
-        emailEditText = (EditText) findViewById(R.id.signinEmailpracticeEditText);
-        signInEmailTextInputLayout = (TextInputLayout) findViewById(R.id.signInEmailTextInputLayout);
-        passwordTextInputLayout = (TextInputLayout) findViewById(R.id.passwordTextInputLayout);
+        signInButton = findViewById(R.id.signinButton);
+        homeButton = findViewById(R.id.signInHome);
+        goBackButton = findViewById(R.id.goBackButton);
+        forgotPasswordTextView = findViewById(R.id.forgot_passwordTextview);
+        passwordEditText = findViewById(R.id.passwordpracticeEditText);
+        emailEditText = findViewById(R.id.signinEmailpracticeEditText);
+        signInEmailTextInputLayout = findViewById(R.id.signInEmailTextInputLayout);
+        passwordTextInputLayout = findViewById(R.id.passwordTextInputLayout);
         showPasswordButton = findViewById(R.id.show_password_button);
 
         setUpLanguageSpinner();
         if (signInScreenMode == SignInScreenMode.PRACTICE_MODE_SIGNIN) {
             displayVersionNumber();
         } else if (signInScreenMode == SignInScreenMode.PATIENT_MODE_SIGNIN) {
-            TextView signInTitle = (TextView) findViewById(R.id.signinTitleTextview);
+            TextView signInTitle = findViewById(R.id.signinTitleTextview);
             signInTitle.setText(Label.getLabel("carepay_signin_title"));
         }
 
@@ -186,48 +168,31 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     }
 
     private void setUpLanguageSpinner() {
-        String selectedLanguageStr = getApplicationPreferences().getUserLanguage();
-        OptionDTO selectedLanguage = signinDTO.getPayload().getLanguages().get(0);
-        for (OptionDTO language : signinDTO.getPayload().getLanguages()) {
-            if (selectedLanguageStr.equals(language.getCode())) {
-                selectedLanguage = language;
+        languageSwitch = findViewById(R.id.languageSpinner);
+        final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), false,
+                signinDTO.getPayload().getLanguages(), new LanguageAdapter.LanguageInterface() {
+            @Override
+            public void onLanguageSelected(OptionDTO language) {
+                changeLanguage(signinDTO.getMetadata().getLinks().getLanguage(),
+                        language.getCode().toLowerCase(), getWorkflowServiceHelper().getApplicationStartHeaders());
             }
-        }
-
-        languageSwitch = (TextView) findViewById(R.id.languageSpinner);
-        final View languageContainer = findViewById(R.id.languageContainer);
+        });
         languageSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                languageContainer.setVisibility(languageContainer.getVisibility() == View.VISIBLE
-                        ? View.GONE : View.VISIBLE);
+                popupPickerLanguage.showAsDropDown(view);
             }
         });
         languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
         final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
         headers.put("username", getApplicationPreferences().getUserName());
         headers.put("username_patient", getApplicationPreferences().getPatientId());
-        RecyclerView languageList = (RecyclerView) findViewById(R.id.languageList);
-        LanguageAdapter languageAdapter = new LanguageAdapter(signinDTO.getPayload().getLanguages(), selectedLanguage);
-        languageList.setAdapter(languageAdapter);
-        languageList.setLayoutManager(new LinearLayoutManager(getContext()));
-        languageAdapter.setCallback(new LanguageAdapter.LanguageInterface() {
-            @Override
-            public void onLanguageSelected(OptionDTO language) {
-                languageContainer.setVisibility(View.GONE);
-                if (!isUserInteraction) {
-                    return;
-                }
-                changeLanguage(signinDTO.getMetadata().getLinks().getLanguage(),
-                        language.getCode().toLowerCase(), getWorkflowServiceHelper().getApplicationStartHeaders());
-            }
-        });
     }
 
     private void displayVersionNumber() {
         try {
             PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            TextView versionNumber = (TextView) findViewById(R.id.version_number);
+            TextView versionNumber = findViewById(R.id.version_number);
             versionNumber.setText(packageInfo.versionName);
         } catch (PackageManager.NameNotFoundException nne) {
             nne.printStackTrace();
@@ -428,6 +393,8 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
             queryMap.put("patient_id", signInResponse.getPayload().getSignIn().getMetadata().getPatientId());
             getApplicationMode().setPatientId(signInResponse.getPayload().getSignIn().getMetadata().getPatientId());
+            ApplicationPreferences.getInstance().setPatientId(signInResponse.getPayload().getSignIn()
+                    .getMetadata().getPatientId());
             getWorkflowServiceHelper().execute(transitionDTO, signInCallback, queryMap);
 
             identifyPatientUser(signInResponse.getPayload().getSignIn().getMetadata().getUserId());
@@ -613,6 +580,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             setSignInButtonClickable(true);
+            getApplicationPreferences().setAppointmentCounts(null);
             navigateToWorkFlow(workflowDTO);
         }
 

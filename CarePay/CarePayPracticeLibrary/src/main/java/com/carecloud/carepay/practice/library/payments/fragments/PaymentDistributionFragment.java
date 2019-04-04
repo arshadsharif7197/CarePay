@@ -2,6 +2,7 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -54,8 +55,8 @@ import com.carecloud.carepaylibray.retail.models.RetailItemPayload;
 import com.carecloud.carepaylibray.retail.models.RetailLineItemMetadata;
 import com.carecloud.carepaylibray.retail.models.RetailOrderItem;
 import com.carecloud.carepaylibray.retail.models.RetailPostModelOrder;
-import com.carecloud.carepaylibray.retail.models.RetailSelectedOption;
 import com.carecloud.carepaylibray.retail.models.RetailProductsModel;
+import com.carecloud.carepaylibray.retail.models.RetailSelectedOption;
 import com.carecloud.carepaylibray.utils.BounceHelper;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -93,6 +94,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     private View actionButton;
     private View retailChargesLayout;
     private RecyclerView retailChargesRecycler;
+    private Button paymentPlanEmptyButton;
 
     private BounceHelper balanceViewSwipeHelper;
     private BounceHelper chargeViewSwipeHelper;
@@ -128,6 +130,8 @@ public class PaymentDistributionFragment extends BaseDialogFragment
     private UserAuthPermissions authPermissions;
 
     private DemographicPayloadDTO patientDemographics;
+
+    private boolean isDialogHidden = false;
 
     @Override
     public void onAttach(Context context) {
@@ -165,8 +169,7 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
         balanceTextView = view.findViewById(R.id.balance_value);
         unAppliedTextView = view.findViewById(R.id.unapplied_value);
-
-        scrollView = view.findViewById(R.id.nested_scroller);
+        scrollView = (NestedScrollView) view.findViewById(R.id.nested_scroller);
 
         unappliedLayout = view.findViewById(R.id.unapplied_layout);
 
@@ -243,7 +246,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         });
 
         View addButton = view.findViewById(R.id.add_item_button);
-        View addButtonEmpty = view.findViewById(R.id.add_item_button_empty);
         View.OnClickListener addItem = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -255,10 +257,10 @@ public class PaymentDistributionFragment extends BaseDialogFragment
             }
         };
         addButton.setOnClickListener(addItem);
-        addButtonEmpty.setOnClickListener(addItem);
 
         Button paymentPlanButton = view.findViewById(R.id.payment_left_button);
-        paymentPlanButton.setOnClickListener(new View.OnClickListener() {
+        paymentPlanEmptyButton = view.findViewById(R.id.payment_plans_empty_button);
+        View.OnClickListener displayPlans =  new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 clearPickers();
@@ -266,7 +268,10 @@ public class PaymentDistributionFragment extends BaseDialogFragment
                 callback.showPaymentPlanDashboard(paymentsModel);
                 hideDialog();
             }
-        });
+        };
+
+        paymentPlanButton.setOnClickListener(displayPlans);
+        paymentPlanEmptyButton.setOnClickListener(displayPlans);
 
         payButton = view.findViewById(R.id.payment_pay_button);
         payButton.setOnClickListener(new View.OnClickListener() {
@@ -315,7 +320,6 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
         payButton.setEnabled(authPermissions.canMakePayment);
         addButton.setEnabled(authPermissions.canAddCharges);
-        addButtonEmpty.setEnabled(authPermissions.canAddCharges);
     }
 
     private void setInitialValues(View view) {
@@ -412,6 +416,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment
 
         if (balanceItems.isEmpty() && chargeItems.isEmpty() && retailItems.isEmpty()) {
             emptyBalanceLayout.setVisibility(View.VISIBLE);
+            if (paymentsModel.getPaymentPayload().getPatientPaymentPlans().size() > 0) {
+                paymentPlanEmptyButton.setVisibility(View.VISIBLE);
+            }
             paymentTotalTextView.setClickable(false);
         } else {
             if (balanceItems.isEmpty()) {
@@ -1164,4 +1171,31 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         super.onSaveInstanceState(outState);
         outState.clear();
     }
+
+    @Override
+    public void hideDialog(){
+        super.hideDialog();
+        isDialogHidden = true;
+    }
+
+    @Override
+    public void showDialog(){
+        super.showDialog();
+        isDialogHidden = false;
+    }
+
+    @Override
+    public void onResume(){
+        if(isDialogHidden){
+            hideDialog();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showDialog();
+                }
+            }, 1500);
+        }
+        super.onResume();
+    }
+
 }

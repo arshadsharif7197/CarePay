@@ -360,9 +360,16 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                             cancelAppointment.setVisibility(View.VISIBLE);
                         }
                         if (isLocationWithBreezeEnabled(enabledLocations)) {
+                            leftButton.setVisibility(View.VISIBLE);
+                            leftButton.setText(Label.getLabel("sigin_how_check_in_scan_qr_code"));
+                            leftButton.setOnClickListener(scanClick);
                             actionsLayout.setVisibility(View.VISIBLE);
                             rightButton.setVisibility(View.VISIBLE);
-                            rightButton.setText(Label.getLabel("appointments_check_in_early"));
+                            if (appointmentDTO.getPayload().canCheckInNow(callback.getPracticeSettings())) {
+                                rightButton.setText(Label.getLabel("appointments_check_in_now"));
+                            } else {
+                                rightButton.setText(Label.getLabel("appointments_check_in_early"));
+                            }
                             rightButton.setOnClickListener(checkInClick);
                         }
                     }
@@ -394,8 +401,9 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     }
 
     private void showCheckoutButton(Set<String> enabledLocations) {
+        DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getEndTime());
         if (isLocationWithBreezeEnabled(enabledLocations)
-                && appointmentDTO.getPayload().canCheckOut()) {
+                && appointmentDTO.getPayload().canCheckOut() && DateUtil.getInstance().isWithinHours(24)) {
             actionsLayout.setVisibility(View.VISIBLE);
             leftButton.setVisibility(View.VISIBLE);
             leftButton.setText(Label.getLabel("appointment_request_checkout_now"));

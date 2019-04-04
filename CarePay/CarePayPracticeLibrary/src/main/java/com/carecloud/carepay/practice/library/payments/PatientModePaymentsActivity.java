@@ -46,7 +46,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
-import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
@@ -91,7 +91,6 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
 
     private PaymentsModel paymentResultModel;
     private PatientBalanceDTO selectedBalance;
-    private PaymentBalancesAdapter paymentBalancesAdapter;
     private PaymentPlanDTO paymentPlan;
 
     @Override
@@ -115,7 +114,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
                 goToHome(paymentResultModel.getPaymentsMetadata().getPaymentsTransitions().getLogout());
             }
         });
-        TextView logoutTextview = (TextView) findViewById(R.id.logoutTextview);
+        TextView logoutTextview = findViewById(R.id.logoutTextview);
         logoutTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -146,12 +145,12 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
     }
 
     private void showPayments(PaymentsModel paymentsModel) {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.appointmentsRecyclerView);
+        RecyclerView recyclerView = findViewById(R.id.appointmentsRecyclerView);
         recyclerView.setVisibility(View.VISIBLE);
         findViewById(R.id.emptyPaymentsImageView).setVisibility(View.GONE);
         recyclerView.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.HORIZONTAL, false));
-        paymentBalancesAdapter = new PaymentBalancesAdapter(this,
+        PaymentBalancesAdapter paymentBalancesAdapter = new PaymentBalancesAdapter(this,
                 paymentsModel, getBalances(paymentsModel),
                 paymentsModel.getPaymentPayload().getUserPractices().get(0), this);
         recyclerView.setAdapter(paymentBalancesAdapter);
@@ -497,7 +496,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
                                      boolean onlySelectMode) {
         PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
                 .newInstance(paymentsModel, paymentPlanPostModel);
-        fragment.setChangePaymentMethodListener(new LargeAlertDialog.LargeAlertInterface() {
+        fragment.setChangePaymentMethodListener(new LargeAlertDialogFragment.LargeAlertInterface() {
             @Override
             public void onActionButton() {
                 PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
@@ -612,7 +611,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
                 onPaymentPlanButonClicked(paymentPlanDTO);
             }
         });
-        fragment.setChangePaymentMethodListener(new LargeAlertDialog.LargeAlertInterface() {
+        fragment.setChangePaymentMethodListener(new LargeAlertDialogFragment.LargeAlertInterface() {
             @Override
             public void onActionButton() {
                 PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment

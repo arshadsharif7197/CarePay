@@ -11,7 +11,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
-import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
@@ -38,9 +38,9 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
     private PaymentPlanCreateInterface callback;
     protected PaymentPlanPostModel paymentPlanPostModel;
     protected PaymentPlanDTO paymentPlanDTO;
-    protected LargeAlertDialog.LargeAlertInterface largeAlertInterface;
+    protected LargeAlertDialogFragment.LargeAlertInterface largeAlertInterface;
 
-    private Date paymentDate;
+    protected Date paymentDate;
 
     /**
      * @param paymentsModel        payment model
@@ -227,12 +227,12 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
         ((OneTimePaymentInterface)callback).showPaymentConfirmation(workflowDTO, false);
     }
 
-    public void setChangePaymentMethodListener(LargeAlertDialog.LargeAlertInterface largeAlertInterface) {
+    public void setChangePaymentMethodListener(LargeAlertDialogFragment.LargeAlertInterface largeAlertInterface) {
         this.largeAlertInterface = largeAlertInterface;
     }
 
     @Override
-    protected LargeAlertDialog.LargeAlertInterface getLargeAlertInterface() {
+    protected LargeAlertDialogFragment.LargeAlertInterface getLargeAlertInterface() {
         if (largeAlertInterface != null) {
             getActivity().getSupportFragmentManager()
                     .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);

@@ -402,6 +402,17 @@ public class PaymentsPayloadDTO implements Serializable {
     }
 
     /**
+     * Verify is pratice has payment methods enabled
+     * 
+     * @param practiceId
+     * @return true if practice has at least one payment method enabled
+     */
+    public boolean hasPaymentMethods(String practiceId) {
+        PaymentsPayloadSettingsDTO settingsDTO = getPaymentSetting(practiceId);
+        return settingsDTO.getPayload().getRegularPayments().getPaymentMethods().size() > 0;
+    }
+
+    /**
      * get only valid plans
      *
      * @param practiceId - optional, if provided will first filter plans by practice
@@ -716,4 +727,14 @@ public class PaymentsPayloadDTO implements Serializable {
         }
         return null;
     }
+
+    public boolean isPrepayment() {
+        try {
+            return getPaymentPostModel().getMetadata().getAppointmentRequestDTO() != null;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
 }

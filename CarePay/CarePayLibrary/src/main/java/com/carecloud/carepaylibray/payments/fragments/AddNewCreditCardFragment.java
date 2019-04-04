@@ -17,7 +17,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
-import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
@@ -194,7 +194,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
         }
     }
 
-    protected void showConfirmation(WorkflowDTO workflowDTO){
+    protected void showConfirmation(WorkflowDTO workflowDTO) {
         callback.showPaymentConfirmation(workflowDTO);
     }
 
@@ -326,13 +326,15 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
     @Override
     public void onAuthorizeCreditCardFailed() {
         nextButton.setEnabled(true);
-        new LargeAlertDialog(getActivity(), Label.getLabel("payment_failed_error"),
+        LargeAlertDialogFragment fragment = LargeAlertDialogFragment.newInstance(Label.getLabel("payment_failed_error"),
                 Label.getLabel("payment_change_payment_label"),
-                R.color.Feldgrau, R.drawable.icn_card_error, getLargeAlertInterface()).show();
+                R.color.Feldgrau, R.drawable.icn_card_error);
+        fragment.setLargeAlertInterface(getLargeAlertInterface());
+        fragment.show(getFragmentManager(), LargeAlertDialogFragment.class.getName());
     }
 
-    protected LargeAlertDialog.LargeAlertInterface getLargeAlertInterface() {
-        return new LargeAlertDialog.LargeAlertInterface() {
+    protected LargeAlertDialogFragment.LargeAlertInterface getLargeAlertInterface() {
+        return new LargeAlertDialogFragment.LargeAlertInterface() {
             @Override
             public void onActionButton() {
                 callback.onPayButtonClicked(amountToMakePayment, paymentsModel);
