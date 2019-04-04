@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.mini.HttpConstants;
 import com.carecloud.carepay.mini.R;
+import com.carecloud.carepay.mini.activities.FullScreenActivity;
 import com.carecloud.carepay.mini.models.response.UserPracticeDTO;
 import com.carecloud.carepay.mini.views.CustomErrorToast;
 
@@ -65,6 +66,7 @@ public class UnlockFragment extends LoginFragment {
         signOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ((FullScreenActivity) getActivity()).toggleCustomerMode();
                 getActivity().finishAffinity();
             }
         });

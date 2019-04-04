@@ -845,6 +845,9 @@ public class WelcomeActivity extends FullScreenActivity {
     };
 
     private void logNewRelicPaymentError(String errorMessage, Object payload){
+        if(errorMessage == null){
+            errorMessage = "Unknown Error Occurred";
+        }
         Map<String, Object> eventMap = new HashMap<>();
         eventMap.put("Error Message", errorMessage);
         eventMap.put("Request Payload", payload);
