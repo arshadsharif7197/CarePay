@@ -463,6 +463,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                         checkIfEnableButton();
                         enableDependentFields(view,
                                 new int[]{R.id.health_insurance_policy_first_name_holder_layout,
+                                        R.id.health_insurance_policy_middle_name_holder_layout,
                                         R.id.health_insurance_policy_last_name_holder_layout,
                                         R.id.health_insurance_policy_birth_date_holder_layout,
                                         R.id.healthInsuranceGenderInputLayout},
@@ -477,6 +478,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         setupExtraFields(view, demographicInsurancePayload, insuranceModelProperties);
         enableDependentFields(view,
                 new int[]{R.id.health_insurance_policy_first_name_holder_layout,
+                        R.id.health_insurance_policy_middle_name_holder_layout,
                         R.id.health_insurance_policy_last_name_holder_layout,
                         R.id.health_insurance_policy_birth_date_holder_layout,
                         R.id.healthInsuranceGenderInputLayout},
@@ -501,6 +503,13 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         EditText firstNameEditText = (EditText) view.findViewById(R.id.health_insurance_policy_first_name_holder);
         firstNameEditText.addTextChangedListener(getValidateOptionsFields(firstNameInputLayout));
 
+        String middleName = demographicInsurancePayload.getPolicyMiddleNameHolder();
+        setUpDemographicField(view, middleName, insuranceModelProperties.getPolicyHolder(),
+                null, R.id.health_insurance_policy_middle_name_holder_layout,
+                R.id.health_insurance_policy_middle_name_holder, null, null, null);
+        TextInputLayout middleNameInputLayout = view.findViewById(R.id.health_insurance_policy_middle_name_holder_layout);
+        EditText middleNameEditText = view.findViewById(R.id.health_insurance_policy_middle_name_holder);
+        middleNameEditText.addTextChangedListener(getValidateOptionsFields(middleNameInputLayout));
 
         String lastName = demographicInsurancePayload.getPolicyLastNameHolder();
         setUpDemographicField(view, lastName, insuranceModelProperties.getPolicyHolder(),
@@ -673,6 +682,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
         String firstName = ((TextView) view.findViewById(R.id.health_insurance_policy_first_name_holder)).getText().toString();
         demographicInsurancePayloadDTO.setPolicyFirstNameHolder(firstName.trim());
+
+        String middleName = ((TextView) view.findViewById(R.id.health_insurance_policy_middle_name_holder)).getText().toString();
+        demographicInsurancePayloadDTO.setPolicyMiddleNameHolder(middleName.trim());
 
         String lastName = ((TextView) view.findViewById(R.id.health_insurance_policy_last_name_holder)).getText().toString();
         demographicInsurancePayloadDTO.setPolicyLastNameHolder(lastName.trim());
