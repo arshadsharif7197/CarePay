@@ -357,9 +357,13 @@ public class CloverPaymentAdapter {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("patient_id", patientId);
         queryMap.put("deepstream_record_id", paymentRequestId);
+        queryMap.put("transition", "true");
+
+        Map<String, String> header = new HashMap<>();
+        header.put("transition", "true");
 
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getRecordPayment();
-        activity.getWorkflowServiceHelper().execute(transitionDTO, getPostPaymentCallback(paymentRequestId, recordObject), queryMap);
+        activity.getWorkflowServiceHelper().execute(transitionDTO, getPostPaymentCallback(paymentRequestId, recordObject), queryMap, header);
     }
 
     private WorkflowServiceCallback getPostPaymentCallback(final String paymentRequestId, final JsonElement recordObject) {
