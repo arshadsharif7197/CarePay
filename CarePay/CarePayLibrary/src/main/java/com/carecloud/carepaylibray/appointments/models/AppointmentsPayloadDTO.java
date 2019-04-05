@@ -569,6 +569,13 @@ public class AppointmentsPayloadDTO {
         this.displayStyle = displayStyle;
     }
 
+    public void setReasonForVisit(String reasonForVisit) {
+        this.reasonForVisit = reasonForVisit;
+    }
+
+    public String getReasonForVisit() {
+        return reasonForVisit;
+    }
 
     @Override
     public boolean equals(Object payloadObj) {
@@ -767,11 +774,4 @@ public class AppointmentsPayloadDTO {
     }
 
 
-    public void setReasonForVisit(String reasonForVisit) {
-        this.reasonForVisit = reasonForVisit;
-    }
-
-    public String getReasonForVisit() {
-        return reasonForVisit;
-    }
 }
