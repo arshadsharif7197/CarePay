@@ -33,7 +33,7 @@ public class ProvidersScheduleDTO implements Serializable {
     private AppointmentResourcesItemDTO resource = new AppointmentResourcesItemDTO();
     @SerializedName("reasons")
     @Expose
-    private List<ProvidersReasonDTO> reasons = new ArrayList<>();
+    private List<VisitTypeDTO> reasons = new ArrayList<>();
     @SerializedName("templates")
     @Expose
     private List<ProvidersTemplatesDTO> templates = new ArrayList<>();
@@ -169,7 +169,7 @@ public class ProvidersScheduleDTO implements Serializable {
      * @return
      *     The reasons
      */
-    public List<ProvidersReasonDTO> getReasons() {
+    public List<VisitTypeDTO> getReasons() {
         return reasons;
     }
 
@@ -178,7 +178,7 @@ public class ProvidersScheduleDTO implements Serializable {
      * @param reasons
      *     The reasons
      */
-    public void setReasons(List<ProvidersReasonDTO> reasons) {
+    public void setReasons(List<VisitTypeDTO> reasons) {
         this.reasons = reasons;
     }
 
