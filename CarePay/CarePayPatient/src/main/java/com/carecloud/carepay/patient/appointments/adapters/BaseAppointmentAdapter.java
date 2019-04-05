@@ -102,8 +102,14 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
 
         switch (style) {
             case CHECKED_IN: {
-                if (appointmentsPayload.canStartVideoVisit()){
-                    holder.videoVisitIndicator.setVisibility(View.VISIBLE);
+                if (appointmentsPayload.getVisitType().hasVideoOption() && !shouldShowCheckoutButton){
+                    if(appointmentsPayload.canStartVideoVisit()) {
+                        holder.videoVisitIndicator.setVisibility(View.VISIBLE);
+                    }else{
+                        holder.todayTimeTextView.setText(dateUtil.getTime12Hour());
+                        holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.emerald));
+                        holder.todayTimeLayout.setVisibility(View.VISIBLE);
+                    }
                 } else if (shouldShowCheckoutButton) {
                     holder.checkOutButton.setVisibility(View.VISIBLE);
                     holder.checkOutButton.setClickable(true);
