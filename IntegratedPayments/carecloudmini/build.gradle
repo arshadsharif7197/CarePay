@@ -101,6 +101,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation project(':fontviews')
 //    implementation project(':shamrocksdk')
-    implementation 'com.github.Carecloud:shamrock_android_sdk:development-SNAPSHOT'
+    implementation 'com.github.Carecloud:shamrock_android_sdk:2.0.3'
 
 }
