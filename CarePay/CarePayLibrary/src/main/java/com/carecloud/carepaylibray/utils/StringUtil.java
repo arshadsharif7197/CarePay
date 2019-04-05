@@ -61,7 +61,7 @@ public class StringUtil {
             res.append(str).append(" ");
         }
 
-        return res.toString();
+        return res.toString().trim();
     }
 
     /**
