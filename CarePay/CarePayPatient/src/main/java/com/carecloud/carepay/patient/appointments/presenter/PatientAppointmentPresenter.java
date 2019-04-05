@@ -42,7 +42,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.CancellationReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
-import com.carecloud.carepaylibray.appointments.models.ProvidersReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
@@ -747,12 +746,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         payload.setResource(selectedResource);
 
         VisitTypeDTO selectedVisitType = appointmentDTO.getPayload().getVisitType();
-        ProvidersReasonDTO reasonDTO = new ProvidersReasonDTO();
-        reasonDTO.setAmount(selectedVisitType.getAmount());
-        reasonDTO.setName(selectedVisitType.getName());
-        reasonDTO.setDescription(selectedVisitType.getDescription());
-        reasonDTO.setId(selectedVisitType.getId());
-        payload.setVisitReason(reasonDTO);
+        payload.setVisitReason(selectedVisitType);
 
         AppointmentAvailabilityDataDTO appointmentAvailabilityDataDTO = new AppointmentAvailabilityDataDTO();
         ArrayList<AppointmentAvailabilityPayloadDTO> payloadList = new ArrayList<>();
