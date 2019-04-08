@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
+import com.carecloud.carepaylibray.appointments.interfaces.VideoAppointmentCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
@@ -238,6 +239,11 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
             @Override
             public void onClick(View view) {
                 if (null != callback) {
+                    if (appointmentDTO.getPayload().getVisitType().hasVideoOption()) {
+                        ((VideoAppointmentCallback)callback).startVideoVisit(appointmentDTO);
+                        dismiss();
+                        return;
+                    }
                     callback.onRightActionTapped(appointmentDTO);
                 }
                 dismiss();
