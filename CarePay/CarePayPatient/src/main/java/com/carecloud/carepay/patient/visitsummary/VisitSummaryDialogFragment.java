@@ -485,7 +485,6 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
 
             @Override
             public void onPreExecute() {
-
             }
 
             @Override
@@ -495,7 +494,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                     visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
                 } catch (Exception ex) {
                     failedParsing = true;
-                    onFailure("Error Pablo");
+                    onFailure("");
                 }
                 String status = visitSummaryDTO.getPayload().getVisitSummary().getStatus();
                 if (retryIntent > MAX_NUMBER_RETRIES) {

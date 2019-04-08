@@ -611,7 +611,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         callback.callVisitSummaryService(appointmentDTO, new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
-                ((BaseActivity) getActivity()).showProgressDialog();
+                showProgressDialog();
             }
 
             @Override
@@ -626,7 +626,10 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
 
             @Override
             public void onFailure(String exceptionMessage) {
-                ((BaseActivity) getActivity()).hideProgressDialog();
+                Log.e("okHttp", exceptionMessage);
+                hideProgressDialog();
+                showErrorNotification(Label.getLabel("visitSummary.createVisitSummary.error.label.downloadError"));
+
             }
         });
     }
@@ -635,21 +638,24 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         callback.callVisitSummaryStatusService(jobId, appointmentDTO.getMetadata().getPracticeMgmt(),
                 new WorkflowServiceCallback() {
 
+                    private boolean failedParsing = false;
+
                     @Override
                     public void onPreExecute() {
-
                     }
 
                     @Override
                     public void onPostExecute(WorkflowDTO workflowDTO) {
-                        VisitSummaryDTO visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
+                        VisitSummaryDTO visitSummaryDTO = null;
+                        try {
+                            visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
+                        } catch (Exception ex) {
+                            failedParsing = true;
+                            onFailure("");
+                        }
                         String status = visitSummaryDTO.getPayload().getVisitSummary().getStatus();
                         if (retryIntent > VisitSummaryDialogFragment.MAX_NUMBER_RETRIES) {
-                            retryIntent = 0;
-                            rightButton.setEnabled(true);
-//                            rightButton.setProgressEnabled(false);
-                            rightButton.setText(Label.getLabel("visitSummary.appointments.button.label.visitSummary"));
-                            showErrorNotification(Label.getLabel("practice_patient_settings_intake_forms_print_status_error"));
+                            resetProcess();
                         } else if (status.equals("queued") || status.equals("working")) {
                             retryIntent++;
                             statusHandler = new Handler();
@@ -665,14 +671,27 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     @Override
                     public void onFailure(String exceptionMessage) {
                         Log.e("OkHttp", exceptionMessage);
-                        String title = String.format("%s - %s",
-                                appointmentDTO.getPayload().getProvider().getFullName(),
-                                DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime())
-                                        .toStringWithFormatMmDashDdDashYyyy());
-                        enqueueId = callback.downloadVisitSummaryFile(jobId,
-                                appointmentDTO.getMetadata().getPracticeMgmt(), title);
+                        if (failedParsing) {
+                            String title = String.format("%s - %s",
+                                    appointmentDTO.getPayload().getProvider().getFullName(),
+                                    DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime())
+                                            .toStringWithFormatMmDashDdDashYyyy());
+                            enqueueId = callback.downloadVisitSummaryFile(jobId,
+                                    appointmentDTO.getMetadata().getPracticeMgmt(), title);
+                        } else {
+                            resetProcess();
+                        }
+                        rightButton.setEnabled(true);
+
                     }
                 });
+    }
+
+    private void resetProcess() {
+        retryIntent = 0;
+        rightButton.setEnabled(true);
+        rightButton.setText(Label.getLabel("visitSummary.appointments.button.label.visitSummary"));
+        showErrorNotification(Label.getLabel("visitSummary.createVisitSummary.error.label.downloadError"));
     }
 
     private View.OnClickListener scanClick = new View.OnClickListener() {
