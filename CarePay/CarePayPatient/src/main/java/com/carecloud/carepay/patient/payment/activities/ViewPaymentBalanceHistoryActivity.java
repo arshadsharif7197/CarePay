@@ -282,6 +282,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         displayPage = PAGE_BALANCES;
         initFragments();
         refreshBalance(true);
+        showRateDialogFragment();
     }
 
     @Override
