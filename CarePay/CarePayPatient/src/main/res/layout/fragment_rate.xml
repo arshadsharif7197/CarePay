@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -16,7 +17,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/rateDialogPadding"
         android:layout_marginEnd="@dimen/rateDialogPadding"
-        android:text="Enjoying Breeze?" />
+        breeze:textKey="rate.dialog.title.label.message"
+        tools:text="Enjoying Breeze?" />
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:layout_width="match_parent"
@@ -24,7 +26,8 @@
         android:layout_marginStart="@dimen/rateDialogPadding"
         android:layout_marginEnd="@dimen/rateDialogPadding"
         android:layout_marginBottom="@dimen/dimen_20dp"
-        android:text="We hope your experience was a Breeze. Would you like to leave us a review?" />
+        breeze:textKey="rate.dialog.subTitle.label.message"
+        tools:text="We hope your experience was a Breeze. Would you like to leave us a review?" />
 
     <View
         android:layout_width="match_parent"
@@ -37,7 +40,8 @@
         android:layout_height="@dimen/rateDialogOptionHeight"
         android:background="?selectableItemBackground"
         android:gravity="center"
-        android:text="Yes, rate it now!" />
+        breeze:textKey="rate.dialog.option.label.rateNow"
+        tools:text="Yes, rate it now!" />
 
     <View
         android:layout_width="match_parent"
@@ -50,6 +54,7 @@
         android:layout_height="@dimen/rateDialogOptionHeight"
         android:background="?selectableItemBackground"
         android:gravity="center"
-        android:text="Not now" />
+        breeze:textKey="rate.dialog.option.label.notNow"
+        tools:text="Not now" />
 
 </LinearLayout>
