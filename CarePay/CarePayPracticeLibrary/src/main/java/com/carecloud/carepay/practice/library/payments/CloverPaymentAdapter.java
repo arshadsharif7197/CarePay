@@ -120,6 +120,28 @@ public class CloverPaymentAdapter {
     }
 
     /**
+     * Set Generic Payment
+     *
+     * @param amount amount to pay
+     */
+    public void setCloverPayment(double amount) {
+        IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
+        paymentLineItem.setAmount(amount);
+        paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_UNAPPLIED);
+        paymentLineItem.setDescription("Unapplied Amount");
+
+        IntegratedPaymentPostModel paymentPostModel = new IntegratedPaymentPostModel();
+        paymentPostModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
+        paymentPostModel.setAmount(amount);
+        paymentPostModel.addLineItem(paymentLineItem);
+
+        IntegratedPaymentMetadata postModelMetadata = paymentPostModel.getMetadata();
+        postModelMetadata.setAppointmentId(appointmentId);
+
+        setCloverPayment(paymentPostModel);
+    }
+
+    /**
      * Set Applied Payment
      *
      * @param postModel payment model for payment application
@@ -130,7 +152,7 @@ public class CloverPaymentAdapter {
 
     public void setCloverPayment(IntegratedPaymentPostModel postModel) {
 
-        Intent intent = new Intent();
+        Intent intent = new Intent(CarePayConstants.CLOVER_PAYMENT_INTENT);
 
         double paymentAmount = postModel.getAmount();
         intent.putExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, paymentAmount);
