@@ -58,6 +58,8 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.marcok.stepprogressbar.StepProgressBar;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_BACK_DTO;
@@ -495,7 +497,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                 null, R.id.health_insurance_group_number_layout,
                 R.id.health_insurance_group_number, null, null, null);
 
-        String firstName = demographicInsurancePayload.getPolicyFirstNameHolder();
+        String firstName = WordUtils.capitalizeFully(demographicInsurancePayload.getPolicyFirstNameHolder());
         setUpDemographicField(view, firstName, insuranceModelProperties.getPolicyHolder(),
                 null, R.id.health_insurance_policy_first_name_holder_layout,
                 R.id.health_insurance_policy_first_name_holder, null, null, null);
@@ -503,7 +505,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         EditText firstNameEditText = (EditText) view.findViewById(R.id.health_insurance_policy_first_name_holder);
         firstNameEditText.addTextChangedListener(getValidateOptionsFields(firstNameInputLayout));
 
-        String middleName = demographicInsurancePayload.getPolicyMiddleNameHolder();
+        String middleName = WordUtils.capitalizeFully(demographicInsurancePayload.getPolicyMiddleNameHolder());
         setUpDemographicField(view, middleName, insuranceModelProperties.getPolicyHolder(),
                 null, R.id.health_insurance_policy_middle_name_holder_layout,
                 R.id.health_insurance_policy_middle_name_holder, null, null, null);
@@ -511,7 +513,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         EditText middleNameEditText = view.findViewById(R.id.health_insurance_policy_middle_name_holder);
         middleNameEditText.addTextChangedListener(getValidateOptionsFields(middleNameInputLayout));
 
-        String lastName = demographicInsurancePayload.getPolicyLastNameHolder();
+        String lastName = WordUtils.capitalizeFully(demographicInsurancePayload.getPolicyLastNameHolder());
         setUpDemographicField(view, lastName, insuranceModelProperties.getPolicyHolder(),
                 null, R.id.health_insurance_policy_last_name_holder_layout,
                 R.id.health_insurance_policy_last_name_holder, null, null, null);

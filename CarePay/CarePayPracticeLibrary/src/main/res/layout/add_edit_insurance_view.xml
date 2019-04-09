@@ -254,7 +254,6 @@
                 android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
                 android:inputType="textPersonName"
                 android:maxLength="100"
-                android:textAllCaps="true"
                 app:customAssetFont="gotham_rounded_book"
                 breeze:hintKey="demographics_insurance_policy_holder"
                 tools:hint="Policy Holder First Name" />
@@ -288,7 +287,6 @@
                 android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
                 android:inputType="textPersonName"
                 android:maxLength="100"
-                android:textAllCaps="true"
                 app:customAssetFont="gotham_rounded_book"
                 breeze:hintKey="demographics_insurance_policy_holder_middle_name"
                 tools:hint="Policy Holder Middle Name" />
@@ -319,7 +317,6 @@
                 android:imeOptions="actionNext"
                 android:inputType="textPersonName"
                 android:maxLength="100"
-                android:textAllCaps="true"
                 app:customAssetFont="gotham_rounded_book"
                 breeze:hintKey="demographics_insurance_policy_holder_last_name"
                 tools:hint="Policy Holder Last Name" />
