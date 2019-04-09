@@ -68,7 +68,7 @@ import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
-import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
@@ -310,10 +310,9 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             public void onClick(View view) {
                 TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata()
                         .getPaymentsLinks().getFindPatient();
-                FindPatientDialog findPatientDialog = new FindPatientDialog(PaymentsActivity.this,
-                        transitionDTO, Label.getLabel("practice_payments_filter_find_patient_by_name"));
+                FindPatientDialog findPatientDialog = FindPatientDialog.newInstance(transitionDTO, Label.getLabel("practice_payments_filter_find_patient_by_name"));
                 setFindPatientOnItemClickedListener(findPatientDialog);
-                findPatientDialog.show();
+                displayDialogFragment(findPatientDialog, false);
             }
         };
     }
@@ -942,7 +941,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 }
             }
         });
-        fragment.setChangePaymentMethodListener(new LargeAlertDialog.LargeAlertInterface() {
+        fragment.setChangePaymentMethodListener(new LargeAlertDialogFragment.LargeAlertInterface() {
             @Override
             public void onActionButton() {
                 PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment

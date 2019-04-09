@@ -51,7 +51,7 @@ import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
+import java.util.concurrent.Executors;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -76,12 +76,13 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
 
     /**
      * get new instance of AndroidPayDialogFragment
-     * @param maskedWallet masked wallet
+     *
+     * @param maskedWallet  masked wallet
      * @param paymentsModel payments model
-     * @param amount payments amount
+     * @param amount        payments amount
      * @return new instance of AndroidPayDialogFragment
      */
-    public static AndroidPayDialogFragment newInstance(MaskedWallet maskedWallet, PaymentsModel paymentsModel, Double amount){
+    public static AndroidPayDialogFragment newInstance(MaskedWallet maskedWallet, PaymentsModel paymentsModel, Double amount) {
         Bundle args = new Bundle();
         args.putParcelable(KEY_MASKED_WALLET, maskedWallet);
         args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
@@ -93,12 +94,12 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
     }
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
         try {
             if (context instanceof PaymentViewHandler) {
                 callback = (PatientPaymentMethodInterface) ((PaymentViewHandler) context).getPaymentPresenter();
-            }else if (context instanceof AppointmentViewHandler){
+            } else if (context instanceof AppointmentViewHandler) {
                 callback = (PatientPaymentMethodInterface) ((AppointmentViewHandler) context).getAppointmentPresenter();
             } else {
                 callback = (PatientPaymentMethodInterface) context;
@@ -109,10 +110,10 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Bundle args = getArguments();
-        if(args != null){
+        if (args != null) {
             maskedWallet = args.getParcelable(KEY_MASKED_WALLET);
             paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
             paymentAmount = args.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
@@ -132,7 +133,7 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
             case PaymentConstants.REQUEST_CODE_FULL_WALLET:
                 switch (resultCode) {
                     case RESULT_OK:
-                        if(data != null) {
+                        if (data != null) {
                             FullWallet fullWallet = data.getParcelableExtra(WalletConstants.EXTRA_FULL_WALLET);
                             androidPayAdapter.sendRequestToPayeezy(fullWallet, papiAccount, paymentAmount, this);
                         }
@@ -157,12 +158,12 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_androidpay_dialog, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         initToolbar(view);
 
         TextView account = (TextView) view.findViewById(R.id.pay_account);
@@ -188,13 +189,13 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
     @Override
     public void onStop() {
         super.onStop();
-        if(androidPayAdapter != null) {
+        if (androidPayAdapter != null) {
             androidPayAdapter.disconnectClient();
         }
 
     }
 
-    private void initToolbar(View view){
+    private void initToolbar(View view) {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
 
         if (toolbar != null) {
@@ -211,14 +212,14 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
         }
     }
 
-    private String buildAddress(){
+    private String buildAddress() {
         StringBuilder builder = new StringBuilder();
         UserAddress address = maskedWallet.getBuyerBillingAddress();
         builder.append(address.getName())
                 .append("\n")
                 .append(address.getAddress1())
                 .append("\n");
-        if(address.getAddress2() != null && address.getAddress2().length() > 0){
+        if (address.getAddress2() != null && address.getAddress2().length() > 0) {
             builder.append(address.getAddress2());
             builder.append("\n");
         }
@@ -230,7 +231,7 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
         return builder.toString();
     }
 
-    private void initChildFragments(){
+    private void initChildFragments() {
         androidPayAdapter.createWalletDetails(maskedWallet, detailsContainer);
     }
 
@@ -255,7 +256,7 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
         }
     }
 
-    private void getPapiAccount(){
+    private void getPapiAccount() {
         UserPracticeDTO userPractice = callback.getPracticeInfo(paymentsModel);
 
         Map<String, String> queryMap = new HashMap<>();
@@ -301,9 +302,9 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
 
     @Override
     public void onAndroidPaySuccess(JsonElement jsonElement) {
-        if(paymentsModel.getPaymentPayload().getPaymentPostModel() == null){
+        if (paymentsModel.getPaymentPayload().getPaymentPostModel() == null) {
             processPayment(jsonElement);
-        }else{
+        } else {
             processPayment(jsonElement, paymentsModel.getPaymentPayload().getPaymentPostModel());
         }
     }
@@ -457,21 +458,21 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
         Gson gson = new Gson();
         eventMap.put("Post Model", gson.toJson(paymentsModel.getPaymentPayload().getPaymentPostModel()));
 
-        if(paymentJson == null){
+        if (paymentJson == null) {
             paymentJson = "";
-        }else{
+        } else {
             eventMap.put("Payment Object", paymentJson.toString());
         }
 
-        if(error == null){
+        if (error == null) {
             error = "";
-        }else{
+        } else {
             eventMap.put("Error Message", error);
         }
 
         NewRelic.recordCustomEvent("AndroidPaymentFail", eventMap);
 
-        if(paymentSuccess){
+        if (paymentSuccess) {
             //sent to Pay Queue API endpoint
             queuePayment(
                     paymentAmount,
@@ -486,28 +487,28 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
         }
     }
 
-    private void queuePayment(double amount, IntegratedPaymentPostModel postModel, String patientID, String practiceId, String practiceMgmt, String paymentJson, String errorMessage){
-        if(postModel!=null){
+    private void queuePayment(double amount, IntegratedPaymentPostModel postModel, String patientID, String practiceId, String practiceMgmt, String paymentJson, String errorMessage) {
+        if (postModel != null) {
 
-            if(postModel.getExecution() == null){
+            if (postModel.getExecution() == null) {
                 postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_CLOVER);
             }
 
-            if(postModel.getTransactionResponse()==null){
+            if (postModel.getTransactionResponse() == null) {
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("Payment Response", paymentJson);
                 jsonObject.addProperty("Error Message", errorMessage);
                 postModel.setTransactionResponse(jsonObject);
-            }else{
-                if(!postModel.getTransactionResponse().has("Payment Response")) {
+            } else {
+                if (!postModel.getTransactionResponse().has("Payment Response")) {
                     postModel.getTransactionResponse().addProperty("Payment Response", paymentJson);
                 }
-                if(!postModel.getTransactionResponse().has("Error Message")) {
+                if (!postModel.getTransactionResponse().has("Error Message")) {
                     postModel.getTransactionResponse().addProperty("Error Message", errorMessage);
                 }
             }
 
-            if(postModel.getAmount() == 0){
+            if (postModel.getAmount() == 0) {
                 postModel.setAmount(amount);
             }
         }
@@ -515,16 +516,15 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
 
         Gson gson = new Gson();
         String paymentModelJson = paymentJson;
-        try{
+        try {
             paymentModelJson = gson.toJson(postModel);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 
 
-
         //store in local DB
-        AndroidPayQueuePaymentRecord paymentRecord = new AndroidPayQueuePaymentRecord();
+        final AndroidPayQueuePaymentRecord paymentRecord = new AndroidPayQueuePaymentRecord();
         paymentRecord.setPatientID(patientID);
         paymentRecord.setPracticeID(practiceId);
         paymentRecord.setPracticeMgmt(practiceMgmt);
@@ -534,10 +534,17 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
         String paymentModelJsonEnc = EncryptionUtil.encrypt(getContext(), paymentModelJson, practiceId);
         paymentRecord.setPaymentModelJsonEnc(paymentModelJsonEnc);
 
-        if(StringUtil.isNullOrEmpty(paymentModelJsonEnc)){
+        if (StringUtil.isNullOrEmpty(paymentModelJsonEnc)) {
             paymentRecord.setPaymentModelJson(paymentModelJson);
         }
-        paymentRecord.save();
+
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                BreezeDataBase database = BreezeDataBase.getDatabase(getContext());
+                database.getAndroidPayDao().insert(paymentRecord);
+            }
+        });
 
         Intent intent = new Intent(getContext(), AndroidPayQueueUploadService.class);
         getContext().startService(intent);

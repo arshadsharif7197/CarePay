@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.appointments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -134,12 +135,18 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     }
 
     @Override
-    public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount,
-                                      PaymentsModel paymentsModel) {
+    public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, final double amount,
+                                      final PaymentsModel paymentsModel) {
         if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
                 && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
-            DialogFragment fragment = PracticeChooseCreditCardFragment
+            PracticeChooseCreditCardFragment fragment = PracticeChooseCreditCardFragment
                     .newInstance(paymentsModel, selectedPaymentMethod.getLabel(), amount);
+            fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialogInterface) {
+                    onPayButtonClicked(amount, paymentsModel);
+                }
+            });
             displayDialogFragment(fragment, false);
         } else {
             showAddCard(amount, paymentsModel);

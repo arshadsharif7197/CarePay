@@ -3,7 +3,9 @@ package com.carecloud.carepay.practice.library.homescreen.dtos;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class HomeScreenOfficeNewsDTO {
+import java.io.Serializable;
+
+public class HomeScreenOfficeNewsDTO implements Serializable {
 
     @SerializedName("payload")
     @Expose

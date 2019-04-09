@@ -8,6 +8,8 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 
+import static com.carecloud.carepaylibray.utils.SystemUtil.isNotEmptyString;
+
 import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,8 +17,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.carecloud.carepaylibray.utils.SystemUtil.isNotEmptyString;
 
 public class StringUtil {
 

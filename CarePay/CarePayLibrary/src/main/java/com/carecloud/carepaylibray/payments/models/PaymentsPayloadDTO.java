@@ -728,4 +728,14 @@ public class PaymentsPayloadDTO extends DelegatePermissionBasePayloadDto impleme
         }
         return null;
     }
+
+    public boolean isPrepayment() {
+        try {
+            return getPaymentPostModel().getMetadata().getAppointmentRequestDTO() != null;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
 }

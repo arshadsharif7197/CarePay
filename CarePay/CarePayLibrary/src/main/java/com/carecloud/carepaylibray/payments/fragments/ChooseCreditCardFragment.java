@@ -157,8 +157,10 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
                     close.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            dismiss();
-                            callback.onPayButtonClicked(amountToMakePayment, paymentsModel);
+                            cancel();
+                            if (onCancelListener == null) {
+                                callback.onPayButtonClicked(amountToMakePayment, paymentsModel);
+                            }
                         }
                     });
                 }
@@ -403,7 +405,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         nextButton.setEnabled(true);
     }
 
-    protected void showConfirmation(WorkflowDTO workflowDTO){
+    protected void showConfirmation(WorkflowDTO workflowDTO) {
         callback.showPaymentConfirmation(workflowDTO);
     }
 

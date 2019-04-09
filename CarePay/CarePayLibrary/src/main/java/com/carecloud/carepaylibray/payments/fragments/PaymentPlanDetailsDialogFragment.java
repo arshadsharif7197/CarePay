@@ -2,7 +2,10 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -78,8 +81,15 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
         paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
     }
 
+    @Nullable
     @Override
-    protected void onInitialization(View view) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_payment_plan_details, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         PaymentPlanPayloadDTO planPayload = paymentPlanDTO.getPayload();
         UserPracticeDTO userPracticeDTO = callback.getPracticeInfo(paymentsModel);
 
@@ -189,16 +199,6 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
             editPlanButton.setVisibility(View.GONE);
             scheduledPaymentLayout.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    protected int getCancelImageResource() {
-        return 0;
-    }
-
-    @Override
-    protected int getContentLayout() {
-        return R.layout.fragment_payment_plan_details;
     }
 
     private String getNextDate(PaymentPlanPayloadDTO planPayload) {

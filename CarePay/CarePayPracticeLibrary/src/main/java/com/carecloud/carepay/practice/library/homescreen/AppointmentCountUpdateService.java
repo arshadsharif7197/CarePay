@@ -59,9 +59,14 @@ public class AppointmentCountUpdateService extends IntentService {
                 queryMap.put("location_ids", StringUtil.getListAsCommaDelimitedString(locationsSavedFilteredIds));
             }
 
+            String username = applicationSession.getApplicationMode().getUserPracticeDTO().getUserName();
+            if(username == null){
+                username = applicationSession.getAppAuthorizationHelper().getCurrUser();
+            }
+
             Map<String, String> header = new HashMap<>();
             header.put("x-api-key", HttpConstants.getApiStartKey());
-            header.put("username", applicationSession.getAppAuthorizationHelper().getCurrUser());
+            header.put("username", username);
             header.put("Authorization", applicationSession.getAppAuthorizationHelper().getIdToken());
 
             transition = intent.getStringExtra(KEY_TRANSITION);

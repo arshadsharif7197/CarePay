@@ -1,11 +1,10 @@
 package com.carecloud.carepay.patient.appointments.dialog;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatRadioButton;
@@ -13,8 +12,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,14 +24,15 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentCancellationRe
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.CancellationReasonDTO;
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.List;
 
-public class CancelReasonAppointmentDialog extends Dialog implements View.OnClickListener {
+public class CancelReasonAppointmentDialog extends BaseDialogFragment implements View.OnClickListener {
 
-    private Context context;
     private AppointmentDTO appointmentDTO;
     private AppointmentsResultModel appointmentInfo;
 
@@ -55,34 +53,39 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
     /**
      * Contractor for dialog.
      *
-     * @param context         context
      * @param appointmentDTO  appointment Item
      * @param appointmentInfo Appointment Info data
      */
-    public CancelReasonAppointmentDialog(Context context, AppointmentDTO appointmentDTO,
-                                         AppointmentsResultModel appointmentInfo,
-                                         CancelReasonAppointmentDialogListener callback) {
-        super(context);
-        this.context = context;
-        this.appointmentDTO = appointmentDTO;
-        this.appointmentInfo = appointmentInfo;
-        this.callback = callback;
+    public static CancelReasonAppointmentDialog newInstance(AppointmentDTO appointmentDTO,
+                                         AppointmentsResultModel appointmentInfo) {
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, appointmentDTO);
+        DtoHelper.bundleDto(args, appointmentInfo);
+        CancelReasonAppointmentDialog fragment = new CancelReasonAppointmentDialog();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @SuppressWarnings("ConstantConditions")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        if (args != null) {
+            appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, args);
+            appointmentInfo = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, args);
+        }
+    }
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.dialog_cancel_reason_appointment);
-        setCancelable(false);
-        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.90);
-        getWindow().setAttributes(params);
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.dialog_cancel_reason_appointment, container, false);
+    }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         onInitialization();
         onSetListener();
     }
@@ -95,12 +98,12 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
         reasonTextInputLayout = (TextInputLayout) findViewById(R.id.reasonTextInputLayout);
         reasonEditText = (EditText) findViewById(R.id.reasonEditText);
         reasonEditText.setHint(Label.getLabel("cancel_appointment_other_reason_hint"));
-        reasonEditText.setHintTextColor(context.getResources().getColor(R.color.light_gray_dialog));
+        reasonEditText.setHintTextColor(getResources().getColor(R.color.light_gray_dialog));
 
         cancelReasonRadioGroup = (RadioGroup) findViewById(R.id.cancelReasonRadioGroup);
         cancelAppointmentButton = (Button) findViewById(R.id.cancelAppointmentButton);
         cancelAppointmentButton.setText(Label.getLabel("cancel_appointments_heading"));
-        SystemUtil.setProximaNovaRegularTypeface(context, cancelAppointmentButton);
+        SystemUtil.setProximaNovaRegularTypeface(getContext(), cancelAppointmentButton);
 
         cancellationReasons = appointmentInfo.getPayload().getCancellationReasons();
         if (cancellationReasons != null) {
@@ -115,24 +118,24 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
     @SuppressWarnings("deprecation")
     @SuppressLint("InflateParams")
     private void addCancelReason(String cancelReason, int id) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         AppCompatRadioButton cancelReasonView = (AppCompatRadioButton) inflater.inflate(R.layout.cancel_appointment_reason_item, null);
         RadioGroup.LayoutParams param = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                context.getResources().getDimensionPixelSize(R.dimen.cancel_radio_button_height));
-        param.setMargins(context.getResources().getDimensionPixelSize(R.dimen.apt_popup_parent_padding), 0,
-                context.getResources().getDimensionPixelSize(R.dimen.apt_popup_parent_padding), 0);
+                getResources().getDimensionPixelSize(R.dimen.cancel_radio_button_height));
+        param.setMargins(getResources().getDimensionPixelSize(R.dimen.apt_popup_parent_padding), 0,
+                getResources().getDimensionPixelSize(R.dimen.apt_popup_parent_padding), 0);
         cancelReasonView.setLayoutParams(param);
         cancelReasonView.setText(cancelReason);
         cancelReasonView.setId(id);
-        SystemUtil.setProximaNovaRegularTypeface(context, cancelReasonView);
+        SystemUtil.setProximaNovaRegularTypeface(getContext(), cancelReasonView);
         cancelReasonRadioGroup.addView(cancelReasonView);
 
         // Add divider
-        ImageView divider = new ImageView(context);
+        ImageView divider = new ImageView(getContext());
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                context.getResources().getDimensionPixelSize(R.dimen.apt_lst_img_elevation));
+                getResources().getDimensionPixelSize(R.dimen.apt_lst_img_elevation));
         divider.setLayoutParams(layoutParams);
-        divider.setBackgroundColor(context.getResources().getColor(R.color.cadet_gray));
+        divider.setBackgroundColor(getResources().getColor(R.color.cadet_gray));
         cancelReasonRadioGroup.addView(divider);
     }
 
@@ -183,11 +186,11 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
         if (cancellationReasons.get(cancellationReasons.size() - 1).getAppointmentCancellationReason().getId() == selectedReasonId) {
             reasonTextInputLayout.setVisibility(View.VISIBLE);
             reasonEditText.setEnabled(true);
-            reasonEditText.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+            reasonEditText.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         } else {
             reasonTextInputLayout.setVisibility(View.GONE);
             reasonEditText.setEnabled(false);
-            reasonEditText.setTextColor(ContextCompat.getColor(context, R.color.light_gray_dialog));
+            reasonEditText.setTextColor(ContextCompat.getColor(getContext(), R.color.light_gray_dialog));
         }
     }
 
@@ -198,8 +201,8 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
                         new int[]{android.R.attr.state_checked}
                 },
                 new int[]{
-                        ContextCompat.getColor(context, R.color.lightSlateGray),
-                        ContextCompat.getColor(context, R.color.colorPrimary),
+                        ContextCompat.getColor(getContext(), R.color.lightSlateGray),
+                        ContextCompat.getColor(getContext(), R.color.colorPrimary),
                 }
         );
         appCompatRadioButton.setSupportButtonTintList(colorStateList);
@@ -227,6 +230,10 @@ public class CancelReasonAppointmentDialog extends Dialog implements View.OnClic
                     = cancellationReasons.get(selectedIndex).getAppointmentCancellationReason();
             callback.onCancelReasonAppointmentDialogCancelClicked(appointmentDTO, cancellationReason.getId(), reasonEditText.getText().toString());
         }
+    }
+
+    public void setsCancelReasonAppointmentDialogListener(CancelReasonAppointmentDialogListener listener) {
+        this.callback = listener;
     }
 
 }

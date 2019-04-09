@@ -11,6 +11,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -60,14 +61,12 @@ public class AppointmentHistoricAdapter extends BaseAppointmentAdapter {
                 }
             }
         });
-
         holder.checkOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 callback.onCheckoutTapped(sortedAppointments.get(position));
             }
         });
-
     }
 
     @Override
@@ -91,12 +90,24 @@ public class AppointmentHistoricAdapter extends BaseAppointmentAdapter {
                 holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
                 break;
             }
+            case CHECKED_IN:
+                holder.checkOutButton.setVisibility(View.GONE);
+                holder.checkedOutLabel.setVisibility(View.GONE);
+                holder.upcomingDateLayout.setVisibility(View.VISIBLE);
+                holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
+                holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDay());
+                holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
             case CHECKED_OUT:
                 holder.checkedOutLabel.setVisibility(View.GONE);
                 holder.upcomingDateLayout.setVisibility(View.VISIBLE);
                 holder.upcomingDateTextView.setText(dateUtil.getDayLiteralAbbr());
                 holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDay());
                 holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
+        }
+        DateUtil.getInstance().setDateRaw(appointmentsPayload.getEndTime());
+        if (style.equals(AppointmentDisplayStyle.CHECKED_IN) && DateUtil.getInstance().isWithinHours(24) && shouldShowCheckoutButton){
+            holder.checkOutButton.setVisibility(View.VISIBLE);
+            holder.upcomingDateLayout.setVisibility(View.GONE);
         }
     }
 

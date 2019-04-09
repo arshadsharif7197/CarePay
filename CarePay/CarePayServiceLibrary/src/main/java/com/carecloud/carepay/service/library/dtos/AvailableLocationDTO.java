@@ -20,7 +20,7 @@ public class AvailableLocationDTO {
     private String name;
     @SerializedName("is_visible_appointment_scheduler")
     @Expose
-    private Boolean isVisibleAppointmentScheduler;
+    private boolean isVisibleAppointmentScheduler = true;
 
     public Integer getId() {
         return id;
@@ -46,11 +46,11 @@ public class AvailableLocationDTO {
         this.name = name;
     }
 
-    public Boolean getVisibleAppointmentScheduler() {
+    public boolean getVisibleAppointmentScheduler() {
         return isVisibleAppointmentScheduler;
     }
 
-    public void setVisibleAppointmentScheduler(Boolean visibleAppointmentScheduler) {
+    public void setVisibleAppointmentScheduler(boolean visibleAppointmentScheduler) {
         isVisibleAppointmentScheduler = visibleAppointmentScheduler;
     }
 }

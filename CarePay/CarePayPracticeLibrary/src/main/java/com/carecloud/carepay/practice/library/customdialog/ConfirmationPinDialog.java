@@ -1,13 +1,12 @@
 package com.carecloud.carepay.practice.library.customdialog;
 
-import android.app.Dialog;
-import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -20,8 +19,9 @@ import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.base.ISession;
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -36,11 +36,10 @@ import java.util.Map;
  * Created by prem_mourya on 10/20/2016.
  */
 
-public class ConfirmationPinDialog extends Dialog implements View.OnClickListener {
+public class ConfirmationPinDialog extends BaseDialogFragment implements View.OnClickListener {
 
     private static final int FULLSCREEN_VALUE = 0x10000000;
 
-    private Context context;
     private EditText pinEditText;
     private CarePayTextView headerLabel;
     private CarePayTextView subHeaderLabel;
@@ -53,15 +52,31 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
     /**
      * Constructor calling from  Patient screen for Switching to Practice Mode.
      *
-     * @param context context
      */
-    public ConfirmationPinDialog(Context context, TransitionDTO transitionDTOPinLink,
+    public static ConfirmationPinDialog newInstance(TransitionDTO transitionDTOPinLink,
                                  boolean isDynamicLabels, TransitionDTO languageTransition) {
-        super(context);
-        this.context = context;
-        this.transitionDTOPinLink = transitionDTOPinLink;
-        this.isDynamicLabels = isDynamicLabels;
-        this.languageTransition = languageTransition;
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, transitionDTOPinLink);
+        args.putBoolean("isDymanicLabels", isDynamicLabels);
+        args.putString("transitionDTOPinLink", DtoHelper.getStringDTO(languageTransition));
+        ConfirmationPinDialog fragment = new ConfirmationPinDialog();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.dialog_confirmation_pin, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        onInitialization();
+        onSettingStyle();
+        onSetListener();
+        onSetPinLabels();
     }
 
     /**
@@ -70,24 +85,19 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
      * @param savedInstanceState for saving state
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setNavigationBarVisibility();
-        setContentView(R.layout.dialog_confirmation_pin);
-        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        setCancelable(false);
-        onInitialization();
-        onSettingStyle();
-        onSetListener();
-        onSetPinLabels();
-
+        Bundle args = getArguments();
+        if (args != null) {
+            transitionDTOPinLink = DtoHelper.getConvertedDTO(TransitionDTO.class, args);
+            isDynamicLabels = args.getBoolean("isDynamicsLabels");
+            languageTransition = DtoHelper.getConvertedDTO(TransitionDTO.class, args.getString("transitionDTOPinLink"));
+        }
     }
 
-    private void setNavigationBarVisibility() {
+    public void setNavigationBarVisibility() {
 
-        View decorView = getWindow().getDecorView();
+        View decorView = getDialog().getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_IMMERSIVE
@@ -110,9 +120,9 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
      * for setting  UI Component Style .
      */
     private void onSettingStyle() {
-        headerLabel.setTextColor(ContextCompat.getColor(context, R.color.white));
-        subHeaderLabel.setTextColor(ContextCompat.getColor(context, R.color.confirm_pin_sub_title));
-        dialogCancelTextView.setTextColor(ContextCompat.getColor(context, R.color.white));
+        headerLabel.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+        subHeaderLabel.setTextColor(ContextCompat.getColor(getContext(), R.color.confirm_pin_sub_title));
+        dialogCancelTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
     }
 
     /**
@@ -160,9 +170,9 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
         if (pin.length() == 4) {
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("pin", pin);
-            queryMap.put("practice_mgmt", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
-            queryMap.put("practice_id", ((ISession) context).getApplicationMode().getUserPracticeDTO().getPracticeId());
-            ((ISession) context).getWorkflowServiceHelper().execute(this.transitionDTOPinLink, commonTransitionCallback, queryMap);
+            queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+            queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
+            getWorkflowServiceHelper().execute(this.transitionDTOPinLink, commonTransitionCallback, queryMap);
         }
     }
 
@@ -208,16 +218,16 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
     private WorkflowServiceCallback commonTransitionCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ((ISession) context).showProgressDialog();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ((ISession) context).hideProgressDialog();
+            hideProgressDialog();
             Gson gson = new Gson();
             PatientModeSwitchPinResponseDTO patientModeSwitchPinResponseDTO = gson.fromJson(workflowDTO.toString(), PatientModeSwitchPinResponseDTO.class);
             if (patientModeSwitchPinResponseDTO.getPayload().getPinpad().getPayload()) {
-                BasePracticeActivity practiceActivity = (BasePracticeActivity) context;
+                BasePracticeActivity practiceActivity = (BasePracticeActivity) getContext();
                 if(practiceActivity.getApplicationMode().getUserPracticeDTO() != null) {
                     String patientLanguage = practiceActivity.getApplicationPreferences().getUserLanguage();
                     if(!patientLanguage.equals(CarePayConstants.DEFAULT_LANGUAGE)) {
@@ -253,10 +263,10 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
                 displayMessage = "Pin Error, Please try again";
             }
 
-            ((ISession) context).hideProgressDialog();
+            hideProgressDialog();
             pinEditText.setText("");
-            SystemUtil.showErrorToast(context, displayMessage);
-            Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            SystemUtil.showErrorToast(getContext(), displayMessage);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -275,8 +285,8 @@ public class ConfirmationPinDialog extends Dialog implements View.OnClickListene
     }
 
     private void identifyPracticeUser(String userId){
-        MixPanelUtil.setUser(context, userId, null);
-        MixPanelUtil.addCustomPeopleProperty(context.getString(R.string.people_is_practice_user), true);
+        MixPanelUtil.setUser(getContext(), userId, null);
+        MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_is_practice_user), true);
     }
 
 }

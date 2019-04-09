@@ -89,7 +89,6 @@ public class AppointmentHistoryFragment extends BaseFragment
             }
         });
         excludedAppointmentStates = new ArrayList<>();
-        excludedAppointmentStates.add(CarePayConstants.PENDING);
         excludedAppointmentStates.add(CarePayConstants.REQUESTED);
         excludedAppointmentStates.add(CarePayConstants.CHECKING_IN);
     }

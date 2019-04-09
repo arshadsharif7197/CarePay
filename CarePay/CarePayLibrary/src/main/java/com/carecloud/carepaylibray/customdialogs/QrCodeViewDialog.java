@@ -1,15 +1,12 @@
 package com.carecloud.carepaylibray.customdialogs;
 
-import android.app.Dialog;
-import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -20,8 +17,9 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentMetadataModel;
 import com.carecloud.carepaylibray.appointments.models.QRCodePayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.QueryStrings;
-import com.carecloud.carepaylibray.base.ISession;
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
@@ -29,9 +27,8 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 import java.util.Map;
 
-public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
+public class QrCodeViewDialog extends BaseDialogFragment implements View.OnClickListener {
 
-    private Context context;
     private AppointmentDTO appointmentDTO;
 
     private ImageView qrCodeImageView;
@@ -45,39 +42,42 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
     }
 
     /**
-     * @param context        activity context
      * @param appointmentDTO appointment model
      */
-    public QrCodeViewDialog(Context context, AppointmentDTO appointmentDTO,
-                            AppointmentMetadataModel appointmentMetadataModel, QRCodeViewDialogListener callback) {
-        super(context);
-        this.context = context;
-        this.appointmentDTO = appointmentDTO;
-        this.appointmentMetadataModel = appointmentMetadataModel;
-        this.callBack = callback;
+    public static QrCodeViewDialog newInstance(AppointmentDTO appointmentDTO,
+                            AppointmentMetadataModel appointmentMetadataModel) {
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, appointmentDTO);
+        DtoHelper.bundleDto(args, appointmentMetadataModel);
+        QrCodeViewDialog fragment = new QrCodeViewDialog();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.dialog_qrcode_view);
-        setCancelable(false);
+        Bundle args = getArguments();
+        if (args != null) {
+            appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, args);
+            appointmentMetadataModel = DtoHelper.getConvertedDTO(AppointmentMetadataModel.class, args);
+        }
+    }
 
-        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        WindowManager.LayoutParams params = getWindow().getAttributes();
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.dialog_qrcode_view, container, false);
+    }
 
-        params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        params.width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.90);
-        getWindow().setAttributes(params);
-
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         ImageView cancelImageView = (ImageView) findViewById(R.id.cancelImageView);
         cancelImageView.setOnClickListener(this);
-
         scanQRCodeTextView = (CarePayTextView) findViewById(R.id.scanQRCodeTextView);
         qrCodeProgressBar = (ProgressBar) findViewById(R.id.qrCodeProgressBar);
         qrCodeImageView = (ImageView) findViewById(R.id.qrCodeImageView);
-
         callGenerateQRCodeAPI(); //API call for generating QR code
     }
 
@@ -93,7 +93,7 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
             Gson gson = new Gson();
             QueryStrings queryStrings = gson.fromJson(queryStringObject, QueryStrings.class);
 
-            ((ISession) context).getWorkflowServiceHelper().execute(appointmentMetadataModel.getTransitions()
+            getWorkflowServiceHelper().execute(appointmentMetadataModel.getTransitions()
                     .getCheckinAtOffice(), qrCodeCallBack, getQueryParam(queryStrings));
         } else {
             /*Error in generating QR code*/
@@ -118,20 +118,20 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
     private WorkflowServiceCallback qrCodeCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
-            ((ISession) context).showProgressDialog();
+            showProgressDialog();
         }
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            ((ISession) context).hideProgressDialog();
+            hideProgressDialog();
             updateUI(workflowDTO);
         }
 
         @Override
         public void onFailure(String exceptionMessage) {
-            ((ISession) context).hideProgressDialog();
+            hideProgressDialog();
             callBack.onGenerateQRCodeError(exceptionMessage);
-            Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -142,7 +142,7 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
         QRCodePayloadDTO scanQRCodeDTO = workflowDTO.getPayload(QRCodePayloadDTO.class);
 
         if (scanQRCodeDTO != null) {
-            Picasso.with(context).load(scanQRCodeDTO.getQrCode()).into(qrCodeImageView);
+            Picasso.with(getContext()).load(scanQRCodeDTO.getQrCode()).into(qrCodeImageView);
             scanQRCodeTextView.setText(Label.getLabel("scan_qr_code_heading"));
             qrCodeProgressBar.setVisibility(View.GONE);
         } else {
@@ -158,5 +158,9 @@ public class QrCodeViewDialog extends Dialog implements View.OnClickListener {
         if (viewId == R.id.cancelImageView) {
             cancel();
         }
+    }
+
+    public void setQRCodeViewDialogListener(QRCodeViewDialogListener listener) {
+        this.callBack = listener;
     }
 }
