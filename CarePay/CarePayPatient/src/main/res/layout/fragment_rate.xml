@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/rateDialogPadding" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/rateDialogPadding"
+        android:layout_marginEnd="@dimen/rateDialogPadding"
+        android:text="Enjoying Breeze?" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/rateDialogPadding"
+        android:layout_marginEnd="@dimen/rateDialogPadding"
+        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:text="We hope your experience was a Breeze. Would you like to leave us a review?" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/separatorHeight"
+        android:background="@color/light_gray" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/rateNowButton"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/rateDialogOptionHeight"
+        android:background="?selectableItemBackground"
+        android:gravity="center"
+        android:text="Yes, rate it now!" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/separatorHeight"
+        android:background="@color/light_gray" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/notNowButton"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/rateDialogOptionHeight"
+        android:background="?selectableItemBackground"
+        android:gravity="center"
+        android:text="Not now" />
+
+</LinearLayout>
