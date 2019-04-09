@@ -497,7 +497,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                 null, R.id.health_insurance_group_number_layout,
                 R.id.health_insurance_group_number, null, null, null);
 
-        String firstName = WordUtils.capitalizeFully(demographicInsurancePayload.getPolicyFirstNameHolder());
+        String firstName = StringUtil.capitalize(demographicInsurancePayload.getPolicyFirstNameHolder());
         setUpDemographicField(view, firstName, insuranceModelProperties.getPolicyHolder(),
                 null, R.id.health_insurance_policy_first_name_holder_layout,
                 R.id.health_insurance_policy_first_name_holder, null, null, null);
@@ -505,7 +505,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         EditText firstNameEditText = (EditText) view.findViewById(R.id.health_insurance_policy_first_name_holder);
         firstNameEditText.addTextChangedListener(getValidateOptionsFields(firstNameInputLayout));
 
-        String middleName = WordUtils.capitalizeFully(demographicInsurancePayload.getPolicyMiddleNameHolder());
+        String middleName = StringUtil.capitalize(demographicInsurancePayload.getPolicyMiddleNameHolder());
         setUpDemographicField(view, middleName, insuranceModelProperties.getPolicyHolder(),
                 null, R.id.health_insurance_policy_middle_name_holder_layout,
                 R.id.health_insurance_policy_middle_name_holder, null, null, null);
@@ -513,7 +513,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         EditText middleNameEditText = view.findViewById(R.id.health_insurance_policy_middle_name_holder);
         middleNameEditText.addTextChangedListener(getValidateOptionsFields(middleNameInputLayout));
 
-        String lastName = WordUtils.capitalizeFully(demographicInsurancePayload.getPolicyLastNameHolder());
+        String lastName = StringUtil.capitalize(demographicInsurancePayload.getPolicyLastNameHolder());
         setUpDemographicField(view, lastName, insuranceModelProperties.getPolicyHolder(),
                 null, R.id.health_insurance_policy_last_name_holder_layout,
                 R.id.health_insurance_policy_last_name_holder, null, null, null);
