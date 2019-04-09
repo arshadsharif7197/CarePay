@@ -23,7 +23,10 @@ import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFr
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
 import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
+import com.carecloud.carepay.patient.rate.RateDialog;
+import com.carecloud.carepay.patient.rate.RateInterface;
 import com.carecloud.carepay.patient.survey.SurveyActivity;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -84,7 +87,8 @@ import java.util.Map;
 public class AppointmentCheckoutActivity extends BasePatientActivity implements CheckOutInterface,
         PaymentNavigationCallback,
         AppointmentPrepaymentCallback, PatientPaymentMethodInterface,
-        PaymentPlanCompletedInterface, PaymentPlanCreateInterface, ConfirmationCallback {
+        PaymentPlanCompletedInterface, PaymentPlanCreateInterface, ConfirmationCallback,
+        RateInterface {
 
     private String appointmentId;
     private AppointmentDTO selectedAppointment;
@@ -438,7 +442,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
             displayDialogFragment(confirmationFragment, false);
 
             //this is a prepayment
-            if(!paymentStarted) {
+            if (!paymentStarted) {
                 MixPanelUtil.incrementPeopleProperty(getString(R.string.count_prepayments_completed), 1);
             }
         }
@@ -820,6 +824,13 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
                 .findFragmentByTag(AvailabilityHourFragment.class.getName());
         if (fragment instanceof DateCalendarRangeInterface) {
             ((DateCalendarRangeInterface) fragment).setDateRange(newStartDate, newEndDate);
+        }
+    }
+
+    @Override
+    public void showRateDialogFragment() {
+        if (ApplicationPreferences.getInstance().shouldShowRateDialog()) {
+            displayDialogFragment(RateDialog.newInstance(), true);
         }
     }
 }

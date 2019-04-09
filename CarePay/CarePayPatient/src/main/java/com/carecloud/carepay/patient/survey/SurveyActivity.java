@@ -11,6 +11,9 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BackPressedFragmentInterface;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.rate.RateDialog;
+import com.carecloud.carepay.patient.rate.RateInterface;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -21,7 +24,6 @@ import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
-import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.survey.model.SurveyDTO;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 
@@ -31,7 +33,7 @@ import java.util.Map;
 /**
  * @author pjohnson on 6/09/18.
  */
-public class SurveyActivity extends BasePatientActivity implements FragmentActivityInterface {
+public class SurveyActivity extends BasePatientActivity implements RateInterface {
 
     public static final int FLAG_SURVEY_FLOW = 110;
     private SurveyDTO surveyDto;
@@ -164,6 +166,13 @@ public class SurveyActivity extends BasePatientActivity implements FragmentActiv
 
         if (getString(R.string.event_survey_started).equals(event)) {
             MixPanelUtil.startTimer(getString(R.string.timer_survey));
+        }
+    }
+
+    @Override
+    public void showRateDialogFragment() {
+        if (ApplicationPreferences.getInstance().shouldShowRateDialog()) {
+            displayDialogFragment(RateDialog.newInstance(), true);
         }
     }
 }

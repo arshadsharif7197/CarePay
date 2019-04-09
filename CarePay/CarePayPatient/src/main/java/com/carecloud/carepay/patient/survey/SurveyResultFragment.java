@@ -23,6 +23,8 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BackPressedFragmentInterface;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.rate.RateDialog;
+import com.carecloud.carepay.patient.rate.RateInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -50,7 +52,7 @@ import java.util.Map;
  */
 public class SurveyResultFragment extends BaseFragment implements BackPressedFragmentInterface {
 
-    private FragmentActivityInterface callback;
+    private RateInterface callback;
     private SurveyDTO surveyDto;
     private boolean showFeedBackLayout;
     private Button noThanksButton;
@@ -73,7 +75,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof FragmentActivityInterface) {
-            callback = (FragmentActivityInterface) context;
+            callback = (RateInterface) context;
         } else {
             throw new ClassCastException("attached context must implement FragmentActivityInterface");
         }
@@ -130,6 +132,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
             bundle.putBoolean(CarePayConstants.REFRESH, true);
             PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, bundle);
         }
+        showRateDialogFragment();
     }
 
     private void showNegativeFeedbackLayout(View view, final SurveyModel surveyModel) {
@@ -388,8 +391,15 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(CarePayConstants.REFRESH, true);
                 PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, bundle);
+                showRateDialogFragment();
             }
         });
+    }
+
+    private void showRateDialogFragment() {
+        if (!surveyDto.getPayload().getSurvey().isAlreadyFilled()) {
+            callback.showRateDialogFragment();
+        }
     }
 
     @NonNull
