@@ -266,6 +266,7 @@ public class SigninFragment extends BaseFragment {
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 Gson gson = new Gson();
+                hideProgressDialog();
                 setSignInButtonClickable(true);
                 String signInResponseString = gson.toJson(workflowDTO);
                 UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString,

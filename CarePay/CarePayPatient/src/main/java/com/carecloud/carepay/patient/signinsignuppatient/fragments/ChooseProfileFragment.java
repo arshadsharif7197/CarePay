@@ -60,9 +60,6 @@ public class ChooseProfileFragment extends BaseDialogFragment {
         super.onCreate(icicle);
         Bundle args = getArguments();
         userLinks = DtoHelper.getConvertedDTO(UserLinks.class, args);
-        if (userLinks.getRepresentedUsers().isEmpty()) {
-            callStartUpService();
-        }
     }
 
     @Nullable
@@ -75,26 +72,31 @@ public class ChooseProfileFragment extends BaseDialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        LinearLayout profilesContainer = view.findViewById(R.id.profilesContainer);
-        userLinks.getRepresentedUsers().add(0, createProfileForLoggedUser(userLinks.getLoggedInUser()));
-        int count = 0;
-        LinearLayout rowLayout = new LinearLayout(getContext());
-        LinearLayout.LayoutParams rllp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        rllp.weight = 2;
-        rllp.gravity = Gravity.CENTER_HORIZONTAL;
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        for (ProfileDto profileDto : userLinks.getRepresentedUsers()) {
-            if (count % 2 == 0) {
-                rowLayout = new LinearLayout(getContext());
-                rowLayout.setOrientation(LinearLayout.HORIZONTAL);
-                rowLayout.setLayoutParams(rllp);
-                rowLayout.setWeightSum(2);
-                rowLayout.setGravity(Gravity.CENTER_HORIZONTAL);
-                profilesContainer.addView(rowLayout);
+        if (!userLinks.getRepresentedUsers().isEmpty()) {
+            view.findViewById(R.id.mainView).setVisibility(View.VISIBLE);
+            LinearLayout profilesContainer = view.findViewById(R.id.profilesContainer);
+            userLinks.getRepresentedUsers().add(0, createProfileForLoggedUser(userLinks.getLoggedInUser()));
+            int count = 0;
+            LinearLayout rowLayout = new LinearLayout(getContext());
+            LinearLayout.LayoutParams rllp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            rllp.weight = 2;
+            rllp.gravity = Gravity.CENTER_HORIZONTAL;
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            for (ProfileDto profileDto : userLinks.getRepresentedUsers()) {
+                if (count % 2 == 0) {
+                    rowLayout = new LinearLayout(getContext());
+                    rowLayout.setOrientation(LinearLayout.HORIZONTAL);
+                    rowLayout.setLayoutParams(rllp);
+                    rowLayout.setWeightSum(2);
+                    rowLayout.setGravity(Gravity.CENTER_HORIZONTAL);
+                    profilesContainer.addView(rowLayout);
+                }
+                createProfileView(rowLayout, inflater, profileDto);
+                count++;
             }
-            createProfileView(rowLayout, inflater, profileDto);
-            count++;
+        } else {
+            callStartUpService();
         }
     }
 
