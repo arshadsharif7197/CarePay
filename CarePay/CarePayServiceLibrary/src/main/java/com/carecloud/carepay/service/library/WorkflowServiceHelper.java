@@ -118,9 +118,7 @@ public class WorkflowServiceHelper {
 
         // Add auth headers to custom in case custom has old auth headers
         if (customHeaders != null) {
-            if (customHeaders.containsKey("Authorization")) {
-                customHeaders.remove("Authorization");
-            }
+            customHeaders.remove("Authorization");
             //this can cause a delegate issue in patient app as of 12.28.18
             // TODO remove this once delegate is reimplemented
             if (applicationMode.getApplicationType() != ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE &&
