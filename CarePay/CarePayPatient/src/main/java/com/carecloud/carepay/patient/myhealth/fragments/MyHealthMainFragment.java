@@ -172,7 +172,7 @@ public class MyHealthMainFragment extends BaseFragment {
             }
         }
         myHealthDto.getPayload().getMyHealthData().getLabs().setLabs(labs);
-        return atLeastOneHasPermission;
+        return atLeastOneHasPermission || myHealthDto.getPayload().getPracticeInformation().isEmpty();
     }
 
     private List<LabDto> filterLabsByPermission(List<LabDto> labs, String practiceId) {
@@ -236,7 +236,7 @@ public class MyHealthMainFragment extends BaseFragment {
             }
         }
         myHealthDto.getPayload().getMyHealthData().getMedications().setMedications(medications);
-        return atLeastOneHasPermission;
+        return atLeastOneHasPermission || myHealthDto.getPayload().getPracticeInformation().isEmpty();
     }
 
     private List<MedicationDto> filterMedicationsByPermission(List<MedicationDto> medications, String practiceId) {
@@ -300,7 +300,7 @@ public class MyHealthMainFragment extends BaseFragment {
             }
         }
         myHealthDto.getPayload().getMyHealthData().getAllergies().setAllergies(allergies);
-        return atLeastOneHasPermission;
+        return atLeastOneHasPermission || myHealthDto.getPayload().getPracticeInformation().isEmpty();
     }
 
     private List<AllergyDto> filterAllergiesByPermission(List<AllergyDto> allergies, String practiceId) {
@@ -363,7 +363,7 @@ public class MyHealthMainFragment extends BaseFragment {
             }
         }
         myHealthDto.getPayload().getMyHealthData().getAssertions().setAssertions(assertions);
-        return atLeastOneHasPermission;
+        return atLeastOneHasPermission || myHealthDto.getPayload().getPracticeInformation().isEmpty();
     }
 
     private List<AssertionDto> filterConditionsByPermission(List<AssertionDto> assertions, String practiceId) {
@@ -427,7 +427,7 @@ public class MyHealthMainFragment extends BaseFragment {
             }
         }
         myHealthDto.getPayload().getMyHealthData().getProviders().setProviders(providers);
-        return atLeastOneHasPermission;
+        return atLeastOneHasPermission || myHealthDto.getPayload().getPracticeInformation().isEmpty();
     }
 
     private List<MyHealthProviderDto> filterCareTeamByPermission(List<MyHealthProviderDto> providers,
