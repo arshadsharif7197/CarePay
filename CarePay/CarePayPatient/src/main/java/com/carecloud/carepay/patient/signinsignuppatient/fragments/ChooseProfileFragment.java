@@ -156,7 +156,7 @@ public class ChooseProfileFragment extends BaseDialogFragment {
         TransitionDTO authenticateTransition = DtoHelper.getConvertedDTO(TransitionDTO.class, args);
         Map<String, String> query = new HashMap<>();
         Map<String, String> header = new HashMap<>();
-        String languageId = getApplicationPreferences().getUserLanguage();
+        String languageId = ApplicationPreferences.getInstance().getUserLanguage();
         header.put("Accept-Language", languageId);
         getWorkflowServiceHelper().execute(authenticateTransition, getSignInCallback(user, password), query, header);
     }
@@ -174,10 +174,11 @@ public class ChooseProfileFragment extends BaseDialogFragment {
                 hideProgressDialog();
                 boolean shouldShowNotificationScreen = getArguments()
                         .getBoolean(CarePayConstants.OPEN_NOTIFICATIONS);
-                getApplicationPreferences().setUserPhotoUrl(null);
-                getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants
+                ApplicationPreferences.getInstance().setUserPhotoUrl(null);
+                ApplicationPreferences.getInstance().setUserFullName("N/A");
+                ApplicationPreferences.getInstance().writeObjectToSharedPreference(CarePayConstants
                         .DEMOGRAPHICS_ADDRESS_BUNDLE, null);
-                getApplicationPreferences().setLandingScreen(true);
+                ApplicationPreferences.getInstance().setLandingScreen(true);
                 if (shouldShowNotificationScreen) {
                     manageNotificationAsLandingScreen(workflowDTO.toString());
                 } else {
