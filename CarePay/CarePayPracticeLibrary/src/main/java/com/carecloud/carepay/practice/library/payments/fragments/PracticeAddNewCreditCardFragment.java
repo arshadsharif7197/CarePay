@@ -35,7 +35,7 @@ public class PracticeAddNewCreditCardFragment extends AddNewCreditCardFragment {
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE) ||
                 HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_2_DEVICE);
         Button swipeCardButton = view.findViewById(R.id.swipeCreditCarNowButton);
-        if (isCloverDevice) {
+        if (isCloverDevice && swipeCardButton != null && !paymentsModel.getPaymentPayload().isPrepayment()) {
             swipeCardButton.setVisibility(View.VISIBLE);
             swipeCardButton.setOnClickListener(swipeCreditCarNowButtonClickListener);
         }
@@ -48,9 +48,9 @@ public class PracticeAddNewCreditCardFragment extends AddNewCreditCardFragment {
             CloverPaymentAdapter cloverPaymentAdapter = new CloverPaymentAdapter((BaseActivity) getActivity(), paymentsModel, callback.getAppointmentId(), callback);
             IntegratedPaymentPostModel paymentPostModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
             if (paymentPostModel == null) {
-                cloverPaymentAdapter.setCloverConnectorPayment(amountToMakePayment);
+                cloverPaymentAdapter.setCloverPayment(amountToMakePayment);//TODO switch back to connector
             } else {
-                cloverPaymentAdapter.setCloverConnectorPayment(paymentPostModel);
+                cloverPaymentAdapter.setCloverPayment(paymentPostModel);
             }
 
             if (getDialog() != null) {

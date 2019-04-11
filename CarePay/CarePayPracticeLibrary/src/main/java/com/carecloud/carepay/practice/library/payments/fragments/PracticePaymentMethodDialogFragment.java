@@ -100,7 +100,6 @@ public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFr
             });
             fragment.show(getFragmentManager(), fragment.getClass().getName());
             logPaymentMethodSelection(getString(com.carecloud.carepaylibrary.R.string.payment_cash));
-            dismiss();
         } else {
             super.handlePaymentButton(paymentMethod, amount);
             hideDialog();

@@ -69,5 +69,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test:rules:0.5'
     api project(':payeezysdk')
 //    compile project(':shamrocksdk')
-    api 'com.github.Carecloud:shamrock_android_sdk:development-SNAPSHOT'
+    api 'com.github.Carecloud:shamrock_android_sdk:2.0.3'
 }
