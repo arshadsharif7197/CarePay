@@ -228,6 +228,29 @@ public class DateUtil {
     }
 
     /**
+     * Format the date as "EEEE, MMM d" (eg Monday, Oct 10th)
+     *
+     * @return A string containing the formatted date
+     */
+    public String getDateAsDayMonthDayOrdinalYear(String today, String tomorrow) {
+        if (getUserLanguage().equals("en")) {
+            //"%s, %s %d%s"
+            if (this.isToday()) {
+                return String.format(Locale.getDefault(), Label.getLabel("date_day_month_day_ordinal_format"),
+                        today, monthLiteralAbbr, day, getOrdinalSuffix(day));
+            } else if (this.isTomorrow()) {
+                return String.format(Locale.getDefault(), Label.getLabel("date_day_month_day_ordinal_format"),
+                        tomorrow, monthLiteralAbbr, day, getOrdinalSuffix(day));
+            }
+            return String.format(Locale.getDefault(), Label.getLabel("date_day_month_day_ordinal_format"),
+                    dayLiteral, monthLiteralAbbr, day, getOrdinalSuffix(day));
+        } else {
+            //"%s %d de %s"
+            return String.format(Locale.getDefault(), FORMAT_ES_DAY_LIT_DATE_MONTH_LIT, dayLiteral, day, monthLiteral);
+        }
+    }
+
+    /**
      * Return the time as 12-hour (format "h:mm a")
      *
      * @return A string contains the formatted time
