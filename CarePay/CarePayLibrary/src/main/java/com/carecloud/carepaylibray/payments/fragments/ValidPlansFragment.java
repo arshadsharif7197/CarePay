@@ -96,7 +96,7 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.onDismissPaymentPlan(paymentsModel);
+                cancel();
             }
         });
         toolbar.setTitle("");

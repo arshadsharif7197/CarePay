@@ -17,7 +17,6 @@ import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
-import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanPaymentMethodFragment;
@@ -47,24 +46,16 @@ import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
-import com.carecloud.carepaylibray.payments.fragments.AddExistingPaymentPlanFragment;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAddCreditCardFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAmountDialog;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanTermsFragment;
-import com.carecloud.carepaylibray.payments.fragments.ValidPlansFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCompletedInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
@@ -287,25 +278,11 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     }
 
     @Override
-    public void onDismissPaymentPlan(PaymentsModel paymentsModel) {
-        onBackPressed();
-    }
-
-    @Override
     public void onSubmitPaymentPlan(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment
                 .newInstance(workflowDTO, getPracticeInfo(paymentsModel), PaymentPlanConfirmationFragment.MODE_CREATE);
         displayDialogFragment(confirmationFragment, false);
-    }
-
-    @Override
-    public void displayBalanceDetails(PaymentsModel paymentsModel,
-                                      PendingBalancePayloadDTO paymentLineItem,
-                                      PendingBalanceDTO selectedBalance) {
-        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-                .newInstance(paymentsModel, paymentLineItem, selectedBalance, false);
-        displayDialogFragment(dialog, false);
     }
 
     @Override
@@ -315,29 +292,6 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
                         PaymentPlanConfirmationFragment.MODE_ADD);
         displayDialogFragment(confirmationFragment, false);
     }
-
-//    @Override
-//    public void onPaymentPlanAmount(PaymentsModel paymentsModel,
-//                                    PendingBalanceDTO selectedBalance,
-//                                    double amount) {
-//        boolean addExisting = false;
-//        if (paymentsModel.getPaymentPayload().mustAddToExisting(amount, selectedBalance)) {
-//            onAddBalanceToExistingPlan(paymentsModel, selectedBalance, amount);
-//            addExisting = true;
-//        } else {
-//            PaymentPlanFragment fragment = PaymentPlanFragment.newInstance(paymentsModel, selectedBalance, amount);
-//            replaceFragment(fragment, true);
-//        }
-//
-//        String[] params = {getString(R.string.param_practice_id),
-//                getString(R.string.param_balance_amount),
-//                getString(R.string.param_is_add_existing)};
-//        Object[] values = {selectedBalance.getMetadata().getPracticeId(),
-//                selectedBalance.getPayload().get(0).getAmount(),
-//                addExisting};
-//
-//        MixPanelUtil.logEvent(getString(R.string.event_paymentplan_started), params, values);
-//    }
 
     @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod,

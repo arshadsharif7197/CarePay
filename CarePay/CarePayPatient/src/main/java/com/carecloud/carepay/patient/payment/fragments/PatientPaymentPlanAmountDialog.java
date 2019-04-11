@@ -5,7 +5,9 @@ import android.support.v4.app.FragmentManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.carecloud.carepay.patient.base.ToolbarInterface;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAmountDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
 import com.carecloud.carepaylibray.payments.fragments.ValidPlansFragment;
@@ -35,20 +37,19 @@ public class PatientPaymentPlanAmountDialog extends PaymentPlanAmountDialog {
         try {
             double amount = Double.parseDouble(enterPartialAmountEditText.getText().toString());
             boolean addExisting = false;
+            BaseDialogFragment fragment;
             if (paymentsModel.getPaymentPayload().mustAddToExisting(amount, selectedBalance)) {
-                ValidPlansFragment fragment = ValidPlansFragment.newInstance(paymentsModel, selectedBalance, amount);
-                callback.replaceFragment(fragment, true);
+                fragment = ValidPlansFragment.newInstance(paymentsModel, selectedBalance, amount);
                 addExisting = true;
             } else {
-                PaymentPlanFragment fragment = PaymentPlanFragment.newInstance(paymentsModel, selectedBalance, amount);
+                fragment = PaymentPlanFragment.newInstance(paymentsModel, selectedBalance, amount);
                 fragment.setOnCancelListener(onDialogCancelListener);
-                callback.replaceFragment(fragment, true);
             }
             logPaymentPlanStartedMixPanelEvent(addExisting);
             getFragmentManager().popBackStackImmediate(PaymentDetailsFragmentDialog.class.getName(),
                     FragmentManager.POP_BACK_STACK_INCLUSIVE);
-//            dismiss();
-
+            callback.replaceFragment(fragment, true);
+            ((ToolbarInterface) callback).displayToolbar(false, null);
         } catch (NumberFormatException nfe) {
             nfe.printStackTrace();
             Toast.makeText(getContext(), "Please enter valid amount!", Toast.LENGTH_LONG).show();

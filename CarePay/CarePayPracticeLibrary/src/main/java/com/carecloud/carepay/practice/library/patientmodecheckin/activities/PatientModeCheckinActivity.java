@@ -511,11 +511,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onDismissPaymentPlan(PaymentsModel paymentsModel) {
-        onBackPressed();
-    }
-
-    @Override
     public void onSubmitPaymentPlan(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         AppointmentDTO appointmentDTO = getAppointment();
@@ -529,16 +524,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         TransitionDTO transition = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getContinueTransition();
         getWorkflowServiceHelper().execute(transition, getCompletePlanAction(workflowDTO,
                 PaymentPlanConfirmationFragment.MODE_CREATE, false), queryMap);
-    }
-
-    @Override
-    public void displayBalanceDetails(PaymentsModel paymentsModel,
-                                      PendingBalancePayloadDTO paymentLineItem,
-                                      PendingBalanceDTO selectedBalance) {
-        //TODO: Delete this when refactor. This code is not used anymore
-//        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-//                .newInstance(paymentDTO, paymentLineItem, false);
-//        displayDialogFragment(dialog, false);
     }
 
     @Override
@@ -556,28 +541,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         getWorkflowServiceHelper().execute(transition, getCompletePlanAction(workflowDTO,
                 PaymentPlanConfirmationFragment.MODE_ADD, false), queryMap);
     }
-
-//    @Override
-//    public void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
-//        boolean addExisting = false;
-//        if (paymentsModel.getPaymentPayload().mustAddToExisting(amount, selectedBalance)) {
-//            onAddBalanceToExistingPlan(paymentsModel, selectedBalance, amount);
-//            addExisting = true;
-//        } else {
-//            PatientModePaymentPlanFullFragment fragment = PatientModePaymentPlanFullFragment
-//                    .newInstance(paymentsModel, selectedBalance, amount);
-//            presenter.navigateToFragment(fragment, true);
-//        }
-//
-//        String[] params = {getString(R.string.param_practice_id),
-//                getString(R.string.param_balance_amount),
-//                getString(R.string.param_is_add_existing)};
-//        Object[] values = {selectedBalance.getMetadata().getPracticeId(),
-//                selectedBalance.getPayload().get(0).getAmount(),
-//                addExisting};
-//
-//        MixPanelUtil.logEvent(getString(R.string.event_paymentplan_started), params, values);
-//    }
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {

@@ -385,11 +385,6 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void onDismissPaymentPlan(PaymentsModel paymentsModel) {
-        onBackPressed();
-    }
-
-    @Override
     public void onSubmitPaymentPlan(WorkflowDTO workflowDTO) {
         for (int i = 0; i < getSupportFragmentManager().getBackStackEntryCount(); i++) {
             getSupportFragmentManager().popBackStack();
@@ -402,11 +397,6 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
                 .newInstance(workflowDTO, paymentsModel.getPaymentPayload().getUserPractice(practiceId),
                         PaymentPlanConfirmationFragment.MODE_CREATE);
         displayDialogFragment(fragment, false);
-    }
-
-    @Override
-    public void displayBalanceDetails(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem, PendingBalanceDTO selectedBalance) {
-
     }
 
     @Override

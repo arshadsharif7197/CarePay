@@ -1,6 +1,5 @@
 package com.carecloud.carepay.patient.payment;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
-import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
@@ -22,32 +20,22 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.interfaces.DTO;
-import com.carecloud.carepaylibray.payments.fragments.AddExistingPaymentPlanFragment;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAddCreditCardFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAmountDialog;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanTermsFragment;
-import com.carecloud.carepaylibray.payments.fragments.ValidPlansFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCompletedInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
@@ -82,8 +70,8 @@ public class PatientPaymentPresenter extends PaymentPresenter
 
     @Override
     public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
-        PartialPaymentDialog dialog=  PartialPaymentDialog.newInstance(paymentsModel, selectedBalance);
-        displayDialogFragment(dialog,false);
+        PartialPaymentDialog dialog = PartialPaymentDialog.newInstance(paymentsModel, selectedBalance);
+        displayDialogFragment(dialog, false);
 
         MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment),
                 getString(R.string.param_practice_id),
@@ -174,7 +162,7 @@ public class PatientPaymentPresenter extends PaymentPresenter
         viewHandler.exitPaymentProcess(true, paymentPlanCreated, false);
 
         double amount = 0D;
-        for(PendingBalancePayloadDTO balancePayloadDTO : pendingBalanceDTO.getPayload()){
+        for (PendingBalancePayloadDTO balancePayloadDTO : pendingBalanceDTO.getPayload()) {
             amount += balancePayloadDTO.getAmount();
         }
 
@@ -185,9 +173,9 @@ public class PatientPaymentPresenter extends PaymentPresenter
     public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
         String practiceId = null;
         toplevel:
-        for(PatientBalanceDTO patientBalanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()){
-            for(PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()){
-                if(patientId != null && patientId.equals(pendingBalanceDTO.getMetadata().getPatientId())){
+        for (PatientBalanceDTO patientBalanceDTO : paymentsModel.getPaymentPayload().getPatientBalances()) {
+            for (PendingBalanceDTO pendingBalanceDTO : patientBalanceDTO.getBalances()) {
+                if (patientId != null && patientId.equals(pendingBalanceDTO.getMetadata().getPatientId())) {
                     practiceId = pendingBalanceDTO.getMetadata().getPracticeId();
                     break toplevel;
                 }
@@ -290,7 +278,7 @@ public class PatientPaymentPresenter extends PaymentPresenter
         }
     }
 
-    private String getString(int id){
+    private String getString(int id) {
         return viewHandler.getContext().getString(id);
     }
 
@@ -301,22 +289,12 @@ public class PatientPaymentPresenter extends PaymentPresenter
     }
 
     @Override
-    public void onDismissPaymentPlan(PaymentsModel paymentsModel) {
-        ((Activity)viewHandler.getContext()).onBackPressed();
-    }
-
-    @Override
     public void onSubmitPaymentPlan(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         PaymentPlanConfirmationFragment confirmationFragment = PaymentPlanConfirmationFragment
                 .newInstance(workflowDTO, getPracticeInfo(paymentsModel),
                         PaymentPlanConfirmationFragment.MODE_CREATE);
         displayDialogFragment(confirmationFragment, false);
-    }
-
-    @Override
-    public void displayBalanceDetails(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem, PendingBalanceDTO selectedBalance) {
-
     }
 
     @Override
@@ -353,7 +331,7 @@ public class PatientPaymentPresenter extends PaymentPresenter
         public void onPostExecute(WorkflowDTO workflowDTO) {
             viewHandler.getISession().hideProgressDialog();
             Bundle info = new Bundle();
-            if(getAppointment() != null) {
+            if (getAppointment() != null) {
                 DtoHelper.bundleDto(info, getAppointment());
             }
             PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);

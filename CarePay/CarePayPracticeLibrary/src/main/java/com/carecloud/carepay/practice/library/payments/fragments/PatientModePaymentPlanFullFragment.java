@@ -42,7 +42,7 @@ public class PatientModePaymentPlanFullFragment extends PaymentPlanFragment {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onDismissPaymentPlan(paymentsModel);
+                cancel();
             }
         });
     }

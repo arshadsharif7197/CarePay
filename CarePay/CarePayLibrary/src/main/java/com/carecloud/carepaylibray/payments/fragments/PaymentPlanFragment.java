@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,7 +23,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
-import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
@@ -48,16 +45,15 @@ import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
-
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class PaymentPlanFragment extends BasePaymentDialogFragment
-        implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
+import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
+
+public class PaymentPlanFragment extends BasePaymentDialogFragment {
 
     protected static final String KEY_PLAN_AMOUNT = "plan_amount";
     protected PaymentsModel paymentsModel;
@@ -162,7 +158,6 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         setupHeader(view);
         setupFields(view);
         setupButtons(view);
-        setAdapter(view);
     }
 
     @Override
@@ -179,7 +174,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.onDismissPaymentPlan(paymentsModel);
+                getActivity().onBackPressed();
             }
         });
         toolbar.setTitle("");
@@ -467,16 +462,6 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         });
 
         enableCreatePlanButton();
-    }
-
-    private void setAdapter(View view) {
-        RecyclerView balanceRecycler = view.findViewById(R.id.balance_recycler);
-        if (balanceRecycler != null && selectedBalance != null) {
-            balanceRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-            PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(),
-                    selectedBalance.getPayload(), this);
-            balanceRecycler.setAdapter(adapter);
-        }
     }
 
     protected void enableCreatePlanButton() {
@@ -835,15 +820,6 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
     protected boolean enableAddToExisting() {
         return hasExistingPlans() && canAddToExisting()
                 && !paymentsModel.getPaymentPayload().getValidPlans(practiceId, paymentPlanAmount).isEmpty();
-    }
-
-    @Override
-    public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
-//        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-//                .newInstance(paymentsModel, paymentLineItem, selectedBalance, false);
-//        displayDialogFragment(dialog, false);
-
-        callback.displayBalanceDetails(paymentsModel, paymentLineItem, selectedBalance);
     }
 
     private TextWatcher getOptionalViewTextWatcher(final View optionalView) {

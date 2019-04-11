@@ -442,12 +442,6 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
     }
 
     @Override
-    public void onDismissPaymentPlan(PaymentsModel paymentsModel) {
-        //TODO: Delete this when refactor. This code is not used anymore
-//        startPaymentProcess(paymentsModel);
-    }
-
-    @Override
     public void onSubmitPaymentPlan(WorkflowDTO workflowDTO) {
         PracticePaymentPlanConfirmationFragment fragment = PracticePaymentPlanConfirmationFragment
                 .newInstance(workflowDTO, getApplicationMode().getUserPracticeDTO(),
@@ -525,16 +519,6 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
                 MixPanelUtil.incrementPeopleProperty(getString(R.string.count_one_time_payments_completed), 1);
             }
         }
-    }
-
-    @Override
-    public void displayBalanceDetails(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem,
-                                      PendingBalanceDTO selectedBalance) {
-        //TODO: Delete this when refactor. This code is not used anymore
-//        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-//                .newInstance(paymentsModel, selectedBalance.getPayload().get(0), false);
-//        displayDialogFragment(dialog, false);
-
     }
 
     @Override

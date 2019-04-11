@@ -283,11 +283,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void onDismissPaymentPlan(PaymentsModel paymentsModel) {
-        onBackPressed();
-    }
-
-    @Override
     public void onSubmitPaymentPlan(WorkflowDTO workflowDTO) {
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         AppointmentDTO appointmentDTO = getAppointment();
@@ -300,14 +295,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
         TransitionDTO transition = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getContinueTransition();
         getWorkflowServiceHelper().execute(transition, getCompletePlanAction(workflowDTO, PaymentPlanConfirmationFragment.MODE_CREATE, false), queryMap);
-    }
-
-    @Override
-    public void displayBalanceDetails(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem, PendingBalanceDTO selectedBalance) {
-        //TODO: Delete this when refactor. This code is not used anymore
-//        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-//                .newInstance(paymentsModel, paymentLineItem, false);
-//        displayDialogFragment(dialog, false);
     }
 
     @Override

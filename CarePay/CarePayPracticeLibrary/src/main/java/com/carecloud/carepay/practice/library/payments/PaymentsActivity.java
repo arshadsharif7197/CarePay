@@ -779,32 +779,12 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     }
 
     @Override
-    public void onDismissPaymentPlan(PaymentsModel paymentsModel) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager
-                .findFragmentByTag(PaymentDistributionFragment.class.getName());
-        if (fragment != null) {
-            fragment.showDialog();
-        }
-    }
-
-    @Override
     public void onSubmitPaymentPlan(WorkflowDTO workflowDTO) {
         popBackStackImmediate(PaymentDistributionFragment.class.getName());
         PracticePaymentPlanConfirmationFragment fragment = PracticePaymentPlanConfirmationFragment
                 .newInstance(workflowDTO, getApplicationMode().getUserPracticeDTO(),
                         PaymentPlanConfirmationFragment.MODE_CREATE);
         displayDialogFragment(fragment, false);
-    }
-
-    @Override
-    public void displayBalanceDetails(PaymentsModel paymentsModel,
-                                      PendingBalancePayloadDTO paymentLineItem,
-                                      PendingBalanceDTO selectedBalance) {
-        //TODO: Delete this when refactor. This code is not used anymore
-//        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-//                .newInstance(paymentsModel, selectedBalance.getPayload().get(0), false);
-//        displayDialogFragment(dialog, false);
     }
 
     @Override
