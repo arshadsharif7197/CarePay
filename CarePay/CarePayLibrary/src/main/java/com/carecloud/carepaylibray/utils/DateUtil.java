@@ -233,20 +233,19 @@ public class DateUtil {
      * @return A string containing the formatted date
      */
     public String getDateAsDayMonthDayOrdinalYear(String today, String tomorrow) {
+        String dayString = dayLiteral;
+        if (this.isToday()) {
+            dayString = today;
+        } else if (this.isTomorrow()) {
+            dayString = tomorrow;
+        }
         if (getUserLanguage().equals("en")) {
             //"%s, %s %d%s"
-            if (this.isToday()) {
-                return String.format(Locale.getDefault(), Label.getLabel("date_day_month_day_ordinal_format"),
-                        today, monthLiteralAbbr, day, getOrdinalSuffix(day));
-            } else if (this.isTomorrow()) {
-                return String.format(Locale.getDefault(), Label.getLabel("date_day_month_day_ordinal_format"),
-                        tomorrow, monthLiteralAbbr, day, getOrdinalSuffix(day));
-            }
             return String.format(Locale.getDefault(), Label.getLabel("date_day_month_day_ordinal_format"),
-                    dayLiteral, monthLiteralAbbr, day, getOrdinalSuffix(day));
+                    dayString, monthLiteralAbbr, day, getOrdinalSuffix(day));
         } else {
             //"%s %d de %s"
-            return String.format(Locale.getDefault(), FORMAT_ES_DAY_LIT_DATE_MONTH_LIT, dayLiteral, day, monthLiteral);
+            return String.format(Locale.getDefault(), FORMAT_ES_DAY_LIT_DATE_MONTH_LIT, dayString, day, monthLiteral);
         }
     }
 
