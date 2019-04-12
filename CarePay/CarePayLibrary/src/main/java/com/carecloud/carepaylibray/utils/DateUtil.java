@@ -223,7 +223,7 @@ public class DateUtil {
                     this.isToday() ? today : dayLiteral, monthLiteralAbbr, day, getOrdinalSuffix(day));
         } else {
             //"%s %d de %s"
-            return String.format(Locale.getDefault(), FORMAT_ES_DAY_LIT_DATE_MONTH_LIT, dayLiteral, day, monthLiteral);
+            return String.format(Locale.getDefault(), FORMAT_ES_DAY_LIT_DATE_MONTH_LIT, this.isToday() ? today : dayLiteral, day, monthLiteral);
         }
     }
 
