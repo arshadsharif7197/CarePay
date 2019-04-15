@@ -28,6 +28,7 @@ public class CarePayConstants {
     public static final String PENDING = "P";
     public static final String CHECKED_IN = "I";
     public static final String CANCELLED = "C";
+    public static final String DENIED = "D";
     public static final String REQUESTED = "R";
     public static final String CHECKING_IN = "CI";
     public static final String CHECKED_OUT = "O";
