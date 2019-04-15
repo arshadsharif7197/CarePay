@@ -74,6 +74,7 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
                     .replaceAll("\"", Matcher.quoteReplacement("\\\""));
 
             loadFormUrl(formString, "load_intake");
+            enableNextButton(false);
         }
     }
 
@@ -117,6 +118,11 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
     @Override
     protected void validateForm() {
         validateForm("save_intake");
+    }
+
+    @Override
+    protected void formScrolledToBottom() {
+        enableNextButton(true);
     }
 
     @Override
