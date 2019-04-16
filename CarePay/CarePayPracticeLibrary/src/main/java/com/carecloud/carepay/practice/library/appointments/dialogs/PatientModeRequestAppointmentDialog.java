@@ -51,7 +51,7 @@ public class PatientModeRequestAppointmentDialog extends BaseRequestAppointmentD
         super.onViewCreated(view, savedInstanceState);
         requestAppointmentButton = view.findViewById(R.id.requestAppointmentButton);
         ApplicationMode.ApplicationType applicationType = getApplicationMode().getApplicationType();
-        boolean autoScheduleAppointments = getAutomaticallyApproveRequests();
+        autoScheduleAppointments = getAutomaticallyApproveRequests();
 
         final EditText reasonForVisitEditText = view.findViewById(R.id.reasonForVisitEditText);
         requestAppointmentButton.setText(Label.getLabel(applicationType == ApplicationMode.ApplicationType.PRACTICE ||
