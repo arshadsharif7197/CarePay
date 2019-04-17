@@ -201,9 +201,9 @@
     <dimen name="findPatientItemVerticalPadding">11dp</dimen>
 
     <!--Dots Menu-->
-    <dimen name="dotSize">3dp</dimen>
-    <dimen name="dotHorizontalMargin">12dp</dimen>
-    <dimen name="dotSemiHorizontalMargin">6dp</dimen>
+    <dimen name="dotSize">3pt</dimen>
+    <dimen name="dotHorizontalMargin">12pt</dimen>
+    <dimen name="dotSemiHorizontalMargin">6pt</dimen>
 
     <!--Distribution Fragment-->
     <dimen name="payment_distibution_dialog_height">600dp</dimen>

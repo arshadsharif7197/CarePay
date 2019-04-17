@@ -284,9 +284,9 @@
     <dimen name="lineItemDetailButtonTextSize">13sp</dimen>
 
     <!--Dots Menu-->
-    <dimen name="dotSize">3dp</dimen>
-    <dimen name="dotHorizontalMargin">12dp</dimen>
-    <dimen name="dotSemiHorizontalMargin">6dp</dimen>
+    <dimen name="dotSize">3pt</dimen>
+    <dimen name="dotHorizontalMargin">12pt</dimen>
+    <dimen name="dotSemiHorizontalMargin">6pt</dimen>
 
     <!--Find patient Dialog-->
     <dimen name="findPatientDialogTitleTextSize">36sp</dimen>
@@ -839,7 +839,7 @@
     <dimen name="paymentHistoryDetailItemsLabelTextSize">18sp</dimen>
     <dimen name="paymentHistoryDetailItemsListTopMargin">12dp</dimen>
 
-    <dimen name="practiceAppointmentDetailDialogWidth">300dp</dimen>
+    <dimen name="practiceAppointmentDetailDialogWidth">600dp</dimen>
 
     <!--Checkin Activity Patient Mode-->
     <dimen name="emptyScreenImageWidth">200dp</dimen>
