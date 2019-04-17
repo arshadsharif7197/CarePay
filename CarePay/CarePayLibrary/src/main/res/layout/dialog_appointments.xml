@@ -205,7 +205,7 @@
                         android:layout_marginTop="@dimen/apt_dl_margin"
                         android:background="@color/light_gray_dialog" />
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/apt_dl_view_margin"
@@ -214,9 +214,9 @@
                         android:orientation="horizontal">
 
                         <LinearLayout
-                            android:layout_width="@dimen/apt_dl_zero_ht_wdh"
+                            android:id="@+id/addressContainer"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.7"
                             android:orientation="vertical">
 
                             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -249,25 +249,42 @@
                                 tools:text="5200 Blue Lagoon Drive\nSuite 900\nMiami, FL 33126" />
                         </LinearLayout>
 
-                        <ImageView
-                            android:id="@+id/appointLocationImageView"
-                            android:layout_width="@dimen/apt_dl_zero_ht_wdh"
+                        <RelativeLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/apt_dialog_appoint_dail_margin"
-                            android:layout_weight="0.15"
-                            android:src="@drawable/icn_appointment_card_directions" />
-
-                        <ImageView
-                            android:id="@+id/appointDailImageView"
-                            android:layout_width="@dimen/apt_dl_zero_ht_wdh"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/apt_dialog_appoint_dail_margin"
+                            android:layout_below="@id/addressContainer"
                             android:layout_marginTop="@dimen/apt_dialog_appoint_dail_margin"
-                            android:layout_marginBottom="@dimen/apt_dialog_appoint_dail_margin"
-                            android:layout_weight="0.15"
-                            android:src="@drawable/selector_phone_icon" />
+                            android:layout_marginBottom="@dimen/apt_dialog_appoint_dail_margin">
 
-                    </LinearLayout>
+                            <ImageView
+                                android:id="@+id/appointDailImageView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:layout_marginStart="@dimen/appointmentDialStartMargin"
+                                android:layout_marginEnd="@dimen/appointmentDialStartMargin"
+                                android:src="@drawable/selector_phone_icon" />
+
+                            <ImageView
+                                android:id="@+id/appointLocationImageView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/apt_dialog_appoint_dail_margin"
+                                android:layout_toStartOf="@id/appointDailImageView"
+                                android:src="@drawable/icn_appointment_card_directions" />
+
+                            <ImageView
+                                android:id="@+id/scheduleAppointmentButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/apt_dialog_appoint_dail_margin"
+                                android:layout_toEndOf="@id/appointDailImageView"
+                                android:src="@drawable/icn_appointment_card_directions" />
+
+
+                        </RelativeLayout>
+
+                    </RelativeLayout>
 
                     <View
                         android:layout_width="match_parent"
@@ -366,7 +383,7 @@
                             layout="@layout/progress_loader"
                             android:layout_width="@dimen/dimen_30dp"
                             android:layout_height="@dimen/dimen_30dp"
-                            android:layout_centerInParent="true"/>
+                            android:layout_centerInParent="true" />
 
                     </RelativeLayout>
 

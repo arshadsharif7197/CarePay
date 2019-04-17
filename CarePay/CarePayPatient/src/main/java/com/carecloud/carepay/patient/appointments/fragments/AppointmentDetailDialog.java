@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.PermissionChecker;
@@ -22,10 +23,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
+import com.carecloud.carepay.patient.appointments.models.AppointmentCalendarEvent;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
+import com.carecloud.carepay.patient.db.BreezeDataBase;
 import com.carecloud.carepay.patient.visitsummary.VisitSummaryDialogFragment;
 import com.carecloud.carepay.patient.visitsummary.dto.VisitSummaryDTO;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
@@ -53,6 +57,7 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.FileDownloadUtil;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.PermissionsUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.picasso.Callback;
@@ -60,6 +65,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Executors;
 
 /**
  * Created by lmenendez on 5/9/17
@@ -69,6 +75,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private static final String KEY_BREEZE_PRACTICE = "is_breeze_practice";
     private static final String KEY_RESCHEDULE_ENABLED = "isRescheduleEnabled";
     private static final int MY_PERMISSIONS_VS_WRITE_EXTERNAL_STORAGE = 10;
+    private static final int OPEN_CALENDAR_APP = 100;
 
     private AppointmentDTO appointmentDTO;
 
@@ -87,6 +94,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private TextView locationAddress;
     private View mapButton;
     private View callButton;
+    private View scheduleAppointmentButton;
     private TextView appointmentStatus;
     private View queueLayout;
     private TextView queueStatus;
@@ -99,6 +107,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private Handler statusHandler;
     private long enqueueId;
     private int retryIntent = 0;
+    private long lastEventId = -1;
+    private AppointmentCalendarEvent calendarEvent;
 
 
     /**
@@ -157,6 +167,14 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
             isBreezePractice = args.getBoolean(KEY_BREEZE_PRACTICE);
             isRescheduleEnabled = args.getBoolean(KEY_RESCHEDULE_ENABLED);
         }
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                BreezeDataBase database = BreezeDataBase.getDatabase(getContext());
+                calendarEvent = database.getCalendarEventDao()
+                        .getAppointmentCalendarEvent(appointmentDTO.getPayload().getId());
+            }
+        });
     }
 
     @Override
@@ -195,6 +213,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         mapButton.setOnClickListener(mapClick);
         callButton = view.findViewById(R.id.appointDailImageView);
         callButton.setOnClickListener(callClick);
+        scheduleAppointmentButton = view.findViewById(R.id.scheduleAppointmentButton);
+        scheduleAppointmentButton.setOnClickListener(scheduleAppointmentClick);
 
         appointmentStatus = view.findViewById(R.id.appointment_status);
 
@@ -408,15 +428,15 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         }
     }
 
-    private boolean shouldShowVisitSummary(){
+    private boolean shouldShowVisitSummary() {
         AppointmentsResultModel appointmentModelDto = ((PatientAppointmentPresenter) callback).getMainAppointmentDto();
-        UserPracticeDTO appointmentPractice= null;
+        UserPracticeDTO appointmentPractice = null;
         for (UserPracticeDTO userPracticeDTO : appointmentModelDto.getPayload().getUserPractices()) {
-            if(userPracticeDTO.getPracticeId().equals(appointmentDTO.getMetadata().getPracticeId())) {
+            if (userPracticeDTO.getPracticeId().equals(appointmentDTO.getMetadata().getPracticeId())) {
                 appointmentPractice = userPracticeDTO;
             }
         }
-        if(appointmentPractice != null && appointmentPractice.isVisitSummaryEnabled()) {
+        if (appointmentPractice != null && appointmentPractice.isVisitSummaryEnabled()) {
             for (PortalSettingDTO portalSettingDTO : appointmentModelDto.getPayload().getPortalSettings()) {
                 if (appointmentPractice.getPracticeId().equals(portalSettingDTO.getMetadata().getPracticeId())) {
                     for (PortalSetting portalSetting : portalSettingDTO.getPayload()) {
@@ -577,6 +597,74 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
             }
         }
     };
+
+    private View.OnClickListener scheduleAppointmentClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (calendarEvent == null && PermissionsUtil.checkPermissionReadCalendar(AppointmentDetailDialog.this)) {
+                saveCalendarEvent();
+            } else if (calendarEvent != null) {
+                Toast.makeText(getContext(), "opps! looks like this is already added to your calendar!", Toast.LENGTH_LONG).show();
+            }
+        }
+    };
+
+    private void saveCalendarEvent() {
+        lastEventId = getNewEventId();
+        Log.e("Pablo", "" + lastEventId);
+        Intent intent = new Intent(Intent.ACTION_INSERT)
+                .setData(CalendarContract.Events.CONTENT_URI)
+                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, DateUtil.getInstance()
+                        .setDateRaw(appointmentDTO.getPayload().getStartTime()).getDate().getTime())
+                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, DateUtil.getInstance()
+                        .setDateRaw(appointmentDTO.getPayload().getEndTime()).getDate().getTime())
+                .putExtra(CalendarContract.Events.TITLE, "Yoga")
+                .putExtra("_id", lastEventId)
+                .putExtra(CalendarContract.Events.DESCRIPTION, "Group class")
+                .putExtra(CalendarContract.Events.EVENT_LOCATION, appointmentDTO.getPayload()
+                        .getLocation().getAddress().getPlaceAddressString())
+//                    .putExtra(Intent.EXTRA_EMAIL, "rowan@example.com,trevor@example.com")
+                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
+        startActivityForResult(intent, OPEN_CALENDAR_APP);
+    }
+
+    public long getNewEventId() {
+        Uri local_uri = Uri.parse(getCalendarUriBase() + "events");
+        Cursor cursor = getActivity().getContentResolver().query(local_uri, new String[]{"MAX(_id) as max_id"},
+                null, null, "_id");
+        cursor.moveToFirst();
+        long max_val = cursor.getLong(cursor.getColumnIndex("max_id"));
+        return max_val + 1;
+    }
+
+    public String getCalendarUriBase() {
+        String calendarUriBase = null;
+        Uri calendars = Uri.parse("content://calendar/calendars");
+        Cursor managedCursor = null;
+
+        try {
+            managedCursor = getActivity().getContentResolver().query(calendars,
+                    null, null, null, null);
+        } catch (Exception e) {
+        }
+
+        if (managedCursor != null) {
+            calendarUriBase = "content://calendar/";
+        } else {
+            calendars = Uri.parse("content://com.android.calendar/calendars");
+            try {
+                managedCursor = getActivity().getContentResolver().query(calendars,
+                        null, null, null, null);
+            } catch (Exception e) {
+                calendarUriBase = "content://com.android.calendar/";
+            }
+            if (managedCursor != null) {
+                calendarUriBase = "content://com.android.calendar/";
+            }
+        }
+
+        return calendarUriBase;
+    }
 
     private View.OnClickListener checkInClick = new View.OnClickListener() {
         @Override
@@ -766,6 +854,30 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         if (requestCode == MY_PERMISSIONS_VS_WRITE_EXTERNAL_STORAGE
                 && (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
             callVisitSummaryService();
+        } else if (requestCode == PermissionsUtil.MY_PERMISSIONS_READ_CALENDAR
+                && (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+            saveCalendarEvent();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == OPEN_CALENDAR_APP && lastEventId != getNewEventId() && lastEventId > -1) {
+            Executors.newSingleThreadExecutor().execute(new Runnable() {
+                @Override
+                public void run() {
+                    AppointmentCalendarEvent appointmentCalendarEvent = new AppointmentCalendarEvent();
+                    appointmentCalendarEvent.setAppointmentId(appointmentDTO.getPayload().getId());
+                    appointmentCalendarEvent.setEventId(lastEventId);
+                    BreezeDataBase database = BreezeDataBase.getDatabase(getContext());
+                    database.getCalendarEventDao().insert(appointmentCalendarEvent);
+                    calendarEvent = database.getCalendarEventDao()
+                            .getAppointmentCalendarEvent(appointmentDTO.getPayload().getId());
+                    Log.e("Pablo", "yeah");
+//
+                }
+            });
         }
     }
 }
