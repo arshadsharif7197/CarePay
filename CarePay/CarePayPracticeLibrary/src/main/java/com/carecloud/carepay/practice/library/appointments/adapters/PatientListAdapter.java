@@ -147,7 +147,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         holder.bind(patient, tapListener);
         holder.setTimeView(patient);
         holder.itemView.setContentDescription(patient.name);
-        holder.setCellAvatar(patient);
+        if (this.currentSection == Section.APPOINTMENTS) { holder.setCellAvatar(patient); }
 
         PicassoHelper.get().loadImage(context, holder.profilePicture, holder.initials,
                 this.currentSection == Section.APPOINTMENTS ? holder.cellAvatar : null, patient.photoUrl, 60);
