@@ -96,6 +96,10 @@ public class PatientModeRequestAppointmentDialog extends BaseRequestAppointmentD
         TextView visitTypeTextView = view.findViewById(R.id.reasonTextView);
         visitTypeTextView.setText(visitTypeDTO.getName());
 
+        View videoVisitIndicator = view.findViewById(R.id.visit_type_video);
+        videoVisitIndicator.setVisibility(appointmentDTO.getPayload().getVisitType()
+                .hasVideoOption() ? View.VISIBLE : View.GONE);
+
         View prepaidLayout = findViewById(R.id.prepaymentLayout);
         if (visitTypeDTO.getAmount() > 0) {
             prepaidLayout.setVisibility(View.VISIBLE);

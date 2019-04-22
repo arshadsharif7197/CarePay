@@ -27,7 +27,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemD
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
-import com.carecloud.carepaylibray.appointments.models.ProvidersReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.interfaces.DTO;
@@ -118,12 +117,7 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
                     AppointmentAvailabilityPayloadDTO payload = new AppointmentAvailabilityPayloadDTO();
                     payload.setLocation(selectedLocation);
                     payload.setResource(selectedResource);
-                    ProvidersReasonDTO reasonDTO = new ProvidersReasonDTO();
-                    reasonDTO.setAmount(selectedVisitType.getAmount());
-                    reasonDTO.setName(selectedVisitType.getName());
-                    reasonDTO.setDescription(selectedVisitType.getDescription());
-                    reasonDTO.setId(selectedVisitType.getId());
-                    payload.setVisitReason(reasonDTO);
+                    payload.setVisitReason(selectedVisitType);
                     availabilityDto.getPayload().getAppointmentAvailability().getPayload().add(payload);
                 }
                 availabilityDto.getPayload().getAppointmentAvailability().getPayload().get(0)
