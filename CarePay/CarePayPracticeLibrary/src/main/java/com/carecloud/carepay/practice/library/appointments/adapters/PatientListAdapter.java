@@ -30,6 +30,7 @@ import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -148,32 +149,10 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         holder.setTimeView(patient);
         holder.itemView.setContentDescription(patient.name);
         holder.videoVisitIndicator.setVisibility(patient.isVideoVisit ? View.VISIBLE : View.GONE);
-        if (this.currentSection == Section.APPOINTMENTS) {
-            holder.setCellAvatar(patient);
-            holder.cellAvatar.setVisibility(View.VISIBLE);
-        } else {
-            holder.cellAvatar.setVisibility(View.INVISIBLE);
-        }
+        if (this.currentSection == Section.APPOINTMENTS) { holder.setCellAvatar(patient); }
 
-        if (!TextUtils.isEmpty(patient.photoUrl)) {
-            Picasso.with(context).load(patient.photoUrl)
-                    .transform(new CircleImageTransform())
-                    .resize(60, 60)
-                    .into(holder.profilePicture, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            holder.profilePicture.setVisibility(View.VISIBLE);
-                        }
-
-                        @Override
-                        public void onError() {
-                            holder.initials.setText(patient.initials);
-                        }
-                    });
-
-        } else {
-            holder.profilePicture.setVisibility(View.INVISIBLE);
-        }
+        PicassoHelper.get().loadImage(context, holder.profilePicture, holder.initials,
+                this.currentSection == Section.APPOINTMENTS ? holder.cellAvatar : null, patient.photoUrl, 60);
     }
 
     @Override
