@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.appointments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -19,6 +20,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.createappointment.availabilityhour.BaseAvailabilityHourFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
@@ -326,8 +328,16 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
     }
 
     @Override
-    public void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO) {
-        showFragment(PatientModeRequestAppointmentDialog.newInstance(appointmentDTO));
+    public void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO,
+                                                    final BaseAvailabilityHourFragment baseAvailabilityHourFragment) {
+        PatientModeRequestAppointmentDialog fragment = PatientModeRequestAppointmentDialog.newInstance(appointmentDTO);
+        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                baseAvailabilityHourFragment.showDialog();
+            }
+        });
+        showFragment(fragment);
     }
 
     private void enableAvailableButton() {

@@ -28,6 +28,7 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.createappointment.CreateAppointmentFragmentInterface;
+import com.carecloud.carepaylibray.appointments.createappointment.availabilityhour.BaseAvailabilityHourFragment;
 import com.carecloud.carepaylibray.appointments.interfaces.DateCalendarRangeInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDataDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityMetadataDTO;
@@ -709,7 +710,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     @Override
-    public void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO) {
+    public void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO, BaseAvailabilityHourFragment baseAvailabilityHourFragment) {
         RequestAppointmentDialogFragment.newInstance(appointmentDTO).show(getSupportFragmentManager(), "confirmation");
     }
 
