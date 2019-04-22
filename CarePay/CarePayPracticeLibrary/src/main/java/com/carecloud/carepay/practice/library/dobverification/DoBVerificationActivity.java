@@ -51,7 +51,6 @@ public class DoBVerificationActivity extends BasePracticeActivity {
         doBDto = getConvertedDTO(DoBDto.class);
 
         setUpUi();
-        SystemUtil.hideSoftKeyboard(this);
     }
 
     private void setUpUi() {
@@ -106,10 +105,27 @@ public class DoBVerificationActivity extends BasePracticeActivity {
             }
         });
 
+        TextView subTitleTextView = findViewById(R.id.subTitleTextView);
+        subTitleTextView.setText(String.format(Label.getLabel("dobVerification.main.subTitle.label.message"),
+                getPatientName()));
+
         populateLanguageSpinner();
         if (retries == 3) {
             showGameOverScreen();
         }
+        dobEditText.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                SystemUtil.hideSoftKeyboard(DoBVerificationActivity.this);
+            }
+        }, 100);
+    }
+
+    private String getPatientName() {
+        String firstName = doBDto.getPayload().getDemographicDTO().getPayload().getPersonalDetails().getFirstName();
+        String lastName = doBDto.getPayload().getDemographicDTO().getPayload().getPersonalDetails()
+                .getLastName().substring(0, 1);
+        return StringUtil.capitalize(String.format("%s %s.", firstName, lastName));
     }
 
     private void onVerifyButtonClick() {

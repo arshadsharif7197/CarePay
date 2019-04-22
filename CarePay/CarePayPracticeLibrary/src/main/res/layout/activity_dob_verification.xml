@@ -77,7 +77,7 @@
             android:textColor="@color/light_blue_subtitle"
             android:textSize="@dimen/dobVerificationSubTitleTextSize"
             app:customAssetFont="gotham_rounded_book"
-            breeze:textKey="dobVerification.main.title.label.message"
+            breeze:textKey="dobVerification.main.subTitle.label.message"
             tools:text="If you are not R. Best, please return the tablet to the front desk." />
 
         <RelativeLayout
