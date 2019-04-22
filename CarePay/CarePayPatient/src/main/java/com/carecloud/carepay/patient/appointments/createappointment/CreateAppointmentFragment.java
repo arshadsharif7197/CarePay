@@ -130,4 +130,5 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
     public void setAppointmentSlot(AppointmentsSlotsDTO slot) {
         //NA for this flow
     }
+
 }

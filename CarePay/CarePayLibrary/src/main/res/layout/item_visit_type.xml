@@ -7,17 +7,18 @@
     android:background="?selectableItemBackground"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:padding="@dimen/itemVisitTypePadding">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/visitTypeNameTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
+            android:layout_weight="1"
             android:ellipsize="end"
             android:gravity="start"
             android:maxLines="1"
@@ -31,34 +32,28 @@
             android:id="@+id/videoImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_video_visit_icon"
+            android:src="@drawable/icn_video_visit"
             android:visibility="gone" />
-
-        <ImageView
-            android:id="@+id/alertImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/visitTypeAlertImageStartMargin"
-            android:src="@drawable/ic_alert_grey" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/prepaymentAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/dimen_5dp"
-            android:layout_toStartOf="@id/alertImageView"
             android:gravity="end"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/visitTypePrepaymentAmountTextSize"
             app:customAssetFont="proxima_nova_semi_bold"
             tools:text="Prepayement: 5000.25" />
 
-    </RelativeLayout>
+        <ImageView
+            android:id="@+id/alertImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/visitTypeAlertImageStartMargin"
+            android:src="@drawable/ic_alert_grey" />
+
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"

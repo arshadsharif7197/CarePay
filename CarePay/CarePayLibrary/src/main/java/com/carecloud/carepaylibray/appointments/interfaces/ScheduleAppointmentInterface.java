@@ -1,8 +1,8 @@
 package com.carecloud.carepaylibray.appointments.interfaces;
 
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 
+import com.carecloud.carepaylibray.appointments.createappointment.availabilityhour.BaseAvailabilityHourFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
@@ -25,7 +25,7 @@ public interface ScheduleAppointmentInterface extends FragmentActivityInterface,
 
     void setLocation(LocationDTO locationDTO);
 
-    void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO);
+    void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO, BaseAvailabilityHourFragment baseAvailabilityHourFragment);
 
     void appointmentScheduledSuccessfully();
 

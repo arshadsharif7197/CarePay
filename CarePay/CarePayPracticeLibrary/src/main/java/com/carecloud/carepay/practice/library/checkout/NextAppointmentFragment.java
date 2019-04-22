@@ -15,7 +15,6 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDataDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityMetadataDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
-import com.carecloud.carepaylibray.appointments.models.ProvidersReasonDTO;
 import com.carecloud.carepaylibray.checkout.BaseNextAppointmentFragment;
 
 import java.util.ArrayList;
@@ -62,12 +61,7 @@ public class NextAppointmentFragment extends BaseNextAppointmentFragment {
         AppointmentAvailabilityPayloadDTO payload = new AppointmentAvailabilityPayloadDTO();
         payload.setLocation(selectedLocation);
         payload.setResource(selectedResource);
-        ProvidersReasonDTO reasonDTO = new ProvidersReasonDTO();
-        reasonDTO.setAmount(selectedVisitType.getAmount());
-        reasonDTO.setName(selectedVisitType.getName());
-        reasonDTO.setDescription(selectedVisitType.getDescription());
-        reasonDTO.setId(selectedVisitType.getId());
-        payload.setVisitReason(reasonDTO);
+        payload.setVisitReason(selectedVisitType);
         AppointmentAvailabilityDataDTO appointmentAvailabilityDataDTO = new AppointmentAvailabilityDataDTO();
         ArrayList<AppointmentAvailabilityPayloadDTO> payloadList = new ArrayList<>();
         payloadList.add(payload);
