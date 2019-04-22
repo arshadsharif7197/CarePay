@@ -75,6 +75,7 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
 
             loadFormUrl(formString, "load_intake");
             enableNextButton(false);
+            pageScrollOffsetPercentage = 0;
         }
     }
 

@@ -77,6 +77,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
 
     protected List<JsonObject> jsonFormSaveResponseArray = new ArrayList<>();
     private CheckinFlowCallback callback;
+    protected int pageScrollOffsetPercentage;
 
     @Override
     public void attachCallback(Context context) {
@@ -389,7 +390,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                enableNextButton(false);
+                                enableNextButton(pageScrollOffsetPercentage > 98);
                                 hideProgressDialog();
                             }
                         });
@@ -402,8 +403,9 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         public void scroll_form(String scrollPercentage) {
             try {
                 JSONObject json = new JSONObject(scrollPercentage);
-                int pageScrollOffsetPercentage = json.getInt("pageScrollOffsetPercentage");
+                pageScrollOffsetPercentage = json.getInt("pageScrollOffsetPercentage");
                 if (pageScrollOffsetPercentage > 98) {
+
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -412,6 +414,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
                     });
                 }
             } catch (JSONException e) {
+                pageScrollOffsetPercentage = 0;
                 e.printStackTrace();
             }
         }
