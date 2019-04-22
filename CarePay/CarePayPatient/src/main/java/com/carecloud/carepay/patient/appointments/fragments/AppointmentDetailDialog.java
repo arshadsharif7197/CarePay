@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.PermissionChecker;
@@ -52,6 +51,7 @@ import com.carecloud.carepaylibray.appointments.models.QueueStatusPayloadDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.customcomponents.CarePayProgressButton;
+import com.carecloud.carepaylibray.utils.CalendarUtil;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -604,66 +604,20 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
             if (calendarEvent == null && PermissionsUtil.checkPermissionReadCalendar(AppointmentDetailDialog.this)) {
                 saveCalendarEvent();
             } else if (calendarEvent != null) {
-                Toast.makeText(getContext(), "opps! looks like this is already added to your calendar!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Looks like this is already added to your calendar!", Toast.LENGTH_LONG).show();
             }
         }
     };
 
     private void saveCalendarEvent() {
-        lastEventId = getNewEventId();
-        Log.e("Pablo", "" + lastEventId);
-        Intent intent = new Intent(Intent.ACTION_INSERT)
-                .setData(CalendarContract.Events.CONTENT_URI)
-                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, DateUtil.getInstance()
-                        .setDateRaw(appointmentDTO.getPayload().getStartTime()).getDate().getTime())
-                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, DateUtil.getInstance()
-                        .setDateRaw(appointmentDTO.getPayload().getEndTime()).getDate().getTime())
-                .putExtra(CalendarContract.Events.TITLE, "Yoga")
-                .putExtra("_id", lastEventId)
-                .putExtra(CalendarContract.Events.DESCRIPTION, "Group class")
-                .putExtra(CalendarContract.Events.EVENT_LOCATION, appointmentDTO.getPayload()
-                        .getLocation().getAddress().getPlaceAddressString())
-//                    .putExtra(Intent.EXTRA_EMAIL, "rowan@example.com,trevor@example.com")
-                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
-        startActivityForResult(intent, OPEN_CALENDAR_APP);
-    }
-
-    public long getNewEventId() {
-        Uri local_uri = Uri.parse(getCalendarUriBase() + "events");
-        Cursor cursor = getActivity().getContentResolver().query(local_uri, new String[]{"MAX(_id) as max_id"},
-                null, null, "_id");
-        cursor.moveToFirst();
-        long max_val = cursor.getLong(cursor.getColumnIndex("max_id"));
-        return max_val + 1;
-    }
-
-    public String getCalendarUriBase() {
-        String calendarUriBase = null;
-        Uri calendars = Uri.parse("content://calendar/calendars");
-        Cursor managedCursor = null;
-
-        try {
-            managedCursor = getActivity().getContentResolver().query(calendars,
-                    null, null, null, null);
-        } catch (Exception e) {
-        }
-
-        if (managedCursor != null) {
-            calendarUriBase = "content://calendar/";
-        } else {
-            calendars = Uri.parse("content://com.android.calendar/calendars");
-            try {
-                managedCursor = getActivity().getContentResolver().query(calendars,
-                        null, null, null, null);
-            } catch (Exception e) {
-                calendarUriBase = "content://com.android.calendar/";
-            }
-            if (managedCursor != null) {
-                calendarUriBase = "content://com.android.calendar/";
-            }
-        }
-
-        return calendarUriBase;
+        lastEventId = CalendarUtil.getNewEventId(getContext());
+        String title = String.format("Appointment with %s", StringUtil
+                .capitalize(appointmentDTO.getPayload().getProvider().getFullName()));
+        startActivityForResult(CalendarUtil.createSaveEventIntent(lastEventId, title, "",
+                DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime()).getDate().getTime(),
+                DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getEndTime()).getDate().getTime(),
+                appointmentDTO.getPayload().getLocation().getAddress().getPlaceAddressString()),
+                OPEN_CALENDAR_APP);
     }
 
     private View.OnClickListener checkInClick = new View.OnClickListener() {
@@ -863,7 +817,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == OPEN_CALENDAR_APP && lastEventId != getNewEventId() && lastEventId > -1) {
+        if (requestCode == OPEN_CALENDAR_APP && lastEventId != CalendarUtil.getNewEventId(getContext())
+                && lastEventId > -1) {
             Executors.newSingleThreadExecutor().execute(new Runnable() {
                 @Override
                 public void run() {
@@ -874,8 +829,6 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     database.getCalendarEventDao().insert(appointmentCalendarEvent);
                     calendarEvent = database.getCalendarEventDao()
                             .getAppointmentCalendarEvent(appointmentDTO.getPayload().getId());
-                    Log.e("Pablo", "yeah");
-//
                 }
             });
         }
