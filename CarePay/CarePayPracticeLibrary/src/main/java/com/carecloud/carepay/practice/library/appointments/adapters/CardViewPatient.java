@@ -37,6 +37,7 @@ public class CardViewPatient {
     public Boolean isCheckedOut;
     public CheckinStatusDTO checkinStatus;
     public Date lastUpdate;
+    public Boolean isVideoVisit = false;
     int headCount;
 
     CardViewPatient(Object raw, String id, ProviderIndexDTO provider, LocationIndexDTO location, Double balance, PatientModel dto) {
@@ -55,6 +56,7 @@ public class CardViewPatient {
         this.isCheckingOut = false;
         this.isCheckedOut = false;
         this.isPending = false;
+        this.isVideoVisit = false;
     }
 
     /**
@@ -100,6 +102,7 @@ public class CardViewPatient {
         if (dto.getAppointmentStatus().getLastUpdated() != null) {
             this.lastUpdate = DateUtil.getInstance().setDateRaw(dto.getAppointmentStatus().getLastUpdated().replaceAll("\\.\\d\\d\\dZ", "-00:00")).getDate();
         }
+        this.isVideoVisit = dto.getVisitType().hasVideoOption();
     }
 
     /**
