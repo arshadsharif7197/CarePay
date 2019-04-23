@@ -25,7 +25,7 @@ public abstract class BreezeDataBase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             BreezeDataBase.class, "breeze_database")
-                            .addMigrations(MIGRATION_1_2)
+                            .addMigrations(MIGRATION_1_2, MIGRATION_2_1)
                             .build();
                 }
             }
@@ -40,6 +40,14 @@ public abstract class BreezeDataBase extends RoomDatabase {
             database.execSQL(
                     "CREATE TABLE AppointmentCalendarEvent (id INTEGER NOT NULL, eventId INTEGER NOT NULL," +
                             " appointmentId TEXT NOT NULL, PRIMARY KEY(id))");
+        }
+    };
+
+    private static final Migration MIGRATION_2_1 = new Migration(2, 1) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            // Create the new table
+            database.execSQL("DROP TABLE AppointmentCalendarEvent");
         }
     };
 
