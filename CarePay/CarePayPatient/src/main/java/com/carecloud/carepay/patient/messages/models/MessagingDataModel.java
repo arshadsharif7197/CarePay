@@ -43,4 +43,13 @@ public class MessagingDataModel {
     public void setProviderContacts(List<ProviderContact> providerContacts) {
         this.providerContacts = providerContacts;
     }
+
+    public String lookupName(Messages.Reply thread, String userId) {
+        for (Messages.Participant participant : thread.getParticipants()) {
+            if (participant.getUserId().equals(userId)) {
+                return participant.getName();
+            }
+        }
+        return null;
+    }
 }
