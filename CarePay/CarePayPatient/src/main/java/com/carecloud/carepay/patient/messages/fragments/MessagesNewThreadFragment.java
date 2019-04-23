@@ -282,6 +282,7 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
             return;
         }
 
+        message = message.replace("\n", "<br/>");
         MessagingPostModel postModel = new MessagingPostModel();
         Messages.Participant participant = postModel.getParticipant();
         participant.setName(providerContact.getName());
