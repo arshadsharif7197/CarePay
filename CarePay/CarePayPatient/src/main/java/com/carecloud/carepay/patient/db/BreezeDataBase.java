@@ -38,7 +38,7 @@ public abstract class BreezeDataBase extends RoomDatabase {
         public void migrate(SupportSQLiteDatabase database) {
             // Create the new table
             database.execSQL(
-                    "CREATE TABLE AppointmentCalendarEvent (id INTEGER, eventId INTEGER NOT NULL," +
+                    "CREATE TABLE AppointmentCalendarEvent (id INTEGER NOT NULL, eventId INTEGER NOT NULL," +
                             " appointmentId TEXT NOT NULL, PRIMARY KEY(id))");
         }
     };
