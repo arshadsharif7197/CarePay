@@ -230,6 +230,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         callButton.setOnClickListener(callClick);
         scheduleAppointmentButton = view.findViewById(R.id.scheduleAppointmentButton);
         scheduleAppointmentButton.setOnClickListener(scheduleAppointmentClick);
+        scheduleAppointmentButton.setEnabled(false);
 
         appointmentStatus = view.findViewById(R.id.appointment_status);
 
@@ -342,6 +343,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                             rightButton.setOnClickListener(checkInClick);
                         }
                     }
+                    scheduleAppointmentButton.setEnabled(!eventExists);
                     break;
                 }
                 case REQUESTED_UPCOMING:
@@ -871,7 +873,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     }
 
     private void saveEventOnLocalDB() {
-        if (lastEventId != CalendarUtil.getNewEventId(getContext()) && lastEventId > -1) {
+        if (lastEventId > -1 && lastEventId != CalendarUtil.getNewEventId(getContext())) {
             Executors.newSingleThreadExecutor().execute(new Runnable() {
                 @Override
                 public void run() {
@@ -885,6 +887,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                 }
             });
             eventExists = true;
+            scheduleAppointmentButton.setEnabled(false);
         }
     }
 }

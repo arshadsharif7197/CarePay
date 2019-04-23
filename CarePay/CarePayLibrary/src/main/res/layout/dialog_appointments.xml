@@ -220,8 +220,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/addressContainer"
-                        android:layout_marginTop="@dimen/apt_dialog_appoint_dail_margin"
-                        android:layout_marginBottom="@dimen/apt_dialog_appoint_dail_margin">
+                        android:layout_marginTop="@dimen/appoinmentDialogButtonsTopMargin"
+                        android:layout_marginBottom="@dimen/appoinmentDialogButtonsTopMargin">
 
                         <ImageView
                             android:id="@+id/appointDailImageView"
@@ -244,17 +244,18 @@
                             android:id="@+id/scheduleAppointmentButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/apt_dialog_appoint_dail_margin"
+                            android:layout_marginStart="@dimen/apt_dialog_appoint_dail_margin"
+                            android:layout_marginTop="@dimen/apt_dialog_appoint_dail_margin"
+                            android:layout_marginEnd="@dimen/apt_dialog_appoint_dail_margin"
                             android:layout_toStartOf="@id/appointDailImageView"
-                            android:src="@drawable/ic_calendar" />
-
+                            android:src="@drawable/selector_calendar_icon" />
 
                     </RelativeLayout>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/apt_dl_boader_ht"
-                        android:layout_marginTop="@dimen/apt_dl_margin"
+                        android:layout_marginTop="@dimen/dimen_10dp"
                         android:background="@color/light_gray_dialog" />
 
                     <LinearLayout
