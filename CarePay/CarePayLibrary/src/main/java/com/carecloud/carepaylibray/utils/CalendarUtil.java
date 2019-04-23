@@ -19,12 +19,27 @@ public abstract class CalendarUtil {
         return new Intent(Intent.ACTION_INSERT)
                 .setData(CalendarContract.Events.CONTENT_URI)
                 .putExtra("_id", eventId)
-                .putExtra(CalendarContract.Events.TITLE, "Yoga")
-                .putExtra(CalendarContract.Events.DESCRIPTION, "Group class")
+                .putExtra(CalendarContract.Events.TITLE, title)
+                .putExtra(CalendarContract.Events.DESCRIPTION, description)
                 .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime)
                 .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endtime)
                 .putExtra(CalendarContract.Events.EVENT_LOCATION, location)
                 .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
+    }
+
+    public static boolean eventExists(Context context, long id, String title) {
+        Uri local_uri = Uri.parse(getCalendarUriBase(context) + "events");
+        try {
+            Cursor cursor = context.getContentResolver().query(local_uri,
+                    null, " _id = ? and deleted != 1 and title like ?",
+                    new String[]{String.valueOf(id), title}, null);
+            boolean exists = cursor.getCount() > 0;
+            cursor.close();
+            return exists;
+        } catch (Exception e) {
+            return false;
+        }
+
     }
 
     public static long getNewEventId(Context context) {
@@ -33,6 +48,7 @@ public abstract class CalendarUtil {
                 null, null, "_id");
         cursor.moveToFirst();
         long max_val = cursor.getLong(cursor.getColumnIndex("max_id"));
+        cursor.close();
         return max_val + 1;
     }
 

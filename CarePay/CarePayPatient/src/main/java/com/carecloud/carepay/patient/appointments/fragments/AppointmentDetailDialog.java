@@ -110,6 +110,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private int retryIntent = 0;
     private long lastEventId = -1;
     private AppointmentCalendarEvent calendarEvent;
+    private boolean eventExists;
 
 
     /**
@@ -174,8 +175,24 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                 BreezeDataBase database = BreezeDataBase.getDatabase(getContext());
                 calendarEvent = database.getCalendarEventDao()
                         .getAppointmentCalendarEvent(appointmentDTO.getPayload().getId());
+                eventExists = false;
+                Log.e("Pablo", "New id " + CalendarUtil.getNewEventId(getContext()));
+                if (calendarEvent != null) {
+                    checkIfEventExists();
+                    if (!eventExists) {
+                        database.getCalendarEventDao().delete(calendarEvent);
+                    }
+                }
+                Log.e("Pablo", eventExists ? "Existe" : "No existe");
             }
         });
+    }
+
+    private void checkIfEventExists() {
+        String title = String.format(Label.getLabel("appointment.schedule.event.title.event"), StringUtil
+                .capitalize(appointmentDTO.getPayload().getProvider().getFullName()));
+        eventExists = CalendarUtil.eventExists(getContext(), calendarEvent.getEventId(), title);
+        Log.e("Pablo", "Event id " + calendarEvent.getEventId());
     }
 
     @Override
@@ -230,49 +247,47 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     }
 
     private void setCommonValues() {
-        if (appointmentDTO != null) {
-            DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime());
-            appointmentDateTextView.setText(dateUtil.getDateAsDayShortMonthDayOrdinal());
-            appointmentTimeTextView.setText(dateUtil.getTime12Hour());
-            appointmentVisitTypeTextView.setText(StringUtil.
-                    capitalize(appointmentDTO.getPayload().getVisitType().getName()));
+        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime());
+        appointmentDateTextView.setText(dateUtil.getDateAsDayShortMonthDayOrdinal());
+        appointmentTimeTextView.setText(dateUtil.getTime12Hour());
+        appointmentVisitTypeTextView.setText(StringUtil.
+                capitalize(appointmentDTO.getPayload().getVisitType().getName()));
 
-            final ProviderDTO provider = appointmentDTO.getPayload().getProvider();
-            providerInitials.setText(StringUtil.getShortName(provider.getName()));
-            providerName.setText(provider.getName());
-            providerSpecialty.setText(provider.getSpecialty().getName());
-            callButton.setEnabled(!StringUtil.isNullOrEmpty(getPhoneNumber()));
+        final ProviderDTO provider = appointmentDTO.getPayload().getProvider();
+        providerInitials.setText(StringUtil.getShortName(provider.getName()));
+        providerName.setText(provider.getName());
+        providerSpecialty.setText(provider.getSpecialty().getName());
+        callButton.setEnabled(!StringUtil.isNullOrEmpty(getPhoneNumber()));
 
-            int size = getResources().getDimensionPixelSize(R.dimen.apt_dl_image_ht_wdh);
-            Picasso.with(getContext())
-                    .load(provider.getPhoto())
-                    .resize(size, size)
-                    .centerCrop()
-                    .transform(new CircleImageTransform())
-                    .into(providerPhoto, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            providerInitials.setVisibility(View.GONE);
-                            providerPhoto.setVisibility(View.VISIBLE);
-                        }
+        int size = getResources().getDimensionPixelSize(R.dimen.apt_dl_image_ht_wdh);
+        Picasso.with(getContext())
+                .load(provider.getPhoto())
+                .resize(size, size)
+                .centerCrop()
+                .transform(new CircleImageTransform())
+                .into(providerPhoto, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        providerInitials.setVisibility(View.GONE);
+                        providerPhoto.setVisibility(View.VISIBLE);
+                    }
 
-                        @Override
-                        public void onError() {
-                            providerPhoto.setVisibility(View.GONE);
-                            providerInitials.setVisibility(View.VISIBLE);
-                        }
-                    });
+                    @Override
+                    public void onError() {
+                        providerPhoto.setVisibility(View.GONE);
+                        providerInitials.setVisibility(View.VISIBLE);
+                    }
+                });
 
-            LocationDTO location = appointmentDTO.getPayload().getLocation();
-            locationName.setText(StringUtil.capitalize(location.getName()));
-            locationAddress.setText(StringUtil
-                    .capitalize(location.getAddress().geAddressStringWithShortZipWOCounty().toLowerCase()));
-            mapButton.setEnabled(!StringUtil.isNullOrEmpty(location.getAddress().geAddressStringWithShortZipWOCounty()));
+        LocationDTO location = appointmentDTO.getPayload().getLocation();
+        locationName.setText(StringUtil.capitalize(location.getName()));
+        locationAddress.setText(StringUtil
+                .capitalize(location.getAddress().geAddressStringWithShortZipWOCounty().toLowerCase()));
+        mapButton.setEnabled(!StringUtil.isNullOrEmpty(location.getAddress().geAddressStringWithShortZipWOCounty()));
 
-            videoVisitIndicator.setVisibility(appointmentDTO.getPayload().getVisitType().hasVideoOption() ?
-                    View.VISIBLE : View.GONE);
+        videoVisitIndicator.setVisibility(appointmentDTO.getPayload().getVisitType().hasVideoOption() ?
+                View.VISIBLE : View.GONE);
 
-        }
     }
 
     private void applyStyle() {
@@ -528,17 +543,6 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         return null;
     }
 
-    private String ordinal(int number, String[] sufixes) {
-        switch (number % 100) {
-            case 11:
-            case 12:
-            case 13:
-                return number + sufixes[0];
-            default:
-                return number + sufixes[number % 10];
-        }
-    }
-
     private String getFormattedText(String formatString, String... fields) {
         if (!formatString.contains("%s")) {
             return formatString;
@@ -558,7 +562,6 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         }
         return phone;
     }
-
 
     private void launchMapView(String address) {
         if (SystemUtil.isNotEmptyString(address)) {
@@ -617,17 +620,19 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private View.OnClickListener scheduleAppointmentClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (calendarEvent == null && PermissionsUtil.checkPermissionReadCalendar(AppointmentDetailDialog.this)) {
+            if (calendarEvent == null && PermissionsUtil
+                    .checkPermissionReadCalendar(AppointmentDetailDialog.this)) {
                 saveCalendarEvent();
             } else if (calendarEvent != null) {
-                Toast.makeText(getContext(), "Looks like this is already added to your calendar!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), Label.getLabel("appointment.schedule.event.message.repeated"),
+                        Toast.LENGTH_LONG).show();
             }
         }
     };
 
     private void saveCalendarEvent() {
         lastEventId = CalendarUtil.getNewEventId(getContext());
-        String title = String.format("Appointment with %s", StringUtil
+        String title = String.format(Label.getLabel("appointment.schedule.event.title.event"), StringUtil
                 .capitalize(appointmentDTO.getPayload().getProvider().getFullName()));
         startActivityForResult(CalendarUtil.createSaveEventIntent(lastEventId, title, "",
                 DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime()).getDate().getTime(),
@@ -793,6 +798,9 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     public void onStart() {
         super.onStart();
         getActivity().registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        if (!eventExists) {
+            saveEventOnLocalDB();
+        }
     }
 
     @Override
@@ -859,8 +867,14 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == OPEN_CALENDAR_APP && lastEventId != CalendarUtil.getNewEventId(getContext())
-                && lastEventId > -1) {
+        if (requestCode == OPEN_CALENDAR_APP) {
+            saveEventOnLocalDB();
+
+        }
+    }
+
+    private void saveEventOnLocalDB() {
+        if (lastEventId != CalendarUtil.getNewEventId(getContext()) && lastEventId > -1) {
             Executors.newSingleThreadExecutor().execute(new Runnable() {
                 @Override
                 public void run() {
@@ -873,6 +887,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                             .getAppointmentCalendarEvent(appointmentDTO.getPayload().getId());
                 }
             });
+            eventExists = true;
         }
     }
 }
