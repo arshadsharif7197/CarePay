@@ -61,7 +61,6 @@ public class DoBVerificationActivity extends BasePracticeActivity {
                 onVerifyButtonClick();
             }
         });
-
         dobEditText = findViewById(R.id.dobEditText);
         dobEditText.addTextChangedListener(new TextWatcher() {
             int lastLength;
@@ -117,15 +116,18 @@ public class DoBVerificationActivity extends BasePracticeActivity {
             @Override
             public void run() {
                 SystemUtil.hideSoftKeyboard(DoBVerificationActivity.this);
+                dobEditText.setFocusable(true);
+                dobEditText.setFocusableInTouchMode(true);
             }
         }, 100);
     }
 
     private String getPatientName() {
-        String firstName = doBDto.getPayload().getDemographicDTO().getPayload().getPersonalDetails().getFirstName();
-        String lastName = doBDto.getPayload().getDemographicDTO().getPayload().getPersonalDetails()
-                .getLastName().substring(0, 1);
-        return StringUtil.capitalize(String.format("%s %s.", firstName, lastName));
+        String firstName = doBDto.getPayload().getDemographicDTO().getPayload()
+                .getPersonalDetails().getFirstName().substring(0, 1);
+        String lastName = doBDto.getPayload().getDemographicDTO().getPayload()
+                .getPersonalDetails().getLastName();
+        return StringUtil.capitalize(String.format("%s. %s", firstName, lastName));
     }
 
     private void onVerifyButtonClick() {
