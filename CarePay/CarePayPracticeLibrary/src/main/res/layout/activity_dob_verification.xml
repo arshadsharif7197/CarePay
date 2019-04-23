@@ -97,7 +97,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="@dimen/emailFieldTopMargin"
-                app:customAssetFont="proxima_nova_semi_bold"
+                app:customAssetFont="gotham_rounded_book"
+                android:textColorHint="@color/pastel_blue"
                 app:hintTextAppearance="@style/FloatingLabelStyle">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayEditText
@@ -108,7 +109,8 @@
                     android:imeOptions="actionDone"
                     android:inputType="textEmailAddress"
                     android:maxLength="10"
-                    app:customAssetFont="proxima_nova_semi_bold"
+                    tools:hint="Date of Birth"
+                    app:customAssetFont="gotham_rounded_book"
                     breeze:hintKey="demographics_dob_label" />
 
             </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
