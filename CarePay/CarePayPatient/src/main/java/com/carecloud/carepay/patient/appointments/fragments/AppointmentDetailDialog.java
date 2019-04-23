@@ -176,14 +176,12 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                 calendarEvent = database.getCalendarEventDao()
                         .getAppointmentCalendarEvent(appointmentDTO.getPayload().getId());
                 eventExists = false;
-                Log.e("Pablo", "New id " + CalendarUtil.getNewEventId(getContext()));
                 if (calendarEvent != null) {
                     checkIfEventExists();
                     if (!eventExists) {
                         database.getCalendarEventDao().delete(calendarEvent);
                     }
                 }
-                Log.e("Pablo", eventExists ? "Existe" : "No existe");
             }
         });
     }
@@ -192,7 +190,6 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         String title = String.format(Label.getLabel("appointment.schedule.event.title.event"), StringUtil
                 .capitalize(appointmentDTO.getPayload().getProvider().getFullName()));
         eventExists = CalendarUtil.eventExists(getContext(), calendarEvent.getEventId(), title);
-        Log.e("Pablo", "Event id " + calendarEvent.getEventId());
     }
 
     @Override
