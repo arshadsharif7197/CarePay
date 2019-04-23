@@ -1310,4 +1310,8 @@ public class DateUtil {
     public String getServerFormat() {
         return toStringWithFormat(FORMAT_TIMEZONE_EN);
     }
+    
+    public boolean isWithinHours(long hours) {
+        return getHoursElapsed(getDate(), Calendar.getInstance().getTime()) <= hours;
+    }
 }

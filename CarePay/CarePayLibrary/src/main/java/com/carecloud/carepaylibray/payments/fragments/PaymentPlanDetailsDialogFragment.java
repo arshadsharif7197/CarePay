@@ -2,7 +2,10 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -78,8 +81,15 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
         paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
     }
 
+    @Nullable
     @Override
-    protected void onInitialization(View view) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_payment_plan_details, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         PaymentPlanPayloadDTO planPayload = paymentPlanDTO.getPayload();
         UserPracticeDTO userPracticeDTO = callback.getPracticeInfo(paymentsModel);
 
@@ -97,7 +107,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
 
         UserPracticeDTO practice = paymentReceiptModel.getPaymentPayload()
                 .getUserPractice(paymentPlanDTO.getMetadata().getPracticeId());
-        if(!StringUtil.isNullOrEmpty(practice.getPracticePhoto())){
+        if (!StringUtil.isNullOrEmpty(practice.getPracticePhoto())) {
             PicassoHelper.get().loadImage(getContext(), (ImageView) view.findViewById(R.id.practiceImageView),
                     practiceInitials, practice.getPracticePhoto());
         }
@@ -106,14 +116,13 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
         planName.setText(paymentPlanDTO.getPayload().getDescription());
 
 
-
         String paymentsMadeOf = Label.getLabel("payment_plan_payments_made_value");
         int paymentCount = planPayload.getPaymentPlanDetails().getFilteredHistory().size();
         int installmentTotal = planPayload.getPaymentPlanDetails().getInstallments();
         int oneTimePayments = paymentPlanDTO.getPayload().getPaymentPlanDetails()
                 .getOneTimePayments().size();
         StringBuilder paymentsMadeBuilder = new StringBuilder().append(String.format(paymentsMadeOf, paymentCount, installmentTotal));
-        if(oneTimePayments > 0){
+        if (oneTimePayments > 0) {
             paymentsMadeBuilder.append(" + ")
                     .append(oneTimePayments)
                     .append(" ")
@@ -183,16 +192,6 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
                 }
             });
         }
-    }
-
-    @Override
-    protected int getCancelImageResource() {
-        return 0;
-    }
-
-    @Override
-    protected int getContentLayout() {
-        return R.layout.fragment_payment_plan_details;
     }
 
     private String getNextDate(PaymentPlanPayloadDTO planPayload) {

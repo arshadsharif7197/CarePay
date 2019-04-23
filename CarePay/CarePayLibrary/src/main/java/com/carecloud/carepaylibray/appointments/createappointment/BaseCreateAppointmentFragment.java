@@ -24,7 +24,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemD
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
-import com.carecloud.carepaylibray.appointments.models.ProvidersReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
@@ -104,7 +103,14 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
 
     private void setUpUI(View view) {
         providersNoDataTextView = view.findViewById(R.id.providersNoDataTextView);
+        providerContainer = view.findViewById(R.id.providerContainer);
         providersNoDataTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showProviderList(selectedPractice, selectedVisitType, selectedLocation);
+            }
+        });
+        providerContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showProviderList(selectedPractice, selectedVisitType, selectedLocation);
@@ -112,23 +118,36 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         });
 
         visitTypeNoDataTextView = view.findViewById(R.id.visitTypeNoDataTextView);
+        visitTypeContainer = view.findViewById(R.id.visitTypeContainer);
         visitTypeNoDataTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showVisitTypeList(selectedPractice, selectedResource, selectedLocation);
             }
         });
+        visitTypeContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showVisitTypeList(selectedPractice, selectedResource, selectedLocation);
+            }
+        });
+
 
         locationNoDataTextView = view.findViewById(R.id.locationNoDataTextView);
+        locationContainer = view.findViewById(R.id.locationContainer);
         locationNoDataTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showLocationList(selectedPractice, selectedResource, selectedVisitType);
             }
         });
-        providerContainer = view.findViewById(R.id.providerContainer);
-        visitTypeContainer = view.findViewById(R.id.visitTypeContainer);
-        locationContainer = view.findViewById(R.id.locationContainer);
+        locationContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLocationList(selectedPractice, selectedResource, selectedVisitType);
+            }
+        });
+
         checkAvailabilityButton = view.findViewById(R.id.checkAvailabilityButton);
         checkAvailabilityButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,12 +168,7 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         AppointmentAvailabilityPayloadDTO payload = new AppointmentAvailabilityPayloadDTO();
         payload.setLocation(selectedLocation);
         payload.setResource(selectedResource);
-        ProvidersReasonDTO reasonDTO = new ProvidersReasonDTO();
-        reasonDTO.setAmount(selectedVisitType.getAmount());
-        reasonDTO.setName(selectedVisitType.getName());
-        reasonDTO.setDescription(selectedVisitType.getDescription());
-        reasonDTO.setId(selectedVisitType.getId());
-        payload.setVisitReason(reasonDTO);
+        payload.setVisitReason(selectedVisitType);
         AppointmentAvailabilityDataDTO appointmentAvailabilityDataDTO = new AppointmentAvailabilityDataDTO();
         ArrayList<AppointmentAvailabilityPayloadDTO> payloadList = new ArrayList<>();
         payloadList.add(payload);

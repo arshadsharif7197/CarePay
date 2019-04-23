@@ -44,6 +44,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
     private static final long LOGOUT_SESSION_TIMEOUT = 1000 * 60 * 10;//10 minutes
     private static boolean isForeground = false;
     private static Handler handler;
+    private static boolean expectingResult = false;
 
     private Dialog progressDialog;
     private CustomPopupNotification errorNotification;
@@ -88,6 +89,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         });
         setLastInteraction(System.currentTimeMillis());
         handler.removeCallbacksAndMessages(null);
+        expectingResult=false;
     }
 
     public boolean isVisible() {
@@ -225,6 +227,12 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
             errorNotification.dismiss();
             errorNotification = null;
         }
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode){
+        expectingResult=true;
+        super.startActivityForResult(intent, requestCode);
     }
 
     /**
@@ -398,7 +406,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         @Override
         public void run() {
             long now = System.currentTimeMillis();
-            if (now - getLastInteraction() > LOGOUT_SESSION_TIMEOUT && !isForeground && !isFinishing()) {
+            if (now - getLastInteraction() > LOGOUT_SESSION_TIMEOUT && !isForeground && !expectingResult && !isFinishing()) {
                 getApplicationMode().clearUserPracticeDTO();
                 AppAuthorizationHelper authHelper = getAppAuthorizationHelper();
                 authHelper.setUser(null);

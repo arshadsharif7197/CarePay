@@ -1,8 +1,12 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.TextView;
 
@@ -73,15 +77,20 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
     @Override
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
-        pendingAmountTextView = (TextView) view.findViewById(R.id.pendingAmountTextView);
+        pendingAmountTextView = view.findViewById(R.id.pendingAmountTextView);
         pendingAmountTextView.setVisibility(View.VISIBLE);
         updatePendingAmountText(fullAmount);
 
         minimumPayment = getMinimumPayment();
         if (minimumPayment > 0) {
-            TextView header = (TextView) view.findViewById(R.id.partialPaymentHeader);
-            String headerText = String.format(Label.getLabel("payment.partial.amountSelector.minimum.amount"),
-                    NumberFormat.getCurrencyInstance(Locale.US).format(minimumPayment));
+            TextView header = view.findViewById(R.id.partialPaymentHeader);
+            SpannableString headerText = new SpannableString(String
+                    .format(Label.getLabel("payment.partial.amountSelector.minimum.amount"),
+                            NumberFormat.getCurrencyInstance(Locale.US).format(minimumPayment)));
+            int lastIndex = Label.getLabel("payment.partial.amountSelector.minimum.amount").lastIndexOf(":");
+            if (lastIndex > 0) {
+                headerText.setSpan(new StyleSpan(Typeface.BOLD), lastIndex, headerText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
             header.setText(headerText);
         }
     }

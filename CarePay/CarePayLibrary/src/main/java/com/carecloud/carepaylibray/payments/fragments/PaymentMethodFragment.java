@@ -16,7 +16,7 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
-import com.carecloud.carepaylibray.customdialogs.LargeAlertDialog;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.payments.adapter.PaymentMethodAdapter;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodInterface;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
@@ -101,21 +101,21 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
     }
 
     protected void setupTitleViews(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         if (toolbar != null) {
-            TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
+            TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
             title.setText(Label.getLabel("payment_method_title"));
             toolbar.setTitle("");
         }
     }
 
     private void initializeViews(View view) {
-        Button createPaymentPlanButton = (Button) view.findViewById(R.id.createPaymentPlanButton);
+        Button createPaymentPlanButton = view.findViewById(R.id.createPaymentPlanButton);
         createPaymentPlanButton.setOnClickListener(createPaymentPlanButtonListener);
         createPaymentPlanButton.setText(Label.getLabel("payment_create_plan_text"));
         createPaymentPlanButton.setEnabled(false);//TODO enable this when ready to support payment plans
 
-        paymentMethodList = (ListView) view.findViewById(R.id.list_payment_types);
+        paymentMethodList = view.findViewById(R.id.list_payment_types);
         final PaymentMethodAdapter paymentMethodAdapter = new PaymentMethodAdapter(getContext(), paymentMethodsList, paymentTypeMap);
 
         paymentMethodList.setAdapter(paymentMethodAdapter);
@@ -146,13 +146,15 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
     protected void handlePaymentButton(PaymentsMethodsDTO paymentMethod, double amount) {
         switch (paymentMethod.getType()) {
             case CarePayConstants.TYPE_CASH:
-                new LargeAlertDialog(getActivity(), Label.getLabel("payment_cash_message"),
+                LargeAlertDialogFragment fragment = LargeAlertDialogFragment.newInstance(Label.getLabel("payment_cash_message"),
                         Label.getLabel("payment_ok"),
-                        R.color.lemonGreen, R.drawable.icn_payment_cash_selected, new LargeAlertDialog.LargeAlertInterface() {
+                        R.color.lemonGreen, R.drawable.icn_payment_cash_selected);
+                fragment.setLargeAlertInterface(new LargeAlertDialogFragment.LargeAlertInterface() {
                     @Override
                     public void onActionButton() {
                     }
-                }).show();
+                });
+                fragment.show(getFragmentManager(), LargeAlertDialogFragment.class.getName());
                 logPaymentMethodSelection(getString(R.string.payment_cash));
                 break;
 

@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.payments.fragments.PaymentHistoryDetailFragment;
@@ -98,7 +100,9 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
             paymentPlanNameTextView.setText(historyItem.getPayload().getMetadata()
                     .getPaymentPlan().getDescription());
             paymentPlanNameTextView.setVisibility(View.VISIBLE);
-        }else{
+        } else if(historyItem.getPayload().getExecution().equals(PaymentConstants.ANDROID_PAY_PAYMENT_TYPE)) {
+            paymentMethod = CarePayConstants.TYPE_GOOGLE_PAY;;
+        } else{
             paymentPlanDetailsButton.setVisibility(View.GONE);
             paymentPlanNameTextView.setVisibility(View.GONE);
         }

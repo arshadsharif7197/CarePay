@@ -1,15 +1,11 @@
 package com.carecloud.carepay.practice.library.checkin.dialog;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,8 +13,9 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -42,11 +39,12 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.CheckinStatusDTO;
 import com.carecloud.carepaylibray.appointments.models.QueueDTO;
 import com.carecloud.carepaylibray.appointments.models.QueueStatusPayloadDTO;
-import com.carecloud.carepaylibray.base.BaseActivity;
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayTypefaceSpan;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -70,18 +68,17 @@ import java.util.Vector;
 /**
  * Created by sudhir_pingale on 10/26/2016
  */
-public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter.PagePickerCallback,
+public class AppointmentDetailDialog extends BaseDialogFragment implements PagePickerAdapter.PagePickerCallback,
         PaymentLineItemsListAdapter.PaymentLineItemCallback {
 
     private static final String TAG = "AppointmentDetailDialog";
 
-    public interface AppointmentDialogCallback {
+    public interface AppointmentDialogCallback extends FragmentActivityInterface {
         void showPaymentDistributionDialog(PaymentsModel paymentsModel);
 
         void onFailure(String errorMessage);
     }
 
-    private Context context;
     private CheckInDTO checkInDTO;
     private AppointmentsPayloadDTO appointmentPayloadDTO;
     private PendingBalanceDTO pendingBalanceDTO;
@@ -124,27 +121,26 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
     /**
      * Constructor.
-     *
-     * @param context context
      */
-    public AppointmentDetailDialog(Context context, CheckInDTO checkInDTO, PendingBalanceDTO pendingBalanceDTO,
-                                   AppointmentsPayloadDTO payloadDTO, int theRoom, AppointmentDialogCallback callback) {
-        super(context);
-        this.context = context;
-        this.checkInDTO = checkInDTO;
-        this.pendingBalanceDTO = pendingBalanceDTO;
-        this.appointmentPayloadDTO = payloadDTO;
-        this.theRoom = theRoom;
-        this.callback = callback;
-        this.handler = new Handler();
-        setHandlersAndListeners();
+    public static AppointmentDetailDialog newInstance(CheckInDTO checkInDTO, PendingBalanceDTO pendingBalanceDTO,
+                                                      AppointmentsPayloadDTO payloadDTO, int theRoom) {
+        Bundle args = new Bundle();
+        DtoHelper.bundleDto(args, checkInDTO);
+        DtoHelper.bundleDto(args, pendingBalanceDTO);
+        DtoHelper.bundleDto(args, payloadDTO);
+        args.putInt("theRoom", theRoom);
+        AppointmentDetailDialog dialog = new AppointmentDetailDialog();
+        dialog.setArguments(args);
+        return dialog;
     }
 
-    private void setHandlersAndListeners() {
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            sessionHandler = (ISession) context;
+            callback = (AppointmentDialogCallback) context;
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Provided context must be an instance of ISession");
+            throw new ClassCastException("Attached context must implement PatientAppointmentNavigationCallback");
         }
     }
 
@@ -155,14 +151,30 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
      */
     @SuppressWarnings("ConstantConditions")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHandlersAndListeners();
+        Bundle args = getArguments();
+        handler = new Handler();
+        if (args != null) {
+            checkInDTO = DtoHelper.getConvertedDTO(CheckInDTO.class, args);
+            pendingBalanceDTO = DtoHelper.getConvertedDTO(PendingBalanceDTO.class, args);
+            appointmentPayloadDTO = DtoHelper.getConvertedDTO(AppointmentsPayloadDTO.class, args);
+            theRoom = args.getInt("theRoom");
+        }
+    }
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.dialog_checkin_detail);
-        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        setCancelable(true);
+    private void setHandlersAndListeners() {
+        try {
+            sessionHandler = (ISession) getContext();
+        } catch (ClassCastException cce) {
+            throw new ClassCastException("Provided context must be an instance of ISession");
+        }
+    }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         onInitialization();
         callGetCheckInStatusAPI(); //API call for getting check-in status
         onSetValuesFromDTO();
@@ -170,7 +182,12 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         if (getPatientBalance() == 0) {
             paymentButton.setEnabled(false);
         }
+    }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.dialog_checkin_detail, container, false);
     }
 
     /**
@@ -206,11 +223,11 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         queueText = (TextView) findViewById(R.id.queue_text);
         patientBalancesLayout = findViewById(R.id.patientBalancesContainer);
         patientBalancesRecycler = (RecyclerView) findViewById(R.id.patientBalancesRecycler);
-        patientBalancesRecycler.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        patientBalancesRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-        pickerWindow = new PopupPickerWindow(context);
+        pickerWindow = new PopupPickerWindow(getContext());
         pickerWindow.flipPopup(true);
-        pickerWindow.setAdapter(new PagePickerAdapter(context, checkInDTO.getPayload().getPageMessages(), this));
+        pickerWindow.setAdapter(new PagePickerAdapter(getContext(), checkInDTO.getPayload().getPageMessages(), this));
 
         if (!canSendPage()) {
             pageButton.setEnabled(false);
@@ -273,8 +290,8 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         checkingInLabel.setText(title);
 
         balanceValueLabel.setText(StringUtil.getFormattedBalanceAmount(getPatientBalance()));
-        patientNameLabel.setText(StringUtil.getFormatedLabal(context, appointmentPayloadDTO.getPatient().getFullName()));
-        doctorNameLabel.setText(StringUtil.getFormatedLabal(context, appointmentPayloadDTO.getProvider().getName()));
+        patientNameLabel.setText(StringUtil.getFormatedLabal(getContext(), appointmentPayloadDTO.getPatient().getFullName()));
+        doctorNameLabel.setText(StringUtil.getFormatedLabal(getContext(), appointmentPayloadDTO.getProvider().getName()));
 
 
         findViewById(R.id.checkin_close_button).setOnClickListener(new View.OnClickListener() {
@@ -286,7 +303,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
         String photoUrl = appointmentPayloadDTO.getPatient().getProfilePhoto();
         if (!TextUtils.isEmpty(photoUrl)) {
-            Picasso.with(context).load(photoUrl)
+            Picasso.with(getContext()).load(photoUrl)
                     .transform(new CircleImageTransform())
                     .resize(88, 88)
                     .into(profilePhoto, new Callback() {
@@ -300,7 +317,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                             shortName.setText(appointmentPayloadDTO.getPatient().getShortName());
                         }
                     });
-            Picasso.with(context).load(photoUrl)
+            Picasso.with(getContext()).load(photoUrl)
                     .fit()
                     .into(bgImage);
 
@@ -352,9 +369,9 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
     private View.OnClickListener pageActionListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (pickerWindow.isShowing()){
+            if (pickerWindow.isShowing()) {
                 pickerWindow.dismiss();
-            }else{
+            } else {
                 int offset = view.getWidth() / 2 - pickerWindow.getWidth() / 2;
                 pickerWindow.showAsDropDown(view, offset, 10);
             }
@@ -390,7 +407,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
             }
 
             if (transition != null && callback != null) {
-                ((ISession) context).getWorkflowServiceHelper().execute(transition, callback, queryMap);
+                ((ISession) getContext()).getWorkflowServiceHelper().execute(transition, callback, queryMap);
             }
         }
     }
@@ -443,7 +460,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
         @Override
         public void onFailure(String exceptionMessage) {
             callback.onFailure(exceptionMessage);
-            Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -468,7 +485,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
             @Override
             public void onFailure(String exceptionMessage) {
-                Log.e(context.getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+                Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
             }
         };
     }
@@ -506,7 +523,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                     //current user
                     CheckBox checkBox = checkBoxes.get(3);
                     checkBox.setSelected(true);
-                    checkBox.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                    checkBox.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
                     SpannableString spannableString = new SpannableString(place);
                     spannableString.setSpan(new CarePayTypefaceSpan(bold), 0, place.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -514,7 +531,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
                     //first user
                     checkBox = checkBoxes.get(0);
-                    checkBox.setTextColor(ContextCompat.getColor(context, R.color.textview_default_textcolor));
+                    checkBox.setTextColor(ContextCompat.getColor(getContext(), R.color.textview_default_textcolor));
                     placeInQueue = queueMap.get(1);
                     place = StringUtil.getOrdinal(language, 1) + "\n" + StringUtil.captialize(placeInQueue.getFirstName());
 
@@ -534,7 +551,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                     //current user
                     CheckBox checkBox = checkBoxes.get(3);
                     checkBox.setSelected(true);
-                    checkBox.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                    checkBox.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
                     SpannableString spannableString = new SpannableString(place);
                     spannableString.setSpan(new CarePayTypefaceSpan(bold), 0, place.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -542,7 +559,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
                     //first user
                     checkBox = checkBoxes.get(0);
-                    checkBox.setTextColor(ContextCompat.getColor(context, R.color.textview_default_textcolor));
+                    checkBox.setTextColor(ContextCompat.getColor(getContext(), R.color.textview_default_textcolor));
                     placeInQueue = queueMap.get(1);
                     place = StringUtil.getOrdinal(language, 1) + "\n" + StringUtil.captialize(placeInQueue.getFirstName());
 
@@ -553,7 +570,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
                     //second user
                     checkBox = checkBoxes.get(4);
-                    checkBox.setTextColor(ContextCompat.getColor(context, R.color.textview_default_textcolor));
+                    checkBox.setTextColor(ContextCompat.getColor(getContext(), R.color.textview_default_textcolor));
                     placeInQueue = queueMap.get(2);
                     place = StringUtil.getOrdinal(language, 2) + "\n" + StringUtil.captialize(placeInQueue.getFirstName());
 
@@ -577,7 +594,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                     int counter = 3;
                     CheckBox checkBox = checkBoxes.get(counter);
                     checkBox.setSelected(true);
-                    checkBox.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                    checkBox.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
                     SpannableString spannableString = new SpannableString(place);
                     spannableString.setSpan(new CarePayTypefaceSpan(bold), 0,
@@ -591,7 +608,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
                         place = StringUtil.getOrdinal(language, rank) + "\n" + StringUtil
                                 .captialize(placeInQueue.getFirstName());
                         checkBox = checkBoxes.get(counter);
-                        checkBox.setTextColor(ContextCompat.getColor(context, R.color.textview_default_textcolor));
+                        checkBox.setTextColor(ContextCompat.getColor(getContext(), R.color.textview_default_textcolor));
 
                         spannableString = new SpannableString(place);
                         spannableString.setSpan(new CarePayTypefaceSpan(bold), 0,
@@ -845,7 +862,7 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
-            SystemUtil.showSuccessToast(context, Label.getLabel("push_notification_sent"));
+            SystemUtil.showSuccessToast(getContext(), Label.getLabel("push_notification_sent"));
         }
 
         @Override
@@ -856,24 +873,15 @@ public class AppointmentDetailDialog extends Dialog implements PagePickerAdapter
 
     @Override
     public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
-        String tag = PaymentDetailsFragmentDialog.class.getName();
-        FragmentManager fragmentManager = ((BaseActivity) context).getSupportFragmentManager();
-        FragmentTransaction ft = fragmentManager.beginTransaction();
-        Fragment prev = fragmentManager.findFragmentByTag(tag);
-        if (prev != null) {
-            ft.remove(prev);
-        }
         PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
                 .newInstance(paymentDetailsModel, paymentLineItem, true);
-        dialog.addOnDismissListener(new OnDismissListener() {
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
-            public void onDismiss(DialogInterface dialog) {
-                show();
+            public void onCancel(DialogInterface dialogInterface) {
+                showDialog();
             }
         });
-        dialog.show(ft, tag);
-        hide();
+        callback.displayDialogFragment(dialog, false);
+        hideDialog();
     }
-
-
 }

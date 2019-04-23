@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
+import com.carecloud.carepaylibray.appointments.interfaces.VideoAppointmentCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
@@ -41,6 +42,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     private String rightActionLabel;
     private String middleActionLabel;
     private AppointmentDisplayStyle style;
+    private GradientDrawable drawable;
 
     private View headerView;
 
@@ -113,8 +115,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         initializeViews(view);
-        GradientDrawable drawable = (GradientDrawable) headerView.getBackground();
-        drawable.setColor(ContextCompat.getColor(getContext(), headerColor));
+        drawable = (GradientDrawable) headerView.getBackground();
 
         TextView apptTime = view.findViewById(R.id.appointment_start_time);
         apptTime.setTextColor(ContextCompat.getColor(getContext(), timeColor));
@@ -165,6 +166,10 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         setTextViewById(R.id.appointment_visit_type, StringUtil.captialize(appointmentPayloadDTO.getVisitType().getName()));
         setTextViewById(R.id.appointment_visit_type_label, Label.getLabel("visit_type_heading"));
 
+        View videoVisitIndicator = findViewById(R.id.visit_type_video);
+        videoVisitIndicator.setVisibility(appointmentPayloadDTO.getVisitType().hasVideoOption() ?
+                View.VISIBLE : View.GONE);
+
         initializeButtons();
     }
 
@@ -176,13 +181,29 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         profileImage.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        drawable.setColor(ContextCompat.getColor(getContext(), headerColor));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        drawable.setColor(getResources().getColor(R.color.colorPrimary));
+    }
+
     private void setupDialogStyle() {
         switch (this.style) {
             case PENDING:
                 headerColor = R.color.dark_blue;
                 timeColor = R.color.colorPrimary;
                 leftActionLabel = Label.getLabel("cancel_appointment_short_label");
-                rightActionLabel = Label.getLabel("start_checkin_label");
+                if(appointmentDTO.getPayload().getVisitType().hasVideoOption()){
+                    rightActionLabel = Label.getLabel("appointment_video_visit_start_short");
+                }else {
+                    rightActionLabel = Label.getLabel("start_checkin_label");
+                }
                 middleActionLabel = Label.getLabel("adhoc_show_forms_button_label");
                 break;
             case REQUESTED:
@@ -195,7 +216,11 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
                 headerColor = R.color.dark_blue;
                 timeColor = R.color.colorPrimary;
                 leftActionLabel = Label.getLabel("cancel_appointment_short_label");
-                rightActionLabel = Label.getLabel("start_checkout_label");
+                if(appointmentDTO.getPayload().getVisitType().hasVideoOption()){
+                    rightActionLabel = Label.getLabel("appointment_video_visit_start_short");
+                }else {
+                    rightActionLabel = Label.getLabel("start_checkout_label");
+                }
                 middleActionLabel = Label.getLabel("adhoc_show_forms_button_label");
                 break;
             case MISSED:
@@ -226,6 +251,11 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
             @Override
             public void onClick(View view) {
                 if (null != callback) {
+                    if (appointmentDTO.getPayload().getVisitType().hasVideoOption()) {
+                        ((VideoAppointmentCallback)callback).startVideoVisit(appointmentDTO);
+                        dismiss();
+                        return;
+                    }
                     callback.onRightActionTapped(appointmentDTO);
                 }
                 dismiss();

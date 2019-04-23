@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.mini.R;
+import com.carecloud.carepay.mini.activities.FullScreenActivity;
 
 /**
  * Created by lmenendez on 6/23/17
@@ -32,6 +33,7 @@ public class StartRegistrationFragment extends RegistrationFragment {
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ((FullScreenActivity) getActivity()).toggleCustomerMode();
                 getActivity().finish();
             }
         });

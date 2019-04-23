@@ -1,12 +1,16 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,7 +94,7 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
         super.onViewCreated(view, icicle);
         applyButton.setText(Label.getLabel("payment_Pay_label"));
 
-        TextView pendingAmountTextView = (TextView) view.findViewById(R.id.pendingAmountTextView);
+        TextView pendingAmountTextView = view.findViewById(R.id.pendingAmountTextView);
         pendingAmountTextView.setVisibility(View.GONE);
 
         schedulePaymentDateText = (EditText) findViewById(R.id.schedulePaymentDateEditText);
@@ -109,8 +113,13 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
 
         TextView paymentHeader = (TextView) findViewById(R.id.partialPaymentHeader);
         currencyFormat.setMinimumFractionDigits(2);
-        String maxAmount = String.format(Label.getLabel("payment.partial.amountSelector.maximum.amount"),
-                currencyFormat.format(fullAmount));
+        SpannableString maxAmount = new SpannableString(String
+                .format(Label.getLabel("payment.partial.amountSelector.maximum.amount"),
+                        currencyFormat.format(fullAmount)));
+        int lastIndex = Label.getLabel("payment.partial.amountSelector.maximum.amount").lastIndexOf(":");
+        if (lastIndex > 0) {
+            maxAmount.setSpan(new StyleSpan(Typeface.BOLD), lastIndex, maxAmount.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
         currencyFormat.setMinimumFractionDigits(0);
         paymentHeader.setText(maxAmount);
     }
@@ -156,6 +165,7 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
     protected View.OnClickListener selectDateButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(final View view) {
+            schedulePaymentDateText.setClickable(false);
             showCalendar();
         }
     };
@@ -212,11 +222,12 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
 
                     @Override
                     public void onDateRangeCancelled() {
-                        //Not Implemented
+                        schedulePaymentDateText.setClickable(true);
                     }
 
                     @Override
                     public void onDateSelected(Date selectedDate) {
+                        schedulePaymentDateText.setClickable(true);
                         setSelectedDate(selectedDate);
                         showDialog();
                     }

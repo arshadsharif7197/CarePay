@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.base.BreezeDataBase;
 import com.carecloud.carepay.practice.library.payments.models.IntegratedPaymentQueueRecord;
 import com.carecloud.carepay.practice.library.payments.models.ShamrockPaymentMetadata;
 import com.carecloud.carepay.practice.library.payments.models.ShamrockPaymentModel;
@@ -24,6 +25,7 @@ import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterf
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PatientPaymentsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentMetadata;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
@@ -42,6 +44,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 /**
  * Created by lmenendez on 3/28/17.
@@ -55,6 +58,7 @@ public class CloverPaymentAdapter {
     private String appointmentId;
     private PaymentConfirmationInterface callback;
     private UserPracticeDTO practiceInfo;
+    private String patientId;
     private String userId;
     private Handler handler;
 
@@ -62,24 +66,42 @@ public class CloverPaymentAdapter {
 
     /**
      * Constructor
-     * @param activity Activity
+     *
+     * @param activity      Activity
      * @param paymentsModel payment model
      */
-    public CloverPaymentAdapter(BaseActivity activity, PaymentsModel paymentsModel, String appointmentId, PaymentConfirmationInterface callback){
+    public CloverPaymentAdapter(BaseActivity activity, PaymentsModel paymentsModel, String appointmentId, PaymentConfirmationInterface callback) {
         this.activity = activity;
         this.paymentsModel = paymentsModel;
         this.appointmentId = appointmentId;
         this.callback = callback;
-        practiceInfo = paymentsModel.getPaymentPayload().getUserPractices().get(0);
+        if(!paymentsModel.getPaymentPayload().getUserPractices().isEmpty()) {
+            practiceInfo = paymentsModel.getPaymentPayload().getUserPractices().get(0);
+        }
+
+        patientId = practiceInfo.getPatientId();
+        if(patientId == null &&
+                !paymentsModel.getPaymentPayload().getPatientBalances().isEmpty() &&
+                !paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().isEmpty()){
+            PendingBalanceMetadataDTO metadataDTO = paymentsModel.getPaymentPayload().getPatientBalances()
+                    .get(0).getBalances().get(0).getMetadata();
+            patientId = metadataDTO.getPatientId();
+            if(practiceInfo == null){
+                practiceInfo = new UserPracticeDTO();
+                practiceInfo.setPracticeMgmt(metadataDTO.getPracticeMgmt());
+                practiceInfo.setPracticeId(metadataDTO.getPracticeId());
+            }
+        }
         userId = activity.getApplicationMode().getUserPracticeDTO().getUserId();
         handler = new Handler();
     }
 
     /**
      * Set Generic Payment
+     *
      * @param amount amount to pay
      */
-    public void setCloverConnectorPayment(double amount){
+    public void setCloverConnectorPayment(double amount) {
         IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
         paymentLineItem.setAmount(amount);
         paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_UNAPPLIED);
@@ -98,7 +120,30 @@ public class CloverPaymentAdapter {
     }
 
     /**
+     * Set Generic Payment
+     *
+     * @param amount amount to pay
+     */
+    public void setCloverPayment(double amount) {
+        IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
+        paymentLineItem.setAmount(amount);
+        paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_UNAPPLIED);
+        paymentLineItem.setDescription("Unapplied Amount");
+
+        IntegratedPaymentPostModel paymentPostModel = new IntegratedPaymentPostModel();
+        paymentPostModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
+        paymentPostModel.setAmount(amount);
+        paymentPostModel.addLineItem(paymentLineItem);
+
+        IntegratedPaymentMetadata postModelMetadata = paymentPostModel.getMetadata();
+        postModelMetadata.setAppointmentId(appointmentId);
+
+        setCloverPayment(paymentPostModel);
+    }
+
+    /**
      * Set Applied Payment
+     *
      * @param postModel payment model for payment application
      */
     public void setCloverConnectorPayment(IntegratedPaymentPostModel postModel) {
@@ -107,12 +152,12 @@ public class CloverPaymentAdapter {
 
     public void setCloverPayment(IntegratedPaymentPostModel postModel) {
 
-        Intent intent = new Intent();
+        Intent intent = new Intent(CarePayConstants.CLOVER_PAYMENT_INTENT);
 
         double paymentAmount = postModel.getAmount();
         intent.putExtra(CarePayConstants.CLOVER_PAYMENT_AMOUNT, paymentAmount);
 
-        if(appointmentId != null) {
+        if (appointmentId != null) {
             intent.putExtra(CarePayConstants.APPOINTMENT_ID, appointmentId);
         }
 
@@ -139,8 +184,8 @@ public class CloverPaymentAdapter {
             paymentLineItem.setDescription(lineItem.getDescription());
 
             PaymentLineItemMetadata metadata = new PaymentLineItemMetadata();
-            metadata.setPatientID(paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getMetadata().getPatientId());
-            metadata.setPracticeID(paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getMetadata().getPracticeId());
+            metadata.setPatientID(patientId);
+            metadata.setPracticeID(practiceInfo.getPracticeId());
             metadata.setLocationID(lineItem.getLocationID());
             metadata.setProviderID(lineItem.getProviderID());
             paymentLineItem.setMetadata(metadata);
@@ -157,12 +202,12 @@ public class CloverPaymentAdapter {
 
     }
 
-    private void initCloverPayment(IntegratedPaymentPostModel postModel){
+    private void initCloverPayment(IntegratedPaymentPostModel postModel) {
         //release old client before each payment to prevent a stale connection or Socket Exception
         DevicePayment.releasePaymentConnection();
 
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("patient_id", practiceInfo.getPatientId());
+        queryMap.put("patient_id", patientId);
 
         ShamrockPaymentsPostModel shamrockPaymentsPostModel = new ShamrockPaymentsPostModel().setIntegratedPaymentPostModel(postModel);
         shamrockPaymentsPostModel.setOrganizationId(paymentsModel.getPaymentPayload().getOrganizationId());
@@ -172,7 +217,7 @@ public class CloverPaymentAdapter {
         ShamrockPaymentMetadata metadata = shamrockPaymentsPostModel.getMetadata();
         metadata.setPracticeId(practiceInfo.getPracticeId());
         metadata.setPracticeMgmt(practiceInfo.getPracticeMgmt());
-        metadata.setPatientId(practiceInfo.getPatientId());
+        metadata.setPatientId(patientId);
         metadata.setUserId(userId);
 
         if (activity.getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
@@ -289,7 +334,7 @@ public class CloverPaymentAdapter {
         }
     };
 
-    private void postPaymentRequest(String paymentRequestId, JsonElement paymentPayload){
+    private void postPaymentRequest(String paymentRequestId, JsonElement paymentPayload) {
         Map<String, String> headerMap = new HashMap<>();
         headerMap.put("x-api-key", HttpConstants.getPaymentsApiKey());
 
@@ -319,9 +364,9 @@ public class CloverPaymentAdapter {
             @Override
             public void onFailure(String errorMessage) {
                 activity.hideProgressDialog();
-                if(shouldRetryShamrock(errorMessage)){
+                if (shouldRetryShamrock(errorMessage)) {
                     postPaymentRequest(paymentRequestId, paymentPayload);
-                }else {
+                } else {
                     activity.showErrorNotification(errorMessage);
                     queuePayment(paymentRequestId, false);
                 }
@@ -332,11 +377,15 @@ public class CloverPaymentAdapter {
 
     private void postCompletedPayment(String paymentRequestId, JsonElement recordObject) {
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("patient_id", practiceInfo.getPatientId());
+        queryMap.put("patient_id", patientId);
         queryMap.put("deepstream_record_id", paymentRequestId);
+        queryMap.put("transition", "true");
+
+        Map<String, String> header = new HashMap<>();
+        header.put("transition", "true");
 
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getRecordPayment();
-        activity.getWorkflowServiceHelper().execute(transitionDTO, getPostPaymentCallback(paymentRequestId, recordObject), queryMap);
+        activity.getWorkflowServiceHelper().execute(transitionDTO, getPostPaymentCallback(paymentRequestId, recordObject), queryMap, header);
     }
 
     private WorkflowServiceCallback getPostPaymentCallback(final String paymentRequestId, final JsonElement recordObject) {
@@ -369,11 +418,12 @@ public class CloverPaymentAdapter {
         };
     }
 
+    //store in local DB
     private void queuePayment(String paymentRequestId, boolean recordOnly) {
-        IntegratedPaymentQueueRecord paymentQueueRecord = new IntegratedPaymentQueueRecord();
+        final IntegratedPaymentQueueRecord paymentQueueRecord = new IntegratedPaymentQueueRecord();
         paymentQueueRecord.setPracticeID(practiceInfo.getPracticeId());
         paymentQueueRecord.setPracticeMgmt(practiceInfo.getPracticeMgmt());
-        paymentQueueRecord.setPatientID(practiceInfo.getPatientId());
+        paymentQueueRecord.setPatientID(patientId);
         paymentQueueRecord.setDeepstreamId(paymentRequestId);
         paymentQueueRecord.setUsername(userId);
         paymentQueueRecord.setRecordOnly(recordOnly);
@@ -381,14 +431,20 @@ public class CloverPaymentAdapter {
         Gson gson = new Gson();
         paymentQueueRecord.setQueueTransition(gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getQueuePayment()));
 
-        paymentQueueRecord.save();
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                BreezeDataBase database = BreezeDataBase.getDatabase(activity);
+                database.getIntegratedAndroidPayDao().insert(paymentQueueRecord);
+            }
+        });
 
         Intent intent = new Intent(activity, IntegratedPaymentsQueueUploadService.class);
         activity.startService(intent);
 
     }
 
-    private boolean shouldRetryShamrock(String errorMessage){
+    private boolean shouldRetryShamrock(String errorMessage) {
         return !errorMessage.contains("payment request has already been completed") && retryCount < POST_SHAMROCK_RETRY_MAX;
     }
 

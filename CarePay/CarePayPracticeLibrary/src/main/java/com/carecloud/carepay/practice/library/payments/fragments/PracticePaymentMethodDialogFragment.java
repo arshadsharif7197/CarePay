@@ -29,9 +29,8 @@ public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFr
     protected PaymentMethodDialogInterface dialogCallback;
 
     /**
-     *
      * @param paymentsModel the payments model
-     * @param amount the amount
+     * @param amount        the amount
      * @return an instance of PracticePaymentMethodDialogFragment
      */
     public static PracticePaymentMethodDialogFragment newInstance(PaymentsModel paymentsModel, double amount) {
@@ -52,9 +51,9 @@ public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFr
     @Override
     public void attachCallback(Context context) {
         super.attachCallback(context);
-        try{
+        try {
             dialogCallback = (PaymentMethodDialogInterface) context;
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must imlement PaymentMethodDialogInterface");
         }
     }
@@ -72,8 +71,10 @@ public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFr
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dismiss();
-                dialogCallback.onDismissPaymentMethodDialog(paymentsModel);
+                cancel();
+                if (onCancelListener == null) {
+                    dialogCallback.onDismissPaymentMethodDialog(paymentsModel);
+                }
             }
         });
         TextView title = (TextView) view.findViewById(R.id.respons_toolbar_title);
@@ -86,8 +87,8 @@ public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFr
     @Override
     protected void handlePaymentButton(PaymentsMethodsDTO paymentMethod, final double amount) {
         dismiss();
-        if(paymentMethod.getType().equals(CarePayConstants.TYPE_CASH) &&
-                getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE){
+        if (paymentMethod.getType().equals(CarePayConstants.TYPE_CASH) &&
+                getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             ConfirmCashDialogFragment fragment = new ConfirmCashDialogFragment();
             fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
@@ -103,19 +104,19 @@ public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFr
             });
             fragment.show(getFragmentManager(), fragment.getClass().getName());
             logPaymentMethodSelection(getString(com.carecloud.carepaylibrary.R.string.payment_cash));
-        }else {
+        } else {
             super.handlePaymentButton(paymentMethod, amount);
         }
     }
 
     @Override
-    protected void handleSwipeCard(){
+    protected void handleSwipeCard() {
         super.handleSwipeCard();
         dismiss();
     }
 
     @Override
-    protected void handleIntegratedPayment(){
+    protected void handleIntegratedPayment() {
         super.handleIntegratedPayment();
         dismiss();
     }

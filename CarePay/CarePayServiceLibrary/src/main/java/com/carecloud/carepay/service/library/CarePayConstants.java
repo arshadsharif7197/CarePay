@@ -180,4 +180,7 @@ public class CarePayConstants {
     public static final String PATIENT_ID = "patientId";
     public static final String NOTIFICATIONS_FLOW = "notifications";
 
+
+    //Video Visit
+    public static final int VIDEO_START_OFFSET_SECONDS = 60 * 30; //10 min
 }

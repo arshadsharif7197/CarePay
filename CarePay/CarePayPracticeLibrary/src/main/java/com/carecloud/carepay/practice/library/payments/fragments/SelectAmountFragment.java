@@ -156,12 +156,13 @@ public class SelectAmountFragment extends BaseDialogFragment {
                     amountSymbol.setTextColor(getResources().getColor(R.color.white));
                 }
             }
-            if (numberStr.length() < 5) {
-                amountTextView.setTextSize(getResources().getDimension(R.dimen.amountCalculatorEntryTextSizeBig));
-            } else if (numberStr.length() < 7) {
-                amountTextView.setTextSize(getResources().getDimension(R.dimen.amountCalculatorEntryTextSize65));
-            } else if (numberStr.length() < 10) {
+
+            if (amountTextView.getText().length() > 10) {
                 amountTextView.setTextSize(getResources().getDimension(R.dimen.amountCalculatorEntryTextSize50));
+            } else if (amountTextView.getText().length() > 6) {
+                amountTextView.setTextSize(getResources().getDimension(R.dimen.amountCalculatorEntryTextSize65));
+            } else if (amountTextView.getText().length() > 0) {
+                amountTextView.setTextSize(getResources().getDimension(R.dimen.amountCalculatorEntryTextSizeBig));
             }
             enableApplyAmountButton(numberStr);
         }
