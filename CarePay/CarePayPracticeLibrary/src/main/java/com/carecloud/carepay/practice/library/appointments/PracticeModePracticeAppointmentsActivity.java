@@ -623,13 +623,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     }
 
-    @Override
-    public void onRightActionTapped(AppointmentDTO appointmentDTO) {
-         if (appointmentDTO.getPayload().getVisitType().hasVideoOption()) {
-            startVideoVisit(appointmentDTO);
-        }
-    }
-
     private void getAllPracticeForms(String patientId, PaymentsModel paymentsModel) {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("patient_id", patientId);
