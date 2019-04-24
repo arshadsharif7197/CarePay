@@ -819,12 +819,12 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
                     if (patientBalanceDTO.getBalances().get(0).getPayload().isEmpty()) {
                         Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show();
                     } else {
+                        dismiss();
                         patientDetails.getPaymentPayload().setLocations(checkInDTO.getPayload().getLocations());
                         patientDetails.getPaymentPayload().setLocationIndex(checkInDTO.getPayload().getLocationIndex());
                         patientDetails.getPaymentPayload().setProviders(checkInDTO.getPayload().getProviders());
                         patientDetails.getPaymentPayload().setProviderIndex(checkInDTO.getPayload().getProviderIndex());
                         callback.showPaymentDistributionDialog(patientDetails);
-                        cancel();
                     }
                 } else {
                     Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show();
