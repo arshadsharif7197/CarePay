@@ -32,6 +32,11 @@ public class LargeAlertDialogFragment extends BaseDialogFragment implements View
     }
 
     public static LargeAlertDialogFragment newInstance(String message,
+                                                       String actionText) {
+        return newInstance(message, actionText, -1, -1);
+    }
+
+    public static LargeAlertDialogFragment newInstance(String message,
                                                        String actionText,
                                                        int headerBackGroundColor,
                                                        int headerIcon) {
@@ -73,7 +78,12 @@ public class LargeAlertDialogFragment extends BaseDialogFragment implements View
         largeMssageLabel.setTextColor(getContext().getResources().getColor(R.color.white));
         largeMssageLabel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         setBackgroundColor();
-        findViewById(R.id.headerIconImageView).setBackgroundResource(headerIcon);
+        if (headerIcon > -1) {
+            findViewById(R.id.headerIconImageView).setBackgroundResource(headerIcon);
+        } else {
+            findViewById(R.id.headerIconImageView).setVisibility(View.GONE);
+            largeMssageLabel.setTextSize(getResources().getDimension(R.dimen.largeAlertMessageTextSize));
+        }
     }
 
     @Override
@@ -91,6 +101,9 @@ public class LargeAlertDialogFragment extends BaseDialogFragment implements View
 
     private void setBackgroundColor() {
         View header = findViewById(R.id.headerLayout);
+        if (headerBackGroundColor == -1) {
+            headerBackGroundColor = R.color.Feldgrau;
+        }
         try {
             GradientDrawable drawable = (GradientDrawable) header.getBackground();
             drawable.setColor(ContextCompat.getColor(getContext(), headerBackGroundColor));

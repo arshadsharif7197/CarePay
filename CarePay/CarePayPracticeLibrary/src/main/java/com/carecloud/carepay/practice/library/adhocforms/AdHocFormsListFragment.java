@@ -86,14 +86,14 @@ public class AdHocFormsListFragment extends BaseDialogFragment
         if (!dto.getMetadata().getDataModels().getAllPracticeForms().isEmpty()) {
             setModifiedDates(dto.getMetadata().getDataModels().getAllPracticeForms(),
                     dto.getPayload().getPatientFormsFilled());
-            RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.formsRecyclerView);
+            RecyclerView recyclerView = view.findViewById(R.id.formsRecyclerView);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             AdHocFormRecyclerViewAdapter adapter = new AdHocFormRecyclerViewAdapter(dto.getMetadata().getDataModels()
                     .getAllPracticeForms());
             adapter.setCallback(this);
             recyclerView.setAdapter(adapter);
 
-            fillNowFormButton = (Button) view.findViewById(R.id.fillNowFormButton);
+            fillNowFormButton = view.findViewById(R.id.fillNowFormButton);
             fillNowFormButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -113,7 +113,7 @@ public class AdHocFormsListFragment extends BaseDialogFragment
                 }
             });
 
-            sendFormButton = (Button) view.findViewById(R.id.sendFormButton);
+            sendFormButton = view.findViewById(R.id.sendFormButton);
             sendFormButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -145,7 +145,7 @@ public class AdHocFormsListFragment extends BaseDialogFragment
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dismiss();
+                cancel();
             }
         });
     }
