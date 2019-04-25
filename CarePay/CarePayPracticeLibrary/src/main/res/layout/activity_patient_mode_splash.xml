@@ -68,7 +68,8 @@
             android:layout_width="@dimen/patientSplashPracticeLogoSize"
             android:layout_height="@dimen/patientSplashPracticeLogoSize"
             android:scaleType="centerCrop"
-            android:src="@drawable/checkin_patient_pic_rounded_border" />
+            android:background="@drawable/checkin_patient_pic_rounded_border"
+            android:padding="@dimen/dimen_11dp"/>
     </LinearLayout>
 
     <FrameLayout
