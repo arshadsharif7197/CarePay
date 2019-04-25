@@ -242,10 +242,9 @@ public class PaymentPlanEditFragment extends PaymentPlanFragment
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
+                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payment_plans_cancelled), 1);
                 dismiss();
                 callback.onPaymentPlanCanceled(workflowDTO, deletePaymentPlan);
-
-                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payment_plans_cancelled), 1);
             }
 
             @Override

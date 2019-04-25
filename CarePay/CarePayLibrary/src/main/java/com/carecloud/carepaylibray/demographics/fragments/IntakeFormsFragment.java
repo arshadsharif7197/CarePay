@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -102,7 +103,10 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
 
         Map<String, String> header = getWorkflowServiceHelper().getPreferredLanguageHeader();
         header.put("transition", "true");
-        header.put("username_patient", intakeResponseModel.getPayload().getAppointments().get(0).getMetadata().getUsername());
+        if (getApplicationMode().getApplicationType() != ApplicationMode.ApplicationType.PATIENT) {
+            header.put("username_patient", intakeResponseModel.getPayload().getAppointments()
+                    .get(0).getMetadata().getUsername());
+        }
 
         Gson gson = new Gson();
         String body = gson.toJson(jsonFormSaveResponseArray);

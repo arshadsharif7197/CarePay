@@ -76,7 +76,7 @@ public abstract class FullScreenActivity extends AppCompatActivity {
         return customerMode;
     }
 
-    protected void toggleCustomerMode(){
+    public void toggleCustomerMode(){
         if(isCustomerMode()){
             setSystemUiShowNavbar();
             CustomerMode.disable(this);

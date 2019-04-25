@@ -279,7 +279,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
                     close.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            dismiss();
+                            cancel();
                             if (callback != null) {
                                 callback.onPayButtonClicked(amountToMakePayment, paymentsModel);
                             }

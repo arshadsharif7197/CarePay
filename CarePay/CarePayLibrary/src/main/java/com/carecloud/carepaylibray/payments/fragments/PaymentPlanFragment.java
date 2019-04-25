@@ -413,7 +413,11 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         isCalculatingAmount = true;
         try {
             installments = Integer.parseInt(day);
-            amounthPayment = calculateMonthlyPayment(installments);
+            if (installments == 0) {
+                amounthPayment = 0;
+            } else {
+                amounthPayment = calculateMonthlyPayment(installments);
+            }
             if (amountPaymentEditText.getOnFocusChangeListener() != null) {
                 amountPaymentEditText.getOnFocusChangeListener().onFocusChange(amountPaymentEditText, true);
             }
@@ -502,7 +506,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
 
     private void setLastPaymentMessage(double paymentAmount) {
         double remainder = (paymentPlanAmount * 100) % (paymentAmount * 100);
-        if (remainder != 0) {
+        if (remainder != 0 && paymentAmount != 0) {
             double amount = Math.ceil(remainder) / 100D;
             lastPaymentMessage.setText(Label.getLabel("payment_last_adjustment_text") + " "
                     + currencyFormatter.format(amount));

@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.customdialogs;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -9,12 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+
+import fr.tvbarthel.lib.blurdialogfragment.BlurDialogEngine;
 
 public abstract class BaseDialogFragment extends DialogFragment implements View.OnClickListener {
     private static final int FULLSCREEN_VALUE = 0x10000000;
@@ -22,6 +24,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
     private Dialog dialog;
     private View view;
     private boolean isPracticeAppPatientMode;
+    private BlurDialogEngine mBlurEngine = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,7 +56,16 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
         if (isPracticeAppPatientMode) {
             setNavigationBarVisibility();
         }
+//        setUpBlur();
+    }
 
+    private void setUpBlur() {
+        mBlurEngine = new BlurDialogEngine(getActivity());
+        mBlurEngine.setBlurRadius(com.carecloud.carepaylibray.base.BaseDialogFragment.BLUR_RADIUS);
+        mBlurEngine.setDownScaleFactor(com.carecloud.carepaylibray.base.BaseDialogFragment.DOWN_SCALE_FACTOR);
+        mBlurEngine.debug(false);
+        mBlurEngine.setBlurActionBar(false);
+        mBlurEngine.setUseRenderScript(true);
     }
 
     @Override
@@ -63,7 +75,34 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
             View decorView = dialog.getWindow().getDecorView();
             hideKeyboardOnViewTouch(decorView);
         }
+        if (mBlurEngine != null) {
+            mBlurEngine.onResume(getRetainInstance());
+        }
         ((ISession) getActivity()).setLastInteraction(System.currentTimeMillis());
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialogInterface) {
+        super.onDismiss(dialogInterface);
+        if (mBlurEngine != null) {
+            mBlurEngine.onDismiss();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mBlurEngine != null) {
+            mBlurEngine.onDetach();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (getDialog() != null) {
+            getDialog().setDismissMessage(null);
+        }
+        super.onDestroyView();
     }
 
 
@@ -76,8 +115,8 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
         }
     }
 
-    protected void hideKeyboardOnViewTouch(View view){
-        if(isPracticeAppPatientMode && view!=null){
+    protected void hideKeyboardOnViewTouch(View view) {
+        if (isPracticeAppPatientMode && view != null) {
             view.setSoundEffectsEnabled(false);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -102,44 +141,6 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
 
     protected abstract boolean getCancelable();
 
-    public boolean disappearViewById(int id) {
-        return setVisibilityById(id, View.GONE);
-    }
-
-    public boolean hideViewById(int id) {
-        return setVisibilityById(id, View.INVISIBLE);
-    }
-
-    private boolean setVisibilityById(int id, int visibility) {
-        View view = findViewById(id);
-        if (null == view) {
-            return false;
-        }
-
-        view.setVisibility(visibility);
-
-        return true;
-    }
-
-    protected TextView setTextViewById(int id, String text) {
-        View view = findViewById(id);
-        if (null == view || !(view instanceof TextView)) {
-            return null;
-        }
-
-        TextView textView = (TextView) view;
-        textView.setText(text);
-
-        return textView;
-    }
-
-    protected void enableById(int id, boolean enabled){
-        View view = findViewById(id);
-        if(view != null){
-            view.setEnabled(enabled);
-        }
-    }
-
     protected View findViewById(int id) {
         return view.findViewById(id);
     }
@@ -153,6 +154,5 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
                 | FULLSCREEN_VALUE;
         decorView.setSystemUiVisibility(uiOptions);
     }
-
 
 }

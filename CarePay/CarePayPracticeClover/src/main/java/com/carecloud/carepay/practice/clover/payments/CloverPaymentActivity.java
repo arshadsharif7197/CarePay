@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.RemoteException;
 import android.util.Log;
 
+import com.carecloud.carepay.practice.clover.BreezeDataBase;
 import com.carecloud.carepay.practice.clover.CloverQueueUploadService;
 import com.carecloud.carepay.practice.clover.R;
 import com.carecloud.carepay.practice.clover.models.CloverCardTransactionInfo;
@@ -55,6 +56,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Executors;
 
 
 /**
@@ -110,7 +112,7 @@ public class CloverPaymentActivity extends BaseActivity {
 
         }
 
-        if (intent.hasExtra(CarePayConstants.APPOINTMENT_ID)){
+        if (intent.hasExtra(CarePayConstants.APPOINTMENT_ID)) {
             appointmentId = intent.getStringExtra(CarePayConstants.APPOINTMENT_ID);
         }
 
@@ -126,7 +128,7 @@ public class CloverPaymentActivity extends BaseActivity {
         }
 
         account = CloverAccount.getAccount(this);
-        if(account != null) {
+        if (account != null) {
             authenticateCloverAccount();
         }
     }
@@ -137,9 +139,9 @@ public class CloverPaymentActivity extends BaseActivity {
 
         if (account == null) {
             account = CloverAccount.getAccount(this);
-            if(account!=null) {
+            if (account != null) {
                 authenticateCloverAccount();
-            }else{
+            } else {
                 SystemUtil.showErrorToast(CloverPaymentActivity.this, getString(R.string.no_account));
                 logPaymentFail(getString(R.string.no_account), false);
                 logPaymentMixpanel(getString(R.string.event_payment_failed));
@@ -186,7 +188,7 @@ public class CloverPaymentActivity extends BaseActivity {
 
     }
 
-    private void onCloverAuthenticated(){
+    private void onCloverAuthenticated() {
         connect();
         if (orderConnector != null) {
             List<LineItem> lineItems = getLineItems();
@@ -220,7 +222,7 @@ public class CloverPaymentActivity extends BaseActivity {
             protected void onPostExecute(CloverAuth.AuthResult authResult) {
                 if (authResult != null && authResult.authToken != null && authResult.baseUrl != null) {
                     onCloverAuthenticated();
-                }else {
+                } else {
                     SystemUtil.showErrorToast(getContext(), Label.getLabel("clover_account_not_authorized"));
                     logPaymentFail("account not authorized", false);
                     logPaymentMixpanel(getString(R.string.event_payment_failed));
@@ -239,7 +241,7 @@ public class CloverPaymentActivity extends BaseActivity {
     private class OrderAsyncTask extends AsyncTask<LineItem, Void, Order> {
         private OrderConnector orderConnector;
 
-        OrderAsyncTask(OrderConnector orderConnector){
+        OrderAsyncTask(OrderConnector orderConnector) {
             this.orderConnector = orderConnector;
         }
 
@@ -417,7 +419,7 @@ public class CloverPaymentActivity extends BaseActivity {
     private void postPayment(String paymentModelJson, Payment payment) {
         Map<String, String> queries = new HashMap<>();
         queries.put("patient_id", patientBalance.getBalances().get(0).getMetadata().getPatientId());//todo this wont work for patient mode prepayments.. needs work
-        if(appointmentId != null){
+        if (appointmentId != null) {
             queries.put("appointment_id", appointmentId);
         }
 
@@ -470,7 +472,7 @@ public class CloverPaymentActivity extends BaseActivity {
                 String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
                 Object[] values = {amountDouble, getString(R.string.payment_clover)};
                 MixPanelUtil.logEvent(getString(R.string.event_payment_complete), params, values);
-                if(getApplicationMode().getApplicationType() != ApplicationMode.ApplicationType.PRACTICE){
+                if (getApplicationMode().getApplicationType() != ApplicationMode.ApplicationType.PRACTICE) {
                     MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payments_completed), 1);
                     MixPanelUtil.incrementPeopleProperty(getString(R.string.total_payments_amount), amountDouble);
                 }
@@ -518,7 +520,7 @@ public class CloverPaymentActivity extends BaseActivity {
         }
     }
 
-    private void logPaymentFail(String message, boolean paymentSuccess){
+    private void logPaymentFail(String message, boolean paymentSuccess) {
         logPaymentFail(message, paymentSuccess, null, null);
     }
 
@@ -534,21 +536,21 @@ public class CloverPaymentActivity extends BaseActivity {
         Gson gson = new Gson();
         eventMap.put("Post Model", gson.toJson(postModel));
 
-        if(paymentJson == null){
+        if (paymentJson == null) {
             paymentJson = "";
-        }else{
+        } else {
             eventMap.put("Payment Object", paymentJson.toString());
         }
 
-        if(error == null){
+        if (error == null) {
             error = "";
-        }else{
+        } else {
             eventMap.put("Error Message", error);
         }
 
         NewRelic.recordCustomEvent("CloverPaymentFail", eventMap);
 
-        if(paymentSuccess){
+        if (paymentSuccess) {
             //sent to Pay Queue API endpoint
             queuePayment(
                     amountDouble,
@@ -566,28 +568,28 @@ public class CloverPaymentActivity extends BaseActivity {
         }
     }
 
-    private void queuePayment(double amount, IntegratedPaymentPostModel postModel, String patientID, String practiceId, String practiceMgmt, String paymentJson, String errorMessage){
-        if(postModel!=null){
+    private void queuePayment(double amount, IntegratedPaymentPostModel postModel, String patientID, String practiceId, String practiceMgmt, String paymentJson, String errorMessage) {
+        if (postModel != null) {
 
-            if(postModel.getExecution() == null){
+            if (postModel.getExecution() == null) {
                 postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_CLOVER);
             }
 
-            if(postModel.getTransactionResponse()==null){
+            if (postModel.getTransactionResponse() == null) {
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("Payment Response", paymentJson);
                 jsonObject.addProperty("Error Message", errorMessage);
                 postModel.setTransactionResponse(jsonObject);
-            }else{
-                if(!postModel.getTransactionResponse().has("Payment Response")) {
+            } else {
+                if (!postModel.getTransactionResponse().has("Payment Response")) {
                     postModel.getTransactionResponse().addProperty("Payment Response", paymentJson);
                 }
-                if(!postModel.getTransactionResponse().has("Error Message")) {
+                if (!postModel.getTransactionResponse().has("Error Message")) {
                     postModel.getTransactionResponse().addProperty("Error Message", errorMessage);
                 }
             }
 
-            if(postModel.getAmount() == 0){
+            if (postModel.getAmount() == 0) {
                 postModel.setAmount(amount);
             }
         }
@@ -595,16 +597,15 @@ public class CloverPaymentActivity extends BaseActivity {
 
         Gson gson = new Gson();
         String paymentModelJson = paymentJson;
-        try{
+        try {
             paymentModelJson = gson.toJson(postModel);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 
 
-
         //store in local DB
-        CloverQueuePaymentRecord paymentRecord = new CloverQueuePaymentRecord();
+        final CloverQueuePaymentRecord paymentRecord = new CloverQueuePaymentRecord();
         paymentRecord.setPatientID(patientID);
         paymentRecord.setPracticeID(practiceId);
         paymentRecord.setPracticeMgmt(practiceMgmt);
@@ -614,18 +615,22 @@ public class CloverPaymentActivity extends BaseActivity {
         String paymentModelJsonEnc = EncryptionUtil.encrypt(getContext(), paymentModelJson, practiceId);
         paymentRecord.setPaymentModelJsonEnc(paymentModelJsonEnc);
 
-        if(StringUtil.isNullOrEmpty(paymentModelJsonEnc)){
+        if (StringUtil.isNullOrEmpty(paymentModelJsonEnc)) {
             paymentRecord.setPaymentModelJson(paymentModelJson);
         }
-        paymentRecord.save();
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                BreezeDataBase dataBase = BreezeDataBase.getDatabase(getApplicationContext());
+                dataBase.getCloverPaymentDao().insert(paymentRecord);
+            }
+        });
 
         Intent intent = new Intent(getContext(), CloverQueueUploadService.class);
         startService(intent);
-
-
     }
 
-    void logPaymentMixpanel(String event){
+    void logPaymentMixpanel(String event) {
         String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
         Object[] values = {amountDouble, getString(R.string.payment_clover)};
         MixPanelUtil.logEvent(event, params, values);
