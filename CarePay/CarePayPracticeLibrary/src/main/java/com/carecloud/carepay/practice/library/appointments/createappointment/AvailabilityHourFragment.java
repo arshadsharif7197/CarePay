@@ -12,6 +12,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.createappointment.availabilityhour.BaseAvailabilityHourFragment;
 import com.carecloud.carepaylibray.appointments.interfaces.DateCalendarRangeInterface;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 
 /**
  * @author pjohnson on 1/16/19.
@@ -63,5 +64,11 @@ public class AvailabilityHourFragment extends BaseAvailabilityHourFragment imple
     @Override
     protected void selectDateRange() {
         callback.showFragment(DateRangeDialogFragment.newInstance(startDate, endDate));
+    }
+
+    @Override
+    protected void showAppointmentConfirmationFragment(AppointmentsSlotsDTO slot) {
+        super.showAppointmentConfirmationFragment(slot);
+        hideDialog();
     }
 }

@@ -76,9 +76,24 @@ public class TransitionsDTO {
     @SerializedName("add_credit_card")
     @Expose
     private TransitionDTO addCreditCard = new TransitionDTO();
-    @Expose
     @SerializedName("save_survey_response")
+    @Expose
     private TransitionDTO saveSurvey = new TransitionDTO();
+    @SerializedName("confirm_appointment")
+    @Expose
+    private TransitionDTO confirmAppointment = new TransitionDTO();
+    @SerializedName("checkin_patient_mode")
+    @Expose
+    private TransitionDTO checkinPatientMode = new TransitionDTO();
+    @SerializedName("checkout_patient_mode")
+    @Expose
+    private TransitionDTO checkoutPatientMode = new TransitionDTO();
+    @SerializedName("cancel_appointment")
+    @Expose
+    private TransitionDTO cancelAppointment = new TransitionDTO();
+    @SerializedName("dismiss_appointment")
+    @Expose
+    private TransitionDTO dismissAppointment = new TransitionDTO();
 
     /**
      * @return The checkingIn
@@ -262,5 +277,45 @@ public class TransitionsDTO {
 
     public void setSaveSurvey(TransitionDTO saveSurvey) {
         this.saveSurvey = saveSurvey;
+    }
+
+    public TransitionDTO getConfirmAppointment() {
+        return confirmAppointment;
+    }
+
+    public void setConfirmAppointment(TransitionDTO confirmAppointment) {
+        this.confirmAppointment = confirmAppointment;
+    }
+
+    public TransitionDTO getCheckinPatientMode() {
+        return checkinPatientMode;
+    }
+
+    public void setCheckinPatientMode(TransitionDTO checkinPatientMode) {
+        this.checkinPatientMode = checkinPatientMode;
+    }
+
+    public TransitionDTO getCheckoutPatientMode() {
+        return checkoutPatientMode;
+    }
+
+    public void setCheckoutPatientMode(TransitionDTO checkoutPatientMode) {
+        this.checkoutPatientMode = checkoutPatientMode;
+    }
+
+    public TransitionDTO getCancelAppointment() {
+        return cancelAppointment;
+    }
+
+    public void setCancelAppointment(TransitionDTO cancelAppointment) {
+        this.cancelAppointment = cancelAppointment;
+    }
+
+    public TransitionDTO getDismissAppointment() {
+        return dismissAppointment;
+    }
+
+    public void setDismissAppointment(TransitionDTO dismissAppointment) {
+        this.dismissAppointment = dismissAppointment;
     }
 }

@@ -27,7 +27,7 @@ public class VisitTypeDTO {
     private boolean forRequest;
     @SerializedName("video_option")
     @Expose
-    private boolean videoOption;
+    private boolean videoOption = false;
 
     /**
      * Visit type getter id
@@ -99,7 +99,7 @@ public class VisitTypeDTO {
         this.forRequest = forRequest;
     }
 
-    public boolean isVideoOption() {
+    public boolean hasVideoOption() {
         return videoOption;
     }
 
