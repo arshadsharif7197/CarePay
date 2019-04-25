@@ -459,8 +459,8 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
 
         @Override
         public void onFailure(String exceptionMessage) {
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
             callback.onFailure(exceptionMessage);
-            Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
