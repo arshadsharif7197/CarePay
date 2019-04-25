@@ -647,6 +647,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             hideProgressDialog();
             getApplicationMode().clearUserPracticeDTO();
             getAppAuthorizationHelper().setUser(null);
+            AppointmentCountUpdateService.cancelScheduledServiceRun(CloverMainActivity.this);
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
             CloverMainActivity.this.finish();
         }
