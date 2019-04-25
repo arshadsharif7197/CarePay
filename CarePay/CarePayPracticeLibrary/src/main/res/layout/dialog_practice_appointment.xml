@@ -146,48 +146,51 @@
             android:paddingEnd="@dimen/visitTypeContainerHorizontalPadding"
             android:paddingBottom="@dimen/visitTypeContainerBottomPadding">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/appointment_visit_type_label"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/visitTypeLabelEndMargin"
-                android:gravity="start"
-                android:textColor="@color/textview_default_textcolor"
-                android:textSize="@dimen/visitTypeLabelTextSize"
-                app:customAssetFont="proxima_nova_regular"
-                tools:text="Visit Type"/>
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/appointment_visit_type_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/visitTypeLabelEndMargin"
+                    android:gravity="start"
+                    android:textColor="@color/textview_default_textcolor"
+                    android:textSize="@dimen/visitTypeLabelTextSize"
+                    app:customAssetFont="proxima_nova_regular"
+                    tools:text="Visit Type"/>
 
-            <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/visit_type_video"
-                android:layout_width="@dimen/dimen_24dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_5dp"
-                android:src="@drawable/icn_video_visit"
-                android:tint="@color/textview_default_textcolor"
-                android:visibility="gone"/>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end">
 
-            <com.carecloud.carepaylibray.customcomponents.AutoResizeTextView
-                android:id="@+id/appointment_visit_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:textColor="@color/textview_default_textcolor"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:textSize="@dimen/visitTypeValueTextSize"
-                tools:text="Virtual Consult"
-                app:customAssetFont="proxima_nova_regular" />
+                    <android.support.v7.widget.AppCompatImageView
+                        android:id="@+id/visit_type_video"
+                        android:layout_width="@dimen/dimen_24dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="@dimen/dimen_5dp"
+                        android:src="@drawable/icn_video_visit"
+                        android:tint="@color/textview_default_textcolor"
+                        android:visibility="gone"/>
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/appointment_visit_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:textColor="@color/textview_default_textcolor"
+                        android:textSize="@dimen/visitTypeValueTextSize"
+                        app:customAssetFont="gotham_rounded_medium"
+                        tools:text="Virtual Consult" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
