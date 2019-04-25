@@ -358,7 +358,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         Calendar dueCal = Calendar.getInstance();
         dueCal.add(Calendar.DATE, 1);
         DatePickerFragment fragment = DatePickerFragment
-                .newInstance(Label.getLabel("payment.oneTimePayment.input.label.date"),
+                .newInstance(
                         calendar.getTime(),
                         dueCal.getTime(),
                         dueCal.getTime(),

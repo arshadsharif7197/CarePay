@@ -7,7 +7,7 @@
     android:id="@+id/add_appointment_toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimary"
+    android:background="@drawable/top_left_right_rounded_background"
     android:gravity="center">
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView

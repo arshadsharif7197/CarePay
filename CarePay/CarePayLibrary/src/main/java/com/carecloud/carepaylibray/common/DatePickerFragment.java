@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -13,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.squareup.timessquare.CalendarPickerView;
 
@@ -21,51 +21,45 @@ import java.util.Date;
 /**
  * @author pjohnson on 9/07/18.
  */
-public class DatePickerFragment extends DialogFragment {
+public class DatePickerFragment extends BaseDialogFragment {
 
     private static final int DEFAULT_FLAG = 0;
     private DateRangePickerDialogListener listener;
-    private String dialogTitle;
     private Date startDate;
     private Date endDate;
     private Date showDate;
     private Date selectedDate;
     private Button applyDateButton;
     private CalendarPickerView calendarPickerView;
-    private FragmentActivityInterface callback;
     private int flag;
 
     public interface DateRangePickerDialogListener {
         void onDateSelected(Date selectedDate, int flag);
     }
 
-    public static DatePickerFragment newInstance(String dialogTitle,
-                                                 Date startDate,
+    public static DatePickerFragment newInstance(Date startDate,
                                                  Date endDate,
                                                  DateRangePickerDialogListener callback) {
 
 
-        return newInstance(dialogTitle, startDate, endDate, callback, DEFAULT_FLAG);
+        return newInstance(startDate, endDate, callback, DEFAULT_FLAG);
     }
 
 
 
-    public static DatePickerFragment newInstance(String dialogTitle,
-                                                 Date startDate,
+    public static DatePickerFragment newInstance(Date startDate,
                                                  Date endDate,
                                                  DateRangePickerDialogListener callback,
                                                  int flag) {
-        return newInstance(dialogTitle, startDate, endDate, null, callback, flag);
+        return newInstance(startDate, endDate, null, callback, flag);
     }
 
-    public static DatePickerFragment newInstance(String dialogTitle,
-                                                 Date startDate,
+    public static DatePickerFragment newInstance(Date startDate,
                                                  Date endDate,
                                                  Date showDate,
                                                  DateRangePickerDialogListener callback,
                                                  int flag){
         Bundle args = new Bundle();
-        args.putString("dialogTitle", dialogTitle);
         args.putSerializable("startDate", startDate);
         args.putSerializable("endDate", endDate);
         if(showDate != null) {
@@ -80,21 +74,10 @@ public class DatePickerFragment extends DialogFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            callback = (FragmentActivityInterface)context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException("Context must implement FragmentActivityInterface");
-        }
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Bundle arguments = getArguments();
-        dialogTitle = arguments.getString("dialogTitle");
         startDate = (Date) arguments.getSerializable("startDate");
         endDate = (Date) arguments.getSerializable("endDate");
         showDate = (Date) arguments.getSerializable("showDate");

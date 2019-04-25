@@ -14,4 +14,5 @@
     <dimen name="visitSummaryExportAsLabelBottomMargin">10dp</dimen>
     <dimen name="visitSummaryExportButtonTopMargin">15dp</dimen>
     <dimen name="encryptedCheckBoxVerticalMargin">10dp</dimen>
+    <dimen name="commonDialogPadding">10dp</dimen>
 </resources>

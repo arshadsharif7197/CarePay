@@ -187,7 +187,7 @@ public abstract class OneTimePaymentDialog extends PartialPaymentDialog {
         }
 
         DatePickerFragment fragment = DatePickerFragment
-                .newInstance(Label.getLabel("payment.oneTimePayment.input.label.date"),
+                .newInstance(
                         calendar.getTime(),
                         dueCal.getTime(),
                         new DatePickerFragment.DateRangePickerDialogListener() {
