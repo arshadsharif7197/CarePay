@@ -55,7 +55,6 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -160,13 +159,15 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             }
         });
         languageSpinner = findViewById(R.id.languageSpinner);
-        languageSpinner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                popupPickerLanguage.showAsDropDown(view);
-            }
-        });
-        languageSpinner.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
+        if (languageSpinner != null) {
+            languageSpinner.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    popupPickerLanguage.showAsDropDown(view);
+                }
+            });
+            languageSpinner.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
+        }
     }
 
     private void initUIFields() {
