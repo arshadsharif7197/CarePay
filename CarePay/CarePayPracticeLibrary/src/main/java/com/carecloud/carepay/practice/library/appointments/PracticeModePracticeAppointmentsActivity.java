@@ -86,8 +86,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     private TwoColumnPatientListView patientListView;
     private boolean needsToConfirmAppointmentCreation;
     private boolean wasCalledFromThisClass;
-//    private String confirmationMessageText;
-//    private boolean updateOnSuccess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -466,94 +464,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         displayDialogFragment(dialog, true);
         setPatient(appointmentDTO.getPayload().getPatient());
     }
-
-//    private void transitionAppointment(TransitionDTO transitionDTO,
-//                                       AppointmentDTO appointmentDTO,
-//                                       boolean updateOnSuccess,
-//                                       String event,
-//                                       boolean shouldRefresh) {
-//        this.updateOnSuccess = updateOnSuccess;
-//
-//        Map<String, String> queryMap = new HashMap<>();
-//        queryMap.put("appointment_id", appointmentDTO.getPayload().getId());
-//
-//        getWorkflowServiceHelper().execute(transitionDTO, getAppointmentsServiceCallback(event, appointmentDTO, shouldRefresh), queryMap);
-//    }
-//
-//    WorkflowServiceCallback getAppointmentsServiceCallback(final String event, final AppointmentDTO appointmentDTO, final boolean shouldRefresh) {
-//        return new WorkflowServiceCallback() {
-//            @Override
-//            public void onPreExecute() {
-//                showProgressDialog();
-//            }
-//
-//            @Override
-//            public void onPostExecute(WorkflowDTO workflowDTO) {
-//                hideProgressDialog();
-//                updateAppointment(workflowDTO);
-//                showSuccessToast(Label.getLabel(confirmationMessageText));
-//                DtoHelper.putExtra(getIntent(), checkInDTO);
-//                initializeCheckinDto();
-//                applyFilter();
-//                if (shouldRefresh) {
-//                    refreshData();
-//                }
-//
-//                updateOnSuccess = false;
-//
-//                String[] params = {getString(R.string.param_appointment_type),
-//                        getString(R.string.param_practice_id),
-//                        getString(R.string.param_practice_name),
-//                        getString(R.string.param_patient_id),
-//                        getString(R.string.param_provider_id),
-//                        getString(R.string.param_location_id)};
-//                String[] values = {appointmentDTO.getPayload().getVisitType().getName(),
-//                        getApplicationMode().getUserPracticeDTO().getPracticeId(),
-//                        getApplicationMode().getUserPracticeDTO().getPracticeName(),
-//                        appointmentDTO.getMetadata().getPatientId(),
-//                        appointmentDTO.getPayload().getProvider().getGuid(),
-//                        appointmentDTO.getPayload().getLocation().getGuid()};
-//                MixPanelUtil.logEvent(event, params, values);
-//            }
-//
-//            @Override
-//            public void onFailure(String exceptionMessage) {
-//                hideProgressDialog();
-//                showErrorNotification(exceptionMessage);
-//                Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-//
-//                updateOnSuccess = false;
-//            }
-//
-//        };
-//    }
-
-//    private void updateAppointment(WorkflowDTO workflowDTO) {
-//        CheckInPayloadDTO payload = checkInDTO.getPayload();
-//        if (null == payload) {
-//            return;
-//        }
-//
-//        PracticeAppointmentDTO practiceAppointmentDTO = DtoHelper
-//                .getConvertedDTO(PracticeAppointmentDTO.class, workflowDTO);
-//        AppointmentDTO newAppointmentDTO = practiceAppointmentDTO.getPayload().getPracticeAppointments();
-//
-//        List<AppointmentDTO> appointments = payload.getAppointments();
-//        for (int i = 0; i < appointments.size(); i++) {
-//            AppointmentDTO oldAppointmentDTO = appointments.get(i);
-//            if (oldAppointmentDTO.getPayload().getId()
-//                    .equalsIgnoreCase(newAppointmentDTO.getPayload().getId())) {
-//
-//                appointments.remove(i);
-//
-//                if (updateOnSuccess) {
-//                    appointments.add(newAppointmentDTO);
-//                }
-//
-//                break;
-//            }
-//        }
-//    }
 
     private void showResponsibilityFragment(PaymentsModel paymentsModel) {
         String tag = ResponsibilityFragmentDialog.class.getName();
