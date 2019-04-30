@@ -10,12 +10,8 @@ import java.util.List;
 /**
  * Created by lmenendez on 3/9/17.
  */
-
 public class PracticeSelectionUserPractice {
 
-    @SerializedName("user_id")
-    @Expose
-    private String userId;
     @SerializedName("practice_mgmt")
     @Expose
     private String practiceMgmt;
@@ -28,6 +24,9 @@ public class PracticeSelectionUserPractice {
     @SerializedName("practice_photo")
     @Expose
     private String practicePhoto;
+    @SerializedName("user_id")
+    @Expose
+    private String userId;
     @SerializedName("locations")
     @Expose
     private List<LocationDTO> locations = new ArrayList<>();
