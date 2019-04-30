@@ -30,6 +30,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressP
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.CreditCardBillingInformationDTO;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -39,6 +40,7 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -135,6 +137,9 @@ public class CreditCardDetailsFragment extends BaseFragment {
 
             TextView expirationDateValue = (TextView) view.findViewById(R.id.expirationDateValue);
             expirationDateValue.setText(creditCardsPayloadDTO.getPayload().getExpireDt());
+            if (checkCreditCardExpired()) {
+                expirationDateValue.setTextColor(getResources().getColor(R.color.redAlert));
+            }
 
             TextView addressValue = (TextView) view.findViewById(R.id.addressValue);
             TextView zipcodeValue = (TextView) view.findViewById(R.id.zipcodeValue);
@@ -170,7 +175,7 @@ public class CreditCardDetailsFragment extends BaseFragment {
             Button setAsDefaultButton = (Button) view.findViewById(R.id.setAsDefaultButton);
             setAsDefaultButton.setOnClickListener(setAsDefaultButtonListener);
 
-            setAsDefaultButton.setEnabled(!creditCardsPayloadDTO.getPayload().isDefault());
+            setAsDefaultButton.setEnabled(!creditCardsPayloadDTO.getPayload().isDefault() && !checkCreditCardExpired());
         }
     }
 
@@ -300,5 +305,11 @@ public class CreditCardDetailsFragment extends BaseFragment {
         });
         FragmentManager fm = getFragmentManager();
         dialogFragment.show(fm, dialogFragment.getClass().getName());
+    }
+
+    private boolean checkCreditCardExpired() {
+        Date expDate = DateUtil.getInstance().setDateRaw(creditCardsPayloadDTO.getPayload().getExpireDt()).getDate();
+        expDate = DateUtil.getLastDayOfMonth(expDate);
+        return expDate.before(new Date());
     }
 }
