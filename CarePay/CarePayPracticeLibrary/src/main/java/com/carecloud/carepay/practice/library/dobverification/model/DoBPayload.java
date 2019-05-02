@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.dobverification.model;
 
+import com.carecloud.carepay.practice.library.patientmodecheckin.models.CheckinModeDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
@@ -23,6 +24,9 @@ public class DoBPayload {
     @SerializedName("appointments")
     @Expose
     private List<AppointmentDTO> appointments = new ArrayList<>();
+    @SerializedName("checkin_patient_mode")
+    @Expose
+    private CheckinModeDTO checkinModeDTO = new CheckinModeDTO();
 
     public DemographicsSettingsDemographicsDTO getDemographicDTO() {
         return demographicDTO;
@@ -46,5 +50,13 @@ public class DoBPayload {
 
     public void setAppointments(List<AppointmentDTO> appointments) {
         this.appointments = appointments;
+    }
+
+    public CheckinModeDTO getCheckinModeDTO() {
+        return checkinModeDTO;
+    }
+
+    public void setCheckinModeDTO(CheckinModeDTO checkinModeDTO) {
+        this.checkinModeDTO = checkinModeDTO;
     }
 }
