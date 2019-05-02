@@ -31,6 +31,7 @@ import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.utils.ValidationHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -188,9 +189,16 @@ public class DoBVerificationActivity extends BasePracticeActivity {
     }
 
     private boolean validateDoB(String dobInput) {
-        String dob = doBDto.getPayload().getDemographicDTO().getPayload().getPersonalDetails()
-                .getFormattedDateOfBirth();
-        return dob.equals(dobInput);
+        String dob;
+        boolean isGuest = !ValidationHelper.isValidEmail(getAppAuthorizationHelper().getCurrUser());
+        if (isGuest) {
+            dob = DateUtil.getInstance().setDateRaw(doBDto.getPayload().getAppointments().get(0)
+                    .getPayload().getPatient().getDateOfBirth()).toStringWithFormatMmSlashDdSlashYyyy();
+        } else {
+            dob = doBDto.getPayload().getDemographicDTO().getPayload().getPersonalDetails()
+                    .getFormattedDateOfBirth();
+        }
+        return dobInput.equals(dob);
     }
 
     private void showGameOverScreen() {
