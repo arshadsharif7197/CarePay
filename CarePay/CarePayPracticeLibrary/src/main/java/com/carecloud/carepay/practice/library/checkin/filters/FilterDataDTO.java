@@ -7,32 +7,34 @@ package com.carecloud.carepay.practice.library.checkin.filters;
 
 public class FilterDataDTO {
 
-    public enum FilterDataType{
-        PATIENT,PROVIDER,LOCATION,HEADER
+    public enum FilterDataType {
+        PATIENT, PROVIDER, LOCATION, HEADER
     }
 
     private String id;
-    private String displayText = "";
+    private String displayText;
     private String imageURL = "";
-    private FilterDataType filterDataType=FilterDataType.HEADER;
+    private FilterDataType filterDataType;
     private boolean checked = false;
 
     /**
      * Constructor with text and type
-     * @param id of the DTO
-     * @param displayText text
+     *
+     * @param id             of the DTO
+     * @param displayText    text
      * @param filterDataType type PREVIOUS_BALANCE, PROVIDER,LOCATION or HEADER
      */
     public FilterDataDTO(String id, String displayText, FilterDataType filterDataType) {
         this.id = id;
-        this.filterDataType=filterDataType;
-        this.displayText=displayText;
+        this.filterDataType = filterDataType;
+        this.displayText = displayText;
     }
 
     /**
      * Constructor with text and type
-     * @param id of the DTO
-     * @param displayText text
+     *
+     * @param id             of the DTO
+     * @param displayText    text
      * @param filterDataType type PREVIOUS_BALANCE, PROVIDER,LOCATION or HEADER
      */
     public FilterDataDTO(int id, String displayText, FilterDataType filterDataType) {
@@ -41,6 +43,7 @@ public class FilterDataDTO {
 
     /**
      * Constructor with text and type
+     *
      * @param displayText text
      */
     public FilterDataDTO(String displayText) {
@@ -78,12 +81,18 @@ public class FilterDataDTO {
 
     @Override
     public boolean equals(Object filterDataDTO) {
-        if (this == filterDataDTO) {return true;}
-        if (!(filterDataDTO instanceof FilterDataDTO)) {return false;}
+        if (this == filterDataDTO) {
+            return true;
+        }
+        if (!(filterDataDTO instanceof FilterDataDTO)) {
+            return false;
+        }
 
         FilterDataDTO that = (FilterDataDTO) filterDataDTO;
 
-        if (!getDisplayText().equals(that.getDisplayText())) {return false;}
+        if (!getDisplayText().equals(that.getDisplayText())) {
+            return false;
+        }
         return getFilterDataType() == that.getFilterDataType();
 
     }

@@ -1,11 +1,14 @@
 package com.carecloud.carepay.practice.library.models;
 
+import android.support.v4.util.ArraySet;
+
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by cocampo on 2/13/17.
@@ -127,12 +130,37 @@ public class FilterModel {
     public ArrayList<FilterDataDTO> getCheckedPatients() {
         ArrayList<FilterDataDTO> checked = new ArrayList<>();
 
-        for (FilterDataDTO dto: patients) {
+        for (FilterDataDTO dto : patients) {
             if (dto.isChecked()) {
                 checked.add(dto);
             }
         }
 
         return checked;
+    }
+
+    public Set<String> getFilteredDoctorsIds() {
+        Set<String> doctorsIds = new ArraySet<>();
+        for (FilterDataDTO doctor : getDoctors()) {
+            if (doctor.isChecked()) {
+                doctorsIds.add(doctor.getId());
+            }
+        }
+        return doctorsIds;
+    }
+
+    public Set<String> getFilteredLocationsIds() {
+        Set<String> locationsIds = new ArraySet<>();
+        for (FilterDataDTO location : getLocations()) {
+            if (location.isChecked()) {
+                locationsIds.add(location.getId());
+            }
+        }
+        return locationsIds;
+    }
+
+    public boolean areThereActiveFilters() {
+        return !(getFilteredDoctorsIds().isEmpty()
+                && getFilteredLocationsIds().isEmpty());
     }
 }

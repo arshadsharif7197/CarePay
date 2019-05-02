@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -79,13 +80,15 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         PaymentDetailInterface,
         VideoAppointmentCallback {
 
-    private FilterModel filter;
+    private FilterModel filterModel;
 
     private CheckInDTO checkInDTO;
 
     private TwoColumnPatientListView patientListView;
     private boolean needsToConfirmAppointmentCreation;
     private boolean wasCalledFromThisClass;
+    private View filterTextView;
+    private View filterTextViewOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,9 +96,10 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
         setContentView(R.layout.activity_practice_appointments);
 
-        filter = new FilterModel();
+        filterModel = new FilterModel();
         initializeCheckinDto();
         initializeViews();
+        setUpFilter();
     }
 
     private void initializeCheckinDto() {
@@ -158,22 +162,21 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             }
         });
 
-        findViewById(R.id.practice_filter_label).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FilterDialog filterDialog = new FilterDialog(getContext(),
-                        findViewById(R.id.activity_practice_appointments), filter,
-                        Label.getLabel("practice_checkin_filter"),
-                        Label.getLabel("practice_checkin_filter_find_patient_by_name"),
-                        Label.getLabel("practice_checkin_filter_clear_filters"));
-
-                filterDialog.showPopWindow();
-            }
-        });
-
         initializePracticeSelectDateRange();
         initializeShowAllAppointments();
         initializeShowPendingAppointments();
+    }
+
+    private void setUpFilter() {
+        filterTextView = findViewById(R.id.filterTextView);
+        filterTextView.setOnClickListener(onFilterIconClick());
+        filterTextViewOn = findViewById(R.id.filterTextViewOn);
+        filterTextViewOn.setOnClickListener(onFilterIconClick());
+        if (filterModel.areThereActiveFilters()) {
+            filterTextViewOn.setVisibility(View.VISIBLE);
+        } else {
+            filterTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initializeShowAllAppointments() {
@@ -187,7 +190,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                         hideViewById(R.id.activity_practice_appointments_show_all_appointments_label);
                         disappearViewById(R.id.practice_pending_count);
                         disappearViewById(R.id.practice_pending_count_label);
-                        filter.setFilteringByPending(false);
+                        filterModel.setFilteringByPending(false);
                         applyFilter();
                     }
                 });
@@ -204,7 +207,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                         hideViewById(R.id.activity_practice_appointments_show_pending_appointments_label);
                         disappearViewById(R.id.practice_patient_count);
                         disappearViewById(R.id.practice_patient_count_label);
-                        filter.setFilteringByPending(true);
+                        filterModel.setFilteringByPending(true);
                         applyFilter();
                     }
                 });
@@ -233,9 +236,22 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             addPatientOnFilterList(patients, appointmentPayloadDTO, photoMap);
         }
 
-        filter.setDoctors(getFilterProviders(providersSavedFilteredIds));
-        filter.setLocations(getFilterLocations(locationsSavedFilteredIds));
-        filter.setPatients(patients);
+        filterModel.setDoctors(getFilterProviders(providersSavedFilteredIds));
+        filterModel.setLocations(getFilterLocations(locationsSavedFilteredIds));
+        filterModel.setPatients(patients);
+    }
+
+    @NonNull
+    private View.OnClickListener onFilterIconClick() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FilterDialog filterDialog = new FilterDialog(getContext(),
+                        findViewById(R.id.activity_practice_appointments), filterModel);
+
+                filterDialog.showPopWindow();
+            }
+        };
     }
 
     private ArrayList<FilterDataDTO> getFilterLocations(Set<String> selectedLocationsIds) {
@@ -286,13 +302,19 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void applyFilter() {
-        patientListView.applyFilter(filter);
+        patientListView.applyFilter(filterModel);
         initializePatientCounter();
     }
 
     @Override
     public void refreshData() {
         onAppointmentRequestSuccess();
+    }
+
+    @Override
+    public void showFilterFlag(boolean areThereActiveFilters) {
+        filterTextView.setVisibility(areThereActiveFilters ? View.GONE : View.VISIBLE);
+        filterTextViewOn.setVisibility(areThereActiveFilters ? View.VISIBLE : View.GONE);
     }
 
     private void initializePracticeSelectDateRange() {

@@ -72,7 +72,7 @@
                 breeze:textKey="practice_payments_findPatient_label" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/practice_filter_label"
+                android:id="@+id/filterTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/icn_filter"
@@ -81,11 +81,12 @@
                 android:includeFontPadding="false"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/filterLabelTextSize"
+                android:visibility="gone"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="practice_checkin_filter" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/practice_filter_on"
+                android:id="@+id/filterTextViewOn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_green_overlay"
@@ -95,10 +96,12 @@
                 android:paddingTop="@dimen/dimen_6dp"
                 android:paddingEnd="@dimen/dimen_15dp"
                 android:paddingBottom="@dimen/dimen_6dp"
-                android:textColor="@color/filter_on"
+                android:textColor="@color/white"
                 android:textSize="@dimen/text_size_18sp"
                 android:visibility="gone"
-                app:customAssetFont="proxima_nova_regular" />
+                app:customAssetFont="proxima_nova_regular"
+                breeze:textKey="practice_checkin_filter_On" />
+
         </LinearLayout>
     </RelativeLayout>
 
