@@ -71,17 +71,20 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/searchPatientEditText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/searchPatientEditTextHeight"
                 android:layout_marginLeft="@dimen/view_margin"
                 android:layout_marginRight="@dimen/view_margin"
                 android:background="@drawable/search_edittext_background"
-                android:drawableStart="@drawable/icn_search_small"
+                android:drawableStart="@drawable/ic_search"
                 android:drawablePadding="@dimen/drawable_padding"
+                android:imeOptions="actionSearch"
+                android:lines="1"
                 android:maxLines="1"
                 android:paddingStart="@dimen/drawable_padding"
                 android:paddingTop="@dimen/drawable_padding"
                 android:paddingEnd="@dimen/search_edittext_padding_right"
                 android:paddingBottom="@dimen/drawable_padding"
+                android:singleLine="true"
                 android:textSize="@dimen/searchEditTextTextSize"
                 app:customAssetFont="proxima_nova_semi_bold" />
 
@@ -94,6 +97,7 @@
                 android:padding="@dimen/view_padding"
                 android:src="@drawable/icn_close_small"
                 android:visibility="gone" />
+
         </LinearLayout>
 
         <RelativeLayout

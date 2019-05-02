@@ -9,14 +9,17 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.filters.CustomFilterListAdapter;
@@ -26,6 +29,7 @@ import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.Set;
 
@@ -119,6 +123,38 @@ public class FilterDialog extends PopupWindow
             }
         });
 
+        setUpSearchEditText(popupWindowLayout);
+
+        clearFiltersButton = popupWindowLayout.findViewById(R.id.clearFiltersButton);
+        clearFiltersButton.setText(practicePaymentsFilterClearFilters);
+        clearFiltersButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Set<String> lastLocationFilter = getFilteredLocationsIds();
+                clearSearchImageView.performClick();
+                filterModel.clear();
+                saveFilter();
+                doctorsLocationsAdapter = new CustomFilterListAdapter(filterModel, FilterDialog.this);
+                filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
+                if (lastLocationFilter.isEmpty()) {
+                    callBack.applyFilter();
+                } else {
+                    callBack.refreshData();
+                }
+                clearFiltersButton.setEnabled(false);
+            }
+        });
+
+        View blankSpace = popupWindowLayout.findViewById(R.id.blankSpace);
+        blankSpace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+    }
+
+    private void setUpSearchEditText(View popupWindowLayout) {
         clearSearchImageView = popupWindowLayout.findViewById(R.id.clearSearchImageView);
         clearSearchImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,31 +211,14 @@ public class FilterDialog extends PopupWindow
             }
         });
 
-        clearFiltersButton = popupWindowLayout.findViewById(R.id.clearFiltersButton);
-        clearFiltersButton.setText(practicePaymentsFilterClearFilters);
-        clearFiltersButton.setOnClickListener(new View.OnClickListener() {
+        searchPatientEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
-            public void onClick(View view) {
-                final Set<String> lastLocationFilter = getFilteredLocationsIds();
-                clearSearchImageView.performClick();
-                filterModel.clear();
-                saveFilter();
-                doctorsLocationsAdapter = new CustomFilterListAdapter(filterModel, FilterDialog.this);
-                filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
-                if (lastLocationFilter.isEmpty()) {
-                    callBack.applyFilter();
-                } else {
-                    callBack.refreshData();
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    SystemUtil.hideSoftKeyboard(context, getContentView());
+                    return true;
                 }
-                clearFiltersButton.setEnabled(false);
-            }
-        });
-
-        View blankSpace = popupWindowLayout.findViewById(R.id.blankSpace);
-        blankSpace.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
+                return false;
             }
         });
     }
