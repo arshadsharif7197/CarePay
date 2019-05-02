@@ -20,6 +20,7 @@ import com.carecloud.carepay.practice.library.dobverification.model.DoBDto;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -53,6 +54,8 @@ public class DoBVerificationActivity extends BasePracticeActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dob_verification);
         doBDto = getConvertedDTO(DoBDto.class);
+        getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
+        getAppAuthorizationHelper().setUser(doBDto.getPayload().getCheckinModeDTO().getMetadata().getUsername());
 
         setUpUi();
     }
