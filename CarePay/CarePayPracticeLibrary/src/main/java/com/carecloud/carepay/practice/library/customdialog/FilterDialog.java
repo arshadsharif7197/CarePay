@@ -28,7 +28,6 @@ import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseActivity;
-import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.Set;
@@ -48,6 +47,7 @@ public class FilterDialog extends PopupWindow
     private FilterModel filterModel;
 
     private FilterDialogListener callBack;
+    private ImageView closeFilterWindowImageView;
 
     public interface FilterDialogListener {
         void applyFilter();
@@ -98,25 +98,25 @@ public class FilterDialog extends PopupWindow
     }
 
     private void initialiseViews() {
-        View popupWindowLayout = this.getContentView();
-
+        final View popupWindowLayout = this.getContentView();
         filterableDataRecyclerView = popupWindowLayout.findViewById(R.id.filterableDataRecyclerView);
 
-        CarePayTextView titleTextView = popupWindowLayout.findViewById(R.id.titleTextView);
-        titleTextView.setText(Label.getLabel("practice_checkin_filter"));
-
-        ImageView closeFilterWindowImageView = popupWindowLayout.findViewById(R.id.closeFilterWindowImageView);
+        closeFilterWindowImageView = popupWindowLayout.findViewById(R.id.closeFilterWindowImageView);
         closeFilterWindowImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dismiss();
+                SystemUtil.hideSoftKeyboard(context, getContentView());
+                if (searchPatientEditText.hasFocus()) {
+                    searchPatientEditText.clearFocus();
+                } else {
+                    dismiss();
+                }
             }
         });
 
         setUpSearchEditText(popupWindowLayout);
 
         clearFiltersButton = popupWindowLayout.findViewById(R.id.clearFiltersButton);
-        clearFiltersButton.setText(Label.getLabel("practice_checkin_filter_clear_filters"));
         clearFiltersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -186,6 +186,11 @@ public class FilterDialog extends PopupWindow
 
             @Override
             public void afterTextChanged(Editable string) {
+                if (string.length() > 0) {
+                    clearSearchImageView.setVisibility(View.VISIBLE);
+                } else {
+                    clearSearchImageView.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -193,11 +198,11 @@ public class FilterDialog extends PopupWindow
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if (hasFocus) {
-                    clearSearchImageView.setVisibility(View.VISIBLE);
                     filterableDataRecyclerView.setAdapter(patientAdapter);
+                    closeFilterWindowImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.icn_nav_back_white));
                 } else {
-                    clearSearchImageView.setVisibility(View.GONE);
                     filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
+                    closeFilterWindowImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.icn_close));
                 }
             }
         });
