@@ -796,4 +796,6 @@
     <dimen name="dobVerificationTitleTextSize">26sp</dimen>
     <dimen name="dobVerificationSubTitleTextSize">17sp</dimen>
 
+    <dimen name="practiceClearButtonContainerPadding">8dp</dimen>
+
 </resources>

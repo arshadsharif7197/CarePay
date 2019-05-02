@@ -106,12 +106,12 @@ public class FilterDialog extends PopupWindow
     private void initialiseViews() {
         View popupWindowLayout = this.getContentView();
 
-        filterableDataRecyclerView = (RecyclerView) popupWindowLayout.findViewById(R.id.filterableDataRecyclerView);
+        filterableDataRecyclerView = popupWindowLayout.findViewById(R.id.filterableDataRecyclerView);
 
-        CarePayTextView titleTextView = (CarePayTextView) popupWindowLayout.findViewById(R.id.titleTextView);
+        CarePayTextView titleTextView = popupWindowLayout.findViewById(R.id.titleTextView);
         titleTextView.setText(practicePaymentsFilter);
 
-        ImageView closeFilterWindowImageView = (ImageView) popupWindowLayout.findViewById(R.id.closeFilterWindowImageView);
+        ImageView closeFilterWindowImageView = popupWindowLayout.findViewById(R.id.closeFilterWindowImageView);
         closeFilterWindowImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,7 +119,7 @@ public class FilterDialog extends PopupWindow
             }
         });
 
-        clearSearchImageView = (ImageView) popupWindowLayout.findViewById(R.id.clearSearchImageView);
+        clearSearchImageView = popupWindowLayout.findViewById(R.id.clearSearchImageView);
         clearSearchImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -135,7 +135,7 @@ public class FilterDialog extends PopupWindow
             }
         });
 
-        searchPatientEditText = (EditText) popupWindowLayout.findViewById(R.id.searchPatientEditText);
+        searchPatientEditText = popupWindowLayout.findViewById(R.id.searchPatientEditText);
         searchPatientEditText.setHint(practicePaymentsFilterFindPatientByName);
         searchPatientEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -175,7 +175,7 @@ public class FilterDialog extends PopupWindow
             }
         });
 
-        clearFiltersButton = (Button) popupWindowLayout.findViewById(R.id.clearFiltersButton);
+        clearFiltersButton = popupWindowLayout.findViewById(R.id.clearFiltersButton);
         clearFiltersButton.setText(practicePaymentsFilterClearFilters);
         clearFiltersButton.setOnClickListener(new View.OnClickListener() {
             @Override
