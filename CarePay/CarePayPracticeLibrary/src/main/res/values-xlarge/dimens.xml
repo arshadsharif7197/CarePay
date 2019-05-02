@@ -786,5 +786,6 @@
     <!--DOB Verification-->
     <dimen name="dobVerificationTitleTextSize">36sp</dimen>
     <dimen name="dobVerificationSubTitleTextSize">22sp</dimen>
+    <dimen name="largeAlertMessageLabelPadding">5dp</dimen>
 
 </resources>
