@@ -108,4 +108,6 @@
     <color name="physicianFilterBackground">#FF2B6369</color>
     <color name="redAlert">#FFE22B41</color>
     <color name="greyEditText">#F9FAFA</color>
+    <color name="disabledFilterText">#A7B7BF</color>
+
 </resources>

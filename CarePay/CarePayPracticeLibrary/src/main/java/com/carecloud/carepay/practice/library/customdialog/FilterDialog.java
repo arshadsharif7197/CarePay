@@ -191,6 +191,7 @@ public class FilterDialog extends PopupWindow
                 } else {
                     callBack.refreshData();
                 }
+                clearFiltersButton.setEnabled(false);
             }
         });
 
@@ -225,15 +226,23 @@ public class FilterDialog extends PopupWindow
     }
 
     private void applyFilter() {
-        clearFiltersButton.setVisibility(View.VISIBLE);
+        enableFilterButton();
         callBack.applyFilter();
         saveFilter();
     }
 
     private void applyFilterAndRefresh() {
-        clearFiltersButton.setVisibility(View.VISIBLE);
+        enableFilterButton();
         saveFilter();
         callBack.refreshData();
+    }
+
+    private void enableFilterButton() {
+        if (getFilteredDoctorsIds().isEmpty() && getFilteredLocationsIds().isEmpty()) {
+            clearFiltersButton.setEnabled(false);
+        } else {
+            clearFiltersButton.setEnabled(true);
+        }
     }
 
     private void saveFilter() {

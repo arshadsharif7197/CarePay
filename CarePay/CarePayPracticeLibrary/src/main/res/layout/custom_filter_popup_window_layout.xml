@@ -110,7 +110,7 @@
                 android:layout_height="@dimen/clearFiltersButtonHeight"
                 android:background="@drawable/button_rounded_blue_selector"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
+                android:textColor="@color/clear_filter_text_color_selector"
                 android:textSize="@dimen/clearFiltersButtonTextSize"
                 android:visibility="visible"
                 app:customAssetFont="gotham_rounded_medium"
