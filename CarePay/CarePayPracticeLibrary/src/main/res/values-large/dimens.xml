@@ -187,7 +187,7 @@
     <dimen name="findPatientButtonRightMargin">35dp</dimen>
     <dimen name="mainScreensTitleTextSize">17sp</dimen>
     <dimen name="paymentContainerBottomMargin">5dp</dimen>
-    <dimen name="paymentContainerHorizontalMargin">70dp</dimen>
+    <dimen name="paymentContainerHorizontalMargin">10dp</dimen>
     <dimen name="changeDateHorizontalPadding">10dp</dimen>
     <dimen name="changeDateVerticalPadding">5dp</dimen>
     <dimen name="listPatientsMarginTop">10dp</dimen>
@@ -350,6 +350,7 @@
     <dimen name="dateSeparatorContainerVerticalPadding">5dp</dimen>
     <dimen name="dateSeparatorContainerStartMargin">10dp</dimen>
     <dimen name="dateSeparatorContainerBottomMargin">5dp</dimen>
+    <dimen name="practiceCounterStartMargin">10dp</dimen>
 
     <!--Visit Type Dialog-->
     <dimen name="visityTypeDialogSubTitleTextSize">12sp</dimen>

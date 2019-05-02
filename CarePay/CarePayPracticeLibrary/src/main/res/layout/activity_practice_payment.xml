@@ -13,6 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?practiceActionBarColor"
+        android:paddingStart="@dimen/paymentContainerHorizontalMargin"
+        android:paddingEnd="@dimen/paymentContainerHorizontalMargin"
         android:padding="4dp">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -26,12 +28,10 @@
             android:drawablePadding="@dimen/dimen_10dp"
             android:gravity="center_vertical"
             android:includeFontPadding="false"
-            android:paddingStart="@dimen/dimen_10dp"
-            android:paddingEnd="10dp"
             android:textColor="@color/white"
             android:textSize="@dimen/goBackTextSize"
             app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="go_back" />
+            breeze:textKey="practice_checkin_back_label" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/practice_payment_title"
@@ -53,8 +53,6 @@
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingStart="0dp"
-            android:paddingEnd="10dp"
             tools:ignore="RelativeOverlap">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -66,7 +64,7 @@
                 android:drawablePadding="@dimen/dimen_10dp"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:textColor="@color/white"
+                android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/filterLabelTextSize"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="practice_payments_findPatient_label" />
@@ -79,7 +77,7 @@
                 android:drawablePadding="@dimen/dimen_10dp"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:textColor="@color/white"
+                android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/filterLabelTextSize"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="practice_checkin_filter" />
@@ -115,6 +113,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/practiceCounterStartMargin"
             android:textColor="@color/white"
             android:textSize="@dimen/checkinColumnTitleTextSize"
             app:customAssetFont="gotham_rounded_medium"
