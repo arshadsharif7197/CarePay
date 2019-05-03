@@ -163,6 +163,7 @@ public class DoBVerificationActivity extends BasePracticeActivity {
             String appointmentId = extra.getString(CarePayConstants.APPOINTMENT_ID);
             Bundle info = new Bundle();
             info.putString(CarePayConstants.APPOINTMENT_ID, appointmentId);
+            info.putBoolean(CarePayConstants.HANDLE_HOME, true);
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, info);
             finish();
         } else {
