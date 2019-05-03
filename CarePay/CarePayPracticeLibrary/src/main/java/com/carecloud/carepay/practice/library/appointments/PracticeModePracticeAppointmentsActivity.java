@@ -28,7 +28,6 @@ import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
 import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.FormsResponsibilityFragmentDialog;
-import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFragmentDialog;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -54,7 +53,6 @@ import com.carecloud.carepaylibray.payments.interfaces.PaymentDetailInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
@@ -666,23 +664,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     @Override
-    public void onDetailItemClick(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem) {
-        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-                .newInstance(paymentsModel, paymentLineItem, false);
-        displayDialogFragment(dialog, false);
-    }
-
-    @Override
-    public void onDetailCancelClicked(PaymentsModel paymentsModel) {
-        showResponsibilityFragment(paymentsModel);
-    }
-
-    @Override
-    public void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
-
-    }
-
-    @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
 
     }
@@ -695,13 +676,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     @Override
     public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
 
-    }
-
-    @Override
-    public void displayBalanceDetails(PaymentsModel paymentsModel,
-                                      PendingBalancePayloadDTO paymentLineItem,
-                                      PendingBalanceDTO selectedBalance) {
-        onDetailItemClick(paymentsModel, paymentLineItem);
     }
 
     @Override
@@ -772,6 +746,16 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         showFragment(fragment);
     }
 
+    @Override
+    public void onPaymentCashFinished() {
+        //NA
+    }
+
+    @Override
+    public void navigateToFragment(Fragment fragment, boolean addToBackStack) {
+        //NA
+    }
+
     private WorkflowServiceCallback startVideoVisitCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -788,7 +772,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             intent.setAction(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(url));
 
-            if(intent.resolveActivity(getContext().getPackageManager()) != null){
+            if (intent.resolveActivity(getContext().getPackageManager()) != null) {
                 startActivityForResult(intent, 555);
             }
         }

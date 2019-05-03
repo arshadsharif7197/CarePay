@@ -351,4 +351,9 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
     private void logout() {
         goToHome(appointmentsResultModel.getMetadata().getTransitions().getLogout());
     }
+
+    @Override
+    public void onPaymentCashFinished() {
+        //NA
+    }
 }

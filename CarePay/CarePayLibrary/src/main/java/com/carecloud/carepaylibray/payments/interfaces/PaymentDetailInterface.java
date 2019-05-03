@@ -1,17 +1,15 @@
 package com.carecloud.carepaylibray.payments.interfaces;
 
+import android.support.v4.app.Fragment;
+
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
-import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 
 /**
  * @author pjohnson on 29/05/17.
  */
 
 public interface PaymentDetailInterface extends ResponsibilityPaymentInterface {
-    void onDetailCancelClicked(PaymentsModel paymentsModel);
 
-    void onPaymentPlanAction(PaymentsModel paymentsModel);
-
-    void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount);
+    void navigateToFragment(Fragment fragment, boolean addToBackStack);
 
 }

@@ -138,9 +138,9 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     }
 
     private void setupTitleViews(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         if (toolbar != null) {
-            TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
+            TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
             title.setText(titleLabel);
             toolbar.setTitle("");
             if (getDialog() == null) {
@@ -158,9 +158,6 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
                         @Override
                         public void onClick(View view) {
                             cancel();
-                            if (onCancelListener == null) {
-                                callback.onPayButtonClicked(amountToMakePayment, paymentsModel);
-                            }
                         }
                     });
                 }
@@ -173,17 +170,17 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     }
 
     private void initializeViews(View view) {
-        nextButton = (Button) view.findViewById(R.id.nextButton);
+        nextButton = view.findViewById(R.id.nextButton);
         nextButton.setOnClickListener(nextButtonListener);
         nextButton.setEnabled(false);
         if (onlySelectMode) {
             nextButton.setText(Label.getLabel("common.button.continue"));
         }
 
-        Button addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
+        Button addNewCardButton = view.findViewById(R.id.addNewCardButton);
         addNewCardButton.setOnClickListener(addNewCardButtonListener);
 
-        creditCardsRecyclerView = (RecyclerView) view.findViewById(R.id.list_credit_cards);
+        creditCardsRecyclerView = view.findViewById(R.id.list_credit_cards);
         creditCardsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         final CreditCardsListAdapter creditCardsListAdapter = new CreditCardsListAdapter(getContext(),
                 creditCardList, this, false);
@@ -392,12 +389,13 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     private View.OnClickListener addNewCardButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (getDialog() != null) {
-                dismiss();
-            }
-            callback.showAddCard(amountToMakePayment, paymentsModel);
+            showAddCard(amountToMakePayment, paymentsModel);
         }
     };
+
+    protected void showAddCard(double amountToMakePayment, PaymentsModel paymentsModel) {
+        callback.showAddCard(amountToMakePayment, paymentsModel);
+    }
 
     @Override
     public void onCreditCardItemSelected(PaymentCreditCardsPayloadDTO creditCard) {
