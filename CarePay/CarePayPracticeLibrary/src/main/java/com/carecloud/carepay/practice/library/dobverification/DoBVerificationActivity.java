@@ -105,6 +105,8 @@ public class DoBVerificationActivity extends BasePracticeActivity {
             }
         });
 
+        dobEditText.setOnClickListener(selectEndOnClick);
+
         findViewById(R.id.lockImageView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -281,4 +283,12 @@ public class DoBVerificationActivity extends BasePracticeActivity {
         super.onSaveInstanceState(outState);
         outState.putInt("retries", retries);
     }
+
+    protected View.OnClickListener selectEndOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            EditText editText = (EditText) view;
+            editText.setSelection(editText.length());
+        }
+    };
 }
