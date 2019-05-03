@@ -123,7 +123,7 @@ public class CustomSearchAdapter extends RecyclerView.Adapter<CustomSearchAdapte
 
         public void setFilterDataDTO(FilterDataDTO filterDataDTO) {
             this.filterDataDTO = filterDataDTO;
-            checkBox.setText(filterDataDTO.getDisplayText());
+            checkBox.setText(StringUtil.capitalize(filterDataDTO.getDisplayText()));
             checkBox.setChecked(filterDataDTO.isChecked());
             if (filterDataDTO.isChecked()) {
                 selectedItemImageView.setVisibility(View.VISIBLE);

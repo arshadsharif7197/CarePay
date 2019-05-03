@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -175,7 +176,7 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         void setFilterDataDTO(FilterDataDTO filterDataDTO) {
             this.filterDataDTO = filterDataDTO;
-            checkBox.setText(filterDataDTO.getDisplayText());
+            checkBox.setText(StringUtil.capitalize(filterDataDTO.getDisplayText()));
             skipCallback = (!checkBox.isChecked() && filterDataDTO.isChecked())
                     || (checkBox.isChecked() && !filterDataDTO.isChecked());//non user interaction check changes
             checkBox.setChecked(filterDataDTO.isChecked());
