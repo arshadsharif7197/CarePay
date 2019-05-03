@@ -2,32 +2,46 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black_opacity_70">
+    android:background="@color/black"
+    android:clickable="true"
+    android:focusable="true">
 
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:background="@color/black">
+        android:layout_alignParentTop="true">
 
         <ImageView
             android:id="@+id/exitImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dimen_20dp"
-            android:layout_marginStart="@dimen/dimen_20dp"
-            android:layout_marginTop="@dimen/dimen_20dp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:scaleType="fitCenter"
             android:src="@drawable/icn_patient_mode_nav_close" />
 
-    </FrameLayout>
+    </RelativeLayout>
 
-    <com.carecloud.carepaylibray.common.ZoomImageView
-        android:id="@+id/documentImageView"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/header"
-        android:layout_centerInParent="true" />
+        android:layout_below="@id/header">
+
+        <com.carecloud.carepaylibray.common.ZoomImageView
+            android:id="@+id/documentImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true" />
+
+        <ProgressBar
+            android:id="@+id/attachmentProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:indeterminate="true"
+            android:indeterminateDrawable="@drawable/progress_indeterminate_custom"
+            android:visibility="gone" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

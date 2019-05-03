@@ -58,6 +58,8 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.marcok.stepprogressbar.StepProgressBar;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_BACK_DTO;
@@ -463,6 +465,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                         checkIfEnableButton();
                         enableDependentFields(view,
                                 new int[]{R.id.health_insurance_policy_first_name_holder_layout,
+                                        R.id.health_insurance_policy_middle_name_holder_layout,
                                         R.id.health_insurance_policy_last_name_holder_layout,
                                         R.id.health_insurance_policy_birth_date_holder_layout,
                                         R.id.healthInsuranceGenderInputLayout},
@@ -477,6 +480,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         setupExtraFields(view, demographicInsurancePayload, insuranceModelProperties);
         enableDependentFields(view,
                 new int[]{R.id.health_insurance_policy_first_name_holder_layout,
+                        R.id.health_insurance_policy_middle_name_holder_layout,
                         R.id.health_insurance_policy_last_name_holder_layout,
                         R.id.health_insurance_policy_birth_date_holder_layout,
                         R.id.healthInsuranceGenderInputLayout},
@@ -493,7 +497,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                 null, R.id.health_insurance_group_number_layout,
                 R.id.health_insurance_group_number, null, null, null);
 
-        String firstName = demographicInsurancePayload.getPolicyFirstNameHolder();
+        String firstName = StringUtil.capitalize(demographicInsurancePayload.getPolicyFirstNameHolder());
         setUpDemographicField(view, firstName, insuranceModelProperties.getPolicyHolder(),
                 null, R.id.health_insurance_policy_first_name_holder_layout,
                 R.id.health_insurance_policy_first_name_holder, null, null, null);
@@ -501,8 +505,15 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         EditText firstNameEditText = view.findViewById(R.id.health_insurance_policy_first_name_holder);
         firstNameEditText.addTextChangedListener(getValidateOptionsFields(firstNameInputLayout));
 
+        String middleName = StringUtil.capitalize(demographicInsurancePayload.getPolicyMiddleNameHolder());
+        setUpDemographicField(view, middleName, insuranceModelProperties.getPolicyHolder(),
+                null, R.id.health_insurance_policy_middle_name_holder_layout,
+                R.id.health_insurance_policy_middle_name_holder, null, null, null);
+        TextInputLayout middleNameInputLayout = view.findViewById(R.id.health_insurance_policy_middle_name_holder_layout);
+        EditText middleNameEditText = view.findViewById(R.id.health_insurance_policy_middle_name_holder);
+        middleNameEditText.addTextChangedListener(getValidateOptionsFields(middleNameInputLayout));
 
-        String lastName = demographicInsurancePayload.getPolicyLastNameHolder();
+        String lastName = StringUtil.capitalize(demographicInsurancePayload.getPolicyLastNameHolder());
         setUpDemographicField(view, lastName, insuranceModelProperties.getPolicyHolder(),
                 null, R.id.health_insurance_policy_last_name_holder_layout,
                 R.id.health_insurance_policy_last_name_holder, null, null, null);
@@ -673,6 +684,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
         String firstName = ((TextView) view.findViewById(R.id.health_insurance_policy_first_name_holder)).getText().toString();
         demographicInsurancePayloadDTO.setPolicyFirstNameHolder(firstName.trim());
+
+        String middleName = ((TextView) view.findViewById(R.id.health_insurance_policy_middle_name_holder)).getText().toString();
+        demographicInsurancePayloadDTO.setPolicyMiddleNameHolder(middleName.trim());
 
         String lastName = ((TextView) view.findViewById(R.id.health_insurance_policy_last_name_holder)).getText().toString();
         demographicInsurancePayloadDTO.setPolicyLastNameHolder(lastName.trim());
