@@ -114,6 +114,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         dobInputLayout.setTag(Label.getLabel("personal_info_date_of_birth"));
         dobEditText = findViewById(R.id.dobEditText);
         dobEditText.setTag(dobInputLayout);
+        dobEditText.setOnClickListener(selectEndOnClick);
         dobEditText.addTextChangedListener(new TextWatcher() {
             int lastLength;
 
@@ -307,6 +308,14 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         @Override
         public void afterTextChanged(Editable editable) {
             enableFindMyAppointmentButton();
+        }
+    };
+
+    protected View.OnClickListener selectEndOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            EditText editText = (EditText) view;
+            editText.setSelection(editText.length());
         }
     };
 }
