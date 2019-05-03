@@ -1,13 +1,11 @@
 package com.carecloud.carepay.practice.library.checkin.activities;
 
-import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,24 +28,21 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class PersonalInformationActivity extends BasePracticeActivity {
-    private TextView selectDateButton;
+
     private EditText firstNameEditText;
     private EditText lastNameEditText;
     private EditText phoneNumberEditText;
+    private TextView genderButton;
+    private EditText dobEditText;
     private CarePayButton findMyAppointmentButton;
-    private boolean isEmptyFirstName = true;
-    private boolean isEmptyLastName = true;
-    private boolean isEmptyPhoneNumber = true;
-    private boolean isEmptyDate = true;
-    private boolean isEmptyGender = true;
     private SignInDTO signInPatientModeDTO;
     private String[] gendersArray;
+    private TextInputLayout dobInputLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,81 +52,56 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         initViews();
     }
 
-    /**
-     * Method to initialise view
-     */
-    void initViews() {
-        CarePayButton goBackButton = (CarePayButton) findViewById(R.id.goBackButton);
-        goBackButton.setOnClickListener(goBackButtonListener);
-
-        TextInputLayout firstNameInputLayout = (TextInputLayout)
-                findViewById(R.id.firstNameInputLayout);
-        firstNameInputLayout.setTag(Label.getLabel("personal_info_first_name"));
-
-        firstNameEditText = (EditText) findViewById(R.id.firstNameEditText);
-        firstNameEditText.setTag(firstNameInputLayout);
-
-        TextInputLayout lastNameInputLayout = (TextInputLayout)
-                findViewById(R.id.lastNameInputLayout);
-        lastNameInputLayout.setTag(Label.getLabel("personal_info_last_name"));
-
-        lastNameEditText = (EditText) findViewById(R.id.lastNameEditText);
-        lastNameEditText.setTag(lastNameInputLayout);
-
-        TextInputLayout phoneNumberInputLayout = (TextInputLayout)
-                findViewById(R.id.phoneNumberInputLayout);
-        phoneNumberInputLayout.setTag(Label.getLabel("personal_info_phone_number"));
-
-        phoneNumberEditText = (EditText) findViewById(R.id.phoneNumberEditText);
-        phoneNumberEditText.setTag(phoneNumberInputLayout);
-
-        //setChangeFocusListeners();
-
-        selectDateButton = (TextView) findViewById(R.id.selectDateButton);
-        selectDateButton.setOnClickListener(selectDateButtonListener);
-
-
-        CarePayTextView genderTextView = (CarePayTextView) findViewById(R.id.genderTextView);
-        genderTextView.setText(signInPatientModeDTO.getMetadata().getDataModels().getPersonalInfo().getProperties().getGender().getLabel());
-
-        TextView genderButton = (TextView) findViewById(R.id.selectGenderButton);
-        genderButton.setOnClickListener(selectGenderButtonListener);
-        genderButton.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                String genderValue = editable.toString();
-                isEmptyGender = genderValue.equalsIgnoreCase(Label.getLabel("choose_gender_label"));
-                enableFindMyAppointmentButton();
-            }
-        });
-
-        findMyAppointmentButton = (CarePayButton)
-                findViewById(R.id.findMyAppointmentButton);
-        findMyAppointmentButton.setEnabled(false);
-        findMyAppointmentButton.setOnClickListener(findMyAppointmentButtonListener);
-
-        if (!findMyAppointmentButton.isEnabled()) {
-            findMyAppointmentButton.setAlpha(0.3F);
-        } else {
-            findMyAppointmentButton.setAlpha(1);
-        }
-
-        setTextListeners();
-
-        ImageView homeImageView = (ImageView) findViewById(R.id.homeImageView);
+    private void initViews() {
+        CarePayButton goBackButton = findViewById(R.id.goBackButton);
+        goBackButton.setOnClickListener(homeImageViewListener);
+        ImageView homeImageView = findViewById(R.id.homeImageView);
         homeImageView.setOnClickListener(homeImageViewListener);
 
-        List<OptionDTO> options = signInPatientModeDTO.getMetadata().getDataModels().getPersonalInfo().getProperties().getGender().getOptions();
+        setUpFirstName();
+        setUpLastName();
+        setUpPhone();
+        setUpGender();
+        setUpDoB();
+    }
+
+    private void setUpFirstName() {
+        TextInputLayout firstNameInputLayout = findViewById(R.id.firstNameInputLayout);
+        firstNameInputLayout.setTag(Label.getLabel("personal_info_first_name"));
+        firstNameEditText = findViewById(R.id.firstNameEditText);
+        firstNameEditText.setTag(firstNameInputLayout);
+        firstNameEditText.addTextChangedListener(commonTextWatcher);
+    }
+
+    private void setUpLastName() {
+        TextInputLayout lastNameInputLayout = findViewById(R.id.lastNameInputLayout);
+        lastNameInputLayout.setTag(Label.getLabel("personal_info_last_name"));
+        lastNameEditText = findViewById(R.id.lastNameEditText);
+        lastNameEditText.setTag(lastNameInputLayout);
+        lastNameEditText.addTextChangedListener(commonTextWatcher);
+    }
+
+    private void setUpPhone() {
+        TextInputLayout phoneNumberInputLayout = findViewById(R.id.phoneNumberInputLayout);
+        phoneNumberInputLayout.setTag(Label.getLabel("personal_info_phone_number"));
+        phoneNumberEditText = findViewById(R.id.phoneNumberEditText);
+        phoneNumberEditText.setTag(phoneNumberInputLayout);
+        phoneNumberEditText.addTextChangedListener(commonTextWatcher);
+    }
+
+    private void setUpGender() {
+        CarePayTextView genderTextView = findViewById(R.id.genderTextView);
+        genderTextView.setText(signInPatientModeDTO.getMetadata().getDataModels().getPersonalInfo()
+                .getProperties().getGender().getLabel());
+        genderButton = findViewById(R.id.selectGenderButton);
+        genderButton.setOnClickListener(selectGenderButtonListener);
+        genderButton.addTextChangedListener(commonTextWatcher);
+
+        findMyAppointmentButton = findViewById(R.id.findMyAppointmentButton);
+        findMyAppointmentButton.setOnClickListener(findMyAppointmentButtonListener);
+
+        List<OptionDTO> options = signInPatientModeDTO.getMetadata().getDataModels()
+                .getPersonalInfo().getProperties().getGender().getOptions();
         List<String> genders = new ArrayList<>();
         for (OptionDTO option : options) {
             genders.add(option.getLabel());
@@ -139,49 +109,17 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         gendersArray = genders.toArray(new String[0]);
     }
 
-    /**
-     * On focus changes listener for Edit Text.
-     */
-    private void setChangeFocusListeners() {
-        firstNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(PersonalInformationActivity.this);
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
+    private void setUpDoB() {
+        dobInputLayout = findViewById(R.id.dobInputLayout);
+        dobInputLayout.setTag(Label.getLabel("personal_info_date_of_birth"));
+        dobEditText = findViewById(R.id.dobEditText);
+        dobEditText.setTag(dobInputLayout);
+        dobEditText.addTextChangedListener(new TextWatcher() {
+            int lastLength;
 
-        lastNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(PersonalInformationActivity.this);
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
-
-        phoneNumberEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean bool) {
-                if (bool) {
-                    SystemUtil.showSoftKeyboard(PersonalInformationActivity.this);
-                }
-                SystemUtil.handleHintChange(view, bool);
-            }
-        });
-    }
-
-    /**
-     * Text change listeners
-     */
-    private void setTextListeners() {
-        firstNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
-
+                lastLength = charSequence.length();
             }
 
             @Override
@@ -191,80 +129,39 @@ public class PersonalInformationActivity extends BasePracticeActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                isEmptyFirstName = StringUtil.isNullOrEmpty(firstNameEditText.getText().toString());
+                StringUtil.autoFormatDateOfBirth(editable, lastLength);
                 enableFindMyAppointmentButton();
             }
         });
-        lastNameEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                isEmptyLastName = StringUtil.isNullOrEmpty(lastNameEditText.getText().toString());
-                enableFindMyAppointmentButton();
-            }
-        });
-
-        phoneNumberEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                isEmptyPhoneNumber = StringUtil.isNullOrEmpty(phoneNumberEditText.getText().toString());
-                enableFindMyAppointmentButton();
-            }
-        });
-        selectDateButton.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                String dateVal = selectDateButton.getText().toString();
-
-                isEmptyDate = dateVal.equalsIgnoreCase(Label.getLabel("personal_info_select"));
-                enableFindMyAppointmentButton();
-            }
-        });
-
-
     }
 
     /**
      * Method to enable or disable Find My Appointment button
      */
     private void enableFindMyAppointmentButton() {
-        boolean areAllNonEmpty = !(isEmptyFirstName || isEmptyLastName || isEmptyPhoneNumber || isEmptyDate || isEmptyGender);
+        boolean areAllNonEmpty = !(StringUtil.isNullOrEmpty(firstNameEditText.getText().toString())
+                || StringUtil.isNullOrEmpty(lastNameEditText.getText().toString())
+                || StringUtil.isNullOrEmpty(phoneNumberEditText.getText().toString())
+                || genderButton.getText().toString().equalsIgnoreCase(Label.getLabel("choose_gender_label")));
+
+        if (!StringUtil.isNullOrEmpty(dobEditText.getText().toString())) {
+            String dateValidationResult = DateUtil.getDateOfBirthValidationResultMessage(dobEditText.getText().toString());
+            if (dateValidationResult != null) {
+                dobInputLayout.setErrorEnabled(true);
+                dobInputLayout.setError(dateValidationResult);
+                areAllNonEmpty = false;
+            } else {
+                dobInputLayout.setErrorEnabled(false);
+                dobInputLayout.setError(null);
+            }
+
+        } else {
+            dobInputLayout.setErrorEnabled(false);
+            dobInputLayout.setError(null);
+            areAllNonEmpty = false;
+        }
 
         findMyAppointmentButton.setEnabled(areAllNonEmpty);
-        if (!findMyAppointmentButton.isEnabled()) {
-            findMyAppointmentButton.setAlpha(0.3F);
-        } else {
-            findMyAppointmentButton.setAlpha(1);
-        }
     }
 
 
@@ -274,78 +171,16 @@ public class PersonalInformationActivity extends BasePracticeActivity {
     View.OnClickListener selectGenderButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            selectGender((TextView) view);
-        }
-    };
-
-
-    /**
-     * Click listener for go back button
-     */
-    View.OnClickListener goBackButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            onBackPressed();
-        }
-    };
-
-
-    /**
-     * Selects gender
-     */
-    public void selectGender(final TextView genderButton) {
-        SystemUtil.showChooseDialog(this,
-                gendersArray, Label.getLabel("gender_label"), Label.getLabel("gender_cancel_label"),
-                genderButton,
-                new SystemUtil.OnClickItemCallback() {
-                    @Override
-                    public void executeOnClick(TextView destination, String selectedOption) {
-                        genderButton.setText(selectedOption);
-                    }
-                });
-    }
-
-
-    /**
-     * Click listener for select date button
-     */
-    View.OnClickListener selectDateButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(final View view) {
-            // Use the current date as the default date in the picker
-            Calendar calendar = Calendar.getInstance();
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-            try {
-                if (!selectDateButton.getText().toString().equalsIgnoreCase(Label.getLabel("personal_info_select"))) {
-                    String[] selectedDate = selectDateButton.getText().toString().split("/");
-                    month = Integer.parseInt(selectedDate[0]) - 1;
-                    day = Integer.parseInt(selectedDate[1]);
-                    year = Integer.parseInt(selectedDate[2]);
-                }
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-
-            DatePickerDialog datePickerDialog = new DatePickerDialog(PersonalInformationActivity.this,
-                    android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                    new DatePickerDialog.OnDateSetListener() {
+            final TextView genderButton = (TextView) view;
+            SystemUtil.showChooseDialog(PersonalInformationActivity.this,
+                    gendersArray, Label.getLabel("gender_label"), Label.getLabel("gender_cancel_label"),
+                    genderButton,
+                    new SystemUtil.OnClickItemCallback() {
                         @Override
-                        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                            Calendar calendar = Calendar.getInstance();
-                            calendar.set(year, month, day);
-
-                            DateUtil.getInstance().setDate(calendar);
-                            selectDateButton.setText(DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
+                        public void executeOnClick(TextView destination, String selectedOption) {
+                            genderButton.setText(selectedOption);
                         }
-                    }, year, month, day);
-
-            datePickerDialog.setTitle(Label.getLabel("personal_info_select"));
-            datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
-            datePickerDialog.getDatePicker().setCalendarViewShown(false);
-            datePickerDialog.show();
+                    });
         }
     };
 
@@ -375,7 +210,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         queryMap.put("language", getApplicationPreferences().getUserLanguage());
         queryMap.put("first_name", firstNameEditText.getText().toString());
         queryMap.put("last_name", lastNameEditText.getText().toString());
-        queryMap.put("date_of_birth", selectDateButton.getText().toString());
+        queryMap.put("date_of_birth", dobEditText.getText().toString());
         queryMap.put("phone", phoneNumberEditText.getText().toString());
         queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
         queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
@@ -399,7 +234,8 @@ public class PersonalInformationActivity extends BasePracticeActivity {
             TransitionDTO transitionDTO;
             Gson gson = new Gson();
             SignInDTO signInDTO = gson.fromJson(workflowDTO.toString(), SignInDTO.class);
-            getApplicationMode().setPatientId(signInDTO.getPayload().getPatientModePersonalInfoCheck().getMetadata().getPatientId());
+            getApplicationMode().setPatientId(signInDTO.getPayload().getPatientModePersonalInfoCheck()
+                    .getMetadata().getPatientId());
             if (signInDTO.getPayload().getPatientModePersonalInfoCheck().getPersonalInfoCheckSuccessful()) {
                 queryMap.put("language", getApplicationPreferences().getUserLanguage());
                 queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
@@ -407,9 +243,11 @@ public class PersonalInformationActivity extends BasePracticeActivity {
                 queryMap.put("patient_id", getApplicationMode().getPatientId());
                 Map<String, String> headers = new HashMap<>();
 
-                getAppAuthorizationHelper().setUser(signInDTO.getPayload().getPatientModePersonalInfoCheck().getMetadata().getUsername());
+                getAppAuthorizationHelper().setUser(signInDTO.getPayload().getPatientModePersonalInfoCheck()
+                        .getMetadata().getUsername());
 
-                MixPanelUtil.setUser(getContext(), signInDTO.getPayload().getPatientModePersonalInfoCheck().getMetadata().getUserId(), null);
+                MixPanelUtil.setUser(getContext(), signInDTO.getPayload().getPatientModePersonalInfoCheck()
+                        .getMetadata().getUserId(), null);
 
                 String[] params = {getString(R.string.param_login_type), getString(R.string.param_app_mode)};
                 Object[] values = {getString(R.string.login_manual), getString(R.string.app_mode_patient)};
@@ -418,7 +256,8 @@ public class PersonalInformationActivity extends BasePracticeActivity {
                 transitionDTO = signInPatientModeDTO.getMetadata().getTransitions().getAction();
                 getWorkflowServiceHelper().execute(transitionDTO, patientModeAppointmentsCallback, queryMap, headers);
             } else {
-                String errorMessage = Label.getLabel("sign_in_failed") + ", " + Label.getLabel("personal_info_incorrect_details");
+                String errorMessage = Label.getLabel("sign_in_failed") + ", "
+                        + Label.getLabel("personal_info_incorrect_details");
                 showErrorNotification(errorMessage);
             }
         }
@@ -451,6 +290,23 @@ public class PersonalInformationActivity extends BasePracticeActivity {
             findMyAppointmentButton.setEnabled(true);
             showErrorNotification(exceptionMessage);
             Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    TextWatcher commonTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            enableFindMyAppointmentButton();
         }
     };
 }
