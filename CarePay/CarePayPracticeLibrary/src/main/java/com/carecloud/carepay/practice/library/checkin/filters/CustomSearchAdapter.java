@@ -14,12 +14,11 @@ import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepaylibray.utils.CircleImageTransform;
+import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,7 @@ import java.util.List;
 /**
  * Custom adapter for displaying an array of FilterableDataDTO objects.
  */
-public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class CustomSearchAdapter extends RecyclerView.Adapter<CustomSearchAdapter.ViewHolder>
         implements Filterable {
 
     private Context context;
@@ -72,37 +71,38 @@ public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public CustomSearchAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
         View customFilterListDataRow = inflater.inflate(R.layout.custom_filter_patient_list_item,
                 viewGroup, false);
-        return new ViewHolderFilterableDataItem(customFilterListDataRow);
+        return new ViewHolder(customFilterListDataRow);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         FilterDataDTO filterDataDTO = this.filteredPatients.get(position);
-        ViewHolderFilterableDataItem vhDataItem = (ViewHolderFilterableDataItem) viewHolder;
-        vhDataItem.setFilterDataDTO(filterDataDTO);
-        viewHolder.itemView.setTag(vhDataItem);
+        holder.setFilterDataDTO(filterDataDTO);
+        holder.itemView.setTag(holder);
+        holder.patientShortNameTextView.setText(StringUtil.getShortName(filterDataDTO.getDisplayText()));
     }
 
     /**
      * Custom ViewHolder for displaying an FilterableDataItem in RecyclerView.
      */
-    private class ViewHolderFilterableDataItem extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         private CheckBox checkBox;
         private ImageView patientImageView;
         private ImageView selectedItemImageView;
         private FilterDataDTO filterDataDTO;
+        TextView patientShortNameTextView;
 
-        ViewHolderFilterableDataItem(View view) {
+        ViewHolder(View view) {
             super(view);
             checkBox = view.findViewById(R.id.patientItemCheckBox);
             patientImageView = view.findViewById(R.id.patientImageView);
+            patientShortNameTextView = view.findViewById(R.id.patientShortNameTextView);
             selectedItemImageView = view.findViewById(R.id.selectedItemImageView);
-            SystemUtil.setProximaNovaSemiboldTypeface(context, checkBox);
             patientImageView.setVisibility(View.VISIBLE);
             checkBox.setOnCheckedChangeListener(onCheckedChangeListener);
         }
@@ -130,15 +130,8 @@ public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             } else {
                 selectedItemImageView.setVisibility(View.INVISIBLE);
             }
-            if (!StringUtil.isNullOrEmpty(filterDataDTO.getImageURL())) {
-                Picasso.with(context)
-                        .load(filterDataDTO.getImageURL())
-                        .transform(new CircleImageTransform())
-                        .placeholder(R.drawable.icn_placeholder_user_profile_png)
-                        .into(patientImageView);
-            } else {
-                patientImageView.setImageResource(R.drawable.icn_placeholder_user_profile_png);
-            }
+            PicassoHelper.get().loadImage(context, patientImageView, patientShortNameTextView,
+                    filterDataDTO.getImageURL());
         }
     }
 

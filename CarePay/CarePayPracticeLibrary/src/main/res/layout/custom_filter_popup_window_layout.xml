@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="3"
-        android:background="@color/popup_background"
+        android:background="@color/filterBackground"
         android:focusable="true"
         android:focusableInTouchMode="true">
 
@@ -109,7 +109,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/textview_default_textcolor"
+            android:background="@color/filterBackground"
             android:padding="@dimen/practiceClearButtonContainerPadding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
@@ -132,11 +132,7 @@
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:layout_above="@id/clearButtonContainer"
-            android:layout_below="@id/search_layout"
-            android:layout_marginLeft="@dimen/view_margin"
-            android:layout_marginTop="@dimen/view_margin"
-            android:layout_marginRight="@dimen/view_margin" />
-
+            android:layout_below="@id/search_layout"/>
 
     </RelativeLayout>
 </LinearLayout>
