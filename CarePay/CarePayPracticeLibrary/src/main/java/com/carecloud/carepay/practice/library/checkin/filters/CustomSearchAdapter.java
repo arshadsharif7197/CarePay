@@ -99,9 +99,9 @@ public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         ViewHolderFilterableDataItem(View view) {
             super(view);
-            checkBox = (CheckBox) view.findViewById(R.id.patientItemCheckBox);
-            patientImageView = (ImageView) view.findViewById(R.id.patientImageView);
-            selectedItemImageView = (ImageView) view.findViewById(R.id.selectedItemImageView);
+            checkBox = view.findViewById(R.id.patientItemCheckBox);
+            patientImageView = view.findViewById(R.id.patientImageView);
+            selectedItemImageView = view.findViewById(R.id.selectedItemImageView);
             SystemUtil.setProximaNovaSemiboldTypeface(context, checkBox);
             patientImageView.setVisibility(View.VISIBLE);
             checkBox.setOnCheckedChangeListener(onCheckedChangeListener);
@@ -114,7 +114,7 @@ public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 if (filterDataDTO.isChecked()) {
                     selectedItemImageView.setVisibility(View.VISIBLE);
                 } else {
-                    selectedItemImageView.setVisibility(View.GONE);
+                    selectedItemImageView.setVisibility(View.INVISIBLE);
                 }
                 searchChangedListener.onSearchChanged(filterDataDTO);
             }
@@ -128,7 +128,7 @@ public class CustomSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if (filterDataDTO.isChecked()) {
                 selectedItemImageView.setVisibility(View.VISIBLE);
             } else {
-                selectedItemImageView.setVisibility(View.GONE);
+                selectedItemImageView.setVisibility(View.INVISIBLE);
             }
             if (!StringUtil.isNullOrEmpty(filterDataDTO.getImageURL())) {
                 Picasso.with(context)

@@ -157,8 +157,7 @@ public class FilterDialog extends PopupWindow
         clearSearchImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clearPatientSearch();
-                applyFilter();
+                searchPatientEditText.setText("");
             }
         });
 
