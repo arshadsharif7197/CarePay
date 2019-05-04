@@ -174,7 +174,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().onBackPressed();
+                onBackPressed();
             }
         });
         toolbar.setTitle("");

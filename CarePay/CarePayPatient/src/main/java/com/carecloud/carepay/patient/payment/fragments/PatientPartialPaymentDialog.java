@@ -1,12 +1,10 @@
 package com.carecloud.carepay.patient.payment.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.carecloud.carepay.patient.base.ToolbarInterface;
-import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -31,10 +29,18 @@ public class PatientPartialPaymentDialog extends PartialPaymentDialog {
         try {
             double amount = Double.parseDouble(enterPartialAmountEditText.getText().toString());
             createPaymentModel(amount);
-            getFragmentManager().popBackStackImmediate(PaymentDetailsFragmentDialog.class.getName(),
-                    FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            payListener.replaceFragment(PatientPaymentMethodFragment
-                    .newInstance(paymentsDTO, amount, false), true);
+//            getFragmentManager().popBackStackImmediate(PaymentDetailsFragmentDialog.class.getName(),
+//                    FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            hideDialog(true);
+            PatientPaymentMethodFragment fragment = PatientPaymentMethodFragment
+                    .newInstance(paymentsDTO, amount, false);
+            fragment.setOnBackPressedListener(new OnBackPressedInterface() {
+                @Override
+                public void onBackPressed() {
+                    showDialog(true);
+                }
+            });
+            payListener.replaceFragment(fragment, true);
             ((ToolbarInterface) payListener).displayToolbar(false, null);
         } catch (NumberFormatException nfe) {
             nfe.printStackTrace();

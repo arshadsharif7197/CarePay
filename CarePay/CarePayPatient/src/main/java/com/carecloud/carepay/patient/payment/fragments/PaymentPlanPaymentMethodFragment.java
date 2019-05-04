@@ -1,8 +1,6 @@
 package com.carecloud.carepay.patient.payment.fragments;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
@@ -16,7 +14,6 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
-import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAddCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
@@ -134,13 +131,13 @@ public class PaymentPlanPaymentMethodFragment extends PatientPaymentMethodFragme
             DateUtil.getInstance().setDateRaw(dateString);
             paymentDate = DateUtil.getInstance().getDate();
         }
-        if(paymentsModel.getPaymentPayload().getPaymentPostModel() != null) {
+        if (paymentsModel.getPaymentPayload().getPaymentPostModel() != null) {
             amountToMakePayment = paymentsModel.getPaymentPayload().getPaymentPostModel().getAmount();
         }
         shouldInitAndroidPay = callback instanceof OneTimePaymentInterface &&
                 paymentPlanDTO != null && paymentPlanDTO.getMetadata().getPaymentPlanId() != null &&
                 (paymentDate == null || DateUtil.isToday(paymentDate)
-                && amountToMakePayment > 0D);
+                        && amountToMakePayment > 0D);
     }
 
     @Override
@@ -151,13 +148,13 @@ public class PaymentPlanPaymentMethodFragment extends PatientPaymentMethodFragme
     @Override
     protected void setupTitleViews(View view) {
         super.setupTitleViews(view);
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         if (toolbar != null) {
             toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    getActivity().onBackPressed();
+                    onBackPressed();
                 }
             });
         }

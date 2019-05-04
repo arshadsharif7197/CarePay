@@ -1,16 +1,13 @@
 package com.carecloud.carepay.patient.payment.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.carecloud.carepay.patient.base.ToolbarInterface;
-import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAmountDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
-import com.carecloud.carepaylibray.payments.fragments.ValidPlansFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -37,17 +34,24 @@ public class PatientPaymentPlanAmountDialog extends PaymentPlanAmountDialog {
         try {
             double amount = Double.parseDouble(enterPartialAmountEditText.getText().toString());
             boolean addExisting = false;
+            hideDialog(true);
             BaseDialogFragment fragment;
             if (paymentsModel.getPaymentPayload().mustAddToExisting(amount, selectedBalance)) {
-                fragment = ValidPlansFragment.newInstance(paymentsModel, selectedBalance, amount);
+                fragment = PatientValidPlansFragment.newInstance(paymentsModel, selectedBalance, amount);
                 addExisting = true;
             } else {
-                fragment = PaymentPlanFragment.newInstance(paymentsModel, selectedBalance, amount);
+                fragment = PatientPaymentPlanFragment.newInstance(paymentsModel, selectedBalance, amount);
                 fragment.setOnCancelListener(onDialogCancelListener);
             }
+            fragment.setOnBackPressedListener(new OnBackPressedInterface() {
+                @Override
+                public void onBackPressed() {
+                    showDialog(true);
+                }
+            });
             logPaymentPlanStartedMixPanelEvent(addExisting);
-            getFragmentManager().popBackStackImmediate(PaymentDetailsFragmentDialog.class.getName(),
-                    FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//            getFragmentManager().popBackStackImmediate(PaymentDetailsFragmentDialog.class.getName(),
+//                    FragmentManager.POP_BACK_STACK_INCLUSIVE);
             callback.replaceFragment(fragment, true);
             ((ToolbarInterface) callback).displayToolbar(false, null);
         } catch (NumberFormatException nfe) {
