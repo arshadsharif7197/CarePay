@@ -452,7 +452,9 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
             }
 
             if (bitmap != null) {
-                base64ProfileImage = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
+                base64ProfileImage = SystemUtil.convertBitmapToString(
+                        SystemUtil.getScaledBitmap(bitmap, CarePayConstants.IMAGE_QUALITY_MAX_PX),
+                        Bitmap.CompressFormat.JPEG, 90);
                 hasNewImage = false;
             }
         }

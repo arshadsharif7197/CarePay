@@ -14,6 +14,7 @@ public class CarePayConstants {
 
     // Generic Constants
     public static final int HOME_PRESSED = 999;
+    public static final int IMAGE_QUALITY_MAX_PX = 1800;
 
     //DeviceType
     public static final String CLOVER_DEVICE = "Clover";
