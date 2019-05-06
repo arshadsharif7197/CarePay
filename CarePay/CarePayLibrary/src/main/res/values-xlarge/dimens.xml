@@ -26,5 +26,5 @@
     <dimen name="timeSlotItemPadding">15dp</dimen>
     <dimen name="timeSlotItemTextSize">20sp</dimen>
     <dimen name="locationItemHeight">90dp</dimen>
-    <dimen name="largeAlertMessageTextSize">18sp</dimen>
+    <dimen name="largeAlertMessageTextSize">13sp</dimen>
 </resources>

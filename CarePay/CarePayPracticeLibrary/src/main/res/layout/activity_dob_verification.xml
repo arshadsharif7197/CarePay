@@ -107,8 +107,9 @@
                     android:contentDescription="@string/content_description_email"
                     android:focusable="false"
                     android:imeOptions="actionDone"
-                    android:inputType="textEmailAddress"
+                    android:inputType="date"
                     android:maxLength="10"
+                    android:digits="1234567890/"
                     tools:hint="Date of Birth"
                     app:customAssetFont="gotham_rounded_book"
                     breeze:hintKey="demographics_dob_label" />
