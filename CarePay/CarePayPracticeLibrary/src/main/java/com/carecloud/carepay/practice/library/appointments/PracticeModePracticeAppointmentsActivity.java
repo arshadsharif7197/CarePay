@@ -89,6 +89,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     private boolean wasCalledFromThisClass;
     private View filterTextView;
     private View filterTextViewOn;
+    private TextView patientCountLabelTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,11 +105,10 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     private void initializeCheckinDto() {
         checkInDTO = getConvertedDTO(CheckInDTO.class);
-        if (null != checkInDTO) {
-            populateLists();
-            initializePatientListView();
-            initializePatientCounter();
-        }
+        populateLists();
+        initializePatientListView();
+        initializePatientCounter();
+
     }
 
     private void initializePatientCounter() {
@@ -118,9 +118,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         count = String.format(Locale.getDefault(), "%1s", patientListView.getSizeFilteredPendingPatients());
         setTextViewById(R.id.practice_pending_count, count);
 
-        count = String.format(Locale.getDefault(), "%d %s", patientListView.getSizeFilteredPendingPatients(),
-                Label.getLabel("pending_appointments_label"));
-        setTextViewById(R.id.activity_practice_appointments_show_pending_appointments_label, count);
+        patientCountLabelTextView = findViewById(R.id.patientCountLabelTextView);
 
         if (null != startDate && null != endDate) {
             String practiceCountLabel = DateUtil.getFormattedDate(
@@ -131,7 +129,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                     Label.getLabel("this_month_label"),
                     Label.getLabel("next_days_label"),
                     true).toUpperCase(Locale.getDefault());
-            setTextViewById(R.id.practice_patient_count_label, practiceCountLabel);
+            patientCountLabelTextView.setText(practiceCountLabel);
         }
     }
 
@@ -162,9 +160,27 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             }
         });
 
+        final TextView showPendingAppointmentTextView = findViewById(R.id.showPendingAppointmentTextView);
+        showPendingAppointmentTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPendingAppointmentTextView.setSelected(!showPendingAppointmentTextView.isSelected());
+                if (showPendingAppointmentTextView.isSelected()) {
+                    showViewById(R.id.practice_pending_count);
+                    disappearViewById(R.id.practice_patient_count);
+                    filterModel.setFilteringByPending(true);
+                    patientCountLabelTextView.setText(Label.getLabel("pending_label"));
+                } else {
+                    showViewById(R.id.practice_patient_count);
+                    disappearViewById(R.id.practice_pending_count);
+                    filterModel.setFilteringByPending(false);
+                    patientCountLabelTextView.setText(Label.getLabel("today_label"));
+                }
+                applyFilter();
+            }
+        });
+
         initializePracticeSelectDateRange();
-        initializeShowAllAppointments();
-        initializeShowPendingAppointments();
     }
 
     private void setUpFilter() {
@@ -177,40 +193,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         } else {
             filterTextView.setVisibility(View.VISIBLE);
         }
-    }
-
-    private void initializeShowAllAppointments() {
-        findViewById(R.id.activity_practice_appointments_show_all_appointments_label)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showViewById(R.id.activity_practice_appointments_show_pending_appointments_label);
-                        showViewById(R.id.practice_patient_count);
-                        showViewById(R.id.practice_patient_count_label);
-                        hideViewById(R.id.activity_practice_appointments_show_all_appointments_label);
-                        disappearViewById(R.id.practice_pending_count);
-                        disappearViewById(R.id.practice_pending_count_label);
-                        filterModel.setFilteringByPending(false);
-                        applyFilter();
-                    }
-                });
-    }
-
-    private void initializeShowPendingAppointments() {
-        findViewById(R.id.activity_practice_appointments_show_pending_appointments_label)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showViewById(R.id.activity_practice_appointments_show_all_appointments_label);
-                        showViewById(R.id.practice_pending_count);
-                        showViewById(R.id.practice_pending_count_label);
-                        hideViewById(R.id.activity_practice_appointments_show_pending_appointments_label);
-                        disappearViewById(R.id.practice_patient_count);
-                        disappearViewById(R.id.practice_patient_count_label);
-                        filterModel.setFilteringByPending(true);
-                        applyFilter();
-                    }
-                });
     }
 
     private void populateLists() {

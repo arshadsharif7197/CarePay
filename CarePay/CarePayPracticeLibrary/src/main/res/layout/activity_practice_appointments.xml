@@ -12,10 +12,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/paymentContainerHorizontalMargin"
-        android:paddingEnd="@dimen/paymentContainerHorizontalMargin"
         android:background="?practiceActionBarColor"
-        android:padding="4dp">
+        android:padding="4dp"
+        android:paddingStart="@dimen/paymentContainerHorizontalMargin"
+        android:paddingEnd="@dimen/paymentContainerHorizontalMargin">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/practice_go_back"
@@ -147,13 +147,30 @@
             android:textSize="@dimen/checkInTitleCounterTextSize"
             breeze:textKey="appoitment_edit_date_range_button" />
 
+        <!--<com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
+        <!--android:id="@+id/activity_practice_appointments_show_all_appointments_label"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_toStartOf="@+id/activity_practice_appointments_change_date_range_label"-->
+        <!--android:background="@drawable/main_buttons_rounded"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:paddingStart="@dimen/changeDateHorizontalPadding"-->
+        <!--android:paddingTop="@dimen/changeDateVerticalPadding"-->
+        <!--android:paddingEnd="@dimen/changeDateHorizontalPadding"-->
+        <!--android:paddingBottom="@dimen/changeDateVerticalPadding"-->
+        <!--android:textColor="@color/white_enabled_selector"-->
+        <!--android:textSize="@dimen/checkInTitleCounterTextSize"-->
+        <!--android:visibility="gone"-->
+        <!--breeze:textKey="all_appointments_label" />-->
+
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/activity_practice_appointments_show_all_appointments_label"
+            android:id="@+id/showPendingAppointmentTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/activity_practice_appointments_change_date_range_label"
-            android:background="@drawable/main_buttons_rounded"
+            android:background="@drawable/blue_round_background_selector"
             android:gravity="center_vertical"
             android:paddingStart="@dimen/changeDateHorizontalPadding"
             android:paddingTop="@dimen/changeDateVerticalPadding"
@@ -161,23 +178,7 @@
             android:paddingBottom="@dimen/changeDateVerticalPadding"
             android:textColor="@color/white_enabled_selector"
             android:textSize="@dimen/checkInTitleCounterTextSize"
-            android:visibility="gone"
-            breeze:textKey="all_appointments_label" />
-
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/activity_practice_appointments_show_pending_appointments_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toStartOf="@+id/activity_practice_appointments_change_date_range_label"
-            android:background="@drawable/main_buttons_rounded"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/changeDateHorizontalPadding"
-            android:paddingTop="@dimen/changeDateVerticalPadding"
-            android:paddingEnd="@dimen/changeDateHorizontalPadding"
-            android:paddingBottom="@dimen/changeDateVerticalPadding"
-            android:textColor="@color/white_enabled_selector"
-            android:textSize="@dimen/checkInTitleCounterTextSize"/>
+            breeze:textKey="pending_appointments_label" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -188,12 +189,12 @@
         android:layout_marginEnd="@dimen/paymentContainerHorizontalMargin">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/practice_patient_count_label"
+            android:id="@+id/patientCountLabelTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="@dimen/practiceCounterStartMargin"
             android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/practiceCounterStartMargin"
             android:textColor="@color/white"
             android:textSize="@dimen/checkinColumnTitleTextSize"
             app:customAssetFont="gotham_rounded_medium"
@@ -206,7 +207,7 @@
             android:layout_height="@dimen/queueCounterNoBorderHeight"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/dimen_8dp"
-            android:layout_toEndOf="@+id/practice_patient_count_label"
+            android:layout_toEndOf="@+id/patientCountLabelTextView"
             android:background="@drawable/queue_counter_noborder_background"
             android:gravity="center"
             android:minWidth="@dimen/dimen_34dp"
@@ -218,28 +219,15 @@
             tools:text="100" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/practice_pending_count_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/checkinColumnTitleTextSize"
-            android:visibility="gone"
-            app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="pending_label"
-            tools:text="Pending" />
-
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/practice_pending_count"
             android:layout_width="@dimen/queueCounterNoBorderWidth"
             android:layout_height="@dimen/queueCounterNoBorderHeight"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/dimen_8dp"
-            android:layout_toEndOf="@+id/practice_pending_count_label"
-            android:background="@drawable/queue_pending_counter_noborder_background"
+            android:layout_toEndOf="@+id/patientCountLabelTextView"
+            android:background="@drawable/queue_counter_noborder_background"
             android:gravity="center"
-            android:textColor="@color/white"
+            android:textColor="@color/lightning_yellow"
             android:textSize="@dimen/checkInTitleCounterTextSize"
             android:textStyle="bold"
             android:visibility="gone"
@@ -253,8 +241,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="@dimen/paymentContainerHorizontalMargin"
-        android:layout_marginEnd="@dimen/paymentContainerHorizontalMargin"
         android:layout_marginTop="@dimen/listPatientsMarginTop"
+        android:layout_marginEnd="@dimen/paymentContainerHorizontalMargin"
         android:layout_marginBottom="@dimen/paymentContainerBottomMargin"
         android:background="@drawable/payments_list_background" />
 
