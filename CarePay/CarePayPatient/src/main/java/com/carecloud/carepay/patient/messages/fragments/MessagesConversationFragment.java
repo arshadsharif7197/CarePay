@@ -131,6 +131,9 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
 
         messageTextInput = view.findViewById(R.id.message_input);
         messageTextInput.addTextChangedListener(messageInputListener);
+
+        TextView threadProviderTextView = view.findViewById(R.id.threadProviderTextView);
+        threadProviderTextView.setText(digProvider(thread));
     }
 
     @Override
@@ -145,9 +148,6 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(thread.getSubject());
-
-        TextView subTitle = toolbar.findViewById(R.id.toolbar_subtitle);
-        subTitle.setText(digProvider(thread));
 
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
