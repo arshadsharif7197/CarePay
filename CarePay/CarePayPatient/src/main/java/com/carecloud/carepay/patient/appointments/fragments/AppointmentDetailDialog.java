@@ -318,6 +318,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     } else if (appointmentDTO.getPayload().isAppointmentOver()) {
                         showCheckoutButton(enabledLocations);
                     }
+                    scheduleAppointmentButton.setEnabled(true);
                     break;
                 }
                 case PENDING: {
@@ -343,7 +344,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                             rightButton.setOnClickListener(checkInClick);
                         }
                     }
-                    scheduleAppointmentButton.setEnabled(!eventExists);
+                    scheduleAppointmentButton.setEnabled(true);
                     break;
                 }
                 case REQUESTED_UPCOMING:
@@ -407,7 +408,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                             rightButton.setOnClickListener(checkInClick);
                         }
                     }
-                    scheduleAppointmentButton.setEnabled(!eventExists);
+                    scheduleAppointmentButton.setEnabled(true);
                     break;
                 }
                 case CHECKED_OUT: {
@@ -620,8 +621,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private View.OnClickListener scheduleAppointmentClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (calendarEvent == null && PermissionsUtil
-                    .checkPermissionReadCalendar(AppointmentDetailDialog.this)) {
+            if (calendarEvent == null && !eventExists
+                    && PermissionsUtil.checkPermissionReadCalendar(AppointmentDetailDialog.this)) {
                 saveCalendarEvent();
             } else if (calendarEvent != null) {
                 Toast.makeText(getContext(), Label.getLabel("appointment.schedule.event.message.repeated"),
@@ -888,7 +889,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                 }
             });
             eventExists = true;
-            scheduleAppointmentButton.setEnabled(false);
+//            scheduleAppointmentButton.setEnabled(false);
         }
     }
 }
