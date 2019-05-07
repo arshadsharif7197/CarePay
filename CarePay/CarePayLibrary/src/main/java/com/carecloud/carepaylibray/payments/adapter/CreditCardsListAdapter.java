@@ -14,6 +14,7 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.Date;
 import java.util.List;
@@ -64,7 +65,10 @@ public class CreditCardsListAdapter extends RecyclerView.Adapter<CreditCardsList
         holder.creditCardText.setText(String.format("%s %s", creditCardInfo.getCardType(),
                 creditCardInfo.getCardNumber()));
 
-        Date expDate = DateUtil.getInstance().setDateRaw(creditCardInfo.getExpireDt()).getDate();
+        String expiredDate = !StringUtil.isNullOrEmpty(creditCardInfo.getExpireDtDisplay()) ?
+                creditCardInfo.getExpireDtDisplay() : creditCardInfo.getExpireDt();
+
+        Date expDate = DateUtil.getInstance().setDateRaw(expiredDate).getDate();
         expDate = DateUtil.getLastDayOfMonth(expDate);
         if (expDate.before(new Date())) {
             holder.paymentMethodImage.setImageResource(R.drawable.icn_payment_credit_card_expiring);
