@@ -13,6 +13,7 @@ import android.widget.EditText;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeSwitchPinResponseDTO;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -51,10 +52,9 @@ public class ConfirmationPinDialog extends BaseDialogFragment implements View.On
 
     /**
      * Constructor calling from  Patient screen for Switching to Practice Mode.
-     *
      */
     public static ConfirmationPinDialog newInstance(TransitionDTO transitionDTOPinLink,
-                                 boolean isDynamicLabels, TransitionDTO languageTransition) {
+                                                    boolean isDynamicLabels, TransitionDTO languageTransition) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, transitionDTOPinLink);
         args.putBoolean("isDymanicLabels", isDynamicLabels);
@@ -228,13 +228,12 @@ public class ConfirmationPinDialog extends BaseDialogFragment implements View.On
             PatientModeSwitchPinResponseDTO patientModeSwitchPinResponseDTO = gson.fromJson(workflowDTO.toString(), PatientModeSwitchPinResponseDTO.class);
             if (patientModeSwitchPinResponseDTO.getPayload().getPinpad().getPayload()) {
                 BasePracticeActivity practiceActivity = (BasePracticeActivity) getContext();
-                if(practiceActivity.getApplicationMode().getUserPracticeDTO() != null) {
+                if (practiceActivity.getApplicationMode().getUserPracticeDTO() != null) {
                     String patientLanguage = practiceActivity.getApplicationPreferences().getUserLanguage();
-                    if(!patientLanguage.equals(CarePayConstants.DEFAULT_LANGUAGE)) {
+                    if (!patientLanguage.equals(CarePayConstants.DEFAULT_LANGUAGE)) {
                         final Map<String, String> headers = practiceActivity.getWorkflowServiceHelper().getApplicationStartHeaders();
                         headers.put("username", practiceActivity.getApplicationPreferences().getUserName());
-                        practiceActivity.getApplicationPreferences().setUserLanguage(CarePayConstants.DEFAULT_LANGUAGE);
-                        practiceActivity.changeLanguage(languageTransition, CarePayConstants.DEFAULT_LANGUAGE, headers, new BasePracticeActivity.SimpleCallback() {
+                        practiceActivity.changeLanguage(languageTransition, ApplicationPreferences.getInstance().getUserLanguage(), headers, new BasePracticeActivity.SimpleCallback() {
                             @Override
                             public void callback() {
                                 //do nothing more
@@ -284,7 +283,7 @@ public class ConfirmationPinDialog extends BaseDialogFragment implements View.On
         }
     }
 
-    private void identifyPracticeUser(String userId){
+    private void identifyPracticeUser(String userId) {
         MixPanelUtil.setUser(getContext(), userId, null);
         MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_is_practice_user), true);
     }
