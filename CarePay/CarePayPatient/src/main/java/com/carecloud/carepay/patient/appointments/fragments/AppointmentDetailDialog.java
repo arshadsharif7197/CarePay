@@ -407,6 +407,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                             rightButton.setOnClickListener(checkInClick);
                         }
                     }
+                    scheduleAppointmentButton.setEnabled(!eventExists);
                     break;
                 }
                 case CHECKED_OUT: {
