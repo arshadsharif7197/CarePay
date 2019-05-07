@@ -83,8 +83,8 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
     private UserPracticeDTO selectedPractice;
     private Date fromDate;
     private Date toDate;
-    private TextView dateToTextView;
     private TextView dateFromTextView;
+    private TextView dateToTextView;
     private CheckBox encryptedCheckBox;
     private EditText emailEditText;
     private RadioButton pdfOption;
@@ -381,6 +381,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                                         dateFromTextView.setText(DateUtil.getInstance().setDate(fromDate)
                                                 .toStringWithFormatMmSlashDdSlashYyyy());
                                         dateFromTextView.getOnFocusChangeListener().onFocusChange(dateFromTextView, true);
+                                        dateToTextView.setEnabled(true);
                                     }
                                 } else {
                                     if (selectedDate != null) {

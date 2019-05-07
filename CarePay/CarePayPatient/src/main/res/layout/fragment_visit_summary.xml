@@ -133,6 +133,7 @@
                             android:cursorVisible="false"
                             android:drawableEnd="@drawable/icon_drop_down"
                             android:editable="false"
+                            android:enabled="false"
                             android:focusableInTouchMode="false"
                             android:imeOptions="actionNext"
                             android:paddingStart="@dimen/dimen_10dp"
