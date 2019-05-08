@@ -103,7 +103,7 @@ public class PatientPaymentPresenter extends PaymentPresenter
 
     @Override
     public void replaceFragment(Fragment fragment, boolean addToBackStack) {
-
+        viewHandler.navigateToFragment(fragment, true);
     }
 
     @Override

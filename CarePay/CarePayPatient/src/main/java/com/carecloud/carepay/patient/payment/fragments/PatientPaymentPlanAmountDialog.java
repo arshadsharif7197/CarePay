@@ -50,8 +50,6 @@ public class PatientPaymentPlanAmountDialog extends PaymentPlanAmountDialog {
                 }
             });
             logPaymentPlanStartedMixPanelEvent(addExisting);
-//            getFragmentManager().popBackStackImmediate(PaymentDetailsFragmentDialog.class.getName(),
-//                    FragmentManager.POP_BACK_STACK_INCLUSIVE);
             callback.replaceFragment(fragment, true);
             ((ToolbarInterface) callback).displayToolbar(false, null);
         } catch (NumberFormatException nfe) {

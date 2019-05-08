@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentDetailInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -23,7 +24,7 @@ public abstract class PaymentPlanAmountDialog extends PartialPaymentDialog {
 
     protected PaymentsModel paymentsModel;
     protected PendingBalanceDTO selectedBalance;
-    protected PaymentDetailInterface callback;
+    protected FragmentActivityInterface callback;
 
     private String practiceId;
     private boolean canAddToExisting;
@@ -37,9 +38,9 @@ public abstract class PaymentPlanAmountDialog extends PartialPaymentDialog {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (PaymentDetailInterface) context;
+            callback = (FragmentActivityInterface) context;
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached Context must implement PaymentDetailInterface");
+            throw new ClassCastException("Attached Context must implement FragmentActivityInterface");
         }
     }
 
