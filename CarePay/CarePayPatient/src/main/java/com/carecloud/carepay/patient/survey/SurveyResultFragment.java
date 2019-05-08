@@ -137,6 +137,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
         } else {
             Bundle bundle = new Bundle();
             bundle.putBoolean(CarePayConstants.REFRESH, true);
+            bundle.putBoolean(CarePayConstants.SHOW_SURVEY, true);
             PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, bundle);
         }
 //        showRateDialogFragment();

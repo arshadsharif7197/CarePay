@@ -50,8 +50,10 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         super.onCreate(savedInstanceState);
         Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
         boolean forceRefresh = false;
+        boolean showSurvey = false;
         if (extra != null) {
             forceRefresh = extra.getBoolean(CarePayConstants.REFRESH, false);
+            showSurvey = extra.getBoolean(CarePayConstants.SHOW_SURVEY, false);
         }
         appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
         if (appointmentsResultModel == null || forceRefresh) {
@@ -59,7 +61,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         } else {
             resumeOnCreate();
         }
-        if (forceRefresh) {
+        if (showSurvey) {
             showRateDialogFragment();
         }
 
