@@ -635,11 +635,16 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         lastEventId = CalendarUtil.getNewEventId(getContext());
         String title = String.format(Label.getLabel("appointment.schedule.event.title.event"), StringUtil
                 .capitalize(appointmentDTO.getPayload().getProvider().getFullName()));
-        startActivityForResult(CalendarUtil.createSaveEventIntent(lastEventId, title, "",
+        Intent intent = CalendarUtil.createSaveEventIntent(lastEventId, title, "",
                 DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime()).getDate().getTime(),
                 DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getEndTime()).getDate().getTime(),
-                appointmentDTO.getPayload().getLocation().getAddress().getPlaceAddressString()),
-                OPEN_CALENDAR_APP);
+                appointmentDTO.getPayload().getLocation().getAddress().getPlaceAddressString());
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(intent, OPEN_CALENDAR_APP);
+        } else {
+            Toast.makeText(getContext(), Label.getLabel("appointment.schedule.alert.message.noCalendarApp"),
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     private View.OnClickListener checkInClick = new View.OnClickListener() {
