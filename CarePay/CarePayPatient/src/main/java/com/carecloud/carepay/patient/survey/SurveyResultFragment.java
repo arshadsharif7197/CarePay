@@ -1,6 +1,7 @@
 package com.carecloud.carepay.patient.survey;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -23,7 +24,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BackPressedFragmentInterface;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.rate.RateDialog;
 import com.carecloud.carepay.patient.rate.RateInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -126,13 +126,20 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
 
     private void finishFlow(WorkflowDTO workflowDTO) {
         if (workflowDTO == null || comesFromNotification) {
+            if (!surveyDto.getPayload().getSurvey().isAlreadyFilled()) {
+                Intent intent = new Intent();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(CarePayConstants.SHOW_SURVEY, true);
+                intent.putExtras(bundle);
+                getActivity().setResult(Activity.RESULT_OK, intent);
+            }
             getActivity().finish();
         } else {
             Bundle bundle = new Bundle();
             bundle.putBoolean(CarePayConstants.REFRESH, true);
             PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, bundle);
         }
-        showRateDialogFragment();
+//        showRateDialogFragment();
     }
 
     private void showNegativeFeedbackLayout(View view, final SurveyModel surveyModel) {
@@ -390,16 +397,10 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(CarePayConstants.REFRESH, true);
+                bundle.putBoolean(CarePayConstants.SHOW_SURVEY, true);
                 PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, bundle);
-                showRateDialogFragment();
             }
         });
-    }
-
-    private void showRateDialogFragment() {
-        if (!surveyDto.getPayload().getSurvey().isAlreadyFilled()) {
-            callback.showRateDialogFragment();
-        }
     }
 
     @NonNull

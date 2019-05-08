@@ -51,7 +51,7 @@
         android:textColor="@color/white"
         app:customAssetFont="gotham_rounded_medium"
         breeze:textKey="rate.dialog.option.label.rateNow"
-        tools:text="Yes, rate it now!" />
+        tools:text="Yes, rate it now" />
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/notNowButton"
