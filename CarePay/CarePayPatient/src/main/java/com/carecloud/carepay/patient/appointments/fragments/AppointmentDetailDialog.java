@@ -321,7 +321,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     } else if (appointmentDTO.getPayload().isAppointmentOver()) {
                         showCheckoutButton(enabledLocations);
                     }
-                    scheduleAppointmentButton.setEnabled(isCalendarAvailable);
+                    scheduleAppointmentButton.setEnabled(isCalendarAvailable
+                            && appointmentDTO.getPayload().isAppointmentOver());
                     break;
                 }
                 case PENDING: {
