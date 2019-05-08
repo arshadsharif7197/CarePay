@@ -322,7 +322,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                         showCheckoutButton(enabledLocations);
                     }
                     scheduleAppointmentButton.setEnabled(isCalendarAvailable
-                            && appointmentDTO.getPayload().isAppointmentOver());
+                            && !appointmentDTO.getPayload().isAppointmentOver());
                     break;
                 }
                 case PENDING: {
