@@ -398,7 +398,6 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                                   final OnOptionSelectedListener listener) {
 
         final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        // add cancel button
         dialog.setNegativeButton(Label.getLabel("demographics_cancel_label"), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int pos) {
@@ -406,7 +405,6 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
             }
         });
 
-        // create dialog layout
         View customView = LayoutInflater.from(context).inflate(R.layout.alert_list_layout, null, false);
         dialog.setView(customView);
         TextView titleTextView = customView.findViewById(R.id.title_view);
@@ -414,7 +412,6 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         titleTextView.setVisibility(View.VISIBLE);
 
 
-        // create the adapter
         ListView listView = customView.findViewById(R.id.dialoglist);
         CustomOptionsAdapter customOptionsAdapter = new CustomOptionsAdapter(context, options);
         listView.setAdapter(customOptionsAdapter);
@@ -424,7 +421,6 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         alert.requestWindowFeature(Window.FEATURE_NO_TITLE);
         alert.show();
 
-        // set item click listener
         AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long row) {
@@ -457,7 +453,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         ((BaseActivity) getActivity()).getWorkflowServiceHelper().execute(transition, new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
-                ((BaseActivity) getActivity()).showProgressDialog();
+                showProgressDialog();
             }
 
             @Override
@@ -473,8 +469,9 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
 
             @Override
             public void onFailure(String exceptionMessage) {
-                ((BaseActivity) getActivity()).hideProgressDialog();
-                ((BaseActivity) getActivity()).showErrorNotification(exceptionMessage);
+                Log.e("okHttp", exceptionMessage);
+                hideProgressDialog();
+                showErrorNotification(Label.getLabel("visitSummary.createVisitSummary.error.label.downloadError"));
             }
         }, query.toString());
     }
@@ -485,23 +482,24 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         query.put("job_id", jobId);
         query.put("practice_mgmt", selectedPractice.getPracticeMgmt());
         ((BaseActivity) getActivity()).getWorkflowServiceHelper().execute(transition, new WorkflowServiceCallback() {
+            boolean failedParsing = false;
 
             @Override
             public void onPreExecute() {
-
             }
 
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
-                VisitSummaryDTO visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
+                VisitSummaryDTO visitSummaryDTO = null;
+                try {
+                    visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
+                } catch (Exception ex) {
+                    failedParsing = true;
+                    onFailure("");
+                }
                 String status = visitSummaryDTO.getPayload().getVisitSummary().getStatus();
                 if (retryIntent > MAX_NUMBER_RETRIES) {
-                    retryIntent = 0;
-                    isExporting = false;
-                    exportButton.setEnabled(true);
-//                    exportButton.setProgressEnabled(false);
-                    exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.export"));
-                    showErrorNotification(Label.getLabel("practice_patient_settings_intake_forms_print_status_error"));
+                    resetProcess();
                 } else if (status.equals("queued") || status.equals("working")) {
                     retryIntent++;
                     handler = new Handler();
@@ -517,12 +515,25 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
             @Override
             public void onFailure(String exceptionMessage) {
                 Log.e("OkHttp", exceptionMessage);
-                downloadFile(jobId, selectedPractice, format);
+                if (failedParsing) {
+                    downloadFile(jobId, selectedPractice, format);
+                } else {
+                    resetProcess();
+                }
                 isExporting = false;
 //                exportButton.setProgressEnabled(false);
                 exportButton.setEnabled(formIsValid());
             }
         }, query);
+    }
+
+    private void resetProcess() {
+        retryIntent = 0;
+        isExporting = false;
+        exportButton.setEnabled(true);
+//        exportButton.setProgressEnabled(false);
+        exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.export"));
+        showErrorNotification(Label.getLabel("visitSummary.createVisitSummary.error.label.downloadError"));
     }
 
     private void downloadFile(String jobId, UserPracticeDTO selectedPractice, String format) {

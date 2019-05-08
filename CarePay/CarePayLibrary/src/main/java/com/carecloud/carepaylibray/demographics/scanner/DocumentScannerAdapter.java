@@ -150,7 +150,7 @@ public class DocumentScannerAdapter {
             imageFront.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(finalFrontPic);
+                    DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(finalFrontPic, false);
                     fragment.show(((BaseActivity) context).getSupportFragmentManager(), "detail");
                 }
             });
@@ -162,7 +162,7 @@ public class DocumentScannerAdapter {
             imageBack.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(finalBackPic);
+                    DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(finalBackPic, false);
                     fragment.show(((BaseActivity) context).getSupportFragmentManager(), "detail");
                 }
             });
@@ -195,7 +195,7 @@ public class DocumentScannerAdapter {
             imageFront.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(finalFrontPic);
+                    DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(finalFrontPic, false);
                     fragment.show(((BaseActivity) context).getSupportFragmentManager(), "detail");
                 }
             });
@@ -208,7 +208,7 @@ public class DocumentScannerAdapter {
             imageBack.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(finalBackPic);
+                    DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(finalBackPic, false);
                     fragment.show(((BaseActivity) context).getSupportFragmentManager(), "detail");
                 }
             });
@@ -297,7 +297,7 @@ public class DocumentScannerAdapter {
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(filePath);
+                        DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(filePath, false);
                         fragment.show(((BaseActivity) context).getSupportFragmentManager(), "detail");
                     }
                 });

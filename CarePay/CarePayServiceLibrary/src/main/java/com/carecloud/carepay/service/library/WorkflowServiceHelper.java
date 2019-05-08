@@ -73,6 +73,38 @@ public class WorkflowServiceHelper {
     }
 
     /**
+     * get request headers
+     *
+     * @param customHeaders collection of custom headers
+     * @return collection of headers
+     */
+    private Map<String, String> getHeaders(Map<String, String> customHeaders) {
+        Map<String, String> headers = getUserAuthenticationHeaders();
+
+        if ((applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PATIENT)
+                && (ApplicationPreferences.getInstance().getProfileId() != null)
+                && (!ApplicationPreferences.getInstance().getProfileId().isEmpty())) {
+            headers.put("username_patient", ApplicationPreferences.getInstance().getProfileId());
+        }
+
+        // Add auth headers to custom in case custom has old auth headers
+        if (customHeaders != null) {
+            customHeaders.remove("Authorization");
+
+            customHeaders.putAll(headers);
+
+            if (customHeaders.containsKey("AccessToken")) {
+                customHeaders.put("Authorization", customHeaders.get("AccessToken"));
+                customHeaders.remove("AccessToken");
+            }
+
+            return customHeaders;
+        }
+
+        return headers;
+    }
+
+    /**
      * Default headers user information
      *
      * @return collection user auth heaters
@@ -105,34 +137,6 @@ public class WorkflowServiceHelper {
 
         userAuthHeaders.putAll(getPreferredLanguageHeader());
         return userAuthHeaders;
-    }
-
-    /**
-     * get request headers
-     *
-     * @param customHeaders collection of custom headers
-     * @return collection of headers
-     */
-    private Map<String, String> getHeaders(Map<String, String> customHeaders) {
-        Map<String, String> headers = getUserAuthenticationHeaders();
-
-        if ((applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PATIENT)
-                && (ApplicationPreferences.getInstance().getProfileId() != null)
-                && (!ApplicationPreferences.getInstance().getProfileId().isEmpty())) {
-            headers.put("username_patient", ApplicationPreferences.getInstance().getProfileId());
-        }
-
-        // Add auth headers to custom in case custom has old auth headers
-        if (customHeaders != null) {
-            if (customHeaders.containsKey("Authorization")) {
-                headers.remove("Authorization");
-            }
-            customHeaders.putAll(headers);
-
-            return customHeaders;
-        }
-
-        return headers;
     }
 
     /**

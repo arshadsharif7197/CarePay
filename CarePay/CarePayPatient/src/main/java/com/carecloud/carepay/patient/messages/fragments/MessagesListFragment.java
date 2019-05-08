@@ -16,7 +16,6 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.MessageNavigationCallback;
 import com.carecloud.carepay.patient.messages.adapters.MessagesListAdapter;
 import com.carecloud.carepay.patient.messages.models.Messages;
-import com.carecloud.carepay.patient.messages.models.MessagingDataModel;
 import com.carecloud.carepay.patient.messages.models.MessagingModel;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -51,7 +50,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
     private TextView noMessagesTitle;
 
     private MessageNavigationCallback callback;
-    private MessagingDataModel messagingDataModel;
+    private MessagingModel messagingModel;
 
     private boolean refreshing = true;
     private boolean isPaging = false;
@@ -72,7 +71,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         handler = new Handler();
-        messagingDataModel = callback.getDto().getPayload();
+        messagingModel = (MessagingModel) callback.getDto();
     }
 
 
@@ -83,7 +82,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
 
     @Override
     public void onViewCreated(View view, Bundle icicle) {
-        refreshLayoutView = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+        refreshLayoutView = view.findViewById(R.id.swipeRefreshLayout);
         refreshLayoutView.setOnRefreshListener(onRefreshListener);
 
         noMessagesLayout = view.findViewById(R.id.no_messages_layout);
@@ -92,7 +91,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         noMessagesDescription = view.findViewById(R.id.no_messages_description);
         noMessagesTitle = view.findViewById(R.id.no_messages_title);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.messages_recycler);
+        recyclerView = view.findViewById(R.id.messages_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView.addOnScrollListener(scrollListener);
 
@@ -104,23 +103,28 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         butonNewMessage.setOnClickListener(newMessageAction);
 
         refreshing = true;
-        updateDisplayDataModel(messagingDataModel);
+        updateDisplayDataModel(messagingModel);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        refreshListMessages();
+    }
+
+    public void refreshListMessages() {
         refreshing = true;
         getThreads(0, 0);
     }
 
     private void setAdapters() {
-        List<Messages.Reply> threads = messagingDataModel.getMessages().getData();
+        List<Messages.Reply> threads = messagingModel.getPayload().getMessages().getData();
         MessagesListAdapter adapter = (MessagesListAdapter) recyclerView.getAdapter();
         if (adapter != null) {
             adapter.setThreads(threads);
         } else {
-            adapter = new MessagesListAdapter(getContext(), threads, this, callback.getUserId());
+            adapter = new MessagesListAdapter(getContext(), threads, this,
+                    messagingModel.getPayload().getInbox().getUserId());
             recyclerView.setAdapter(adapter);
         }
         Profile delegateUser = messagingDataModel.getDelegate();
@@ -153,12 +157,14 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
      *
      * @param messagingDataModel updated model
      */
-    public void updateDisplayDataModel(MessagingDataModel messagingDataModel) {
-        if (this.messagingDataModel == null || refreshing) {
-            this.messagingDataModel = messagingDataModel;
+    public void updateDisplayDataModel(MessagingModel messagingDataModel) {
+        if (this.messagingModel == null || refreshing) {
+            this.messagingModel = messagingDataModel;
         } else {
-            this.messagingDataModel.getMessages().setPaging(messagingDataModel.getMessages().getPaging());
-            this.messagingDataModel.getMessages().getData().addAll(messagingDataModel.getMessages().getData());
+            this.messagingModel.getPayload().getMessages().setPaging(messagingDataModel
+                    .getPayload().getMessages().getPaging());
+            this.messagingModel.getPayload().getMessages().getData().addAll(messagingDataModel
+                    .getPayload().getMessages().getData());
         }
 
         setAdapters();
@@ -168,13 +174,13 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
     }
 
     private boolean hasMorePages() {
-        Paging paging = messagingDataModel.getMessages().getPaging();
+        Paging paging = messagingModel.getPayload().getMessages().getPaging();
         return paging.getCurrentPage() != paging.getTotalPages();
     }
 
     @Override
     public void onMessageSelected(Messages.Reply thread) {
-        callback.displayThreadMessages(thread);
+        callback.displayThreadMessages(thread, false);
     }
 
     @Override
@@ -224,8 +230,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
             if (hasMorePages()) {
                 int last = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
                 if (last > recyclerView.getAdapter().getItemCount() - BOTTOM_ROW_OFFSET && !isPaging) {
-                    Paging paging = messagingDataModel.getMessages().getPaging();
-//                    callback.getMessageThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage());
+                    Paging paging = messagingModel.getPayload().getMessages().getPaging();
                     getThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage());
                     isPaging = true;
                 }
@@ -237,7 +242,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
     private View.OnClickListener newMessageAction = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            callback.startNewThread();
+            callback.addFragment(MessagesProvidersFragment.newInstance(), true);
         }
     };
 
@@ -256,11 +261,10 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
             if (deleteThread != null) {
                 MessagesListAdapter messagesListAdapter = (MessagesListAdapter) recyclerView.getAdapter();
                 messagesListAdapter.finalizeMessageRemoval(deleteThread);
-//                callback.deleteMessageThread(deleteThread);
                 deleteMessageThread(deleteThread);
                 //reset delete thread
                 deleteThread = null;
-                Paging paging = messagingDataModel.getMessages().getPaging();
+                Paging paging = messagingModel.getPayload().getMessages().getPaging();
                 if (messagesListAdapter.getItemCount() == 0) {
                     setAdapters();
                 } else if (paging.getResultsPerPage() % messagesListAdapter.getItemCount() < BOTTOM_ROW_OFFSET &&
@@ -277,7 +281,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         queryMap.put("page", String.valueOf(page < 1 ? 1 : page));//first page is 1
         queryMap.put("limit", String.valueOf(size < 15 ? 15 : size));//default size if 15, should not be less than that
 
-        TransitionDTO inbox = callback.getDto().getMetadata().getLinks().getInbox();
+        TransitionDTO inbox = messagingModel.getMetadata().getLinks().getInbox();
         getWorkflowServiceHelper().execute(inbox, getMessageThreadsCallback, queryMap);
     }
 
@@ -290,8 +294,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             MessagingModel messagingModel = DtoHelper.getConvertedDTO(MessagingModel.class, workflowDTO);
-            MessagingDataModel messagingDataModel = messagingModel.getPayload();
-            updateDisplayDataModel(messagingDataModel);
+            updateDisplayDataModel(messagingModel);
         }
 
         @Override
@@ -305,7 +308,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("message_id", deleteThread.getId());
 
-        TransitionDTO deleteMessage = callback.getDto().getMetadata().getLinks().getDeleteMessage();
+        TransitionDTO deleteMessage = messagingModel.getMetadata().getLinks().getDeleteMessage();
         getWorkflowServiceHelper().execute(deleteMessage, getMessageThreadsCallback, queryMap);
     }
 }

@@ -9,6 +9,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Model for appointment payload.
@@ -568,6 +569,13 @@ public class AppointmentsPayloadDTO {
         this.displayStyle = displayStyle;
     }
 
+    public void setReasonForVisit(String reasonForVisit) {
+        this.reasonForVisit = reasonForVisit;
+    }
+
+    public String getReasonForVisit() {
+        return reasonForVisit;
+    }
 
     @Override
     public boolean equals(Object payloadObj) {
@@ -739,11 +747,30 @@ public class AppointmentsPayloadDTO {
         }
     }
 
-    public void setReasonForVisit(String reasonForVisit) {
-        this.reasonForVisit = reasonForVisit;
+    public boolean isRescheduleEnabled(String practiceId, List<PortalSettingDTO> portalSettings) {
+        for (PortalSettingDTO portalSettingsDto : portalSettings) {
+            if (portalSettingsDto.getMetadata().getPracticeId().equals(practiceId)) {
+                for (PortalSetting portalSetting : portalSettingsDto.getPayload()) {
+                    if ("scheduling".equals(portalSetting.getTypeName().toLowerCase())
+                            && "appointments".equals(portalSetting.getLabel().toLowerCase())) {
+                        return "A".equals(portalSetting.getStatus());
+                    }
+                }
+            }
+        }
+        return false;
     }
 
-    public String getReasonForVisit() {
-        return reasonForVisit;
+    public boolean canStartVideoVisit() {
+        Date apptStartDate = DateUtil.getInstance().setDateRaw(getStartTime()).getDate();
+        Date currentDate = DateUtil.getInstance().setToCurrent().getDate();
+        return getVisitType().hasVideoOption() &&
+                isAppointmentToday() &&
+                ((!hasAppointmentStarted() &&
+                        DateUtil.getSecondsElapsed(apptStartDate, currentDate) <
+                                CarePayConstants.VIDEO_START_OFFSET_SECONDS) ||
+                        hasAppointmentStarted());
     }
+
+
 }

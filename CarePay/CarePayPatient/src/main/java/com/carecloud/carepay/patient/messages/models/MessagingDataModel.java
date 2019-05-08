@@ -2,7 +2,6 @@ package com.carecloud.carepay.patient.messages.models;
 
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.base.dtos.DelegatePermissionBasePayloadDto;
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -56,5 +55,14 @@ public class MessagingDataModel extends DelegatePermissionBasePayloadDto {
 
     public void setUserPractices(List<UserPracticeDTO> userPractices) {
         this.userPractices = userPractices;
+    }
+
+    public String lookupName(Messages.Reply thread, String userId) {
+        for (Messages.Participant participant : thread.getParticipants()) {
+            if (participant.getUserId().equals(userId)) {
+                return participant.getName();
+            }
+        }
+        return null;
     }
 }

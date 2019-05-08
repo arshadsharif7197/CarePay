@@ -23,6 +23,8 @@
     <dimen name="timeSlotItemPadding">10dp</dimen>
     <dimen name="timeSlotItemTextSize">14sp</dimen>
     <dimen name="locationItemHeight">80dp</dimen>
+
+    <!--Delegate-->
     <dimen name="menuIconSize">40dp</dimen>
     <dimen name="menuItemPadding">10dp</dimen>
     <dimen name="menuIconPadding">5dp</dimen>
@@ -35,4 +37,6 @@
     <dimen name="profileListTriggerIconSize">20dp</dimen>
     <dimen name="profileListTriggerHorizontalMargin">5dp</dimen>
     <dimen name="profileListTriggerIconPadding">5dp</dimen>
+
+    <dimen name="largeAlertMessageTextSize">13sp</dimen>
 </resources>

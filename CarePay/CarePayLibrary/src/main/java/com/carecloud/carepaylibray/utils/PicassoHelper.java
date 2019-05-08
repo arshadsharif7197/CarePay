@@ -48,6 +48,7 @@ public class PicassoHelper {
         Picasso.Builder builder = new Picasso.Builder(context);
         builder.downloader(new CustomOkHttpDownloader(context));
         picasso = builder.build();
+        picasso.setLoggingEnabled(true);
 
         return picasso;
     }
@@ -80,6 +81,11 @@ public class PicassoHelper {
 
     public void loadImage(Context context, final ImageView imageView, final View viewToHide, String photoUrl,
                           int size) {
+        loadImage(context, imageView, viewToHide, null, photoUrl, size);
+    }
+
+    public void loadImage(Context context, final ImageView imageView, final View viewToHide, final View viewToShow, String photoUrl,
+                          int size) {
         if (!StringUtil.isNullOrEmpty(photoUrl)) {
             Picasso.with(context).load(photoUrl)
                     .resize(size, size)
@@ -92,6 +98,9 @@ public class PicassoHelper {
                             if (viewToHide != null) {
                                 viewToHide.setVisibility(View.GONE);
                             }
+                            if (viewToShow != null) {
+                                viewToShow.setVisibility(View.VISIBLE);
+                            }
                         }
 
                         @Override
@@ -99,12 +108,18 @@ public class PicassoHelper {
                             if (viewToHide != null) {
                                 viewToHide.setVisibility(View.VISIBLE);
                             }
+                            if (viewToShow != null) {
+                                viewToShow.setVisibility(View.GONE);
+                            }
                             imageView.setVisibility(View.INVISIBLE);
                         }
                     });
         } else {
             if (viewToHide != null) {
                 viewToHide.setVisibility(View.VISIBLE);
+            }
+            if (viewToShow != null) {
+                viewToShow.setVisibility(View.GONE);
             }
             imageView.setVisibility(View.INVISIBLE);
         }

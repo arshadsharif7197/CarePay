@@ -105,8 +105,8 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
 
     @Override
     public void onViewCreated(View view, Bundle icicle) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
-        TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
+        Toolbar toolbar = view.findViewById(R.id.settings_toolbar);
+        TextView title = toolbar.findViewById(R.id.settings_toolbar_title);
         title.setText(Label.getLabel("demographics_documents_section"));
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
         callback.setToolbar(toolbar);
@@ -135,7 +135,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
 
 
     private void initHealthInsuranceList(View view) {
-        RecyclerView recyclerView = ((RecyclerView) view.findViewById(R.id.available_health_insurance_list));
+        RecyclerView recyclerView = view.findViewById(R.id.available_health_insurance_list);
         List<DemographicInsurancePayloadDTO> insuranceList = getInsurances(demographicDTO);
         if (adapter == null) {
             adapter = new InsuranceLineItemsListAdapter(getContext(), insuranceList, this, getApplicationMode().getApplicationType());
@@ -152,7 +152,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
-        Button addAnotherButton = (Button) view.findViewById(R.id.health_insurance_add_another);
+        Button addAnotherButton = view.findViewById(R.id.health_insurance_add_another);
         addAnotherButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View addAnotherButton) {

@@ -85,6 +85,7 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
         holder.cellAvatar.setVisibility(View.GONE);
         holder.initials.setVisibility(View.VISIBLE);
         holder.itemView.setOnClickListener(null);//need to remove this for header just in case
+        holder.videoVisitIndicator.setVisibility(View.GONE);
     }
 
     protected void bindView(final ViewHolder holder, AppointmentsPayloadDTO appointmentsPayload,
@@ -102,7 +103,15 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
 
         switch (style) {
             case CHECKED_IN: {
-                if (shouldShowCheckoutButton) {
+                if (appointmentsPayload.getVisitType().hasVideoOption() && !shouldShowCheckoutButton){
+                    if(appointmentsPayload.canStartVideoVisit()) {
+                        holder.videoVisitIndicator.setVisibility(View.VISIBLE);
+                    }else{
+                        holder.todayTimeTextView.setText(dateUtil.getTime12Hour());
+                        holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.emerald));
+                        holder.todayTimeLayout.setVisibility(View.VISIBLE);
+                    }
+                } else if (shouldShowCheckoutButton) {
                     holder.checkOutButton.setVisibility(View.VISIBLE);
                     holder.checkOutButton.setClickable(true);
                 }
@@ -290,6 +299,7 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
 
         Button checkOutButton;
         TextView checkedOutLabel;
+        View videoVisitIndicator;
 
         View listItemDivider;
 
@@ -322,6 +332,9 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
             //Check-Out
             checkOutButton = itemView.findViewById(R.id.check_out_button);
             checkedOutLabel = itemView.findViewById(R.id.checked_out_label);
+
+            //Video Visit
+            videoVisitIndicator = itemView.findViewById(R.id.visit_type_video);
 
             listItemDivider = itemView.findViewById(R.id.appointment_list_item_divider);
 

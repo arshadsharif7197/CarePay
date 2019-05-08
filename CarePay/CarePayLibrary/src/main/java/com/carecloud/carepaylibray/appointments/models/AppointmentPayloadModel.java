@@ -95,6 +95,9 @@ public class AppointmentPayloadModel extends DelegatePermissionBasePayloadDto im
     @SerializedName("appointment_page_details")
     @Expose
     private List<PagingDto> pagingInfo = new ArrayList<>();
+    @SerializedName("video_visit")
+    @Expose
+    private VideoVisitModel videoVisitModel = new VideoVisitModel();
 
     /**
      * @return languages
@@ -342,6 +345,14 @@ public class AppointmentPayloadModel extends DelegatePermissionBasePayloadDto im
 
     public void setPagingInfo(List<PagingDto> pagingInfo) {
         this.pagingInfo = pagingInfo;
+    }
+
+    public VideoVisitModel getVideoVisitModel() {
+        return videoVisitModel;
+    }
+
+    public void setVideoVisitModel(VideoVisitModel videoVisitModel) {
+        this.videoVisitModel = videoVisitModel;
     }
 
     public UserPracticeDTO getPractice(@NonNull String practiceId) {

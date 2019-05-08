@@ -24,7 +24,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemD
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
-import com.carecloud.carepaylibray.appointments.models.ProvidersReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
@@ -169,12 +168,7 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         AppointmentAvailabilityPayloadDTO payload = new AppointmentAvailabilityPayloadDTO();
         payload.setLocation(selectedLocation);
         payload.setResource(selectedResource);
-        ProvidersReasonDTO reasonDTO = new ProvidersReasonDTO();
-        reasonDTO.setAmount(selectedVisitType.getAmount());
-        reasonDTO.setName(selectedVisitType.getName());
-        reasonDTO.setDescription(selectedVisitType.getDescription());
-        reasonDTO.setId(selectedVisitType.getId());
-        payload.setVisitReason(reasonDTO);
+        payload.setVisitReason(selectedVisitType);
         AppointmentAvailabilityDataDTO appointmentAvailabilityDataDTO = new AppointmentAvailabilityDataDTO();
         ArrayList<AppointmentAvailabilityPayloadDTO> payloadList = new ArrayList<>();
         payloadList.add(payload);
