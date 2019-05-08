@@ -111,6 +111,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private long lastEventId = -1;
     private AppointmentCalendarEvent calendarEvent;
     private boolean eventExists;
+    private boolean isCalendarAvailable = false;
 
 
     /**
@@ -184,6 +185,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                 }
             }
         });
+        isCalendarAvailable = getSaveCalendarEventIntent()
+                .resolveActivity(getActivity().getPackageManager()) != null;
     }
 
     private void checkIfEventExists() {
@@ -318,7 +321,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     } else if (appointmentDTO.getPayload().isAppointmentOver()) {
                         showCheckoutButton(enabledLocations);
                     }
-                    scheduleAppointmentButton.setEnabled(true);
+                    scheduleAppointmentButton.setEnabled(isCalendarAvailable);
                     break;
                 }
                 case PENDING: {
@@ -344,7 +347,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                             rightButton.setOnClickListener(checkInClick);
                         }
                     }
-                    scheduleAppointmentButton.setEnabled(true);
+                    scheduleAppointmentButton.setEnabled(isCalendarAvailable);
                     break;
                 }
                 case REQUESTED_UPCOMING:
@@ -408,7 +411,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                             rightButton.setOnClickListener(checkInClick);
                         }
                     }
-                    scheduleAppointmentButton.setEnabled(true);
+                    scheduleAppointmentButton.setEnabled(isCalendarAvailable);
                     break;
                 }
                 case CHECKED_OUT: {
@@ -633,18 +636,22 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
 
     private void saveCalendarEvent() {
         lastEventId = CalendarUtil.getNewEventId(getContext());
-        String title = String.format(Label.getLabel("appointment.schedule.event.title.event"), StringUtil
-                .capitalize(appointmentDTO.getPayload().getProvider().getFullName()));
-        Intent intent = CalendarUtil.createSaveEventIntent(lastEventId, title, "",
-                DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime()).getDate().getTime(),
-                DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getEndTime()).getDate().getTime(),
-                appointmentDTO.getPayload().getLocation().getAddress().getPlaceAddressString());
+        Intent intent = getSaveCalendarEventIntent();
         if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivityForResult(intent, OPEN_CALENDAR_APP);
         } else {
             Toast.makeText(getContext(), Label.getLabel("appointment.schedule.alert.message.noCalendarApp"),
                     Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private Intent getSaveCalendarEventIntent() {
+        String title = String.format(Label.getLabel("appointment.schedule.event.title.event"), StringUtil
+                .capitalize(appointmentDTO.getPayload().getProvider().getFullName()));
+        return CalendarUtil.createSaveEventIntent(lastEventId, title, "",
+                DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime()).getDate().getTime(),
+                DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getEndTime()).getDate().getTime(),
+                appointmentDTO.getPayload().getLocation().getAddress().getPlaceAddressString());
     }
 
     private View.OnClickListener checkInClick = new View.OnClickListener() {
@@ -894,7 +901,6 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                 }
             });
             eventExists = true;
-//            scheduleAppointmentButton.setEnabled(false);
         }
     }
 }
