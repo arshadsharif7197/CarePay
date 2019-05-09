@@ -45,6 +45,7 @@ script:
    - ./runner testfairy
    - cd /home/travis/build/CareCloud/shamrock_android/CarePay
    - ./runner testfairy
+
 branches:
   only: 
     - master
