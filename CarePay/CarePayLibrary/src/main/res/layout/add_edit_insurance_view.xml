@@ -10,6 +10,42 @@
     android:orientation="vertical">
 
     <FrameLayout
+        android:id="@+id/healthInsuranceTypeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
+            android:id="@+id/healthInsuranceTypeInputLayout"
+            style="@style/SigninSignupTextInputStyle"
+            android:tag="@string/tag_demographics_error_color"
+            android:textColorHint="@color/demographics_color_error"
+            app:customAssetFont="proxima_nova_semi_bold"
+            app:hintTextAppearance="@style/FloatingLabelStyle">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
+                android:id="@+id/health_insurance_types"
+                style="@style/SigninSignupEditStyle"
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:drawableEnd="@drawable/icon_drop_down"
+                android:editable="false"
+                android:focusableInTouchMode="false"
+                android:imeOptions="actionNext"
+                app:customAssetFont="proxima_nova_regular"
+                app:hintTextAppearance="@style/FloatingLabelStyle"
+                breeze:hintKey="demographics_insurance_type_label"
+                tools:hint="Type" />
+
+        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
+
+        <include
+            android:id="@+id/healthInsuranceTypeRequired"
+            layout="@layout/layout_required_text_view"
+            android:visibility="visible"/>
+
+    </FrameLayout>
+
+    <FrameLayout
         android:id="@+id/healthInsuranceProvidersLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -40,7 +76,8 @@
 
         <include
             android:id="@+id/healthInsuranceProviderRequired"
-            layout="@layout/layout_required_text_view" />
+            layout="@layout/layout_required_text_view"
+            android:visibility="visible"/>
 
     </FrameLayout>
 
@@ -153,41 +190,6 @@
             breeze:hintKey="demographics_insurance_group_number"
             tools:hint="Group Number" />
     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
-
-    <FrameLayout
-        android:id="@+id/healthInsuranceTypeLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
-            android:id="@+id/healthInsuranceTypeInputLayout"
-            style="@style/SigninSignupTextInputStyle"
-            android:tag="@string/tag_demographics_error_color"
-            android:textColorHint="@color/demographics_color_error"
-            app:customAssetFont="proxima_nova_semi_bold"
-            app:hintTextAppearance="@style/FloatingLabelStyle">
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayEditText
-                android:id="@+id/health_insurance_types"
-                style="@style/SigninSignupEditStyle"
-                android:clickable="false"
-                android:cursorVisible="false"
-                android:drawableEnd="@drawable/icon_drop_down"
-                android:editable="false"
-                android:focusableInTouchMode="false"
-                android:imeOptions="actionNext"
-                app:customAssetFont="proxima_nova_regular"
-                app:hintTextAppearance="@style/FloatingLabelStyle"
-                breeze:hintKey="demographics_insurance_type_label"
-                tools:hint="Type" />
-
-        </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
-
-        <include
-            android:id="@+id/healthInsuranceTypeRequired"
-            layout="@layout/layout_required_text_view" />
-
-    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/healthInsuranceRelationshipLayout"

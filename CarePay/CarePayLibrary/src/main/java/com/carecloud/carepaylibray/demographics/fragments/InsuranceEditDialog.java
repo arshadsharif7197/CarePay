@@ -58,7 +58,9 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.marcok.stepprogressbar.StepProgressBar;
 
-import org.apache.commons.lang3.text.WordUtils;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
@@ -66,10 +68,6 @@ import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAd
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_FRONT_DTO;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_BACK;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_FRONT;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public class InsuranceEditDialog extends BaseDialogFragment implements MediaViewInterface, DTOInterface {
 
@@ -671,8 +669,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
         demographicInsurancePayloadDTO.setInsuranceProvider(selectedProviderOption.getName().trim());
         demographicInsurancePayloadDTO.setInsurancePlan(selectedPlanOption.getName().trim());
-        demographicInsurancePayloadDTO.setInsuranceType(!StringUtil.isNullOrEmpty(selectedTypeOption.getName())
-                ? selectedTypeOption.getName().trim() : defaultType);
+        demographicInsurancePayloadDTO.setInsuranceType(selectedTypeOption.getName().trim());
 
         String cardNumber = ((TextView) view.findViewById(R.id.health_insurance_card_number)).getText().toString();
         demographicInsurancePayloadDTO.setInsuranceMemberId(cardNumber.trim());
@@ -870,13 +867,26 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             return false;
         }
 
+        if (StringUtil.isNullOrEmpty(selectedTypeOption.getName())) {
+            if (userInteraction) {
+                showErrorViews(true, (ViewGroup) view.findViewById(R.id.healthInsuranceTypeLayout));
+                findViewById(R.id.healthInsuranceTypeRequired).setVisibility(View.VISIBLE);
+            }
+            return false;
+        } else {
+            showErrorViews(false, (ViewGroup) view.findViewById(R.id.healthInsuranceTypeLayout));
+            findViewById(R.id.healthInsuranceTypeRequired).setVisibility(View.GONE);
+        }
+
         if (StringUtil.isNullOrEmpty(selectedProviderOption.getName())) {
             if (userInteraction) {
                 showErrorViews(true, (ViewGroup) view.findViewById(R.id.healthInsuranceProvidersLayout));
+                findViewById(R.id.healthInsuranceProviderRequired).setVisibility(View.VISIBLE);
             }
             return false;
         } else {
             showErrorViews(false, (ViewGroup) view.findViewById(R.id.healthInsuranceProvidersLayout));
+            findViewById(R.id.healthInsuranceProviderRequired).setVisibility(View.GONE);
         }
 
         if (!isDataHolderSelf) {
