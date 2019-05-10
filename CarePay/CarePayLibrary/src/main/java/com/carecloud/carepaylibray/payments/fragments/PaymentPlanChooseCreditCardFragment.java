@@ -138,7 +138,7 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
 
-        Button addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
+        Button addNewCardButton = view.findViewById(R.id.addNewCardButton);
         addNewCardButton.setOnClickListener(addNewCardButtonListener);
 
         nextButton.setOnClickListener(nextButtonListener);
@@ -154,7 +154,7 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
                 onAddPaymentPlanCard(paymentsModel, paymentPlanPostModel, onlySelectMode);
             }
             if (paymentPlanDTO != null && callback instanceof OneTimePaymentInterface) {
-                onAddPaymentPlanCard2(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
+                onAddPaymentPlanCard(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
             }
             if (getDialog() != null) {
                 dismiss();
@@ -162,27 +162,12 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
         }
     };
 
-    private void onAddPaymentPlanCard2(PaymentsModel paymentsModel,
-                                       PaymentPlanDTO paymentPlanDTO,
-                                       boolean onlySelectMode,
-                                       Date paymentDate) {
+    private void onAddPaymentPlanCard(PaymentsModel paymentsModel,
+                                      PaymentPlanDTO paymentPlanDTO,
+                                      boolean onlySelectMode,
+                                      Date paymentDate) {
         PaymentPlanAddCreditCardFragment fragment = PaymentPlanAddCreditCardFragment
                 .newInstance(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
-//        fragment.setChangePaymentMethodListener(new LargeAlertDialogFragment.LargeAlertInterface() {
-//            @Override
-//            public void onActionButton() {
-//                PaymentPlanPaymentMethodFragment fragment = PaymentPlanPaymentMethodFragment
-//                        .newInstance(paymentsModel, paymentPlan, false, paymentDate);
-//                fragment.setOnCancelListener(new Dialog.OnCancelListener() {
-//                    @Override
-//                    public void onCancel(DialogInterface dialog) {
-//                        onMakeOneTimePayment(paymentsModel, paymentPlanDTO);
-//                    }
-//                });
-//                replaceFragment(fragment, true);
-//                displayToolbar(false, toolBarTitle);
-//            }
-//        });
         callback.replaceFragment(fragment, true);
     }
 
@@ -191,15 +176,6 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
                                       boolean onlySelectMode) {
         PaymentPlanAddCreditCardFragment fragment = PaymentPlanAddCreditCardFragment
                 .newInstance(paymentsModel, paymentPlanPostModel, onlySelectMode);
-//        fragment.setChangePaymentMethodListener(new LargeAlertDialogFragment.LargeAlertInterface() {
-//            @Override
-//            public void onActionButton() {
-//                PaymentPlanPaymentMethodFragment fragment = PaymentPlanPaymentMethodFragment
-//                        .newInstance(paymentsModel, paymentPlanPostModel);
-//                replaceFragment(fragment, true);
-//                displayToolbar(false, toolBarTitle);
-//            }
-//        });
         callback.replaceFragment(fragment, true);
     }
 

@@ -663,7 +663,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         };
     }
 
-
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
 
@@ -749,7 +748,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void onPaymentCashFinished() {
-
+        //NA
     }
 
     @Override
