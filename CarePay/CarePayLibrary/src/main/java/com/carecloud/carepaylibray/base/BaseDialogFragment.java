@@ -37,6 +37,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
 
     private DialogInterface.OnDismissListener onDismissListener;
     protected DialogInterface.OnCancelListener onCancelListener;
+    protected OnBackPressedInterface onBackPressedInterface;
 
     private long lastFullScreenSet;
     private BlurDialogEngine mBlurEngine;
@@ -296,12 +297,28 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         }
     }
 
+    public void showDialog(boolean showBlur) {
+        if (getDialog() != null) {
+            getDialog().show();
+            if (showBlur && mBlurEngine != null) {
+                mBlurEngine.onResume(getRetainInstance());
+            }
+        }
+    }
+
     /**
      * hide dialog fragment without dismissing
      */
     public void hideDialog() {
+        hideDialog(false);
+    }
+
+    public void hideDialog(boolean hideBlur) {
         if (getDialog() != null) {
             getDialog().hide();
+            if (hideBlur && mBlurEngine != null) {
+                mBlurEngine.onDismiss();
+            }
         }
     }
 
@@ -323,4 +340,19 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
             showDialog();
         }
     };
+
+    public void onBackPressed() {
+        getActivity().onBackPressed();
+        if (onBackPressedInterface != null) {
+            onBackPressedInterface.onBackPressed();
+        }
+    }
+
+    public void setOnBackPressedListener(OnBackPressedInterface onBackPressedInterface) {
+        this.onBackPressedInterface = onBackPressedInterface;
+    }
+
+    public interface OnBackPressedInterface {
+        void onBackPressed();
+    }
 }

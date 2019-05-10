@@ -101,6 +101,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         setContentView(R.layout.activity_demographic_review);
 
         presenter = new PatientModeDemographicsPresenter(this, icicle, this);
+        Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
+        if (extra.getBoolean(CarePayConstants.HANDLE_HOME, false)) {
+            presenter.setHandleHomeButton(true);
+        }
+
         initializeHomeButton();
         initializeLeftNavigation();
         initializeLanguageSpinner();

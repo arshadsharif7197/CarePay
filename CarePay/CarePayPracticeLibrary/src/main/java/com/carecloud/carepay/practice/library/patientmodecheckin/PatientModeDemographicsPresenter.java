@@ -15,24 +15,11 @@ import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenterImpl;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
-import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
-import com.carecloud.carepaylibray.demographics.fragments.FormsFragment;
-import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
-import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment;
-import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
-import com.carecloud.carepaylibray.demographics.fragments.IntakeFormsFragment;
-import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
-import com.carecloud.carepaylibray.medications.fragments.AllergiesFragment;
-import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragment;
-import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
-import com.carecloud.carepaylibray.medications.fragments.MedicationsFragment;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
-import com.carecloud.carepaylibray.utils.ValidationHelper;
 
 import java.util.List;
 
@@ -177,5 +164,9 @@ public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl 
                 ((CheckInDemographicsBaseFragment) fragment).afterLanguageChanged(demographicDTO);
             }
         }
+    }
+
+    public void setHandleHomeButton(boolean handle) {
+        shouldHandleHomeButton = handle;
     }
 }

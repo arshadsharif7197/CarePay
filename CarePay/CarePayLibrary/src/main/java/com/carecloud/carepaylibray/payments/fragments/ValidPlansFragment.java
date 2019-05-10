@@ -96,13 +96,17 @@ public class ValidPlansFragment extends BaseDialogFragment implements PaymentPla
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cancel();
+                onBackNavigationClick();
             }
         });
         toolbar.setTitle("");
         TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(Label.getLabel("payment_plan_active_plan"));
 
+    }
+
+    protected void onBackNavigationClick() {
+        cancel();
     }
 
     protected void setAdapter(View view) {

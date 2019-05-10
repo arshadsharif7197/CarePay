@@ -2,6 +2,7 @@ package com.carecloud.carepay.patient.payment.fragments;
 
 import android.os.Bundle;
 
+import com.carecloud.carepay.patient.base.ToolbarInterface;
 import com.carecloud.carepaylibray.payments.fragments.OneTimePaymentDialog;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -30,19 +31,32 @@ public class PatientOneTimePaymentDialog extends OneTimePaymentDialog {
 
     @Override
     protected void onStartOneTimePayment(PaymentsModel paymentsDTO, PaymentPlanDTO paymentPlanDTO) {
+        hideDialog(true);
         PaymentPlanPaymentMethodFragment fragment = PaymentPlanPaymentMethodFragment
                 .newInstance(paymentsDTO, paymentPlanDTO, false);
+        fragment.setOnBackPressedListener(new OnBackPressedInterface() {
+            @Override
+            public void onBackPressed() {
+                showDialog(true);
+            }
+        });
         callback.replaceFragment(fragment, true);
-//        callback.displayToolbar(false, toolBarTitle);
-
+        ((ToolbarInterface) callback).displayToolbar(false, null);
         logPaymentPlanOneTimePaymentMixPanelEvent(paymentPlanDTO);
     }
 
     @Override
     protected void onScheduleOneTimePayment(PaymentsModel paymentsDTO, PaymentPlanDTO paymentPlanDTO, Date paymentDate) {
+        hideDialog(true);
         PaymentPlanPaymentMethodFragment fragment = PaymentPlanPaymentMethodFragment
                 .newInstance(paymentsDTO, paymentPlanDTO, false, paymentDate);
+        fragment.setOnBackPressedListener(new OnBackPressedInterface() {
+            @Override
+            public void onBackPressed() {
+                showDialog(true);
+            }
+        });
         callback.replaceFragment(fragment, true);
-//        callback.displayToolbar(false, toolBarTitle);
+        ((ToolbarInterface) callback).displayToolbar(false, null);
     }
 }

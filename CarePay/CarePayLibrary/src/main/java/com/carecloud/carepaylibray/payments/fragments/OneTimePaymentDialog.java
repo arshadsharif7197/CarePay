@@ -117,7 +117,6 @@ public abstract class OneTimePaymentDialog extends PartialPaymentDialog {
             } else {
                 onScheduleOneTimePayment(paymentsDTO, paymentPlanDTO, paymentDate);
             }
-            dismiss();
         } catch (NumberFormatException nfe) {
             nfe.printStackTrace();
             Toast.makeText(getContext(), "Please enter valid amount!", Toast.LENGTH_LONG).show();
@@ -127,11 +126,11 @@ public abstract class OneTimePaymentDialog extends PartialPaymentDialog {
     protected void onScheduleOneTimePayment(PaymentsModel paymentsDTO,
                                             PaymentPlanDTO paymentPlanDTO,
                                             Date paymentDate) {
-        //NA
+        dismiss();
     }
 
     protected void onStartOneTimePayment(PaymentsModel paymentsDTO, PaymentPlanDTO paymentPlanDTO) {
-        //NA
+        dismiss();
     }
 
     protected void createPaymentModel(double amount) {

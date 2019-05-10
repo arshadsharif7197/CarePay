@@ -202,7 +202,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    getActivity().onBackPressed();
+                    onBackPressed();
                 }
             });
         }
