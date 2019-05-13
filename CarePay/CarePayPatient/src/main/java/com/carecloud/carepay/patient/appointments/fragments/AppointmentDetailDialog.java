@@ -424,15 +424,15 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         }
     }
 
-    private boolean shouldShowVisitSummary(){
+    private boolean shouldShowVisitSummary() {
         AppointmentsResultModel appointmentModelDto = ((PatientAppointmentPresenter) callback).getMainAppointmentDto();
-        UserPracticeDTO appointmentPractice= null;
+        UserPracticeDTO appointmentPractice = null;
         for (UserPracticeDTO userPracticeDTO : appointmentModelDto.getPayload().getUserPractices()) {
-            if(userPracticeDTO.getPracticeId().equals(appointmentDTO.getMetadata().getPracticeId())) {
+            if (userPracticeDTO.getPracticeId().equals(appointmentDTO.getMetadata().getPracticeId())) {
                 appointmentPractice = userPracticeDTO;
             }
         }
-        if(appointmentPractice != null && appointmentPractice.isVisitSummaryEnabled()) {
+        if (appointmentPractice != null && appointmentPractice.isVisitSummaryEnabled()) {
             for (PortalSettingDTO portalSettingDTO : appointmentModelDto.getPayload().getPortalSettings()) {
                 if (appointmentPractice.getPracticeId().equals(portalSettingDTO.getMetadata().getPracticeId())) {
                     for (PortalSetting portalSetting : portalSettingDTO.getPayload()) {
@@ -527,15 +527,22 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     }
 
     private String getPhoneNumber() {
-        String phone = appointmentDTO.getPayload().getProvider().getPhone();
-        if (StringUtil.isNullOrEmpty(phone)) {
+        String phone = appointmentDTO.getPayload().getLocation().getPrimaryPhone();
+        if (StringUtil.isNullOrEmpty(phone)){
             for (LocationDTO.PhoneDTO phoneDTO : appointmentDTO.getPayload().getLocation().getPhoneDTOs()) {
-                if (phoneDTO.isPrimary()) {
+                if(!phoneDTO.isPrimary()){
                     phone = phoneDTO.getPhoneNumber();
-                    break;
                 }
+                break;
             }
         }
+
+        if (StringUtil.isNullOrEmpty(phone)){
+            AppointmentsResultModel appointmentModelDto = ((PatientAppointmentPresenter) callback).getMainAppointmentDto();
+            UserPracticeDTO practiceDTO = appointmentModelDto.getPayload().getPractice(appointmentDTO.getMetadata().getPracticeId());
+            phone = practiceDTO.getPracticePhone();
+        }
+
         return phone;
     }
 
