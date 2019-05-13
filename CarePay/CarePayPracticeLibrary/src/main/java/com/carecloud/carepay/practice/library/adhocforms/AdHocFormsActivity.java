@@ -168,7 +168,7 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
 
     @Override
     public DTO getDto() {
-        return adhocFormsModel;
+        return adhocFormsModel != null ? adhocFormsModel : getConvertedDTO(AdHocFormsModel.class);
     }
 
     @Override
