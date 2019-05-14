@@ -78,7 +78,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                 addressSection.getProperties().getAddress2().isDisplayed(),
                 demographicPayload.getAddress().getAddress2(),
                 addressSection.getProperties().getAddress2().isRequired(),
-                view.findViewById(R.id.addressLine2Required));
+                null);
         address2EditText.setEnabled(!StringUtil.isNullOrEmpty(demographicPayload.getAddress().getAddress1()));
 
         final TextInputLayout addressInputLayout = view.findViewById(R.id.address1TextInputLayout);
