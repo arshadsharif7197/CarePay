@@ -533,7 +533,6 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                 if(!phoneDTO.isPrimary()){
                     phone = phoneDTO.getPhoneNumber();
                 }
-                break;
             }
         }
 
