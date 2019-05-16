@@ -25,6 +25,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.demographics.adapters.InsuranceLineItemsListAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
@@ -32,6 +33,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPay
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPhotoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter;
 import com.carecloud.carepaylibray.media.MediaScannerPresenter;
 import com.carecloud.carepaylibray.media.MediaViewInterface;
@@ -74,6 +76,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
     private boolean insuranceTypeRepeated = false;
     private String insuranceTypeRepeatedErrorMessage;
     private View nextButton;
+    private boolean insuranceChanged;
 
 
     public static SettingsDocumentsFragment newInstance() {
@@ -96,6 +99,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         super.onCreate(savedInstanceState);
         demographicsSettingsDTO = (DemographicDTO) callback.getDto();
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, DtoHelper.getStringDTO(demographicsSettingsDTO));
+        insuranceChanged = false;
     }
 
     @Override
@@ -109,7 +113,12 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         TextView title = toolbar.findViewById(R.id.settings_toolbar_title);
         title.setText(Label.getLabel("demographics_documents_section"));
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
-        callback.setToolbar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checkForUnsavedChanges();
+            }
+        });
 
         nextButton = findViewById(R.id.buttonAddDemographicInfo);
         nextButton.setOnClickListener(new View.OnClickListener() {
@@ -124,6 +133,22 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         initHealthInsuranceList(view);
     }
 
+    private void checkForUnsavedChanges() {
+        if (insuranceChanged) {
+            ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment
+                    .newInstance(Label.getLabel("demographics_insurance_unsaved_alert_title"),
+                            Label.getLabel("demographics_insurance_unsaved_alert_message"));
+            confirmDialogFragment.setCallback(new ConfirmationCallback() {
+                @Override
+                public void onConfirm() {
+                    getFragmentManager().popBackStack();
+                }
+            });
+            confirmDialogFragment.show(getFragmentManager(), confirmDialogFragment.getClass().getName());
+        } else {
+            getFragmentManager().popBackStack();
+        }
+    }
 
     private void initDocumentViews(View view) {
         mediaScannerPresenter = new MediaScannerPresenter(getContext(), this, CarePayCameraPreview.CameraType.SCAN_DOC);
@@ -345,6 +370,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
      * @param demographicDTO updated demographic dto payload
      */
     public void updateInsuranceList(DemographicDTO demographicDTO) {
+        insuranceChanged = true;
         this.demographicDTO = demographicDTO;
         if (getView() != null && isAdded()) {
             initHealthInsuranceList(getView());
