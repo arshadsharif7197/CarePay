@@ -58,7 +58,9 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.marcok.stepprogressbar.StepProgressBar;
 
-import org.apache.commons.lang3.text.WordUtils;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
@@ -66,10 +68,6 @@ import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAd
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_FRONT_DTO;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_BACK;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_FRONT;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public class InsuranceEditDialog extends BaseDialogFragment implements MediaViewInterface, DTOInterface {
 
@@ -382,16 +380,18 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                 .getNewDataModel().getDemographic().getInsurances().getProperties().getItems()
                 .getInsuranceModel().getInsuranceModelProperties();
 
-        final TextInputLayout planInputLayout = (TextInputLayout) view.findViewById(R.id.healthInsurancePlanInputLayout);
-        final EditText planEditText = (EditText) view.findViewById(R.id.health_insurance_plans);
+        final View otherPolicyHolderFields = findViewById(R.id.otherPolicyHolderFields);
+
+        final TextInputLayout planInputLayout = view.findViewById(R.id.healthInsurancePlanInputLayout);
+        final EditText planEditText = view.findViewById(R.id.health_insurance_plans);
         final DemographicsField planField = insuranceModelProperties.getInsurancePlan();
 
         String selectedProvider = demographicInsurancePayload.getInsuranceProvider();
-        TextInputLayout providerInputLayout = (TextInputLayout) view.findViewById(R.id.healthInsuranceProvidersInputLayout);
-        final EditText providerEditText = (EditText) view.findViewById(R.id.health_insurance_providers);
+        TextInputLayout providerInputLayout = view.findViewById(R.id.healthInsuranceProvidersInputLayout);
+        final EditText providerEditText = view.findViewById(R.id.health_insurance_providers);
         DemographicsInsuranceField providerField = insuranceModelProperties.getInsuranceProvider();
-        setUpDemographicField(view, selectedProvider, providerField.isDisplayed(), providerField.isRequired(),
-                providerField.getOptions(), null, providerInputLayout, providerEditText, null,
+        setUpDemographicField(view, selectedProvider, providerField.isDisplayed(),
+                providerField.getOptions(), null, providerInputLayout, providerEditText, R.id.healthInsuranceProviderRequired,
                 selectedProviderOption, Label.getLabel("demographics_documents_title_select_provider"), new OnOptionSelectedListener() {
                     @Override
                     public void onOptionSelected(DemographicsOption selectedOption) {
@@ -406,7 +406,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
                         //reset the plan dropdown
                         selectedPlanOption = new DemographicsOption();
-                        setUpDemographicField(view, null, planField.isDisplayed(), planField.isRequired(),
+                        setUpDemographicField(view, null, planField.isDisplayed(),
                                 insuranceOption.getPayerPlans(), R.id.healthInsurancePlanLayout,
                                 planInputLayout, planEditText, null, selectedPlanOption,
                                 Label.getLabel("demographics_documents_title_select_plan"), null);
@@ -434,7 +434,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                 !StringUtil.isNullOrEmpty(selectedProvider));
 
         String selectedPlan = demographicInsurancePayload.getInsurancePlan();
-        setUpDemographicField(view, selectedPlan, planField.isDisplayed(), planField.isRequired(),
+        setUpDemographicField(view, selectedPlan, planField.isDisplayed(),
                 selectedProviderOption.getPayerPlans(), R.id.healthInsurancePlanLayout,
                 planInputLayout, planEditText, null, selectedPlanOption,
                 Label.getLabel("demographics_documents_title_select_plan"), null);
@@ -442,7 +442,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         String selectedType = StringUtil.captialize(demographicInsurancePayload.getInsuranceType());
         setUpDemographicField(view, selectedType, insuranceModelProperties.getInsuranceType(),
                 R.id.healthInsuranceTypeLayout, R.id.healthInsuranceTypeInputLayout,
-                R.id.health_insurance_types, null,
+                R.id.health_insurance_types, R.id.healthInsuranceTypeRequired,
                 selectedTypeOption, Label.getLabel("demographics_insurance_type_label"));
 
         String selectedRelationship = demographicInsurancePayload.getRelationship();
@@ -450,19 +450,18 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             selectedRelationship = StringUtil.captialize(KEY_POLICY_HOLDER_SELF);
         }
         DemographicsField relationshipField = insuranceModelProperties.getRelationship();
-        TextInputLayout relationshipInputLayout = (TextInputLayout) view.findViewById(R.id.healthInsuranceRelationshipInputLayout);
-        EditText relationshipEditText = (EditText) view.findViewById(R.id.health_insurance_relationship);
+        TextInputLayout relationshipInputLayout = view.findViewById(R.id.healthInsuranceRelationshipInputLayout);
+        EditText relationshipEditText = view.findViewById(R.id.health_insurance_relationship);
         setUpDemographicField(view, selectedRelationship, relationshipField.isDisplayed(),
-                relationshipField.isRequired(), relationshipField.getOptions(),
-                R.id.healthInsuranceRelationshipLayout, relationshipInputLayout,
+                relationshipField.getOptions(), R.id.healthInsuranceRelationshipLayout, relationshipInputLayout,
                 relationshipEditText, null,
                 selectedRelationshipOption, Label.getLabel("demographics_insurance_relationship_label"),
                 new OnOptionSelectedListener() {
                     @Override
                     public void onOptionSelected(DemographicsOption option) {
                         isDataHolderSelf = selectedRelationshipOption.getLabel().toLowerCase().equals(KEY_POLICY_HOLDER_SELF);
-//                        setupExtraFields(view, demographicInsurancePayload, insuranceModelProperties);
                         checkIfEnableButton();
+                        otherPolicyHolderFields.setVisibility(isDataHolderSelf ? View.GONE : View.VISIBLE);
                         enableDependentFields(view,
                                 new int[]{R.id.health_insurance_policy_first_name_holder_layout,
                                         R.id.health_insurance_policy_middle_name_holder_layout,
@@ -500,26 +499,20 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         String firstName = StringUtil.capitalize(demographicInsurancePayload.getPolicyFirstNameHolder());
         setUpDemographicField(view, firstName, insuranceModelProperties.getPolicyHolder(),
                 null, R.id.health_insurance_policy_first_name_holder_layout,
-                R.id.health_insurance_policy_first_name_holder, null, null, null);
-        TextInputLayout firstNameInputLayout = (TextInputLayout) view.findViewById(R.id.health_insurance_policy_first_name_holder_layout);
-        EditText firstNameEditText = (EditText) view.findViewById(R.id.health_insurance_policy_first_name_holder);
-        firstNameEditText.addTextChangedListener(getValidateOptionsFields(firstNameInputLayout));
+                R.id.health_insurance_policy_first_name_holder, R.id.healthInsuranceFirstNameRequired,
+                null, null);
 
         String middleName = StringUtil.capitalize(demographicInsurancePayload.getPolicyMiddleNameHolder());
         setUpDemographicField(view, middleName, insuranceModelProperties.getPolicyHolder(),
                 null, R.id.health_insurance_policy_middle_name_holder_layout,
-                R.id.health_insurance_policy_middle_name_holder, null, null, null);
-        TextInputLayout middleNameInputLayout = view.findViewById(R.id.health_insurance_policy_middle_name_holder_layout);
-        EditText middleNameEditText = view.findViewById(R.id.health_insurance_policy_middle_name_holder);
-        middleNameEditText.addTextChangedListener(getValidateOptionsFields(middleNameInputLayout));
+                R.id.health_insurance_policy_middle_name_holder, null,
+                null, null);
 
         String lastName = StringUtil.capitalize(demographicInsurancePayload.getPolicyLastNameHolder());
         setUpDemographicField(view, lastName, insuranceModelProperties.getPolicyHolder(),
                 null, R.id.health_insurance_policy_last_name_holder_layout,
-                R.id.health_insurance_policy_last_name_holder, null, null, null);
-        TextInputLayout lastNameInputLayout = (TextInputLayout) view.findViewById(R.id.health_insurance_policy_last_name_holder_layout);
-        EditText lastNameEditText = (EditText) view.findViewById(R.id.health_insurance_policy_last_name_holder);
-        lastNameEditText.addTextChangedListener(getValidateOptionsFields(lastNameInputLayout));
+                R.id.health_insurance_policy_last_name_holder, R.id.healthInsuranceLastNameRequired,
+                null, null);
 
         otherProviderEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -546,7 +539,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         if (!StringUtil.isNullOrEmpty(title)) {
             ((TextView) view.findViewById(R.id.toolbar_title)).setText(title);
         }
-
+        otherPolicyHolderFields.setVisibility(isDataHolderSelf ? View.GONE : View.VISIBLE);
     }
 
     private void enableDependentFields(View view, int[] fields, boolean enabled) {
@@ -567,22 +560,23 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         }
     }
 
+
     private void setupExtraFields(View view, DemographicInsurancePayloadDTO demographicInsurancePayload,
                                   InsuranceModelProperties insuranceModelProperties) {
         String dob = demographicInsurancePayload.getFormattedPolicyDateOfBirthHolder();
-        final TextInputLayout dobTextInputLayout = (TextInputLayout) view.findViewById(R.id.health_insurance_policy_birth_date_holder_layout);
-        EditText dobEditText = (EditText) view.findViewById(R.id.health_insurance_policy_birth_date_holder);
-        setUpDemographicField(view, dob, true, !isDataHolderSelf, new ArrayList<DemographicsOption>(),
+        final TextInputLayout dobTextInputLayout = view.findViewById(R.id.health_insurance_policy_birth_date_holder_layout);
+        EditText dobEditText = view.findViewById(R.id.health_insurance_policy_birth_date_holder);
+        setUpDemographicField(view, dob, true, new ArrayList<DemographicsOption>(),
                 R.id.health_insurance_policy_birth_date_holder_layout, dobTextInputLayout, dobEditText,
-                null, null, null, null);
+                R.id.healthInsuranceDateOfBirthRequired, null, null, null);
         dobEditText.addTextChangedListener(dateInputFormatter);
 
         String selectedGender = demographicInsurancePayload.getPolicyGenderHolder();
-        TextInputLayout genderInputLayout = (TextInputLayout) view.findViewById(R.id.healthInsuranceGenderInputLayout);
-        EditText genderEditText = (EditText) view.findViewById(R.id.health_insurance_gender);
-        setUpDemographicField(view, selectedGender, true, !isDataHolderSelf,
+        TextInputLayout genderInputLayout = view.findViewById(R.id.healthInsuranceGenderInputLayout);
+        EditText genderEditText = view.findViewById(R.id.health_insurance_gender);
+        setUpDemographicField(view, selectedGender, true,
                 insuranceModelProperties.getPolicyHolderGender().getOptions(), R.id.healthInsuranceGenderLayout,
-                genderInputLayout, genderEditText, null,
+                genderInputLayout, genderEditText, R.id.healthInsuranceGenderRequired,
                 selectedGenderOption, Label.getLabel("demographics_review_gender"), null);
 
     }
@@ -671,8 +665,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
         demographicInsurancePayloadDTO.setInsuranceProvider(selectedProviderOption.getName().trim());
         demographicInsurancePayloadDTO.setInsurancePlan(selectedPlanOption.getName().trim());
-        demographicInsurancePayloadDTO.setInsuranceType(!StringUtil.isNullOrEmpty(selectedTypeOption.getName())
-                ? selectedTypeOption.getName().trim() : defaultType);
+        demographicInsurancePayloadDTO.setInsuranceType(selectedTypeOption.getName().trim());
 
         String cardNumber = ((TextView) view.findViewById(R.id.health_insurance_card_number)).getText().toString();
         demographicInsurancePayloadDTO.setInsuranceMemberId(cardNumber.trim());
@@ -864,79 +857,48 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         saveInsuranceButton.setClickable(isValid);
     }
 
+    /**
+     * Validate all the fields in the form and display errors
+     * @param userInteraction User interaction
+     * @return Boolean for all input data good
+     */
     private boolean validateForm(boolean userInteraction) {
         View view = getView();
         if (view == null) {
             return false;
         }
 
-        if (StringUtil.isNullOrEmpty(selectedProviderOption.getName())) {
-            if (userInteraction) {
-                showErrorViews(true, (ViewGroup) view.findViewById(R.id.healthInsuranceProvidersLayout));
-            }
-            return false;
-        } else {
-            showErrorViews(false, (ViewGroup) view.findViewById(R.id.healthInsuranceProvidersLayout));
+        boolean error = false;
+
+        if (validateError(StringUtil.isNullOrEmpty(selectedTypeOption.getName()),
+                userInteraction, view.findViewById(R.id.healthInsuranceTypeLayout))) {
+            error = true;
         }
-
+        if (validateError(StringUtil.isNullOrEmpty(selectedProviderOption.getName()),
+                userInteraction, view.findViewById(R.id.healthInsuranceProvidersLayout))) {
+            error = true;
+        }
         if (!isDataHolderSelf) {
-
-            String firstName = ((TextView) view.findViewById(R.id.health_insurance_policy_first_name_holder)).getText().toString();
-            TextInputLayout policyFirstNameHolderInput = (TextInputLayout) view.findViewById(R.id.health_insurance_policy_first_name_holder_layout);
-            if (StringUtil.isNullOrEmpty(firstName.trim())) {
-                if (userInteraction) {
-                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.healthInsuranceFirstNameContainer));
-                    policyFirstNameHolderInput.setErrorEnabled(true);
-                    policyFirstNameHolderInput.setError(Label.getLabel("demographics_required_field_msg"));
-                }
-                return false;
-            } else {
-                showErrorViews(false, (ViewGroup) view.findViewById(R.id.healthInsuranceFirstNameContainer));
-                policyFirstNameHolderInput.setError(null);
-                policyFirstNameHolderInput.setErrorEnabled(false);
+            String firstName = ((TextView) view.findViewById(R.id.health_insurance_policy_first_name_holder)).getText().toString().trim();
+            if (validateError(StringUtil.isNullOrEmpty(firstName.trim()), userInteraction,
+                    view.findViewById(R.id.healthInsuranceFirstNameContainer))) {
+                error = true;
             }
-
-
-            String lastName = ((TextView) view.findViewById(R.id.health_insurance_policy_last_name_holder)).getText().toString();
-            TextInputLayout policyLastNameHolderInput = (TextInputLayout) view.findViewById(R.id.health_insurance_policy_last_name_holder_layout);
-            if (StringUtil.isNullOrEmpty(lastName.trim())) {
-                if (userInteraction) {
-                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.healthInsuranceLastNameContainer));
-                    policyLastNameHolderInput.setErrorEnabled(true);
-                    policyLastNameHolderInput.setError(Label.getLabel("demographics_required_field_msg"));
-                }
-                return false;
-            } else {
-                showErrorViews(false, (ViewGroup) view.findViewById(R.id.healthInsuranceLastNameContainer));
-                policyLastNameHolderInput.setError(null);
-                policyLastNameHolderInput.setErrorEnabled(false);
+            String lastName = ((TextView) view.findViewById(R.id.health_insurance_policy_last_name_holder)).getText().toString().trim();
+            if (validateError(StringUtil.isNullOrEmpty(lastName.trim()), userInteraction,
+                    view.findViewById(R.id.healthInsuranceLastNameContainer))) {
+                error = true;
             }
-
-            String dob = ((TextView) view.findViewById(R.id.health_insurance_policy_birth_date_holder)).getText().toString();
-            TextInputLayout policyBirthDateHolderInput = (TextInputLayout) view.findViewById(R.id.health_insurance_policy_birth_date_holder_layout);
-            if (StringUtil.isNullOrEmpty(dob.trim())) {
-                if (userInteraction) {
-                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.dateOfBirthContainer));
-                    policyBirthDateHolderInput.setErrorEnabled(true);
-                    policyBirthDateHolderInput.setError(Label.getLabel("demographics_required_field_msg"));
-                }
-                return false;
-            } else {
-                showErrorViews(false, (ViewGroup) view.findViewById(R.id.dateOfBirthContainer));
-                policyBirthDateHolderInput.setError(null);
-                policyBirthDateHolderInput.setErrorEnabled(false);
+            String dob = ((TextView) view.findViewById(R.id.health_insurance_policy_birth_date_holder)).getText().toString().trim();
+            if (validateError(StringUtil.isNullOrEmpty(dob), userInteraction, view.findViewById(R.id.dateOfBirthContainer))) {
+                error = true;
             }
-
-
-            if (StringUtil.isNullOrEmpty(selectedGenderOption.getName()) || "Choose".equals(selectedGenderOption.getName())) {
-                if (userInteraction) {
-                    showErrorViews(true, (ViewGroup) view.findViewById(R.id.healthInsuranceGenderLayout));
-                }
-                return false;
-            } else {
-                showErrorViews(false, (ViewGroup) view.findViewById(R.id.healthInsuranceGenderLayout));
+            if (validateError((StringUtil.isNullOrEmpty(selectedGenderOption.getName()) ||
+                    "Choose".equals(selectedGenderOption.getName())),
+                    userInteraction, view.findViewById(R.id.healthInsuranceGenderLayout))) {
+                error = true;
             }
-
+            TextInputLayout policyBirthDateHolderInput = view.findViewById(R.id.health_insurance_policy_birth_date_holder_layout);
             if (!StringUtil.isNullOrEmpty(dob.trim())) {
                 String dateValidationResult = DateUtil
                         .getDateOfBirthValidationResultMessage(dob.trim());
@@ -945,14 +907,34 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                         policyBirthDateHolderInput.setErrorEnabled(true);
                         policyBirthDateHolderInput.setError(dateValidationResult);
                     }
-                    return false;
+                    error = true;
                 } else {
                     policyBirthDateHolderInput.setError(null);
                     policyBirthDateHolderInput.setErrorEnabled(false);
                 }
             }
         }
+        if (error) return false;
         return true;
+    }
+
+    /**
+     * Validate an individual field and set the error on the field
+     * @param inputDataBad Boolean for input data verification check
+     * @param userInteraction User interaction
+     * @param container Container for error displays
+     * @return Boolean error found
+     */
+    public boolean validateError(boolean inputDataBad, boolean userInteraction, View container) {
+        if (inputDataBad) {
+            if (userInteraction) {
+                showErrorViews(true, (ViewGroup) container);
+            }
+            return true;
+        } else {
+            showErrorViews(false, (ViewGroup) container);
+        }
+        return false;
     }
 
 
@@ -984,16 +966,14 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         // create dialog layout
         View customView = LayoutInflater.from(context).inflate(R.layout.alert_list_layout, null, false);
         dialog.setView(customView);
-        TextView titleTextView = (TextView) customView.findViewById(R.id.title_view);
+        TextView titleTextView = customView.findViewById(R.id.title_view);
         titleTextView.setText(title);
         titleTextView.setVisibility(View.VISIBLE);
 
-
         // create the adapter
-        ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
+        ListView listView = customView.findViewById(R.id.dialoglist);
         CustomOptionsAdapter customOptionsAdapter = new CustomOptionsAdapter(context, options);
         listView.setAdapter(customOptionsAdapter);
-
 
         final AlertDialog alert = dialog.create();
         alert.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1048,22 +1028,50 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         }
     };
 
+    /**
+     *
+     * First time setup of individual field that uses ids for all UI components
+     * instead of the component.
+     * @param view View
+     * @param keyName Key name.
+     * @param demographicsField DemographicsField
+     * @param containerLayout ContainerLayout id
+     * @param inputLayoutId InputLayout id
+     * @param editTextId EditText id
+     * @param requiredViewId RequiredView id
+     * @param demographicsOption DemographicsOption
+     * @param optionDialogTitle Title for dialog
+     */
     private void setUpDemographicField(View view, String keyName, DemographicsField demographicsField,
                                        Integer containerLayout, int inputLayoutId, int editTextId, Integer requiredViewId,
                                        DemographicsOption demographicsOption, String optionDialogTitle) {
         if (demographicsField == null) {
             demographicsField = new DemographicsField();
         }
-        TextInputLayout inputLayout = (TextInputLayout) view.findViewById(inputLayoutId);
-        EditText editText = (EditText) view.findViewById(editTextId);
-        setUpDemographicField(view, keyName, demographicsField.isDisplayed(), demographicsField.isRequired(),
+        TextInputLayout inputLayout = view.findViewById(inputLayoutId);
+        EditText editText = view.findViewById(editTextId);
+        setUpDemographicField(view, keyName, demographicsField.isDisplayed(),
                 demographicsField.getOptions(), containerLayout, inputLayout, editText,
                 requiredViewId, demographicsOption, optionDialogTitle, null);
 
     }
 
+    /**
+     * First time setup of the individual field
+     * @param view View
+     * @param keyName Key name.
+     * @param displayed Boolean to display the view or hide.
+     * @param options Pass in if there is multiple options for field, ex: Input dropdown with multiple options.
+     * @param containerLayout ContainerLayout
+     * @param inputLayout InputLayout
+     * @param editText EditText
+     * @param requiredViewId View of required label, used for removing and adding view when typed in field.
+     * @param demographicsOption DemographicsOption
+     * @param optionDialogTitle Title of dialog
+     * @param requiredListener OnOptionSelectedListener.
+     */
     private void setUpDemographicField(View view, String keyName, boolean displayed,
-                                       boolean required, List<? extends DemographicsOption> options,
+                                       List<? extends DemographicsOption> options,
                                        Integer containerLayout, TextInputLayout inputLayout, EditText editText, Integer requiredViewId,
                                        DemographicsOption demographicsOption, String optionDialogTitle,
                                        OnOptionSelectedListener requiredListener) {
@@ -1072,31 +1080,27 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         }
         editText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(inputLayout, null));
         if (demographicsOption != null ){//&& !StringUtil.isNullOrEmpty(demographicsOption.getName())) {
-            initSelectableInput(editText, demographicsOption, keyName, null, (List<DemographicsOption>) options);
+            initSelectableInput(editText, demographicsOption, keyName, (List<DemographicsOption>) options);
         } else {
             editText.setText(keyName);
         }
         editText.getOnFocusChangeListener().onFocusChange(editText,
                 !StringUtil.isNullOrEmpty(editText.getText().toString().trim()));
-        View requiredView = null;
-        if (requiredViewId != null) {
-            requiredView = view.findViewById(requiredViewId);
-            requiredView.setVisibility(required && StringUtil.isNullOrEmpty(keyName) ? View.VISIBLE : View.GONE);
-        }
         if (demographicsOption != null) {
             editText.setOnClickListener(getEditTextClickListener(options, inputLayout, editText,
-                    requiredView, demographicsOption, optionDialogTitle, requiredListener));
+                    demographicsOption, optionDialogTitle, requiredListener));
             demographicsOption.setName(editText.getText().toString());
             demographicsOption.setLabel(editText.getText().toString());
-        } else if (required) {
-            editText.addTextChangedListener(getValidateOptionsFields(inputLayout));
-        } else if (requiredView != null) {
+        }
+        if (requiredViewId != null) {
+            View requiredView = view.findViewById(requiredViewId);
+            requiredView.setVisibility(StringUtil.isNullOrEmpty(keyName) ? View.VISIBLE : View.GONE);
             editText.addTextChangedListener(getRequiredViewTextWatcher(requiredView));
         }
     }
 
     protected void initSelectableInput(TextView textView, DemographicsOption storeOption,
-                                       String storedName, View requiredView, List<DemographicsOption> options) {
+                                       String storedName, List<DemographicsOption> options) {
         String key = storeOption.getName();
         if (StringUtil.isNullOrEmpty(key)){
             key = storedName;
@@ -1104,10 +1108,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         storeOption = getOptionByKey(options, key, storeOption);
         if (!StringUtil.isNullOrEmpty(storedName)) {
             textView.setText(storeOption.getLabel());
-        }else if (requiredView != null) {
-            requiredView.setVisibility(View.VISIBLE);
         }
-
     }
 
     private DemographicsOption getOptionByKey(List<DemographicsOption> options,
@@ -1125,10 +1126,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         return storeOption;
     }
 
+
     private View.OnClickListener getEditTextClickListener(List<? extends DemographicsOption> options,
                                                           final TextInputLayout inputLayout,
                                                           final EditText editText,
-                                                          final View requiredLabel,
                                                           final DemographicsOption demographicsOption,
                                                           final String dialogTitle,
                                                           final OnOptionSelectedListener optionsListener) {
@@ -1146,9 +1147,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                                 .onFocusChange(editText, !StringUtil.isNullOrEmpty(editText.getText().toString()));
                         inputLayout.setError(null);
                         inputLayout.setErrorEnabled(false);
-                        if (requiredLabel != null) {
-                            requiredLabel.setVisibility(View.GONE);
-                        }
                         checkIfEnableButton();
 
                         if (optionsListener != null) {
@@ -1159,30 +1157,12 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                 dialogTitle);
     }
 
-    private TextWatcher getValidateOptionsFields(final TextInputLayout inputLayout) {
-        return new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence sequence, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (StringUtil.isNullOrEmpty(editable.toString()) && !isDataHolderSelf) {
-                    inputLayout.setErrorEnabled(true);
-                    inputLayout.setError(Label.getLabel("demographics_required_validation_msg"));
-                } else {
-                    inputLayout.setError(null);
-                }
-                checkIfEnableButton();
-            }
-        };
-    }
-
+    /**
+     * Text watcher for views that contain required label, add/removes required label and
+     * checks if button should be enabled
+     * @param requiredView Required view
+     * @return TextWatcher
+     */
     private TextWatcher getRequiredViewTextWatcher(final View requiredView) {
         return new TextWatcher() {
             @Override
@@ -1196,11 +1176,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (StringUtil.isNullOrEmpty(editable.toString())) {
-                    requiredView.setVisibility(View.VISIBLE);
-                } else {
-                    requiredView.setVisibility(View.GONE);
-                }
+                requiredView.setVisibility(StringUtil.isNullOrEmpty(editable.toString()) ? View.VISIBLE : View.GONE);
                 checkIfEnableButton();
             }
         };
