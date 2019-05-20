@@ -311,9 +311,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         View container = view.findViewById(R.id.container_main);
         hideKeyboardOnViewTouch(container);
 
-        otherProviderEditText = (EditText) view.findViewById(R.id.otherProviderEditText);
+        otherProviderEditText = view.findViewById(R.id.otherProviderEditText);
         otherProviderLayout = view.findViewById(R.id.otherProviderLayout);
-        scrollView = (ScrollView) view.findViewById(R.id.demographicsScrollView);
+        scrollView = view.findViewById(R.id.demographicsScrollView);
 
         if (getDialog() != null || (hadInsurance && !isPatientMode) || !isCheckin) {
             saveInsuranceButton = (Button) findViewById(R.id.save_insurance_changes);
@@ -385,6 +385,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         final TextInputLayout planInputLayout = view.findViewById(R.id.healthInsurancePlanInputLayout);
         final EditText planEditText = view.findViewById(R.id.health_insurance_plans);
         final DemographicsField planField = insuranceModelProperties.getInsurancePlan();
+        boolean savedInsurance = !StringUtil.isNullOrEmpty(demographicInsurancePayload.getInsuranceId());
 
         String selectedProvider = demographicInsurancePayload.getInsuranceProvider();
         TextInputLayout providerInputLayout = view.findViewById(R.id.healthInsuranceProvidersInputLayout);
@@ -404,6 +405,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
                         //reset the plan dropdown
                         selectedPlanOption = new DemographicsOption();
+                        planEditText.setText("");
                         setUpDemographicField(view, null, planField.isDisplayed(),
                                 insuranceOption.getPayerPlans(), R.id.healthInsurancePlanLayout,
                                 planInputLayout, planEditText, null, selectedPlanOption,
@@ -422,7 +424,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                             otherProviderLayout.setVisibility(View.GONE);
                         }
                     }
-                }, selectedProvider != null);
+                }, !StringUtil.isNullOrEmpty(selectedProvider) && savedInsurance);
 
         setProviderOptionsPlans(insuranceModelProperties);
         enableDependentFields(view,
@@ -433,7 +435,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         setUpDemographicField(view, selectedPlan, planField.isDisplayed(),
                 selectedProviderOption.getPayerPlans(), R.id.healthInsurancePlanLayout,
                 planInputLayout, planEditText, null, selectedPlanOption,
-                Label.getLabel("demographics_documents_title_select_plan"), null, selectedPlan != null);
+                Label.getLabel("demographics_documents_title_select_plan"), null,
+                !StringUtil.isNullOrEmpty(selectedPlan) && savedInsurance);
 
         String selectedType = StringUtil.captialize(demographicInsurancePayload.getInsuranceType());
         setUpDemographicField(view, selectedType, insuranceModelProperties.getInsuranceType(),
@@ -485,12 +488,14 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         String memberId = demographicInsurancePayload.getInsuranceMemberId();
         setUpDemographicField(view, memberId, insuranceModelProperties.getInsuranceMemberId(),
                 null, R.id.health_insurance_card_number_layout,
-                R.id.health_insurance_card_number, null, null, null, memberId != null);
+                R.id.health_insurance_card_number, null, null, null,
+                !StringUtil.isNullOrEmpty(memberId) && savedInsurance);
 
         String groupId = demographicInsurancePayload.getInsuranceGroupId();
         setUpDemographicField(view, groupId, insuranceModelProperties.getInsuranceGroupId(),
                 null, R.id.health_insurance_group_number_layout,
-                R.id.health_insurance_group_number, null, null, null, groupId != null);
+                R.id.health_insurance_group_number, null, null, null,
+                !StringUtil.isNullOrEmpty(groupId) && savedInsurance);
 
         String firstName = StringUtil.capitalize(demographicInsurancePayload.getPolicyFirstNameHolder());
         setUpDemographicField(view, firstName, insuranceModelProperties.getPolicyHolder(),
@@ -580,7 +585,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     private void setProviderOptionsPlans(InsuranceModelProperties insuranceModelProperties) {
         for (DemographicsInsuranceOption insuranceOption : insuranceModelProperties
                 .getInsuranceProvider().getOptions()) {
-            if (insuranceOption.getName().equals(selectedProviderOption.getName())) {
+            if (insuranceOption.getName().equalsIgnoreCase(selectedProviderOption.getName().trim())) {
                 selectedProviderOption.setPayerPlans(insuranceOption.getPayerPlans());
             }
         }
@@ -1037,6 +1042,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
      * @param requiredViewId RequiredView id
      * @param demographicsOption DemographicsOption
      * @param optionDialogTitle Title for dialog
+     * @param disableField Boolean for disabling input field
      */
     private void setUpDemographicField(View view, String keyName, DemographicsField demographicsField,
                                        Integer containerLayout, int inputLayoutId, int editTextId, Integer requiredViewId,
@@ -1065,6 +1071,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
      * @param demographicsOption DemographicsOption
      * @param optionDialogTitle Title of dialog
      * @param requiredListener OnOptionSelectedListener.
+     * @param disableField Boolean for disabling input field
      */
     private void setUpDemographicField(View view, String keyName, boolean displayed,
                                        List<? extends DemographicsOption> options,
