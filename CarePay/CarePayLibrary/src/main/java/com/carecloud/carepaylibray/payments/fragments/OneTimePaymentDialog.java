@@ -186,7 +186,7 @@ public abstract class OneTimePaymentDialog extends PartialPaymentDialog {
         }
 
         DatePickerFragment fragment = DatePickerFragment
-                .newInstance(
+                .newInstance(Label.getLabel("payment.oneTimePayment.input.label.date"),
                         calendar.getTime(),
                         dueCal.getTime(),
                         new DatePickerFragment.DateRangePickerDialogListener() {
@@ -195,7 +195,7 @@ public abstract class OneTimePaymentDialog extends PartialPaymentDialog {
                                 setSelectedDate(selectedDate);
                             }
                         });
-        SystemUtil.hideSoftKeyboard(getContext(), getActivity().getCurrentFocus());
+        SystemUtil.hideSoftKeyboard(getActivity());
         ((FragmentActivityInterface) callback).displayDialogFragment(fragment, true);
     }
 

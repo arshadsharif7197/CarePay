@@ -24,4 +24,5 @@
     <dimen name="timeSlotItemTextSize">14sp</dimen>
     <dimen name="locationItemHeight">80dp</dimen>
     <dimen name="largeAlertMessageTextSize">13sp</dimen>
+    <dimen name="patient_bottom_round_dimen">5dp</dimen>
 </resources>

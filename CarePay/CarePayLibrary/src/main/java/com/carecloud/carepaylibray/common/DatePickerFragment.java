@@ -1,6 +1,5 @@
 package com.carecloud.carepaylibray.common;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,10 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
-import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.squareup.timessquare.CalendarPickerView;
 
 import java.util.Date;
@@ -27,44 +26,48 @@ public class DatePickerFragment extends BaseDialogFragment {
     private DateRangePickerDialogListener listener;
     private Date startDate;
     private Date endDate;
-    private Date showDate;
     private Date selectedDate;
+    private Date showDate;
     private Button applyDateButton;
     private CalendarPickerView calendarPickerView;
     private int flag;
+    private String toolbarTitle;
 
     public interface DateRangePickerDialogListener {
         void onDateSelected(Date selectedDate, int flag);
     }
 
-    public static DatePickerFragment newInstance(Date startDate,
+    public static DatePickerFragment newInstance(String dialogTitle,
+                                                 Date startDate,
                                                  Date endDate,
                                                  DateRangePickerDialogListener callback) {
 
 
-        return newInstance(startDate, endDate, callback, DEFAULT_FLAG);
+        return newInstance(dialogTitle, startDate, endDate, callback, DEFAULT_FLAG);
     }
 
-
-
-    public static DatePickerFragment newInstance(Date startDate,
+    public static DatePickerFragment newInstance(String dialogTitle,
+                                                 Date startDate,
                                                  Date endDate,
                                                  DateRangePickerDialogListener callback,
                                                  int flag) {
-        return newInstance(startDate, endDate, null, callback, flag);
+        return newInstance(dialogTitle, startDate, endDate, null, null, callback, flag);
     }
 
-    public static DatePickerFragment newInstance(Date startDate,
+    public static DatePickerFragment newInstance(String dialogTitle,
+                                                 Date startDate,
                                                  Date endDate,
+                                                 Date selectedDate,
                                                  Date showDate,
                                                  DateRangePickerDialogListener callback,
-                                                 int flag){
+                                                 int flag) {
         Bundle args = new Bundle();
         args.putSerializable("startDate", startDate);
         args.putSerializable("endDate", endDate);
-        if(showDate != null) {
-            args.putSerializable("showDate", showDate);
+        if (selectedDate != null) {
+            args.putSerializable("selectedDate", selectedDate);
         }
+        args.putSerializable("showDate", showDate);
         args.putInt("flag", flag);
 
         DatePickerFragment dialog = new DatePickerFragment();
@@ -80,8 +83,10 @@ public class DatePickerFragment extends BaseDialogFragment {
         Bundle arguments = getArguments();
         startDate = (Date) arguments.getSerializable("startDate");
         endDate = (Date) arguments.getSerializable("endDate");
+        selectedDate = (Date) arguments.getSerializable("selectedDate");
         showDate = (Date) arguments.getSerializable("showDate");
         flag = arguments.getInt("flag");
+        toolbarTitle = arguments.getString("dialogTitle");
     }
 
     @Nullable
@@ -120,9 +125,12 @@ public class DatePickerFragment extends BaseDialogFragment {
                 onTodayClicked();
             }
         });
-        if(today.before(startDate)){
+        if (today.before(startDate)) {
             todayButton.setVisibility(View.GONE);
         }
+
+        TextView toolbarTitleTextView = toolbar.findViewById(R.id.add_appointment_toolbar_title);
+        toolbarTitleTextView.setText(toolbarTitle);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,8 +143,14 @@ public class DatePickerFragment extends BaseDialogFragment {
         calendarPickerView = view.findViewById(R.id.calendarView);
         calendarPickerView.init(startDate, endDate)
                 .inMode(CalendarPickerView.SelectionMode.SINGLE);
-        if(showDate!=null) {
-            calendarPickerView.scrollToDate(showDate);
+        if (selectedDate != null) {
+            calendarPickerView.selectDate(selectedDate);
+            scrollToDate(selectedDate);
+        } else {
+            if (showDate == null) {
+                showDate = new Date();
+            }
+            scrollToDate(showDate);
         }
         calendarPickerView.setOnDateSelectedListener(new CalendarPickerView.OnDateSelectedListener() {
             @Override
@@ -149,6 +163,15 @@ public class DatePickerFragment extends BaseDialogFragment {
                 clearSelectedDate();
             }
         });
+    }
+
+    private void scrollToDate(final Date date) {
+        calendarPickerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                calendarPickerView.scrollToDate(date);
+            }
+        }, 200);
     }
 
     private void updateSelectedDates() {
