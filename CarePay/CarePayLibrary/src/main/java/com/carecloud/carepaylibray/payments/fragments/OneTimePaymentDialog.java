@@ -14,7 +14,6 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.common.DatePickerFragment;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentDetailInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -43,12 +42,11 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
     protected long minDate;
 
     /**
-     *
      * @param paymentsDTO    payment model
      * @param paymentPlanDTO payment plan
      */
     public static OneTimePaymentDialog newInstance(PaymentsModel paymentsDTO,
-                                PaymentPlanDTO paymentPlanDTO) {
+                                                   PaymentPlanDTO paymentPlanDTO) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsDTO);
         DtoHelper.bundleDto(args, paymentPlanDTO);
@@ -202,7 +200,7 @@ public class OneTimePaymentDialog extends PartialPaymentDialog {
                                 setSelectedDate(selectedDate);
                             }
                         });
-        SystemUtil.hideSoftKeyboard(getContext(), getActivity().getCurrentFocus());
+        SystemUtil.hideSoftKeyboard(getActivity());
         ((FragmentActivityInterface) callback).displayDialogFragment(fragment, true);
     }
 
