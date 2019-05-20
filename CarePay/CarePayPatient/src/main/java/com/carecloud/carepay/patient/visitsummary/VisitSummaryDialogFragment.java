@@ -351,6 +351,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
     private void showCalendar(int flag, String showDate) {
         Calendar fromCalendar = Calendar.getInstance();
         Calendar toCalendar = Calendar.getInstance();
+        Calendar showCalendar = Calendar.getInstance();
         toCalendar.add(Calendar.DATE, 1);
         if (flag == FROM_DATE) {
             fromCalendar.set(2000, 1, 1);
@@ -361,6 +362,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
             if (fromDate != null) {
                 fromCalendar.setTimeInMillis(fromDate.getTime());
                 fromCalendar.add(Calendar.DAY_OF_YEAR, 1);
+                showCalendar = fromCalendar;
             }
         }
         Date selectedDate = null;
@@ -368,10 +370,11 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
             selectedDate = DateUtil.getInstance().setDateRaw(showDate).getDate();
         }
         DatePickerFragment fragment = DatePickerFragment
-                .newInstance(Label.getLabel("payment.oneTimePayment.input.label.date"),
+                .newInstance(Label.getLabel("pick_date_heading"),
                         fromCalendar.getTime(),
                         toCalendar.getTime(),
                         selectedDate,
+                        showCalendar.getTime(),
                         new DatePickerFragment.DateRangePickerDialogListener() {
                             @Override
                             public void onDateSelected(Date selectedDate, int flag) {

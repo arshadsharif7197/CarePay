@@ -2,21 +2,51 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:padding="@dimen/dimen_20dp"
     android:weightSum="5">
 
-    <include layout="@layout/custom_calendar_toolbar" />
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/add_appointment_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/top_left_right_rounded_background"
+        android:gravity="center">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/add_appointment_toolbar_title"
+            style="@style/ResponsibilityToolbarTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center_vertical"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="pick_date_heading"
+            tools:text="@string/pick_a_date_label" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/today_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="center_vertical|end"
+            android:padding="@dimen/dimen_10dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/textview_textsize"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="today_appointments_heading"
+            tools:text="Today" />
+
+    </android.support.v7.widget.Toolbar>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/date_range_header"
         android:orientation="horizontal"
-        android:paddingBottom="@dimen/add_apt_calendar_day_title_padding_top"
         android:paddingTop="@dimen/add_apt_calendar_day_title_padding_top"
+        android:paddingBottom="@dimen/add_apt_calendar_day_title_padding_top"
         android:weightSum="7">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -24,6 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="@string/sunday_text_view_label"
             android:textColor="@color/white"
             android:textSize="@dimen/add_apt_calendar_day_title_text_size"
@@ -34,6 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="@string/monday_text_view_label"
             android:textColor="@color/white"
             android:textSize="@dimen/add_apt_calendar_day_title_text_size"
@@ -44,6 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1.1"
+            android:gravity="center"
             android:text="@string/tuesday_text_view_label"
             android:textColor="@color/white"
             android:textSize="@dimen/add_apt_calendar_day_title_text_size"
@@ -54,6 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="@string/wednesday_text_view_label"
             android:textColor="@color/white"
             android:textSize="@dimen/add_apt_calendar_day_title_text_size"
@@ -64,6 +98,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="@string/thursday_text_view_label"
             android:textColor="@color/white"
             android:textSize="@dimen/add_apt_calendar_day_title_text_size"
@@ -74,6 +109,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="@string/friday_text_view_label"
             android:textColor="@color/white"
             android:textSize="@dimen/add_apt_calendar_day_title_text_size"
@@ -84,6 +120,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="@string/saturday_text_view_label"
             android:textColor="@color/white"
             android:textSize="@dimen/add_apt_calendar_day_title_text_size"
@@ -103,15 +140,22 @@
         app:tsquare_headerTextColor="@color/transparent_apt"
         app:tsquare_titleTextColor="@color/textview_default_textcolor" />
 
-    <com.carecloud.carepaylibray.customcomponents.CarePayButton
-        android:id="@+id/applyDateRangeButton"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/add_apt_apply_date_range_height"
-        android:layout_weight="1"
-        android:background="@drawable/button_green_selector"
-        android:textColor="@color/white"
-        android:textSize="@dimen/apt_popup_button_text"
-        app:customAssetFont="gotham_rounded_bold"
-        breeze:textKey="datepicker_apply_option" />
+        android:background="@drawable/round_bottom_white_background"
+        android:layout_height="wrap_content">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/applyDateRangeButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/add_apt_apply_date_range_height"
+            android:layout_weight="1"
+            android:background="@drawable/button_green_selector"
+            android:textColor="@color/white"
+            android:textSize="@dimen/apt_popup_button_text"
+            app:customAssetFont="gotham_rounded_bold"
+            breeze:textKey="datepicker_apply_option" />
+
+    </FrameLayout>
 
 </LinearLayout>
