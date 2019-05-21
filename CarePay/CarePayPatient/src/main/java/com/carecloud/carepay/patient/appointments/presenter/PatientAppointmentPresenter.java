@@ -1,6 +1,8 @@
 package com.carecloud.carepay.patient.appointments.presenter;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -28,6 +30,7 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.createappointment.CreateAppointmentFragmentInterface;
+import com.carecloud.carepaylibray.appointments.createappointment.availabilityhour.BaseAvailabilityHourFragment;
 import com.carecloud.carepaylibray.appointments.interfaces.DateCalendarRangeInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDataDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityMetadataDTO;
@@ -40,7 +43,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.CancellationReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
-import com.carecloud.carepaylibray.appointments.models.ProvidersReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
@@ -100,6 +102,18 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                                        AppointmentsResultModel appointmentsResultModel,
                                        PaymentsModel paymentsModel) {
         super(viewHandler, appointmentsResultModel, paymentsModel);
+    }
+
+    @Override
+    public void startVideoVisit(AppointmentDTO appointmentDTO) {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
+        queryMap.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
+        queryMap.put("patient_id", appointmentDTO.getMetadata().getPatientId());
+        queryMap.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
+
+        TransitionDTO videoVisitTransition = appointmentsResultModel.getMetadata().getLinks().getVideoVisit();
+        viewHandler.getWorkflowServiceHelper().execute(videoVisitTransition, startVideoVisitCallback, queryMap);
     }
 
     public AppointmentsResultModel getMainAppointmentDto() {
@@ -709,7 +723,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     @Override
-    public void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO) {
+    public void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO, BaseAvailabilityHourFragment baseAvailabilityHourFragment) {
         RequestAppointmentDialogFragment.newInstance(appointmentDTO).show(getSupportFragmentManager(), "confirmation");
     }
 
@@ -733,12 +747,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         payload.setResource(selectedResource);
 
         VisitTypeDTO selectedVisitType = appointmentDTO.getPayload().getVisitType();
-        ProvidersReasonDTO reasonDTO = new ProvidersReasonDTO();
-        reasonDTO.setAmount(selectedVisitType.getAmount());
-        reasonDTO.setName(selectedVisitType.getName());
-        reasonDTO.setDescription(selectedVisitType.getDescription());
-        reasonDTO.setId(selectedVisitType.getId());
-        payload.setVisitReason(reasonDTO);
+        payload.setVisitReason(selectedVisitType);
 
         AppointmentAvailabilityDataDTO appointmentAvailabilityDataDTO = new AppointmentAvailabilityDataDTO();
         ArrayList<AppointmentAvailabilityPayloadDTO> payloadList = new ArrayList<>();
@@ -806,4 +815,32 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         MixPanelUtil.logEvent(getString(R.string.event_appointment_cancelled), params, values);
         MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_cancelled), 1);
     }
+
+    private WorkflowServiceCallback startVideoVisitCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            viewHandler.showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            viewHandler.hideProgressDialog();
+            AppointmentsResultModel appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
+            String url = appointmentsResultModel.getPayload().getVideoVisitModel().getPayload().getVisitUrl();
+
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
+
+            if(intent.resolveActivity(getContext().getPackageManager()) != null){
+                ((Activity) getContext()).startActivityForResult(intent, 555);
+            }
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            viewHandler.hideProgressDialog();
+            viewHandler.showErrorNotification(exceptionMessage);
+        }
+    };
 }

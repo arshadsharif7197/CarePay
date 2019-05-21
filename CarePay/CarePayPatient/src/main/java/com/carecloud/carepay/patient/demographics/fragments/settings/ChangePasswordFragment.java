@@ -158,7 +158,7 @@ public class ChangePasswordFragment extends DemographicsBaseSettingsFragment {
 
                     Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
                     header.put("maintenance", encodedAttributes);
-                    header.put("Authorization", getAppAuthorizationHelper().getAccessToken());
+                    header.put("AccessToken", getAppAuthorizationHelper().getAccessToken());
 
                     DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
                     if (demographicsSettingsPayloadDTO != null) {

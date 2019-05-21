@@ -43,7 +43,12 @@ public class FileDownloadUtil {
         return downloadManager.enqueue(request);
     }
 
-    public static long downloadFile(Context context, @NonNull String url, @NonNull String filename, @NonNull String extension, String description, Map<String, String> headers) {
+    public static long downloadFile(Context context,
+                                    @NonNull String url,
+                                    @NonNull String filename,
+                                    @NonNull String extension,
+                                    String description,
+                                    Map<String, String> headers) {
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
 
         if (!filename.contains(extension)) {

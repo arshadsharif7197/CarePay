@@ -55,7 +55,6 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -160,13 +159,15 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             }
         });
         languageSpinner = findViewById(R.id.languageSpinner);
-        languageSpinner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                popupPickerLanguage.showAsDropDown(view);
-            }
-        });
-        languageSpinner.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
+        if (languageSpinner != null) {
+            languageSpinner.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    popupPickerLanguage.showAsDropDown(view);
+                }
+            });
+            languageSpinner.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
+        }
     }
 
     private void initUIFields() {
@@ -210,7 +211,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             Gson gson = new Gson();
             PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO
                     = gson.fromJson(payloadAsJsonObject, PracticeHomeScreenPayloadDTO.class);
-            boolean showShop = practiceHomeScreenPayloadDTO.getUserPractices().get(0).isRetailEnabled();
+            boolean showShop = !practiceHomeScreenPayloadDTO.getUserPractices().isEmpty()
+                    && practiceHomeScreenPayloadDTO.getUserPractices().get(0).isRetailEnabled();
             if (showShop) {
                 View shopContainer = findViewById(R.id.homeShopClickable);
                 if (shopContainer != null) {
@@ -645,6 +647,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             hideProgressDialog();
             getApplicationMode().clearUserPracticeDTO();
             getAppAuthorizationHelper().setUser(null);
+            AppointmentCountUpdateService.cancelScheduledServiceRun(CloverMainActivity.this);
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
             CloverMainActivity.this.finish();
         }

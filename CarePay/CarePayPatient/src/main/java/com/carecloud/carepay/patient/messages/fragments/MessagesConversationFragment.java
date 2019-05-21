@@ -21,6 +21,7 @@ import com.carecloud.carepay.patient.messages.MessageNavigationCallback;
 import com.carecloud.carepay.patient.messages.adapters.MessagesConversationAdapter;
 import com.carecloud.carepay.patient.messages.models.MessageAttachment;
 import com.carecloud.carepay.patient.messages.models.Messages;
+import com.carecloud.carepay.patient.messages.models.MessagingModel;
 import com.carecloud.carepay.patient.messages.models.MessagingPostModel;
 import com.carecloud.carepay.patient.messages.models.MessagingThreadDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -28,6 +29,7 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.common.DocumentDetailFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.FileDownloadUtil;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
@@ -57,6 +59,7 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
 
     private MessageAttachment selectedAttachment;
     private String selectedAttachmentFormat;
+    private MessagingModel messagingModel;
 
     /**
      * Get new instance of MessagesConversationFragment
@@ -87,11 +90,11 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-
         Bundle args = getArguments();
         if (args != null) {
             thread = DtoHelper.getConvertedDTO(Messages.Reply.class, args);
         }
+        messagingModel = (MessagingModel) callback.getDto();
 
     }
 
@@ -105,7 +108,7 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
     public void onViewCreated(View view, Bundle icicle) {
         initToolbar(view);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.messages_recycler);
+        recyclerView = view.findViewById(R.id.messages_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
@@ -126,7 +129,7 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
         sendButton.setEnabled(false);
         sendButton.setClickable(false);
 
-        messageTextInput = (EditText) view.findViewById(R.id.message_input);
+        messageTextInput = view.findViewById(R.id.message_input);
         messageTextInput.addTextChangedListener(messageInputListener);
     }
 
@@ -139,11 +142,11 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
     }
 
     private void initToolbar(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(thread.getSubject());
 
-        TextView subTitle = (TextView) toolbar.findViewById(R.id.toolbar_subtitle);
+        TextView subTitle = toolbar.findViewById(R.id.toolbar_subtitle);
         subTitle.setText(digProvider(thread));
 
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
@@ -160,8 +163,8 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
         if (adapter != null) {
             adapter.setMessages(messages);
         } else {
-            adapter = new MessagesConversationAdapter(getContext(), this, messages, callback.getUserId(),
-                    callback.getDto().getMetadata());
+            adapter = new MessagesConversationAdapter(getContext(), this, messages,
+                    messagingModel.getPayload().getInbox().getUserId(), messagingModel.getMetadata());
             recyclerView.setAdapter(adapter);
         }
 
@@ -172,18 +175,19 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
         String message = messageTextInput.getText().toString();
         if (!StringUtil.isNullOrEmpty(message)) {
 //            callback.postMessage(thread, message);
+            message = message.replace("\n", "<br/>");
             refreshing = true;
 
             Map<String, String> queryMap = new HashMap<>();
             queryMap.put("message_id", thread.getId());
 
             MessagingPostModel postModel = new MessagingPostModel();
-            String userId = callback.getUserId();
+            String userId = messagingModel.getPayload().getInbox().getUserId();
             postModel.getParticipant().setUserId(userId);
-            postModel.getParticipant().setName(callback.lookupName(thread, userId));
+            postModel.getParticipant().setName(messagingModel.getPayload().lookupName(thread, userId));
             postModel.setMessage(message);
 
-            TransitionDTO reply = callback.getDto().getMetadata().getLinks().getReply();
+            TransitionDTO reply = messagingModel.getMetadata().getLinks().getReply();
             getWorkflowServiceHelper().execute(reply, getMessagesCallback(true), DtoHelper.getStringDTO(postModel), queryMap);
         }
         messageTextInput.setText(null);
@@ -216,7 +220,7 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("message_id", thread.getId());
 
-        TransitionDTO messages = callback.getDto().getMetadata().getLinks().getMessage();
+        TransitionDTO messages = messagingModel.getMetadata().getLinks().getMessage();
         getWorkflowServiceHelper().execute(messages, getMessagesCallback(false), queryMap);
     }
 
@@ -253,7 +257,7 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
         }
 
         for (Messages.Participant participant : thread.getParticipants()) {
-            if (!participant.getUserId().equals(callback.getUserId())) {
+            if (!participant.getUserId().equals(messagingModel.getPayload().getInbox().getUserId())) {
                 return participant.getName();
             }
         }
@@ -302,11 +306,11 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
     public void downloadAttachment(MessageAttachment attachment, String attachmentFormat) {
         if (!PermissionsUtil.checkPermissionStorageWrite(this)) {
             selectedAttachment = attachment;
-            selectedAttachmentFormat = selectedAttachmentFormat;
+            selectedAttachmentFormat = attachmentFormat;
             return;
         }
 
-        TransitionDTO fetchAttachment = callback.getDto().getMetadata().getLinks().getFetchAttachment();
+        TransitionDTO fetchAttachment = messagingModel.getMetadata().getLinks().getFetchAttachment();
 
         Map<String, String> headers = new HashMap<>();
         headers.put("x-api-key", HttpConstants.getApiStartKey());
@@ -327,5 +331,16 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
 
         selectedAttachment = null;
         selectedAttachmentFormat = null;
+    }
+
+    @Override
+    public void openImageDetailView(MessageAttachment attachment) {
+        TransitionDTO fetchAttachment = messagingModel.getMetadata().getLinks().getFetchAttachment();
+        Uri uri = Uri.parse(fetchAttachment.getUrl());
+        uri = uri.buildUpon()
+                .appendQueryParameter("nodeid", attachment.getDocument().getDocumentHandler())
+                .build();
+        DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(uri.toString(), true);
+        fragment.show(getFragmentManager(), "detail");
     }
 }

@@ -47,8 +47,8 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         PaymentMethodDialogInterface, ScheduleAppointmentInterface,
         DateRangePickerDialog.DateRangePickerDialogListener {
 
-    private Date startDate;
-    private Date endDate;
+    protected Date startDate;
+    protected Date endDate;
 
     protected AppointmentsResultModel appointmentsResultModel;
 
