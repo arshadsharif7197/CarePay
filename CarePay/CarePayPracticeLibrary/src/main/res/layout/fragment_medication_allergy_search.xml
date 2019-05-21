@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -117,8 +118,8 @@
                 android:layout_height="match_parent"
                 android:padding="@dimen/medicationAllergyPadding" />
 
-            <FrameLayout
-                android:id="@+id/emptyStateScreen"
+            <RelativeLayout
+                android:id="@+id/noResultsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingStart="@dimen/dimen_60dp"
@@ -126,15 +127,19 @@
                 android:visibility="gone">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                    android:id="@+id/no_results_message"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/dimen_20dp"
+                    android:layout_marginBottom="@dimen/dimen_5dp"
                     android:gravity="center"
-                    android:textColor="@color/optional_gray"
-                    android:textSize="@dimen/text_size_18sp"
-                    app:customAssetFont="gotham_rounded_medium" />
+                    android:textColor="@color/textview_default_textcolor"
+                    android:textSize="@dimen/medicationAllergyHeaderTitleTextSize"
+                    app:customAssetFont="gotham_rounded_medium"
+                    breeze:textKey="payment_retail_items_no_results"
+                    tools:text="No results found" />
 
-            </FrameLayout>
+            </RelativeLayout>
 
         </FrameLayout>
 

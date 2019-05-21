@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -56,7 +57,8 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
     private RecyclerView searchRecycler;
     private SearchView searchView;
     private Button unlisted;
-    private View emptyList;
+    private View noResultsContainer;
+    private View initialScreenContainer;
 
     public static MedicationAllergySearchFragment newInstance(MedicationsAllergiesResultsModel medicationsAllergiesDTO,
                                                               int searchMode) {
@@ -116,7 +118,7 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
     }
 
     private void inflateToolbarViews(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.search_toolbar);
+        Toolbar toolbar = view.findViewById(R.id.search_toolbar);
         toolbar.setTitle("");
         if (getDialog() == null) {
             toolbar.setNavigationIcon(ContextCompat.getDrawable(getContext(), R.drawable.icn_nav_back));
@@ -128,12 +130,12 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
                 }
             });
         }
-        searchView = (SearchView) view.findViewById(R.id.search_entry_view);
+        searchView = view.findViewById(R.id.search_entry_view);
         searchView.setOnQueryTextListener(searchQueryListener);
         searchView.requestFocus(View.FOCUS_DOWN);
         SystemUtil.showSoftKeyboard(getActivity());
 
-        TextView title = (TextView) view.findViewById(R.id.toolbar_title);
+        TextView title = view.findViewById(R.id.toolbar_title);
         if (title != null) {
             if (searchMode == ALLERGY_ITEM) {
                 title.setText(Label.getLabel("allergies_title"));
@@ -175,7 +177,7 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
         }
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        searchRecycler = (RecyclerView) view.findViewById(R.id.search_recycler);
+        searchRecycler = view.findViewById(R.id.search_recycler);
         searchRecycler.setLayoutManager(layoutManager);
         View closeButton = view.findViewById(R.id.closeViewLayout);
         if (closeButton != null) {
@@ -188,9 +190,19 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
             });
         }
 
-        TextView emptyMessage = view.findViewById(R.id.no_results_message);
-        emptyMessage.setText(Label.getLabel("payment_retail_items_no_results"));
-        emptyList = view.findViewById(R.id.emptyStateScreen);
+        noResultsContainer = view.findViewById(R.id.noResultsContainer);
+
+        if (getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PATIENT)){
+            initialScreenContainer = view.findViewById(R.id.initialScreenContainer);
+            TextView initialScreenTitleTextView = view.findViewById(R.id.initialScreenTitleTextView);
+            initialScreenTitleTextView.setText(searchMode == ALLERGY_ITEM ?
+                    Label.getLabel("medications_allergies_search_allergy_title") :
+                    Label.getLabel("medications_allergies_search_medication_title"));
+            TextView initialScreenSubTitleTextView = view.findViewById(R.id.initialScreenSubTitleTextView);
+            initialScreenSubTitleTextView.setText(searchMode == ALLERGY_ITEM ?
+                    Label.getLabel("medications_allergies_search_subtitle") :
+                    Label.getLabel("medications_allergies_search_medication_subtitle"));
+        }
     }
 
     private void setAdapters() {
@@ -252,11 +264,21 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
             if (newText != null && newText.length() > 0) {
                 getWorkflowServiceHelper().interrupt();
                 submitSearch(newText, searchMode);
+                showHideInitialScreen(false);
+            } else {
+                showHideInitialScreen(true);
             }
             unlisted.setEnabled(!StringUtil.isNullOrEmpty(newText));
             return false;
         }
     };
+
+    private void showHideInitialScreen(boolean show) {
+        if (initialScreenContainer != null) {
+            initialScreenContainer.setVisibility(show ? View.VISIBLE : View.GONE);
+            searchRecycler.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
+    }
 
     private WorkflowServiceCallback searchCallback = new WorkflowServiceCallback() {
         @Override
@@ -282,7 +304,7 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
             adapter.setItems(resultsList);
             adapter.notifyDataSetChanged();
 
-            emptyList.setVisibility(resultsList.isEmpty() ? View.VISIBLE : View.GONE);
+            noResultsContainer.setVisibility(resultsList.isEmpty() ? View.VISIBLE : View.GONE);
         }
 
         @Override
