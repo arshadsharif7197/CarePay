@@ -450,6 +450,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_checked_out);
                 break;
             }
+            case DENIED:
             case REQUESTED: {
                 if ("denied".equals(notificationItem.getPayload().getNotificationSubType())) {
                     notificationItem.getPayload().getAppointment().getPayload()
