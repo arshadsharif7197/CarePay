@@ -48,6 +48,7 @@ public class PicassoHelper {
         Picasso.Builder builder = new Picasso.Builder(context);
         builder.downloader(new CustomOkHttpDownloader(context));
         picasso = builder.build();
+        picasso.setLoggingEnabled(true);
 
         return picasso;
     }
@@ -74,28 +75,54 @@ public class PicassoHelper {
     }
 
     public void loadImage(Context context, final ImageView imageView, final View viewToHide, String photoUrl) {
-        int size = context.getResources().getDimensionPixelSize(R.dimen.payment_details_dialog_icon_size);
-        Picasso.with(context).load(photoUrl)
-                .resize(size, size)
-                .centerCrop()
-                .transform(new CircleImageTransform())
-                .into(imageView, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        imageView.setVisibility(View.VISIBLE);
-                        if (viewToHide != null) {
-                            viewToHide.setVisibility(View.GONE);
-                        }
-                    }
+        loadImage(context, imageView, viewToHide, photoUrl,
+                context.getResources().getDimensionPixelSize(R.dimen.payment_details_dialog_icon_size));
+    }
 
-                    @Override
-                    public void onError() {
-                        if (viewToHide != null) {
-                            viewToHide.setVisibility(View.VISIBLE);
+    public void loadImage(Context context, final ImageView imageView, final View viewToHide, String photoUrl,
+                          int size) {
+        loadImage(context, imageView, viewToHide, null, photoUrl, size);
+    }
+
+    public void loadImage(Context context, final ImageView imageView, final View viewToHide, final View viewToShow, String photoUrl,
+                          int size) {
+        if (!StringUtil.isNullOrEmpty(photoUrl)) {
+            Picasso.with(context).load(photoUrl)
+                    .resize(size, size)
+                    .centerCrop()
+                    .transform(new CircleImageTransform())
+                    .into(imageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            imageView.setVisibility(View.VISIBLE);
+                            if (viewToHide != null) {
+                                viewToHide.setVisibility(View.GONE);
+                            }
+                            if (viewToShow != null) {
+                                viewToShow.setVisibility(View.VISIBLE);
+                            }
                         }
-                        imageView.setVisibility(View.GONE);
-                    }
-                });
+
+                        @Override
+                        public void onError() {
+                            if (viewToHide != null) {
+                                viewToHide.setVisibility(View.VISIBLE);
+                            }
+                            if (viewToShow != null) {
+                                viewToShow.setVisibility(View.GONE);
+                            }
+                            imageView.setVisibility(View.INVISIBLE);
+                        }
+                    });
+        } else {
+            if (viewToHide != null) {
+                viewToHide.setVisibility(View.VISIBLE);
+            }
+            if (viewToShow != null) {
+                viewToShow.setVisibility(View.GONE);
+            }
+            imageView.setVisibility(View.INVISIBLE);
+        }
     }
 
 }

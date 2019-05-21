@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/appointmentsList"
     android:layout_width="match_parent"
@@ -34,10 +34,14 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/dimen_16dp"
         android:src="@drawable/ic_add_white"
-        app:backgroundTint="@color/overlay_green" />
+        app:backgroundTint="@color/overlay_green"
+        app:layout_anchor="@id/appointments_recycler_view"
+        app:layout_anchorGravity="bottom|end"
+        app:layout_behavior="com.carecloud.carepay.patient.utils.FloatingActionButtonScrollBehavior" />
 
     <FrameLayout
         android:id="@+id/shimmerLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-</FrameLayout>
+        android:layout_height="match_parent" />
+
+</android.support.design.widget.CoordinatorLayout>

@@ -74,7 +74,6 @@ import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
-import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -111,6 +110,11 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         setContentView(R.layout.activity_demographic_review);
 
         presenter = new PatientModeDemographicsPresenter(this, icicle, this);
+        Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
+        if (extra.getBoolean(CarePayConstants.HANDLE_HOME, false)) {
+            presenter.setHandleHomeButton(true);
+        }
+
         initializeHomeButton();
         initializeLeftNavigation();
         initializeLanguageSpinner();

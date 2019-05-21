@@ -385,10 +385,10 @@
     <dimen name="appointmentDialogPhoneHorizontalMargin">70dp</dimen>
     <dimen name="appointmentDialogPhoneVerticalPadding">10dp</dimen>
     <dimen name="appointmentDialogPhoneTextSize">24sp</dimen>
-    <dimen name="visitTypeContainerHorizontalPadding">15dp</dimen>
+    <dimen name="visitTypeContainerHorizontalPadding">25dp</dimen>
     <dimen name="visitTypeContainerBottomPadding">30dp</dimen>
     <dimen name="visitTypeLabelTextSize">18sp</dimen>
-    <dimen name="visitTypeValueTextSize">16sp</dimen>
+    <dimen name="visitTypeValueTextSize">14sp</dimen>
     <dimen name="visitTypeLabelEndMargin">5dp</dimen>
     <dimen name="visitTypeValueHeight">20dp</dimen>
     <dimen name="appointmentSeparatorTopMargin">20dp</dimen>
@@ -791,5 +791,10 @@
     <dimen name="completeCheckInItemValueTextSize">12sp</dimen>
     <dimen name="completeScreenSectionTitleTextSize">14sp</dimen>
     <dimen name="completeScreenSectionTitleVerticalMargin">10dp</dimen>
+
+    <!--DOB Verification-->
+    <dimen name="dobVerificationTitleTextSize">26sp</dimen>
+    <dimen name="dobVerificationSubTitleTextSize">17sp</dimen>
+    <dimen name="largeAlertMessageLabelPadding">3dp</dimen>
 
 </resources>
