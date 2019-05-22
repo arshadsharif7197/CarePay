@@ -15,6 +15,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -90,11 +91,13 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     private EditText otherProviderEditText;
     private View otherProviderLayout;
     private ScrollView scrollView;
+    private EditText planEditText;
 
     private boolean hadInsurance;
     private boolean isPatientMode;
     private boolean isDataHolderSelf;
     private boolean isCheckin;
+    private boolean isProviderOther;
 
     private DemographicInsurancePhotoDTO frontInsurancePhotoDTO;
     private DemographicInsurancePhotoDTO backInsurancePhotoDTO;
@@ -383,9 +386,11 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         final View otherPolicyHolderFields = findViewById(R.id.otherPolicyHolderFields);
 
         final TextInputLayout planInputLayout = view.findViewById(R.id.healthInsurancePlanInputLayout);
-        final EditText planEditText = view.findViewById(R.id.health_insurance_plans);
+        planEditText = view.findViewById(R.id.health_insurance_plans);
         final DemographicsField planField = insuranceModelProperties.getInsurancePlan();
         boolean savedInsurance = !StringUtil.isNullOrEmpty(demographicInsurancePayload.getInsuranceId());
+
+        final View otherProviderRequiredView = view.findViewById(R.id.otherProviderRequired);
 
         String selectedProvider = demographicInsurancePayload.getInsuranceProvider();
         TextInputLayout providerInputLayout = view.findViewById(R.id.healthInsuranceProvidersInputLayout);
@@ -405,15 +410,22 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
                         //reset the plan dropdown
                         selectedPlanOption = new DemographicsOption();
-                        planEditText.setText("");
+                        planEditText.getText().clear();
                         setUpDemographicField(view, null, planField.isDisplayed(),
                                 insuranceOption.getPayerPlans(), R.id.healthInsurancePlanLayout,
                                 planInputLayout, planEditText, null, selectedPlanOption,
                                 Label.getLabel("demographics_documents_title_select_plan"), null, false);
 
                         if (selectedOption.getName().toLowerCase().equals(KEY_PROVIDER_OTHER)) {
+                            isProviderOther = true;
+                            planEditText.setOnClickListener(null);
+                            planEditText.setInputType(InputType.TYPE_CLASS_TEXT);
+                            changeInputComponentType(planEditText, true);
+
                             otherProviderLayout.setVisibility(View.VISIBLE);
                             otherProviderEditText.requestFocus();
+                            otherProviderEditText.getText().clear();
+
                             view.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
@@ -421,6 +433,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                                 }
                             }, 100);
                         } else {
+                            isProviderOther = false;
+                            changeInputComponentType(planEditText, false);
                             otherProviderLayout.setVisibility(View.GONE);
                         }
                     }
@@ -530,7 +544,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             public void afterTextChanged(Editable editable) {
                 if (editable.length() > 0 || selectedProviderOption.getName() == null) {
                     selectedProviderOption.setName(editable.toString());
-                    selectedPlanOption.setLabel(selectedProviderOption.getLabel());
+                    otherProviderRequiredView.setVisibility(View.GONE);
+                } else {
+                    selectedProviderOption = new DemographicsInsuranceOption();
+                    otherProviderRequiredView.setVisibility(View.VISIBLE);
                 }
                 checkIfEnableButton();
             }
@@ -541,6 +558,25 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             ((TextView) view.findViewById(R.id.toolbar_title)).setText(title);
         }
         otherPolicyHolderFields.setVisibility(isDataHolderSelf ? View.GONE : View.VISIBLE);
+    }
+
+    /**
+     * Changes the input component from dropdown to editText
+     * @param view
+     * @param setToTextInput
+     */
+    private void changeInputComponentType(EditText view, boolean setToTextInput) {
+        view.setClickable(setToTextInput);
+        view.setFocusableInTouchMode(setToTextInput);
+        view.setCursorVisible(setToTextInput);
+        view.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                setToTextInput ? null : getContext().getResources().getDrawable(R.drawable.icon_drop_down),
+                null );
+        if (setToTextInput) {
+            view.requestFocus();
+        } else {
+            view.clearFocus();
+        }
     }
 
     private void enableDependentFields(View view, int[] fields, boolean enabled) {
@@ -652,6 +688,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         View view = getView();
         if (view == null) {
             return;
+        }
+
+        if (isProviderOther && !StringUtil.isNullOrEmpty(planEditText.getText().toString())) {
+            selectedPlanOption.setName(planEditText.getText().toString().trim());
         }
 
         DemographicInsurancePayloadDTO demographicInsurancePayloadDTO;
@@ -876,7 +916,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             error = true;
         }
         if (validateError(StringUtil.isNullOrEmpty(selectedProviderOption.getName()),
-                userInteraction, view.findViewById(R.id.healthInsuranceProvidersLayout))) {
+                userInteraction, isProviderOther ? view.findViewById(R.id.otherProviderLayout) : view.findViewById(R.id.healthInsuranceProvidersLayout))) {
             error = true;
         }
         if (!isDataHolderSelf) {
@@ -1055,7 +1095,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         setUpDemographicField(view, keyName, demographicsField.isDisplayed(),
                 demographicsField.getOptions(), containerLayout, inputLayout, editText,
                 requiredViewId, demographicsOption, optionDialogTitle, null, disableField);
-
     }
 
     /**

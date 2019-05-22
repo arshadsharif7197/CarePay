@@ -105,8 +105,9 @@
         </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
         <include
-            android:id="@+id/healthInsuranceProviderRequired"
-            layout="@layout/layout_required_text_view" />
+            android:id="@+id/otherProviderRequired"
+            layout="@layout/layout_required_text_view"
+            android:visibility="visible" />
 
     </FrameLayout>
 
