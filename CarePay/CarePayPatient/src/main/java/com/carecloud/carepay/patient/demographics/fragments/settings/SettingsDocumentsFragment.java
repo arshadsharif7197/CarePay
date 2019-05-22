@@ -43,6 +43,8 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,6 +76,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
     private boolean showAlert = false;
     private boolean noPrimaryInsuranceFound = false;
     private boolean insuranceTypeRepeated = false;
+    private boolean insuranceDataRepeated = false;
     private String insuranceTypeRepeatedErrorMessage;
     private View nextButton;
     private boolean insuranceChanged;
@@ -171,7 +174,8 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
             showAlert();
             showAlert = false;
             noPrimaryInsuranceFound = false;
-            insuranceTypeRepeated = false;
+            insuranceTypeRepeated =  false;
+            insuranceDataRepeated = false;
         }
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -227,10 +231,8 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
                 && !isThereAnyPrimaryInsurance) {
             noPrimaryInsuranceFound = true;
             showAlert = true;
-        } else {
-            nextButton.setEnabled(!checkIfHasDuplicateInsuranceType(insurancesTypeMap));
         }
-
+        nextButton.setEnabled(!checkIfHasDuplicateInsuranceType(insurancesTypeMap) && !checkIfInsuranceDataMatches());
 
         MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_has_identity_doc), hasOnePhoto);
 
@@ -267,14 +269,36 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         return insuranceTypeRepeated;
     }
 
+    private boolean checkIfInsuranceDataMatches() {
+        List<DemographicInsurancePayloadDTO> insuranceList = demographicDTO.getPayload().getDemographics().getPayload().getInsurances();
+        DemographicInsurancePayloadDTO firstInsurance = insuranceList.get(insuranceList.size() - 1);
+        for (DemographicInsurancePayloadDTO insurance : insuranceList.subList(0, insuranceList.size() - 1)) {
+            boolean match = checkEqualValues(insurance.getInsuranceProvider(), firstInsurance.getInsuranceProvider()) &&
+                    checkEqualValues(insurance.getInsurancePlan(), firstInsurance.getInsurancePlan()) &&
+                    checkEqualValues(insurance.getInsuranceMemberId(), firstInsurance.getInsuranceMemberId());
+            if (match)  {
+                insuranceDataRepeated = showAlert = true;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkEqualValues(String value1, String value2) {
+        return StringUtils.equalsIgnoreCase(value1, value2) || StringUtils.isEmpty(value1) && StringUtils.isEmpty(value2);
+    }
+
     private void showAlert() {
         String alertMessage = Label.getLabel("demographics_insurance_no_photo_alert");
         int notificationType = CustomMessageToast.NOTIFICATION_TYPE_WARNING;
-        if (noPrimaryInsuranceFound) {
-            alertMessage = Label.getLabel("demographics_insurance_no_primary_alert");
-        } else if (insuranceTypeRepeated) {
+        if (insuranceTypeRepeated) {
             alertMessage = insuranceTypeRepeatedErrorMessage;
             notificationType = CustomMessageToast.NOTIFICATION_TYPE_ERROR;
+        } else if (insuranceDataRepeated) {
+            alertMessage = Label.getLabel("demographics_insurance_duplicate_insurance");
+            notificationType = CustomMessageToast.NOTIFICATION_TYPE_ERROR;
+        } else if (noPrimaryInsuranceFound) {
+            alertMessage = Label.getLabel("demographics_insurance_no_primary_alert");
         }
         new CustomMessageToast(getActivity(), alertMessage, notificationType).show();
 
@@ -451,7 +475,6 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
                 filePath = docPhotoDTO.getIdDocPhoto();
                 base64FrontImage = DocumentScannerAdapter.getBase64(getContext(), filePath);
             }
-
             if (docPhotoDTO.getPage() == BACK_PIC && hasBackImage) {
                 filePath = docPhotoDTO.getIdDocPhoto();
                 base64BackImage = DocumentScannerAdapter.getBase64(getContext(), filePath);
