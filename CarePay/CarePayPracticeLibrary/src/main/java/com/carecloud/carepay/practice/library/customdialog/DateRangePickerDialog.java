@@ -2,15 +2,17 @@ package com.carecloud.carepay.practice.library.customdialog;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.base.BasePracticeDialogFragment;
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.squareup.timessquare.CalendarPickerView;
 
@@ -20,7 +22,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-public class DateRangePickerDialog extends BasePracticeDialogFragment {
+public class DateRangePickerDialog extends BaseDialogFragment {
 
     private CalendarPickerView calendarPickerView;
     private Button applyDateRangeButton;
@@ -115,13 +117,35 @@ public class DateRangePickerDialog extends BasePracticeDialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.dialog_date_range_picker, container, false);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         initializeApplyDateRangeButton(view);
         initCalendarView(view);
         inflateToolbar(view);
-
-        return view;
+        setCancelable(isCancelable);
+        View closeView = view.findViewById(R.id.closeViewLayout);
+        if(closeView != null) {
+            closeView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onDialogCancel();
+                }
+            });
+        }
+        TextView closeText = view.findViewById(R.id.closeTextView);
+        if(closeText != null) {
+            closeText.setText(cancelString);
+        }
+        ImageView cancelImage = view.findViewById(R.id.cancel_img);
+        if(cancelImage != null) {
+            cancelImage.setImageResource(getCancelImageResource());
+        }
     }
 
     private void checkDates() {
@@ -280,12 +304,10 @@ public class DateRangePickerDialog extends BasePracticeDialogFragment {
         return nextSixMonths.getTime();
     }
 
-    @Override
     protected void onDialogCancel() {
         if (null != callback) {
             callback.onDateRangeCancelled();
         }
-
         dismiss();
     }
 
@@ -293,23 +315,7 @@ public class DateRangePickerDialog extends BasePracticeDialogFragment {
         this.callback = callback;
     }
 
-    @Override
-    protected boolean getCancelable() {
-        return isCancelable;
-    }
-
-    @Override
-    protected String getCancelString() {
-        return cancelString;
-    }
-
-    @Override
     protected int getCancelImageResource() {
         return isCancelable ? R.drawable.icn_close : R.drawable.icn_arrow_left;
-    }
-
-    @Override
-    protected int getContentLayout() {
-        return R.layout.dialog_date_range_picker;
     }
 }

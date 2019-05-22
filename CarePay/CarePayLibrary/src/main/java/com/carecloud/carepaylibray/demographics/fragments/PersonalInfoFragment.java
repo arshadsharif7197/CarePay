@@ -214,7 +214,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
                             .getLastName().isRequired(), lastNameValue, R.id.lastNameContainer,
                     R.id.reviewdemogrLastNameTextInput, isUserAction())) return false;
 
-            EditText dateOfBirth = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
+            EditText dateOfBirth = view.findViewById(R.id.revewidemogrDOBEdit);
             String dobValue = dateOfBirth.getText().toString();
             if (validateField(view, dataModel.getDemographic().getPersonalDetails().getProperties()
                             .getDateOfBirth().isRequired(), dobValue, R.id.dobContainer,

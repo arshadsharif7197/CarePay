@@ -396,6 +396,8 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
                 !ValidationHelper.isValidString(zipCode.getText().toString().trim(), ValidationHelper.ZIP_CODE_PATTERN)) {
             setFieldError(zipLayout, Label.getLabel("demographics_zip_code_validation_msg"), isUserInteraction);
             return false;
+        } else {
+            unsetFieldError(zipLayout);
         }
 
         String cityValue = ((EditText) view.findViewById(R.id.cityId)).getText().toString();
