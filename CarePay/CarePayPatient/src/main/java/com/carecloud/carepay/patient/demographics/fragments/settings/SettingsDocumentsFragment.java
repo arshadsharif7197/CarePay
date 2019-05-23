@@ -273,14 +273,16 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
 
     private boolean checkIfInsuranceDataMatches() {
         List<DemographicInsurancePayloadDTO> insuranceList = demographicDTO.getPayload().getDemographics().getPayload().getInsurances();
-        DemographicInsurancePayloadDTO firstInsurance = insuranceList.get(insuranceList.size() - 1);
-        for (DemographicInsurancePayloadDTO insurance : insuranceList.subList(0, insuranceList.size() - 1)) {
-            boolean match = checkEqualValues(insurance.getInsuranceProvider(), firstInsurance.getInsuranceProvider()) &&
-                    checkEqualValues(insurance.getInsurancePlan(), firstInsurance.getInsurancePlan()) &&
-                    checkEqualValues(insurance.getInsuranceMemberId(), firstInsurance.getInsuranceMemberId());
-            if (match)  {
-                insuranceDataRepeated = showAlert = true;
-                return true;
+        if (insuranceList.size() > 0) {
+            DemographicInsurancePayloadDTO firstInsurance = insuranceList.get(insuranceList.size() - 1);
+            for (DemographicInsurancePayloadDTO insurance : insuranceList.subList(0, insuranceList.size() - 1)) {
+                boolean match = checkEqualValues(insurance.getInsuranceProvider(), firstInsurance.getInsuranceProvider()) &&
+                        checkEqualValues(insurance.getInsurancePlan(), firstInsurance.getInsurancePlan()) &&
+                        checkEqualValues(insurance.getInsuranceMemberId(), firstInsurance.getInsuranceMemberId());
+                if (match)  {
+                    insuranceDataRepeated = showAlert = true;
+                    return true;
+                }
             }
         }
         return false;

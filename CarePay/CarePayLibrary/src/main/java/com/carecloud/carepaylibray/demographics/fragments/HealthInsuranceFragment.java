@@ -30,6 +30,8 @@ import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,6 +45,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     private boolean showAlert = false;
     private boolean noPrimaryInsuranceFound;
     private boolean insuranceTypeRepeated = false;
+    private boolean insuranceDataRepeated = false;
     private String insuranceTypeRepeatedErrorMessage;
     private boolean shouldContinue = false;
 
@@ -157,10 +160,10 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
                     && !isThereAnyPrimaryInsurance) {
                 noPrimaryInsuranceFound = true;
                 showAlert = true;
-            } else {
-                checkIfHasDuplicateInsuranceType(insurancesTypeMap);
-                checkIfEnableButton(getView());
             }
+            checkIfHasDuplicateInsuranceType(insurancesTypeMap);
+            checkIfInsuranceDataMatches();
+            checkIfEnableButton(getView());
         }
 
         MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_has_identity_doc), hasOnePhoto);
@@ -199,6 +202,28 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
         return insuranceTypeRepeated;
     }
 
+    private boolean checkIfInsuranceDataMatches() {
+        List<DemographicInsurancePayloadDTO> insuranceList = demographicDTO.getPayload().getDemographics().getPayload().getInsurances();
+        if (insuranceList.size() > 0) {
+            DemographicInsurancePayloadDTO firstInsurance = insuranceList.get(insuranceList.size() - 1);
+            for (DemographicInsurancePayloadDTO insurance : insuranceList.subList(0, insuranceList.size() - 1)) {
+                boolean match = checkEqualValues(insurance.getInsuranceProvider(), firstInsurance.getInsuranceProvider()) &&
+                        checkEqualValues(insurance.getInsurancePlan(), firstInsurance.getInsurancePlan()) &&
+                        checkEqualValues(insurance.getInsuranceMemberId(), firstInsurance.getInsuranceMemberId());
+                if (match) {
+                    insuranceDataRepeated = showAlert = true;
+                    return true;
+                }
+            }
+            insuranceDataRepeated = false;
+        }
+        return false;
+    }
+
+    private boolean checkEqualValues(String value1, String value2) {
+        return StringUtils.equalsIgnoreCase(value1, value2) || StringUtils.isEmpty(value1) && StringUtils.isEmpty(value2);
+    }
+
     private void initializeViews() {
         if (demographicDTO != null) {
             if (hasInsurance()) {
@@ -222,11 +247,14 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
         String alertMessage = Label.getLabel("demographics_insurance_no_photo_alert");
         int notificationType = CustomMessageToast.NOTIFICATION_TYPE_WARNING;
 
-        if (noPrimaryInsuranceFound) {
-            alertMessage = Label.getLabel("demographics_insurance_no_primary_alert");
-        } else if (insuranceTypeRepeated) {
+        if (insuranceTypeRepeated) {
             alertMessage = insuranceTypeRepeatedErrorMessage;
             notificationType = CustomMessageToast.NOTIFICATION_TYPE_ERROR;
+        } else if (insuranceDataRepeated) {
+            alertMessage = Label.getLabel("demographics_insurance_duplicate_insurance");
+            notificationType = CustomMessageToast.NOTIFICATION_TYPE_ERROR;
+        } else if (noPrimaryInsuranceFound) {
+            alertMessage = Label.getLabel("demographics_insurance_no_primary_alert");
         }
         if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT) {
             new CustomMessageToast(getActivity(), alertMessage, notificationType).show();
@@ -264,7 +292,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
     @Override
     protected boolean passConstraints(View view) {
-        if (insuranceTypeRepeated) {
+        if (insuranceTypeRepeated || insuranceDataRepeated) {
             return false;
         }
         return true;
