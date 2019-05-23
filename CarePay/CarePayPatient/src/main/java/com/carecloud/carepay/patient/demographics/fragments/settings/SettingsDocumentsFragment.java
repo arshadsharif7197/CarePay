@@ -232,7 +232,9 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
             noPrimaryInsuranceFound = true;
             showAlert = true;
         }
-        nextButton.setEnabled(!checkIfHasDuplicateInsuranceType(insurancesTypeMap) && !checkIfInsuranceDataMatches());
+        nextButton.setEnabled(insuranceChanged &&
+                !checkIfHasDuplicateInsuranceType(insurancesTypeMap) &&
+                !checkIfInsuranceDataMatches());
 
         MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_has_identity_doc), hasOnePhoto);
 

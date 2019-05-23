@@ -430,6 +430,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                                 @Override
                                 public void run() {
                                     selectedProviderOption = new DemographicsInsuranceOption();
+                                    checkIfEnableButton();
                                 }
                             }, 100);
                         } else {
@@ -562,8 +563,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
     /**
      * Changes the input component from dropdown to editText
-     * @param view
-     * @param setToTextInput
+     * @param view View
+     * @param setToTextInput Boolean for component to be EditText
      */
     private void changeInputComponentType(EditText view, boolean setToTextInput) {
         view.setClickable(setToTextInput);
@@ -955,7 +956,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                 }
             }
         }
-        if (error) return false;
+        if (error) { return false; }
         return true;
     }
 
@@ -1070,7 +1071,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     };
 
     /**
-     *
      * First time setup of individual field that uses ids for all UI components
      * instead of the component.
      * @param view View
