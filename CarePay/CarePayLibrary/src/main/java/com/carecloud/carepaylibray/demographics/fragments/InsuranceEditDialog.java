@@ -416,8 +416,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                                 planInputLayout, planEditText, null, selectedPlanOption,
                                 Label.getLabel("demographics_documents_title_select_plan"), null, false);
 
-                        if (selectedOption.getName().toLowerCase().equals(KEY_PROVIDER_OTHER)) {
-                            isProviderOther = true;
+                        isProviderOther = selectedOption.getName().toLowerCase().equals(KEY_PROVIDER_OTHER);
+                        if (isProviderOther) {
                             planEditText.setOnClickListener(null);
                             planEditText.setInputType(InputType.TYPE_CLASS_TEXT);
                             changeInputComponentType(planEditText, true);
@@ -429,12 +429,13 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                             view.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    selectedProviderOption = new DemographicsInsuranceOption();
+                                    selectedProviderOption.setLabel(null);
+                                    selectedProviderOption.setName(null);
+                                    selectedProviderOption.setId(null);
                                     checkIfEnableButton();
                                 }
                             }, 100);
                         } else {
-                            isProviderOther = false;
                             changeInputComponentType(planEditText, false);
                             otherProviderLayout.setVisibility(View.GONE);
                         }
@@ -547,7 +548,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                     selectedProviderOption.setName(editable.toString());
                     otherProviderRequiredView.setVisibility(View.GONE);
                 } else {
-                    selectedProviderOption = new DemographicsInsuranceOption();
+                    selectedProviderOption.setLabel(null);
+                    selectedProviderOption.setName(null);
+                    selectedProviderOption.setId(null);
                     otherProviderRequiredView.setVisibility(View.VISIBLE);
                 }
                 checkIfEnableButton();
@@ -1182,11 +1185,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                 new OnOptionSelectedListener() {
                     @Override
                     public void onOptionSelected(DemographicsOption option) {
-                        if (demographicsOption != null) {
-                            demographicsOption.setLabel(option.getLabel());
-                            demographicsOption.setName(option.getName());
-                            demographicsOption.setId(option.getId());
-                        }
+                        demographicsOption.setLabel(option.getLabel());
+                        demographicsOption.setName(option.getName());
+                        demographicsOption.setId(option.getId());
+
                         editText.setText(option.getLabel());
                         editText.getOnFocusChangeListener()
                                 .onFocusChange(editText, !StringUtil.isNullOrEmpty(editText.getText().toString()));
