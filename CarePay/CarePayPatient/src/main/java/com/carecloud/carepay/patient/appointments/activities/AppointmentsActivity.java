@@ -61,7 +61,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         } else {
             resumeOnCreate();
         }
-        if (showSurvey) {
+        if (showSurvey || forceRefresh) {
             showRateDialogFragment();
         }
 
