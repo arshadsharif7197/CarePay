@@ -451,6 +451,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 break;
             }
             case DENIED:
+            case REQUESTED_UPCOMING:
             case REQUESTED: {
                 if ("denied".equals(notificationItem.getPayload().getNotificationSubType())) {
                     notificationItem.getPayload().getAppointment().getPayload()
