@@ -121,6 +121,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                         @Override
                         public void run() {
                             refreshAppointments();
+                            showRateDialogFragment();
                         }
                     }, 100);
                 } else if (resultCode == RESULT_OK) {
