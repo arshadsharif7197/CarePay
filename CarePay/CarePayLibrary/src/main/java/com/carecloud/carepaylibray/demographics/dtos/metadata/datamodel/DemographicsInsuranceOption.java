@@ -24,4 +24,9 @@ public class DemographicsInsuranceOption extends DemographicsOption {
     public void setPayerPlans(List<DemographicsOption> payerPlans) {
         this.payerPlans = payerPlans;
     }
+
+    @Override
+    public String getDisplayName() {
+        return super.getDisplayName();
+    }
 }

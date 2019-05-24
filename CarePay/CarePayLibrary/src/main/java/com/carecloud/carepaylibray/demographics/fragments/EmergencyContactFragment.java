@@ -1,12 +1,10 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,11 +13,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -27,9 +22,10 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.common.options.OnOptionSelectedListener;
+import com.carecloud.carepaylibray.common.options.SelectOptionFragment;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicEmergencyContactSection;
@@ -129,14 +125,14 @@ public class EmergencyContactFragment extends BaseDialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbarLayout);
+        Toolbar toolbar = view.findViewById(R.id.toolbarLayout);
         if (getDialog() == null) {
-            TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
+            TextView title = toolbar.findViewById(R.id.settings_toolbar_title);
             title.setText(Label.getLabel("demographics_emergency_contact_title"));
             toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);
             callback.setToolbar(toolbar);
         } else {
-            TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+            TextView title = toolbar.findViewById(R.id.toolbar_title);
             title.setText(Label.getLabel("demographics_emergency_contact_title"));
             view.findViewById(R.id.edit_insurance_close_button).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -153,7 +149,7 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         PatientModel emergencyContact = demographicPayload.getEmergencyContact();
         DemographicEmergencyContactSection emergencyContactSection = dto.getMetadata().getNewDataModel().getDemographic().getEmergencyContact();
 
-        saveButton = (Button) view.findViewById(R.id.saveButton);
+        saveButton = view.findViewById(R.id.saveButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -248,11 +244,11 @@ public class EmergencyContactFragment extends BaseDialogFragment {
                 emergencyContactSection.getProperties().getAddress().getProperties().getState().isRequired(),
                 view.findViewById(R.id.stateRequired), null);
         stateEditText.setOnClickListener(
-                getOptionsListener(emergencyContactSection.getProperties().getAddress()
+                getSelectOptionsListener(emergencyContactSection.getProperties().getAddress()
                                 .getProperties().getState().getOptions(),
-                        new CheckInDemographicsBaseFragment.OnOptionSelectedListener() {
+                        new OnOptionSelectedListener() {
                             @Override
-                            public void onOptionSelected(DemographicsOption option) {
+                            public void onOptionSelected(DemographicsOption option, int position) {
                                 stateEditText.setText(option.getLabel());
                             }
                         },
@@ -277,10 +273,10 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         TextInputLayout genderInputLayout = view.findViewById(R.id.genderInputLayout);
         genderEditText = view.findViewById(R.id.genderEditText);
         genderEditText.setOnClickListener(
-                getOptionsListener(emergencyContactSection.getProperties().getGender().getOptions(),
-                        new CheckInDemographicsBaseFragment.OnOptionSelectedListener() {
+                getSelectOptionsListener(emergencyContactSection.getProperties().getGender().getOptions(),
+                        new OnOptionSelectedListener() {
                             @Override
-                            public void onOptionSelected(DemographicsOption option) {
+                            public void onOptionSelected(DemographicsOption option, int position) {
                                 selectedGender = option;
                                 genderEditText.setText(option.getLabel());
                                 genderEditText.getOnFocusChangeListener().onFocusChange(genderEditText,
@@ -297,10 +293,10 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         ecRelationshipInputLayout = view.findViewById(R.id.emergencyContactRelationshipInputLayout);
         ecRelationshipEditText = view.findViewById(R.id.emergencyContactRelationshipEditText);
         ecRelationshipEditText.setOnClickListener(
-                getOptionsListener(emergencyContactSection.getProperties().getRelationshipType().getOptions(),
-                        new CheckInDemographicsBaseFragment.OnOptionSelectedListener() {
+                getSelectOptionsListener(emergencyContactSection.getProperties().getRelationshipType().getOptions(),
+                        new OnOptionSelectedListener() {
                             @Override
-                            public void onOptionSelected(DemographicsOption option) {
+                            public void onOptionSelected(DemographicsOption option, int position) {
                                 selectedRelationship = option;
                                 ecRelationshipEditText.setText(option.getLabel());
                                 ecRelationshipEditText.getOnFocusChangeListener()
@@ -559,11 +555,8 @@ public class EmergencyContactFragment extends BaseDialogFragment {
             unsetFieldError(dateBirthTextInputLayout);
         }
 
-        if (dataModel.getProperties().getGender().isRequired()
-                && StringUtil.isNullOrEmpty(genderEditText.getText().toString())) {
-            return false;
-        }
-        return true;
+        return !dataModel.getProperties().getGender().isRequired()
+                || !StringUtil.isNullOrEmpty(genderEditText.getText().toString());
     }
 
     private boolean validatePhoneNumber(TextInputLayout textInputLayout,
@@ -744,62 +737,18 @@ public class EmergencyContactFragment extends BaseDialogFragment {
         }.execute(zipCode);
     }
 
-    protected View.OnClickListener getOptionsListener(final List<DemographicsOption> options,
-                                                      final CheckInDemographicsBaseFragment.OnOptionSelectedListener listener,
-                                                      final String title) {
+    protected View.OnClickListener getSelectOptionsListener(final List<DemographicsOption> options,
+                                                            final OnOptionSelectedListener listener,
+                                                            final String title) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showChooseDialog(getContext(), options, title, listener);
+                SelectOptionFragment fragment = SelectOptionFragment.newInstance(title);
+                fragment.setOptions(options);
+                fragment.setCallback(listener);
+                fragment.show(getActivity().getSupportFragmentManager(), fragment.getClass().getName());
             }
         };
-    }
-
-    private void showChooseDialog(Context context,
-                                  List<DemographicsOption> options,
-                                  String title,
-                                  final CheckInDemographicsBaseFragment.OnOptionSelectedListener listener) {
-
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        // add cancel button
-        dialog.setNegativeButton(Label.getLabel("demographics_cancel_label"), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int pos) {
-                dialogInterface.dismiss();
-            }
-        });
-
-        // create dialog layout
-        View customView = LayoutInflater.from(context).inflate(R.layout.alert_list_layout, null, false);
-        dialog.setView(customView);
-        TextView titleTextView = (TextView) customView.findViewById(R.id.title_view);
-        titleTextView.setText(title);
-        titleTextView.setVisibility(View.VISIBLE);
-
-
-        // create the adapter
-        ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
-        CustomOptionsAdapter customOptionsAdapter = new CustomOptionsAdapter(context, options);
-        listView.setAdapter(customOptionsAdapter);
-
-
-        final AlertDialog alert = dialog.create();
-        alert.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        alert.show();
-
-        // set item click listener
-        AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long row) {
-                DemographicsOption selectedOption = (DemographicsOption) adapterView.getAdapter()
-                        .getItem(position);
-                if (listener != null) {
-                    listener.onOptionSelected(selectedOption);
-                }
-                alert.dismiss();
-            }
-        };
-        listView.setOnItemClickListener(clickListener);
     }
 
     protected TextWatcher dateInputFormatter = new TextWatcher() {

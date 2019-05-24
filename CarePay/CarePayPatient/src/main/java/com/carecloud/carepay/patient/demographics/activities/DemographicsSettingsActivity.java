@@ -14,10 +14,7 @@ import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.demographics.fragments.settings.ChangePasswordFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsExpandedFragment;
-import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsInformationFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsSettingsFragment;
-import com.carecloud.carepay.patient.demographics.fragments.settings.EditProfileFragment;
-import com.carecloud.carepay.patient.demographics.fragments.settings.HelpFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.SettingsDocumentsFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.SupportFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.UpdateEmailFragment;
@@ -49,7 +46,6 @@ import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactFragm
 import com.carecloud.carepaylibray.demographics.interfaces.PhysicianFragmentInterface;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
-import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -135,12 +131,6 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     }
 
     @Override
-    public void displayEditProfileFragment() {
-        EditProfileFragment editProfileFragment = EditProfileFragment.newInstance();
-        replaceFragment(editProfileFragment, true);
-    }
-
-    @Override
     public void displayUpdateEmailFragment() {
         UpdateEmailFragment updateEmailFragment = UpdateEmailFragment.newInstance();
         replaceFragment(updateEmailFragment, true);
@@ -159,37 +149,11 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     }
 
     @Override
-    public void displayDemographicsFragment() {
-        DemographicsInformationFragment demographicsInformationFragment =
-                DemographicsInformationFragment.newInstance();
-        replaceFragment(demographicsInformationFragment, true);
-    }
-
-    @Override
-    public void displayExpandedDemographicsFragment() {
-        DemographicsExpandedFragment demographicsExpandedFragment = DemographicsExpandedFragment.newInstance();
-        replaceFragment(demographicsExpandedFragment, true);
-    }
-
-    @Override
-    public void displayDocumentsFragment() {
-        SettingsDocumentsFragment settingsDocumentsFragment = SettingsDocumentsFragment.newInstance();
-        replaceFragment(settingsDocumentsFragment, true);
-    }
-
-    @Override
     public void editInsurance(DemographicDTO demographicDTO, int editedIndex) {
         InsuranceEditDialog insuranceEditDialog = InsuranceEditDialog
                 .newInstance(demographicDTO, editedIndex, false, false);
 
         replaceFragment(insuranceEditDialog, true);
-    }
-
-
-    @Override
-    public void displayCreditCardListFragment() {
-        CreditCardListFragment creditCardListFragment = new CreditCardListFragment();
-        replaceFragment(creditCardListFragment, true);
     }
 
     @Override
@@ -204,12 +168,6 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         CreditCardDetailsFragment creditCardDetailsFragment = CreditCardDetailsFragment
                 .newInstance(creditCardsPayloadDTO);
         replaceFragment(creditCardDetailsFragment, true);
-    }
-
-    @Override
-    public void displayHelpFragment() {
-        replaceFragment(new HelpFragment(), true);
-        MixPanelUtil.logEvent(getString(R.string.event_help_clicked));
     }
 
     @Override

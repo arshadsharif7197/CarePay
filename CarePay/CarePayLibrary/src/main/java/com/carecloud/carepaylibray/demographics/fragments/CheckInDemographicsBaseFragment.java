@@ -1,13 +1,11 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -17,12 +15,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -33,8 +28,9 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
+import com.carecloud.carepaylibray.common.options.OnOptionSelectedListener;
+import com.carecloud.carepaylibray.common.options.SelectOptionFragment;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicDataModel;
@@ -79,14 +75,14 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_review_demographic_base, container, false);
-        stepProgressBar = (StepProgressBar) view.findViewById(R.id.stepProgressBarCheckin);
+        stepProgressBar = view.findViewById(R.id.stepProgressBarCheckin);
         inflateContent(inflater, view);
         inflateToolbarViews(view);
 
         View mainContainer = view.findViewById(R.id.container_main);
         hideKeyboardOnViewTouch(mainContainer);
         hideKeyboardOnViewTouch(view);
-        scrollView = (ScrollView) view.findViewById(R.id.demographicsScrollView);
+        scrollView = view.findViewById(R.id.demographicsScrollView);
         return view;
     }
 
@@ -100,7 +96,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     }
 
     private void inflateToolbarViews(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         if (toolbar == null) {
             return;
         }
@@ -124,10 +120,10 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     }
 
     protected void setHeaderTitle(String title, String heading, String subHeading, View view) {
-        TextView titleTextView = (TextView) view.findViewById(R.id.toolbar_title);
+        TextView titleTextView = view.findViewById(R.id.toolbar_title);
         if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT) {
-            TextView mainHeadingTextView = (TextView) view.findViewById(R.id.demographicsMainHeading);
-            TextView subHeadingTextView = (TextView) view.findViewById(R.id.demographicsSubHeading);
+            TextView mainHeadingTextView = view.findViewById(R.id.demographicsMainHeading);
+            TextView subHeadingTextView = view.findViewById(R.id.demographicsSubHeading);
             (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
 
             if (StringUtil.isNullOrEmpty(heading) || heading.equalsIgnoreCase(CarePayConstants.NOT_DEFINED)) {
@@ -147,7 +143,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             (view.findViewById(R.id.toolbar_layout)).setVisibility(View.VISIBLE);
             titleTextView.setText(title);
 
-            TextView subHeadingTextView = (TextView) view.findViewById(R.id.demographicsSubHeading);
+            TextView subHeadingTextView = view.findViewById(R.id.demographicsSubHeading);
             if (StringUtil.isNullOrEmpty(subHeading) || subHeading.equalsIgnoreCase(CarePayConstants.NOT_DEFINED)) {
                 subHeadingTextView.setVisibility(View.GONE);
             } else {
@@ -158,7 +154,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     }
 
     protected void initNextButton(final View view) {
-        Button nextButton = (Button) view.findViewById(R.id.checkinDemographicsNextButton);
+        Button nextButton = view.findViewById(R.id.checkinDemographicsNextButton);
         nextButton.setVisibility(View.VISIBLE);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,7 +181,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
 
     protected void checkIfEnableButton(View view) {
         if (view != null) {
-            Button nextButton = (Button) view.findViewById(R.id.checkinDemographicsNextButton);
+            Button nextButton = view.findViewById(R.id.checkinDemographicsNextButton);
             boolean isEnabled = passConstraints(view);
             if (nextButton != null) {
                 nextButton.setSelected(isEnabled);
@@ -260,7 +256,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             hideProgressDialog();
             if (checkinFlowCallback.getCurrentStep() == CheckinFlowCallback.IDENTITY) {
                 MixPanelUtil.endTimer(getActivityProxy().getString(R.string.timer_identification_docs));
-            }else if (checkinFlowCallback.getCurrentStep() == CheckinFlowCallback.INSURANCE) {
+            } else if (checkinFlowCallback.getCurrentStep() == CheckinFlowCallback.INSURANCE) {
                 MixPanelUtil.endTimer(getActivityProxy().getString(R.string.timer_health_insurance));
             }
 
@@ -440,7 +436,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     protected OnOptionSelectedListener getDefaultOnOptionsSelectedListener(final TextView textView, final DemographicsOption storeOption, final View requiredView) {
         return new OnOptionSelectedListener() {
             @Override
-            public void onOptionSelected(DemographicsOption option) {
+            public void onOptionSelected(DemographicsOption option, int position) {
                 if (textView != null) {
                     textView.setText(option.getLabel());
                 }
@@ -462,56 +458,12 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showChooseDialog(getContext(), options, title, listener);
+                SelectOptionFragment fragment = SelectOptionFragment.newInstance(title);
+                fragment.setOptions(options);
+                fragment.setCallback(listener);
+                fragment.show(getActivity().getSupportFragmentManager(), fragment.getClass().getName());
             }
         };
-    }
-
-
-    private void showChooseDialog(Context context,
-                                  List<DemographicsOption> options,
-                                  String title,
-                                  final OnOptionSelectedListener listener) {
-
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        // add cancel button
-        dialog.setNegativeButton(Label.getLabel("demographics_cancel_label"), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int pos) {
-                dialogInterface.dismiss();
-            }
-        });
-
-        // create dialog layout
-        View customView = LayoutInflater.from(context).inflate(R.layout.alert_list_layout, null, false);
-        dialog.setView(customView);
-        TextView titleTextView = (TextView) customView.findViewById(R.id.title_view);
-        titleTextView.setText(title);
-        titleTextView.setVisibility(View.VISIBLE);
-
-
-        // create the adapter
-        ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
-        CustomOptionsAdapter customOptionsAdapter = new CustomOptionsAdapter(context, options);
-        listView.setAdapter(customOptionsAdapter);
-
-
-        final AlertDialog alert = dialog.create();
-        alert.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        alert.show();
-
-        // set item click listener
-        AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long row) {
-                DemographicsOption selectedOption = (DemographicsOption) adapterView.getAdapter().getItem(position);
-                if (listener != null) {
-                    listener.onOptionSelected(selectedOption);
-                }
-                alert.dismiss();
-            }
-        };
-        listView.setOnItemClickListener(clickListener);
     }
 
     protected boolean isUserAction() {
@@ -527,7 +479,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     }
 
     protected void unsetFieldError(View baseView, int id) {
-        TextInputLayout inputLayout = (TextInputLayout) baseView.findViewById(id);
+        TextInputLayout inputLayout = baseView.findViewById(id);
         unsetFieldError(inputLayout);
     }
 
@@ -537,10 +489,6 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
             inputLayout.setErrorEnabled(false);
         }
 
-    }
-
-    public interface OnOptionSelectedListener {
-        void onOptionSelected(DemographicsOption option);
     }
 
     protected void showErrorViews(boolean isError, ViewGroup container) {
@@ -685,7 +633,7 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
     }
 
     protected void setFieldError(View baseView, int id, String error, boolean shouldRequestFocus) {
-        TextInputLayout inputLayout = (TextInputLayout) baseView.findViewById(id);
+        TextInputLayout inputLayout = baseView.findViewById(id);
         setFieldError(inputLayout, error, shouldRequestFocus);
     }
 

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootDialogAppointLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/dimen_10dp"
+    android:background="@color/transparent_apt"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/dimen_10dp"
+    android:paddingEnd="@dimen/dimen_10dp">
+
+    <ImageView
+        android:id="@+id/closeImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/apt_imgview_ht"
+        android:layout_gravity="start"
+        android:layout_marginBottom="@dimen/apt_dl_margin_bottom"
+        android:gravity="start"
+        android:src="@drawable/icn_patient_mode_nav_close"
+        android:textColor="@color/white" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/closeImageView"
+        android:background="@drawable/round_white_background"
+        android:minWidth="@dimen/dimen_300dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/headerContainer"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@drawable/top_left_right_rounded_background"
+            android:orientation="horizontal"
+            android:padding="@dimen/dimen_10dp">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/dialogTitleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:ellipsize="end"
+                android:gravity="start"
+                android:lines="1"
+                android:maxLines="1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_20sp"
+                app:customAssetFont="gotham_rounded_medium" />
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/optionsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</RelativeLayout>

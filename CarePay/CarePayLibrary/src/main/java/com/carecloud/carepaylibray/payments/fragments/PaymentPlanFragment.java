@@ -1,11 +1,9 @@
 package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -15,18 +13,16 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
+import com.carecloud.carepaylibray.common.options.OnOptionSelectedListener;
+import com.carecloud.carepaylibray.common.options.SelectOptionFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsToggleOption;
@@ -48,13 +44,13 @@ import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
-
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
 
 public class PaymentPlanFragment extends BasePaymentDialogFragment
         implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
@@ -232,14 +228,17 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         paymentDateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showChooseDialog(getContext(), selectedDateOptions, dialogTitle,
-                        new ValueOptionCallback() {
-                            @Override
-                            public void onValueOption(DemographicsOption option) {
-                                paymentDateOption = option;
-                                paymentDateEditText.setText(option.getLabel());
-                            }
-                        });
+                SelectOptionFragment fragment = SelectOptionFragment.newInstance(dialogTitle);
+                fragment.setOptions(selectedDateOptions);
+                fragment.setCallback(new OnOptionSelectedListener() {
+                    @Override
+                    public void onOptionSelected(DemographicsOption option, int position) {
+                        paymentDateOption = option;
+                        paymentDateEditText.setText(option.getLabel());
+                        enableCreatePlanButton();
+                    }
+                });
+                fragment.show(getActivity().getSupportFragmentManager(), fragment.getClass().getName());
             }
         });
 
@@ -253,17 +252,19 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
             frequencyCodeEditText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showChooseDialog(getContext(), frequencyOptions,
-                            Label.getLabel("payment.paymentPlan.frequency.dialog.title"),
-                            new ValueOptionCallback() {
-                                @Override
-                                public void onValueOption(DemographicsOption option) {
-                                    if (!frequencyOption.getName().equals(option.getName())) {
-                                        manageFrequencyChange((DemographicsToggleOption) option, true);
-                                    }
-
-                                }
-                            });
+                    SelectOptionFragment fragment = SelectOptionFragment.newInstance(
+                            Label.getLabel("payment.paymentPlan.frequency.dialog.title"));
+                    fragment.setOptions(frequencyOptions);
+                    fragment.setCallback(new OnOptionSelectedListener() {
+                        @Override
+                        public void onOptionSelected(DemographicsOption option, int position) {
+                            if (!frequencyOption.getName().equals(option.getName())) {
+                                manageFrequencyChange((DemographicsToggleOption) option, true);
+                                enableCreatePlanButton();
+                            }
+                        }
+                    });
+                    fragment.show(getActivity().getSupportFragmentManager(), fragment.getClass().getName());
                 }
             });
         } else {
@@ -919,58 +920,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         }
     };
 
-    private void showChooseDialog(Context context,
-                                  List<? extends DemographicsOption> options,
-                                  String title,
-                                  final ValueOptionCallback valueInputCallback) {
-
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        // add cancel button
-        dialog.setNegativeButton(Label.getLabel("demographics_cancel_label"), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int pos) {
-                dialogInterface.dismiss();
-            }
-        });
-
-        // create dialog layout
-        View customView = LayoutInflater.from(context).inflate(R.layout.alert_list_layout, null, false);
-        dialog.setView(customView);
-        TextView titleTextView = (TextView) customView.findViewById(R.id.title_view);
-        titleTextView.setText(title);
-        titleTextView.setVisibility(View.VISIBLE);
-
-
-        // create the adapter
-        ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
-        CustomOptionsAdapter customOptionsAdapter = new CustomOptionsAdapter(context, options);
-        listView.setAdapter(customOptionsAdapter);
-
-
-        final AlertDialog alert = dialog.create();
-        alert.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        alert.show();
-
-        // set item click listener
-        AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long row) {
-                DemographicsOption selectedOption = (DemographicsOption) adapterView.getAdapter()
-                        .getItem(position);
-                valueInputCallback.onValueOption(selectedOption);
-                alert.dismiss();
-                enableCreatePlanButton();
-            }
-        };
-        listView.setOnItemClickListener(clickListener);
-    }
-
     private interface ValueInputCallback {
         void onValueInput(String input);
-    }
-
-    private interface ValueOptionCallback {
-        void onValueOption(DemographicsOption option);
     }
 
 }

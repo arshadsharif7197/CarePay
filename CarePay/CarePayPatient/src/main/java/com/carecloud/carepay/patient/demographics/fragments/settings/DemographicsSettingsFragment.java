@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
+import com.carecloud.carepay.patient.payment.fragments.CreditCardListFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -45,7 +46,6 @@ public class DemographicsSettingsFragment extends BaseFragment {
 
 
     private DemographicDTO demographicsSettingsDTO;
-    private Button signOutButton;
     private DemographicsSettingsFragmentListener callback;
     private CheckBox pushNotificationCheckBox;
     private CheckBox emailNotificationCheckBox;
@@ -84,8 +84,8 @@ public class DemographicsSettingsFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
-        TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
+        final Toolbar toolbar = view.findViewById(R.id.settings_toolbar);
+        TextView title = toolbar.findViewById(R.id.settings_toolbar_title);
         title.setText(Label.getLabel("settings_heading"));
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_close));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -95,20 +95,20 @@ public class DemographicsSettingsFragment extends BaseFragment {
     }
 
     private void setUpUi(View view) {
-        CarePayTextView patientNameTextView = (CarePayTextView) view.findViewById(R.id.patient_name);
+        CarePayTextView patientNameTextView = view.findViewById(R.id.patient_name);
         PatientModel demographicsPersonalDetails = demographicsSettingsDTO.getPayload().getDemographics()
                 .getPayload().getPersonalDetails();
         String firstName = demographicsPersonalDetails.getFirstName();
         String lastName = demographicsPersonalDetails.getLastName();
         patientNameTextView.setText(StringUtil.getCapitalizedUserName(firstName, lastName));
-        CarePayTextView patientIdTextView = (CarePayTextView) view.findViewById(R.id.patient_id);
+        CarePayTextView patientIdTextView = view.findViewById(R.id.patient_id);
         patientIdTextView.setText(demographicsSettingsDTO.getPayload().getCurrentEmail());
 
         initializeHelpButton(view);
 
         String imageUrl = demographicsPersonalDetails.getProfilePhoto();
         if (!StringUtil.isNullOrEmpty(imageUrl)) {
-            ImageView profileImageview = (ImageView) view.findViewById(R.id.providerPicImageView);
+            ImageView profileImageview = view.findViewById(R.id.providerPicImageView);
             Picasso.with(getContext())
                     .load(imageUrl)
                     .placeholder(R.drawable.icn_placeholder_user_profile_png)
@@ -119,11 +119,11 @@ public class DemographicsSettingsFragment extends BaseFragment {
 
         }
 
-        pushNotificationCheckBox = (CheckBox) view.findViewById(R.id.pushNotificationCheckBox);
+        pushNotificationCheckBox = view.findViewById(R.id.pushNotificationCheckBox);
         pushNotificationCheckBox.setChecked(demographicsSettingsDTO.getPayload().getDemographicSettingsNotificationDTO().getPayload().isPush());
-        emailNotificationCheckBox = (CheckBox) view.findViewById(R.id.emailNotificationCheckBox);
+        emailNotificationCheckBox = view.findViewById(R.id.emailNotificationCheckBox);
         emailNotificationCheckBox.setChecked(demographicsSettingsDTO.getPayload().getDemographicSettingsNotificationDTO().getPayload().isEmail());
-        smsNotificationCheckBox = (CheckBox) view.findViewById(R.id.smsNotificationCheckBox);
+        smsNotificationCheckBox = view.findViewById(R.id.smsNotificationCheckBox);
         smsNotificationCheckBox.setChecked(demographicsSettingsDTO.getPayload().getDemographicSettingsNotificationDTO().getPayload().isSms());
         smsNotificationCheckBox.setVisibility(View.VISIBLE);
 
@@ -134,24 +134,23 @@ public class DemographicsSettingsFragment extends BaseFragment {
 
     @Override
     public void onDetach() {
-        super.onDetach();
         callback = null;
+        super.onDetach();
     }
 
     private void initializeHelpButton(View view) {
-        TextView textView = (TextView) view.findViewById(R.id.helpTextView);
+        TextView textView = view.findViewById(R.id.helpTextView);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (callback != null) {
-                    callback.displayHelpFragment();
-                }
+                callback.replaceFragment(new HelpFragment(), true);
+                MixPanelUtil.logEvent(getString(R.string.event_help_clicked));
             }
         });
     }
 
     private void setClickListeners(View view) {
-        signOutButton = (Button) view.findViewById(R.id.signOutButton);
+        Button signOutButton = view.findViewById(R.id.signOutButton);
         signOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -159,35 +158,40 @@ public class DemographicsSettingsFragment extends BaseFragment {
             }
         });
 
-        CarePayTextView editTextView = (CarePayTextView) view.findViewById(R.id.editTextView);
+        CarePayTextView editTextView = view.findViewById(R.id.editTextView);
         editTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.displayEditProfileFragment();
+                EditProfileFragment editProfileFragment = EditProfileFragment.newInstance();
+                callback.replaceFragment(editProfileFragment, true);
             }
         });
 
-        CarePayTextView demographicsTextview = (CarePayTextView) view.findViewById(R.id.demographicsTextView);
-        demographicsTextview.setOnClickListener(new View.OnClickListener() {
+        CarePayTextView demographicsTextView = view.findViewById(R.id.demographicsTextView);
+        demographicsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.displayDemographicsFragment();
+                DemographicsInformationFragment demographicsInformationFragment =
+                        DemographicsInformationFragment.newInstance();
+                callback.replaceFragment(demographicsInformationFragment, true);
             }
         });
 
-        CarePayTextView documentsTextview = (CarePayTextView) view.findViewById(R.id.documentsTextView);
+        CarePayTextView documentsTextview = view.findViewById(R.id.documentsTextView);
         documentsTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.displayDocumentsFragment();
+                SettingsDocumentsFragment settingsDocumentsFragment = SettingsDocumentsFragment.newInstance();
+                callback.replaceFragment(settingsDocumentsFragment, true);
             }
         });
 
-        CarePayTextView creditCardsTextView = (CarePayTextView) view.findViewById(R.id.creditCardsTextView);
+        CarePayTextView creditCardsTextView = view.findViewById(R.id.creditCardsTextView);
         creditCardsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.displayCreditCardListFragment();
+                CreditCardListFragment creditCardListFragment = new CreditCardListFragment();
+                callback.replaceFragment(creditCardListFragment, true);
             }
         });
 

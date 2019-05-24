@@ -57,7 +57,6 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
 
     private EditText dateOfBirthEditText;
     private EditText phoneNumberEditText;
-    private EditText phoneNumberTypeEditText;
     private EditText addressEditText;
     private EditText address2EditText;
     private EditText zipCode;
@@ -107,8 +106,8 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
-        TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
+        Toolbar toolbar = view.findViewById(R.id.settings_toolbar);
+        TextView title = toolbar.findViewById(R.id.settings_toolbar_title);
         title.setText(Label.getLabel("demographics_label"));
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
         callback.setToolbar(toolbar);
@@ -135,7 +134,8 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         additionalDemographics.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.displayExpandedDemographicsFragment();
+                DemographicsExpandedFragment demographicsExpandedFragment = DemographicsExpandedFragment.newInstance();
+                callback.replaceFragment(demographicsExpandedFragment, true);
             }
         });
 
@@ -154,8 +154,8 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
     }
 
     private void initPersonalInfo(View view, DemographicPayloadDTO demographicPayload) {
-        TextInputLayout dateBirthInputLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
-        dateOfBirthEditText = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
+        TextInputLayout dateBirthInputLayout = view.findViewById(R.id.reviewdemogrDOBTextInput);
+        dateOfBirthEditText = view.findViewById(R.id.revewidemogrDOBEdit);
         boolean isDOBRequired = dataModel.getDemographic().getPersonalDetails().getProperties().getDateOfBirth().isRequired();
         setUpField(dateBirthInputLayout, dateOfBirthEditText,
                 dataModel.getDemographic().getPersonalDetails().getProperties().getDateOfBirth().isDisplayed(),
@@ -166,9 +166,8 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         dateOfBirthEditText.addTextChangedListener(dateInputFormatter);
         dateOfBirthEditText.setOnClickListener(selectEndOnClick);
 
-        TextInputLayout phoneNumberInputLayout = (TextInputLayout)
-                view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
-        phoneNumberEditText = (EditText) view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
+        TextInputLayout phoneNumberInputLayout = view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
+        phoneNumberEditText = view.findViewById(R.id.reviewgrdemoPhoneNumberEdit);
         boolean phoneNumberRequired = dataModel.getDemographic().getAddress().getProperties().getPhone().isRequired();
         setUpField(phoneNumberInputLayout, phoneNumberEditText,
                 dataModel.getDemographic().getAddress().getProperties().getPhone().isDisplayed(),
@@ -179,8 +178,8 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         phoneNumberEditText.addTextChangedListener(phoneInputFormatter);
         phoneNumberEditText.setOnClickListener(selectEndOnClick);
 
-        TextInputLayout phoneTypeInputLayout = (TextInputLayout) view.findViewById(R.id.phoneTypeInputLayout);
-        phoneNumberTypeEditText = (EditText) view.findViewById(R.id.phoneTypeEditText);
+        TextInputLayout phoneTypeInputLayout = view.findViewById(R.id.phoneTypeInputLayout);
+        EditText phoneNumberTypeEditText = view.findViewById(R.id.phoneTypeEditText);
         phoneNumberTypeEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(phoneTypeInputLayout, null));
         selectedPhoneType.setLabel(demographicPayload.getAddress().getPhoneNumberType());
         selectedPhoneType.setName(demographicPayload.getAddress().getPhoneNumberType());
@@ -217,8 +216,8 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
     private void initAddressInfo(View view, DemographicPayloadDTO demographicPayload) {
         DemographicsAddressSection addressSection = dataModel.getDemographic().getAddress();
 
-        TextInputLayout address2InputLayout = (TextInputLayout) view.findViewById(R.id.address2TextInputLayout);
-        address2EditText = (EditText) view.findViewById(R.id.addressEditText2Id);
+        TextInputLayout address2InputLayout = view.findViewById(R.id.address2TextInputLayout);
+        address2EditText = view.findViewById(R.id.addressEditText2Id);
         setUpField(address2InputLayout, address2EditText,
                 addressSection.getProperties().getAddress2().isDisplayed(),
                 demographicPayload.getAddress().getAddress2(),
@@ -226,8 +225,8 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
                 view.findViewById(R.id.demogrAddressOptionalLabel));
         address2EditText.setEnabled(!StringUtil.isNullOrEmpty(demographicPayload.getAddress().getAddress2()));
 
-        final TextInputLayout addressInputLayout = (TextInputLayout) view.findViewById(R.id.address1TextInputLayout);
-        addressEditText = (EditText) view.findViewById(R.id.addressEditTextId);
+        final TextInputLayout addressInputLayout = view.findViewById(R.id.address1TextInputLayout);
+        addressEditText = view.findViewById(R.id.addressEditTextId);
         setUpField(addressInputLayout, addressEditText,
                 addressSection.getProperties().getAddress1().isDisplayed(),
                 demographicPayload.getAddress().getAddress1(),
@@ -257,8 +256,8 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         });
 
 
-        TextInputLayout zipCodeInputLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
-        zipCode = (EditText) view.findViewById(R.id.zipCodeId);
+        TextInputLayout zipCodeInputLayout = view.findViewById(R.id.zipCodeTextInputLayout);
+        zipCode = view.findViewById(R.id.zipCodeId);
         setUpField(zipCodeInputLayout, zipCode,
                 addressSection.getProperties().getZipcode().isDisplayed(),
                 StringUtil.formatZipCode(demographicPayload.getAddress().getZipcode()),
@@ -266,8 +265,8 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         zipCode.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(zipCodeInputLayout, getZipCodeFocusListener(zipCode)));
         zipCode.addTextChangedListener(zipInputFormatter);
 
-        TextInputLayout cityInputLayout = (TextInputLayout) view.findViewById(R.id.cityTextInputLayout);
-        cityEditText = (EditText) view.findViewById(R.id.cityId);
+        TextInputLayout cityInputLayout = view.findViewById(R.id.cityTextInputLayout);
+        cityEditText = view.findViewById(R.id.cityId);
         cityEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(cityInputLayout, null));
         setVisibility(cityInputLayout, addressSection.getProperties().getCity().isDisplayed());
         cityEditText.setText(StringUtil.captialize(demographicPayload.getAddress().getCity()));
@@ -278,7 +277,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
         }
 
 
-        TextInputLayout stateInputLayout = (TextInputLayout) view.findViewById(R.id.stateTextInputLayout);
+        TextInputLayout stateInputLayout = view.findViewById(R.id.stateTextInputLayout);
         stateEditText = (EditText) view.findViewById(R.id.reviewDemographicsStateAutoCompleteTextView);
         stateEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(stateInputLayout, null));
         setVisibility(stateInputLayout, addressSection.getProperties().getState().isDisplayed());
@@ -315,7 +314,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
                 R.id.reviewdemogrDOBTextInput, isUserInteraction)) return false;
 
         //This validation is required regardless of whether fields are required
-        TextInputLayout dateBirthLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrDOBTextInput);
+        TextInputLayout dateBirthLayout = view.findViewById(R.id.reviewdemogrDOBTextInput);
         if (dateBirthLayout.getVisibility() == View.VISIBLE &&
                 !StringUtil.isNullOrEmpty(dateOfBirthEditText.getText().toString().trim())) {
             String dateValidationResult = DateUtil
@@ -335,7 +334,7 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
                         .getPhone().isRequired(), phoneValue,
                 R.id.reviewdemogrPhoneNumberTextInput, isUserInteraction)) return false;
 
-        TextInputLayout phoneLayout = (TextInputLayout) view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
+        TextInputLayout phoneLayout = view.findViewById(R.id.reviewdemogrPhoneNumberTextInput);
         if (phoneLayout.getVisibility() == View.VISIBLE &&
                 !StringUtil.isNullOrEmpty(phoneValue) &&
                 !ValidationHelper.isValidString(phoneValue, ValidationHelper.PHONE_NUMBER_PATTERN)) {
@@ -389,8 +388,8 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
                 R.id.zipCodeTextInputLayout, isUserInteraction))
             return false;
 
-        TextInputLayout zipLayout = (TextInputLayout) view.findViewById(R.id.zipCodeTextInputLayout);
-        EditText zipCode = (EditText) view.findViewById(R.id.zipCodeId);
+        TextInputLayout zipLayout = view.findViewById(R.id.zipCodeTextInputLayout);
+        EditText zipCode = view.findViewById(R.id.zipCodeId);
         if (zipLayout.getVisibility() == View.VISIBLE &&
                 !StringUtil.isNullOrEmpty(zipCode.getText().toString().trim()) &&
                 !ValidationHelper.isValidString(zipCode.getText().toString().trim(), ValidationHelper.ZIP_CODE_PATTERN)) {
@@ -406,11 +405,9 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
                 R.id.cityTextInputLayout, isUserInteraction)) return false;
 
         String stateValue = selectedState.getName();
-        if (validateField(view, dataModel.getDemographic().getAddress().getProperties()
+        return !validateField(view, dataModel.getDemographic().getAddress().getProperties()
                         .getState().isRequired(), stateValue,
-                R.id.stateTextInputLayout, isUserInteraction)) return false;
-
-        return true;
+                R.id.stateTextInputLayout, isUserInteraction);
     }
 
 

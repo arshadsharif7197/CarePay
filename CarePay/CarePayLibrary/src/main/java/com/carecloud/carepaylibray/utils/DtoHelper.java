@@ -3,9 +3,15 @@ package com.carecloud.carepaylibray.utils;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.carecloud.carepay.service.library.base.OptionNameInterface;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by cocampo on 2/2/17.
@@ -90,6 +96,19 @@ public class DtoHelper {
         if (dto != null) {
             bundle.putString(dto.getClass().getName(), getStringDTO(dto));
         }
+    }
+
+    public static void bundleList(Bundle bundle, List<? extends OptionNameInterface> options) {
+        if (options != null && !options.isEmpty()) {
+            bundle.putString(OptionNameInterface.class.getName(), getStringDTO(options));
+        }
+    }
+
+    public static <T> List<T> getConvertedList(Bundle bundle, final Class<T> clazz) {
+        Type collectionType = new TypeToken<Collection<T>>() {
+        }.getType();
+        Gson gson = new Gson();
+        return gson.fromJson(bundle.getString(clazz.getName()), collectionType);
     }
 
     public static void putExtra(Intent intent, Object dto) {
