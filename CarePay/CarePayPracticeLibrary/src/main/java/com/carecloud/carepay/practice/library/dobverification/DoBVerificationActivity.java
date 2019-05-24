@@ -151,8 +151,14 @@ public class DoBVerificationActivity extends BasePracticeActivity {
     }
 
     private String getPatientName() {
-        String firstName = doBDto.getPayload().getDemographicDTO().getPayload()
-                .getPersonalDetails().getFirstName().substring(0, 1);
+        String firstName;
+        if (StringUtil.isNullOrEmpty(doBDto.getPayload().getDemographicDTO().getPayload()
+                .getPersonalDetails().getFirstName())) {
+            firstName = "";
+        } else {
+            firstName = doBDto.getPayload().getDemographicDTO().getPayload()
+                    .getPersonalDetails().getFirstName().substring(0, 1);
+        }
         String lastName = doBDto.getPayload().getDemographicDTO().getPayload()
                 .getPersonalDetails().getLastName();
         return StringUtil.capitalize(String.format("%s. %s", firstName, lastName));
