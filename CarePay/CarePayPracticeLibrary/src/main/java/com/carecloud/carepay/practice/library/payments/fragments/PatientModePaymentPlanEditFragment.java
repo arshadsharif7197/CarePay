@@ -102,7 +102,7 @@ public class PatientModePaymentPlanEditFragment extends PaymentPlanEditFragment 
         PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
                 .newInstance(paymentsModel, paymentPlanDTO, true);
         fragment.setOnCancelListener(onDialogCancelListener);
-        callback.displayDialogFragment(fragment, false);
+        callback.displayDialogFragment(fragment, true);
         hideDialog();
     }
 }
