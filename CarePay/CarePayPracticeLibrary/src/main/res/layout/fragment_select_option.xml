@@ -49,11 +49,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:ellipsize="end"
-                android:gravity="start"
+                android:gravity="center"
                 android:lines="1"
                 android:maxLines="1"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_20sp"
+                android:textSize="@dimen/text_size_18sp"
                 app:customAssetFont="gotham_rounded_medium" />
 
         </LinearLayout>

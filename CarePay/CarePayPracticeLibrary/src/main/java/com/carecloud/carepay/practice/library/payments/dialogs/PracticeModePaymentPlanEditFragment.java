@@ -99,9 +99,9 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
 
     @Override
     protected void setupToolbar(View view, String titleString) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.payment_toolbar);
+        Toolbar toolbar = view.findViewById(R.id.payment_toolbar);
         if (toolbar != null) {
-            TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+            TextView title = toolbar.findViewById(R.id.toolbar_title);
             title.setText(Label.getLabel("payment_plan_edit_heading"));
         }
 
@@ -120,14 +120,14 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
 
     @Override
     protected void setUpAmounts(View view) {
-        TextView paymentPlanNameTextView = (TextView) view.findViewById(R.id.paymentPlanNameTextView);
+        TextView paymentPlanNameTextView = view.findViewById(R.id.paymentPlanNameTextView);
         paymentPlanNameTextView.setText(paymentPlanDTO.getPayload().getDescription());
 
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
-        TextView paymentPlanValueTextView = (TextView) view.findViewById(R.id.paymentPlanValueTextView);
+        TextView paymentPlanValueTextView = view.findViewById(R.id.paymentPlanValueTextView);
         paymentPlanValueTextView.setText(currencyFormatter.format(paymentPlanAmount));
 
-        TextView paymentAmountTextView = (TextView) view.findViewById(R.id.paymentAmountTextView);
+        TextView paymentAmountTextView = view.findViewById(R.id.paymentAmountTextView);
         String paymentAmount = currencyFormatter.format(paymentPlanDTO.getPayload()
                 .getPaymentPlanDetails().getAmount()) +
                 paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyString();
@@ -160,7 +160,7 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
 
     @Override
     protected void setupButtons(final View view) {
-        editPaymentPlanButton = (Button) view.findViewById(R.id.editPaymentPlanButton);
+        editPaymentPlanButton = view.findViewById(R.id.editPaymentPlanButton);
         editPaymentPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -174,7 +174,7 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
                 }
             }
         });
-        Button cancelPaymentPlanButton = (Button) view.findViewById(R.id.cancelPaymentPlanButton);
+        Button cancelPaymentPlanButton = view.findViewById(R.id.cancelPaymentPlanButton);
         boolean deletePaymentPlan = false;
         if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanHistoryList().isEmpty()) {
             deletePaymentPlan = true;
@@ -184,7 +184,7 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
         cancelPaymentPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((PaymentPlanEditInterface) callback).showCancelPaymentPlanConfirmDialog(new ConfirmationCallback() {
+                callback.showCancelPaymentPlanConfirmDialog(new ConfirmationCallback() {
                     @Override
                     public void onConfirm() {
                         cancelPaymentPlan(finalDeletePaymentPlan);
@@ -193,7 +193,7 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
             }
         });
 
-        Button addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
+        Button addNewCardButton = view.findViewById(R.id.addNewCardButton);
         addNewCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -204,7 +204,7 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
 
     @Override
     protected void setUpItems(View view, List<BalanceItemDTO> items) {
-        RecyclerView itemsRecycler = (RecyclerView) view.findViewById(R.id.itemRecycler);
+        RecyclerView itemsRecycler = view.findViewById(R.id.itemRecycler);
         itemsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         ExistingChargesItemAdapter adapter = new ExistingChargesItemAdapter(paymentPlanDTO.getPayload().getLineItems());
         itemsRecycler.setAdapter(adapter);

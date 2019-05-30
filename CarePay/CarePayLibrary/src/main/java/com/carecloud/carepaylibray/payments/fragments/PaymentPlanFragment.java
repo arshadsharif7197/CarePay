@@ -330,6 +330,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
             installmentsInputLayout.setHint(Label.getLabel("payment_number_of_months"));
             amountPaymentInputLayout.setHint(Label.getLabel("payment_monthly_payment"));
             selectedDateOptions = dateOptions;
+            dialogTitle = Label.getLabel("payment.paymentPlan.frequency.monthly.hint");
             interval = PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS;
         } else {
             paymentDayInputLayout.setHint(Label
@@ -338,6 +339,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
             amountPaymentInputLayout.setHint(Label.getLabel("payment.paymentPlan.frequency.weekly.weeklyPayments"));
             selectedDateOptions = dayOfWeekOptions;
             interval = PaymentSettingsBalanceRangeRule.INTERVAL_WEEKS;
+            dialogTitle = Label.getLabel("payment.paymentPlan.frequency.weekly.hint");
         }
         updateHints();
         if (applyRangeRules) {

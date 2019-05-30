@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="?actionBarSize"
+    android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
     android:orientation="vertical">
 
@@ -12,12 +12,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_margin="@dimen/dimen_5dp"
-        android:gravity="start|center_vertical"
-        android:paddingStart="@dimen/dimen_5dp"
-        android:paddingEnd="@dimen/dimen_5dp"
+        android:gravity="center_vertical"
+        android:padding="@dimen/timeSlotItemPadding"
         android:textColor="@color/charcoal"
-        app:customAssetFont="gotham_rounded_medium"
+        android:textSize="@dimen/timeSlotItemTextSize"
+        app:customAssetFont="gotham_rounded_book"
         tools:text="Option Name" />
 
     <View

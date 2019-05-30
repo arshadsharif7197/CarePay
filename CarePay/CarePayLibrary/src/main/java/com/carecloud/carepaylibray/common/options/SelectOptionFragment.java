@@ -18,6 +18,7 @@ import com.carecloud.carepay.service.library.base.OptionNameInterface;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BlurDialogFragment;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.List;
 
@@ -66,7 +67,7 @@ public class SelectOptionFragment extends BlurDialogFragment implements OnOption
         optionsRecyclerView.setAdapter(adapter);
 
         TextView dialogTitleTextView = view.findViewById(R.id.dialogTitleTextView);
-        dialogTitleTextView.setText(getArguments().getString("title"));
+        dialogTitleTextView.setText(StringUtil.capitalize(getArguments().getString("title")));
 
         view.findViewById(R.id.closeImageView).setOnClickListener(new View.OnClickListener() {
             @Override

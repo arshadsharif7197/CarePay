@@ -37,8 +37,8 @@ public class OptionsRecyclerAdapter extends RecyclerView.Adapter<OptionsRecycler
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onOptionSelected(option instanceof DemographicsOption ? (DemographicsOption) option : null,
-                        position);
+                listener.onOptionSelected(option instanceof DemographicsOption ?
+                        (DemographicsOption) option : null, position);
             }
         });
         if (position == options.size() - 1) {
