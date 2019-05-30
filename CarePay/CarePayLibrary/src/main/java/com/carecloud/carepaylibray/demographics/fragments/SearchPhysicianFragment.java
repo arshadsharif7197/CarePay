@@ -37,6 +37,7 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.EndlessRecyclerViewScrollListener;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,8 +71,7 @@ public class SearchPhysicianFragment extends BaseDialogFragment implements Physi
     }
 
     /**
-     *
-     * @param physicianDto the physician Dto
+     * @param physicianDto  the physician Dto
      * @param physicianType the physician type (primary or referral)
      * @return a new instance of SearchPhysicianFragment
      */
@@ -117,10 +117,10 @@ public class SearchPhysicianFragment extends BaseDialogFragment implements Physi
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbarLayout);
+        Toolbar toolbar = view.findViewById(R.id.toolbarLayout);
         if (getDialog() == null) {
-            searchView = (SearchView) toolbar.findViewById(R.id.search_entry_view);
-            ImageView lenImage = (ImageView) searchView.findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
+            searchView = toolbar.findViewById(R.id.search_entry_view);
+            ImageView lenImage = searchView.findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
             if (lenImage != null) {
                 lenImage.setVisibility(View.GONE);
             }
@@ -133,8 +133,8 @@ public class SearchPhysicianFragment extends BaseDialogFragment implements Physi
                 }
             });
         } else {
-            searchView = (SearchView) view.findViewById(R.id.search_entry_view);
-            TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+            searchView = view.findViewById(R.id.search_entry_view);
+            TextView title = toolbar.findViewById(R.id.toolbar_title);
             if (physicianType == PRIMARY_PHYSICIAN) {
                 title.setText(Label.getLabel("demographics_primary_care_physician"));
             } else {
@@ -161,7 +161,7 @@ public class SearchPhysicianFragment extends BaseDialogFragment implements Physi
         states.addAll(dto.getMetadata().getNewDataModel()
                 .getDemographic().getAddress().getProperties()
                 .getState().getOptions());
-        stateTextView = (TextView) view.findViewById(R.id.stateSelectorTextView);
+        stateTextView = view.findViewById(R.id.stateSelectorTextView);
         stateTextView.setOnClickListener(getOptionsListener(states,
                 new CheckInDemographicsBaseFragment.OnOptionSelectedListener() {
                     @Override
@@ -175,7 +175,7 @@ public class SearchPhysicianFragment extends BaseDialogFragment implements Physi
                         }
                     }
                 }, Label.getLabel("demographics_documents_title_select_state")));
-        RecyclerView physicianRecyclerView = (RecyclerView) view.findViewById(R.id.physicianRecyclerView);
+        RecyclerView physicianRecyclerView = view.findViewById(R.id.physicianRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         physicianRecyclerView.setLayoutManager(layoutManager);
         scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
@@ -224,7 +224,6 @@ public class SearchPhysicianFragment extends BaseDialogFragment implements Physi
             scrollListener.resetState();
         }
         Map<String, String> queries = new HashMap<>();
-        queries.put("search", query);
         if (!selectedState.equals(allStatesOption)) {
             queries.put("state_code", selectedState.getName());
         }
@@ -237,8 +236,12 @@ public class SearchPhysicianFragment extends BaseDialogFragment implements Physi
             queries.put("appointment_id", appointment.getMetadata().getAppointmentId());
         }
 
+        JsonObject postBodyObj = new JsonObject();
+        postBodyObj.addProperty("term", query);
+
         TransitionDTO searchPhysiciansLink = dto.getMetadata().getLinks().getSearchPhysicians();
-        getWorkflowServiceHelper().execute(searchPhysiciansLink, searchPhysicianCallback, queries);
+        getWorkflowServiceHelper().execute(searchPhysiciansLink, searchPhysicianCallback,
+                postBodyObj.toString(), queries);
     }
 
 
@@ -270,13 +273,13 @@ public class SearchPhysicianFragment extends BaseDialogFragment implements Physi
         // create dialog layout
         View customView = LayoutInflater.from(context).inflate(R.layout.alert_list_layout, null, false);
         dialog.setView(customView);
-        TextView titleTextView = (TextView) customView.findViewById(R.id.title_view);
+        TextView titleTextView = customView.findViewById(R.id.title_view);
         titleTextView.setText(title);
         titleTextView.setVisibility(View.VISIBLE);
 
 
         // create the adapter
-        ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
+        ListView listView = customView.findViewById(R.id.dialoglist);
         CustomOptionsAdapter customOptionsAdapter = new CustomOptionsAdapter(context, options);
         listView.setAdapter(customOptionsAdapter);
 
