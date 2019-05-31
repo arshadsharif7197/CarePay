@@ -33,6 +33,7 @@
     <color name="overlay_green">#7ED321</color>
     <color name="light_gray_dialog">#eceff1</color>
     <color name="emerald">#5BD063</color>
+    <color name="emeraldPressed">#4BAB52</color>
     <color name="harvard_crimson">#d0021b</color>
     <color name="paint_color_thumbnail">#BAB399</color>
     <color name="grayRound">#546e7a</color>

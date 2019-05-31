@@ -30,7 +30,8 @@
     <dimen name="langSpinnerTextSize">15sp</dimen>
     <dimen name="languageSpinnerWidth">85dp</dimen>
     <dimen name="languageSpinnerHeight">30dp</dimen>
-    <dimen name="languageContainerWidth">120dp</dimen>
+    <dimen name="languageContainerWidth">140dp</dimen>
+    <dimen name="languageContainerHeight">40dp</dimen>
     <dimen name="languageContainerMarginTop">13dp</dimen>
     <dimen name="languageIndicatorSize">20dp</dimen>
     <dimen name="languageItemStartMargin">10dp</dimen>
@@ -321,7 +322,7 @@
     <dimen name="creditCardFieldBottomPadding">20dp</dimen>
     <dimen name="creditCardFieldTextSize">13sp</dimen>
     <dimen name="payment_pick_date_label_text_size">10sp</dimen>
-    <dimen name="addNewCreditCardTextFieldSize">18sp</dimen>
+    <dimen name="addNewCreditCardTextFieldSize">15sp</dimen>
 
     <!--Payment Plan Confirmation-->
     <dimen name="paymentPlanConfirmationHeaderHorizontalPadding">5dp</dimen>
@@ -384,10 +385,10 @@
     <dimen name="appointmentDialogPhoneHorizontalMargin">70dp</dimen>
     <dimen name="appointmentDialogPhoneVerticalPadding">10dp</dimen>
     <dimen name="appointmentDialogPhoneTextSize">24sp</dimen>
-    <dimen name="visitTypeContainerHorizontalPadding">15dp</dimen>
+    <dimen name="visitTypeContainerHorizontalPadding">25dp</dimen>
     <dimen name="visitTypeContainerBottomPadding">30dp</dimen>
     <dimen name="visitTypeLabelTextSize">18sp</dimen>
-    <dimen name="visitTypeValueTextSize">16sp</dimen>
+    <dimen name="visitTypeValueTextSize">14sp</dimen>
     <dimen name="visitTypeLabelEndMargin">5dp</dimen>
     <dimen name="visitTypeValueHeight">20dp</dimen>
     <dimen name="appointmentSeparatorTopMargin">20dp</dimen>
@@ -790,5 +791,10 @@
     <dimen name="completeCheckInItemValueTextSize">12sp</dimen>
     <dimen name="completeScreenSectionTitleTextSize">14sp</dimen>
     <dimen name="completeScreenSectionTitleVerticalMargin">10dp</dimen>
+
+    <!--DOB Verification-->
+    <dimen name="dobVerificationTitleTextSize">26sp</dimen>
+    <dimen name="dobVerificationSubTitleTextSize">17sp</dimen>
+    <dimen name="largeAlertMessageLabelPadding">3dp</dimen>
 
 </resources>

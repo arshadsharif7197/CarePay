@@ -18,7 +18,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckoutActivity;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
@@ -29,7 +28,6 @@ import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.practice.FlowStateInfo;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
@@ -128,7 +126,7 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
                 if (paymentList != null && paymentList.size() > 0) {
                     for (PendingBalancePayloadDTO payment : paymentList.get(0).getPayload()) {
                         total = SystemUtil.safeAdd(total, payment.getAmount());
-                        if(!payment.getType().equals(PendingBalancePayloadDTO.PATIENT_BALANCE)){
+                        if (!payment.getType().equals(PendingBalancePayloadDTO.PATIENT_BALANCE)) {
                             //not an amount that can be added to a plan
                             nonBalanceTotal = SystemUtil.safeAdd(nonBalanceTotal, payment.getAmount());
                         }

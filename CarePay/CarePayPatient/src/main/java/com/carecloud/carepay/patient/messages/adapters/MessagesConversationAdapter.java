@@ -163,7 +163,7 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
         holder.imageAttachment.setVisibility(View.GONE);
         if (!message.getAttachments().isEmpty()) {
             //currently only supporting one attachment
-            MessageAttachment attachment = message.getAttachments().get(0);
+            final MessageAttachment attachment = message.getAttachments().get(0);
             String attachmentFormat = attachment.getDocument().getDocumentFormat();
             if (attachmentFormat != null && attachmentFormat.contains("/")) {
                 attachmentFormat = MimeTypeMap.getSingleton().getExtensionFromMimeType(attachmentFormat);
@@ -192,12 +192,13 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
                 PicassoHelper.getPicassoInstance(context)
                         .load(uri)
                         .placeholder(R.drawable.bg_glitter_rounded)
-                        .transform(new PicassoRoundedCornersExifTransformation(14, 10, uri.toString(), headers))
+                        .transform(new PicassoRoundedCornersExifTransformation(24, 10, uri.toString(), headers))
                         .into(holder.imageAttachment, new Callback() {
                             @Override
                             public void onSuccess() {
                                 holder.imageAttachment.setVisibility(View.VISIBLE);
                                 holder.attachmentProgress.setVisibility(View.GONE);
+                                holder.imageAttachment.setOnClickListener(getImageClickListener(attachment));
                             }
 
                             @Override
@@ -217,6 +218,15 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
             holder.imageAttachment.setOnLongClickListener(getDownloadListener(attachment, attachmentFormat));
 
         }
+    }
+
+    private View.OnClickListener getImageClickListener(final MessageAttachment attachment) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callback.openImageDetailView(attachment);
+            }
+        };
     }
 
     private View.OnLongClickListener getDownloadListener(final MessageAttachment attachment, final String attachmentFormat){
@@ -356,6 +366,8 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
 
     public interface ConversationCallback {
         void downloadAttachment(MessageAttachment attachment, String attachmentFormat);
+
+        void openImageDetailView(MessageAttachment attachment);
     }
 
     private class ConversationTagHandler implements Html.TagHandler {

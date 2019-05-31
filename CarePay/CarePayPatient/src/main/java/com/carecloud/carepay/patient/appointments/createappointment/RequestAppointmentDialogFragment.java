@@ -7,7 +7,6 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -20,7 +19,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
-import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.PicassoHelper;
@@ -53,22 +51,26 @@ public class RequestAppointmentDialogFragment extends BaseRequestAppointmentDial
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime());
-        CarePayTextView dateTextView = view.findViewById(R.id.appointDateTextView);
-        CarePayTextView timeTextView = view.findViewById(R.id.appointTimeTextView);
+        TextView dateTextView = view.findViewById(R.id.appointDateTextView);
+        TextView timeTextView = view.findViewById(R.id.appointTimeTextView);
         timeTextView.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinal());
         dateTextView.setText(DateUtil.getInstance().getTime12Hour());
 
-        CarePayTextView shortNameTextView = view.findViewById(R.id.appointShortnameTextView);
+        TextView shortNameTextView = view.findViewById(R.id.appointShortnameTextView);
         shortNameTextView.setText(StringUtil.getShortName(appointmentDTO.getPayload().getProvider().getName()));
 
-        CarePayTextView nameTextView = view.findViewById(R.id.providerName);
+        TextView nameTextView = view.findViewById(R.id.providerName);
         nameTextView.setText(appointmentDTO.getPayload().getProvider().getName());
 
-        CarePayTextView typeTextView = view.findViewById(R.id.providerSpecialty);
+        TextView typeTextView = view.findViewById(R.id.providerSpecialty);
         typeTextView.setText(appointmentDTO.getPayload().getProvider().getSpecialty().getName());
 
+        View videoVisitIndicator = view.findViewById(R.id.visit_type_video);
+        videoVisitIndicator.setVisibility(appointmentDTO.getPayload().getVisitType()
+                .hasVideoOption() ? View.VISIBLE : View.GONE);
+
         // Appointment Place name
-        final CarePayTextView addressHeaderTextView = view.findViewById(R.id.appointAddressHeaderTextView);
+        final TextView addressHeaderTextView = view.findViewById(R.id.appointAddressHeaderTextView);
         final String placeName = appointmentDTO.getPayload().getLocation().getName();
         addressHeaderTextView.setText(placeName);
 
@@ -83,7 +85,7 @@ public class RequestAppointmentDialogFragment extends BaseRequestAppointmentDial
         }
 
         // Appointment Place address
-        final CarePayTextView addressTextView = view.findViewById(R.id.appointAddressTextView);
+        final TextView addressTextView = view.findViewById(R.id.appointAddressTextView);
         String placeAddress = null;
         if (appointmentDTO.getPayload().getLocation().getAddress() != null) {
             placeAddress = appointmentDTO.getPayload().getLocation().getAddress().getPlaceAddressString();

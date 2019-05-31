@@ -12,7 +12,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.PermissionChecker;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -81,14 +83,15 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
         setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_NoTitleBar_Fullscreen);
     }
 
+    @Nullable
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_dialog_payment_details, container, false);
     }
 
     @Override
-    protected void onInitialization(View view) {
-
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         boolean canMakePayments = false;
         if (paymentReceiptModel != null) {
             String practiceName = selectedBalance.getMetadata().getPracticeName();
@@ -202,9 +205,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
         }
 
         boolean showPaymentButtons = getArguments().getBoolean("showPaymentButtons", false);
-        if (showPaymentButtons && canMakePayments) {
-            view.findViewById(R.id.consolidatedPaymentButton).setVisibility(View.VISIBLE);
-        }
+        view.findViewById(R.id.consolidatedPaymentButton).setVisibility((showPaymentButtons && canMakePayments) ? View.VISIBLE : View.GONE);
 
         final View shadow = view.findViewById(R.id.shadow);
         LinearLayout llBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
@@ -249,16 +250,6 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                 String.valueOf(statementDTO.getId()));
         String fileName = String.format("%s %s", "Statement - ", selectedBalance.getMetadata().getPracticeName());
         FileDownloadUtil.downloadPdf(getContext(), url, fileName, ".pdf", statementDTO.getStatementDate());
-    }
-
-    @Override
-    protected int getCancelImageResource() {
-        return 0;
-    }
-
-    @Override
-    protected int getContentLayout() {
-        return R.layout.fragment_dialog_payment_details;
     }
 
     protected boolean isPartialPayAvailable(String practiceId, double total) {

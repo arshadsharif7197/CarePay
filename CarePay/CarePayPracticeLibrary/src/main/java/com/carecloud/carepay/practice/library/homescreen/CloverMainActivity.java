@@ -26,7 +26,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
-import com.carecloud.carepay.practice.library.customdialog.ChangeModeDialog;
+import com.carecloud.carepay.practice.library.customdialog.ChangeModeDialogFragment;
 import com.carecloud.carepay.practice.library.customdialog.ConfirmationPinDialog;
 import com.carecloud.carepay.practice.library.homescreen.adapters.OfficeNewsListAdapter;
 import com.carecloud.carepay.practice.library.homescreen.dialogs.OfficeNewsDetailsDialog;
@@ -39,6 +39,7 @@ import com.carecloud.carepay.practice.library.homescreen.dtos.PatientHomeScreenT
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenPayloadDTO;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenTransitionsDTO;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeLinksDTO;
+import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -54,7 +55,6 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,13 +67,10 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private HomeScreenDTO homeScreenDTO;
     private LinearLayout homeCheckInLl;
     private LinearLayout homeAlertLinearLl;
-    private List<String> modeSwitchOptions = new ArrayList<>();
     private HomeScreenMode homeScreenMode;
     private TextView languageSpinner;
 
     private Handler handler = new Handler();
-
-    private boolean isUserInteraction = false;
 
     public enum HomeScreenMode {
         PATIENT_HOME, PRACTICE_HOME
@@ -94,8 +91,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         // init UI fields
         initUIFields();
-        createChangeModeDialog();
-        populateWithLabels();
         populateLanguageSpinner();
 
         if (modeSwitchImageView != null) {
@@ -143,71 +138,35 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         getNews();
     }
 
-    @Override
-    public void onUserInteraction() {
-        super.onUserInteraction();
-        isUserInteraction = true;
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                View language = findViewById(R.id.languageContainer);
-                if (language != null) {
-                    language.setVisibility(View.GONE);
-                }
-            }
-        }, 25);
-    }
-
     private void populateLanguageSpinner() {
         JsonObject payloadAsJsonObject = homeScreenDTO.getPayload();
         Gson gson = new Gson();
         PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO
                 = gson.fromJson(payloadAsJsonObject, PracticeHomeScreenPayloadDTO.class);
-        final List<OptionDTO> languages = new ArrayList<>();
-        for (OptionDTO language : practiceHomeScreenPayloadDTO.getLanguages()) {
-            languages.add(language);
-        }
-        String selectedLanguageStr = getApplicationPreferences().getUserLanguage();
-        OptionDTO selectedLanguage = languages.get(0);
-        for (OptionDTO language : languages) {
-            if (selectedLanguageStr.equals(language.getCode())) {
-                selectedLanguage = language;
-            }
-        }
+        JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getLinks();
+        final PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject,
+                PracticeHomeScreenTransitionsDTO.class);
+        final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
+        headers.put("username", getApplicationPreferences().getUserName());
+        headers.put("username_patient", getApplicationPreferences().getPatientId());
 
-        final View languageContainer = findViewById(R.id.languageContainer);
-        if (languageContainer != null) {
-            languageSpinner = findViewById(R.id.languageSpinner);
+        final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), false,
+                practiceHomeScreenPayloadDTO.getLanguages(), new LanguageAdapter.LanguageInterface() {
+            @Override
+            public void onLanguageSelected(OptionDTO language) {
+                changeLanguage(transitionsDTO.getLanguage(),
+                        language.getCode().toLowerCase(), headers);
+            }
+        });
+        languageSpinner = findViewById(R.id.languageSpinner);
+        if (languageSpinner != null) {
             languageSpinner.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    languageContainer.setVisibility(languageContainer.getVisibility() == View.VISIBLE
-                            ? View.GONE : View.VISIBLE);
+                    popupPickerLanguage.showAsDropDown(view);
                 }
             });
             languageSpinner.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
-            JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getLinks();
-            final PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject,
-                    PracticeHomeScreenTransitionsDTO.class);
-            final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
-            headers.put("username", getApplicationPreferences().getUserName());
-            headers.put("username_patient", getApplicationPreferences().getPatientId());
-            RecyclerView languageList = findViewById(R.id.languageList);
-            LanguageAdapter languageAdapter = new LanguageAdapter(languages, selectedLanguage);
-            languageList.setAdapter(languageAdapter);
-            languageList.setLayoutManager(new LinearLayoutManager(getContext()));
-            languageAdapter.setCallback(new LanguageAdapter.LanguageInterface() {
-                @Override
-                public void onLanguageSelected(OptionDTO language) {
-                    languageContainer.setVisibility(View.GONE);
-                    if (!isUserInteraction) {
-                        return;
-                    }
-                    changeLanguage(transitionsDTO.getLanguage(),
-                            language.getCode().toLowerCase(), headers);
-                }
-            });
         }
     }
 
@@ -220,10 +179,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     private void populateWithLabels() {
-        // load mode switch options
-        modeSwitchOptions.clear();
-        modeSwitchOptions.add(Label.getLabel("patient_mode_button"));
-        modeSwitchOptions.add(Label.getLabel("logout_button"));
     }
 
     private void changeScreenMode(HomeScreenMode homeScreenMode) {
@@ -256,7 +211,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             Gson gson = new Gson();
             PracticeHomeScreenPayloadDTO practiceHomeScreenPayloadDTO
                     = gson.fromJson(payloadAsJsonObject, PracticeHomeScreenPayloadDTO.class);
-            boolean showShop = practiceHomeScreenPayloadDTO.getUserPractices().get(0).isRetailEnabled();
+            boolean showShop = !practiceHomeScreenPayloadDTO.getUserPractices().isEmpty()
+                    && practiceHomeScreenPayloadDTO.getUserPractices().get(0).isRetailEnabled();
             if (showShop) {
                 View shopContainer = findViewById(R.id.homeShopClickable);
                 if (shopContainer != null) {
@@ -479,9 +435,11 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private void unlockPracticeMode() {
         Gson gson = new Gson();
         PatientModeLinksDTO pinPadObject = gson.fromJson(homeScreenDTO.getMetadata().getLinks(), PatientModeLinksDTO.class);
-        ConfirmationPinDialog confirmationPinDialog = new ConfirmationPinDialog(this,
-                pinPadObject.getPinpad(), false, pinPadObject.getLanguage());
-        confirmationPinDialog.show();
+        ConfirmationPinDialog confirmationPinDialog = ConfirmationPinDialog.newInstance(
+                pinPadObject.getPinpad(),
+                false,
+                pinPadObject.getLanguage());
+        displayDialogFragment(confirmationPinDialog, false);
     }
 
     private void getNews() {
@@ -627,30 +585,15 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
     private void navigateToPatientHome() {
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-            createChangeModeDialog().show();
+            createChangeModeDialog();
         } else if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
             // add transitions
         }
     }
 
-    private ChangeModeDialog createChangeModeDialog() {
-        Gson gson = new Gson();
-        JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
-        final PracticeHomeScreenTransitionsDTO transitionsDTO = gson.fromJson(transitionsAsJsonObject, PracticeHomeScreenTransitionsDTO.class);
-        return new ChangeModeDialog(this, new ChangeModeDialog.PatientModeClickListener() {
-            @Override
-            public void onPatientModeSelected() {
-                Map<String, String> query = new HashMap<>();
-                query.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
-                query.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
-                getWorkflowServiceHelper().execute(transitionsDTO.getPatientMode(), commonTransitionCallback, query);
-            }
-        }, new ChangeModeDialog.LogoutClickListener() {
-            @Override
-            public void onLogoutSelected() {
-                logOut(transitionsDTO.getLogout());
-            }
-        }, modeSwitchOptions);
+    private void createChangeModeDialog() {
+        String transitionsAsString = homeScreenDTO.getMetadata().getTransitions().toString();
+        ChangeModeDialogFragment.newInstance(transitionsAsString).show(getSupportFragmentManager(), ChangeModeDialogFragment.class.getName());
     }
 
     /**
@@ -661,7 +604,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     private void logOut(TransitionDTO transitionsDTO) {
         Map<String, String> query = new HashMap<>();
         Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
-
         query.put("transition", "true");
         getWorkflowServiceHelper().execute(transitionsDTO, logOutCall, query, headers);
     }
@@ -705,6 +647,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             hideProgressDialog();
             getApplicationMode().clearUserPracticeDTO();
             getAppAuthorizationHelper().setUser(null);
+            AppointmentCountUpdateService.cancelScheduledServiceRun(CloverMainActivity.this);
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
             CloverMainActivity.this.finish();
         }
@@ -770,9 +713,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             = new OfficeNewsListAdapter.OnOfficeNewsClickedListener() {
         @Override
         public void onOfficeNewsSelected(List<HomeScreenOfficeNewsDTO> officeNewsList, int position) {
-            OfficeNewsDetailsDialog detailsDialog = new OfficeNewsDetailsDialog(
-                    CloverMainActivity.this, officeNewsList, position);
-            detailsDialog.show();
+            OfficeNewsDetailsDialog detailsDialog = OfficeNewsDetailsDialog.newInstance(officeNewsList, position);
+            displayDialogFragment(detailsDialog, false);
         }
     };
 
@@ -868,7 +810,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
     @Override
     public void onBackPressed() {
-
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
             Gson gson = new Gson();
             JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
@@ -878,8 +819,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             getAppAuthorizationHelper().setUser(null);
             getApplicationMode().setUserPracticeDTO(getAppAuthorizationHelper(), null);
         }
-
-//        super.onBackPressed();
     }
 
 }

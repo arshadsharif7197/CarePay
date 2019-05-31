@@ -6,9 +6,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,7 +17,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
@@ -25,6 +27,7 @@ import com.carecloud.carepay.patient.messages.MessageNavigationCallback;
 import com.carecloud.carepay.patient.messages.models.AttachmentPostModel;
 import com.carecloud.carepay.patient.messages.models.AttachmentUploadModel;
 import com.carecloud.carepay.patient.messages.models.Messages;
+import com.carecloud.carepay.patient.messages.models.MessagingModel;
 import com.carecloud.carepay.patient.messages.models.MessagingPostModel;
 import com.carecloud.carepay.patient.messages.models.MessagingThreadDTO;
 import com.carecloud.carepay.patient.messages.models.ProviderContact;
@@ -36,6 +39,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
 import com.carecloud.carepaylibray.media.MediaScannerPresenter;
 import com.carecloud.carepaylibray.media.MediaViewInterface;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -67,13 +71,15 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
 
     private File attachmentFile;
     private AttachmentPostModel attachmentPostModel;
+    private MessagingModel messagingModel;
 
     /**
      * Get a new instance of MessagesNewThreadFragment
+     *
      * @param provider provider to use for sending message
      * @return MessagesNewThreadFragment
      */
-    public static MessagesNewThreadFragment newInstance(ProviderContact provider){
+    public static MessagesNewThreadFragment newInstance(ProviderContact provider) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, provider);
 
@@ -83,38 +89,40 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
     }
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(Context context) {
         super.onAttach(context);
-        try{
+        try {
             callback = (MessageNavigationCallback) context;
-        }catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement MessageNavigationCallback");
         }
     }
 
     @Override
-    public void onCreate(Bundle icicle){
+    public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
         Bundle args = getArguments();
-        if(args != null){
+        if (args != null) {
             provider = DtoHelper.getConvertedDTO(ProviderContact.class, args);
         }
+        messagingModel = (MessagingModel) callback.getDto();
+
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         callback.displayToolbar(false, null);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_new_thread, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         initToolbar(view);
 
         TextInputLayout subjectLayout = view.findViewById(R.id.subjectInputLayout);
@@ -131,22 +139,11 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
         buttonCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                callback.postNewMessage(provider, subjectInput.getText().toString(), messageInput.getText().toString());
                 postNewMessage(provider, subjectInput.getText().toString(), messageInput.getText().toString());
             }
         });
 
-        View.OnClickListener selectFileListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                selectFile();
-            }
-        };
         attachmentInput = view.findViewById(R.id.attachmentEditText);
-        attachmentInput.setOnClickListener(selectFileListener);
-
-        View uploadButton = view.findViewById(R.id.upload_button);
-        uploadButton.setOnClickListener(selectFileListener);
 
         clearAttachmentButton = view.findViewById(R.id.clearBtn);
         clearAttachmentButton.setOnClickListener(new View.OnClickListener() {
@@ -158,11 +155,11 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
                 view.setVisibility(View.INVISIBLE);
             }
         });
-
+        setUpBottomSheet(view);
         validateForm();
     }
 
-    private void initToolbar(View view){
+    private void initToolbar(View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(Label.getLabel("messaging_subject_title"));
@@ -176,16 +173,84 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
         });
     }
 
-    private void validateForm(){
+    private void validateForm() {
         boolean valid = !StringUtil.isNullOrEmpty(subjectInput.getText().toString()) &&
                 !StringUtil.isNullOrEmpty(messageInput.getText().toString());
-
         buttonCreate.setEnabled(valid);
         buttonCreate.setClickable(valid);
-
     }
 
-    private TextWatcher getEmptyTextWatcher(final TextInputLayout layout){
+    private void setUpBottomSheet(View view) {
+
+        final View shadow = view.findViewById(R.id.shadow);
+        LinearLayout llBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
+        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
+        bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    shadow.setClickable(false);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                shadow.setAlpha(slideOffset);
+            }
+        });
+
+        View.OnClickListener bottomSheetClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_EXPANDED);
+                shadow.setClickable(true);
+            }
+        };
+        view.findViewById(R.id.upload_button).setOnClickListener(bottomSheetClickListener);
+        attachmentInput.setOnClickListener(bottomSheetClickListener);
+
+        Button cancelButton = view.findViewById(R.id.cancelButton);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
+            }
+        });
+        shadow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
+            }
+        });
+        shadow.setClickable(false);
+
+        mediaScannerPresenter = new MediaScannerPresenter(getContext(),
+                this, CarePayCameraPreview.CameraType.SCAN_DOC);
+        View takePhotoContainer = view.findViewById(R.id.takePhotoContainer);
+        takePhotoContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mediaScannerPresenter.handlePictureAction();
+                bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
+            }
+        });
+
+        View chooseFileContainer = view.findViewById(R.id.chooseFileContainer);
+        chooseFileContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mediaScannerPresenter.selectFile();
+                bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
+            }
+        });
+    }
+
+    private void bottomMenuAction(BottomSheetBehavior bottomSheetBehavior, int stateHidden) {
+        bottomSheetBehavior.setState(stateHidden);
+    }
+
+    private TextWatcher getEmptyTextWatcher(final TextInputLayout layout) {
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
@@ -199,11 +264,11 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if(!StringUtil.isNullOrEmpty(editable.toString())){
+                if (!StringUtil.isNullOrEmpty(editable.toString())) {
                     layout.setError(null);
                     layout.setErrorEnabled(false);
                     validateForm();
-                }else{
+                } else {
                     layout.setErrorEnabled(true);
                     layout.setError(Label.getLabel("demographics_required_field_msg"));
                 }
@@ -211,12 +276,13 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
         };
     }
 
-    private void postNewMessage(ProviderContact providerContact, String subject, String message){
-        if(attachmentFile != null){
+    private void postNewMessage(ProviderContact providerContact, String subject, String message) {
+        if (attachmentFile != null) {
             uploadFile(attachmentFile);
             return;
         }
 
+        message = message.replace("\n", "<br/>");
         MessagingPostModel postModel = new MessagingPostModel();
         Messages.Participant participant = postModel.getParticipant();
         participant.setName(providerContact.getName());
@@ -226,7 +292,7 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
         postModel.setMessage(message);
         postModel.setSubject(subject);
 
-        if(attachmentPostModel != null){
+        if (attachmentPostModel != null) {
             attachmentPostModel.setPatientId(providerContact.getPatientId());
             attachmentPostModel.setPracticeId(providerContact.getBusinessEntityId());
 
@@ -234,7 +300,7 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
             postModel.getAttachments().add(attachmentPostModel);
         }
 
-        TransitionDTO newMessage = callback.getDto().getMetadata().getLinks().getNewMessage();
+        TransitionDTO newMessage = messagingModel.getMetadata().getLinks().getNewMessage();
         getWorkflowServiceHelper().execute(newMessage, postNewMessageCallback(providerContact), DtoHelper.getStringDTO(postModel));
 
     }
@@ -250,12 +316,10 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
                 MessagingThreadDTO messagingThreadDTO = DtoHelper.getConvertedDTO(MessagingThreadDTO.class, workflowDTO);
-                getFragmentManager().popBackStack(MessagesProvidersFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                callback.displayThreadMessages(messagingThreadDTO.getPayload());
-
                 String[] params = {getString(R.string.param_provider_id), getString(R.string.param_provider_name)};
                 Object[] values = {provider.getId(), provider.getName()};
                 MixPanelUtil.logEvent(getString(R.string.event_message_new), params, values);
+                callback.displayThreadMessages(messagingThreadDTO.getPayload(), true);
             }
 
             @Override
@@ -266,17 +330,12 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
         };
     }
 
-    private void selectFile(){
-        mediaScannerPresenter = new MediaScannerPresenter(getContext(), this, null);
-        mediaScannerPresenter.selectFile();
-    }
-
-    private void uploadFile(File file){
-        TransitionDTO transitionDTO = callback.getDto().getMetadata().getLinks().getUploadAttachment();
+    private void uploadFile(File file) {
+        TransitionDTO transitionDTO = messagingModel.getMetadata().getLinks().getUploadAttachment();
         Uri uri = Uri.parse(transitionDTO.getUrl());
         String path = uri.getPath();
         String baseUrl = transitionDTO.getUrl();
-        if(baseUrl != null && path != null) {
+        if (baseUrl != null && path != null) {
             baseUrl = baseUrl.substring(0, baseUrl.length() - path.length());
         }
         RestCallServiceHelper restCallServiceHelper = new RestCallServiceHelper(getAppAuthorizationHelper(), getApplicationMode());
@@ -309,9 +368,8 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
                     attachmentPostModel = new AttachmentPostModel();
                     attachmentPostModel.setNodeId(uploadModel.getNodeId());
                     attachmentPostModel.setDescription(file.getName());
-                    attachmentPostModel.setFormat(MimeTypeMap.getSingleton()
-                            .getMimeTypeFromExtension(extension));
-                    if(attachmentPostModel.getFormat() == null && "json".equals(extension)){
+                    attachmentPostModel.setFormat(extension);
+                    if (attachmentPostModel.getFormat() == null && "json".equals(extension)) {
                         attachmentPostModel.setFormat("application/json");
                     }
 
@@ -370,6 +428,7 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
     @Override
     public boolean handleActivityResult(int requestCode, int resultCode, Intent data) {
         return mediaScannerPresenter != null && mediaScannerPresenter.handleActivityResult(requestCode, resultCode, data);

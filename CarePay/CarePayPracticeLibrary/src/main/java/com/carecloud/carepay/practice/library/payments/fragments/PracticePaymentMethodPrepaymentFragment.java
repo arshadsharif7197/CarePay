@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -68,6 +69,11 @@ public class PracticePaymentMethodPrepaymentFragment extends PracticePaymentMeth
 
         TextView title = (TextView) view.findViewById(R.id.respons_toolbar_title);
         title.setText(Label.getLabel("appointments_prepayment_title"));
+
+        Button swipeCreditCarNowButton = (Button) view.findViewById(R.id.swipeCreditCarNowButton);
+        if(swipeCreditCarNowButton != null){
+            swipeCreditCarNowButton.setVisibility(View.GONE);
+        }
     }
 
 

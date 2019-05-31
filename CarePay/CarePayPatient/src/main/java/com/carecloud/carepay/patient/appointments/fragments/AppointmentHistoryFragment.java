@@ -91,7 +91,6 @@ public class AppointmentHistoryFragment extends BaseFragment
         selectedPractice = appointmentDto.getPayload().getUserPractices().get(0);
         callAppointmentService(selectedPractice, true, true);
         excludedAppointmentStates = new ArrayList<>();
-        excludedAppointmentStates.add(CarePayConstants.PENDING);
         excludedAppointmentStates.add(CarePayConstants.REQUESTED);
         excludedAppointmentStates.add(CarePayConstants.CHECKING_IN);
     }

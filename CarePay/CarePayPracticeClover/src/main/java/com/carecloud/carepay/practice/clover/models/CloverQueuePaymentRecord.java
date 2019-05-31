@@ -1,13 +1,17 @@
 package com.carecloud.carepay.practice.clover.models;
 
-import com.orm.SugarRecord;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 
 /**
  * Created by lmenendez on 4/19/17.
  */
+@Entity(tableName = "CloverQueuePaymentRecord")
+public class CloverQueuePaymentRecord {
 
-public class CloverQueuePaymentRecord extends SugarRecord {
 
+    @PrimaryKey(autoGenerate = true)
+    private int id;
     private String patientID;
     private String practiceID;
     private String practiceMgmt;
@@ -15,11 +19,6 @@ public class CloverQueuePaymentRecord extends SugarRecord {
     private String paymentModelJsonEnc;
     private String paymentModelJson;
     private String username;
-
-    public CloverQueuePaymentRecord(){
-
-    }
-
 
     public String getPatientID() {
         return patientID;
@@ -75,5 +74,13 @@ public class CloverQueuePaymentRecord extends SugarRecord {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

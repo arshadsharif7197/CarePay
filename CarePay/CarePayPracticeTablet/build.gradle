@@ -7,11 +7,12 @@ android {
         applicationId "com.carecloud.carepay.practice.tablet"
         minSdkVersion 17
         targetSdkVersion 26
-        versionCode 121
-        versionName "1.2.24"
+        versionCode 129
+        versionName "1.2.27"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        renderscriptTargetApi 22
+        renderscriptSupportModeEnabled true
     }
     dexOptions {
         maxProcessCount 4
@@ -43,6 +44,8 @@ android {
     productFlavors {
         development {
             applicationId "com.carecloud.carepay.practice"
+//            buildConfigField 'String', 'API_BASE_URL', '"http://10.0.2.2:8082"'
+//            buildConfigField 'String', 'API_START_URL', '"http://10.0.2.2:8082/workflow_engine/workflow/shamrock/practice_mode/practice_mode_signin/start"'
             buildConfigField 'String', 'API_BASE_URL', '"https://breeze-entry.development.carecloud.com"'
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.development.carecloud.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
             buildConfigField 'String', 'X_API_KEY', '"PhrvB0D7Bw9EbQ3aEXTCj3FvYtPDzbGr7X71uYJT"'

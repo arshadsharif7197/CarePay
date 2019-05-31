@@ -29,7 +29,7 @@
 
     <LinearLayout
         android:layout_width="@dimen/practiceAppointmentDetailDialogWidth"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dialog_height"
         android:layout_marginStart="@dimen/dimen_26dp"
         android:layout_marginEnd="@dimen/dimen_26dp"
         android:orientation="vertical">
@@ -132,23 +132,6 @@
                 app:customAssetFont="proxima_nova_regular"
                 tools:text="Dr. Homero Simpson" />
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/appointment_patient_phone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/appointmentDialogPhoneHorizontalMargin"
-                android:layout_marginTop="@dimen/appointmentDialogPhoneTopMargin"
-                android:layout_marginEnd="@dimen/appointmentDialogPhoneHorizontalMargin"
-                android:layout_marginBottom="@dimen/appointmentDialogPhoneBottomMargin"
-                android:gravity="center"
-                android:paddingTop="@dimen/appointmentDialogPhoneVerticalPadding"
-                android:paddingBottom="@dimen/appointmentDialogPhoneVerticalPadding"
-                android:textColor="@color/lightSlateGray"
-                android:textSize="@dimen/appointmentDialogPhoneTextSize"
-                android:textStyle="bold"
-                android:visibility="visible"
-                app:customAssetFont="proxima_nova_extra_bold"
-                tools:text="42342342-2342342" />
 
         </LinearLayout>
 
@@ -156,7 +139,7 @@
             android:id="@+id/visitTypeContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/grey_bottom_border"
+            android:background="@color/white"
             android:orientation="vertical"
             android:paddingStart="@dimen/visitTypeContainerHorizontalPadding"
             android:paddingTop="@dimen/visitTypeContainerBottomPadding"
@@ -166,7 +149,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/appointment_visit_type_label"
@@ -176,16 +160,37 @@
                     android:gravity="start"
                     android:textColor="@color/textview_default_textcolor"
                     android:textSize="@dimen/visitTypeLabelTextSize"
-                    app:customAssetFont="proxima_nova_regular" />
+                    app:customAssetFont="proxima_nova_regular"
+                    tools:text="Visit Type"/>
 
-                <com.carecloud.carepaylibray.customcomponents.AutoResizeTextView
-                    android:id="@+id/appointment_visit_type"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/visitTypeValueHeight"
-                    android:gravity="end"
-                    android:textColor="@color/textview_default_textcolor"
-                    android:textSize="@dimen/visitTypeValueTextSize"
-                    app:customAssetFont="proxima_nova_regular" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end">
+
+                    <android.support.v7.widget.AppCompatImageView
+                        android:id="@+id/visit_type_video"
+                        android:layout_width="@dimen/dimen_24dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="@dimen/dimen_5dp"
+                        android:src="@drawable/icn_video_visit"
+                        android:tint="@color/textview_default_textcolor"
+                        android:visibility="gone"/>
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                        android:id="@+id/appointment_visit_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:textColor="@color/textview_default_textcolor"
+                        android:textSize="@dimen/visitTypeValueTextSize"
+                        app:customAssetFont="gotham_rounded_medium"
+                        tools:text="Virtual Consult" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -196,6 +201,12 @@
                 android:background="@color/light_gray" />
 
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/grey_bottom_border"/>
 
         <LinearLayout
             android:layout_width="match_parent"

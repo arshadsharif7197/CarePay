@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.base.BreezeDataBase;
 import com.carecloud.carepay.practice.library.payments.IntegratedPaymentsQueueUploadService;
 import com.carecloud.carepay.practice.library.payments.adapter.IntegratedPaymentsChooseDeviceAdapter;
 import com.carecloud.carepay.practice.library.payments.interfaces.ShamrockPaymentsCallback;
@@ -65,6 +66,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Executors;
 
 /**
  * Created by lmenendez on 11/9/17
@@ -452,8 +454,9 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         getWorkflowServiceHelper().execute(transitionDTO, getPostPaymentCallback(paymentRequestId, recordObject), queryMap);
     }
 
+    //store in local DB
     private void queuePayment(String paymentRequestId) {
-        IntegratedPaymentQueueRecord paymentQueueRecord = new IntegratedPaymentQueueRecord();
+        final IntegratedPaymentQueueRecord paymentQueueRecord = new IntegratedPaymentQueueRecord();
         paymentQueueRecord.setPracticeID(practiceInfo.getPracticeId());
         paymentQueueRecord.setPracticeMgmt(practiceInfo.getPracticeMgmt());
         paymentQueueRecord.setPatientID(practiceInfo.getPatientId());
@@ -463,7 +466,13 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         Gson gson = new Gson();
         paymentQueueRecord.setQueueTransition(gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getQueuePayment()));
 
-        paymentQueueRecord.save();
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                BreezeDataBase database = BreezeDataBase.getDatabase(getContext());
+                database.getIntegratedAndroidPayDao().insert(paymentQueueRecord);
+            }
+        });
 
         Intent intent = new Intent(getContext(), IntegratedPaymentsQueueUploadService.class);
         getContext().startService(intent);

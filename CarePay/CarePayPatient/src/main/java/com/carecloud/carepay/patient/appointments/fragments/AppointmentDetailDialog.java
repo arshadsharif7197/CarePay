@@ -93,6 +93,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private View actionsLayout;
     private Button leftButton;
     private CarePayProgressButton rightButton;
+    private View videoVisitIndicator;
 
     private boolean isBreezePractice = true;
     private boolean isRescheduleEnabled = true;
@@ -204,6 +205,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         actionsLayout = view.findViewById(R.id.appointment_actions_layout);
         leftButton = view.findViewById(R.id.appointment_button_left);
         rightButton = view.findViewById(R.id.appointment_button_right);
+
+        videoVisitIndicator = view.findViewById(R.id.visit_type_video);
     }
 
     private void setCommonValues() {
@@ -245,6 +248,10 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
             locationAddress.setText(StringUtil
                     .capitalize(location.getAddress().geAddressStringWithShortZipWOCounty().toLowerCase()));
             mapButton.setEnabled(!StringUtil.isNullOrEmpty(location.getAddress().geAddressStringWithShortZipWOCounty()));
+
+            videoVisitIndicator.setVisibility(appointmentDTO.getPayload().getVisitType().hasVideoOption() ?
+                    View.VISIBLE : View.GONE);
+
         }
     }
 
@@ -260,9 +267,18 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     appointmentDateTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                     appointmentTimeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                     appointmentVisitTypeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
-                    if (appointmentDTO.getPayload().isAppointmentToday()
+
+                    if (appointmentDTO.getPayload().getVisitType().hasVideoOption() &&
+                            !appointmentDTO.getPayload().isAppointmentOver()) {
+                        actionsLayout.setVisibility(View.VISIBLE);
+                        leftButton.setVisibility(View.VISIBLE);
+                        leftButton.setText(Label.getLabel("appointment_video_visit_start"));
+                        leftButton.setOnClickListener(startVideoVisitClick);
+                        leftButton.setEnabled(appointmentDTO.getPayload().canStartVideoVisit());
+                    } else if (appointmentDTO.getPayload().isAppointmentToday()
                             || !appointmentDTO.getPayload().isAppointmentOver()) {
-                        if (appointmentDTO.getPayload().getAppointmentStatus().getOriginalName() == null) {
+                        if (appointmentDTO.getPayload().getAppointmentStatus().getOriginalName() == null &&
+                                !appointmentDTO.getPayload().getVisitType().hasVideoOption()) {
                             callback.getQueueStatus(appointmentDTO, queueStatusCallback);
                         }
                         showCheckoutButton(enabledLocations);
@@ -344,9 +360,16 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                             cancelAppointment.setVisibility(View.VISIBLE);
                         }
                         if (isLocationWithBreezeEnabled(enabledLocations)) {
+                            leftButton.setVisibility(View.VISIBLE);
+                            leftButton.setText(Label.getLabel("sigin_how_check_in_scan_qr_code"));
+                            leftButton.setOnClickListener(scanClick);
                             actionsLayout.setVisibility(View.VISIBLE);
                             rightButton.setVisibility(View.VISIBLE);
-                            rightButton.setText(Label.getLabel("appointments_check_in_early"));
+                            if (appointmentDTO.getPayload().canCheckInNow(callback.getPracticeSettings())) {
+                                rightButton.setText(Label.getLabel("appointments_check_in_now"));
+                            } else {
+                                rightButton.setText(Label.getLabel("appointments_check_in_early"));
+                            }
                             rightButton.setOnClickListener(checkInClick);
                         }
                     }
@@ -366,6 +389,16 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     }
                     break;
                 }
+                case DENIED: {
+                    header.setBackgroundResource(R.drawable.appointment_dialog_red_bg);
+                    appointmentDateTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    appointmentTimeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    appointmentVisitTypeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    appointmentStatus.setVisibility(View.VISIBLE);
+                    appointmentStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.remove_red));
+                    appointmentStatus.setText(Label.getLabel("notification_denied_appointment_status"));
+                    break;
+                }
                 default: {
                     cleanupViews();
                 }
@@ -378,8 +411,9 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     }
 
     private void showCheckoutButton(Set<String> enabledLocations) {
+        DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getEndTime());
         if (isLocationWithBreezeEnabled(enabledLocations)
-                && appointmentDTO.getPayload().canCheckOut()) {
+                && appointmentDTO.getPayload().canCheckOut() && DateUtil.getInstance().isWithinHours(24)) {
             actionsLayout.setVisibility(View.VISIBLE);
             leftButton.setVisibility(View.VISIBLE);
             leftButton.setText(Label.getLabel("appointment_request_checkout_now"));
@@ -400,15 +434,15 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         }
     }
 
-    private boolean shouldShowVisitSummary(){
+    private boolean shouldShowVisitSummary() {
         AppointmentsResultModel appointmentModelDto = ((PatientAppointmentPresenter) callback).getMainAppointmentDto();
-        UserPracticeDTO appointmentPractice= null;
+        UserPracticeDTO appointmentPractice = null;
         for (UserPracticeDTO userPracticeDTO : appointmentModelDto.getPayload().getUserPractices()) {
-            if(userPracticeDTO.getPracticeId().equals(appointmentDTO.getMetadata().getPracticeId())) {
+            if (userPracticeDTO.getPracticeId().equals(appointmentDTO.getMetadata().getPracticeId())) {
                 appointmentPractice = userPracticeDTO;
             }
         }
-        if(appointmentPractice != null && appointmentPractice.isVisitSummaryEnabled()) {
+        if (appointmentPractice != null && appointmentPractice.isVisitSummaryEnabled()) {
             for (PortalSettingDTO portalSettingDTO : appointmentModelDto.getPayload().getPortalSettings()) {
                 if (appointmentPractice.getPracticeId().equals(portalSettingDTO.getMetadata().getPracticeId())) {
                     for (PortalSetting portalSetting : portalSettingDTO.getPayload()) {
@@ -482,17 +516,6 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
             }
         }
         return null;
-    }
-
-    private String ordinal(int number, String[] sufixes) {
-        switch (number % 100) {
-            case 11:
-            case 12:
-            case 13:
-                return number + sufixes[0];
-            default:
-                return number + sufixes[number % 10];
-        }
     }
 
     private String getFormattedText(String formatString, String... fields) {
@@ -603,7 +626,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         callback.callVisitSummaryService(appointmentDTO, new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
-                ((BaseActivity) getActivity()).showProgressDialog();
+                showProgressDialog();
             }
 
             @Override
@@ -618,7 +641,10 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
 
             @Override
             public void onFailure(String exceptionMessage) {
-                ((BaseActivity) getActivity()).hideProgressDialog();
+                Log.e("okHttp", exceptionMessage);
+                hideProgressDialog();
+                showErrorNotification(Label.getLabel("visitSummary.createVisitSummary.error.label.downloadError"));
+
             }
         });
     }
@@ -629,19 +655,19 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
 
                     @Override
                     public void onPreExecute() {
-
                     }
 
                     @Override
                     public void onPostExecute(WorkflowDTO workflowDTO) {
-                        VisitSummaryDTO visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
+                        VisitSummaryDTO visitSummaryDTO = null;
+                        try {
+                            visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
+                        } catch (Exception ex) {
+                            onFailure("");
+                        }
                         String status = visitSummaryDTO.getPayload().getVisitSummary().getStatus();
                         if (retryIntent > VisitSummaryDialogFragment.MAX_NUMBER_RETRIES) {
-                            retryIntent = 0;
-                            rightButton.setEnabled(true);
-//                            rightButton.setProgressEnabled(false);
-                            rightButton.setText(Label.getLabel("visitSummary.appointments.button.label.visitSummary"));
-                            showErrorNotification(Label.getLabel("practice_patient_settings_intake_forms_print_status_error"));
+                            resetProcess();
                         } else if (status.equals("queued") || status.equals("working")) {
                             retryIntent++;
                             statusHandler = new Handler();
@@ -657,14 +683,27 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     @Override
                     public void onFailure(String exceptionMessage) {
                         Log.e("OkHttp", exceptionMessage);
-                        String title = String.format("%s - %s",
-                                appointmentDTO.getPayload().getProvider().getFullName(),
-                                DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime())
-                                        .toStringWithFormatMmDashDdDashYyyy());
-                        enqueueId = callback.downloadVisitSummaryFile(jobId,
-                                appointmentDTO.getMetadata().getPracticeMgmt(), title);
+                        if (exceptionMessage.contains("JSON")) {
+                            String title = String.format("%s - %s",
+                                    appointmentDTO.getPayload().getProvider().getFullName(),
+                                    DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime())
+                                            .toStringWithFormatMmDashDdDashYyyy());
+                            enqueueId = callback.downloadVisitSummaryFile(jobId,
+                                    appointmentDTO.getMetadata().getPracticeMgmt(), title);
+                        } else {
+                            resetProcess();
+                        }
+                        rightButton.setEnabled(true);
+
                     }
                 });
+    }
+
+    private void resetProcess() {
+        retryIntent = 0;
+        rightButton.setEnabled(true);
+        rightButton.setText(Label.getLabel("visitSummary.appointments.button.label.visitSummary"));
+        showErrorNotification(Label.getLabel("visitSummary.createVisitSummary.error.label.downloadError"));
     }
 
     private View.OnClickListener scanClick = new View.OnClickListener() {
@@ -694,6 +733,13 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         public void onClick(View view) {
             callback.rescheduleAppointment(appointmentDTO);
             dismiss();
+        }
+    };
+
+    private View.OnClickListener startVideoVisitClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            callback.startVideoVisit(appointmentDTO);
         }
     };
 

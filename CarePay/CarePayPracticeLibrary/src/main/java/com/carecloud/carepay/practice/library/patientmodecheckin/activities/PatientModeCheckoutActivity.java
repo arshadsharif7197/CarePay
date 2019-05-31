@@ -3,13 +3,10 @@ package com.carecloud.carepay.practice.library.patientmodecheckin.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -25,6 +22,7 @@ import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckOutFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
+import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientModeAddExistingPaymentPlanFullFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PatientModePaymentPlanFullFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
@@ -47,6 +45,7 @@ import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.createappointment.CreateAppointmentFragmentInterface;
+import com.carecloud.carepaylibray.appointments.createappointment.availabilityhour.BaseAvailabilityHourFragment;
 import com.carecloud.carepaylibray.appointments.interfaces.AppointmentPrepaymentCallback;
 import com.carecloud.carepaylibray.appointments.interfaces.DateCalendarRangeInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -114,8 +113,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     private boolean paymentStarted = false;
     private boolean completedPaymentPlan = false;
 
-    private boolean isUserInteraction = false;
-
     private WorkflowDTO continuePaymentsDTO;
     private boolean isCashPayment = false;
 
@@ -134,19 +131,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         initViews();
         initializeLanguageSpinner();
         logCheckoutStarted();
-    }
-
-    @Override
-    public void onUserInteraction() {
-        super.onUserInteraction();
-        isUserInteraction = true;
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                findViewById(R.id.languageContainer).setVisibility(View.GONE);
-            }
-        }, 25);
     }
 
     /**
@@ -180,39 +164,14 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     private void initializeLanguageSpinner() {
-        String selectedLanguageStr = getApplicationPreferences().getUserLanguage();
-        OptionDTO selectedLanguage = appointmentsResultModel.getPayload().getLanguages().get(0);
-        for (OptionDTO language : appointmentsResultModel.getPayload().getLanguages()) {
-            if (selectedLanguageStr.equals(language.getCode())) {
-                selectedLanguage = language;
-            }
-        }
-
-        final TextView languageSwitch = (TextView) findViewById(R.id.languageSpinner);
-        final View languageContainer = findViewById(R.id.languageContainer);
-        languageSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                languageContainer.setVisibility(languageContainer.getVisibility() == View.VISIBLE
-                        ? View.GONE : View.VISIBLE);
-            }
-        });
-        languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
+        final TextView languageSwitch = findViewById(R.id.languageSpinner);
         final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
         headers.put("username", getApplicationPreferences().getUserName());
         headers.put("username_patient", getApplicationPreferences().getPatientId());
-        RecyclerView languageList = (RecyclerView) findViewById(R.id.languageList);
-        LanguageAdapter languageAdapter = new LanguageAdapter(appointmentsResultModel.getPayload().getLanguages(),
-                selectedLanguage);
-        languageList.setAdapter(languageAdapter);
-        languageList.setLayoutManager(new LinearLayoutManager(getContext()));
-        languageAdapter.setCallback(new LanguageAdapter.LanguageInterface() {
+        final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), true,
+                appointmentsResultModel.getPayload().getLanguages(), new LanguageAdapter.LanguageInterface() {
             @Override
             public void onLanguageSelected(OptionDTO language) {
-                languageContainer.setVisibility(View.GONE);
-                if (!isUserInteraction) {
-                    return;
-                }
                 TransitionDTO transition;
                 if (appointmentsResultModel != null) {
                     transition = appointmentsResultModel.getMetadata().getLinks().getLanguage();
@@ -237,6 +196,15 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                 });
             }
         });
+        languageSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int offsetX = view.getWidth() / 2 - popupPickerLanguage.getWidth() / 2;
+                int offsetY = -view.getHeight() - popupPickerLanguage.getHeight();
+                popupPickerLanguage.showAsDropDown(view, offsetX, offsetY);
+            }
+        });
+        languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
     }
 
     private void changeLeftMenuLabels() {
@@ -1122,7 +1090,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     @Override
-    public void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO) {
+    public void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO, BaseAvailabilityHourFragment baseAvailabilityHourFragment) {
 
     }
 

@@ -1,19 +1,25 @@
 package com.carecloud.carepay.practice.library.appointments.adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.models.MapFilterModel;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
+import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
+import com.carecloud.carepaylibray.appointments.AppointmentDisplayUtil;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
@@ -24,6 +30,7 @@ import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -54,6 +61,11 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private int sizeFilteredPatients;
     private int sizeFilteredPendingPatients;
+    private Section currentSection;
+    private enum Section {
+        APPOINTMENTS,
+        PAYMENTS
+    }
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
 
@@ -69,6 +81,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
      */
     public PatientListAdapter(Context context, PaymentsModel paymentsModel) {
         this.context = context;
+        this.currentSection = Section.PAYMENTS;
         loadPatients(paymentsModel);
         applyFilter();
     }
@@ -81,6 +94,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
      */
     public PatientListAdapter(Context context, CheckInDTO checkInDTO) {
         this.context = context;
+        this.currentSection = Section.APPOINTMENTS;
         loadPatients(checkInDTO);
         applyFilter();
     }
@@ -134,26 +148,11 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         holder.bind(patient, tapListener);
         holder.setTimeView(patient);
         holder.itemView.setContentDescription(patient.name);
+        holder.videoVisitIndicator.setVisibility(patient.isVideoVisit ? View.VISIBLE : View.GONE);
+        if (this.currentSection == Section.APPOINTMENTS) { holder.setCellAvatar(patient); }
 
-        if (!TextUtils.isEmpty(patient.photoUrl)) {
-            Picasso.with(context).load(patient.photoUrl)
-                    .transform(new CircleImageTransform())
-                    .resize(60, 60)
-                    .into(holder.profilePicture, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            holder.profilePicture.setVisibility(View.VISIBLE);
-                        }
-
-                        @Override
-                        public void onError() {
-                            holder.initials.setText(patient.initials);
-                        }
-                    });
-
-        } else {
-            holder.profilePicture.setVisibility(View.INVISIBLE);
-        }
+        PicassoHelper.get().loadImage(context, holder.profilePicture, holder.initials,
+                this.currentSection == Section.APPOINTMENTS ? holder.cellAvatar : null, patient.photoUrl, 60);
     }
 
     @Override
@@ -384,12 +383,14 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     class CardViewHolder extends RecyclerView.ViewHolder {
 
-        CarePayTextView initials;
-        CarePayTextView name;
-        CarePayTextView provider;
-        CarePayTextView balance;
-        CarePayTextView timeTextView;
+        TextView initials;
+        TextView name;
+        TextView provider;
+        TextView balance;
+        TextView timeTextView;
         ImageView profilePicture;
+        View videoVisitIndicator;
+        ImageView cellAvatar;
 
         /**
          * Constructor.
@@ -398,12 +399,14 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
          */
         CardViewHolder(View view) {
             super(view);
-            initials = (CarePayTextView) view.findViewById(R.id.patient_short_name);
-            name = (CarePayTextView) view.findViewById(R.id.patient_name_text_view);
-            provider = (CarePayTextView) view.findViewById(R.id.provider_name_text_view);
-            balance = (CarePayTextView) view.findViewById(R.id.amount_text_view);
-            timeTextView = (CarePayTextView) view.findViewById(R.id.timeTextView);
-            profilePicture = (ImageView) view.findViewById(R.id.patient_pic_image_view);
+            initials = view.findViewById(R.id.patient_short_name);
+            name = view.findViewById(R.id.patient_name_text_view);
+            provider = view.findViewById(R.id.provider_name_text_view);
+            balance = view.findViewById(R.id.amount_text_view);
+            timeTextView = view.findViewById(R.id.timeTextView);
+            profilePicture = view.findViewById(R.id.patient_pic_image_view);
+            cellAvatar = view.findViewById(R.id.cellAvatarImageView);
+            videoVisitIndicator = view.findViewById(R.id.visit_type_video);
         }
 
         void bind(final CardViewPatient patient, final OnItemTappedListener tapListener) {
@@ -432,6 +435,70 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
 
             timeTextView.setVisibility(View.VISIBLE);
+        }
+
+        void setCellAvatar(CardViewPatient patient) {
+            AppointmentDisplayStyle style = AppointmentDisplayUtil.determineDisplayStyle(((AppointmentDTO) patient.raw).getPayload());
+            switch (style) {
+                case CHECKED_IN: {
+                    initials.setTextColor(ContextCompat.getColor(context, R.color.white));
+                    initials.setBackgroundResource(R.drawable.round_list_tv_green);
+                    cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_checked_in);
+                    break;
+                }
+                case PENDING: {
+                    initials.setTextColor(ContextCompat.getColor(context, R.color.emerald));
+                    initials.setBackgroundResource(R.drawable.round_list_tv_green_border);
+                    cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_upcoming);
+                    break;
+                }
+                case REQUESTED: {
+                    initials.setTextColor(ContextCompat.getColor(context, R.color.white));
+                    initials.setBackgroundResource(R.drawable.round_list_tv_orange);
+                    cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_pending);
+                    break;
+                }
+                case MISSED: {
+                    initials.setTextColor(ContextCompat.getColor(context, R.color.white));
+                    initials.setBackgroundResource(R.drawable.round_list_tv_red);
+                    cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_missed);
+                    break;
+                }
+                case CANCELED: {
+                    initials.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
+                    initials.setBackgroundResource(R.drawable.round_list_tv);
+                    cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_canceled);
+                    break;
+                }
+                case PENDING_UPCOMING: {
+                    initials.setTextColor(ContextCompat.getColor(context, R.color.emerald));
+                    initials.setBackgroundResource(R.drawable.round_list_tv_green_border);
+                    cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_upcoming);
+                    break;
+                }
+                case REQUESTED_UPCOMING: {
+                    initials.setTextColor(ContextCompat.getColor(context, R.color.white));
+                    initials.setBackgroundResource(R.drawable.round_list_tv_orange);
+                    cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_pending);
+                    break;
+                }
+                case CANCELED_UPCOMING: {
+                    initials.setTextColor(ContextCompat.getColor(context, R.color.lightSlateGray));
+                    initials.setBackgroundResource(R.drawable.round_list_tv);
+                    cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_canceled);
+                    break;
+                }
+                case CHECKED_OUT: {
+                    initials.setTextColor(ContextCompat.getColor(context, R.color.white));
+                    initials.setBackgroundResource(R.drawable.round_tv);
+                    cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_checked_out);
+                    break;
+                }
+                default: {
+                    cellAvatar.setVisibility(View.GONE);
+                }
+            }
+
         }
     }
 

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -113,6 +114,7 @@ public abstract class BaseWebFormFragment extends BaseFragment {
             return;
         }
         toolbar.setTitle("");
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.icn_nav_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,7 +123,6 @@ public abstract class BaseWebFormFragment extends BaseFragment {
                 getActivity().onBackPressed();
             }
         });
-
 
         header = (TextView) view.findViewById(R.id.toolbar_title);
     }

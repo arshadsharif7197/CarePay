@@ -72,6 +72,9 @@ public class LinksDTO extends BaseLinks {
     @Expose
     @SerializedName("visit_summary_status")
     private TransitionDTO visitSummaryStatus = new TransitionDTO();
+    @SerializedName("video_visit")
+    @Expose
+    private TransitionDTO videoVisit = new TransitionDTO();
 
     /**
      * @return The demographics
@@ -246,5 +249,13 @@ public class LinksDTO extends BaseLinks {
 
     public void setVisitSummaryStatus(TransitionDTO visitSummaryStatus) {
         this.visitSummaryStatus = visitSummaryStatus;
+    }
+
+    public TransitionDTO getVideoVisit() {
+        return videoVisit;
+    }
+
+    public void setVideoVisit(TransitionDTO videoVisit) {
+        this.videoVisit = videoVisit;
     }
 }

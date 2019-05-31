@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.appointments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -19,13 +20,13 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.createappointment.availabilityhour.BaseAvailabilityHourFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
-import com.carecloud.carepaylibray.appointments.models.ProvidersReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.interfaces.DTO;
@@ -116,12 +117,7 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
                     AppointmentAvailabilityPayloadDTO payload = new AppointmentAvailabilityPayloadDTO();
                     payload.setLocation(selectedLocation);
                     payload.setResource(selectedResource);
-                    ProvidersReasonDTO reasonDTO = new ProvidersReasonDTO();
-                    reasonDTO.setAmount(selectedVisitType.getAmount());
-                    reasonDTO.setName(selectedVisitType.getName());
-                    reasonDTO.setDescription(selectedVisitType.getDescription());
-                    reasonDTO.setId(selectedVisitType.getId());
-                    payload.setVisitReason(reasonDTO);
+                    payload.setVisitReason(selectedVisitType);
                     availabilityDto.getPayload().getAppointmentAvailability().getPayload().add(payload);
                 }
                 availabilityDto.getPayload().getAppointmentAvailability().getPayload().get(0)
@@ -161,6 +157,12 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
             }
         });
         locationCard = locationContainer.findViewById(R.id.stepContainer);
+        locationCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFragment(LocationListFragment.newInstance(selectedPractice, selectedVisitType, selectedResource));
+            }
+        });
         ImageView profilePicImageView = locationCard.findViewById(R.id.profilePicImageView);
         profilePicImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_step_location));
     }
@@ -178,6 +180,12 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
             }
         });
         visitTypeCard = visitTypeContainer.findViewById(R.id.stepContainer);
+        visitTypeCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFragment(VisitTypeListFragment.newInstance(selectedPractice, selectedLocation, selectedResource));
+            }
+        });
         ImageView profilePicImageView = visitTypeCard.findViewById(R.id.profilePicImageView);
         profilePicImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_visit_type_placeholder));
 
@@ -196,6 +204,12 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
             }
         });
         providerCard = providerContainer.findViewById(R.id.stepContainer);
+        providerCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFragment(ProviderListFragment.newInstance(selectedPractice, selectedVisitType, selectedLocation));
+            }
+        });
     }
 
     @Override
@@ -308,8 +322,16 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
     }
 
     @Override
-    public void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO) {
-        showFragment(PatientModeRequestAppointmentDialog.newInstance(appointmentDTO));
+    public void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO,
+                                                    final BaseAvailabilityHourFragment baseAvailabilityHourFragment) {
+        PatientModeRequestAppointmentDialog fragment = PatientModeRequestAppointmentDialog.newInstance(appointmentDTO);
+        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                baseAvailabilityHourFragment.showDialog();
+            }
+        });
+        showFragment(fragment);
     }
 
     private void enableAvailableButton() {

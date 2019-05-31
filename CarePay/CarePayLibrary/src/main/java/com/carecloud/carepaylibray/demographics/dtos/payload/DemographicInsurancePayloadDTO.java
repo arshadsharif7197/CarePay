@@ -47,6 +47,10 @@ public class DemographicInsurancePayloadDTO extends PatientModel {
     @Expose
     private String policyFirstNameHolder;
 
+    @SerializedName("policy_holder_middle_name")
+    @Expose
+    private String policyMiddleNameHolder;
+
     @SerializedName("policy_holder_last_name")
     @Expose
     private String policyLastNameHolder;
@@ -194,5 +198,13 @@ public class DemographicInsurancePayloadDTO extends PatientModel {
 
     public void setInsuranceId(String insuranceId) {
         this.insuranceId = insuranceId;
+    }
+
+    public String getPolicyMiddleNameHolder() {
+        return policyMiddleNameHolder;
+    }
+
+    public void setPolicyMiddleNameHolder(String policyMiddleNameHolder) {
+        this.policyMiddleNameHolder = policyMiddleNameHolder;
     }
 }

@@ -109,9 +109,9 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
         CloverPaymentAdapter cloverPaymentAdapter = new CloverPaymentAdapter((BaseActivity) getActivity(), paymentsModel, callback.getAppointmentId(), (PaymentConfirmationInterface) callback);
         IntegratedPaymentPostModel paymentPostModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
         if (paymentPostModel == null) {
-            cloverPaymentAdapter.setCloverConnectorPayment(amountToMakePayment);
+            cloverPaymentAdapter.setCloverPayment(amountToMakePayment);//TODO switch back to connector
         } else {
-            cloverPaymentAdapter.setCloverConnectorPayment(paymentPostModel);
+            cloverPaymentAdapter.setCloverPayment(paymentPostModel);
         }
         logPaymentMethodSelection(getString(R.string.payment_clover));
     }

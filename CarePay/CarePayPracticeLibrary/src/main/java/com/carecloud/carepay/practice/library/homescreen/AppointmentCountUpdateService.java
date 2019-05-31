@@ -52,16 +52,25 @@ public class AppointmentCountUpdateService extends IntentService {
             queryMap.put("practice_id", practiceId);
             queryMap.put("practice_mgmt", practiceMgmt);
 
-            Set<String> locationsSavedFilteredIds = applicationSession.getApplicationPreferences()
-                    .getSelectedLocationsIds(practiceId,
-                            applicationSession.getApplicationMode().getUserPracticeDTO().getUserId());
-            if (locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()) {
-                queryMap.put("location_ids", StringUtil.getListAsCommaDelimitedString(locationsSavedFilteredIds));
+            String username = null;
+
+            if (applicationSession.getApplicationMode().getUserPracticeDTO() != null) {
+                Set<String> locationsSavedFilteredIds = applicationSession.getApplicationPreferences()
+                        .getSelectedLocationsIds(practiceId,
+                                applicationSession.getApplicationMode().getUserPracticeDTO().getUserId());
+                if (locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()) {
+                    queryMap.put("location_ids", StringUtil.getListAsCommaDelimitedString(locationsSavedFilteredIds));
+                }
+
+                username = applicationSession.getApplicationMode().getUserPracticeDTO().getUserName();
+                if (username == null) {
+                    username = applicationSession.getAppAuthorizationHelper().getCurrUser();
+                }
             }
 
             Map<String, String> header = new HashMap<>();
             header.put("x-api-key", HttpConstants.getApiStartKey());
-            header.put("username", applicationSession.getAppAuthorizationHelper().getCurrUser());
+            header.put("username", username);
             header.put("Authorization", applicationSession.getAppAuthorizationHelper().getIdToken());
 
             transition = intent.getStringExtra(KEY_TRANSITION);
@@ -90,7 +99,7 @@ public class AppointmentCountUpdateService extends IntentService {
 
     private static PendingIntent getPendingService(Context context, IntentParams params) {
         Intent scheduledService = new Intent(context, AppointmentCountUpdateService.class);
-        if(params != null) {
+        if (params != null) {
             scheduledService.putExtra(AppointmentCountUpdateService.KEY_TRANSITION, params.transition);
             scheduledService.putExtra(AppointmentCountUpdateService.KEY_PRACTICE_ID, params.practiceId);
             scheduledService.putExtra(AppointmentCountUpdateService.KEY_PRACTICE_MGMT, params.practiceMgmt);
