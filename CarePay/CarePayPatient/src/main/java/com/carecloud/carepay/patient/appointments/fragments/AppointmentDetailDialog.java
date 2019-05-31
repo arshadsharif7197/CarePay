@@ -431,6 +431,16 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     }
                     break;
                 }
+                case DENIED: {
+                    header.setBackgroundResource(R.drawable.appointment_dialog_red_bg);
+                    appointmentDateTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    appointmentTimeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    appointmentVisitTypeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    appointmentStatus.setVisibility(View.VISIBLE);
+                    appointmentStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.remove_red));
+                    appointmentStatus.setText(Label.getLabel("notification_denied_appointment_status"));
+                    break;
+                }
                 default: {
                     cleanupViews();
                 }
