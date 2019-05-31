@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/icn_arrow_left" />
+            android:src="@drawable/icn_close" />
     </FrameLayout>
 
     <RelativeLayout

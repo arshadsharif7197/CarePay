@@ -6,9 +6,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.createappointment.visittype.BaseVisitTypeListFragment;
@@ -52,9 +54,13 @@ public class VisitTypeListFragment extends BaseVisitTypeListFragment {
         view.findViewById(R.id.closeViewLayout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
+                cancel();
             }
         });
+        if(getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE){
+            ImageView close = view.findViewById(R.id.cancel_img);
+            close.setImageResource(R.drawable.icn_close);
+        }
     }
 
 }

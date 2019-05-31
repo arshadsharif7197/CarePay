@@ -29,15 +29,13 @@ before_install:
   - chmod +x ./CarePay/runner
   - chmod +x ./IntegratedPayments/runner
   - pip install --user awscli
+  - yes | sdkmanager "platforms;android-28"
+  - yes | sdkmanager "build-tools;28.0.3"
 android:
   components:
     - tools
     - platform-tools
-    # The BuildTools version used by your project
-    - build-tools-27.0.3
 
-    # The SDK version used to compile your project
-    - android-26
     - extra-google-m2repository
     - extra-android-m2repository # for design library
     - addon-google_apis-google-19
@@ -53,3 +51,4 @@ branches:
     - Staging
     - QA
     - development
+    - SHMRK-TRAVIS

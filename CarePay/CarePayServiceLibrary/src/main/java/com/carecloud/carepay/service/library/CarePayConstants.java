@@ -179,5 +179,9 @@ public class CarePayConstants {
     public static final String GET_STARTED_URL = "/get_started";
     public static final String PATIENT_ID = "patientId";
     public static final String NOTIFICATIONS_FLOW = "notifications";
+    public static final String HANDLE_HOME = "handleHome";
 
+
+    //Video Visit
+    public static final int VIDEO_START_OFFSET_SECONDS = 60 * 30; //10 min
 }

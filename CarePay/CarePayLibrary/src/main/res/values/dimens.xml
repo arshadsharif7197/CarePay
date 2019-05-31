@@ -530,6 +530,7 @@
     <dimen name="completeCheckInItemMargin">14dp</dimen>
     <dimen name="completeCheckInItemTextSize">22sp</dimen>
     <dimen name="completeCheckInItemValueTextSize">16sp</dimen>
+    <dimen name="largeAlertMessageTextSize">13sp</dimen>
 
 
 </resources>

@@ -27,7 +27,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
-import com.carecloud.carepaylibray.appointments.models.ProvidersReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
@@ -55,7 +54,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
 
     protected ScheduleAppointmentInterface callback;
     private AppointmentsResultModel appointmentModelDto;
-    private ProvidersReasonDTO selectedProviderReason;
+    private VisitTypeDTO selectedVisitReason;
     private AppointmentResourcesItemDTO selectedResource;
     private LocationDTO selectedLocation;
     private String today = Label.getLabel("today_label");
@@ -88,7 +87,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         appointmentModelDto = (AppointmentsResultModel) callback.getDto();
-        selectedProviderReason = appointmentModelDto.getPayload().getAppointmentAvailability()
+        selectedVisitReason = appointmentModelDto.getPayload().getAppointmentAvailability()
                 .getPayload().get(0).getVisitReason();
         selectedLocation = appointmentModelDto.getPayload().getAppointmentAvailability()
                 .getPayload().get(0).getLocation();
@@ -163,18 +162,14 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
         return false;
     }
 
-    private void showAppointmentConfirmationFragment(AppointmentsSlotsDTO slot) {
+    protected void showAppointmentConfirmationFragment(AppointmentsSlotsDTO slot) {
         AppointmentsPayloadDTO payloadDTO = new AppointmentsPayloadDTO();
         payloadDTO.setStartTime(slot.getStartTime());
         payloadDTO.setEndTime(slot.getEndTime());
         payloadDTO.setLocation(selectedLocation);
-        payloadDTO.setVisitReasonId(selectedProviderReason.getId());
+        payloadDTO.setVisitReasonId(selectedVisitReason.getId());
 
-        VisitTypeDTO visitTypeDTO = new VisitTypeDTO();
-        visitTypeDTO.setId(selectedProviderReason.getId());
-        visitTypeDTO.setName(selectedProviderReason.getName());
-        visitTypeDTO.setAmount(selectedProviderReason.getAmount());
-        payloadDTO.setVisitType(visitTypeDTO);
+        payloadDTO.setVisitType(selectedVisitReason);
 
         payloadDTO.setProvider(selectedResource.getProvider());
         payloadDTO.setProviderId(String.valueOf(selectedResource.getProvider().getId()));
@@ -183,7 +178,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
 
         AppointmentDTO appointmentDTO = new AppointmentDTO();
         appointmentDTO.setPayload(payloadDTO);
-        callback.showAppointmentConfirmationFragment(appointmentDTO);
+        callback.showAppointmentConfirmationFragment(appointmentDTO, this);
     }
 
     protected abstract void selectDateRange();
@@ -191,9 +186,9 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
     private void setUpPrepaymentMessage(View view) {
         TextView prepaymentMessage = view.findViewById(R.id.prepaymentMessage);
         if (prepaymentMessage != null) {
-            double visitTypeAmount = getVisitTypeAmount(selectedProviderReason.getId());
+            double visitTypeAmount = getVisitTypeAmount(selectedVisitReason.getId());
             if (visitTypeAmount > 0) {
-                selectedProviderReason.setAmount(visitTypeAmount);
+                selectedVisitReason.setAmount(visitTypeAmount);
                 String message = Label.getLabel("appointments_prepayment_message")
                         + NumberFormat.getCurrencyInstance(Locale.US).format(visitTypeAmount);
                 prepaymentMessage.setText(message);
@@ -305,7 +300,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
                     AppointmentAvailabilityPayloadDTO payload = new AppointmentAvailabilityPayloadDTO();
                     payload.setLocation(selectedLocation);
                     payload.setResource(selectedResource);
-                    payload.setVisitReason(selectedProviderReason);
+                    payload.setVisitReason(selectedVisitReason);
                     availabilityDto.getPayload().getAppointmentAvailability().getPayload().add(payload);
                 }
 

@@ -284,7 +284,7 @@ public class MediaScannerPresenter {
         this.pendingAction = action;
     }
 
-    private void handlePictureAction() {
+    public void handlePictureAction() {
         setPendingAction(ACTION_PICTURE);
         if (mediaViewInterface.getCallingFragment() != null) {
             if (!PermissionsUtil.checkPermissionCamera(mediaViewInterface.getCallingFragment())) {
