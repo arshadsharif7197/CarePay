@@ -360,6 +360,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     appointmentStatus.setVisibility(View.VISIBLE);
                     appointmentStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.lightning_yellow));
                     appointmentStatus.setText(Label.getLabel("appointments_request_pending_heading"));
+                    scheduleAppointmentButton.setEnabled(isCalendarAvailable
+                            && !appointmentDTO.getPayload().isAppointmentOver());
                     break;
                 }
                 case MISSED: {
