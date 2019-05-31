@@ -715,8 +715,6 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         callback.callVisitSummaryStatusService(jobId, appointmentDTO.getMetadata().getPracticeMgmt(),
                 new WorkflowServiceCallback() {
 
-                    private boolean failedParsing = false;
-
                     @Override
                     public void onPreExecute() {
                     }
@@ -727,7 +725,6 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                         try {
                             visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
                         } catch (Exception ex) {
-                            failedParsing = true;
                             onFailure("");
                         }
                         String status = visitSummaryDTO.getPayload().getVisitSummary().getStatus();
@@ -748,7 +745,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     @Override
                     public void onFailure(String exceptionMessage) {
                         Log.e("OkHttp", exceptionMessage);
-                        if (failedParsing) {
+                        if (exceptionMessage.contains("JSON")) {
                             String title = String.format("%s - %s",
                                     appointmentDTO.getPayload().getProvider().getFullName(),
                                     DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime())
