@@ -389,6 +389,16 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     }
                     break;
                 }
+                case DENIED: {
+                    header.setBackgroundResource(R.drawable.appointment_dialog_red_bg);
+                    appointmentDateTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    appointmentTimeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    appointmentVisitTypeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+                    appointmentStatus.setVisibility(View.VISIBLE);
+                    appointmentStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.remove_red));
+                    appointmentStatus.setText(Label.getLabel("notification_denied_appointment_status"));
+                    break;
+                }
                 default: {
                     cleanupViews();
                 }
@@ -424,15 +434,15 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         }
     }
 
-    private boolean shouldShowVisitSummary(){
+    private boolean shouldShowVisitSummary() {
         AppointmentsResultModel appointmentModelDto = ((PatientAppointmentPresenter) callback).getMainAppointmentDto();
-        UserPracticeDTO appointmentPractice= null;
+        UserPracticeDTO appointmentPractice = null;
         for (UserPracticeDTO userPracticeDTO : appointmentModelDto.getPayload().getUserPractices()) {
-            if(userPracticeDTO.getPracticeId().equals(appointmentDTO.getMetadata().getPracticeId())) {
+            if (userPracticeDTO.getPracticeId().equals(appointmentDTO.getMetadata().getPracticeId())) {
                 appointmentPractice = userPracticeDTO;
             }
         }
-        if(appointmentPractice != null && appointmentPractice.isVisitSummaryEnabled()) {
+        if (appointmentPractice != null && appointmentPractice.isVisitSummaryEnabled()) {
             for (PortalSettingDTO portalSettingDTO : appointmentModelDto.getPayload().getPortalSettings()) {
                 if (appointmentPractice.getPracticeId().equals(portalSettingDTO.getMetadata().getPracticeId())) {
                     for (PortalSetting portalSetting : portalSettingDTO.getPayload()) {
@@ -506,17 +516,6 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
             }
         }
         return null;
-    }
-
-    private String ordinal(int number, String[] sufixes) {
-        switch (number % 100) {
-            case 11:
-            case 12:
-            case 13:
-                return number + sufixes[0];
-            default:
-                return number + sufixes[number % 10];
-        }
     }
 
     private String getFormattedText(String formatString, String... fields) {
