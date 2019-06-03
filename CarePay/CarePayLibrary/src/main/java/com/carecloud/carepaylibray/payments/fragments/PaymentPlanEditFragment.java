@@ -633,9 +633,14 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
             samePaymentDate = true;
         }
 
-        boolean metadataUnModified = samePaymentDate && creditCard == null &&
-                (StringUtil.isNullOrEmpty(planNameEditText.getText().toString()) ||
-                        planNameEditText.getText().toString().equals(paymentPlanDTO.getPayload().getDescription()));
+        boolean sameCard = creditCard != null && paymentPlanDTO.getPayload().getPaymentMethod().getPapiPaymentID()
+                .equals(creditCard.getCreditCardsId());
+
+        boolean sameName = planNameEditText.getText().toString().equals(paymentPlanDTO.getPayload().getDescription());
+
+        boolean metadataUnModified = (samePaymentDate && creditCard == null &&
+                (StringUtil.isNullOrEmpty(planNameEditText.getText().toString()) || sameName)) ||
+                (samePaymentDate && sameName && sameCard);
 
         int completedInstallments = paymentPlanDTO.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
         boolean parametersModified = installments + completedInstallments != paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments() ||
