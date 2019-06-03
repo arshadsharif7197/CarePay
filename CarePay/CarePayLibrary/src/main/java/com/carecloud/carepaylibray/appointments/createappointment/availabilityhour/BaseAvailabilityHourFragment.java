@@ -100,7 +100,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
     private void initDates() {
         startDate = new Date();
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, 5);
+        cal.add(Calendar.DATE, 4);
         endDate = cal.getTime();
     }
 
