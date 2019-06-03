@@ -166,11 +166,6 @@ public class PaymentPlanTermsFragment extends BasePaymentDialogFragment {
         }
     }
 
-    protected void onPaymentPlanSubmitted(WorkflowDTO workflowDTO) {
-        callback.onSubmitPaymentPlan(workflowDTO);
-        dismiss();
-    }
-
     private void submitPaymentPlan() {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("practice_mgmt", paymentPlanPostModel.getMetadata().getPracticeMgmt());
@@ -202,6 +197,11 @@ public class PaymentPlanTermsFragment extends BasePaymentDialogFragment {
             showErrorNotification(exceptionMessage);
         }
     };
+
+    protected void onPaymentPlanSubmitted(WorkflowDTO workflowDTO) {
+        callback.onSubmitPaymentPlan(workflowDTO);
+        dismiss();
+    }
 
 
 }

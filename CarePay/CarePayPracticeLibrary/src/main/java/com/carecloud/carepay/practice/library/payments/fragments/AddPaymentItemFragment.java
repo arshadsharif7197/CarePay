@@ -38,6 +38,15 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
 
     private AddPaymentItemCallback callback;
 
+    public static AddPaymentItemFragment newInstance(List<SimpleChargeItem> simpleChargeItems) {
+        Bundle args = new Bundle();
+        Gson gson = new Gson();
+        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(simpleChargeItems));
+        AddPaymentItemFragment fragment = new AddPaymentItemFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -66,8 +75,7 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dismiss();
-                callback.onDismissAddItemFragment();
+                cancel();
             }
         });
 

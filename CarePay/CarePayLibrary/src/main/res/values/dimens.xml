@@ -535,5 +535,7 @@
     <dimen name="appointmentDialStartMargin">5dp</dimen>
     <dimen name="appoinmentDialogButtonsTopMargin">10dp</dimen>
 
+    <dimen name="paymentDetailDialogMargin">10dp</dimen>
+
 
 </resources>

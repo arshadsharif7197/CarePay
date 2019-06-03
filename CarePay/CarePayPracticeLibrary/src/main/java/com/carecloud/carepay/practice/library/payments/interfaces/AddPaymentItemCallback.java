@@ -13,6 +13,4 @@ public interface AddPaymentItemCallback {
 
     void addRetailItemWithOptions(RetailItemDto retailItemDto, int quantity, Map<Integer, RetailItemOptionChoiceDto> selectedOptions);
 
-    void onDismissAddItemFragment();
-
 }

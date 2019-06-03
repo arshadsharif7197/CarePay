@@ -24,7 +24,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
     private Dialog dialog;
     private View view;
     private boolean isPracticeAppPatientMode;
-    private BlurDialogEngine mBlurEngine = null;
+    private BlurDialogEngine mBlurEngine;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,7 +56,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
         if (isPracticeAppPatientMode) {
             setNavigationBarVisibility();
         }
-//        setUpBlur();
+        setUpBlur();
     }
 
     private void setUpBlur() {

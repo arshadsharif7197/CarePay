@@ -109,9 +109,9 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
     }
 
     protected void setupToolbar(View view, String titleString) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.payment_toolbar);
+        Toolbar toolbar = view.findViewById(R.id.payment_toolbar);
         if (toolbar != null) {
-            TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+            TextView title = toolbar.findViewById(R.id.toolbar_title);
             title.setText(titleString);
         }
 
@@ -126,7 +126,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
 
     protected void setUpAmounts(View view) {
         double unAppliedCredit = selectedBalance.getPayload().get(0).getUnappliedCredit() * -1;
-        TextView unAppliedValueTextView = (TextView) view.findViewById(R.id.unAppliedValueTextView);
+        TextView unAppliedValueTextView = view.findViewById(R.id.unAppliedValueTextView);
         unAppliedValueTextView.setText(currencyFormatter.format(unAppliedCredit));
         if (unAppliedCredit < 0.01) {
             unAppliedValueTextView.setVisibility(View.GONE);
@@ -135,16 +135,16 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
             view.findViewById(R.id.balanceLabelSeparator).setVisibility(View.GONE);
         }
 
-        TextView balanceValueTextView = (TextView) view.findViewById(R.id.balanceValueTextView);
+        TextView balanceValueTextView = view.findViewById(R.id.balanceValueTextView);
         totalBalance = getTotalBalance(selectedBalance);
         balanceValueTextView.setText(currencyFormatter.format(totalBalance));
 
-        paymentValueTextView = (TextView) view.findViewById(R.id.paymentValueTextView);
+        paymentValueTextView = view.findViewById(R.id.paymentValueTextView);
         paymentValueTextView.setText(currencyFormatter.format(paymentPlanAmount));
     }
 
     protected void setUpItems(View view, List<BalanceItemDTO> items) {
-        RecyclerView itemsRecycler = (RecyclerView) view.findViewById(R.id.itemRecycler);
+        RecyclerView itemsRecycler = view.findViewById(R.id.itemRecycler);
         itemsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new PaymentPlanItemAdapter(items);
         adapter.setCallback(this);
@@ -167,16 +167,26 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
                 }
             }
         });
-        addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
+        addNewCardButton = view.findViewById(R.id.addNewCardButton);
         addNewCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onAddPaymentPlanCard(paymentsModel, null, true);
+                onAddPaymentPlanCard(paymentsModel, null, true);
             }
         });
         if (paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             addNewCardButton.setText(Label.getLabel("payment_new_credit_card"));
         }
+    }
+
+    protected void onAddPaymentPlanCard(PaymentsModel paymentsModel,
+                                        PaymentPlanDTO paymentPlanDTO,
+                                        boolean onlySelectMode) {
+        PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
+                .newInstance(paymentsModel, (PaymentPlanDTO) null, onlySelectMode);
+        fragment.setOnCancelListener(onDialogCancelListener);
+        callback.displayDialogFragment(fragment, false);
+        hideDialog();
     }
 
     protected void mainButtonAction() {
@@ -239,7 +249,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
     }
 
     protected void setUpCreditCards(View view) {
-        RecyclerView creditCardsRecyclerView = (RecyclerView) view.findViewById(R.id.creditCardRecycler);
+        RecyclerView creditCardsRecyclerView = view.findViewById(R.id.creditCardRecycler);
         creditCardsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = paymentsModel
                 .getPaymentPayload().getPatientCreditCards();
@@ -326,11 +336,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
             clearError(R.id.paymentAmountInputLayout);
         }
 
-        if (selectedCreditCard == null) {
-            return false;
-        }
-
-        return true;
+        return selectedCreditCard != null;
     }
 
     @Override

@@ -107,14 +107,18 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
         if ((view.getId() == R.id.enter_amount_button) && !StringUtil.isNullOrEmpty(numberStr)) {
             double amount = Double.parseDouble(numberStr);
             if (amount > fullAmount) {
-                String errorMessage = Label.getLabel("payment_partial_max_error") + NumberFormat.getCurrencyInstance(Locale.US).format(fullAmount);
-                CustomMessageToast toast = new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
+                String errorMessage = Label.getLabel("payment_partial_max_error")
+                        + NumberFormat.getCurrencyInstance(Locale.US).format(fullAmount);
+                CustomMessageToast toast = new CustomMessageToast(getContext(), errorMessage,
+                        CustomMessageToast.NOTIFICATION_TYPE_ERROR);
                 toast.show();
                 return;
             }
             if (minimumPayment > 0 && amount < minimumPayment) {
-                String errorMessage = Label.getLabel("payment_partial_minimum_error") + NumberFormat.getCurrencyInstance(Locale.US).format(minimumPayment);
-                CustomMessageToast toast = new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR);
+                String errorMessage = Label.getLabel("payment_partial_minimum_error")
+                        + NumberFormat.getCurrencyInstance(Locale.US).format(minimumPayment);
+                CustomMessageToast toast = new CustomMessageToast(getContext(), errorMessage,
+                        CustomMessageToast.NOTIFICATION_TYPE_ERROR);
                 toast.show();
                 return;
             }
@@ -124,12 +128,16 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
 
     protected void onPaymentClick(double amount) {
         createPaymentModel(amount);
-        callback.onPayButtonClicked(amount, paymentsModel);
-        dismiss();
+        PracticePaymentMethodDialogFragment fragment = PracticePaymentMethodDialogFragment
+                .newInstance(paymentsModel, amount);
+        fragment.setOnCancelListener(onDialogCancelListener);
+        callback.displayDialogFragment(fragment, true);
+        hideDialog();
     }
 
     private void updatePendingAmountText(double amount) {
-        pendingAmountTextView.setText(Label.getLabel("payment_pending_text") + " " + StringUtil.getFormattedBalanceAmount(amount));
+        pendingAmountTextView.setText(String.format("%s %s", Label.getLabel("payment_pending_text"),
+                StringUtil.getFormattedBalanceAmount(amount)));
     }
 
     private void createPaymentModel(double payAmount) {
@@ -211,7 +219,8 @@ public class PracticePartialPaymentDialogFragment extends PartialPaymentBaseDial
     }
 
     protected double getMinimumPayment() {
-        return paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload().getRegularPayments().getMinimumPartialPaymentAmount();
+        return paymentsModel.getPaymentPayload().getPaymentSettings().get(0).getPayload()
+                .getRegularPayments().getMinimumPartialPaymentAmount();
     }
 
 }

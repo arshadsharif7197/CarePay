@@ -15,9 +15,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAmountDialog;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -93,7 +95,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -104,7 +106,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         });
         toolbar.setTitle("");
         getPaymentLabels();
-        TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
+        TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
         if (getArguments().getString("title") != null) {
             paymentsTitleString = getArguments().getString("title");
         }
@@ -119,13 +121,13 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         fillDetailAdapter(view, selectedBalance.getPayload());
         for (PendingBalancePayloadDTO payment : selectedBalance.getPayload()) {
             total = SystemUtil.safeAdd(total, payment.getAmount());
-            if(!payment.getType().equals(PendingBalancePayloadDTO.PATIENT_BALANCE)){
+            if (!payment.getType().equals(PendingBalancePayloadDTO.PATIENT_BALANCE)) {
                 //not an amount that can be added to a plan
                 nonBalanceTotal = SystemUtil.safeAdd(nonBalanceTotal, payment.getAmount());
             }
         }
         currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
-        TextView responseTotal = (TextView) view.findViewById(R.id.respons_total);
+        TextView responseTotal = view.findViewById(R.id.respons_total);
         responseTotal.setText(currencyFormat.format(total));
 
         setUpBottomSheet(view);
@@ -151,11 +153,6 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
             partialPaymentContainer.setEnabled(true);
             payLaterContainer.setEnabled(true);
             payLaterContainer.setEnabled(true);
-
-//            payTotalAmountContainer.setTextColor(Color.WHITE);
-            int color = ContextCompat.getColor(getContext(), R.color.colorPrimary);
-//            partialPaymentContainer.setTextColor(color);
-//            payLaterContainer.setTextColor(color);
         }
 
 
@@ -192,11 +189,16 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         paymentPlanContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                actionCallback.onPaymentPlanAction(paymentDTO);
+                PendingBalanceDTO selectedBalancesItem = paymentDTO.getPaymentPayload()
+                        .getPatientBalances().get(0).getBalances().get(0);//this should be a safe assumption for checkin
+                PendingBalanceDTO reducedBalancesItem = paymentDTO.getPaymentPayload()
+                        .reduceBalanceItems(selectedBalancesItem, false);
+                actionCallback.displayDialogFragment(PatientPaymentPlanAmountDialog
+                        .newInstance(paymentDTO, reducedBalancesItem), true);
             }
         });
         if (mustAddToExisting) {
-            TextView paymentPlanTextView = (TextView) paymentPlanContainer.findViewById(R.id.paymentPlanTextView);
+            TextView paymentPlanTextView = paymentPlanContainer.findViewById(R.id.paymentPlanTextView);
             paymentPlanTextView.setText(Label.getLabel("payment_plan_add_existing"));
         }
 
@@ -214,7 +216,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
                 shadow.setAlpha(slideOffset);
             }
         });
-        Button consolidatedPaymentButton = (Button) view.findViewById(R.id.consolidatedPaymentButton);
+        Button consolidatedPaymentButton = view.findViewById(R.id.consolidatedPaymentButton);
         consolidatedPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -222,7 +224,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
             }
         });
 
-        Button cancelButton = (Button) view.findViewById(R.id.cancelButton);
+        Button cancelButton = view.findViewById(R.id.cancelButton);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -230,7 +232,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
             }
         });
 
-        TextView totalPatientResponsibilityValue = (TextView) view.findViewById(R.id.totalPatientResponsibilityValue);
+        TextView totalPatientResponsibilityValue = view.findViewById(R.id.totalPatientResponsibilityValue);
         totalPatientResponsibilityValue.setText(currencyFormat.format(total));
     }
 
@@ -253,7 +255,9 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
 
     @Override
     public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
-        actionCallback.displayBalanceDetails(paymentDTO, paymentLineItem, selectedBalance);
+        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
+                .newInstance(paymentDTO, paymentLineItem, selectedBalance, false);
+        actionCallback.displayDialogFragment(dialog, false);
     }
 
 

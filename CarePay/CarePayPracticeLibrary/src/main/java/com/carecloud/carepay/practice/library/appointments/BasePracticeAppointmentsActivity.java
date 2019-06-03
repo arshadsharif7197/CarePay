@@ -117,8 +117,9 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     @Override
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
-        PracticeAddNewCreditCardFragment fragment = PracticeAddNewCreditCardFragment.newInstance(paymentsModel, amount);
-        displayDialogFragment(fragment, false);
+        //TODO: Delete this when refactor. This code is not used anymore
+//        PracticeAddNewCreditCardFragment fragment = PracticeAddNewCreditCardFragment.newInstance(paymentsModel, amount);
+//        displayDialogFragment(fragment, false);
     }
 
     @Override
@@ -130,27 +131,17 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     }
 
     @Override
-    public void onPaymentPlanAction(PaymentsModel paymentsModel) {
-
-    }
-
-    @Override
-    public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, final double amount,
-                                      final PaymentsModel paymentsModel) {
-        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
-                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
-            PracticeChooseCreditCardFragment fragment = PracticeChooseCreditCardFragment
-                    .newInstance(paymentsModel, selectedPaymentMethod.getLabel(), amount);
-            fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialogInterface) {
-                    onPayButtonClicked(amount, paymentsModel);
-                }
-            });
-            displayDialogFragment(fragment, false);
-        } else {
-            showAddCard(amount, paymentsModel);
-        }
+    public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount,
+                                      PaymentsModel paymentsModel) {
+        //TODO: Delete this when refactor. This code is not used anymore
+//        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
+//                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+//            DialogFragment fragment = PracticeChooseCreditCardFragment
+//                    .newInstance(paymentsModel, selectedPaymentMethod.getLabel(), amount);
+//            displayDialogFragment(fragment, false);
+//        } else {
+//            showAddCard(amount, paymentsModel);
+//        }
     }
 
     @Nullable
@@ -204,11 +195,6 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     }
 
     @Override
-    public void onDismissPaymentMethodDialog(PaymentsModel paymentsModel) {
-//        onHoursAndLocationSelected(appointmentSlot, null);
-    }
-
-    @Override
     public void showFragment(DialogFragment fragment) {
         String tag = fragment.getClass().getName();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -234,7 +220,6 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         AppointmentsSlotsDTO slot = new AppointmentsSlotsDTO();
         slot.setStartTime(appointmentRequestDto.getAppointment().getStartTime());
         slot.setEndTime(appointmentRequestDto.getAppointment().getEndTime());
-//        setPracticeId(practiceId);
         startPrepaymentProcess(appointmentRequestDto, slot, amount);
     }
 
