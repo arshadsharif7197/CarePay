@@ -18,7 +18,7 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayAdapter;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayQueueUploadService;
-import com.carecloud.carepay.patient.payment.androidpay.BreezeDataBase;
+import com.carecloud.carepay.patient.db.BreezeDataBase;
 import com.carecloud.carepay.patient.payment.androidpay.models.AndroidPayQueuePaymentRecord;
 import com.carecloud.carepay.patient.payment.androidpay.models.PayeezyAndroidPayResponse;
 import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;

@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.payment.androidpay;
+package com.carecloud.carepay.patient.db;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
