@@ -285,8 +285,8 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
         checkingInLabel.setText(title);
 
         balanceValueLabel.setText(StringUtil.getFormattedBalanceAmount(getPatientBalance()));
-        patientNameLabel.setText(StringUtil.getFormatedLabal(getContext(), appointmentPayloadDTO.getPatient().getFullName()));
-        doctorNameLabel.setText(StringUtil.getFormatedLabal(getContext(), appointmentPayloadDTO.getProvider().getName()));
+        patientNameLabel.setText(StringUtil.capitalize(StringUtil.getFormatedLabel(getContext(), appointmentPayloadDTO.getPatient().getFullName())));
+        doctorNameLabel.setText(StringUtil.getFormatedLabel(getContext(), appointmentPayloadDTO.getProvider().getName()));
 
 
         findViewById(R.id.checkin_close_button).setOnClickListener(new View.OnClickListener() {

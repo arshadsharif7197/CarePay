@@ -131,7 +131,9 @@
     <dimen name="dialog_header_height">205dp</dimen>
 
     <dimen name="profilePicMarginTop">26dp</dimen>
-    <dimen name="checkinPatientNameTextSize">34sp</dimen>
+    <dimen name="checkinPatientNameTextSize">42sp</dimen>
+    <dimen name="checkinPatientNameMinTextSize">18sp</dimen>
+    <dimen name="checkinPatientNameMarginSize">20dp</dimen>
     <dimen name="doctorNameTextSize">18sp</dimen>
     <dimen name="checkin_info_label_width">150dp</dimen>
     <dimen name="balanceTextPadding">19dp</dimen>

@@ -139,7 +139,9 @@
     <dimen name="custom_appointment_dialog_checkbox_normal_size">12dp</dimen>
 
     <dimen name="profilePicMarginTop">10dp</dimen>
-    <dimen name="checkinPatientNameTextSize">20sp</dimen>
+    <dimen name="checkinPatientNameTextSize">32sp</dimen>
+    <dimen name="checkinPatientNameMinTextSize">12sp</dimen>
+    <dimen name="checkinPatientNameMarginSize">50dp</dimen>
     <dimen name="doctorNameTextSize">14sp</dimen>
     <dimen name="checkin_info_label_width">100dp</dimen>
     <dimen name="balanceTextPadding">12dp</dimen>
