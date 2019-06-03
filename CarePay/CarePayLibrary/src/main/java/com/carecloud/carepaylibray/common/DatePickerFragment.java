@@ -49,7 +49,6 @@ public class DatePickerFragment extends DialogFragment {
     }
 
 
-
     public static DatePickerFragment newInstance(String dialogTitle,
                                                  Date startDate,
                                                  Date endDate,
@@ -63,12 +62,12 @@ public class DatePickerFragment extends DialogFragment {
                                                  Date endDate,
                                                  Date showDate,
                                                  DateRangePickerDialogListener callback,
-                                                 int flag){
+                                                 int flag) {
         Bundle args = new Bundle();
         args.putString("dialogTitle", dialogTitle);
         args.putSerializable("startDate", startDate);
         args.putSerializable("endDate", endDate);
-        if(showDate != null) {
+        if (showDate != null) {
             args.putSerializable("showDate", showDate);
         }
         args.putInt("flag", flag);
@@ -83,7 +82,7 @@ public class DatePickerFragment extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (FragmentActivityInterface)context;
+            callback = (FragmentActivityInterface) context;
         } catch (ClassCastException e) {
             throw new ClassCastException("Context must implement FragmentActivityInterface");
         }
@@ -137,7 +136,7 @@ public class DatePickerFragment extends DialogFragment {
                 onTodayClicked();
             }
         });
-        if(today.before(startDate)){
+        if (today.before(startDate)) {
             todayButton.setVisibility(View.GONE);
         }
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -152,8 +151,9 @@ public class DatePickerFragment extends DialogFragment {
         calendarPickerView = view.findViewById(R.id.calendarView);
         calendarPickerView.init(startDate, endDate)
                 .inMode(CalendarPickerView.SelectionMode.SINGLE);
-        if(showDate!=null) {
-            calendarPickerView.scrollToDate(showDate);
+        if (showDate != null) {
+//            calendarPickerView.scrollToDate(showDate);
+            calendarPickerView.selectDate(showDate);
         }
         calendarPickerView.setOnDateSelectedListener(new CalendarPickerView.OnDateSelectedListener() {
             @Override
