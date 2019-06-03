@@ -441,6 +441,7 @@
     <dimen name="visitTypeContainerTopMargin">15dp</dimen>
     <dimen name="reasonTypeValueTextSize">14sp</dimen>
     <dimen name="reasonForVisitPadding">10dp</dimen>
+    <dimen name="appointmentRequestDialogTopPadding">20dp</dimen>
 
     <!--Check In Screen-->
     <dimen name="checkInShadowEndMargin">-40dp</dimen>

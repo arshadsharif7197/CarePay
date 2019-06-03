@@ -68,7 +68,7 @@ public class PatientModeRequestAppointmentDialog extends BaseRequestAppointmentD
 //        setDialogTitle(dateUtil.getDateAsDayMonthDayOrdinalYear(Label.getLabel("appointments_web_today_heading")));
 
         TextView appointment_date = view.findViewById(R.id.content_view_header_title);
-        appointment_date.setText(dateUtil.getDateAsDayMonthDayOrdinalYear(Label.getLabel("appointments_web_today_heading")));
+        appointment_date.setText(dateUtil.getDateAsDayMonthDayOrdinalYear(Label.getLabel("appointments_web_today_heading"), Label.getLabel("add_appointment_tomorrow")));
 
         TextView appointmentTimeTextView = view.findViewById(R.id.appointment_time);
         appointmentTimeTextView.setText(dateUtil.getTime12Hour());
@@ -94,7 +94,7 @@ public class PatientModeRequestAppointmentDialog extends BaseRequestAppointmentD
 
         VisitTypeDTO visitTypeDTO = appointmentDTO.getPayload().getVisitType();
         TextView visitTypeTextView = view.findViewById(R.id.reasonTextView);
-        visitTypeTextView.setText(visitTypeDTO.getName());
+        visitTypeTextView.setText(StringUtil.capitalize(visitTypeDTO.getName()));
 
         View videoVisitIndicator = view.findViewById(R.id.visit_type_video);
         videoVisitIndicator.setVisibility(appointmentDTO.getPayload().getVisitType()
