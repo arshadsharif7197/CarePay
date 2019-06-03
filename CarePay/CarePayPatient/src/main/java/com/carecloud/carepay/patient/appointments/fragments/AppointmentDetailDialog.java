@@ -568,15 +568,21 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     }
 
     private String getPhoneNumber() {
-        String phone = appointmentDTO.getPayload().getProvider().getPhone();
-        if (StringUtil.isNullOrEmpty(phone)) {
+        String phone = appointmentDTO.getPayload().getLocation().getPrimaryPhone();
+        if (StringUtil.isNullOrEmpty(phone)){
             for (LocationDTO.PhoneDTO phoneDTO : appointmentDTO.getPayload().getLocation().getPhoneDTOs()) {
-                if (phoneDTO.isPrimary()) {
+                if(!phoneDTO.isPrimary()){
                     phone = phoneDTO.getPhoneNumber();
-                    break;
                 }
             }
         }
+
+        if (StringUtil.isNullOrEmpty(phone)){
+            AppointmentsResultModel appointmentModelDto = ((PatientAppointmentPresenter) callback).getMainAppointmentDto();
+            UserPracticeDTO practiceDTO = appointmentModelDto.getPayload().getPractice(appointmentDTO.getMetadata().getPracticeId());
+            phone = practiceDTO.getPracticePhone();
+        }
+
         return phone;
     }
 
