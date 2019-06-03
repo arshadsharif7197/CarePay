@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
@@ -362,7 +363,9 @@ public class DocumentScannerAdapter {
         }
 
         if (bitmap != null) {
-            return SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
+            return SystemUtil.convertBitmapToString(
+                    SystemUtil.getScaledBitmap(bitmap, CarePayConstants.IMAGE_QUALITY_MAX_PX),
+                    Bitmap.CompressFormat.JPEG, 100);
         }
         return null;
     }
