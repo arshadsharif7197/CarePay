@@ -18,9 +18,9 @@ import com.carecloud.carepay.practice.library.signin.adapters.PracticeSearchAdap
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionUserPractice;
 import com.carecloud.carepay.practice.library.signin.interfaces.SelectPracticeCallback;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
-import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ViewUtils;
 
@@ -31,7 +31,8 @@ import java.util.List;
  * Created by lmenendez on 3/9/17.
  */
 
-public class PracticeSearchFragment extends BaseDialogFragment implements PracticeSearchAdapter.SelectPracticeAdapterCallback {
+public class ChoosePracticeFragment extends BaseDialogFragment
+        implements PracticeSearchAdapter.SelectPracticeAdapterCallback {
 
     private List<PracticeSelectionUserPractice> practiceList = new ArrayList<>();
     private PracticeSelectionUserPractice selectedPractice;
@@ -43,12 +44,9 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
 
     private SelectPracticeCallback callback;
 
-    public static PracticeSearchFragment newInstance(PracticeSelectionUserPractice selectedPractice) {
+    public static ChoosePracticeFragment newInstance() {
         Bundle args = new Bundle();
-        if (selectedPractice != null) {
-            DtoHelper.bundleDto(args, selectedPractice);
-        }
-        PracticeSearchFragment fragment = new PracticeSearchFragment();
+        ChoosePracticeFragment fragment = new ChoosePracticeFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -79,9 +77,9 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
 
     @Override
     public void onViewCreated(View view, Bundle icicle) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.search_toolbar);
+        Toolbar toolbar = view.findViewById(R.id.search_toolbar);
         if (toolbar != null) {
-            TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+            TextView title = toolbar.findViewById(R.id.toolbar_title);
             if (title != null) {
                 ViewGroup.LayoutParams layoutParams = title.getLayoutParams();
                 layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -105,7 +103,7 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
             }
         });
 
-        searchView = (SearchView) view.findViewById(R.id.search_entry_view);
+        searchView = view.findViewById(R.id.search_entry_view);
         for (TextView textView : ViewUtils.findChildrenByClass(searchView, TextView.class)) {
             textView.setHintTextColor(getResources().getColor(R.color.optional_gray));
             textView.setTextColor(getResources().getColor(R.color.textview_default_textcolor));
@@ -114,8 +112,9 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
         searchView.setQueryHint(Label.getLabel("search_field_hint"));
         searchView.setOnQueryTextListener(queryTextListener);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        searchRecycler = (RecyclerView) view.findViewById(R.id.search_recycler);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.VERTICAL, false);
+        searchRecycler = view.findViewById(R.id.search_recycler);
         searchRecycler.setLayoutManager(layoutManager);
 
         setAdapter(practiceList);
@@ -125,7 +124,8 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
         PracticeSearchAdapter practiceSearchAdapter;
         if (searchRecycler.getAdapter() == null) {
             practiceSearchAdapter = new PracticeSearchAdapter(getContext(), practiceList, this);
-            selectedPractice = DtoHelper.getConvertedDTO(PracticeSelectionUserPractice.class, getArguments());
+            selectedPractice = getPreviousSelectedPractice(practiceList, ApplicationPreferences
+                    .getInstance().getPracticeId());
             if (selectedPractice != null) {
                 practiceSearchAdapter.setSelectedPractice(selectedPractice);
                 continueButton.setEnabled(true);
@@ -136,6 +136,18 @@ public class PracticeSearchFragment extends BaseDialogFragment implements Practi
             practiceSearchAdapter.setPracticeList(practiceList);
             practiceSearchAdapter.notifyDataSetChanged();
         }
+    }
+
+    private PracticeSelectionUserPractice getPreviousSelectedPractice(List<PracticeSelectionUserPractice> practiceList,
+                                                                      String practiceId) {
+        if (practiceId != null) {
+            for (PracticeSelectionUserPractice practice : practiceList) {
+                if (practice.getPracticeId().equals(practiceId)) {
+                    return practice;
+                }
+            }
+        }
+        return null;
     }
 
 
