@@ -127,6 +127,11 @@ public class FormsFragment extends BaseWebFormFragment {
     }
 
     @Override
+    protected void formScrolledToBottom() {
+        //NA
+    }
+
+    @Override
     protected CheckinFlowState getCheckinFlowState() {
         return CheckinFlowState.CONSENT;
     }

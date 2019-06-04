@@ -212,6 +212,27 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler {
         return string != null && !string.isEmpty() && !string.equals("null");
     }
 
+    public static Bitmap getScaledBitmap(Bitmap original, int maxPixels){
+        int width = original.getWidth();
+        int height = original.getHeight();
+
+        if(width < maxPixels && height < maxPixels){
+            return original;
+        }
+
+        float aspectRatio = (float) width / (float) height;
+        if(aspectRatio > 1){
+            //landscape image
+            width = maxPixels;
+            height = (int) (maxPixels/aspectRatio);
+        }else{
+            //portrait image
+            height = maxPixels;
+            width = (int) (maxPixels/aspectRatio);
+        }
+        return Bitmap.createScaledBitmap(original, width, height, true);
+    }
+
     /**
      * Utility to encode a bitmapinto a base64
      *

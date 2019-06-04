@@ -209,9 +209,9 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
                 headerColor = R.color.dark_blue;
                 timeColor = R.color.colorPrimary;
                 leftActionLabel = Label.getLabel("cancel_appointment_short_label");
-                if(appointmentDTO.getPayload().getVisitType().hasVideoOption()){
+                if (appointmentDTO.getPayload().getVisitType().hasVideoOption()) {
                     rightActionLabel = Label.getLabel("appointment_video_visit_start_short");
-                }else {
+                } else {
                     rightActionLabel = Label.getLabel("start_checkin_label");
                 }
                 middleActionLabel = Label.getLabel("adhoc_show_forms_button_label");
@@ -226,9 +226,9 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
                 headerColor = R.color.dark_blue;
                 timeColor = R.color.colorPrimary;
                 leftActionLabel = Label.getLabel("cancel_appointment_short_label");
-                if(appointmentDTO.getPayload().getVisitType().hasVideoOption()){
+                if (appointmentDTO.getPayload().getVisitType().hasVideoOption()) {
                     rightActionLabel = Label.getLabel("appointment_video_visit_start_short");
-                }else {
+                } else {
                     rightActionLabel = Label.getLabel("start_checkout_label");
                 }
                 middleActionLabel = Label.getLabel("adhoc_show_forms_button_label");
@@ -259,7 +259,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
             public void onClick(View view) {
                 if (null != callback) {
                     if (appointmentDTO.getPayload().getVisitType().hasVideoOption()) {
-                        ((VideoAppointmentCallback)callback).startVideoVisit(appointmentDTO);
+                        ((VideoAppointmentCallback) callback).startVideoVisit(appointmentDTO);
                         dismiss();
                         return;
                     }
@@ -285,13 +285,11 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
                 break;
             case PENDING:
             case CHECKED_IN:
-                if (!authPermissions.canCancelAppointment) {
-                    enableById(R.id.button_left_action, false);
-                }
+                enableById(R.id.button_left_action, authPermissions.canCancelAppointment);
                 break;
             case MISSED:
             default:
-                enableById(R.id.button_left_action, true);
+                enableById(R.id.button_left_action, authPermissions.canCancelAppointment);
                 enableById(R.id.button_right_action, true);
         }
     }

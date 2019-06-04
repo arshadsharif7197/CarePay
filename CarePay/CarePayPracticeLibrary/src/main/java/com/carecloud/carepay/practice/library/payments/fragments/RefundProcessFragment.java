@@ -144,8 +144,7 @@ public class RefundProcessFragment extends BaseDialogFragment implements RefundP
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dismiss();
-                callback.displayHistoryItemDetails(historyItem, paymentsModel);
+                cancel();
             }
         });
 

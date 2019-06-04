@@ -475,19 +475,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     @Override
-    public void onPaymentPlanAction(PaymentsModel paymentsModel) {
-        PaymentPlanFragment fragment = new PaymentPlanFragment();
-
-        Bundle args = new Bundle();
-        Gson gson = new Gson();
-        String paymentsDTOString = gson.toJson(paymentsModel);
-        args.putString(CarePayConstants.PAYMENT_CREDIT_CARD_INFO, paymentsDTOString);
-        fragment.setArguments(args);
-
-        viewHandler.replaceFragment(fragment, true);
-    }
-
-    @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount,
                                       PaymentsModel paymentsModel) {
         if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
@@ -650,6 +637,11 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         userPracticeDTO.setPracticeId(practiceId);
         userPracticeDTO.setPracticeMgmt(practiceMgmt);
         return userPracticeDTO;
+    }
+
+    @Override
+    public void onPaymentCashFinished() {
+        //NA
     }
 
     @Override

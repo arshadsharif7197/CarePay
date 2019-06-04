@@ -16,11 +16,15 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 
 public class PracticeValidPlansFragment extends ValidPlansFragment {
 
-    public static PracticeValidPlansFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount){
+    public static PracticeValidPlansFragment newInstance(PaymentsModel paymentsModel,
+                                                         PendingBalanceDTO selectedBalance,
+                                                         double amount,
+                                                         boolean showModalResult) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
         args.putDouble(KEY_PLAN_AMOUNT, amount);
+        args.putBoolean("showModalResult", showModalResult);
 
         PracticeValidPlansFragment fragment = new PracticeValidPlansFragment();
         fragment.setArguments(args);
@@ -28,13 +32,12 @@ public class PracticeValidPlansFragment extends ValidPlansFragment {
     }
 
     @Override
-    protected void setupToolBar(View view){
+    protected void setupToolBar(View view) {
         View closeButton = view.findViewById(R.id.closeViewLayout);
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
-                callback.onDismissPaymentPlan(paymentsModel);
+                cancel();
             }
         });
 
@@ -42,8 +45,18 @@ public class PracticeValidPlansFragment extends ValidPlansFragment {
 
     @Override
     public void onPaymentPlanItemSelected(PaymentPlanDTO paymentPlan) {
-        super.onPaymentPlanItemSelected(paymentPlan);
-        dismiss();
+        if (getArguments().getBoolean("showModalResult", false)) {
+            PatientModeAddExistingPaymentPlanFragment fragment = PatientModeAddExistingPaymentPlanFragment
+                    .newInstance(paymentsModel, selectedBalance, paymentPlan, paymentPlanAmount);
+            fragment.setOnCancelListener(onDialogCancelListener);
+            callback.displayDialogFragment(fragment, true);
+            hideDialog();
+        } else {
+            dismiss();
+            PatientModeAddExistingPaymentPlanFullFragment fragment = PatientModeAddExistingPaymentPlanFullFragment
+                .newInstance(paymentsModel, selectedBalance, paymentPlan, paymentPlanAmount);
+            callback.navigateToFragment(fragment, true);
+        }
     }
 
 

@@ -84,6 +84,11 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     protected CheckBox setAsDefaultCheckBox;
     protected CheckBox useProfileAddressCheckBox;
 
+    protected TextView nameOnCardRequiredTextView;
+    protected TextView creditCardNoRequiredTextView;
+    protected TextView verificationCodeRequiredTextView;
+    protected TextView expirationDateRequiredTextView;
+
     protected EditText address1EditText;
     protected EditText address2EditText;
     protected EditText zipCodeEditText;
@@ -198,8 +203,10 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
                 if (!StringUtil.isNullOrEmpty(getCardNumber()) && type != null) {
                     cardTypeTextView.setVisibility(View.VISIBLE);
                     cardTypeTextView.setText(type);
+                    creditCardNoRequiredTextView.setVisibility(View.GONE);
                 } else {
                     cardTypeTextView.setVisibility(View.GONE);
+                    creditCardNoRequiredTextView.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -243,6 +250,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         @Override
         public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
             validateCreditCardDetails();
+            checkRequiredFields(charSequence);
         }
 
         @Override
@@ -280,9 +288,6 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
                         @Override
                         public void onClick(View view) {
                             cancel();
-                            if (callback != null) {
-                                callback.onPayButtonClicked(amountToMakePayment, paymentsModel);
-                            }
                         }
                     });
                 }
@@ -299,17 +304,21 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     private void initializeViews(View view) {
         creditCardNoTextInput = view.findViewById(R.id.creditCardNoTextInputLayout);
         creditCardNoEditText = view.findViewById(R.id.creditCardNoEditText);
+        creditCardNoRequiredTextView = view.findViewById(R.id.creditCardNoRequiredTextView);
 
         cardTypeTextView = view.findViewById(R.id.cardTypeTextView);
 
         nameOnCardTextInputLayout = view.findViewById(R.id.nameOnCardTextInputLayout);
         nameOnCardEditText = view.findViewById(R.id.nameOnCardEditText);
+        nameOnCardRequiredTextView = view.findViewById(R.id.nameOnCardRequiredTextView);
 
         verificationCodeTextInput = view.findViewById(R.id.verificationCodeTextInputLayout);
         verificationCodeEditText = view.findViewById(R.id.verificationCodeEditText);
+        verificationCodeRequiredTextView = view.findViewById(R.id.verificationCodeRequiredTextView);
 
         expirationDateTextInput = view.findViewById(R.id.expirationDateInputLayout);
         expirationDateEditText = view.findViewById(R.id.expirationDateEditText);
+        expirationDateRequiredTextView = view.findViewById(R.id.expirationDateRequiredTextView);
         expirationDateEditText.setOnClickListener(pickDateListener);
 
         saveCardOnFileCheckBox = view.findViewById(R.id.saveCardOnFileCheckBox);
@@ -601,6 +610,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         expirationDateEditText.setText(DateUtil.getInstance().formatMonthYear(year, monthOfYear));
         expirationDateEditText.getOnFocusChangeListener().onFocusChange(expirationDateEditText,
                 !StringUtil.isNullOrEmpty(expirationDateEditText.getText().toString().trim()));
+        expirationDateRequiredTextView.setVisibility(View.GONE);
         validateCreditCardDetails();
     }
 
@@ -657,6 +667,14 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
             nextButton.setEnabled(false);
             nextButton.setClickable(false);
             return false;
+        }
+    }
+
+    private void checkRequiredFields(CharSequence charSequence) {
+        if (nameOnCardEditText.getText().hashCode() == charSequence.hashCode()) {
+            nameOnCardRequiredTextView.setVisibility(!(nameOnCardEditText.getText().toString().trim().length() > 0) ? View.VISIBLE : View.GONE);
+        } else if (verificationCodeEditText.getText().hashCode() == charSequence.hashCode()) {
+            verificationCodeRequiredTextView.setVisibility(!(verificationCodeEditText.getText().toString().length() > 2) ? View.VISIBLE: View.GONE);
         }
     }
 

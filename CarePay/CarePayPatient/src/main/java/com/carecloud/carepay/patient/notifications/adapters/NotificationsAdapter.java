@@ -19,6 +19,7 @@ import com.carecloud.carepay.patient.notifications.models.NotificationItem;
 import com.carecloud.carepay.patient.notifications.models.NotificationItemMetadata;
 import com.carecloud.carepay.patient.notifications.models.NotificationType;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
@@ -220,9 +221,11 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                     public void onClick(View view) {
                         String appPackageName = context.getPackageName();
                         try {
-                            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                            context.startActivity(new Intent(Intent.ACTION_VIEW,
+                                    Uri.parse("market://details?id=" + appPackageName)));
                         } catch (android.content.ActivityNotFoundException anfe) {
-                            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                            context.startActivity(new Intent(Intent.ACTION_VIEW,
+                                    Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
                         }
                     }
                 });
@@ -448,15 +451,21 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_checked_out);
                 break;
             }
+            case DENIED:
+            case REQUESTED_UPCOMING:
             case REQUESTED: {
-                holder.header.setText(Label.getLabel("notification_denied_appointment_title"));
-                holder.header.setTextColor(ContextCompat.getColor(context, R.color.remove_red));
-                setFormattedMessage(holder.message, Label.getLabel("notification_denied_appointment_message"),
-                        appointmentDate, provider.getName());
-                holder.initials.setTextColor(ContextCompat.getColor(context, R.color.remove_red));
-                holder.initials.setBackgroundResource(R.drawable.round_list_tv_red_border);
-                holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_denied);
-                holder.cellAvatar.setVisibility(View.VISIBLE);
+                if ("denied".equals(notificationItem.getPayload().getNotificationSubType())) {
+                    notificationItem.getPayload().getAppointment().getPayload()
+                            .getAppointmentStatus().setCode(CarePayConstants.DENIED);
+                    holder.header.setText(Label.getLabel("notification_denied_appointment_title"));
+                    holder.header.setTextColor(ContextCompat.getColor(context, R.color.remove_red));
+                    setFormattedMessage(holder.message, Label.getLabel("notification_denied_appointment_message"),
+                            appointmentDate, provider.getName());
+                    holder.initials.setTextColor(ContextCompat.getColor(context, R.color.remove_red));
+                    holder.initials.setBackgroundResource(R.drawable.round_list_tv_red_border);
+                    holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_denied);
+                    holder.cellAvatar.setVisibility(View.VISIBLE);
+                }
                 break;
             }
             default:
@@ -467,7 +476,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         if (!StringUtil.isNullOrEmpty(photoUrl)) {
             loadImage(holder, photoUrl, false);
         }
-
     }
 
     private void loadImage(final NotificationViewHolder holder, String photoUrl,
@@ -514,16 +522,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 }
             }
         }
-
         textView.setText(stringBuilder);
-    }
-
-    private String getTimeStamp(NotificationItem notificationItem) {
-        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(notificationItem.getMetadata().getCreatedDt());
-        if (dateUtil.isToday()) {
-            return Label.getLabel("today_label");
-        }
-        return dateUtil.toStringWithFormatMmSlashDdSlashYyyy();
     }
 
     private void resetViews(NotificationViewHolder holder) {
@@ -537,6 +536,14 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.deleteButton.setVisibility(View.VISIBLE);
         holder.undoButton.setVisibility(View.GONE);
         holder.notificationItemView.setVisibility(View.VISIBLE);
+    }
+
+    private String getTimeStamp(NotificationItem notificationItem) {
+        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(notificationItem.getMetadata().getCreatedDt());
+        if (dateUtil.isToday()) {
+            return Label.getLabel("today_label");
+        }
+        return dateUtil.toStringWithFormatMmSlashDdSlashYyyy();
     }
 
     class NotificationViewHolder extends SwipeViewHolder {

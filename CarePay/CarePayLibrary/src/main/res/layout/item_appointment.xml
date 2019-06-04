@@ -145,6 +145,7 @@
                 android:paddingEnd="@dimen/default_title_indicator_title_padding"
                 android:paddingStart="0dp"
                 android:textColor="@color/cadet_gray"
+                android:textAllCaps="true"
                 android:textSize="@dimen/apt_list_upcoming_month_txt_size"
                 app:customAssetFont="proxima_nova_regular"/>
 

@@ -84,7 +84,6 @@ public class AddRetailItemFragment extends BaseDialogFragment implements AddReta
             @Override
             public void onClick(View view) {
                 cancel();
-                callback.onDismissAddItemFragment();
             }
         });
 
