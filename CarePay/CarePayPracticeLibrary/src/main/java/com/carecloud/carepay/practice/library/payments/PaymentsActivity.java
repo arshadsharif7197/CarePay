@@ -82,11 +82,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         ShamrockPaymentsCallback, PaymentPlanEditInterface, PaymentPlanCreateInterface {
 
     private PaymentsModel paymentsModel;
-    private FilterModel filter;
-
-    private String practicePaymentsFilter;
-    private String practicePaymentsFilterFindPatientByName;
-    private String practicePaymentsFilterClearFilters;
+    private FilterModel filterModel;
 
     private Date startDate;
     private Date endDate;
@@ -94,6 +90,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     private PaymentHistoryItem recentRefundItem;
     private String patientId;
     private boolean paymentMethodCancelled = false;
+    private View filterTextView;
+    private View filterTextViewOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,11 +101,34 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_practice_payment);
 
-        filter = new FilterModel();
+        filterModel = new FilterModel();
         paymentsModel = getConvertedDTO(PaymentsModel.class);
-
-        setLabels();
         populateList();
+        setUpUI();
+    }
+
+    private void setUpUI() {
+        findViewById(R.id.practice_payment_find_patient).setOnClickListener(onFindPatientClick());
+        findViewById(R.id.goBackTextview).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+        findViewById(R.id.change_date_range).setOnClickListener(selectDateRange);
+        setUpFilter();
+    }
+
+    private void setUpFilter() {
+        filterTextView = findViewById(R.id.filterTextView);
+        filterTextView.setOnClickListener(onFilterIconClick());
+        filterTextViewOn = findViewById(R.id.filterTextViewOn);
+        filterTextViewOn.setOnClickListener(onFilterIconClick());
+        if (filterModel.areThereActiveFilters()) {
+            filterTextViewOn.setVisibility(View.VISIBLE);
+        } else {
+            filterTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -123,12 +144,6 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         recentRefundItem = null;
     }
 
-    private void setLabels() {
-        practicePaymentsFilter = Label.getLabel("practice_payments_filter");
-        practicePaymentsFilterFindPatientByName = Label.getLabel("practice_payments_filter_find_patient_by_name");
-        practicePaymentsFilterClearFilters = Label.getLabel("practice_payments_filter_clear_filters");
-    }
-
     private void populateList() {
         if (paymentsModel != null && paymentsModel.getPaymentPayload().getPatientBalances() != null) {
 
@@ -138,9 +153,9 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             String userId = getApplicationMode().getUserPracticeDTO().getUserId();
             Set<String> providersSavedFilteredIds = getApplicationPreferences().getSelectedProvidersIds(practiceId, userId);
             Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
-            filter.setDoctors(addProviderOnProviderFilterList(paymentsModel, providersSavedFilteredIds));
-            filter.setLocations(addLocationOnFilterList(paymentsModel, locationsSavedFilteredIds));
-            filter.setPatients(addPatientOnFilterList(patientBalancesList));
+            filterModel.setDoctors(addProviderOnProviderFilterList(paymentsModel, providersSavedFilteredIds));
+            filterModel.setLocations(addLocationOnFilterList(paymentsModel, locationsSavedFilteredIds));
+            filterModel.setPatients(addPatientOnFilterList(patientBalancesList));
 
             initializePatientListView();
 
@@ -148,15 +163,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
                     String.format(Locale.getDefault(), "%1s", patientBalancesList.size()));
         }
 
-        findViewById(R.id.practice_payment_find_patient).setOnClickListener(onFindPatientClick());
-        findViewById(R.id.filterTextView).setOnClickListener(onFilterIconClick());
-        findViewById(R.id.goBackTextview).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
-        findViewById(R.id.change_date_range).setOnClickListener(selectDateRange);
+
     }
 
     private void initializePatientListView() {
@@ -265,9 +272,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             @Override
             public void onClick(View view) {
                 FilterDialog filterDialog = new FilterDialog(PaymentsActivity.this,
-                        findViewById(R.id.activity_practice_payment), filter,
-                        practicePaymentsFilter, practicePaymentsFilterFindPatientByName,
-                        practicePaymentsFilterClearFilters);
+                        findViewById(R.id.activity_practice_payment), filterModel
+                );
 
                 filterDialog.showPopWindow();
             }
@@ -340,12 +346,18 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     @Override
     public void applyFilter() {
         TwoColumnPatientListView patientListView = findViewById(R.id.list_patients);
-        patientListView.applyFilter(filter);
+        patientListView.applyFilter(filterModel);
     }
 
     @Override
     public void refreshData() {
         onRangeSelected(startDate, endDate);
+    }
+
+    @Override
+    public void showFilterFlag(boolean areThereActiveFilters) {
+        filterTextView.setVisibility(areThereActiveFilters ? View.GONE : View.VISIBLE);
+        filterTextViewOn.setVisibility(areThereActiveFilters ? View.VISIBLE : View.GONE);
     }
 
 

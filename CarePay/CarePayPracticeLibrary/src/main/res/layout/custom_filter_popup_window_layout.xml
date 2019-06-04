@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -19,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="3"
-        android:background="@color/popup_background"
+        android:background="@color/filterBackground"
         android:focusable="true"
         android:focusableInTouchMode="true">
 
@@ -30,27 +31,28 @@
             android:layout_alignParentTop="true"
             android:padding="@dimen/custom_filter_popup_header_padding">
 
+            <ImageView
+                android:id="@+id/closeFilterWindowImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:padding="@dimen/view_padding"
+                android:src="@drawable/icn_close" />
+
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/titleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
+                android:layout_toEndOf="@id/closeFilterWindowImageView"
                 android:drawablePadding="@dimen/drawable_padding"
-                android:drawableStart="@drawable/icn_filter"
                 android:gravity="center_vertical"
                 android:includeFontPadding="false"
                 android:padding="@dimen/view_padding"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/filterTitleTextSize"
-                app:customAssetFont="gotham_rounded_bold" />
+                app:customAssetFont="gotham_rounded_bold"
+                breeze:textKey="practice_checkin_filter" />
 
-            <ImageView
-                android:id="@+id/closeFilterWindowImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:padding="@dimen/view_padding"
-                android:src="@drawable/icn_close" />
         </RelativeLayout>
 
         <View
@@ -61,7 +63,7 @@
             android:layout_marginBottom="@dimen/view_margin"
             android:background="@color/popup_list_text_color" />
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/search_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -71,17 +73,20 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                 android:id="@+id/searchPatientEditText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/searchPatientEditTextHeight"
                 android:layout_marginLeft="@dimen/view_margin"
                 android:layout_marginRight="@dimen/view_margin"
                 android:background="@drawable/search_edittext_background"
+                android:drawableStart="@drawable/ic_search"
                 android:drawablePadding="@dimen/drawable_padding"
-                android:drawableStart="@drawable/icn_search_small"
+                android:imeOptions="actionSearch"
+                android:lines="1"
                 android:maxLines="1"
-                android:paddingBottom="@dimen/drawable_padding"
-                android:paddingEnd="@dimen/search_edittext_padding_right"
                 android:paddingStart="@dimen/drawable_padding"
                 android:paddingTop="@dimen/drawable_padding"
+                android:paddingEnd="@dimen/search_edittext_padding_right"
+                android:paddingBottom="@dimen/drawable_padding"
+                android:singleLine="true"
                 android:textSize="@dimen/searchEditTextTextSize"
                 app:customAssetFont="proxima_nova_semi_bold" />
 
@@ -89,34 +94,45 @@
                 android:id="@+id/clearSearchImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/clear_search_button_margin"
+                android:layout_marginEnd="@dimen/dimen_10dp"
                 android:padding="@dimen/view_padding"
                 android:src="@drawable/icn_close_small"
                 android:visibility="gone" />
-        </LinearLayout>
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayButton
-            android:id="@+id/clearFiltersButton"
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/clearButtonContainer"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/clearFiltersButtonHeight"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/overlay_green"
-            android:textSize="@dimen/clearFiltersButtonTextSize"
-            android:visibility="visible"
-            app:customAssetFont="gotham_rounded_medium"
-            tools:text="@string/not_defined" />
+            android:background="@color/filterBackground"
+            android:padding="@dimen/practiceClearButtonContainerPadding">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/clearFiltersButton"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/clearFiltersButtonHeight"
+                android:background="@drawable/button_rounded_blue_selector"
+                android:textAllCaps="false"
+                android:textColor="@color/clear_filter_text_color_selector"
+                android:textSize="@dimen/clearFiltersButtonTextSize"
+                android:visibility="visible"
+                breeze:textKey="practice_checkin_filter_clear_filters"
+                app:customAssetFont="gotham_rounded_medium"
+                tools:text="Clear Filters" />
+
+        </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/filterableDataRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
-            android:layout_above="@id/clearFiltersButton"
-            android:layout_below="@id/search_layout"
-            android:layout_marginLeft="@dimen/view_margin"
-            android:layout_marginRight="@dimen/view_margin"
-            android:layout_marginTop="@dimen/view_margin" />
-
+            android:layout_above="@id/clearButtonContainer"
+            android:layout_below="@id/search_layout"/>
 
     </RelativeLayout>
 </LinearLayout>

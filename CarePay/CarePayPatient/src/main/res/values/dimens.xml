@@ -15,4 +15,9 @@
     <dimen name="visitSummaryExportButtonTopMargin">15dp</dimen>
     <dimen name="encryptedCheckBoxVerticalMargin">10dp</dimen>
     <dimen name="commonDialogPadding">10dp</dimen>
+
+    <!--Rate Dialog-->
+    <dimen name="rateDialogPadding">20dp</dimen>
+    <dimen name="rateDialogOptionHeight">60dp</dimen>
+    <dimen name="rateDialogTitleTextSize">21sp</dimen>
 </resources>
