@@ -141,7 +141,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
     private void showRateDialogFragment() {
         if (ApplicationPreferences.getInstance().shouldShowRateDialog()) {
-            displayDialogFragment(new RateDialog(), true);
+            displayDialogFragment(RateDialog.newInstance(), true);
         }
     }
 
