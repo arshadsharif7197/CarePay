@@ -21,6 +21,7 @@ import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.patient.rate.RateDialog;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -107,7 +108,9 @@ public class NotificationActivity extends MenuPatientActivity
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            displayDialogFragment(RateDialog.newInstance(), true);
+                            if(ApplicationPreferences.getInstance().shouldShowRateDialog()){
+                                displayDialogFragment(RateDialog.newInstance(), true);
+                            }
                         }
                     }, 100);
                 }
