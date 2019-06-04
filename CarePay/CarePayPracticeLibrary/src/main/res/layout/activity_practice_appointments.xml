@@ -12,6 +12,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingStart="@dimen/paymentContainerHorizontalMargin"
+        android:paddingEnd="@dimen/paymentContainerHorizontalMargin"
         android:background="?practiceActionBarColor"
         android:padding="4dp">
 
@@ -26,12 +28,10 @@
             android:drawablePadding="@dimen/dimen_10dp"
             android:gravity="center_vertical"
             android:includeFontPadding="false"
-            android:paddingStart="@dimen/dimen_10dp"
-            android:paddingEnd="10dp"
             android:textColor="@color/white"
             android:textSize="@dimen/goBackTextSize"
             app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="go_back" />
+            breeze:textKey="practice_checkin_back_label" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/practice_title"
@@ -66,7 +66,7 @@
                 android:drawablePadding="@dimen/dimen_10dp"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:textColor="@color/white"
+                android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/filterLabelTextSize"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="practice_payments_findPatient_label" />
@@ -79,7 +79,7 @@
                 android:drawablePadding="@dimen/dimen_10dp"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:textColor="@color/white"
+                android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/filterLabelTextSize"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="practice_checkin_filter" />
@@ -189,6 +189,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
+            android:layout_marginStart="@dimen/practiceCounterStartMargin"
             android:layout_centerVertical="true"
             android:textColor="@color/white"
             android:textSize="@dimen/checkinColumnTitleTextSize"
@@ -198,14 +199,14 @@
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/practice_patient_count"
-            android:layout_width="@dimen/queueCounterNoBorderWidth"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/queueCounterNoBorderHeight"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/dimen_8dp"
             android:layout_toEndOf="@+id/practice_patient_count_label"
             android:background="@drawable/queue_counter_noborder_background"
             android:gravity="center"
-            android:minWidth="@dimen/dimen_34dp"
+            android:minWidth="@dimen/queueCounterNoBorderWidth"
             android:padding="@dimen/dimen_3dp"
             android:textColor="@color/practice_mode_counter_text"
             android:textSize="@dimen/checkInTitleCounterTextSize"
@@ -249,8 +250,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="@dimen/paymentContainerHorizontalMargin"
-        android:layout_marginTop="@dimen/listPatientsMarginTop"
         android:layout_marginEnd="@dimen/paymentContainerHorizontalMargin"
+        android:layout_marginTop="@dimen/listPatientsMarginTop"
         android:layout_marginBottom="@dimen/paymentContainerBottomMargin"
         android:background="@drawable/payments_list_background" />
 

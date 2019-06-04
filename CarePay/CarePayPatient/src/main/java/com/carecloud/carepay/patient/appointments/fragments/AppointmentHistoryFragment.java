@@ -221,7 +221,7 @@ public class AppointmentHistoryFragment extends BaseFragment
                         List<AppointmentDTO> appointments = filterAppointments(appointmentDto
                                 .getPayload().getAppointments());
                         if (appointments.size() > 0) {
-                            showHistoricAppointments(appointmentDto.getPayload().getAppointments(), refresh);
+                            showHistoricAppointments(appointments, refresh);
                         } else {
                             showNoAppointmentsLayout();
                         }

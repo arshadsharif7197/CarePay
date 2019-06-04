@@ -16,7 +16,6 @@ import com.carecloud.carepay.practice.library.appointments.createappointment.Ava
 import com.carecloud.carepay.practice.library.appointments.createappointment.CreateAppointmentFragment;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAppointmentDialog;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeModeRequestAppointmentDialog;
-import com.carecloud.carepay.practice.library.appointments.dtos.PracticeAppointmentDTO;
 import com.carecloud.carepay.practice.library.appointments.interfaces.PracticeAppointmentDialogListener;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInPayloadDTO;
@@ -28,7 +27,6 @@ import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
 import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.FormsResponsibilityFragmentDialog;
-import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFragmentDialog;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -54,10 +52,8 @@ import com.carecloud.carepaylibray.payments.interfaces.PaymentDetailInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 import com.squareup.timessquare.CalendarPickerView;
@@ -88,8 +84,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     private TwoColumnPatientListView patientListView;
     private boolean needsToConfirmAppointmentCreation;
     private boolean wasCalledFromThisClass;
-    private String confirmationMessageText;
-    private boolean updateOnSuccess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -469,94 +463,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         setPatient(appointmentDTO.getPayload().getPatient());
     }
 
-    private void transitionAppointment(TransitionDTO transitionDTO,
-                                       AppointmentDTO appointmentDTO,
-                                       boolean updateOnSuccess,
-                                       String event,
-                                       boolean shouldRefresh) {
-        this.updateOnSuccess = updateOnSuccess;
-
-        Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("appointment_id", appointmentDTO.getPayload().getId());
-
-        getWorkflowServiceHelper().execute(transitionDTO, getAppointmentsServiceCallback(event, appointmentDTO, shouldRefresh), queryMap);
-    }
-
-    WorkflowServiceCallback getAppointmentsServiceCallback(final String event, final AppointmentDTO appointmentDTO, final boolean shouldRefresh) {
-        return new WorkflowServiceCallback() {
-            @Override
-            public void onPreExecute() {
-                showProgressDialog();
-            }
-
-            @Override
-            public void onPostExecute(WorkflowDTO workflowDTO) {
-                hideProgressDialog();
-                updateAppointment(workflowDTO);
-                showSuccessToast(Label.getLabel(confirmationMessageText));
-                DtoHelper.putExtra(getIntent(), checkInDTO);
-                initializeCheckinDto();
-                applyFilter();
-                if (shouldRefresh) {
-                    refreshData();
-                }
-
-                updateOnSuccess = false;
-
-                String[] params = {getString(R.string.param_appointment_type),
-                        getString(R.string.param_practice_id),
-                        getString(R.string.param_practice_name),
-                        getString(R.string.param_patient_id),
-                        getString(R.string.param_provider_id),
-                        getString(R.string.param_location_id)};
-                String[] values = {appointmentDTO.getPayload().getVisitType().getName(),
-                        getApplicationMode().getUserPracticeDTO().getPracticeId(),
-                        getApplicationMode().getUserPracticeDTO().getPracticeName(),
-                        appointmentDTO.getMetadata().getPatientId(),
-                        appointmentDTO.getPayload().getProvider().getGuid(),
-                        appointmentDTO.getPayload().getLocation().getGuid()};
-                MixPanelUtil.logEvent(event, params, values);
-            }
-
-            @Override
-            public void onFailure(String exceptionMessage) {
-                hideProgressDialog();
-                showErrorNotification(exceptionMessage);
-                Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-
-                updateOnSuccess = false;
-            }
-
-        };
-    }
-
-    private void updateAppointment(WorkflowDTO workflowDTO) {
-        CheckInPayloadDTO payload = checkInDTO.getPayload();
-        if (null == payload) {
-            return;
-        }
-
-        PracticeAppointmentDTO practiceAppointmentDTO = DtoHelper
-                .getConvertedDTO(PracticeAppointmentDTO.class, workflowDTO);
-        AppointmentDTO newAppointmentDTO = practiceAppointmentDTO.getPayload().getPracticeAppointments();
-
-        List<AppointmentDTO> appointments = payload.getAppointments();
-        for (int i = 0; i < appointments.size(); i++) {
-            AppointmentDTO oldAppointmentDTO = appointments.get(i);
-            if (oldAppointmentDTO.getPayload().getId()
-                    .equalsIgnoreCase(newAppointmentDTO.getPayload().getId())) {
-
-                appointments.remove(i);
-
-                if (updateOnSuccess) {
-                    appointments.add(newAppointmentDTO);
-                }
-
-                break;
-            }
-        }
-    }
-
     private void showResponsibilityFragment(PaymentsModel paymentsModel) {
         String tag = ResponsibilityFragmentDialog.class.getName();
         ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(paymentsModel);
@@ -666,23 +572,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     @Override
-    public void onDetailItemClick(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem) {
-        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-                .newInstance(paymentsModel, paymentLineItem, false);
-        displayDialogFragment(dialog, false);
-    }
-
-    @Override
-    public void onDetailCancelClicked(PaymentsModel paymentsModel) {
-        showResponsibilityFragment(paymentsModel);
-    }
-
-    @Override
-    public void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
-
-    }
-
-    @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
 
     }
@@ -695,13 +584,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     @Override
     public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
 
-    }
-
-    @Override
-    public void displayBalanceDetails(PaymentsModel paymentsModel,
-                                      PendingBalancePayloadDTO paymentLineItem,
-                                      PendingBalanceDTO selectedBalance) {
-        onDetailItemClick(paymentsModel, paymentLineItem);
     }
 
     @Override
@@ -772,6 +654,16 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         showFragment(fragment);
     }
 
+    @Override
+    public void onPaymentCashFinished() {
+        //NA
+    }
+
+    @Override
+    public void navigateToFragment(Fragment fragment, boolean addToBackStack) {
+        //NA
+    }
+
     private WorkflowServiceCallback startVideoVisitCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
@@ -788,7 +680,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             intent.setAction(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(url));
 
-            if(intent.resolveActivity(getContext().getPackageManager()) != null){
+            if (intent.resolveActivity(getContext().getPackageManager()) != null) {
                 startActivityForResult(intent, 555);
             }
         }

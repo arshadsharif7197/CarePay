@@ -14,6 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?practiceActionBarColor"
+        android:paddingStart="@dimen/paymentContainerHorizontalMargin"
+        android:paddingEnd="@dimen/paymentContainerHorizontalMargin"
         android:padding="4dp">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -27,12 +29,10 @@
             android:drawableStart="@drawable/icn_arrow_left"
             android:gravity="center_vertical"
             android:includeFontPadding="false"
-            android:paddingEnd="10dp"
-            android:paddingStart="@dimen/dimen_10dp"
             android:textColor="@color/white"
             android:textSize="@dimen/goBackTextSize"
             app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="go_back" />
+            breeze:textKey="practice_checkin_back_label" />
 
         <LinearLayout
             android:id="@+id/filterLayout"
@@ -43,8 +43,6 @@
             android:background="?attr/selectableItemBackground"
             android:gravity="center_vertical|end"
             android:orientation="horizontal"
-            android:paddingEnd="10dp"
-            android:paddingStart="0dp"
             tools:ignore="RelativeOverlap">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -54,7 +52,7 @@
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:drawablePadding="@dimen/dimen_10dp"
-                android:textColor="@color/white"
+                android:textColor="@color/colorPrimary"
                 android:drawableStart="@drawable/icn_filter"
                 android:textSize="@dimen/filterLabelTextSize"
                 app:customAssetFont="proxima_nova_regular"

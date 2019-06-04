@@ -135,13 +135,6 @@ public abstract class BaseFragment extends Fragment implements ISession {
         }
     }
 
-    protected void hideDefaultActionBar() {
-        ActionBar actionBar = ((AppCompatActivity) getActivityProxy()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
-    }
-
     protected void showDefaultActionBar() {
         ActionBar actionBar = ((AppCompatActivity) getActivityProxy()).getSupportActionBar();
         if (actionBar != null) {

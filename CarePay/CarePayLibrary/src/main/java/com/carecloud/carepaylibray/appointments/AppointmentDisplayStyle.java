@@ -10,6 +10,7 @@ public enum AppointmentDisplayStyle implements Serializable {
     PENDING,
     PENDING_UPCOMING,
 
+    DENIED,
     REQUESTED,
     REQUESTED_UPCOMING,
 
