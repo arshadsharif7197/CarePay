@@ -196,7 +196,7 @@ public abstract class OneTimePaymentDialog extends PartialPaymentDialog {
                                 setSelectedDate(selectedDate);
                             }
                         });
-        SystemUtil.hideSoftKeyboard(getContext(), getActivity().getCurrentFocus());
+        SystemUtil.hideSoftKeyboard(getActivity());
         ((FragmentActivityInterface) callback).displayDialogFragment(fragment, true);
     }
 
