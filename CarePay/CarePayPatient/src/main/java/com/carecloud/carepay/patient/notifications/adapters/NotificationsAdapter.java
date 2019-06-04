@@ -192,6 +192,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icn_survey));
         holder.imageView.setVisibility(View.VISIBLE);
         holder.initials.setBackgroundResource(R.drawable.round_list_tv_primary);
+        holder.initials.setText("");
         holder.header.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
         holder.header.setText(Label.getLabel("survey.notificationList.item.title.newSurvey"));
         String message = Label.getLabel("survey.notificationList.item.message.newSurvey");
@@ -475,7 +476,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         if (!StringUtil.isNullOrEmpty(photoUrl)) {
             loadImage(holder, photoUrl, false);
         }
-
     }
 
     private void loadImage(final NotificationViewHolder holder, String photoUrl,
@@ -522,16 +522,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 }
             }
         }
-
         textView.setText(stringBuilder);
-    }
-
-    private String getTimeStamp(NotificationItem notificationItem) {
-        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(notificationItem.getMetadata().getCreatedDt());
-        if (dateUtil.isToday()) {
-            return Label.getLabel("today_label");
-        }
-        return dateUtil.toStringWithFormatMmSlashDdSlashYyyy();
     }
 
     private void resetViews(NotificationViewHolder holder) {
@@ -545,6 +536,14 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.deleteButton.setVisibility(View.VISIBLE);
         holder.undoButton.setVisibility(View.GONE);
         holder.notificationItemView.setVisibility(View.VISIBLE);
+    }
+
+    private String getTimeStamp(NotificationItem notificationItem) {
+        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(notificationItem.getMetadata().getCreatedDt());
+        if (dateUtil.isToday()) {
+            return Label.getLabel("today_label");
+        }
+        return dateUtil.toStringWithFormatMmSlashDdSlashYyyy();
     }
 
     class NotificationViewHolder extends SwipeViewHolder {
