@@ -14,6 +14,7 @@ public class CarePayConstants {
 
     // Generic Constants
     public static final int HOME_PRESSED = 999;
+    public static final int IMAGE_QUALITY_MAX_PX = 1800;
 
     //DeviceType
     public static final String CLOVER_DEVICE = "Clover";
@@ -28,6 +29,7 @@ public class CarePayConstants {
     public static final String PENDING = "P";
     public static final String CHECKED_IN = "I";
     public static final String CANCELLED = "C";
+    public static final String DENIED = "D";
     public static final String REQUESTED = "R";
     public static final String CHECKING_IN = "CI";
     public static final String CHECKED_OUT = "O";
@@ -179,6 +181,7 @@ public class CarePayConstants {
     public static final String GET_STARTED_URL = "/get_started";
     public static final String PATIENT_ID = "patientId";
     public static final String NOTIFICATIONS_FLOW = "notifications";
+    public static final String HANDLE_HOME = "handleHome";
 
 
     //Video Visit

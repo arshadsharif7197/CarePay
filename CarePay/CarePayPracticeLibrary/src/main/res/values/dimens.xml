@@ -273,7 +273,9 @@
     <dimen name="dialog_header_height">205dp</dimen>
 
     <dimen name="profilePicMarginTop">26dp</dimen>
-    <dimen name="checkinPatientNameTextSize">34sp</dimen>
+    <dimen name="checkinPatientNameTextSize">42sp</dimen>
+    <dimen name="checkinPatientNameMinTextSize">18sp</dimen>
+    <dimen name="checkinPatientNameMarginSize">20dp</dimen>
     <dimen name="doctorNameTextSize">18sp</dimen>
     <dimen name="balanceTextPadding">19dp</dimen>
     <dimen name="balanceTextSize">24sp</dimen>
@@ -564,6 +566,7 @@
     <dimen name="visitTypeContainerTopMargin">25dp</dimen>
     <dimen name="reasonTypeValueTextSize">17sp</dimen>
     <dimen name="reasonForVisitPadding">14dp</dimen>
+    <dimen name="appointmentRequestDialogTopPadding">30dp</dimen>
 
     <!--Check In Screen-->
     <dimen name="checkInShadowEndMargin">-25dp</dimen>
@@ -896,6 +899,7 @@
     <!--DOB Verification-->
     <dimen name="dobVerificationTitleTextSize">36sp</dimen>
     <dimen name="dobVerificationSubTitleTextSize">22sp</dimen>
+    <dimen name="largeAlertMessageLabelPadding">5dp</dimen>
 
     <dimen name="practiceClearButtonContainerPadding">15dp</dimen>
     <dimen name="searchPatientEditTextHeight">50dp</dimen>

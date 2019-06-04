@@ -149,8 +149,7 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
         if (paymentPlanPostModel != null) {
             paymentPlanPostModel.setPapiPaymentMethod(papiPaymentMethod);
             paymentPlanPostModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
-            dismiss();
-            callback.onDisplayPaymentPlanTerms(paymentsModel, paymentPlanPostModel);
+            onDisplayPaymentPlanTerms(paymentsModel, paymentPlanPostModel);
         }
 
         if (paymentPlanDTO != null) {
@@ -165,6 +164,12 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
             }
             makePlanPayment();
         }
+    }
+
+    protected void onDisplayPaymentPlanTerms(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
+        dismiss();
+        PaymentPlanTermsFragment fragment = PaymentPlanTermsFragment.newInstance(paymentsModel, paymentPlanPostModel);
+        callback.replaceFragment(fragment, true);
     }
 
     private void makePlanPayment() {

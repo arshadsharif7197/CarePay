@@ -1,7 +1,7 @@
 package com.carecloud.carepay.patient.notifications.models;
 
-import com.carecloud.carepaylibray.survey.model.PendingSurveyDto;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.survey.model.PendingSurveyDto;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -18,6 +18,10 @@ public class NotificationItemPayload {
     @SerializedName("notification_type")
     @Expose
     private NotificationType notificationType;
+
+    @SerializedName("notification_subtype")
+    @Expose
+    private String notificationSubType;
 
     @SerializedName("read_status")
     @Expose
@@ -57,6 +61,14 @@ public class NotificationItemPayload {
 
     public void setNotificationType(NotificationType notificationType) {
         this.notificationType = notificationType;
+    }
+
+    public String getNotificationSubType() {
+        return notificationSubType;
+    }
+
+    public void setNotificationSubType(String notificationSubType) {
+        this.notificationSubType = notificationSubType;
     }
 
     public NotificationStatus getReadStatus() {

@@ -114,6 +114,7 @@
                         app:customAssetFont="proxima_nova_semi_bold" />
 
                     <include
+                        android:id="@+id/nameOnCardRequiredTextView"
                         layout="@layout/layout_required_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -177,6 +178,7 @@
                         app:customAssetFont="proxima_nova_semi_bold" />
 
                     <include
+                        android:id="@+id/creditCardNoRequiredTextView"
                         layout="@layout/layout_required_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -235,7 +237,9 @@
                         android:textColor="@color/yellowGreen"
                         android:textSize="@dimen/signup_optional_label_text_size"
                         app:customAssetFont="proxima_nova_semi_bold" />
+
                     <include
+                        android:id="@+id/verificationCodeRequiredTextView"
                         layout="@layout/layout_required_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -286,14 +290,17 @@
                         breeze:hintKey="payment_expiration_date"
                         tools:hint="Expiration Date" />
 
+
                 </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
-                    <include
-                        layout="@layout/layout_required_text_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="visible"
-                        android:layout_gravity="center_vertical|end"
-                        android:layout_marginEnd="@dimen/dimen_42dp"/>
+
+                <include
+                    android:id="@+id/expirationDateRequiredTextView"
+                    layout="@layout/layout_required_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_marginEnd="@dimen/dimen_42dp"/>
                 </FrameLayout>
 
                 <View

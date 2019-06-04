@@ -6,10 +6,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,37 +26,12 @@ import com.carecloud.carepay.practice.library.checkin.dtos.CheckInPayloadDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.customdialog.FilterDialog;
 import com.carecloud.carepay.practice.library.models.FilterModel;
-import com.carecloud.carepay.practice.library.payments.dialogs.IntegratedPaymentsChooseDeviceFragment;
-import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
-import com.carecloud.carepay.practice.library.payments.dialogs.PracticePaymentPlanDetailsDialogFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.AddPaymentItemFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.AddRetailItemFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PatientModePaymentPlanEditFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionEntryFragment;
+import com.carecloud.carepay.practice.library.payments.dialogs.PracticeModePaymentPlanEditFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PaymentHistoryFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PaymentPlanDashboardFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticeEditOneTimePaymentFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticeModeAddToExistingPaymentPlanFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeModePaymentPlanFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticeOneTimePaymentFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentHistoryDetailFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanAddCreditCardFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanConfirmationFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanListFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanPaymentMethodFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanTermsFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticeValidPlansFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.RefundDetailFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.RefundProcessFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.RetailItemOptionsFragment;
-import com.carecloud.carepay.practice.library.payments.interfaces.AddPaymentItemCallback;
-import com.carecloud.carepay.practice.library.payments.interfaces.PaymentPlanDashboardInterface;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentNavigationCallback;
 import com.carecloud.carepay.practice.library.payments.interfaces.ShamrockPaymentsCallback;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
@@ -70,36 +43,31 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
-import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
-import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
-import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanEditFragment;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentPayload;
-import com.carecloud.carepaylibray.payments.models.SimpleChargeItem;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.payments.models.updatebalance.UpdatePatientBalancesDTO;
-import com.carecloud.carepaylibray.retail.models.RetailItemDto;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
@@ -107,7 +75,6 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -116,9 +83,9 @@ import java.util.Set;
 
 public class PracticeModeCheckInActivity extends BasePracticeActivity
         implements FilterDialog.FilterDialogListener, PracticePaymentNavigationCallback,
-        AppointmentDetailDialog.AppointmentDialogCallback, PaymentPlanEditInterface,
+        FragmentActivityInterface, PaymentPlanEditInterface,
         CheckedInAppointmentAdapter.CheckinItemCallback, ShamrockPaymentsCallback,
-        PaymentPlanDashboardInterface {
+        PaymentPlanCreateInterface {
 
 
     private RecyclerView checkingInRecyclerView;
@@ -586,19 +553,20 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     @Override
     public void onCheckInItemClick(AppointmentsPayloadDTO appointmentPayloadDTO, int theRoom) {
         patientId = appointmentPayloadDTO.getPatient().getPatientId();
-        AppointmentDetailDialog dialog = AppointmentDetailDialog.newInstance(checkInDTO, getPatientBalanceDTOs(appointmentPayloadDTO.getPatient().getPatientId()),
-                appointmentPayloadDTO, theRoom);
+        AppointmentDetailDialog dialog = AppointmentDetailDialog.newInstance(checkInDTO,
+                getPatientBalanceDTOs(appointmentPayloadDTO.getPatient().getPatientId()), appointmentPayloadDTO, theRoom);
         displayDialogFragment(dialog, true);
     }
 
     @Override
     public void startPaymentProcess(PaymentsModel paymentsModel) {
-        Bundle args = new Bundle();
-        Gson gson = new Gson();
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(paymentsModel));
-        PaymentDistributionFragment fragment = new PaymentDistributionFragment();
-        fragment.setArguments(args);
-        displayDialogFragment(fragment, true);
+        //TODO: Delete this when refactor. This code is not used anymore
+//        Bundle args = new Bundle();
+//        Gson gson = new Gson();
+//        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(paymentsModel));
+//        PaymentDistributionFragment fragment = new PaymentDistributionFragment();
+//        fragment.setArguments(args);
+//        displayDialogFragment(fragment, true);
     }
 
     @Override
@@ -608,64 +576,29 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
-        PracticePaymentMethodDialogFragment fragment = PracticePaymentMethodDialogFragment
-                .newInstance(paymentsModel, amount);
-        displayDialogFragment(fragment, false);
+        //TODO: Delete this when refactor. This code is not used anymore
+//        PracticePaymentMethodDialogFragment fragment = PracticePaymentMethodDialogFragment
+//                .newInstance(paymentsModel, amount);
+//        displayDialogFragment(fragment, false);
     }
 
     @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod,
                                       double amount, PaymentsModel paymentsModel) {
-        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
-                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
-            DialogFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel,
-                    selectedPaymentMethod.getLabel(), amount);
-            displayDialogFragment(fragment, false);
-        } else {
-            showAddCard(amount, paymentsModel);
-        }
+        //TODO: Delete this when refactor. This code is not used anymore
+//        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
+//                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+//            DialogFragment fragment = PracticeChooseCreditCardFragment.newInstance(paymentsModel,
+//                    selectedPaymentMethod.getLabel(), amount);
+//            displayDialogFragment(fragment, false);
+//        } else {
+//            showAddCard(amount, paymentsModel);
+//        }
     }
 
     @Override
-    public void onPaymentPlanAction(final PaymentsModel paymentsModel) {
-        PendingBalanceDTO selectedBalance = paymentsModel.getPaymentPayload()
-                .getPatientBalances().get(0).getBalances().get(0);
-        PracticeModePaymentPlanFragment fragment = PracticeModePaymentPlanFragment
-                .newInstance(paymentsModel, selectedBalance);
-        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                showPaymentPlanDashboard(paymentsModel);
-            }
-        });
-        displayDialogFragment(fragment, false);
-
-        String[] params = {getString(R.string.param_practice_id),
-                getString(R.string.param_balance_amount),
-                getString(R.string.param_is_add_existing)};
-        Object[] values = {selectedBalance.getMetadata().getPracticeId(),
-                selectedBalance.getPayload().get(0).getAmount(),
-                false};
-
-        MixPanelUtil.logEvent(getString(R.string.event_paymentplan_started), params, values);
-    }
-
-    @Override
-    public void onPaymentPlanAmount(PaymentsModel paymentsModel,
-                                    PendingBalanceDTO selectedBalance,
-                                    double amount) {
-    }
-
-    @Override
-    public void showChooseDeviceList(PaymentsModel paymentsModel, double paymentAmount) {
-        IntegratedPaymentsChooseDeviceFragment fragment = IntegratedPaymentsChooseDeviceFragment
-                .newInstance(paymentsModel, paymentAmount);
-        displayDialogFragment(fragment, false);
-    }
-
-    @Override
-    public void dismissChooseDeviceList(double amount, PaymentsModel paymentsModel) {
-        onPayButtonClicked(amount, paymentsModel);
+    public void navigateToFragment(Fragment fragment, boolean addToBackStack) {
+        //NA
     }
 
     @Override
@@ -675,37 +608,32 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
-        PracticeAddNewCreditCardFragment fragment = PracticeAddNewCreditCardFragment.newInstance(paymentsModel, amount);
-        displayDialogFragment(fragment, false);
+        //TODO: Delete this when refactor. This code is not used anymore
+//        PracticeAddNewCreditCardFragment fragment = PracticeAddNewCreditCardFragment.newInstance(paymentsModel, amount);
+//        displayDialogFragment(fragment, false);
     }
 
     @Override
     public void onCreditCardSelected(PaymentCreditCardsPayloadDTO creditCard) {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(PatientModePaymentPlanEditFragment.class.getName());
-        if (fragment != null && fragment instanceof PatientModePaymentPlanEditFragment) {
-            ((PaymentPlanEditFragment) fragment).replacePaymentMethod(creditCard);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(PracticeModePaymentPlanEditFragment.class.getName());
+        if (fragment instanceof PracticeModePaymentPlanEditFragment) {
+            ((PracticeModePaymentPlanEditFragment) fragment).replacePaymentMethod(creditCard);
+            ((PracticeModePaymentPlanEditFragment) fragment).showDialog();
             return;
         }
 
         fragment = getSupportFragmentManager().findFragmentByTag(PracticeModePaymentPlanFragment.class.getName());
-        if (fragment != null && fragment instanceof PracticeModePaymentPlanFragment) {
+        if (fragment instanceof PracticeModePaymentPlanFragment) {
             ((PracticeModePaymentPlanFragment) fragment).replacePaymentMethod(creditCard);
+            ((PracticeModePaymentPlanFragment) fragment).showDialog();
             return;
         }
     }
 
     @Override
     public void completePaymentProcess(WorkflowDTO workflowDTO) {
-        Gson gson = new Gson();
-        PaymentsModel paymentsModel = gson.fromJson(workflowDTO.toString(), PaymentsModel.class);
-        UpdatePatientBalancesDTO updatePatientBalance = null;
-        if (!paymentsModel.getPaymentPayload().getPatientBalances().isEmpty()) {
-            PatientBalanceDTO balance = paymentsModel.getPaymentPayload().getPatientBalances().get(0);
-            String patientBalance = gson.toJson(balance);
-            updatePatientBalance = gson.fromJson(patientBalance,
-                    UpdatePatientBalancesDTO.class);
-        }
-        hidePaymentDistributionFragment(updatePatientBalance);
+        popBackStackImmediate(AppointmentDetailDialog.class.getName());
+        refreshData();
     }
 
     private void hidePaymentDistributionFragment(UpdatePatientBalancesDTO updatePatientBalance) {
@@ -733,6 +661,11 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         return null;
     }
 
+    @Override
+    public void onPaymentCashFinished() {
+        popBackStackImmediate(AppointmentDetailDialog.class.getName());
+    }
+
     @Nullable
     @Override
     public String getAppointmentId() {
@@ -743,70 +676,6 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     @Override
     public AppointmentDTO getAppointment() {
         return null;
-    }
-
-
-    @Override
-    public void showPaymentDistributionDialog(PaymentsModel paymentsModel) {
-        startPaymentProcess(paymentsModel);
-        selectedPaymentModel = paymentsModel;
-    }
-
-    @Override
-    public void onFailure(String errorMessage) {
-        showErrorNotification(errorMessage); // Show default error
-    }
-
-    @Override
-    public void lookupChargeItem(List<SimpleChargeItem> simpleChargeItems,
-                                 AddPaymentItemCallback callback) {
-        Bundle args = new Bundle();
-        Gson gson = new Gson();
-        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(simpleChargeItems));
-
-        AddPaymentItemFragment fragment = new AddPaymentItemFragment();
-        fragment.setCallback(callback);
-        if (simpleChargeItems != null && !simpleChargeItems.isEmpty()) {
-            fragment.setArguments(args);
-        }
-
-        displayDialogFragment(fragment, false);
-    }
-
-    @Override
-    public void showAmountEntry(PaymentDistributionEntryFragment.PaymentDistributionAmountCallback callback,
-                                BalanceItemDTO balanceItem, SimpleChargeItem chargeItem) {
-        PaymentDistributionEntryFragment entryFragment = new PaymentDistributionEntryFragment();
-        if (balanceItem != null) {
-            entryFragment.setBalanceItem(balanceItem);
-        }
-        if (chargeItem != null) {
-            entryFragment.setChargeItem(chargeItem);
-        }
-
-        entryFragment.setCallback(callback);
-        displayDialogFragment(entryFragment, false);
-    }
-
-    @Override
-    public void showPaymentPlanDashboard(PaymentsModel paymentsModel) {
-        PaymentPlanDashboardFragment fragment = PaymentPlanDashboardFragment.newInstance(paymentsModel);
-        displayDialogFragment(fragment, true);
-    }
-
-    @Override
-    public void showRetailItems(PaymentsModel paymentsModel,
-                                AddPaymentItemCallback callback) {
-        AddRetailItemFragment retailItemFragment = AddRetailItemFragment.getInstance(paymentsModel);
-        retailItemFragment.setCallback(callback);
-        displayDialogFragment(retailItemFragment, false);
-    }
-
-    @Override
-    public void showRetailItemOptions(RetailItemDto retailItemDto, AddPaymentItemCallback callback) {
-        RetailItemOptionsFragment optionsFragment = RetailItemOptionsFragment.newInstance(retailItemDto);
-        optionsFragment.setCallback(callback);
-        displayDialogFragment(optionsFragment, false);
     }
 
     @Override
@@ -890,89 +759,21 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
                 .equals(updateBalance.getBalances().get(0).getMetadata().getPatientId());
     }
 
-
-    @Override
-    public void onDetailCancelClicked(PaymentsModel paymentsModel) {
-        startPaymentProcess(paymentsModel);
-    }
-
-    @Override
-    public void onDismissPaymentMethodDialog(PaymentsModel paymentsModel) {
-        if (paymentMethodCancelled) {
-            paymentMethodCancelled = false;
-            return;
-        }
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager
-                .findFragmentByTag(PaymentDistributionFragment.class.getName());
-        if (fragment != null) {
-            fragment.showDialog();
-        }
-    }
-
     @Override
     public void onCashSelected(PaymentsModel paymentsModel) {
         //TODO handle this from practice mode
     }
 
     @Override
-    public void showPaymentHistory(PaymentsModel paymentsModel) {
-        PaymentHistoryFragment fragment = PaymentHistoryFragment.newInstance(paymentsModel);
-        displayDialogFragment(fragment, false);
-    }
-
-
-    @Override
-    public void onDismissPaymentHistory() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager
-                .findFragmentByTag(PaymentDistributionFragment.class.getName());
-        if (fragment != null) {
-            fragment.showDialog();
-        }
-    }
-
-    @Override
-    public void displayHistoryItemDetails(PaymentHistoryItem item, PaymentsModel paymentsModel) {
-        PracticePaymentHistoryDetailFragment fragment = PracticePaymentHistoryDetailFragment.newInstance(item, paymentsModel);
-        displayDialogFragment(fragment, true);
-    }
-
-    @Override
-    public void startRefundProcess(PaymentHistoryItem historyItem, PaymentsModel paymentsModel) {
-//        getSupportFragmentManager().popBackStack(PaymentDistributionFragment.class.getName(), 0);
-        RefundProcessFragment fragment = RefundProcessFragment.newInstance(historyItem, paymentsModel);
-        displayDialogFragment(fragment, true);
-    }
-
-    @Override
     public void completeRefundProcess(PaymentHistoryItem historyItem, PaymentsModel paymentsModel) {
-        getSupportFragmentManager().popBackStackImmediate(PaymentDistributionFragment.class.getName(),
-                FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        popBackStackImmediate(AppointmentDetailDialog.class.getName());
 
         RefundDetailFragment fragment = RefundDetailFragment.newInstance(historyItem, paymentsModel);
-        displayDialogFragment(fragment, false);
-
+        displayDialogFragment(fragment, true);
     }
 
-    @Override
-    public void displayPaymentPlansList(final PaymentsModel paymentsModel) {
-        PracticePaymentPlanListFragment fragment = PracticePaymentPlanListFragment
-                .newInstance(paymentsModel, getPracticeInfo(paymentsModel).getPracticeId());
-        fragment.setDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                showPaymentHistory(paymentsModel);
-            }
-        });
-        displayDialogFragment(fragment, false);
-    }
-
-    @Override
-    public void onPaymentPlanSelected(final PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
-        PracticePaymentPlanDetailsDialogFragment fragment = PracticePaymentPlanDetailsDialogFragment
-                .newInstance(paymentsModel, paymentPlanDTO, false);
-        displayDialogFragment(fragment, false);
+    private void popBackStackImmediate(String className) {
+        getSupportFragmentManager().popBackStackImmediate(className, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     private void refreshLists(boolean isBlocking) {
@@ -1017,117 +818,6 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
                 showErrorNotification(exceptionMessage);
             }
         };
-    }
-
-    @Override
-    public void onMakeOneTimePayment(final PaymentsModel paymentsModel, final PaymentPlanDTO paymentPlanDTO) {
-        PracticeOneTimePaymentFragment fragment = PracticeOneTimePaymentFragment
-                .newInstance(paymentsModel, 0, paymentPlanDTO);
-        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                showPaymentPlanDetail(paymentsModel, paymentPlanDTO, false);
-            }
-        });
-        displayDialogFragment(fragment, false);
-    }
-
-    @Override
-    public void onStartOneTimePayment(final PaymentsModel paymentsModel, final PaymentPlanDTO paymentPlanDTO) {
-        PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
-                .newInstance(paymentsModel, paymentPlanDTO, false);
-        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                paymentMethodCancelled = true;
-                showPaymentPlanDetail(paymentsModel, paymentPlanDTO, false);
-            }
-        });
-        displayDialogFragment(fragment, false);
-
-        String[] params = {getString(R.string.param_practice_id),
-                getString(R.string.param_payment_plan_id),
-                getString(R.string.param_payment_plan_amount),
-                getString(R.string.param_patient_id)
-        };
-        Object[] values = {
-                paymentPlanDTO.getMetadata().getPracticeId(),
-                paymentPlanDTO.getMetadata().getPaymentPlanId(),
-                paymentPlanDTO.getPayload().getAmount(),
-                paymentPlanDTO.getMetadata().getPatientId()
-        };
-        MixPanelUtil.logEvent(getString(R.string.event_paymentplan_onetime_payment), params, values);
-    }
-
-    @Override
-    public void onSelectPaymentPlanMethod(PaymentsMethodsDTO selectedPaymentMethod,
-                                          final PaymentsModel paymentsModel,
-                                          final PaymentPlanDTO paymentPlanDTO,
-                                          boolean onlySelectMode,
-                                          final Date paymentDate) {
-        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
-                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
-            PracticePaymentPlanChooseCreditCardFragment fragment = PracticePaymentPlanChooseCreditCardFragment
-                    .newInstance(paymentsModel, selectedPaymentMethod.getLabel(),
-                            paymentPlanDTO, onlySelectMode, paymentDate);
-            fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    if (paymentDate == null) {
-                        onStartOneTimePayment(paymentsModel, paymentPlanDTO);
-                    } else {
-                        onScheduleOneTimePayment(paymentsModel, paymentPlanDTO, paymentDate);
-                    }
-                }
-            });
-            displayDialogFragment(fragment, false);
-        } else {
-            onAddPaymentPlanCard(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
-        }
-    }
-
-    @Override
-    public void onAddPaymentPlanCard(final PaymentsModel paymentsModel,
-                                     final PaymentPlanDTO paymentPlanDTO,
-                                     boolean onlySelectMode,
-                                     final Date paymentDate) {
-        PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
-                .newInstance(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
-        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                if (paymentDate == null) {
-                    onStartOneTimePayment(paymentsModel, paymentPlanDTO);
-                } else {
-                    onScheduleOneTimePayment(paymentsModel, paymentPlanDTO, paymentDate);
-                }
-            }
-        });
-        fragment.setChangePaymentMethodListener(new LargeAlertDialogFragment.LargeAlertInterface() {
-            @Override
-            public void onActionButton() {
-                PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
-                        .newInstance(paymentsModel, paymentPlanDTO, false, paymentDate);
-                displayDialogFragment(fragment, false);
-            }
-        });
-        displayDialogFragment(fragment, false);
-    }
-
-    @Override
-    public void onScheduleOneTimePayment(final PaymentsModel paymentsModel,
-                                         final PaymentPlanDTO paymentPlanDTO,
-                                         Date paymentDate) {
-        PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
-                .newInstance(paymentsModel, paymentPlanDTO, false, paymentDate);
-        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                paymentMethodCancelled = true;
-                showPaymentPlanDetail(paymentsModel, paymentPlanDTO, false);
-            }
-        });
-        displayDialogFragment(fragment, false);
     }
 
     @Override
@@ -1200,15 +890,11 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         }
     }
 
-    @Override
-    public void onStartPaymentPlan(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
-        PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
-                .newInstance(paymentsModel, paymentPlanPostModel);
-        displayDialogFragment(fragment, false);
-    }
-
-    @Override
-    public void onDismissPaymentPlan(PaymentsModel paymentsModel) {
+    private void onDismissPaymentMethodDialog(PaymentsModel paymentsModel) {
+        if (paymentMethodCancelled) {
+            paymentMethodCancelled = false;
+            return;
+        }
         FragmentManager fragmentManager = getSupportFragmentManager();
         PaymentDistributionFragment fragment = (PaymentDistributionFragment) fragmentManager
                 .findFragmentByTag(PaymentDistributionFragment.class.getName());
@@ -1218,60 +904,20 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     }
 
     @Override
-    public void onSelectPaymentPlanMethod(PaymentsMethodsDTO selectedPaymentMethod,
-                                          PaymentsModel paymentsModel,
-                                          PaymentPlanPostModel paymentPlanPostModel,
-                                          boolean onlySelectMode) {
-        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
-                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
-            PracticePaymentPlanChooseCreditCardFragment fragment = PracticePaymentPlanChooseCreditCardFragment
-                    .newInstance(paymentsModel, selectedPaymentMethod.getLabel(), paymentPlanPostModel);
-            displayDialogFragment(fragment, false);
-        } else {
-            onAddPaymentPlanCard(paymentsModel, paymentPlanPostModel, onlySelectMode);
-        }
-    }
-
-    @Override
-    public void onAddPaymentPlanCard(PaymentsModel paymentsModel,
-                                     PaymentPlanPostModel paymentPlanPostModel,
-                                     boolean onlySelectMode) {
-        PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
-                .newInstance(paymentsModel, (PaymentPlanDTO) null, onlySelectMode);
-        displayDialogFragment(fragment, false);
-    }
-
-    @Override
-    public void onDisplayPaymentPlanTerms(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
-        PracticePaymentPlanTermsFragment fragment = PracticePaymentPlanTermsFragment
-                .newInstance(paymentsModel, paymentPlanPostModel);
-        displayDialogFragment(fragment, false);
+    public void onStartPaymentPlan(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
+        //TODO: Delete this when refactor. This code is not used anymore
+//        PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
+//                .newInstance(paymentsModel, paymentPlanPostModel);
+//        displayDialogFragment(fragment, false);
     }
 
     @Override
     public void onSubmitPaymentPlan(WorkflowDTO workflowDTO) {
-        getSupportFragmentManager().popBackStackImmediate(PaymentDistributionFragment.class.getName(),
-                FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        popBackStackImmediate(AppointmentDetailDialog.class.getName());
         PracticePaymentPlanConfirmationFragment confirmationFragment = PracticePaymentPlanConfirmationFragment
                 .newInstance(workflowDTO, getApplicationMode().getUserPracticeDTO(),
                         PaymentPlanConfirmationFragment.MODE_CREATE);
         displayDialogFragment(confirmationFragment, false);
-    }
-
-    @Override
-    public void displayBalanceDetails(PaymentsModel paymentsModel,
-                                      PendingBalancePayloadDTO paymentLineItem,
-                                      PendingBalanceDTO selectedBalance) {
-        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-                .newInstance(paymentsModel, selectedBalance.getPayload().get(0), false);
-        displayDialogFragment(dialog, false);
-    }
-
-    @Override
-    public void onEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
-        PatientModePaymentPlanEditFragment fragment = PatientModePaymentPlanEditFragment
-                .newInstance(paymentsModel, paymentPlanDTO);
-        displayDialogFragment(fragment, true);
     }
 
     @Override
@@ -1289,72 +935,11 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void onPaymentPlanAddedExisting(WorkflowDTO workflowDTO) {
-        getSupportFragmentManager().popBackStackImmediate(PaymentDistributionFragment.class.getName(),
-                FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        popBackStackImmediate(AppointmentDetailDialog.class.getName());
         PracticePaymentPlanConfirmationFragment confirmationFragment = PracticePaymentPlanConfirmationFragment
                 .newInstance(workflowDTO, getApplicationMode().getUserPracticeDTO(),
                         PaymentPlanConfirmationFragment.MODE_ADD);
         displayDialogFragment(confirmationFragment, false);
-    }
-
-    @Override
-    public void onDismissEditPaymentPlan(final PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
-        PracticePaymentPlanDetailsDialogFragment fragment = PracticePaymentPlanDetailsDialogFragment
-                .newInstance(paymentsModel, paymentPlanDTO, false);
-        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                showPaymentPlanDashboard(paymentsModel);
-            }
-        });
-        displayDialogFragment(fragment, false);
-    }
-
-    @Override
-    public void onAddBalanceToExistingPlan(PaymentsModel paymentsModel,
-                                           PendingBalanceDTO selectedBalance,
-                                           double amount) {
-        PracticeValidPlansFragment fragment = PracticeValidPlansFragment
-                .newInstance(paymentsModel, selectedBalance, amount);
-        displayDialogFragment(fragment, false);
-
-    }
-
-    @Override
-    public void onSelectedPlanToAdd(PaymentsModel paymentsModel,
-                                    PendingBalanceDTO selectedBalance,
-                                    PaymentPlanDTO selectedPlan,
-                                    double amount) {
-        //Not used anymore
-    }
-
-    @Override
-    public void onEditPaymentPlanPaymentMethod(final PaymentsModel paymentsModel,
-                                               final PaymentPlanDTO paymentPlanDTO) {
-        PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
-                .newInstance(paymentsModel, paymentPlanDTO, true);
-        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                showPaymentPlanDetail(paymentsModel, paymentPlanDTO, false);
-            }
-        });
-        displayDialogFragment(fragment, false);
-    }
-
-    @Override
-    public void onStartEditScheduledPayment(final PaymentsModel paymentsModel,
-                                            final PaymentPlanDTO paymentPlanDTO,
-                                            ScheduledPaymentModel scheduledPaymentModel) {
-        PracticeEditOneTimePaymentFragment fragment = PracticeEditOneTimePaymentFragment
-                .newInstance(paymentsModel, 0, paymentPlanDTO, scheduledPaymentModel);
-        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                showPaymentPlanDetail(paymentsModel, paymentPlanDTO, false);
-            }
-        });
-        displayDialogFragment(fragment, false);
     }
 
     @Override
@@ -1365,8 +950,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         }
         showSuccessToast(Label.getLabel(message));
 
-        getSupportFragmentManager().popBackStackImmediate(PaymentDistributionFragment.class.getName(),
-                FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        popBackStackImmediate(AppointmentDetailDialog.class.getName());
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("patient_id", patientId);
 
@@ -1386,7 +970,6 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
                     patientDetails.getPaymentPayload().setLocationIndex(checkInDTO.getPayload().getLocationIndex());
                     patientDetails.getPaymentPayload().setProviders(checkInDTO.getPayload().getProviders());
                     patientDetails.getPaymentPayload().setProviderIndex(checkInDTO.getPayload().getProviderIndex());
-                    showPaymentDistributionDialog(patientDetails);
                 }
             }
 
@@ -1399,17 +982,18 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void showCancelPaymentPlanConfirmDialog(ConfirmationCallback confirmationCallback, boolean isDeletion) {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        String title = Label.getLabel("payment.cancelPaymentPlan.confirmation.popup.title");
-        String message = Label.getLabel("payment.cancelPaymentPlan.confirmation.popup.message");
-        if (isDeletion) {
-            title = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.title");
-            message = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.message");
-        }
-        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(title, message);
-        confirmDialogFragment.setCallback(confirmationCallback);
-        String tag = confirmDialogFragment.getClass().getName();
-        confirmDialogFragment.show(ft, tag);
+        //TODO: Delete this when refactor. This code is not used anymore
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        String title = Label.getLabel("payment.cancelPaymentPlan.confirmation.popup.title");
+//        String message = Label.getLabel("payment.cancelPaymentPlan.confirmation.popup.message");
+//        if (isDeletion) {
+//            title = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.title");
+//            message = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.message");
+//        }
+//        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(title, message);
+//        confirmDialogFragment.setCallback(confirmationCallback);
+//        String tag = confirmDialogFragment.getClass().getName();
+//        confirmDialogFragment.show(ft, tag);
     }
 
     @Override
@@ -1419,35 +1003,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void completePaymentPlanProcess(WorkflowDTO workflowDTO) {
-        //TODO what should we show in this case because we don't have PP represented at the top level payload
-    }
-
-    @Override
-    public void onAddBalanceToExistingPlan(final PaymentsModel paymentsModel, PaymentPlanDTO paymentPlan) {
-        PracticeModeAddToExistingPaymentPlanFragment fragment = PracticeModeAddToExistingPaymentPlanFragment
-                .newInstance(paymentsModel, paymentPlan);
-        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                showPaymentPlanDashboard(paymentsModel);
-            }
-        });
-        displayDialogFragment(fragment, false);
-    }
-
-    @Override
-    public void showPaymentPlanDetail(final PaymentsModel paymentsModel,
-                                      PaymentPlanDTO paymentPlan,
-                                      boolean isCompleted) {
-        PracticePaymentPlanDetailsDialogFragment fragment = PracticePaymentPlanDetailsDialogFragment
-                .newInstance(paymentsModel, paymentPlan, isCompleted);
-        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                showPaymentPlanDashboard(paymentsModel);
-            }
-        });
-        displayDialogFragment(fragment, false);
+        popBackStackImmediate(AppointmentDetailDialog.class.getName());
     }
 
     @Override

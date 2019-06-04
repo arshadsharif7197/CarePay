@@ -20,15 +20,19 @@ import com.carecloud.carepay.practice.library.dobverification.model.DoBDto;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.utils.ValidationHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,12 +47,15 @@ public class DoBVerificationActivity extends BasePracticeActivity {
     private DoBDto doBDto;
     private EditText dobEditText;
     private int retries = 0;
+    private CarePayTextInputLayout dobTextInputLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dob_verification);
         doBDto = getConvertedDTO(DoBDto.class);
+        getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
+        getAppAuthorizationHelper().setUser(doBDto.getPayload().getCheckinModeDTO().getMetadata().getUsername());
 
         setUpUi();
     }
@@ -61,6 +68,7 @@ public class DoBVerificationActivity extends BasePracticeActivity {
                 onVerifyButtonClick();
             }
         });
+        dobTextInputLayout = findViewById(R.id.dobTextInputLayout);
         dobEditText = findViewById(R.id.dobEditText);
         dobEditText.addTextChangedListener(new TextWatcher() {
             int lastLength;
@@ -78,7 +86,7 @@ public class DoBVerificationActivity extends BasePracticeActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 StringUtil.autoFormatDateOfBirth(editable, lastLength);
-                if (editable.length() == DOB_LENGTH) {
+                if (validateDoBValue(editable.toString())) {
                     verifyButton.setEnabled(true);
                 } else {
                     verifyButton.setEnabled(false);
@@ -96,6 +104,8 @@ public class DoBVerificationActivity extends BasePracticeActivity {
                 return false;
             }
         });
+
+        dobEditText.setOnClickListener(selectEndOnClick);
 
         findViewById(R.id.lockImageView).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,9 +132,33 @@ public class DoBVerificationActivity extends BasePracticeActivity {
         }, 100);
     }
 
+    private boolean validateDoBValue(String dateString) {
+        if (!StringUtil.isNullOrEmpty(dateString)) {
+            String dateValidationResult = DateUtil.getDateOfBirthValidationResultMessage(dateString);
+            if (dateValidationResult != null) {
+                dobTextInputLayout.setErrorEnabled(true);
+                dobTextInputLayout.setError(dateValidationResult);
+                return false;
+            } else {
+                dobTextInputLayout.setError(null);
+                dobTextInputLayout.setErrorEnabled(false);
+            }
+        } else {
+            dobTextInputLayout.setError(null);
+            dobTextInputLayout.setErrorEnabled(false);
+        }
+        return true;
+    }
+
     private String getPatientName() {
-        String firstName = doBDto.getPayload().getDemographicDTO().getPayload()
-                .getPersonalDetails().getFirstName().substring(0, 1);
+        String firstName;
+        if (StringUtil.isNullOrEmpty(doBDto.getPayload().getDemographicDTO().getPayload()
+                .getPersonalDetails().getFirstName())) {
+            firstName = "";
+        } else {
+            firstName = doBDto.getPayload().getDemographicDTO().getPayload()
+                    .getPersonalDetails().getFirstName().substring(0, 1);
+        }
         String lastName = doBDto.getPayload().getDemographicDTO().getPayload()
                 .getPersonalDetails().getLastName();
         return StringUtil.capitalize(String.format("%s. %s", firstName, lastName));
@@ -137,6 +171,7 @@ public class DoBVerificationActivity extends BasePracticeActivity {
             String appointmentId = extra.getString(CarePayConstants.APPOINTMENT_ID);
             Bundle info = new Bundle();
             info.putString(CarePayConstants.APPOINTMENT_ID, appointmentId);
+            info.putBoolean(CarePayConstants.HANDLE_HOME, true);
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, info);
             finish();
         } else {
@@ -166,9 +201,16 @@ public class DoBVerificationActivity extends BasePracticeActivity {
     }
 
     private boolean validateDoB(String dobInput) {
-        String dob = doBDto.getPayload().getDemographicDTO().getPayload().getPersonalDetails()
-                .getFormattedDateOfBirth();
-        return dob.equals(dobInput);
+        String dob;
+        boolean isGuest = !ValidationHelper.isValidEmail(getAppAuthorizationHelper().getCurrUser());
+        if (isGuest) {
+            dob = DateUtil.getInstance().setDateRaw(doBDto.getPayload().getAppointments().get(0)
+                    .getPayload().getPatient().getDateOfBirth()).toStringWithFormatMmSlashDdSlashYyyy();
+        } else {
+            dob = doBDto.getPayload().getDemographicDTO().getPayload().getPersonalDetails()
+                    .getFormattedDateOfBirth();
+        }
+        return dobInput.equals(dob);
     }
 
     private void showGameOverScreen() {
@@ -247,4 +289,12 @@ public class DoBVerificationActivity extends BasePracticeActivity {
         super.onSaveInstanceState(outState);
         outState.putInt("retries", retries);
     }
+
+    protected View.OnClickListener selectEndOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            EditText editText = (EditText) view;
+            editText.setSelection(editText.length());
+        }
+    };
 }

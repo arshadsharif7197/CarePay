@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.db.BreezeDataBase;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.models.AndroidPayQueuePaymentRecord;
 import com.carecloud.carepay.patient.payment.androidpay.models.PayeezyAndroidPayResponse;

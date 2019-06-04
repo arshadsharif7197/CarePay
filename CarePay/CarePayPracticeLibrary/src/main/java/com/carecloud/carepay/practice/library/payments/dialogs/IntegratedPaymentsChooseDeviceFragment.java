@@ -137,10 +137,10 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
     public void onViewCreated(View view, Bundle icicle) {
         initToolbar(view);
 
-        deviceRecycler = (RecyclerView) view.findViewById(R.id.processing_devices_recycler);
+        deviceRecycler = view.findViewById(R.id.processing_devices_recycler);
         deviceRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-        selectedLocationText = (TextView) view.findViewById(R.id.selected_location);
+        selectedLocationText = view.findViewById(R.id.selected_location);
         selectedLocationText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -165,12 +165,11 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dismiss();
-                callback.dismissChooseDeviceList(paymentAmount, paymentsModel);
+                cancel();
             }
         });
 
-        TextView title = (TextView) view.findViewById(R.id.respons_toolbar_title);
+        TextView title = view.findViewById(R.id.respons_toolbar_title);
         ViewGroup.LayoutParams layoutParams = title.getLayoutParams();
         layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
         title.setLayoutParams(layoutParams);
@@ -381,13 +380,13 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         // create dialog layout
         View customView = LayoutInflater.from(context).inflate(R.layout.alert_list_layout, null, false);
         dialog.setView(customView);
-        TextView titleTextView = (TextView) customView.findViewById(R.id.title_view);
+        TextView titleTextView = customView.findViewById(R.id.title_view);
         titleTextView.setText(Label.getLabel("payment_choose_location"));
         titleTextView.setVisibility(View.VISIBLE);
 
 
         // create the adapter
-        ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
+        ListView listView = customView.findViewById(R.id.dialoglist);
         CustomOptionsAdapter customOptionsAdapter = new CustomOptionsAdapter(context, options);
         listView.setAdapter(customOptionsAdapter);
 
@@ -500,7 +499,9 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
                     groupMap.put(deviceGroup.getGroupName(), deviceGroup);
                 }
             }
-            updateSelectedLocation();
+            if (isVisible()) {
+                updateSelectedLocation();
+            }
         }
 
         @Override

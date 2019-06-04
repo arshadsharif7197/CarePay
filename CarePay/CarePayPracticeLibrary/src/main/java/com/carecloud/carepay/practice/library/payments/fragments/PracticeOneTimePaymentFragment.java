@@ -1,13 +1,11 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
@@ -28,6 +26,7 @@ import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.squareup.timessquare.CalendarPickerView;
@@ -137,11 +136,52 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
     protected void onPaymentClick(double amount) {
         createPaymentModel(amount);
         if (DateUtil.isSameDay(paymentDate, new Date())) {
-            callback.onStartOneTimePayment(paymentsModel, paymentPlanDTO);
+            onStartOneTimePayment(paymentsModel, paymentPlanDTO);
         } else {
-            callback.onScheduleOneTimePayment(paymentsModel, paymentPlanDTO, paymentDate);
+            onScheduleOneTimePayment(paymentsModel, paymentPlanDTO, paymentDate);
         }
-        dismiss();
+    }
+
+    private void onStartOneTimePayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+        PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
+                .newInstance(paymentsModel, paymentPlanDTO, false);
+        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                showDialog();
+            }
+        });
+        callback.displayDialogFragment(fragment, true);
+        hideDialog();
+        logOneTimePaymentStartedMixPanelEvent();
+    }
+
+    private void onScheduleOneTimePayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO, Date paymentDate) {
+        PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
+                .newInstance(paymentsModel, paymentPlanDTO, false, paymentDate);
+        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                showDialog();
+            }
+        });
+        callback.displayDialogFragment(fragment, true);
+        hideDialog();
+    }
+
+    private void logOneTimePaymentStartedMixPanelEvent() {
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_payment_plan_id),
+                getString(R.string.param_payment_plan_amount),
+                getString(R.string.param_patient_id)
+        };
+        Object[] values = {
+                paymentPlanDTO.getMetadata().getPracticeId(),
+                paymentPlanDTO.getMetadata().getPaymentPlanId(),
+                paymentPlanDTO.getPayload().getAmount(),
+                paymentPlanDTO.getMetadata().getPatientId()
+        };
+        MixPanelUtil.logEvent(getString(R.string.event_paymentplan_onetime_payment), params, values);
     }
 
     protected void createPaymentModel(double amount) {
@@ -233,7 +273,7 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
                     }
                 }, CalendarPickerView.SelectionMode.SINGLE.name());
 
-        displayDialogFragment(dialog, false);
+        callback.displayDialogFragment(dialog, false);
 
     }
 
@@ -247,26 +287,6 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
             schedulePaymentDateText.setText(DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
             applyButton.setText(Label.getLabel("payment_plan_schedule_payment"));
         }
-    }
-
-    /**
-     * Display a fragment as a Dialog
-     *
-     * @param fragment       must be a Dialog Fragment
-     * @param addToBackStack optional flag to addFragment this transaction to back stack
-     */
-    public void displayDialogFragment(DialogFragment fragment, boolean addToBackStack) {
-        String tag = fragment.getClass().getName();
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag(tag);
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        if (addToBackStack) {
-            ft.addToBackStack(tag);
-        }
-
-        fragment.show(ft, tag);
     }
 
 }

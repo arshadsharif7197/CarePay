@@ -214,7 +214,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
                             .getLastName().isRequired(), lastNameValue, R.id.lastNameContainer,
                     R.id.reviewdemogrLastNameTextInput, isUserAction())) return false;
 
-            EditText dateOfBirth = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
+            EditText dateOfBirth = view.findViewById(R.id.revewidemogrDOBEdit);
             String dobValue = dateOfBirth.getText().toString();
             if (validateField(view, dataModel.getDemographic().getPersonalDetails().getProperties()
                             .getDateOfBirth().isRequired(), dobValue, R.id.dobContainer,
@@ -452,7 +452,9 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
             }
 
             if (bitmap != null) {
-                base64ProfileImage = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
+                base64ProfileImage = SystemUtil.convertBitmapToString(
+                        SystemUtil.getScaledBitmap(bitmap, CarePayConstants.IMAGE_QUALITY_MAX_PX),
+                        Bitmap.CompressFormat.JPEG, 90);
                 hasNewImage = false;
             }
         }

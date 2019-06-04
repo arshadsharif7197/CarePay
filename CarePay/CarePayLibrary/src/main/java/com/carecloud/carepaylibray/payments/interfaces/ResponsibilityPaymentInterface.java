@@ -27,22 +27,6 @@ public interface ResponsibilityPaymentInterface extends PaymentInterface {
      */
     void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance);
 
-    /**
-     * Callback to launch payment plan flow
-     *
-     * @param paymentsModel payment model
-     */
-    void onPaymentPlanAction(PaymentsModel paymentsModel);
-
-    /**
-     * Callback to display balance details
-     *
-     * @param paymentsModel payment model
-     * @param paymentLineItem line item
-     * @param selectedBalance selected balance
-     */
-    void displayBalanceDetails(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem, PendingBalanceDTO selectedBalance);
-
     @Nullable
     AppointmentDTO getAppointment();
 }

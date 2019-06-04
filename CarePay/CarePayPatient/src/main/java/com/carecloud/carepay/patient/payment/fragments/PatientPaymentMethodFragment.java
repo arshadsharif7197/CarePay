@@ -18,7 +18,7 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayAdapter;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayQueueUploadService;
-import com.carecloud.carepay.patient.payment.androidpay.BreezeDataBase;
+import com.carecloud.carepay.patient.db.BreezeDataBase;
 import com.carecloud.carepay.patient.payment.androidpay.models.AndroidPayQueuePaymentRecord;
 import com.carecloud.carepay.patient.payment.androidpay.models.PayeezyAndroidPayResponse;
 import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
@@ -124,7 +124,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     @Override
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
-        paymentMethodFragmentProgressBar = (ProgressBar) view.findViewById(R.id.paymentMethodFragmentProgressBar);
+        paymentMethodFragmentProgressBar = view.findViewById(R.id.paymentMethodFragmentProgressBar);
     }
 
     @Override
@@ -196,7 +196,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
 
     protected void setupTitleViews(View view) {
         super.setupTitleViews(view);
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         if (toolbar != null) {
             toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {

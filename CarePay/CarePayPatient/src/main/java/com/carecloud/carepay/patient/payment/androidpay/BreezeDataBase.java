@@ -7,6 +7,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 
+import com.carecloud.carepay.patient.db.AndroidPayQueuePaymentRecordDao;
 import com.carecloud.carepay.patient.payment.androidpay.models.AndroidPayQueuePaymentRecord;
 
 
