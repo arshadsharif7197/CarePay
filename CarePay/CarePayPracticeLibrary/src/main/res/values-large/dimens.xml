@@ -801,4 +801,7 @@
     <dimen name="dobVerificationSubTitleTextSize">17sp</dimen>
     <dimen name="largeAlertMessageLabelPadding">3dp</dimen>
 
+    <dimen name="practiceClearButtonContainerPadding">8dp</dimen>
+    <dimen name="searchPatientEditTextHeight">35dp</dimen>
+
 </resources>
