@@ -534,5 +534,6 @@
     <dimen name="completeCheckInItemValueTextSize">16sp</dimen>
     <dimen name="largeAlertMessageTextSize">13sp</dimen>
 
+    <dimen name="inputLayoutRequiredLabelTopMargin">25dp</dimen>
 
 </resources>

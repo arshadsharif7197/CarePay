@@ -916,31 +916,38 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         boolean error = false;
 
         if (validateError(StringUtil.isNullOrEmpty(selectedTypeOption.getName()),
-                userInteraction, view.findViewById(R.id.healthInsuranceTypeLayout))) {
+                userInteraction, view.findViewById(R.id.healthInsuranceTypeLayout),
+                (TextInputLayout)view.findViewById(R.id.healthInsuranceTypeInputLayout))) {
             error = true;
         }
         if (validateError(StringUtil.isNullOrEmpty(selectedProviderOption.getName()),
-                userInteraction, isProviderOther ? view.findViewById(R.id.otherProviderLayout) : view.findViewById(R.id.healthInsuranceProvidersLayout))) {
+                userInteraction, isProviderOther ? view.findViewById(R.id.otherProviderLayout) : view.findViewById(R.id.healthInsuranceProvidersLayout),
+                isProviderOther ? (TextInputLayout) view.findViewById(R.id.otherProviderInputLayout) :
+                        (TextInputLayout) view.findViewById(R.id.healthInsuranceProvidersInputLayout))) {
             error = true;
         }
         if (!isDataHolderSelf) {
             String firstName = ((TextView) view.findViewById(R.id.health_insurance_policy_first_name_holder)).getText().toString().trim();
             if (validateError(StringUtil.isNullOrEmpty(firstName.trim()), userInteraction,
-                    view.findViewById(R.id.healthInsuranceFirstNameContainer))) {
+                    view.findViewById(R.id.healthInsuranceFirstNameContainer),
+                    (TextInputLayout) view.findViewById(R.id.health_insurance_policy_first_name_holder_layout))) {
                 error = true;
             }
             String lastName = ((TextView) view.findViewById(R.id.health_insurance_policy_last_name_holder)).getText().toString().trim();
             if (validateError(StringUtil.isNullOrEmpty(lastName.trim()), userInteraction,
-                    view.findViewById(R.id.healthInsuranceLastNameContainer))) {
+                    view.findViewById(R.id.healthInsuranceLastNameContainer),
+                    (TextInputLayout) view.findViewById(R.id.health_insurance_policy_last_name_holder_layout))) {
                 error = true;
             }
             String dob = ((TextView) view.findViewById(R.id.health_insurance_policy_birth_date_holder)).getText().toString().trim();
-            if (validateError(StringUtil.isNullOrEmpty(dob), userInteraction, view.findViewById(R.id.dateOfBirthContainer))) {
+            if (validateError(StringUtil.isNullOrEmpty(dob), userInteraction, view.findViewById(R.id.dateOfBirthContainer),
+                    (TextInputLayout) view.findViewById(R.id.health_insurance_policy_birth_date_holder_layout))) {
                 error = true;
             }
             if (validateError((StringUtil.isNullOrEmpty(selectedGenderOption.getName()) ||
                     "Choose".equals(selectedGenderOption.getName())),
-                    userInteraction, view.findViewById(R.id.healthInsuranceGenderLayout))) {
+                    userInteraction, view.findViewById(R.id.healthInsuranceGenderLayout),
+                    (TextInputLayout) view.findViewById(R.id.healthInsuranceGenderInputLayout))) {
                 error = true;
             }
             TextInputLayout policyBirthDateHolderInput = view.findViewById(R.id.health_insurance_policy_birth_date_holder_layout);
@@ -970,14 +977,18 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
      * @param container Container for error displays
      * @return Boolean error found
      */
-    public boolean validateError(boolean inputDataBad, boolean userInteraction, View container) {
+    public boolean validateError(boolean inputDataBad, boolean userInteraction, View container, TextInputLayout inputLayout) {
         if (inputDataBad) {
             if (userInteraction) {
                 showErrorViews(true, (ViewGroup) container);
+                inputLayout.setErrorEnabled(true);
+                inputLayout.setError(Label.getLabel("demographics_required_field_msg"));
             }
             return true;
         } else {
             showErrorViews(false, (ViewGroup) container);
+            inputLayout.setError(null);
+            inputLayout.setErrorEnabled(false);
         }
         return false;
     }
@@ -1252,7 +1263,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                         } else if (tag.equals(TAG_ERROR_SHOW_GONE) || tag.equals(TAG_ERROR_SHOW_INV)) {
                             view.setVisibility(View.VISIBLE);
                         } else if (tag.equals(TAG_ERROR_COLOR)) {
-                            view.setSelected(true);
                             if (view instanceof TextInputLayout) {
                                 EditText editText = ((TextInputLayout) view).getEditText();
                                 editText.getBackground().setColorFilter(ContextCompat.getColor(getContext(), R.color.remove_red), PorterDuff.Mode.SRC_IN);
