@@ -93,7 +93,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     private RecyclerView checkingOutRecyclerView;
     private RecyclerView checkedOutRecyclerView;
 
-    private FilterModel filter;
+    private FilterModel filterModel;
 
     private Handler handler;
 
@@ -103,7 +103,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     CheckedInAppointmentAdapter checkedOutAdapter;
 
     CarePayTextView goBackTextView;
-    CarePayTextView filterOnTextView;
+    CarePayTextView filterTextViewOn;
     CarePayTextView filterTextView;
     CarePayTextView checkingInCounterTextView;
     CarePayTextView waitingCounterTextView;
@@ -125,9 +125,10 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_check_in);
-        filter = new FilterModel();
+        filterModel = new FilterModel();
         initializationView();
         populateLists();
+        setUpFilter();
         setAdapter();
     }
 
@@ -152,8 +153,6 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     private void initializationView() {
         goBackTextView = findViewById(R.id.goBackTextview);
-        filterOnTextView = findViewById(R.id.filterOnTextView);
-        filterTextView = findViewById(R.id.filterTextView);
         checkingInCounterTextView = findViewById(R.id.checkingInCounterTextview);
         waitingCounterTextView = findViewById(R.id.waitingCounterTextview);
         checkingOutCounterTextView = findViewById(R.id.checkingOutCounterTextview);
@@ -181,12 +180,20 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         checkedOutRecyclerView.setItemAnimator(new DefaultItemAnimator());
         checkedOutRecyclerView.setLayoutManager(new LinearLayoutManager(PracticeModeCheckInActivity.this));
 
-
-        filterOnTextView.setVisibility(View.GONE);
-        filterTextView.setVisibility(View.VISIBLE);
-
         goBackTextView.setOnClickListener(onGoBackButtonClick());
         findViewById(R.id.filterLayout).setOnClickListener(onFilterIconClick());
+    }
+
+    private void setUpFilter() {
+        filterTextView = findViewById(R.id.filterTextView);
+        filterTextView.setOnClickListener(onFilterIconClick());
+        filterTextViewOn = findViewById(R.id.filterTextViewOn);
+        filterTextViewOn.setOnClickListener(onFilterIconClick());
+        if (filterModel.areThereActiveFilters()) {
+            filterTextViewOn.setVisibility(View.VISIBLE);
+        } else {
+            filterTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     @NonNull
@@ -210,10 +217,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
             @Override
             public void onClick(View view) {
                 FilterDialog filterDialog = new FilterDialog(getContext(),
-                        findViewById(R.id.activity_checked_in), filter,
-                        Label.getLabel("practice_checkin_filter"),
-                        Label.getLabel("practice_checkin_filter_find_patient_by_name"),
-                        Label.getLabel("practice_checkin_filter_clear_filters"));
+                        findViewById(R.id.activity_checked_in), filterModel);
 
                 filterDialog.showPopWindow();
             }
@@ -222,10 +226,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     private void populateLists() {
         ArrayList<FilterDataDTO> patients = new ArrayList<>();
-
         Map<String, String> photoMap = PracticeUtil.getProfilePhotoMap(checkInDTO.getPayload()
                 .getPatientBalances());
-
         CheckInPayloadDTO payload = checkInDTO.getPayload();
         if (null == payload) {
             return;
@@ -244,9 +246,9 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
             addPatientOnFilterList(patients, appointmentPayloadDTO, photoMap);
         }
 
-        filter.setDoctors(getFilterProviders(providersSavedFilteredIds));
-        filter.setLocations(getFilterLocations(locationsSavedFilteredIds));
-        filter.setPatients(patients);
+        filterModel.setDoctors(getFilterProviders(providersSavedFilteredIds));
+        filterModel.setLocations(getFilterLocations(locationsSavedFilteredIds));
+        filterModel.setPatients(patients);
     }
 
     private ArrayList<FilterDataDTO> getFilterLocations(Set<String> selectedLocationsIds) {
@@ -509,10 +511,10 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @Override
     public void applyFilter() {
-        checkingInAdapter.applyFilter(filter);
-        checkedInAdapter.applyFilter(filter);
-        checkingOutAdapter.applyFilter(filter);
-        checkedOutAdapter.applyFilter(filter);
+        checkingInAdapter.applyFilter(filterModel);
+        checkedInAdapter.applyFilter(filterModel);
+        checkingOutAdapter.applyFilter(filterModel);
+        checkedOutAdapter.applyFilter(filterModel);
         checkingInCounterTextView.setText(String.valueOf(checkingInAdapter.getItemCount()));
         waitingCounterTextView.setText(String.valueOf(checkedInAdapter.getItemCount()));
         checkingOutCounterTextView.setText(String.valueOf(checkingOutAdapter.getItemCount()));
@@ -522,6 +524,12 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     @Override
     public void refreshData() {
         refreshLists(true);
+    }
+
+    @Override
+    public void showFilterFlag(boolean areThereActiveFilters) {
+        filterTextView.setVisibility(areThereActiveFilters ? View.GONE : View.VISIBLE);
+        filterTextViewOn.setVisibility(areThereActiveFilters ? View.VISIBLE : View.GONE);
     }
 
     private PendingBalanceDTO getPatientBalanceDTOs(String patientId) {

@@ -15,6 +15,7 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.squareup.timessquare.CalendarPickerView;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -83,6 +84,13 @@ public class DatePickerFragment extends BaseDialogFragment {
         Bundle arguments = getArguments();
         startDate = (Date) arguments.getSerializable("startDate");
         endDate = (Date) arguments.getSerializable("endDate");
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.setTimeInMillis(endDate.getTime());
+        endCalendar.add(Calendar.DAY_OF_YEAR, 1);
+        endCalendar.set(Calendar.HOUR_OF_DAY, 23);
+        if (endCalendar.compareTo(Calendar.getInstance()) < 0) {
+            endDate = endCalendar.getTime();
+        }
         selectedDate = (Date) arguments.getSerializable("selectedDate");
         showDate = (Date) arguments.getSerializable("showDate");
         flag = arguments.getInt("flag");

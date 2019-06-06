@@ -530,8 +530,11 @@
     <dimen name="completeCheckInItemMargin">14dp</dimen>
     <dimen name="completeCheckInItemTextSize">22sp</dimen>
     <dimen name="completeCheckInItemValueTextSize">16sp</dimen>
+
     <dimen name="largeAlertMessageTextSize">13sp</dimen>
     <dimen name="patient_bottom_round_dimen">5dp</dimen>
+    <dimen name="appointmentDialStartMargin">5dp</dimen>
+    <dimen name="appoinmentDialogButtonsTopMargin">10dp</dimen>
 
     <dimen name="paymentDetailDialogMargin">10dp</dimen>
 

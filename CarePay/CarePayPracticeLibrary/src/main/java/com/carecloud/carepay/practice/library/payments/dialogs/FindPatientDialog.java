@@ -178,7 +178,7 @@ public class FindPatientDialog extends BaseDialogFragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            if(isAdded()) {
+            if (isAdded()) {
                 findViewById(R.id.patient_searched_list).setVisibility(View.GONE);
                 findViewById(R.id.patient_not_found_text).setVisibility(View.VISIBLE);
             }

@@ -20,6 +20,8 @@ import com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFrag
 import com.carecloud.carepay.patient.payment.fragments.PaymentDisabledAlertDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
+import com.carecloud.carepay.patient.rate.RateDialog;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
@@ -46,7 +48,6 @@ import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
@@ -258,6 +259,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         displayPage = PAGE_BALANCES;
         initFragments();
         refreshBalance(true);
+        showRateDialogFragment();
     }
 
     @Override
@@ -539,6 +541,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void completePaymentPlanProcess(WorkflowDTO workflowDTO) {
+        showRateDialogFragment();
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         List<PaymentPlanDTO> paymentPlanList = this.paymentsDTO.getPaymentPayload().getPatientPaymentPlans();
 
@@ -559,6 +562,12 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         paymentPlanList.addAll(paymentsModel.getPaymentPayload().getPatientPaymentPlans());
         completePaymentProcess(workflowDTO);
 
+    }
+
+    private void showRateDialogFragment() {
+        if (ApplicationPreferences.getInstance().shouldShowRateDialog()) {
+            displayDialogFragment(RateDialog.newInstance(), true);
+        }
     }
 
     private void refreshBalance(boolean showProgress) {

@@ -361,7 +361,6 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         } else {
             if (fromDate != null) {
                 fromCalendar.setTimeInMillis(fromDate.getTime());
-                fromCalendar.add(Calendar.DAY_OF_YEAR, 1);
                 showCalendar = fromCalendar;
             }
         }
