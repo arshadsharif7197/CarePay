@@ -214,7 +214,7 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
 
     @Override
     public void onCreditCardSelected(PaymentCreditCardsPayloadDTO papiPaymentMethod) {
-
+        //Works only when chooseCreditCardFragment is used in selectMode
     }
 
     @Override

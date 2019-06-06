@@ -142,8 +142,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:background="@drawable/round_bottom_white_background"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_bottom_white_background">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/applyDateRangeButton"

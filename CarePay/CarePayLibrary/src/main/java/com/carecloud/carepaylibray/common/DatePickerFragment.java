@@ -1,6 +1,5 @@
 package com.carecloud.carepaylibray.common;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -48,7 +47,6 @@ public class DatePickerFragment extends BaseDialogFragment {
         return newInstance(dialogTitle, startDate, endDate, callback, DEFAULT_FLAG);
     }
 
-
     public static DatePickerFragment newInstance(String dialogTitle,
                                                  Date startDate,
                                                  Date endDate,
@@ -65,7 +63,6 @@ public class DatePickerFragment extends BaseDialogFragment {
                                                  DateRangePickerDialogListener callback,
                                                  int flag) {
         Bundle args = new Bundle();
-        args.putString("dialogTitle", dialogTitle);
         args.putSerializable("startDate", startDate);
         args.putSerializable("endDate", endDate);
         if (selectedDate != null) {
@@ -78,15 +75,6 @@ public class DatePickerFragment extends BaseDialogFragment {
         dialog.setArguments(args);
         dialog.setListener(callback);
         return dialog;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-        } catch (ClassCastException e) {
-            throw new ClassCastException("Context must implement FragmentActivityInterface");
-        }
     }
 
     @Override

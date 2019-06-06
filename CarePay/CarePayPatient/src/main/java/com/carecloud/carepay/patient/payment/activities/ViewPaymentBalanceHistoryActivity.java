@@ -15,6 +15,7 @@ import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialo
 import com.carecloud.carepay.patient.payment.fragments.NoPaymentsFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentPlanDetailsDialogFragment;
+import com.carecloud.carepay.patient.payment.fragments.PatientPaymentPlanEditFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentDisabledAlertDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanPaymentMethodFragment;
@@ -246,9 +247,9 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void onCreditCardSelected(PaymentCreditCardsPayloadDTO creditCard) {
-        String tag = PaymentPlanEditFragment.class.getName();
+        String tag = PatientPaymentPlanEditFragment.class.getName();
         getSupportFragmentManager().popBackStackImmediate(tag, 0);
-        PaymentPlanEditFragment fragment = (PaymentPlanEditFragment) getSupportFragmentManager()
+        PatientPaymentPlanEditFragment fragment = (PatientPaymentPlanEditFragment) getSupportFragmentManager()
                 .findFragmentByTag(tag);
         fragment.replacePaymentMethod(creditCard);
     }
