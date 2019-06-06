@@ -16,6 +16,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
+import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -38,7 +39,12 @@ public abstract class PaymentPlanAmountDialog extends PartialPaymentDialog {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (FragmentActivityInterface) context;
+//            callback = (FragmentActivityInterface) context;
+            if (context instanceof PaymentViewHandler) {
+                callback = ((PaymentViewHandler) context).getPaymentPresenter();
+            } else {
+                callback = (PaymentDetailInterface) context;
+            }
         } catch (ClassCastException cce) {
             throw new ClassCastException("Attached Context must implement FragmentActivityInterface");
         }

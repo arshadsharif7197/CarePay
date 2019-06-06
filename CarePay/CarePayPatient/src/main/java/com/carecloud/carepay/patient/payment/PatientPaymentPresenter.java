@@ -103,7 +103,7 @@ public class PatientPaymentPresenter extends PaymentPresenter
 
     @Override
     public void replaceFragment(Fragment fragment, boolean addToBackStack) {
-        viewHandler.navigateToFragment(fragment, true);
+        viewHandler.navigateToFragment(fragment, addToBackStack);
     }
 
     @Override
@@ -206,11 +206,11 @@ public class PatientPaymentPresenter extends PaymentPresenter
         return viewHandler.getAppointment();
     }
 
+    //TODO: Delete this when refactor. This code is not used anymore
 //    @Override
 //    public void onPaymentPlanAmount(PaymentsModel paymentsModel,
 //                                    PendingBalanceDTO selectedBalance,
 //                                    double amount) {
-    //TODO: Delete this when refactor. This code is not used anymore
 //        boolean addExisting = false;
 //        if(paymentsModel.getPaymentPayload().mustAddToExisting(amount, selectedBalance)){
 //            onAddBalanceToExistingPlan(paymentsModel, selectedBalance, amount);

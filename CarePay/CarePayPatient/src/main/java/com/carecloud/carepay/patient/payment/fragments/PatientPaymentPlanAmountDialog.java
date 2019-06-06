@@ -51,7 +51,9 @@ public class PatientPaymentPlanAmountDialog extends PaymentPlanAmountDialog {
             });
             logPaymentPlanStartedMixPanelEvent(addExisting);
             callback.replaceFragment(fragment, true);
-            ((ToolbarInterface) callback).displayToolbar(false, null);
+            if (callback instanceof ToolbarInterface) {
+                ((ToolbarInterface) callback).displayToolbar(false, null);
+            }
         } catch (NumberFormatException nfe) {
             nfe.printStackTrace();
             Toast.makeText(getContext(), "Please enter valid amount!", Toast.LENGTH_LONG).show();

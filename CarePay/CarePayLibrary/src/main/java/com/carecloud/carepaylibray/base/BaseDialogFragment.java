@@ -62,7 +62,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         if (isPracticeAppPatientMode) {
             setNavigationBarVisibility();
         }
-        setUpBlur();
+//        setUpBlur();
     }
 
     private void setUpBlur() {
