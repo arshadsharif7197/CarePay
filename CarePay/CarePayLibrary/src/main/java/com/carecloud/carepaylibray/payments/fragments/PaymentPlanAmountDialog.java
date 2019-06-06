@@ -39,12 +39,7 @@ public abstract class PaymentPlanAmountDialog extends PartialPaymentDialog {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-//            callback = (FragmentActivityInterface) context;
-            if (context instanceof PaymentViewHandler) {
-                callback = ((PaymentViewHandler) context).getPaymentPresenter();
-            } else {
-                callback = (PaymentDetailInterface) context;
-            }
+            callback = (FragmentActivityInterface) context;
         } catch (ClassCastException cce) {
             throw new ClassCastException("Attached Context must implement FragmentActivityInterface");
         }
