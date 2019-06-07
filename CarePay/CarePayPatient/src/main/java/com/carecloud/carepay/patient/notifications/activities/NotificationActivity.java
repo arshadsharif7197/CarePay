@@ -1,13 +1,16 @@
 package com.carecloud.carepay.patient.notifications.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.patient.notifications.fragments.NotificationFragment;
 import com.carecloud.carepay.patient.notifications.models.NotificationItem;
@@ -16,6 +19,8 @@ import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
+import com.carecloud.carepay.patient.rate.RateDialog;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -45,6 +50,7 @@ public class NotificationActivity extends MenuPatientActivity
 
     private PatientAppointmentPresenter appointmentPresenter;
     private NotificationsDTO notificationsDTO;
+    private static final int SURVEY_FLOW = 100;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -95,6 +101,19 @@ public class NotificationActivity extends MenuPatientActivity
             case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_FULL_WALLET:
                 appointmentPresenter.forwardAndroidPayResult(requestCode, resultCode, data);
+                break;
+            case SURVEY_FLOW:
+                if (resultCode == Activity.RESULT_OK
+                        && data.getBooleanExtra(CarePayConstants.SHOW_SURVEY, false)) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (ApplicationPreferences.getInstance().shouldShowRateDialog()) {
+                                displayDialogFragment(RateDialog.newInstance(), true);
+                            }
+                        }
+                    }, 100);
+                }
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
@@ -176,7 +195,8 @@ public class NotificationActivity extends MenuPatientActivity
                         Bundle bundle = new Bundle();
                         bundle.putString(CarePayConstants.PATIENT_ID, notificationItem.getMetadata().getPatientId());
                         bundle.putBoolean(CarePayConstants.NOTIFICATIONS_FLOW, true);
-                        navigateToWorkflow(workflowDTO, bundle);
+                        PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, true,
+                                SURVEY_FLOW, bundle);
                     }
 
                     @Override

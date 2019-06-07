@@ -35,7 +35,7 @@ public class StringUtil {
     }
 
 
-    public static String getFormatedLabal(Context context, String label) {
+    public static String getFormatedLabel(Context context, String label) {
         return isNullOrEmpty(label) ? context.getString(R.string.not_defined) : label;
     }
 

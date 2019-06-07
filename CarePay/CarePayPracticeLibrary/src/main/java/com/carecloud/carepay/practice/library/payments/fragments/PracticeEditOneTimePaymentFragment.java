@@ -1,6 +1,5 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -125,12 +124,7 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
                 Label.getLabel("button_yes"));
         confirmDialogFragment.setCallback(confirmDeleteCallback);
         confirmDialogFragment.setNegativeAction(true);
-        confirmDialogFragment.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                showDialog();
-            }
-        });
+        confirmDialogFragment.setOnCancelListener(onDialogCancelListener);
         confirmDialogFragment.show(getFragmentManager(), null);
         hideDialog();
     }

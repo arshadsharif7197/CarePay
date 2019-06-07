@@ -83,8 +83,8 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
     private UserPracticeDTO selectedPractice;
     private Date fromDate;
     private Date toDate;
-    private TextView dateToTextView;
     private TextView dateFromTextView;
+    private TextView dateToTextView;
     private CheckBox encryptedCheckBox;
     private EditText emailEditText;
     private RadioButton pdfOption;
@@ -246,7 +246,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         dateFromTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showCalendar(FROM_DATE);
+                showCalendar(FROM_DATE, dateFromTextView.getText().toString());
             }
         });
         dateFromTextView.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(dateFromTextInputLayout, null));
@@ -256,7 +256,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         dateToTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showCalendar(TO_DATE);
+                showCalendar(TO_DATE, dateToTextView.getText().toString());
             }
         });
         dateToTextView.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(dateToTextInputLayout, null));
@@ -349,20 +349,32 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         exportButton.setOnClickListener(exportSummaryListener);
     }
 
-    private void showCalendar(int flag) {
-        Calendar calendar = Calendar.getInstance();
-        if (flag == TO_DATE) {
-            calendar.setTimeInMillis(fromDate.getTime());
+    private void showCalendar(int flag, String showDate) {
+        Calendar fromCalendar = Calendar.getInstance();
+        Calendar toCalendar = Calendar.getInstance();
+        Calendar showCalendar = Calendar.getInstance();
+        toCalendar.add(Calendar.DATE, 1);
+        if (flag == FROM_DATE) {
+            fromCalendar.set(2000, 1, 1);
+            if (toDate != null) {
+                toCalendar.setTimeInMillis(toDate.getTime());
+            }
         } else {
-            calendar.set(1900, 1, 1);
+            if (fromDate != null) {
+                fromCalendar.setTimeInMillis(fromDate.getTime());
+                showCalendar = fromCalendar;
+            }
         }
-        Calendar dueCal = Calendar.getInstance();
-        dueCal.add(Calendar.DATE, 1);
+        Date selectedDate = null;
+        if (!StringUtil.isNullOrEmpty(showDate)) {
+            selectedDate = DateUtil.getInstance().setDateRaw(showDate).getDate();
+        }
         DatePickerFragment fragment = DatePickerFragment
-                .newInstance(Label.getLabel("payment.oneTimePayment.input.label.date"),
-                        calendar.getTime(),
-                        dueCal.getTime(),
-                        dueCal.getTime(),
+                .newInstance(Label.getLabel("pick_date_heading"),
+                        fromCalendar.getTime(),
+                        toCalendar.getTime(),
+                        selectedDate,
+                        showCalendar.getTime(),
                         new DatePickerFragment.DateRangePickerDialogListener() {
                             @Override
                             public void onDateSelected(Date selectedDate, int flag) {
@@ -372,9 +384,6 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                                         dateFromTextView.setText(DateUtil.getInstance().setDate(fromDate)
                                                 .toStringWithFormatMmSlashDdSlashYyyy());
                                         dateFromTextView.getOnFocusChangeListener().onFocusChange(dateFromTextView, true);
-                                        dateToTextView.setText("");
-                                        dateToTextView.getOnFocusChangeListener().onFocusChange(dateToTextView, false);
-                                        toDate = null;
                                         dateToTextView.setEnabled(true);
                                     }
                                 } else {
@@ -482,7 +491,6 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         query.put("job_id", jobId);
         query.put("practice_mgmt", selectedPractice.getPracticeMgmt());
         ((BaseActivity) getActivity()).getWorkflowServiceHelper().execute(transition, new WorkflowServiceCallback() {
-            boolean failedParsing = false;
 
             @Override
             public void onPreExecute() {
@@ -494,7 +502,6 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                 try {
                     visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
                 } catch (Exception ex) {
-                    failedParsing = true;
                     onFailure("");
                 }
                 String status = visitSummaryDTO.getPayload().getVisitSummary().getStatus();
@@ -515,7 +522,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
             @Override
             public void onFailure(String exceptionMessage) {
                 Log.e("OkHttp", exceptionMessage);
-                if (failedParsing) {
+                if (exceptionMessage.contains("JSON")) {
                     downloadFile(jobId, selectedPractice, format);
                 } else {
                     resetProcess();

@@ -122,8 +122,6 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
                 break;
             }
             case PENDING: {
-                holder.todayTimeMessage.setVisibility(View.VISIBLE);
-                holder.todayTimeMessage.setText(Label.getLabel("appointment_status_pending"));
                 holder.todayTimeLayout.setVisibility(View.VISIBLE);
                 holder.todayTimeTextView.setText(dateUtil.getTime12Hour());
                 holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.emerald));
@@ -134,6 +132,8 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
                 break;
             }
             case REQUESTED: {
+                holder.todayTimeMessage.setVisibility(View.VISIBLE);
+                holder.todayTimeMessage.setText(Label.getLabel("appointment_status_pending"));
                 holder.todayTimeLayout.setVisibility(View.VISIBLE);
                 holder.todayTimeTextView.setText(dateUtil.getTime12Hour());
                 holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.lightning_yellow));

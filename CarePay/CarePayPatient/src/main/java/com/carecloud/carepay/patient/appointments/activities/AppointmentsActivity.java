@@ -17,6 +17,8 @@ import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPr
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
+import com.carecloud.carepay.patient.rate.RateDialog;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -50,14 +52,20 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         super.onCreate(savedInstanceState);
         Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
         boolean forceRefresh = false;
+        boolean showSurvey = false;
         if (extra != null) {
             forceRefresh = extra.getBoolean(CarePayConstants.REFRESH, false);
+            showSurvey = extra.getBoolean(CarePayConstants.SHOW_SURVEY, false);
         }
         appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
         if (appointmentsResultModel == null || forceRefresh) {
             callAppointmentService();
         } else {
             resumeOnCreate();
+        }
+
+        if (showSurvey || forceRefresh) {
+            showRateDialogFragment();
         }
     }
 
@@ -115,6 +123,14 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                         @Override
                         public void run() {
                             refreshAppointments();
+                            showRateDialogFragment();
+                        }
+                    }, 100);
+                } else if (resultCode == RESULT_OK) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            showRateDialogFragment();
                         }
                     }, 100);
                 }
@@ -122,6 +138,12 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             default:
                 super.onActivityResult(requestCode, resultCode, data);
                 break;
+        }
+    }
+
+    private void showRateDialogFragment() {
+        if (ApplicationPreferences.getInstance().shouldShowRateDialog()) {
+            displayDialogFragment(RateDialog.newInstance(), true);
         }
     }
 
@@ -139,7 +161,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     }
 
     @Override
-    public void onBackPressed() {// sign-out from Cognito
+    public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);

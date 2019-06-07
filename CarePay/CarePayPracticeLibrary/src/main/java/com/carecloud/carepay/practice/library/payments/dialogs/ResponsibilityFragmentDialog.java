@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.library.payments.dialogs;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -50,12 +51,6 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
     private ResponsibilityHeaderModel headerModel;
 
     private boolean mustAddToExisting = false;
-
-    @Override
-    public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
-        callback.onDetailItemClick(paymentsModel, paymentLineItem);
-        dismiss();
-    }
 
     /**
      * @param paymentsModel the payment model
@@ -262,7 +257,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
 
         void onMiddleActionTapped(PaymentsModel paymentsModel, double amount);
 
-        void onDetailItemClick(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem);
+        void displayDialogFragment(DialogFragment fragment, boolean addToBackStack);
     }
 
     private void createPaymentModel(double payAmount) {
@@ -397,5 +392,14 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
         }
 
         return false;
+    }
+
+    @Override
+    public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
+        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
+                .newInstance(paymentsModel, paymentLineItem, false);
+        dialog.setOnCancelListener(onDialogCancelListener);
+        callback.displayDialogFragment(dialog, true);
+        hideDialog();
     }
 }

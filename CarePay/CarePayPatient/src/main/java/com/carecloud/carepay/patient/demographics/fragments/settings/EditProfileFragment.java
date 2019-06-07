@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -318,7 +319,8 @@ public class EditProfileFragment extends BaseFragment implements MediaViewInterf
                 }
             }
             if (bitmap != null) {
-                String imageAsBase64 = SystemUtil.convertBitmapToString(bitmap,
+                String imageAsBase64 = SystemUtil.convertBitmapToString(
+                        SystemUtil.getScaledBitmap(bitmap, CarePayConstants.IMAGE_QUALITY_MAX_PX),
                         Bitmap.CompressFormat.JPEG, 90);
                 PatientModel demographicsPersonalDetails = demographicsSettingsDTO.getPayload()
                         .getDemographics().getPayload().getPersonalDetails();

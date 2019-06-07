@@ -8,6 +8,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 /**
@@ -36,8 +37,7 @@ public class PatientModePaymentPlanFragment extends PaymentPlanFragment {
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
-                callback.onDismissPaymentPlan(paymentsModel);
+                cancel();
             }
         });
     }
@@ -56,15 +56,26 @@ public class PatientModePaymentPlanFragment extends PaymentPlanFragment {
     protected void createPaymentPlanPostModel(boolean userInteraction) {
         super.createPaymentPlanPostModel(userInteraction);
         if (validateFields(true)) {
-            dismiss();
         }
     }
 
     @Override
-    protected void addBalanceToExisting() {
-        super.addBalanceToExisting();
-        dismiss();
+    protected void onAddBalanceToExistingPlan() {
+        PracticeValidPlansFragment fragment = PracticeValidPlansFragment
+                .newInstance(paymentsModel, selectedBalance, paymentPlanAmount, false);
+        fragment.setOnCancelListener(onDialogCancelListener);
+        callback.displayDialogFragment(fragment, true);
+        hideDialog();
+        logPaymentPlanStartedMixPanelEvent();
     }
 
+    @Override
+    protected void createPaymentPlanNextStep(PaymentPlanPostModel postModel) {
+        PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
+                .newInstance(paymentsModel, postModel);
+        fragment.setOnCancelListener(onDialogCancelListener);
+        callback.displayDialogFragment(fragment, true);
+        hideDialog();
+    }
 
 }

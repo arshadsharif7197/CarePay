@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.List;
 
@@ -24,7 +25,8 @@ public class PatientSearchResultAdapter extends RecyclerView.Adapter<PatientSear
 
     /**
      * Constructor
-     * @param context context
+     *
+     * @param context  context
      * @param patients patient list
      */
     public PatientSearchResultAdapter(Context context, List<PatientModel> patients) {
@@ -45,7 +47,7 @@ public class PatientSearchResultAdapter extends RecyclerView.Adapter<PatientSear
     @Override
     public void onBindViewHolder(PatientSearchResultAdapter.ViewHolder holder, int position) {
         PatientModel patient = patients.get(position);
-        holder.name.setText(patient.getFullName());
+        holder.name.setText(StringUtil.capitalize(patient.getFullName()));
         holder.itemView.setContentDescription(patient.getFullName());
         holder.patientDOBTextView.setText(patient.getFormattedDateOfBirth());
     }
@@ -62,6 +64,7 @@ public class PatientSearchResultAdapter extends RecyclerView.Adapter<PatientSear
 
         /**
          * Constructor
+         *
          * @param itemView view
          */
         public ViewHolder(View itemView) {

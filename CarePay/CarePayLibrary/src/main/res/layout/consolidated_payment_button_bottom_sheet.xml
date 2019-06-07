@@ -65,15 +65,15 @@
             android:layout_centerVertical="true"
             android:layout_margin="@dimen/dimen_10dp"
             android:padding="@dimen/dimen_3dp"
-            android:src="@drawable/icn_pay_option_full"/>
+            android:src="@drawable/icn_pay_option_full" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/payTotalTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginBottom="@dimen/dimen_30dp"
             android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginBottom="@dimen/dimen_30dp"
             android:layout_toEndOf="@id/totalAmountProgressBar"
             android:gravity="start"
             android:textColor="@color/textview_default_textcolor"
@@ -102,15 +102,15 @@
             android:layout_centerVertical="true"
             android:layout_margin="@dimen/dimen_10dp"
             android:padding="@dimen/dimen_3dp"
-            android:src="@drawable/icn_pay_option_partial"/>
+            android:src="@drawable/icn_pay_option_partial" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/partialPaymentTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginBottom="@dimen/dimen_30dp"
             android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginBottom="@dimen/dimen_30dp"
             android:layout_toEndOf="@id/partialPaymentProgressBar"
             android:gravity="start"
             android:textColor="@color/textview_default_textcolor"
@@ -140,15 +140,15 @@
             android:layout_centerVertical="true"
             android:layout_margin="@dimen/dimen_10dp"
             android:padding="@dimen/dimen_1dp"
-            android:src="@drawable/icn_pay_option_plan"/>
+            android:src="@drawable/icn_pay_option_plan" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/paymentPlanTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginBottom="@dimen/dimen_30dp"
             android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginBottom="@dimen/dimen_30dp"
             android:layout_toEndOf="@id/paymentPlanProgressBar"
             android:gravity="start"
             android:textColor="@color/textview_default_textcolor"
@@ -177,15 +177,15 @@
             android:layout_centerVertical="true"
             android:layout_margin="@dimen/dimen_10dp"
             android:padding="@dimen/dimen_3dp"
-            android:src="@drawable/icn_pay_option_later"/>
+            android:src="@drawable/icn_pay_option_later" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/payLaterTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginBottom="@dimen/dimen_30dp"
             android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginBottom="@dimen/dimen_30dp"
             android:layout_toEndOf="@id/payLaterProgressBar"
             android:gravity="start"
             android:textColor="@color/textview_default_textcolor"
@@ -206,8 +206,8 @@
         style="@style/SigninNewAccountButtonStyle"
         customAssetFont="gotham_rounded_medium"
         android:layout_height="@dimen/dimen_50dp"
-        android:layout_marginBottom="5dp"
         android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_marginBottom="5dp"
         android:foreground="?android:selectableItemBackground"
         breeze:textKey="cancel"
         tools:text="Cancel" />

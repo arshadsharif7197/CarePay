@@ -154,9 +154,10 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
 
     @Override
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
-        PracticeAddNewCreditCardFragment fragment = PracticeAddNewCreditCardFragment
-                .newInstance(paymentsModel, amount);
-        displayDialogFragment(fragment, true);
+        //TODO: Delete this when refactor. This code is not used anymore
+//        PracticeAddNewCreditCardFragment fragment = PracticeAddNewCreditCardFragment
+//                .newInstance(paymentsModel, amount);
+//        displayDialogFragment(fragment, true);
     }
 
     @Override
@@ -190,21 +191,21 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
     }
 
     @Override
-    public void onPaymentPlanAction(PaymentsModel paymentsModel) {
+    public void onPaymentCashFinished() {
 
     }
 
     @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount,
                                       PaymentsModel paymentsModel) {
-        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
-                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
-            ChooseCreditCardFragment fragment = ChooseCreditCardFragment.newInstance(paymentsModel,
-                    selectedPaymentMethod.getLabel(), amount);
-            displayDialogFragment(fragment, true);
-        } else {
-            showAddCard(amount, paymentsModel);
-        }
+//        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
+//                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+//            ChooseCreditCardFragment fragment = ChooseCreditCardFragment.newInstance(paymentsModel,
+//                    selectedPaymentMethod.getLabel(), amount);
+//            displayDialogFragment(fragment, true);
+//        } else {
+//            showAddCard(amount, paymentsModel);
+//        }
     }
 
     @Nullable
@@ -235,13 +236,6 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public void onDismissPaymentMethodDialog(PaymentsModel paymentsModel) {
-        //when dismissing the payment method dialog the nav bar was showing up
-        setSystemUiVisibility();
-        setNavigationBarVisibility();
     }
 
     @Override

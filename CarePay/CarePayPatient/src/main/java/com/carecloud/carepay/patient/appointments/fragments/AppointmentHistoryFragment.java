@@ -241,7 +241,7 @@ public class AppointmentHistoryFragment extends BaseFragment
                         List<AppointmentDTO> appointments = filterAppointments(appointmentDto
                                 .getPayload().getAppointments());
                         if (appointments.size() > 0) {
-                            showHistoricAppointments(appointmentDto.getPayload().getAppointments(), refresh);
+                            showHistoricAppointments(appointments, refresh);
                         } else if (!appointmentDto.getPayload().canViewAppointments(userPracticeDTO.getPracticeId())) {
                             //when there are no permissions to see appointments, MW sends no appointments
                             showNoPermissionsLayout();

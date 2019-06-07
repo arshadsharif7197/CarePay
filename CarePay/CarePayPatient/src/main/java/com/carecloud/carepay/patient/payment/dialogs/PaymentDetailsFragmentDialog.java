@@ -21,6 +21,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.base.ToolbarInterface;
+import com.carecloud.carepay.patient.payment.fragments.PatientPartialPaymentDialog;
+import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
+import com.carecloud.carepay.patient.payment.fragments.PatientPaymentPlanAmountDialog;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.adapters.PaymentItemsListAdapter;
@@ -35,6 +39,7 @@ import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.StatementDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.FileDownloadUtil;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
@@ -175,46 +180,6 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
     }
 
     private void setUpBottomSheet(View view, boolean canMakePayments) {
-        View payTotalAmountContainer = view.findViewById(R.id.payTotalAmountContainer);
-        payTotalAmountContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-                callback.onPayButtonClicked(paymentPayload.getAmount(), paymentReceiptModel);
-            }
-        });
-
-        View partialPaymentContainer = view.findViewById(R.id.partialPaymentContainer);
-        partialPaymentContainer.setVisibility(isPartialPayAvailable(selectedBalance.getMetadata()
-                .getPracticeId(), paymentPayload.getAmount())
-                ? View.VISIBLE : View.GONE);
-        partialPaymentContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-                callback.onPartialPaymentClicked(paymentPayload.getAmount(), selectedBalance);
-            }
-        });
-
-        View paymentPlanContainer = view.findViewById(R.id.paymentPlanContainer);
-        paymentPlanContainer.setVisibility(isPaymentPlanAvailable(selectedBalance.getMetadata()
-                .getPracticeId(), paymentPayload.getAmount())
-                ? View.VISIBLE : View.GONE);
-        paymentPlanContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-                callback.onPaymentPlanAction(paymentReceiptModel);
-            }
-        });
-        if (mustAddToExisting) {
-            TextView paymentPlanTextView = paymentPlanContainer.findViewById(R.id.paymentPlanTextView);
-            paymentPlanTextView.setText(Label.getLabel("payment_plan_add_existing"));
-        }
-
-        boolean showPaymentButtons = getArguments().getBoolean("showPaymentButtons", false);
-        view.findViewById(R.id.consolidatedPaymentButton).setVisibility((showPaymentButtons && canMakePayments) ? View.VISIBLE : View.GONE);
-
         final View shadow = view.findViewById(R.id.shadow);
         LinearLayout llBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
         final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
@@ -229,6 +194,66 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                 shadow.setAlpha(slideOffset);
             }
         });
+
+        View payTotalAmountContainer = view.findViewById(R.id.payTotalAmountContainer);
+        payTotalAmountContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+                PatientPaymentMethodFragment fragment = PatientPaymentMethodFragment
+                        .newInstance(paymentReceiptModel, paymentPayload.getAmount(), false);
+                callback.replaceFragment(fragment, true);
+                logFullPaymentMixPanelEvent();
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                ((ToolbarInterface) callback).displayToolbar(false, null);
+            }
+        });
+
+        View partialPaymentContainer = view.findViewById(R.id.partialPaymentContainer);
+        partialPaymentContainer.setVisibility(isPartialPayAvailable(selectedBalance.getMetadata()
+                .getPracticeId(), paymentPayload.getAmount())
+                ? View.VISIBLE : View.GONE);
+        partialPaymentContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PatientPartialPaymentDialog fragment = PatientPartialPaymentDialog.newInstance(paymentReceiptModel, selectedBalance);
+                fragment.setOnCancelListener(onDialogCancelListener);
+                callback.displayDialogFragment(fragment, true);
+                hideDialog();
+                MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment),
+                        getString(R.string.param_practice_id),
+                        selectedBalance.getMetadata().getPracticeId());
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            }
+        });
+
+        View paymentPlanContainer = view.findViewById(R.id.paymentPlanContainer);
+        paymentPlanContainer.setVisibility(isPaymentPlanAvailable(selectedBalance.getMetadata()
+                .getPracticeId(), paymentPayload.getAmount())
+                ? View.VISIBLE : View.GONE);
+        paymentPlanContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PendingBalanceDTO reducedBalancesItem = paymentReceiptModel.getPaymentPayload()
+                        .reduceBalanceItems(selectedBalance, false);
+                PatientPaymentPlanAmountDialog fragment = PatientPaymentPlanAmountDialog
+                        .newInstance(paymentReceiptModel, reducedBalancesItem);
+                fragment.setOnCancelListener(onDialogCancelListener);
+                callback.displayDialogFragment(fragment, true);
+                hideDialog();
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            }
+        });
+        if (mustAddToExisting) {
+            TextView paymentPlanTextView = paymentPlanContainer.findViewById(R.id.paymentPlanTextView);
+            paymentPlanTextView.setText(Label.getLabel("payment_plan_add_existing"));
+        }
+
+        boolean showPaymentButtons = getArguments().getBoolean("showPaymentButtons", false);
+        view.findViewById(R.id.consolidatedPaymentButton).setVisibility((showPaymentButtons && canMakePayments)
+                ? View.VISIBLE : View.GONE);
+
+
         Button consolidatedPaymentButton = view.findViewById(R.id.consolidatedPaymentButton);
         consolidatedPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -249,6 +274,17 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
 
         TextView totalPatientResponsibilityValue = view.findViewById(R.id.totalPatientResponsibilityValue);
         totalPatientResponsibilityValue.setText(currencyFormat.format(paymentPayload.getAmount()));
+    }
+
+    private void logFullPaymentMixPanelEvent() {
+        String[] params = {getString(R.string.param_balance_amount),
+                getString(R.string.param_practice_id)
+        };
+
+        Object[] values = {paymentPayload.getAmount(),
+                selectedBalance.getMetadata().getPracticeId()
+        };
+        MixPanelUtil.logEvent(getString(R.string.event_payment_make_full_payment), params, values);
     }
 
     private void downloadStatementPdf() {

@@ -16,9 +16,14 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -54,6 +59,7 @@ public class ApplicationPreferences {
     private static final String PREFERENCE_FORCE_UPDATE = "force_update";
     private static final String PREFERENCE_PROFILE_ID = "profileId";
     public static final String PREFERENCE_APPOINTMENT_COUNTS = "appointment_counts";
+    private static final String PREFERENCE_LAST_DATE_RATE_DIALOG_SHOWN = "lastDateRateDialogShown";
 
     private String patientId;
     private String practiceId;
@@ -535,5 +541,29 @@ public class ApplicationPreferences {
 
     public Object getAppointmentCounts(Class appointmentCountsClass) {
         return getObjectFromSharedPreferences(PREFERENCE_APPOINTMENT_COUNTS, appointmentCountsClass);
+    }
+
+    public boolean shouldShowRateDialog() {
+        String strDate = readStringFromSharedPref(PREFERENCE_LAST_DATE_RATE_DIALOG_SHOWN, null);
+        if (strDate == null) {
+            return true;
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        formatter.setLenient(false);
+        try {
+            Date lastRateDate = formatter.parse(strDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(lastRateDate);
+            calendar.add(Calendar.DAY_OF_YEAR, 122);
+            return calendar.after(new Date());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public void setLastDateRateDialogShown() {
+        String strDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        writeStringToSharedPref(PREFERENCE_LAST_DATE_RATE_DIALOG_SHOWN, strDate);
     }
 }

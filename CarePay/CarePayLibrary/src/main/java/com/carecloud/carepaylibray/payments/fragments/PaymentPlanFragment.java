@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,7 +23,6 @@ import android.widget.TextView;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
-import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
@@ -48,16 +45,15 @@ import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
-
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class PaymentPlanFragment extends BasePaymentDialogFragment
-        implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
+import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
+
+public class PaymentPlanFragment extends BasePaymentDialogFragment {
 
     protected static final String KEY_PLAN_AMOUNT = "plan_amount";
     protected PaymentsModel paymentsModel;
@@ -162,7 +158,6 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         setupHeader(view);
         setupFields(view);
         setupButtons(view);
-        setAdapter(view);
     }
 
     @Override
@@ -174,25 +169,25 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
     }
 
     protected void setupToolBar(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.onDismissPaymentPlan(paymentsModel);
+                getActivity().onBackPressed();
             }
         });
         toolbar.setTitle("");
-        TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
+        TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(Label.getLabel("payment_plan_heading"));
 
     }
 
     protected void setupHeader(View view) {
-        TextView totalTextView = (TextView) view.findViewById(R.id.payment_plan_total);
+        TextView totalTextView = view.findViewById(R.id.payment_plan_total);
         totalTextView.setText(currencyFormatter.format(paymentPlanAmount));
 
-        parametersTextView = (TextView) view.findViewById(R.id.paymentPlanParametersTextView);
+        parametersTextView = view.findViewById(R.id.paymentPlanParametersTextView);
         if (parametersTextView != null) {
             parametersTextView.setVisibility(View.VISIBLE);
         }
@@ -214,16 +209,16 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
     }
 
     protected void setupFields(View view) {
-        planNameEditText = (EditText) view.findViewById(R.id.paymentPlanName);
-        TextInputLayout planNameInputLayout = (TextInputLayout) view.findViewById(R.id.paymentPlanNameInputLayout);
+        planNameEditText = view.findViewById(R.id.paymentPlanName);
+        TextInputLayout planNameInputLayout = view.findViewById(R.id.paymentPlanNameInputLayout);
         planNameEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(planNameInputLayout, null));
         View planNameOptional = view.findViewById(R.id.paymentPlanNameOptional);
         planNameOptional.setVisibility(View.VISIBLE);
         planNameEditText.addTextChangedListener(getOptionalViewTextWatcher(planNameOptional));
 
-        paymentDateEditText = (EditText) view.findViewById(R.id.paymentDrawDay);
-        paymentDayInputLayout = (TextInputLayout) view.findViewById(R.id.paymentDrawDayInputLayout);
+        paymentDateEditText = view.findViewById(R.id.paymentDrawDay);
+        paymentDayInputLayout = view.findViewById(R.id.paymentDrawDayInputLayout);
         paymentDateEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(paymentDayInputLayout, null));
         paymentDateEditText.setText(paymentDateOption.getLabel());
@@ -243,8 +238,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
             }
         });
 
-        frequencyCodeEditText = (EditText) view.findViewById(R.id.frequencyCodeEditText);
-        TextInputLayout frequencyCodeInputLayout = (TextInputLayout) view.findViewById(R.id.frequencyCodeInputLayout);
+        frequencyCodeEditText = view.findViewById(R.id.frequencyCodeEditText);
+        TextInputLayout frequencyCodeInputLayout = view.findViewById(R.id.frequencyCodeInputLayout);
         frequencyCodeEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(frequencyCodeInputLayout, null));
         frequencyCodeEditText.setText(frequencyOption.getLabel());
@@ -271,8 +266,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         }
         frequencyCodeEditText.setEnabled(frequencyOptions.size() > 1);
 
-        installmentsEditText = (EditText) view.findViewById(R.id.paymentMonthCount);
-        installmentsInputLayout = (CarePayTextInputLayout) view
+        installmentsEditText = view.findViewById(R.id.paymentMonthCount);
+        installmentsInputLayout = view
                 .findViewById(R.id.paymentMonthCountInputLayout);
         installmentsInputLayout.setRequestFocusWhenError(false);
         installmentsEditText.setOnFocusChangeListener(SystemUtil
@@ -286,8 +281,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
             }
         }));
 
-        amountPaymentEditText = (EditText) view.findViewById(R.id.paymentAmount);
-        amountPaymentInputLayout = (CarePayTextInputLayout) view
+        amountPaymentEditText = view.findViewById(R.id.paymentAmount);
+        amountPaymentInputLayout = view
                 .findViewById(R.id.paymentAmountInputLayout);
         amountPaymentInputLayout.setRequestFocusWhenError(false);
         amountPaymentEditText.setOnFocusChangeListener(SystemUtil
@@ -320,7 +315,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
                         }
                     }
                 }));
-        lastPaymentMessage = (TextView) view.findViewById(R.id.lastPaymentMessage);
+        lastPaymentMessage = view.findViewById(R.id.lastPaymentMessage);
         lastPaymentMessage.setVisibility(View.INVISIBLE);
 
         if (frequencyOption.getName().equals(PaymentPlanModel.FREQUENCY_MONTHLY)) {
@@ -441,11 +436,11 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
             addToExisting.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    addBalanceToExisting();
+                    onAddBalanceToExistingPlan();
                 }
             });
         }
-        createPlanButton = (Button) view.findViewById(R.id.create_payment_plan_button);
+        createPlanButton = view.findViewById(R.id.create_payment_plan_button);
         createPlanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -467,16 +462,6 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         });
 
         enableCreatePlanButton();
-    }
-
-    private void setAdapter(View view) {
-        RecyclerView balanceRecycler = (RecyclerView) view.findViewById(R.id.balance_recycler);
-        if (balanceRecycler != null && selectedBalance != null) {
-            balanceRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-            PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(),
-                    selectedBalance.getPayload(), this, true);
-            balanceRecycler.setAdapter(adapter);
-        }
     }
 
     protected void enableCreatePlanButton() {
@@ -700,8 +685,13 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         return true;
     }
 
-    protected void addBalanceToExisting() {
-        callback.onAddBalanceToExistingPlan(paymentsModel, selectedBalance, paymentPlanAmount);
+    protected void onAddBalanceToExistingPlan() {
+        ValidPlansFragment fragment = ValidPlansFragment.newInstance(paymentsModel, selectedBalance, paymentPlanAmount);
+        callback.replaceFragment(fragment, true);
+        logPaymentPlanStartedMixPanelEvent();
+    }
+
+    protected void logPaymentPlanStartedMixPanelEvent() {
         String[] params = {getString(R.string.param_practice_id),
                 getString(R.string.param_balance_amount),
                 getString(R.string.param_is_add_existing)};
@@ -781,7 +771,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
 
     protected void setError(int id, String error, boolean requestFocus) {
         if (getView() != null) {
-            TextInputLayout inputLayout = (TextInputLayout) getView().findViewById(id);
+            TextInputLayout inputLayout = getView().findViewById(id);
             setError(inputLayout, error, requestFocus);
         }
     }
@@ -797,7 +787,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
 
     protected void clearError(int id) {
         if (getView() != null) {
-            TextInputLayout inputLayout = (TextInputLayout) getView().findViewById(id);
+            TextInputLayout inputLayout = getView().findViewById(id);
             clearError(inputLayout);
         }
     }
@@ -830,11 +820,6 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
     protected boolean enableAddToExisting() {
         return hasExistingPlans() && canAddToExisting()
                 && !paymentsModel.getPaymentPayload().getValidPlans(practiceId, paymentPlanAmount).isEmpty();
-    }
-
-    @Override
-    public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
-        callback.displayBalanceDetails(paymentsModel, paymentLineItem, selectedBalance);
     }
 
     private TextWatcher getOptionalViewTextWatcher(final View optionalView) {
@@ -936,13 +921,13 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         // create dialog layout
         View customView = LayoutInflater.from(context).inflate(R.layout.alert_list_layout, null, false);
         dialog.setView(customView);
-        TextView titleTextView = (TextView) customView.findViewById(R.id.title_view);
+        TextView titleTextView = customView.findViewById(R.id.title_view);
         titleTextView.setText(title);
         titleTextView.setVisibility(View.VISIBLE);
 
 
         // create the adapter
-        ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
+        ListView listView = customView.findViewById(R.id.dialoglist);
         CustomOptionsAdapter customOptionsAdapter = new CustomOptionsAdapter(context, options);
         listView.setAdapter(customOptionsAdapter);
 

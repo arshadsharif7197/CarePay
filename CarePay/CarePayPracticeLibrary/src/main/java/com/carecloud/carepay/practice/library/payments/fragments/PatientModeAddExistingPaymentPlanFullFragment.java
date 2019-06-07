@@ -39,11 +39,11 @@ public class PatientModeAddExistingPaymentPlanFullFragment extends AddExistingPa
 
     @Override
     protected void setupToolBar(View view) {
-        Button cancelButton = (Button) view.findViewById(R.id.cancel_button);
+        Button cancelButton = view.findViewById(R.id.cancel_button);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onDismissPaymentPlan(paymentsModel);
+                cancel();
             }
         });
     }
@@ -51,10 +51,10 @@ public class PatientModeAddExistingPaymentPlanFullFragment extends AddExistingPa
     @Override
     protected void setupHeader(View view) {
         super.setupHeader(view);
-        TextView headerPaymentAmount = (TextView) view.findViewById(R.id.headerPlanTotal);
+        TextView headerPaymentAmount = view.findViewById(R.id.headerPlanTotal);
         headerPaymentAmount.setText(currencyFormatter.format(paymentPlanAmount));
 
-        TextView patientBalance = (TextView) view.findViewById(R.id.patientBalance);
+        TextView patientBalance = view.findViewById(R.id.patientBalance);
         patientBalance.setText(currencyFormatter.format(paymentPlanAmount));
     }
 

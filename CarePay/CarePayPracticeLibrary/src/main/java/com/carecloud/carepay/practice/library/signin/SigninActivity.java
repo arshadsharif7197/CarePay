@@ -27,7 +27,7 @@ import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLangua
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionUserPractice;
 import com.carecloud.carepay.practice.library.signin.fragments.ChoosePracticeLocationFragment;
-import com.carecloud.carepay.practice.library.signin.fragments.PracticeSearchFragment;
+import com.carecloud.carepay.practice.library.signin.fragments.ChoosePracticeFragment;
 import com.carecloud.carepay.practice.library.signin.interfaces.SelectPracticeCallback;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -493,7 +493,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
 
     @Override
     public void onSelectPracticeLocationCanceled(PracticeSelectionUserPractice selectedPractice) {
-        showPracticeSearchFragment(selectedPractice);
+        showPracticeSearchFragment();
     }
 
     public void requestPasswordFocus() {
@@ -555,7 +555,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
                     fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
                 }
             } else {
-                showPracticeSearchFragment(null);
+                showPracticeSearchFragment();
             }
         }
 
@@ -597,8 +597,8 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         PracticeNavigationHelper.navigateToWorkflow(this, workflowDTO);
     }
 
-    private void showPracticeSearchFragment(PracticeSelectionUserPractice selectedPractice) {
-        PracticeSearchFragment fragment = PracticeSearchFragment.newInstance(selectedPractice);
+    private void showPracticeSearchFragment() {
+        ChoosePracticeFragment fragment = ChoosePracticeFragment.newInstance();
         fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
     }
 

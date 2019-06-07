@@ -15,9 +15,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAmountDialog;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
@@ -195,7 +197,12 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         paymentPlanContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                actionCallback.onPaymentPlanAction(paymentDTO);
+                PendingBalanceDTO selectedBalancesItem = paymentDTO.getPaymentPayload()
+                        .getPatientBalances().get(0).getBalances().get(0);//this should be a safe assumption for checkin
+                PendingBalanceDTO reducedBalancesItem = paymentDTO.getPaymentPayload()
+                        .reduceBalanceItems(selectedBalancesItem, false);
+                actionCallback.displayDialogFragment(PatientPaymentPlanAmountDialog
+                        .newInstance(paymentDTO, reducedBalancesItem), true);
             }
         });
         if (mustAddToExisting) {
@@ -256,7 +263,9 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
 
     @Override
     public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
-        actionCallback.displayBalanceDetails(paymentDTO, paymentLineItem, selectedBalance);
+        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
+                .newInstance(paymentDTO, paymentLineItem, selectedBalance, false);
+        actionCallback.displayDialogFragment(dialog, false);
     }
 
 

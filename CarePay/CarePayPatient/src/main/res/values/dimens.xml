@@ -14,8 +14,15 @@
     <dimen name="visitSummaryExportAsLabelBottomMargin">10dp</dimen>
     <dimen name="visitSummaryExportButtonTopMargin">15dp</dimen>
     <dimen name="encryptedCheckBoxVerticalMargin">10dp</dimen>
+    <dimen name="commonDialogPadding">10dp</dimen>
+
     <dimen name="mainMenuItemContainerTopPadding">5dp</dimen>
     <dimen name="menuItemSeparatorVerticalMargin">5dp</dimen>
     <dimen name="profileImageViewSize">60dp</dimen>
     <dimen name="profileHeaderHeight">50dp</dimen>
+
+    <!--Rate Dialog-->
+    <dimen name="rateDialogPadding">20dp</dimen>
+    <dimen name="rateDialogOptionHeight">60dp</dimen>
+    <dimen name="rateDialogTitleTextSize">21sp</dimen>
 </resources>

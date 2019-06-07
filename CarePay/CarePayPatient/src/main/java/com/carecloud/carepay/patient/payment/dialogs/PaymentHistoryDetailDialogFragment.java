@@ -1,6 +1,7 @@
 package com.carecloud.carepay.patient.payment.dialogs;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.NestedScrollView;
@@ -13,11 +14,13 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
-import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.fragments.PaymentHistoryDetailFragment;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -32,7 +35,7 @@ import java.util.Locale;
 
 public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFragment {
 
-    private PaymentFragmentActivityInterface callback;
+    private FragmentActivityInterface callback;
     private UserPracticeDTO userPracticeDTO;
     private PaymentsModel paymentsModel;
 
@@ -58,7 +61,7 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
     @Override
     protected void attachCallback(Context context) {
         try {
-            callback = (PaymentFragmentActivityInterface) context;
+            callback = (FragmentActivityInterface) context;
         } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement PaymentFragmentActivityInterface");
         }
@@ -95,8 +98,7 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
             paymentPlanDetailsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    callback.displayPaymentPlanHistoryDetails(historyItem,
-                            historyItem.getPayload().getMetadata().getPaymentPlan());
+                    displayPaymentPlanHistoryDetails(historyItem, historyItem.getPayload().getMetadata().getPaymentPlan());
                 }
             });
             paymentMethod = Label.getLabel("payment_plan_payment_text");
@@ -105,7 +107,6 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
             paymentPlanNameTextView.setVisibility(View.VISIBLE);
         } else if (historyItem.getPayload().getExecution().equals(PaymentConstants.ANDROID_PAY_PAYMENT_TYPE)) {
             paymentMethod = CarePayConstants.TYPE_GOOGLE_PAY;
-            ;
         } else {
             paymentPlanDetailsButton.setVisibility(View.GONE);
             paymentPlanNameTextView.setVisibility(View.GONE);
@@ -149,6 +150,29 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
                     .format(historyItem.getPayload().getTotalRefunded()));
         }
 
+    }
+
+    private void displayPaymentPlanHistoryDetails(final PaymentHistoryItem historyItem, PaymentPlanPayloadDTO paymentPlan) {
+        String taskId = paymentPlan.getMetadata().getTaskId();
+        PaymentPlanDTO selectedPaymentPlan = null;
+        for (PaymentPlanDTO paymentPlanDTO : paymentsModel.getPaymentPayload().getPatientPaymentPlans()) {
+            if (taskId.equals(paymentPlanDTO.getPayload().getMetadata().getTaskId())) {
+                selectedPaymentPlan = paymentPlanDTO;
+                break;
+            }
+        }
+
+        final UserPracticeDTO selectedUserPractice = paymentsModel.getPaymentPayload().getUserPractice(historyItem.getMetadata().getPracticeId());
+        PaymentPlanHistoryDetailDialogFragment planHistoryFragment = PaymentPlanHistoryDetailDialogFragment
+                .newInstance(selectedPaymentPlan, selectedUserPractice);
+        planHistoryFragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                showDialog();
+            }
+        });
+        callback.displayDialogFragment(planHistoryFragment, false);
+        hideDialog();
     }
 
     @Override

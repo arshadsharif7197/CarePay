@@ -1,16 +1,19 @@
 package com.carecloud.carepay.practice.library.payments.dialogs;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
+import com.carecloud.carepay.practice.library.payments.fragments.PatientModePaymentPlanEditFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticeEditOneTimePaymentFragment;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticeOneTimePaymentFragment;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanDetailsDialogFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 /**
@@ -18,8 +21,6 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
  */
 
 public class PatientModePaymentPlanDetailsDialogFragment extends PaymentPlanDetailsDialogFragment {
-
-    private DialogInterface.OnDismissListener dismissListener;
 
     /**
      * @param paymentsModel      the payment model
@@ -50,9 +51,6 @@ public class PatientModePaymentPlanDetailsDialogFragment extends PaymentPlanDeta
             closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (dismissListener != null) {
-                        dismissListener.onDismiss(getDialog());
-                    }
                     dismiss();
                 }
             });
@@ -65,13 +63,32 @@ public class PatientModePaymentPlanDetailsDialogFragment extends PaymentPlanDeta
         }
     }
 
-    /**
-     * Set dismiss listener
-     *
-     * @param dismissListener dismiss listener
-     */
-    public void setDismissListener(DialogInterface.OnDismissListener dismissListener) {
-        this.dismissListener = dismissListener;
+    @Override
+    protected void onMakeOneTimePayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+        PracticeOneTimePaymentFragment fragment = PracticeOneTimePaymentFragment.newInstance(paymentsModel,
+                0, paymentPlanDTO);
+        fragment.setOnCancelListener(onDialogCancelListener);
+        callback.displayDialogFragment(fragment, true);
+        hideDialog();
+    }
+
+    @Override
+    protected void onEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+        PatientModePaymentPlanEditFragment fragment = PatientModePaymentPlanEditFragment
+                .newInstance(paymentsModel, paymentPlanDTO);
+        fragment.setOnCancelListener(onDialogCancelListener);
+        callback.displayDialogFragment(fragment, true);
+        hideDialog();
+    }
+
+    @Override
+    protected void onStartEditScheduledPayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO,
+                                               ScheduledPaymentModel scheduledPayment) {
+        PracticeEditOneTimePaymentFragment fragment = PracticeEditOneTimePaymentFragment
+                .newInstance(paymentsModel, 0, paymentPlanDTO, scheduledPayment);
+        fragment.setOnCancelListener(onDialogCancelListener);
+        callback.displayDialogFragment(fragment, true);
+        hideDialog();
     }
 
 }
