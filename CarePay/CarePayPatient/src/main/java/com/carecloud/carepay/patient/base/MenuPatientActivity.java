@@ -225,7 +225,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
             LinearLayout profilesContainer = findViewById(R.id.profilesContainer);
             profilesContainer.removeAllViews();
             for (final ProfileDto profile : profileData.getRepresentedUsers()) {
-                View row = LayoutInflater.from(getContext()).inflate(R.layout.layout_item_menu, null, false);
+                View row = LayoutInflater.from(getContext())
+                        .inflate(R.layout.layout_item_menu, null, false);
                 row.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -233,9 +234,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
                     }
                 });
                 TextView nameTextView = row.findViewById(R.id.menuIconLabelTextView);
-                nameTextView.setText(StringUtil.capitalize(profile.getProfile().getName()));
+                nameTextView.setText(getProfileName(profile.getProfile().getDemographics()));
                 TextView userShortNameTextView = row.findViewById(R.id.userShortName);
-                userShortNameTextView.setText(StringUtil.getShortName(profile.getProfile().getName()));
+                userShortNameTextView.setText(StringUtil.getShortName(profile.getProfile().getDemographics()
+                        .getPayload().getPersonalDetails().getFullName()));
                 userShortNameTextView.setVisibility(View.VISIBLE);
                 PicassoHelper.get().loadImage(getContext(), (ImageView) row.findViewById(R.id.menuIconImageView),
                         userShortNameTextView, profile.getProfile().getDemographics().getPayload()
@@ -301,7 +303,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
         Collections.sort(profileList, new Comparator<ProfileDto>() {
             @Override
             public int compare(ProfileDto o1, ProfileDto o2) {
-                return o1.getProfile().getName().compareTo(o2.getProfile().getName());
+                return getProfileName(o1.getProfile().getDemographics())
+                        .compareTo(getProfileName(o2.getProfile().getDemographics()));
             }
         });
         profileData.setRepresentedUsers(profileList);
