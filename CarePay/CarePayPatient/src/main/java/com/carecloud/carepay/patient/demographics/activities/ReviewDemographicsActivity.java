@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
+import com.carecloud.carepay.patient.base.ToolbarInterface;
 import com.carecloud.carepay.patient.payment.PatientPaymentPresenter;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -33,6 +34,8 @@ import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
 import com.carecloud.carepaylibray.demographics.fragments.IntakeFormsFragment;
 import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
+import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.interfaces.IcicleInterface;
 import com.carecloud.carepaylibray.media.MediaResultListener;
 import com.carecloud.carepaylibray.medications.fragments.AllergiesFragment;
@@ -48,7 +51,7 @@ import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class ReviewDemographicsActivity extends BasePatientActivity implements DemographicsView,
-        PaymentViewHandler, ConfirmationCallback {
+        PaymentViewHandler, ConfirmationCallback, FragmentActivityInterface, ToolbarInterface {
 
 
     private static final String KEY_PAYMENT_DTO = "KEY_PAYMENT_DTO";
@@ -321,4 +324,23 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         finish();
     }
 
+    @Override
+    public void addFragment(Fragment fragment, boolean addToBackStack) {
+        paymentPresenter.addFragment(fragment, addToBackStack);
+    }
+
+    @Override
+    public void replaceFragment(Fragment fragment, boolean addToBackStack) {
+        paymentPresenter.replaceFragment(fragment, addToBackStack);
+    }
+
+    @Override
+    public DTO getDto() {
+        return null;
+    }
+
+    @Override
+    public void displayToolbar(boolean display, String title) {
+
+    }
 }
