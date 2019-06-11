@@ -113,7 +113,10 @@ public class ChooseProfileFragment extends BaseDialogFragment {
                 StringUtil.capitalize(profileDto.getProfile().getDemographics().getPayload().getPersonalDetails().getLastName())));
 
         TextView profileShortNameTextView = profileView.findViewById(R.id.profileShortNameTextView);
-        profileShortNameTextView.setText(StringUtil.getShortName(profileDto.getProfile().getName()));
+        profileShortNameTextView.setText(StringUtil.getShortName(StringUtil
+                .getCapitalizedUserName(profileDto.getProfile().getDemographics().getPayload()
+                        .getPersonalDetails().getFirstName(), profileDto.getProfile().getDemographics()
+                        .getPayload().getPersonalDetails().getLastName())));
         ImageView profileImageView = profileView.findViewById(R.id.profileImageView);
         PicassoHelper.get().loadImage(getContext(), profileImageView, profileShortNameTextView,
                 profileDto.getProfile().getDemographics().getPayload().getPersonalDetails().getProfilePhoto(),
