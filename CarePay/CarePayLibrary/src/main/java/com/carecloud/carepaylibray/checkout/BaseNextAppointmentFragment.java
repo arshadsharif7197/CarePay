@@ -407,7 +407,8 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
 
     private String getNextAppointmentDate(String time) {
         DateUtil dateUtil = DateUtil.getInstance().setDateRaw(time);
-        return dateUtil.getDateAsDayMonthDayOrdinal();
+        return dateUtil.getDateAsWeekdayMonthDayYear(Label.getLabel("today_label"),
+                Label.getLabel("add_appointment_tomorrow")) + " - " + dateUtil.getTime12Hour();
     }
 
     private void setDefaultMessage() {

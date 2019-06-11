@@ -240,7 +240,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
             if (slotDate != null && !DateUtil.isSameDay(lastDate, slotDate)) {
                 headerTemplate = new AppointmentsSlotsDTO();
                 headerTemplate.setHeader(true);
-                headerTemplate.setStartTime(DateUtil.getFormattedDate(slotDate, today, tomorrow));
+                headerTemplate.setStartTime(DateUtil.getInstance().getDateAsWeekdayMonthDayYear(today, tomorrow));
                 slotsWithHeaders.add(headerTemplate);
                 lastDate = slotDate;
             }

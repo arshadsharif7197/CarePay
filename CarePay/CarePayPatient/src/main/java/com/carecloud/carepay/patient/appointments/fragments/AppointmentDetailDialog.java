@@ -249,7 +249,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
 
     private void setCommonValues() {
         DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime());
-        appointmentDateTextView.setText(dateUtil.getDateAsDayShortMonthDayOrdinal());
+        appointmentDateTextView.setText(dateUtil.getDateAsWeekdayMonthDayYear());
         appointmentTimeTextView.setText(dateUtil.getTime12Hour());
         appointmentVisitTypeTextView.setText(StringUtil.
                 capitalize(appointmentDTO.getPayload().getVisitType().getName()));
