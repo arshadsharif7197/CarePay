@@ -267,8 +267,8 @@ public class DateUtil {
                     monthLiteral.length() > 4 ? monthLiteral.substring(0,3) : monthLiteral,
                     day, year);
         } else {
-            return String.format(Locale.getDefault(), FORMAT_WD_MM_DD_YY_ES, dayLiteral, day,
-                    monthLiteral.substring(0,3), year);
+            return String.format(Locale.getDefault(), FORMAT_WD_MM_DD_YY_ES, StringUtil.capitalize(dayLiteral), day,
+                    StringUtil.capitalize(monthLiteral.substring(0,3)), year);
         }
     }
 
@@ -289,8 +289,8 @@ public class DateUtil {
                     monthLiteral.length() > 4 ? monthLiteral.substring(0,3) : monthLiteral,
                     day, year);
         } else {
-            return String.format(Locale.getDefault(), FORMAT_WD_MM_DD_YY_ES, dayString, day,
-                    monthLiteral.substring(0,3), year);
+            return String.format(Locale.getDefault(), FORMAT_WD_MM_DD_YY_ES, StringUtil.capitalize(dayString), day,
+                    StringUtil.capitalize(monthLiteral.substring(0,3)), year);
         }
     }
 
@@ -306,7 +306,7 @@ public class DateUtil {
                     day, year);
         } else {
             return String.format(Locale.getDefault(), FORMAT_MM_DD_YY_ES, day,
-                    monthLiteral.substring(0,3), year);
+                    StringUtil.capitalize(monthLiteral.substring(0,3)), year);
         }
     }
 

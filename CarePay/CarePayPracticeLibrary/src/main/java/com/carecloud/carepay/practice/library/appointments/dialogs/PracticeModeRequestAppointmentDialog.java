@@ -47,7 +47,8 @@ public class PracticeModeRequestAppointmentDialog extends PatientModeRequestAppo
 
         DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime());
         TextView toolbar = view.findViewById(R.id.content_view_header_title);
-        toolbar.setText(dateUtil.getDateAsDayMonthDayOrdinalYear(Label.getLabel("appointments_web_today_heading"), Label.getLabel("add_appointment_tomorrow")));
+        toolbar.setText(dateUtil.getDateAsWeekdayMonthDayYear(
+                Label.getLabel("appointments_web_today_heading"), Label.getLabel("add_appointment_tomorrow")));
         toolbar.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.background_top_rounded_dark_blue));
 
         TextView providerImageTextView = view.findViewById(R.id.provider_short_name);
