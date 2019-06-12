@@ -117,6 +117,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
                 loggedInUser.setProfileName(getProfileName(loggedInUser.getDemographics()));
                 loggedInUser.setProfileId("");
                 updateProfileList(selectedProfileDto, loggedInUser);
+            } else {
+                sortProfileList(profileData.getRepresentedUsers());
             }
             populateProfilesList(profileData);
         }
@@ -300,6 +302,12 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
         profileDto.setProfile(currentProfile);
         profileList.add(profileDto);
 
+        sortProfileList(profileList);
+        profileData.setRepresentedUsers(profileList);
+        populateProfilesList(profileData);
+    }
+
+    private void sortProfileList(List<ProfileDto> profileList) {
         Collections.sort(profileList, new Comparator<ProfileDto>() {
             @Override
             public int compare(ProfileDto o1, ProfileDto o2) {
@@ -307,8 +315,6 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
                         .compareTo(getProfileName(o2.getProfile().getDemographics()));
             }
         });
-        profileData.setRepresentedUsers(profileList);
-        populateProfilesList(profileData);
     }
 
     protected abstract Profile getCurrentProfile();
