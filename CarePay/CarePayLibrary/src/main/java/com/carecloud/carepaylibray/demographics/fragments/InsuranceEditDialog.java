@@ -58,7 +58,9 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.marcok.stepprogressbar.StepProgressBar;
 
-import org.apache.commons.lang3.text.WordUtils;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
@@ -66,10 +68,6 @@ import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAd
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_FRONT_DTO;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_BACK;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.KEY_HAS_FRONT;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public class InsuranceEditDialog extends BaseDialogFragment implements MediaViewInterface, DTOInterface {
 
@@ -92,6 +90,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     private EditText otherProviderEditText;
     private View otherProviderLayout;
     private ScrollView scrollView;
+    private Button noInsuranceButton;
 
     private boolean hadInsurance;
     private boolean isPatientMode;
@@ -316,6 +315,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         otherProviderEditText = view.findViewById(R.id.otherProviderEditText);
         otherProviderLayout = view.findViewById(R.id.otherProviderLayout);
         scrollView = view.findViewById(R.id.demographicsScrollView);
+        if (!isPatientMode) {
+            noInsuranceButton = view.findViewById(R.id.noInsuranceButton);
+        }
 
         if (getDialog() != null || (hadInsurance && !isPatientMode) || !isCheckin) {
             saveInsuranceButton = (Button) findViewById(R.id.save_insurance_changes);
@@ -348,12 +350,19 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
             isDataHolderSelf = true;
             initInsuranceData(view, new DemographicInsurancePayloadDTO());
+            if (!isPatientMode) {
+                noInsuranceButton.setVisibility(isCheckin ? View.VISIBLE : View.GONE);
+                noInsuranceButton.setOnClickListener(noInsurance);
+            }
         } else {
             DemographicInsurancePayloadDTO demographicInsurancePayload = demographicDTO.getPayload()
                     .getDemographics().getPayload().getInsurances().get(editedIndex);
             initInsuranceData(view, demographicInsurancePayload);
 
             findViewById(R.id.remove_insurance_entry).setOnClickListener(removeButtonListener);
+            if (!isPatientMode) {
+                noInsuranceButton.setVisibility(View.GONE);
+            }
         }
 
 
@@ -1279,5 +1288,12 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         }
 
     }
+
+    private View.OnClickListener noInsurance = new View.OnClickListener() {
+        @Override
+        public void onClick(View saveChanges) {
+            closeDialog();
+        }
+    };
 
 }
