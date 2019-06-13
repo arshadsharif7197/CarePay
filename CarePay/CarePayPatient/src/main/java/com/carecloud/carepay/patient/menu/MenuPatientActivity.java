@@ -41,6 +41,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.customcomponents.CustomMenuItem;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
 import com.carecloud.carepaylibray.profile.Profile;
@@ -197,6 +198,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         navigationView.findViewById(R.id.formsMenuItem).setOnClickListener(menuItemClickListener);
         navigationView.findViewById(R.id.shopMenuItem).setOnClickListener(menuItemClickListener);
         navigationView.findViewById(R.id.notificationsMenuItem).setOnClickListener(menuItemClickListener);
+        navigationView.findViewById(R.id.manageProfilesMenuItem).setOnClickListener(menuItemClickListener);
         navigationView.findViewById(R.id.settingsMenuItem).setOnClickListener(menuItemClickListener);
         navigationView.findViewById(R.id.logOutMenuItem).setOnClickListener(menuItemClickListener);
 
@@ -227,7 +229,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         if (MenuPatientActivity.profileData.getRepresentedUsers().size() > 0) {
             RecyclerView profilesRecyclerView = findViewById(R.id.profilesRecyclerView);
             profilesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            ProfilesMenuRecyclerAdapter adapter = new ProfilesMenuRecyclerAdapter(profileData.getRepresentedUsers());
+            ProfilesMenuRecyclerAdapter adapter = new ProfilesMenuRecyclerAdapter(profileData.getRepresentedUsers(),
+                    ProfilesMenuRecyclerAdapter.SMALL_PROFILE_VIEW_TYPE);
             adapter.setCallback(this);
             profilesRecyclerView.setAdapter(adapter);
         } else {
@@ -415,6 +418,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
                 case R.id.notificationsMenuItem:
                     startActivity(NotificationActivity.class);
                     break;
+                case R.id.manageProfilesMenuItem:
+                    callback = manageProfilesCallback;
+                    transition = transitionForms;
+                    break;
                 case R.id.settingsMenuItem:
                     callback = demographicsSettingsCallBack;
                     transition = transitionProfile;
@@ -531,6 +538,25 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
             hideProgressDialog();
             showErrorNotification(exceptionMessage);
             Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
+
+    private WorkflowServiceCallback manageProfilesCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            hideProgressDialog();
+            workflowDTO.setState(NavigationStateConstants.DELEGATE_PROFILES);
+            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            hideProgressDialog();
         }
     };
 

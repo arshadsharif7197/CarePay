@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/menuHeader"
+    android:background="?selectableItemBackground"
+    android:orientation="horizontal"
+    tools:showIn="@layout/activity_navigation">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_5dp"
+        android:layout_marginBottom="@dimen/dimen_5dp"
+        android:padding="@dimen/menuItemPadding">
+
+        <ImageView
+            android:id="@+id/menuIconImageView"
+            android:layout_width="@dimen/menuIconSize"
+            android:layout_height="@dimen/menuIconSize"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/menuIconStartMargin"
+            android:padding="@dimen/menuIconPadding"
+            android:tint="@color/Feldgrau" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/userShortName"
+            android:layout_width="@dimen/menuIconSize"
+            android:layout_height="@dimen/menuIconSize"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/menuIconStartMargin"
+            android:background="@drawable/round_list_tv_dark"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_15"
+            android:visibility="gone"
+            app:customAssetFont="gotham_rounded_medium" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/badgeCounter"
+            android:layout_width="@dimen/menuItemBadgeSize"
+            android:layout_height="@dimen/menuItemBadgeSize"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/badgeCounterEndMargin"
+            android:background="@drawable/badge_background"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/menuItemBadeTextSize"
+            android:visibility="gone"
+            app:customAssetFont="proxima_nova_semi_bold" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/menuIconLabelTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/menuIconLabelStartMargin"
+            android:layout_toStartOf="@id/badgeCounter"
+            android:layout_toEndOf="@id/menuIconImageView"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:lines="1"
+            android:paddingTop="@dimen/menuIconPadding"
+            android:paddingBottom="@dimen/menuIconPadding"
+            android:textColor="@drawable/menuitem_selector"
+            android:textSize="@dimen/menuIconLabelTextSize"
+            app:customAssetFont="proxima_nova_semi_bold"
+            tools:text="Appointments" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/profileRelationTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:lines="2"
+            android:textColor="@color/lightSlateGray"
+            android:textSize="@dimen/itemProfileRelationTextSize"
+            android:visibility="gone"
+            app:customAssetFont="proxima_nova_regular"
+            tools:text="Child" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/separatorHeight"
+        android:layout_alignParentBottom="true"
+        android:background="@color/light_gray" />
+
+</RelativeLayout>

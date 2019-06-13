@@ -27,7 +27,6 @@
         android:layout_marginStart="@dimen/menuIconStartMargin"
         android:layout_gravity="center"
         android:background="@drawable/round_list_tv_dark"
-        android:src="@drawable/icn_placeholder_user_profile_png"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_15"
         android:visibility="gone"

@@ -22,15 +22,23 @@ public class ProfilesMenuRecyclerAdapter extends RecyclerView.Adapter<ProfilesMe
 
     private final List<ProfileDto> profiles;
     private ProfileMenuInterface callback;
+    public static final int SMALL_PROFILE_VIEW_TYPE = 100;
+    public static final int BIG_PROFILE_VIEW_TYPE = 101;
+    private final int viewType;
 
-    public ProfilesMenuRecyclerAdapter(List<ProfileDto> profiles) {
+    public ProfilesMenuRecyclerAdapter(List<ProfileDto> profiles, int viewType) {
         this.profiles = profiles;
+        this.viewType = viewType;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        int layout = R.layout.layout_item_profile_small;
+        if (viewType == BIG_PROFILE_VIEW_TYPE) {
+            layout = R.layout.layout_item_profile_big;
+        }
         return new ViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.layout_item_menu, parent, false));
+                .inflate(layout, parent, false));
     }
 
     @Override
@@ -40,11 +48,15 @@ public class ProfilesMenuRecyclerAdapter extends RecyclerView.Adapter<ProfilesMe
         holder.userShortNameTextView.setText(StringUtil.getShortName(profile.getProfile().getDemographics()
                 .getPayload().getPersonalDetails().getFullName()));
         holder.userShortNameTextView.setVisibility(View.VISIBLE);
-        PicassoHelper.get().loadImage(holder.menuIconImageView.getContext(),
-                holder.menuIconImageView,
+        if (profile.getProfile().getLinks() != null && !profile.getProfile().getLinks().isEmpty()) {
+            holder.profileRelationTextView.setText(StringUtil.capitalize(profile.getProfile()
+                    .getLinks().get(0).getRelationType()));
+        }
+        PicassoHelper.get().loadImage(holder.profileImageView.getContext(),
+                holder.profileImageView,
                 holder.userShortNameTextView, profile.getProfile().getDemographics().getPayload()
                         .getPersonalDetails().getProfilePhoto(),
-                holder.menuIconImageView.getContext().getResources().getDimensionPixelSize(R.dimen.menuIconSize));
+                holder.profileImageView.getContext().getResources().getDimensionPixelSize(R.dimen.menuIconSize));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,6 +70,11 @@ public class ProfilesMenuRecyclerAdapter extends RecyclerView.Adapter<ProfilesMe
         return profiles.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return viewType;
+    }
+
     private String getProfileName(DemographicPayloadInfoDTO demographics) {
         return StringUtil
                 .getCapitalizedUserName(demographics.getPayload()
@@ -65,7 +82,7 @@ public class ProfilesMenuRecyclerAdapter extends RecyclerView.Adapter<ProfilesMe
                         .getPayload().getPersonalDetails().getLastName());
     }
 
-    interface ProfileMenuInterface {
+    public interface ProfileMenuInterface {
         void onProfileClicked(ProfileDto profile);
     }
 
@@ -76,13 +93,15 @@ public class ProfilesMenuRecyclerAdapter extends RecyclerView.Adapter<ProfilesMe
     public class ViewHolder extends RecyclerView.ViewHolder {
         final TextView nameTextView;
         final TextView userShortNameTextView;
-        private final ImageView menuIconImageView;
+        final ImageView profileImageView;
+        final TextView profileRelationTextView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.menuIconLabelTextView);
+            profileRelationTextView = itemView.findViewById(R.id.profileRelationTextView);
             userShortNameTextView = itemView.findViewById(R.id.userShortName);
-            menuIconImageView = itemView.findViewById(R.id.menuIconImageView);
+            profileImageView = itemView.findViewById(R.id.menuIconImageView);
         }
     }
 }

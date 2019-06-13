@@ -25,4 +25,6 @@
     <dimen name="rateDialogPadding">20dp</dimen>
     <dimen name="rateDialogOptionHeight">60dp</dimen>
     <dimen name="rateDialogTitleTextSize">21sp</dimen>
+    <dimen name="itemProfileNameTextSize">17sp</dimen>
+    <dimen name="itemProfileRelationTextSize">14sp</dimen>
 </resources>

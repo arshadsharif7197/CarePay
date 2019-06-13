@@ -153,6 +153,9 @@
         <activity
             android:name=".survey.SurveyActivity"
             android:screenOrientation="sensorPortrait" />
+        <activity
+            android:name=".delegate.ProfilesActivity"
+            android:screenOrientation="sensorPortrait" />
 
         <service
             android:name=".payment.androidpay.AndroidPayQueueUploadService"

@@ -14,6 +14,9 @@ public class ProfileLink {
     @SerializedName("patient_id")
     @Expose
     private String patientId;
+    @SerializedName("relationship_type")
+    @Expose
+    private String relationType;
     @SerializedName("permissions")
     @Expose
     private PermissionDto permissionDto;
@@ -41,5 +44,13 @@ public class ProfileLink {
 
     public void setPatientId(String patientId) {
         this.patientId = patientId;
+    }
+
+    public String getRelationType() {
+        return relationType;
+    }
+
+    public void setRelationType(String relationType) {
+        this.relationType = relationType;
     }
 }
