@@ -8,8 +8,7 @@
     android:layout_marginEnd="@dimen/dimen_5dp"
     android:layout_marginBottom="@dimen/dimen_10dp"
     android:layout_weight="1"
-    android:background="@drawable/round_fifteen_white_background"
-    android:foreground="?selectableItemBackground">
+    android:background="@drawable/round_fifteen_white_background">
 
     <View
         android:id="@+id/profileHeaderView"

@@ -30,7 +30,8 @@
         android:paddingStart="@dimen/dimen_17dp"
         android:paddingTop="@dimen/dimen_30dp"
         android:paddingEnd="@dimen/dimen_17dp"
-        android:paddingBottom="@dimen/dimen_30dp">
+        android:paddingBottom="@dimen/dimen_30dp"
+        android:scrollbars="none">
 
         <LinearLayout
             android:id="@+id/profilesContainer"
