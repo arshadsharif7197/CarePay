@@ -11,7 +11,7 @@ import android.view.View;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
-import com.carecloud.carepay.patient.base.MenuPatientActivity;
+import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.demographics.fragments.settings.ChangePasswordFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsExpandedFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsInformationFragment;

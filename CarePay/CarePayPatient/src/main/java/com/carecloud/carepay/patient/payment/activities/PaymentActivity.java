@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
-import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.ToolbarInterface;
 import com.carecloud.carepay.patient.payment.PatientPaymentPresenter;
 import com.carecloud.carepay.patient.payment.PaymentConstants;

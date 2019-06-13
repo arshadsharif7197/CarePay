@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
-import com.carecloud.carepay.patient.base.MenuPatientActivity;
+import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.patient.notifications.fragments.NotificationFragment;

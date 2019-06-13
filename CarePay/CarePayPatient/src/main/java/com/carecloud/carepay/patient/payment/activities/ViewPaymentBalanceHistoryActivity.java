@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.base.MenuPatientActivity;
+import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
@@ -37,7 +37,6 @@ import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanEditFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;

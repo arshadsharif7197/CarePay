@@ -13,7 +13,7 @@ import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AlertDialog;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.base.MenuPatientActivity;
+import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.patient.myhealth.dtos.AllergyDto;
 import com.carecloud.carepay.patient.myhealth.dtos.LabDto;

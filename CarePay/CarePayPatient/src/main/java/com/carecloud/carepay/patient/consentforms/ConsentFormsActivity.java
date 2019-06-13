@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.base.MenuPatientActivity;
+import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormProvidersListFragment;

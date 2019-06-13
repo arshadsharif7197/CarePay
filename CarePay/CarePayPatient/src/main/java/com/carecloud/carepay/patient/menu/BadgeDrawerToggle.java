@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.base;
+package com.carecloud.carepay.patient.menu;
 
 import android.app.Activity;
 import android.content.Context;

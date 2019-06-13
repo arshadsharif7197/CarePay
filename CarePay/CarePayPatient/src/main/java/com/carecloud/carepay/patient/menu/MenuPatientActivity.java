@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.base;
+package com.carecloud.carepay.patient.menu;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,19 +10,21 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
+import com.carecloud.carepay.patient.base.BasePatientActivity;
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.consentforms.ConsentFormsActivity;
 import com.carecloud.carepay.patient.messages.activities.MessagesActivity;
 import com.carecloud.carepay.patient.myhealth.MyHealthActivity;
@@ -49,7 +51,6 @@ import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -64,7 +65,7 @@ import java.util.Map;
 /**
  * Created by jorge on 10/01/17
  */
-public abstract class MenuPatientActivity extends BasePatientActivity {
+public abstract class MenuPatientActivity extends BasePatientActivity implements ProfilesMenuRecyclerAdapter.ProfileMenuInterface {
 
     //transitions
     private static TransitionDTO transitionBalance;
@@ -217,43 +218,25 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
             rotateIcon(profileListTriggerIcon);
         }
         View mainMenuItemContainer = findViewById(R.id.mainMenuItemContainer);
-        View profilesContainer = findViewById(R.id.profilesContainer);
+        View profilesRecyclerView = findViewById(R.id.profilesRecyclerView);
         mainMenuItemContainer.setVisibility(View.VISIBLE);
-        profilesContainer.setVisibility(View.INVISIBLE);
+        profilesRecyclerView.setVisibility(View.INVISIBLE);
     }
 
     private void populateProfilesList(UserLinks profileData) {
         if (MenuPatientActivity.profileData.getRepresentedUsers().size() > 0) {
-            LinearLayout profilesContainer = findViewById(R.id.profilesContainer);
-            profilesContainer.removeAllViews();
-            for (final ProfileDto profile : profileData.getRepresentedUsers()) {
-                View row = LayoutInflater.from(getContext())
-                        .inflate(R.layout.layout_item_menu, null, false);
-                row.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onProfileClicked(profile);
-                    }
-                });
-                TextView nameTextView = row.findViewById(R.id.menuIconLabelTextView);
-                nameTextView.setText(getProfileName(profile.getProfile().getDemographics()));
-                TextView userShortNameTextView = row.findViewById(R.id.userShortName);
-                userShortNameTextView.setText(StringUtil.getShortName(profile.getProfile().getDemographics()
-                        .getPayload().getPersonalDetails().getFullName()));
-                userShortNameTextView.setVisibility(View.VISIBLE);
-                PicassoHelper.get().loadImage(getContext(), (ImageView) row.findViewById(R.id.menuIconImageView),
-                        userShortNameTextView, profile.getProfile().getDemographics().getPayload()
-                                .getPersonalDetails().getProfilePhoto(),
-                        getContext().getResources().getDimensionPixelSize(R.dimen.menuIconSize));
-
-                profilesContainer.addView(row);
-            }
+            RecyclerView profilesRecyclerView = findViewById(R.id.profilesRecyclerView);
+            profilesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            ProfilesMenuRecyclerAdapter adapter = new ProfilesMenuRecyclerAdapter(profileData.getRepresentedUsers());
+            adapter.setCallback(this);
+            profilesRecyclerView.setAdapter(adapter);
         } else {
             findViewById(R.id.profileListTriggerIcon).setVisibility(View.GONE);
         }
     }
 
-    private void onProfileClicked(ProfileDto profile) {
+    @Override
+    public void onProfileClicked(ProfileDto profile) {
         enableBadge(profile);
         updateProfileInfo(profile);
         updateProfileView();
@@ -270,6 +253,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
         } else {
             navigationView.findViewById(R.id.settingsMenuItem).setVisibility(View.GONE);
         }
+    }
+
+    private void showManageProfilesItemMenu(boolean show) {
+        navigationView.findViewById(R.id.manageProfilesMenuItem).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private void enableBadge(ProfileDto profile) {
@@ -334,16 +321,11 @@ public abstract class MenuPatientActivity extends BasePatientActivity {
 
     private void toggleProfileList(ImageView profileListTriggerIcon) {
         View mainMenuItemContainer = findViewById(R.id.mainMenuItemContainer);
-        View profilesContainer = findViewById(R.id.profilesContainer);
-        if (profileListTriggerIcon.isSelected()) {
-            //Hide
-            profilesContainer.setVisibility(View.INVISIBLE);
-            mainMenuItemContainer.setVisibility(View.VISIBLE);
-        } else {
-            //Show
-            profilesContainer.setVisibility(View.VISIBLE);
-            mainMenuItemContainer.setVisibility(View.INVISIBLE);
-        }
+        View profilesRecyclerView = findViewById(R.id.profilesRecyclerView);
+        boolean showProfilesRecyclerView = !profileListTriggerIcon.isSelected();
+        showManageProfilesItemMenu(showProfilesRecyclerView);
+        profilesRecyclerView.setVisibility(showProfilesRecyclerView ? View.VISIBLE : View.INVISIBLE);
+        mainMenuItemContainer.setVisibility(showProfilesRecyclerView ? View.INVISIBLE : View.VISIBLE);
         profileListTriggerIcon.setSelected(!profileListTriggerIcon.isSelected());
     }
 

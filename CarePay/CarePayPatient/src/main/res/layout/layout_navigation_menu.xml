@@ -16,15 +16,44 @@
             layout="@layout/nav_header_navigation" />
 
         <LinearLayout
-            android:id="@+id/profilesContainer"
+            android:id="@+id/secondaryMenuItemContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/menuHeader"
+            android:layout_below="@id/mainMenuItemContainer"
+            android:layout_alignParentBottom="true"
+            android:gravity="bottom"
             android:orientation="vertical"
-            android:paddingTop="@dimen/mainMenuItemContainerTopPadding"
-            android:visibility="gone">
+            android:paddingBottom="@dimen/mainMenuItemContainerTopPadding">
+
+            <com.carecloud.carepaylibray.customcomponents.CustomMenuItem
+                android:id="@+id/manageProfilesMenuItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:labelTextKey="navigation_link_manage_profiles" />
+
+            <com.carecloud.carepaylibray.customcomponents.CustomMenuItem
+                android:id="@+id/settingsMenuItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:labelTextKey="navigation_link_profile_settings" />
+
+            <com.carecloud.carepaylibray.customcomponents.CustomMenuItem
+                android:id="@+id/logOutMenuItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:labelTextKey="navigation_link_sign_out" />
 
         </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/profilesRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/secondaryMenuItemContainer"
+            android:layout_below="@id/menuHeader"
+            android:paddingTop="@dimen/mainMenuItemContainerTopPadding"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/mainMenuItemContainer"
@@ -89,30 +118,6 @@
                 android:layout_marginTop="@dimen/menuItemSeparatorVerticalMargin"
                 android:layout_marginBottom="@dimen/menuItemSeparatorVerticalMargin"
                 android:background="@color/light_gray" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/secondaryMenuItemContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/mainMenuItemContainer"
-            android:layout_alignParentBottom="true"
-            android:gravity="bottom"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/mainMenuItemContainerTopPadding">
-
-            <com.carecloud.carepaylibray.customcomponents.CustomMenuItem
-                android:id="@+id/settingsMenuItem"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:labelTextKey="navigation_link_profile_settings" />
-
-            <com.carecloud.carepaylibray.customcomponents.CustomMenuItem
-                android:id="@+id/logOutMenuItem"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:labelTextKey="navigation_link_sign_out" />
 
         </LinearLayout>
 

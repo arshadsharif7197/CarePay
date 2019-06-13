@@ -14,7 +14,7 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentFragment;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentTabHostFragment;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
-import com.carecloud.carepay.patient.base.MenuPatientActivity;
+import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.rate.RateDialog;

@@ -17,7 +17,7 @@ import com.carecloud.carepay.patient.appointments.createappointment.RequestAppoi
 import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentFeeDialog;
 import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentDetailDialog;
-import com.carecloud.carepay.patient.base.MenuPatientActivity;
+import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
@@ -56,7 +56,6 @@ import com.carecloud.carepaylibray.customdialogs.QrCodeViewDialog;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
@@ -69,7 +68,6 @@ import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.gms.wallet.MaskedWallet;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;

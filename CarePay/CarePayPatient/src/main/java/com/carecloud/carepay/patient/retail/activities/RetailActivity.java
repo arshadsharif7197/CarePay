@@ -7,7 +7,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.base.MenuPatientActivity;
+import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
