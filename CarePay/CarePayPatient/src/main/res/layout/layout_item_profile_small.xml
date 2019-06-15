@@ -6,8 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_below="@id/menuHeader"
     android:background="?selectableItemBackground"
-    android:orientation="horizontal"
-    tools:showIn="@layout/activity_navigation">
+    android:orientation="horizontal">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -17,16 +16,14 @@
         android:padding="@dimen/menuItemPadding">
 
         <ImageView
-            android:id="@+id/menuIconImageView"
+            android:id="@+id/profileImageView"
             android:layout_width="@dimen/menuIconSize"
             android:layout_height="@dimen/menuIconSize"
             android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/menuIconStartMargin"
-            android:padding="@dimen/menuIconPadding"
-            android:tint="@color/Feldgrau" />
+            android:layout_marginStart="@dimen/menuIconStartMargin" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/userShortName"
+            android:id="@+id/profileShortNameTextView"
             android:layout_width="@dimen/menuIconSize"
             android:layout_height="@dimen/menuIconSize"
             android:layout_centerVertical="true"
@@ -39,27 +36,12 @@
             app:customAssetFont="gotham_rounded_medium" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/badgeCounter"
-            android:layout_width="@dimen/menuItemBadgeSize"
-            android:layout_height="@dimen/menuItemBadgeSize"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/badgeCounterEndMargin"
-            android:background="@drawable/badge_background"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="@dimen/menuItemBadeTextSize"
-            android:visibility="gone"
-            app:customAssetFont="proxima_nova_semi_bold" />
-
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/menuIconLabelTextView"
+            android:id="@+id/profileNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/menuIconLabelStartMargin"
-            android:layout_toStartOf="@id/badgeCounter"
-            android:layout_toEndOf="@id/menuIconImageView"
+            android:layout_toEndOf="@id/profileImageView"
             android:ellipsize="end"
             android:gravity="start"
             android:lines="1"
@@ -68,7 +50,7 @@
             android:textColor="@drawable/menuitem_selector"
             android:textSize="@dimen/menuIconLabelTextSize"
             app:customAssetFont="proxima_nova_semi_bold"
-            tools:text="Appointments" />
+            tools:text="Pablo Johnson" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/profileRelationTextView"

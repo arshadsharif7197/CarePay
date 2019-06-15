@@ -42,25 +42,27 @@ public class ProfilesMenuRecyclerAdapter extends RecyclerView.Adapter<ProfilesMe
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         final ProfileDto profile = profiles.get(position);
-        holder.nameTextView.setText(getProfileName(profile.getProfile().getDemographics()));
-        holder.userShortNameTextView.setText(StringUtil.getShortName(profile.getProfile().getDemographics()
+        holder.profileNameTextView.setText(getProfileName(profile.getProfile().getDemographics()));
+        holder.profileShortNameTextView.setText(StringUtil.getShortName(profile.getProfile().getDemographics()
                 .getPayload().getPersonalDetails().getFullName()));
-        holder.userShortNameTextView.setVisibility(View.VISIBLE);
+        holder.profileShortNameTextView.setVisibility(View.VISIBLE);
         if (profile.getProfile().getLinks() != null && !profile.getProfile().getLinks().isEmpty()) {
             holder.profileRelationTextView.setText(StringUtil.capitalize(profile.getProfile()
                     .getLinks().get(0).getRelationType()));
         }
+
         PicassoHelper.get().loadImage(holder.profileImageView.getContext(),
                 holder.profileImageView,
-                holder.userShortNameTextView, profile.getProfile().getDemographics().getPayload()
+                holder.profileShortNameTextView, profile.getProfile().getDemographics().getPayload()
                         .getPersonalDetails().getProfilePhoto(),
                 holder.profileImageView.getContext().getResources().getDimensionPixelSize(R.dimen.menuIconSize));
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.onProfileClicked(profile);
+                callback.onProfileClicked(profile, position);
             }
         });
     }
@@ -83,7 +85,7 @@ public class ProfilesMenuRecyclerAdapter extends RecyclerView.Adapter<ProfilesMe
     }
 
     public interface ProfileMenuInterface {
-        void onProfileClicked(ProfileDto profile);
+        void onProfileClicked(ProfileDto profile, int position);
     }
 
     public void setCallback(ProfileMenuInterface callback) {
@@ -91,17 +93,17 @@ public class ProfilesMenuRecyclerAdapter extends RecyclerView.Adapter<ProfilesMe
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        final TextView nameTextView;
-        final TextView userShortNameTextView;
         final ImageView profileImageView;
+        final TextView profileShortNameTextView;
+        final TextView profileNameTextView;
         final TextView profileRelationTextView;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            nameTextView = itemView.findViewById(R.id.menuIconLabelTextView);
+            profileImageView = itemView.findViewById(R.id.profileImageView);
+            profileShortNameTextView = itemView.findViewById(R.id.profileShortNameTextView);
+            profileNameTextView = itemView.findViewById(R.id.profileNameTextView);
             profileRelationTextView = itemView.findViewById(R.id.profileRelationTextView);
-            userShortNameTextView = itemView.findViewById(R.id.userShortName);
-            profileImageView = itemView.findViewById(R.id.menuIconImageView);
         }
     }
 }

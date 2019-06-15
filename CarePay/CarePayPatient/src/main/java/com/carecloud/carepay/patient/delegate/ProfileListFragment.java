@@ -81,7 +81,7 @@ public class ProfileListFragment extends BaseDialogFragment implements ProfilesM
     }
 
     @Override
-    public void onProfileClicked(ProfileDto profile) {
-
+    public void onProfileClicked(ProfileDto profile, int position) {
+        callback.addFragment(ProfileDetailFragment.newInstance(position), true);
     }
 }

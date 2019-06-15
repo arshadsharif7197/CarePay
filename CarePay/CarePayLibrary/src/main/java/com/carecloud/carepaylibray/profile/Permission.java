@@ -11,6 +11,9 @@ public class Permission {
     @SerializedName("enabled")
     @Expose
     private boolean enabled;
+    @SerializedName("label")
+    @Expose
+    private String label;
 
     public boolean isEnabled() {
         return enabled;
@@ -18,5 +21,13 @@ public class Permission {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 }

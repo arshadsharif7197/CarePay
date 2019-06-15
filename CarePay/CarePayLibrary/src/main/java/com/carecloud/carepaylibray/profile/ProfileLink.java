@@ -20,6 +20,15 @@ public class ProfileLink {
     @SerializedName("permissions")
     @Expose
     private PermissionDto permissionDto;
+    @SerializedName("practice_name")
+    @Expose
+    private String practiceName;
+    @SerializedName("practice_image")
+    @Expose
+    private String practiceImage;
+    @SerializedName("expiration_dt")
+    @Expose
+    private String expirationDate;
 
 
     public PermissionDto getPermissionDto() {
@@ -52,5 +61,29 @@ public class ProfileLink {
 
     public void setRelationType(String relationType) {
         this.relationType = relationType;
+    }
+
+    public String getPracticeName() {
+        return practiceName;
+    }
+
+    public void setPracticeName(String practiceName) {
+        this.practiceName = practiceName;
+    }
+
+    public String getPracticeImage() {
+        return practiceImage;
+    }
+
+    public void setPracticeImage(String practiceImage) {
+        this.practiceImage = practiceImage;
+    }
+
+    public String getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(String expirationDate) {
+        this.expirationDate = expirationDate;
     }
 }

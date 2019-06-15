@@ -223,6 +223,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         View profilesRecyclerView = findViewById(R.id.profilesRecyclerView);
         mainMenuItemContainer.setVisibility(View.VISIBLE);
         profilesRecyclerView.setVisibility(View.INVISIBLE);
+        showManageProfilesItemMenu(false);
     }
 
     private void populateProfilesList(UserLinks profileData) {
@@ -239,7 +240,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
     }
 
     @Override
-    public void onProfileClicked(ProfileDto profile) {
+    public void onProfileClicked(ProfileDto profile, int position) {
         enableBadge(profile);
         updateProfileInfo(profile);
         updateProfileView();
