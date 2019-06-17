@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
@@ -21,6 +22,9 @@ import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author pjohnson on 2019-06-14.
@@ -128,7 +132,15 @@ public class ProfileDetailFragment extends BaseDialogFragment {
         RecyclerView permissionsRecyclerView = view.findViewById(R.id.permissionsRecyclerView);
         permissionsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         permissionsRecyclerView.setAdapter(new ProfilePermissionsRecyclerAdapter(selectedProfile.getProfile()
-                .getLinks()));
+                .getLinks(), getPracticesMap(delegateDto)));
+    }
+
+    private Map<String, UserPracticeDTO> getPracticesMap(DelegateDto delegateDto) {
+        Map<String, UserPracticeDTO> map = new HashMap<>();
+        for (UserPracticeDTO practiceDTO : delegateDto.getPayload().getUserLinks().getDelegatePracticeInformation()) {
+            map.put(practiceDTO.getPracticeId(), practiceDTO);
+        }
+        return map;
     }
 
     private String getProfileName(DemographicPayloadInfoDTO demographics) {

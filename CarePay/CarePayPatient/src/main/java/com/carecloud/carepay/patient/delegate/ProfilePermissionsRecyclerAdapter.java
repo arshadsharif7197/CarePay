@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.profile.Permission;
 import com.carecloud.carepaylibray.profile.Permissions;
@@ -21,6 +22,7 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author pjohnson on 2019-06-14.
@@ -28,9 +30,11 @@ import java.util.List;
 class ProfilePermissionsRecyclerAdapter extends RecyclerView.Adapter<ProfilePermissionsRecyclerAdapter.ViewHolder> {
 
     private final List<ProfileLink> links;
+    private final Map<String, UserPracticeDTO> practicesMap;
 
-    public ProfilePermissionsRecyclerAdapter(List<ProfileLink> links) {
+    public ProfilePermissionsRecyclerAdapter(List<ProfileLink> links, Map<String, UserPracticeDTO> practicesMap) {
         this.links = links;
+        this.practicesMap = practicesMap;
     }
 
     @Override
@@ -42,10 +46,11 @@ class ProfilePermissionsRecyclerAdapter extends RecyclerView.Adapter<ProfilePerm
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         ProfileLink profileLink = links.get(position);
-        holder.practiceShortNameTextView.setText(StringUtil.getShortName(profileLink.getPracticeName()));
+        UserPracticeDTO userPracticeDTO = practicesMap.get(profileLink.getPracticeId());
+        holder.practiceShortNameTextView.setText(StringUtil.getShortName(userPracticeDTO.getPracticeName()));
         PicassoHelper.get().loadImage(holder.practiceImageView.getContext(),
                 holder.practiceImageView,
-                holder.practiceShortNameTextView, profileLink.getPracticeImage());
+                holder.practiceShortNameTextView, userPracticeDTO.getPracticePhoto());
         holder.toggleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,7 +60,7 @@ class ProfilePermissionsRecyclerAdapter extends RecyclerView.Adapter<ProfilePerm
                 rotateIcon(holder.toggleImageView);
             }
         });
-        holder.practiceNameTextView.setText(StringUtil.capitalize(profileLink.getPracticeName()));
+        holder.practiceNameTextView.setText(StringUtil.capitalize(userPracticeDTO.getPracticeName()));
         holder.expirationDateTextView.setText(String.format(Label
                         .getLabel("profile.profileDetail.item.permission.expires"),
                 DateUtil.getInstance().setDateRaw(profileLink.getExpirationDate())

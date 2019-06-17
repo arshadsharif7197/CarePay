@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.profile.Permission;
 
 import java.util.List;
@@ -31,7 +32,7 @@ class PermissionsNameAdapter extends RecyclerView.Adapter<PermissionsNameAdapter
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Permission permission = permissionsList.get(position);
-        holder.permissionNameTextView.setText(permission.getLabel());
+        holder.permissionNameTextView.setText(Label.getLabel(permission.getLabel()));
     }
 
     @Override

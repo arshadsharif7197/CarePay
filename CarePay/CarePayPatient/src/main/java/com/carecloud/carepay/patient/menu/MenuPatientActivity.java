@@ -420,8 +420,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
                     startActivity(NotificationActivity.class);
                     break;
                 case R.id.manageProfilesMenuItem:
+                    transition = transitionProfile;
                     callback = manageProfilesCallback;
-                    transition = transitionForms;
                     break;
                 case R.id.settingsMenuItem:
                     callback = demographicsSettingsCallBack;
