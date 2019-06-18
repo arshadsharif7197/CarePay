@@ -143,7 +143,8 @@
                         android:layout_toStartOf="@id/providerResetImage"
                         android:paddingTop="@dimen/nextAppointmentFieldTopMargin"
                         android:paddingEnd="@dimen/nextAppointmentFieldHorizontalPadding"
-                        app:customAssetFont="proxima_nova_semi_bold"
+                        app:customAssetFont="gotham_rounded_light"
+                        app:customFloatingFont="proxima_nova_extra_bold"
                         app:hintTextAppearance="@style/FloatingLabelStyle">
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
@@ -191,7 +192,8 @@
                         android:layout_toStartOf="@id/locationResetImage"
                         android:paddingTop="@dimen/nextAppointmentFieldTopMargin"
                         android:paddingEnd="@dimen/nextAppointmentFieldHorizontalPadding"
-                        app:customAssetFont="proxima_nova_semi_bold"
+                        app:customAssetFont="gotham_rounded_light"
+                        app:customFloatingFont="proxima_nova_extra_bold"
                         app:hintTextAppearance="@style/FloatingLabelStyle">
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
@@ -239,7 +241,8 @@
                         android:layout_toStartOf="@id/visitTypeResetImage"
                         android:paddingTop="@dimen/nextAppointmentFieldTopMargin"
                         android:paddingEnd="@dimen/nextAppointmentFieldHorizontalPadding"
-                        app:customAssetFont="proxima_nova_semi_bold"
+                        app:customAssetFont="gotham_rounded_light"
+                        app:customFloatingFont="proxima_nova_extra_bold"
                         app:hintTextAppearance="@style/FloatingLabelStyle">
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
@@ -289,7 +292,8 @@
                         android:layout_toStartOf="@id/visitTimeResetImage"
                         android:paddingTop="@dimen/nextAppointmentFieldTopMargin"
                         android:paddingEnd="@dimen/nextAppointmentFieldHorizontalPadding"
-                        app:customAssetFont="proxima_nova_semi_bold"
+                        app:customAssetFont="gotham_rounded_light"
+                        app:customFloatingFont="proxima_nova_extra_bold"
                         app:hintTextAppearance="@style/FloatingLabelStyle">
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayEditText

@@ -187,6 +187,7 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
                         getResources().getDrawable(R.drawable.icon_drop_down), null);
                 enableTimeSlotField();
                 enableScheduleAppointmentButton();
+                chooseProviderTextView.getOnFocusChangeListener().onFocusChange(chooseProviderTextView, false);
             }
         });
     }
@@ -220,9 +221,9 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
                         getResources().getDrawable(R.drawable.icon_drop_down), null);
                 enableTimeSlotField();
                 enableScheduleAppointmentButton();
+                locationTextView.getOnFocusChangeListener().onFocusChange(locationTextView, false);
             }
         });
-
     }
 
     private void setUpVisitTypeField(View view) {
@@ -251,6 +252,7 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
                         getResources().getDrawable(R.drawable.icon_drop_down), null);
                 enableTimeSlotField();
                 enableScheduleAppointmentButton();
+                visitTypeTextView.getOnFocusChangeListener().onFocusChange(visitTypeTextView, false);
             }
         });
     }
@@ -494,18 +496,13 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
             selectedTimeSlot = null;
             visitTimeTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
                     getResources().getDrawable(R.drawable.icon_drop_down), null);
-            setHint(visitTimeTextView, visitTimeTextInputLayout, null);
+            visitTimeTextView.getOnFocusChangeListener().onFocusChange(visitTimeTextView, false);
         }
         visitTimeTextView.setEnabled(enabled);
     }
 
     private void setHint(TextView textView, TextInputLayout inputLayout, String name) {
-        String[] tags = (String[]) textView.getTag();
-        if (name == null) {
-            inputLayout.setHint(tags[1]);
-        } else {
-            inputLayout.setHint(tags[0]);
-        }
+        textView.getOnFocusChangeListener().onFocusChange(textView, true);
     }
 
     @Override
