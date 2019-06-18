@@ -1,9 +1,10 @@
 package com.carecloud.carepay.practice.library.base;
 
+import android.content.Context;
+
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import android.content.Context;
 
 import com.carecloud.carepay.practice.library.payments.interfaces.IntegratedPaymentQueueRecordDao;
 import com.carecloud.carepay.practice.library.payments.models.IntegratedPaymentQueueRecord;
@@ -12,7 +13,7 @@ import com.carecloud.carepay.practice.library.payments.models.IntegratedPaymentQ
 /**
  * @author pjohnson on 2/27/19.
  */
-@Database(entities = {IntegratedPaymentQueueRecord.class}, version = 1)
+@Database(entities = {IntegratedPaymentQueueRecord.class}, version = 1, exportSchema = false)
 public abstract class BreezeDataBase extends RoomDatabase {
 
     private static volatile BreezeDataBase INSTANCE;

@@ -5,6 +5,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
+
 import android.content.Context;
 
 import com.carecloud.carepay.patient.db.AndroidPayQueuePaymentRecordDao;
@@ -14,7 +15,7 @@ import com.carecloud.carepay.patient.payment.androidpay.models.AndroidPayQueuePa
 /**
  * @author pjohnson on 2/27/19.
  */
-@Database(entities = {AndroidPayQueuePaymentRecord.class}, version = 1)
+@Database(entities = {AndroidPayQueuePaymentRecord.class}, version = 1, exportSchema = false)
 public abstract class BreezeDataBase extends RoomDatabase {
 
     private static volatile BreezeDataBase INSTANCE;

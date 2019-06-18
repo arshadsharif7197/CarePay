@@ -12,7 +12,7 @@ import com.carecloud.carepay.practice.clover.models.CloverQueuePaymentRecord;
 /**
  * @author pjohnson on 2/27/19.
  */
-@Database(entities = {CloverQueuePaymentRecord.class}, version = 1)
+@Database(entities = {CloverQueuePaymentRecord.class}, version = 1, exportSchema = false)
 public abstract class BreezeDataBase extends RoomDatabase {
 
     private static volatile BreezeDataBase INSTANCE;
