@@ -1,7 +1,7 @@
 package com.carecloud.carepay.patient.appointments.adapters;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.view.View;
 
 import com.carecloud.carepay.patient.R;
@@ -11,7 +11,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

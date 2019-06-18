@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'newrelic'
 android {
-    compileSdkVersion 26
+    compileSdkVersion 28
 
     defaultConfig {
         applicationId "com.carecloud.carepay.practice.tablet"
@@ -10,7 +10,7 @@ android {
         versionCode 129
         versionName "1.2.27"
         multiDexEnabled true
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         renderscriptTargetApi 22
         renderscriptSupportModeEnabled true
     }
