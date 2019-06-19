@@ -47,6 +47,7 @@
         android:maxLines="2"
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/text_size_20sp"
+        app:customAssetFont="proxima_nova_semi_bold"
         tools:text="Tyler \n Conan" />
 
 </RelativeLayout>
