@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class BaseDateRangeDialogFragment extends BaseDialogFragment {
 
+    private static final long MAX_DATE_RANGE = 35;
     private Date previousStartDate;
     private Date previousEndDate;
     private Date newEndDate;
@@ -135,9 +136,10 @@ public class BaseDateRangeDialogFragment extends BaseDialogFragment {
                     if (newStartDate != null && newEndDate != null) {
                         long diff = newEndDate.getTime() - newStartDate.getTime();
                         long numOfDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-                        if (numOfDays >= 93) {
-                            Toast.makeText(getActivity(), Label
-                                            .getLabel("add_appointment_max_date_range_message"),
+                        if (numOfDays >= MAX_DATE_RANGE) {
+                            Toast.makeText(getActivity(),
+                                    String.format(Label.getLabel("appointment.availability.dateRange.maxDaysValidation.message")
+                                            , MAX_DATE_RANGE),
                                     Toast.LENGTH_LONG).show();
                             acceptableRange = false;
                         }
