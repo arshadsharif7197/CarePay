@@ -16,7 +16,7 @@ android {
     }
     dexOptions {
         maxProcessCount 4
-        javaMaxHeapSize "12g"
+        javaMaxHeapSize "4g"
     }
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
