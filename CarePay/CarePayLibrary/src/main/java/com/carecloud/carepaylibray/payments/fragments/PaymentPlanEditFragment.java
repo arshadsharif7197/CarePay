@@ -194,7 +194,7 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
 
     @Override
     protected void enableCreatePlanButton() {
-        boolean isEnabled = validateFields(false) ;
+        boolean isEnabled = validateFields(false);
         getActionButton().setSelected(isEnabled);
         getActionButton().setClickable(isEnabled);
     }
@@ -418,7 +418,7 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
 
             String tokenType = merchantServiceDTO.getTokenType();
             String tokenAuth = merchantServiceDTO.getTokenizationAuth();
-            PayeezyRequestTask requestTask = new PayeezyRequestTask(getContext(), this);
+            PayeezyRequestTask requestTask = new PayeezyRequestTask(this);
             requestTask.execute("gettokenvisa", tokenAuth, "", currency, tokenType, cardType, name,
                     number, expiryDate, cvv);
             System.out.println("first authorize call end");
@@ -609,7 +609,7 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
         if (!option.isEnabled()) {
             stubRangeRules();
         }
-        if (option.getName().equals(paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode())){
+        if (option.getName().equals(paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode())) {
             resetPlanParameters();
         }
     }
@@ -645,13 +645,13 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
         int completedInstallments = paymentPlanDTO.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
         boolean parametersModified = installments + completedInstallments != paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments() ||
                 amounthPayment != paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount();
-        if(!parametersModified){
+        if (!parametersModified) {
             //clear any errors in these fields if parameters have not been modified
             clearError(R.id.paymentMonthCountInputLayout);
             clearError(R.id.paymentAmountInputLayout);
         }
 
-        if(!parametersModified){
+        if (!parametersModified) {
             clearError(R.id.paymentMonthCountInputLayout);
             clearError(R.id.paymentAmountInputLayout);
         }

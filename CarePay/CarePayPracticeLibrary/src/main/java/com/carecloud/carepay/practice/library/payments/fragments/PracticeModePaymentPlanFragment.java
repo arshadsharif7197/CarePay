@@ -515,7 +515,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
 
             String tokenType = merchantServiceDTO.getTokenType();
             String tokenAuth = merchantServiceDTO.getTokenizationAuth();
-            PayeezyRequestTask requestTask = new PayeezyRequestTask(getContext(), this);
+            PayeezyRequestTask requestTask = new PayeezyRequestTask(this);
             requestTask.execute("gettokenvisa", tokenAuth, "", currency, tokenType, cardType, name,
                     number, expiryDate, cvv);
             System.out.println("first authorize call end");

@@ -13,21 +13,21 @@ import java.util.ArrayList;
 @JsonAutoDetect(fieldVisibility = Visibility.ANY, getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE)
 public class Error implements Cloneable {
     @Override
-	protected Object clone() throws CloneNotSupportedException {
-		// TODO Auto-generated method stub
-		return super.clone();
-	}
+    protected Object clone() throws CloneNotSupportedException {
+        // TODO Auto-generated method stub
+        return super.clone();
+    }
 
 
-	@JsonProperty("messages")
+    @JsonProperty("messages")
     private ArrayList<String> messages;
-    
-    
+
+
     public ArrayList<String> getMessages() {
         return messages;
     }
-    
-    
+
+
     public void setMessage(ArrayList<String> message) {
         this.messages = message;
     }

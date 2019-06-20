@@ -460,7 +460,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
 
             String tokenType = merchantServiceDTO.getTokenType();
             String tokenAuth = merchantServiceDTO.getTokenizationAuth();
-            PayeezyRequestTask requestTask = new PayeezyRequestTask(getContext(), this);
+            PayeezyRequestTask requestTask = new PayeezyRequestTask(this);
             requestTask.execute("gettokenvisa", tokenAuth, "", currency, tokenType, cardType, name,
                     number, expiryDate, cvv);
             System.out.println("first authorize call end");
@@ -674,7 +674,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         if (nameOnCardEditText.getText().hashCode() == charSequence.hashCode()) {
             nameOnCardRequiredTextView.setVisibility(!(nameOnCardEditText.getText().toString().trim().length() > 0) ? View.VISIBLE : View.GONE);
         } else if (verificationCodeEditText.getText().hashCode() == charSequence.hashCode()) {
-            verificationCodeRequiredTextView.setVisibility(!(verificationCodeEditText.getText().toString().length() > 2) ? View.VISIBLE: View.GONE);
+            verificationCodeRequiredTextView.setVisibility(!(verificationCodeEditText.getText().toString().length() > 2) ? View.VISIBLE : View.GONE);
         }
     }
 
