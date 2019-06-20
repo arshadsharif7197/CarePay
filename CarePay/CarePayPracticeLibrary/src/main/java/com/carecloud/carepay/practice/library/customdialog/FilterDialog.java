@@ -30,6 +30,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 public class FilterDialog extends PopupWindow
@@ -48,6 +49,11 @@ public class FilterDialog extends PopupWindow
 
     private FilterDialogListener callBack;
     private ImageView closeFilterWindowImageView;
+    private boolean isOnPatientFilter;
+
+    public void refresh() {
+        doctorsLocationsAdapter.notifyDataSetChanged();
+    }
 
     public interface FilterDialogListener {
         void applyFilter();
@@ -120,19 +126,28 @@ public class FilterDialog extends PopupWindow
         clearFiltersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Set<String> lastLocationFilter = filterModel.getFilteredLocationsIds();
-                clearPatientSearch();
-                filterModel.clear();
-                saveFilter();
-                doctorsLocationsAdapter = new CustomFilterListAdapter(filterModel, FilterDialog.this);
-                filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
-                callBack.showFilterFlag(false);
-                if (lastLocationFilter.isEmpty()) {
+                if (isOnPatientFilter) {
+//                    filterModel.setPatients(new ArrayList<FilterDataDTO>());
+                    filterModel.clearPatients();
+                    patientAdapter.resetData();
+                    doctorsLocationsAdapter = new CustomFilterListAdapter(filterModel, FilterDialog.this);
+                    filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
                     callBack.applyFilter();
                 } else {
-                    callBack.refreshData();
+                    final Set<String> lastLocationFilter = filterModel.getFilteredLocationsIds();
+                    filterModel.clearAll();
+                    saveFilter();
+                    doctorsLocationsAdapter = new CustomFilterListAdapter(filterModel, FilterDialog.this);
+                    filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
+                    callBack.showFilterFlag(false);
+                    if (lastLocationFilter.isEmpty()) {
+                        callBack.applyFilter();
+                    } else {
+                        callBack.refreshData();
+                    }
                 }
-                clearFiltersButton.setEnabled(false);
+                enableFilterButton();
+                clearPatientSearch();
             }
         });
 
@@ -199,9 +214,13 @@ public class FilterDialog extends PopupWindow
                 if (hasFocus) {
                     filterableDataRecyclerView.setAdapter(patientAdapter);
                     closeFilterWindowImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.icn_nav_back_white));
+                    isOnPatientFilter = true;
+                    clearFiltersButton.setText("practice.filter.clearFilters.button.clearPatients");
                 } else {
                     filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
                     closeFilterWindowImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.icn_close));
+                    isOnPatientFilter = false;
+                    clearFiltersButton.setText(Label.getLabel("practice.filter.clearFilters.button.clearAll"));
                 }
             }
         });

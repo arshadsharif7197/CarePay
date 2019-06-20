@@ -88,6 +88,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     private View filterTextView;
     private View filterTextViewOn;
     private TextView patientCountLabelTextView;
+    private FilterDialog filterDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -219,6 +220,9 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         filterModel.setDoctors(getFilterProviders(providersSavedFilteredIds));
         filterModel.setLocations(getFilterLocations(locationsSavedFilteredIds));
         filterModel.setPatients(patients);
+        if (filterDialog != null && filterDialog.isShowing()) {
+            filterDialog.refresh();
+        }
     }
 
     @NonNull
@@ -226,7 +230,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FilterDialog filterDialog = new FilterDialog(getContext(),
+                filterDialog = new FilterDialog(getContext(),
                         findViewById(R.id.activity_practice_appointments), filterModel);
 
                 filterDialog.showPopWindow();
