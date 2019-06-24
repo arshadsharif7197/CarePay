@@ -135,7 +135,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                 .getMetadata().getPracticeId())) {
             setUpBottomSheet(view, canMakePayments);
         } else {
-            view.findViewById(R.id.consolidatedPaymentButton).setVisibility(View.GONE);
+            view.findViewById(R.id.consolidatedPaymentButton).setVisibility(View.INVISIBLE);
         }
     }
 
