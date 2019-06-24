@@ -122,10 +122,10 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     private void initFragments() {
-        if (hasPayments() || hasPaymentPlans() || hasCharges()) {
-            replaceFragment(PaymentBalanceHistoryFragment.newInstance(displayPage), false);
-        } else if (!canViewBalanceAndHistoricalPayments(paymentsDTO.getPaymentPayload().getUserPractices())) {
+        if (!canViewBalanceAndHistoricalPayments(paymentsDTO.getPaymentPayload().getUserPractices())) {
             showNoPermissionsLayout();
+        } else if (hasPayments() || hasPaymentPlans() || hasCharges()) {
+            replaceFragment(PaymentBalanceHistoryFragment.newInstance(displayPage), false);
         } else {
             showNoPaymentsLayout();
         }
