@@ -260,7 +260,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
     }
 
     private void showManageProfilesItemMenu(boolean show) {
-        navigationView.findViewById(R.id.manageProfilesMenuItem).setVisibility(show ? View.VISIBLE : View.GONE);
+        //TODO: Uncomment this when manage profiles is available
+//        navigationView.findViewById(R.id.manageProfilesMenuItem).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private void enableBadge(ProfileDto profile) {
