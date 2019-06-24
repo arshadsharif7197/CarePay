@@ -17,6 +17,9 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsToggleOption;
+import com.carecloud.carepaylibray.payeeze.CallPayeezy;
+import com.carecloud.carepaylibray.payeeze.model.CreditCard;
+import com.carecloud.carepaylibray.payeeze.model.TokenizeResponse;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.MerchantServiceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
@@ -36,11 +39,9 @@ import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.payments.utils.CreditCardUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
-import com.carecloud.carepaylibray.utils.PayeezyRequestTask;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
-import com.payeezy.sdk.payeezytokenised.TransactionDataProvider;
 
 import java.util.HashMap;
 import java.util.List;
@@ -53,8 +54,7 @@ import java.util.regex.Pattern;
  */
 
 public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
-        implements PayeezyRequestTask.AuthorizeCreditCardCallback,
-        BaseAddCreditCardFragment.IAuthoriseCreditCardResponse {
+        implements BaseAddCreditCardFragment.IAuthoriseCreditCardResponse {
 
     protected PaymentPlanDTO paymentPlanDTO;
     protected PaymentCreditCardsPayloadDTO creditCard;
@@ -393,66 +393,41 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
         String cardType = creditCard.getCardType();
         String number = creditCard.getCompleteNumber();
 
-        try {
-            showProgressDialog();
-            MerchantServiceMetadataDTO merchantServiceDTO = null;
-            for (MerchantServicesDTO merchantService : paymentsModel.getPaymentPayload().getMerchantServices()) {
-                if (merchantService.getName().toLowerCase().contains("payeezy")) {
-                    merchantServiceDTO = merchantService.getMetadata();
-                    break;
+        showProgressDialog();
+        MerchantServiceMetadataDTO merchantServiceDTO = null;
+        for (MerchantServicesDTO merchantService : paymentsModel.getPaymentPayload().getMerchantServices()) {
+            if (merchantService.getName().toLowerCase().contains("payeezy")) {
+                merchantServiceDTO = merchantService.getMetadata();
+                break;
+            }
+        }
+
+        final CreditCard creditCardDto = new CreditCard();
+        creditCardDto.setCardHolderName(name);
+        creditCardDto.setCardNumber(number);
+        creditCardDto.setCvv(cvv);
+        creditCardDto.setExpDate(expiryDate);
+        creditCardDto.setType(cardType);
+
+        CallPayeezy callPayeezy = new CallPayeezy();
+        callPayeezy.doCall(creditCardDto, merchantServiceDTO, new CallPayeezy.AuthorizeCreditCardCallback() {
+
+            @Override
+            public void onAuthorizeCreditCard(TokenizeResponse tokenizeResponse) {
+                if (tokenizeResponse != null) {
+                    if (tokenizeResponse.getToken() != null) {
+                        creditCard.setToken(tokenizeResponse.getToken().getValue());
+                        onAuthorizeCreditCardSuccess();
+                    } else {
+                        onAuthorizeCreditCardFailed();
+                    }
+                } else {
+                    onAuthorizeCreditCardFailed();
                 }
             }
+        });
 
-            String tokenUrl = merchantServiceDTO.getBaseUrl() + merchantServiceDTO.getUrlPath();
-            if (!tokenUrl.endsWith("?")) {
-                tokenUrl += "?";
-            }
-
-            TransactionDataProvider.tokenUrl = tokenUrl;
-            TransactionDataProvider.appIdCert = merchantServiceDTO.getApiKey();
-            TransactionDataProvider.secureIdCert = merchantServiceDTO.getApiSecret();
-            TransactionDataProvider.tokenCert = merchantServiceDTO.getMasterMerchantToken();
-            TransactionDataProvider.trTokenInt = merchantServiceDTO.getMasterTaToken();
-            TransactionDataProvider.jsSecurityKey = merchantServiceDTO.getMasterJsSecurityKey();
-            TransactionDataProvider.taToken = merchantServiceDTO.getMasterTaToken();
-
-            String tokenType = merchantServiceDTO.getTokenType();
-            String tokenAuth = merchantServiceDTO.getTokenizationAuth();
-            PayeezyRequestTask requestTask = new PayeezyRequestTask(this);
-            requestTask.execute("gettokenvisa", tokenAuth, "", currency, tokenType, cardType, name,
-                    number, expiryDate, cvv);
-            System.out.println("first authorize call end");
-        } catch (Exception e) {
-            hideDialog();
-            System.out.println(e.getMessage());
-        }
         System.out.println("authorize call end");
-    }
-
-    @Override
-    public void onAuthorizeCreditCard(String resString) {
-        String valueString = "value";
-        if (resString != null && resString.contains(valueString)) {
-
-            String group1 = "(\\\"value\\\":\")";
-            String group2 = "(\\d+)";
-            String regex = group1 + group2;
-            String tokenValue = null;
-            Matcher matcher = Pattern.compile(regex).matcher(resString);
-            if (matcher.find()) {
-                tokenValue = matcher.group().replaceAll(group1, "");
-            }
-
-            if (tokenValue != null && tokenValue.matches(group2)) {
-                creditCard.setToken(tokenValue);
-                onAuthorizeCreditCardSuccess();
-            } else {
-                onAuthorizeCreditCardFailed();
-            }
-
-        } else {
-            onAuthorizeCreditCardFailed();
-        }
     }
 
     @Override
