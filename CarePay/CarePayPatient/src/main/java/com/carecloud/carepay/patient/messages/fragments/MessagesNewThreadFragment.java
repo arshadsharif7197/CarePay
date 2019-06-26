@@ -368,8 +368,7 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
                     attachmentPostModel = new AttachmentPostModel();
                     attachmentPostModel.setNodeId(uploadModel.getNodeId());
                     attachmentPostModel.setDescription(file.getName());
-                    attachmentPostModel.setFormat(MimeTypeMap.getSingleton()
-                            .getMimeTypeFromExtension(extension));
+                    attachmentPostModel.setFormat(extension);
                     if (attachmentPostModel.getFormat() == null && "json".equals(extension)) {
                         attachmentPostModel.setFormat("application/json");
                     }

@@ -481,7 +481,6 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         query.put("job_id", jobId);
         query.put("practice_mgmt", selectedPractice.getPracticeMgmt());
         ((BaseActivity) getActivity()).getWorkflowServiceHelper().execute(transition, new WorkflowServiceCallback() {
-            boolean failedParsing = false;
 
             @Override
             public void onPreExecute() {
@@ -493,7 +492,6 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                 try {
                     visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
                 } catch (Exception ex) {
-                    failedParsing = true;
                     onFailure("");
                 }
                 String status = visitSummaryDTO.getPayload().getVisitSummary().getStatus();
@@ -514,7 +512,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
             @Override
             public void onFailure(String exceptionMessage) {
                 Log.e("OkHttp", exceptionMessage);
-                if (failedParsing) {
+                if (exceptionMessage.contains("JSON")) {
                     downloadFile(jobId, selectedPractice, format);
                 } else {
                     resetProcess();
