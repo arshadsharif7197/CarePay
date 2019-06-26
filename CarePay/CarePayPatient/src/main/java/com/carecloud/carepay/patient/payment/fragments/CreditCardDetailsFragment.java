@@ -2,10 +2,6 @@ package com.carecloud.carepay.patient.payment.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,6 +12,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
 import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -24,7 +25,6 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
-import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
@@ -110,8 +110,8 @@ public class CreditCardDetailsFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(View view, Bundle icicle) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
-        TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
+        TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(StringUtil.getFormattedCardNumber(
                 creditCardsPayloadDTO.getPayload().getCardType(),
                 creditCardsPayloadDTO.getPayload().getCardNumber()));
@@ -126,20 +126,20 @@ public class CreditCardDetailsFragment extends BaseFragment {
     private void initializeViews(View view) {
 
         if (demographicsSettingsDTO != null && creditCardsPayloadDTO != null) {
-            TextView nameOnCardValue = (TextView) view.findViewById(R.id.nameOnCardValue);
+            TextView nameOnCardValue = view.findViewById(R.id.nameOnCardValue);
             nameOnCardValue.setText(creditCardsPayloadDTO.getPayload().getNameOnCard());
 
-            TextView cardNumberValue = (TextView) view.findViewById(R.id.cardNumberValue);
+            TextView cardNumberValue = view.findViewById(R.id.cardNumberValue);
             cardNumberValue.setText(getMaskedCardNumber(creditCardsPayloadDTO.getPayload().getCardNumber(),
                     creditCardsPayloadDTO.getPayload().getCardType()));
 
-            TextView expirationDateValue = (TextView) view.findViewById(R.id.expirationDateValue);
+            TextView expirationDateValue = view.findViewById(R.id.expirationDateValue);
             expirationDateValue.setText(creditCardsPayloadDTO.getPayload().getExpireDt());
 
-            TextView addressValue = (TextView) view.findViewById(R.id.addressValue);
-            TextView zipcodeValue = (TextView) view.findViewById(R.id.zipcodeValue);
-            TextView cityValue = (TextView) view.findViewById(R.id.cityValue);
-            TextView stateValue = (TextView) view.findViewById(R.id.stateValue);
+            TextView addressValue = view.findViewById(R.id.addressValue);
+            TextView zipcodeValue = view.findViewById(R.id.zipcodeValue);
+            TextView cityValue = view.findViewById(R.id.cityValue);
+            TextView stateValue = view.findViewById(R.id.stateValue);
 
             CreditCardBillingInformationDTO billingInformationDTO = creditCardsPayloadDTO
                     .getPayload().getBillingInformation();
@@ -167,7 +167,7 @@ public class CreditCardDetailsFragment extends BaseFragment {
                 cityValue.setText(billingInformationDTO.getCity());
                 stateValue.setText(billingInformationDTO.getState());
             }
-            Button setAsDefaultButton = (Button) view.findViewById(R.id.setAsDefaultButton);
+            Button setAsDefaultButton = view.findViewById(R.id.setAsDefaultButton);
             setAsDefaultButton.setOnClickListener(setAsDefaultButtonListener);
 
             setAsDefaultButton.setEnabled(!creditCardsPayloadDTO.getPayload().isDefault());
@@ -176,16 +176,13 @@ public class CreditCardDetailsFragment extends BaseFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (!creditCardsPayloadDTO.getPayload().isDefault()) {
-            inflater.inflate(R.menu.setting_credit_card, menu);
-            menu.getItem(0).setTitle(Label.getLabel("edit_credit_card_remove_label"));
-        }
+        inflater.inflate(R.menu.setting_credit_card, menu);
+        menu.getItem(0).setTitle(Label.getLabel("edit_credit_card_remove_label"));
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         if (item.getItemId() == R.id.action_remove_credit_card) {
             showConfirmRemoveDialog();
         }
@@ -220,12 +217,7 @@ public class CreditCardDetailsFragment extends BaseFragment {
         return 16;
     }
 
-    private View.OnClickListener setAsDefaultButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            setAsDefaultRequest();
-        }
-    };
+    private View.OnClickListener setAsDefaultButtonListener = view -> setAsDefaultRequest();
 
     private void setAsDefaultRequest() {
         try {
@@ -292,12 +284,7 @@ public class CreditCardDetailsFragment extends BaseFragment {
         String message = String.format(Label.getLabel("settings.removeCreditCard.confirmation.label.description"),
                 creditCardsPayloadDTO.getPayload().getCardNumber());
         ConfirmDialogFragment dialogFragment = ConfirmDialogFragment.newInstance(title, message);
-        dialogFragment.setCallback(new ConfirmationCallback() {
-            @Override
-            public void onConfirm() {
-                removeCreditCardRequest();
-            }
-        });
+        dialogFragment.setCallback(this::removeCreditCardRequest);
         FragmentManager fm = getFragmentManager();
         dialogFragment.show(fm, dialogFragment.getClass().getName());
     }
