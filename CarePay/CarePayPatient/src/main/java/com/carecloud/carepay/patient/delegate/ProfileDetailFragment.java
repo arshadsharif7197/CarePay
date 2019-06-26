@@ -2,15 +2,16 @@ package com.carecloud.carepay.patient.delegate;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
@@ -79,17 +80,12 @@ public class ProfileDetailFragment extends BaseDialogFragment {
     private void setUpToolbar(View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
         TextView title = toolbar.findViewById(R.id.toolbarTitle);
         title.setText(Label.getLabel("patient.delegate.profileList.title.label"));
     }
 
-    protected void setUpUi(View view) {
+    private void setUpUi(View view) {
         TextView profileShortNameTextView = view.findViewById(R.id.profileShortNameTextView);
         profileShortNameTextView.setText(StringUtil.getShortName(selectedProfile.getProfile().getDemographics()
                 .getPayload().getPersonalDetails().getFullName()));

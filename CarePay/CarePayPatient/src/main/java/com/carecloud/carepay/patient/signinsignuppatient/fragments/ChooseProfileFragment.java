@@ -1,7 +1,6 @@
 package com.carecloud.carepay.patient.signinsignuppatient.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -10,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
@@ -122,20 +123,17 @@ public class ChooseProfileFragment extends BaseDialogFragment {
                 profileDto.getProfile().getDemographics().getPayload().getPersonalDetails().getProfilePhoto(),
                 getContext().getResources().getDimensionPixelSize(R.dimen.profileImageViewSize));
         rowLayout.addView(profileView);
-        profileView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ApplicationPreferences.getInstance().setProfileId(profileDto.getProfile().getId());
-                ApplicationPreferences.getInstance().setUserFullName(StringUtil
-                        .getCapitalizedUserName(profileDto.getProfile().getDemographics().getPayload()
-                                .getPersonalDetails().getFirstName(), profileDto.getProfile().getDemographics()
-                                .getPayload().getPersonalDetails().getLastName()));
-                ApplicationPreferences.getInstance().setUserId(profileDto.getProfile().getDemographics().getPayload()
-                        .getPersonalDetails().getEmailAddress());
-                ApplicationPreferences.getInstance().setUserPhotoUrl(profileDto.getProfile().getDemographics().getPayload()
-                        .getPersonalDetails().getProfilePhoto());
-                callStartUpService();
-            }
+        profileView.setOnClickListener(view -> {
+            ApplicationPreferences.getInstance().setProfileId(profileDto.getProfile().getId());
+            ApplicationPreferences.getInstance().setUserFullName(StringUtil
+                    .getCapitalizedUserName(profileDto.getProfile().getDemographics().getPayload()
+                            .getPersonalDetails().getFirstName(), profileDto.getProfile().getDemographics()
+                            .getPayload().getPersonalDetails().getLastName()));
+            ApplicationPreferences.getInstance().setUserId(profileDto.getProfile().getDemographics().getPayload()
+                    .getPersonalDetails().getEmailAddress());
+            ApplicationPreferences.getInstance().setUserPhotoUrl(profileDto.getProfile().getDemographics().getPayload()
+                    .getPersonalDetails().getProfilePhoto());
+            callStartUpService();
         });
     }
 

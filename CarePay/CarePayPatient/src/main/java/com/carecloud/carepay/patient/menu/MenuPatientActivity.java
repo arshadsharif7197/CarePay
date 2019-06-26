@@ -5,14 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +12,14 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
@@ -53,12 +53,12 @@ import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -183,12 +183,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         toggle.setDrawerArrowDrawable(badgeDrawable);
         toggle.getDrawerArrowDrawable().setColor(ContextCompat.getColor(this, R.color.white));
         drawer.addDrawerListener(toggle);
-        toggle.setCallback(new BadgeDrawerToggle.DrawerInterface() {
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                resetViews();
-            }
-        });
+        toggle.setCallback(drawerView -> resetViews());
         toggle.syncState();
 
         navigationView.findViewById(R.id.appointmentMenuItem).setOnClickListener(menuItemClickListener);
@@ -204,12 +199,9 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
 
         final ImageView profileListTriggerIcon = findViewById(R.id.profileListTriggerIcon);
         profileListTriggerIcon.setSelected(false);
-        profileListTriggerIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleProfileList(profileListTriggerIcon);
-                rotateIcon(v);
-            }
+        profileListTriggerIcon.setOnClickListener(v -> {
+            toggleProfileList(profileListTriggerIcon);
+            rotateIcon(v);
         });
     }
 
@@ -300,13 +292,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
     }
 
     private void sortProfileList(List<ProfileDto> profileList) {
-        Collections.sort(profileList, new Comparator<ProfileDto>() {
-            @Override
-            public int compare(ProfileDto o1, ProfileDto o2) {
-                return getProfileName(o1.getProfile().getDemographics())
-                        .compareTo(getProfileName(o2.getProfile().getDemographics()));
-            }
-        });
+        Collections.sort(profileList, (o1, o2) -> getProfileName(o1.getProfile().getDemographics())
+                .compareTo(getProfileName(o2.getProfile().getDemographics())));
     }
 
     protected abstract Profile getCurrentProfile();

@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.appointments.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,6 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressLint("RestrictedApi")
 public class AppointmentsListFragment extends BaseAppointmentFragment
         implements AppointmentListAdapter.SelectAppointmentCallback {
 

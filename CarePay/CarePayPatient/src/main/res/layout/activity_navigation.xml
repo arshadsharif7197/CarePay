@@ -24,6 +24,6 @@
 
         <include layout="@layout/layout_navigation_menu" />
 
-    </android.support.design.widget.NavigationView>
+    </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>

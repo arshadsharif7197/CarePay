@@ -1,11 +1,12 @@
 package com.carecloud.carepay.patient.menu;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
@@ -59,12 +60,7 @@ public class ProfilesMenuRecyclerAdapter extends RecyclerView.Adapter<ProfilesMe
                         .getPersonalDetails().getProfilePhoto(),
                 holder.profileImageView.getContext().getResources().getDimensionPixelSize(R.dimen.menuIconSize));
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.onProfileClicked(profile, position);
-            }
-        });
+        holder.itemView.setOnClickListener(view -> callback.onProfileClicked(profile, position));
     }
 
     @Override
