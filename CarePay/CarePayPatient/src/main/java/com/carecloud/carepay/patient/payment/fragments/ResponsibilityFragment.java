@@ -2,12 +2,12 @@ package com.carecloud.carepay.patient.payment.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +19,6 @@ import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialo
 import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAmountDialog;
 import com.carecloud.carepaylibray.payments.fragments.ResponsibilityBaseFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;

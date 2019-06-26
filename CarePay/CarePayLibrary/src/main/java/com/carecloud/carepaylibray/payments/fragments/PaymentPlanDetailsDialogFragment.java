@@ -2,7 +2,7 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +17,6 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customdialogs.BasePaymentDetailsFragmentDialog;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanPayloadDTO;

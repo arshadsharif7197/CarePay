@@ -18,7 +18,7 @@
         android:orientation="vertical"
         android:padding="@dimen/dimen_20dp">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/signInEmailTextInputLayout"
             style="@style/TextInputLayoutStyle"
             app:customAssetFont="proxima_nova_semi_bold"
@@ -30,9 +30,9 @@
                 android:inputType="textEmailAddress"
                 app:customAssetFont="proxima_nova_regular" />
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/oldPasswordTextInputLayout"
             style="@style/TextInputLayoutStyle"
             app:customAssetFont="proxima_nova_semi_bold"
@@ -47,7 +47,7 @@
                 android:textColor="@color/colorPrimary"
                 app:customAssetFont="proxima_nova_regular" />
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
 

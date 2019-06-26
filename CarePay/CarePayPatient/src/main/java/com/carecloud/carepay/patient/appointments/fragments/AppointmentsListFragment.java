@@ -2,20 +2,19 @@ package com.carecloud.carepay.patient.appointments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
 import com.carecloud.carepay.patient.appointments.adapters.AppointmentListAdapter;
@@ -31,6 +30,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -265,7 +265,7 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
         getWorkflowServiceHelper().execute(transitionDTO, pageRefreshCallback);
     }
 
-    WorkflowServiceCallback pageRefreshCallback = new WorkflowServiceCallback() {
+    private WorkflowServiceCallback pageRefreshCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             showProgressDialog();

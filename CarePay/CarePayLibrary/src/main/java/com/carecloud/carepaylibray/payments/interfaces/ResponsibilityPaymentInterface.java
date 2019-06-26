@@ -1,11 +1,9 @@
 package com.carecloud.carepaylibray.payments.interfaces;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 
 /**
  * @author pjohnson on 29/05/17.

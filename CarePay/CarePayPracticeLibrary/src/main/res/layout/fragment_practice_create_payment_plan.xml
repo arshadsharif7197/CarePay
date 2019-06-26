@@ -230,7 +230,7 @@
 
         </RelativeLayout>
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/divider"
@@ -242,7 +242,7 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/itemRecycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -273,7 +273,7 @@
                         android:layout_height="@dimen/dimen_1dp"
                         android:background="@color/light_gray" />
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/existingChargesRecycler"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
@@ -511,7 +511,7 @@
                     breeze:textKey="payment.createPaymentPlan.section.title.creditCard"
                     tools:text="Credit Card" />
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/creditCardRecycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -536,7 +536,7 @@
 
             </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
 
     </RelativeLayout>
 

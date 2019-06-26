@@ -4,7 +4,7 @@ package com.carecloud.carepaylibray.payments.models;
  * Created by Rahul on 11/30/16
  */
 
-import android.support.annotation.StringDef;
+import androidx.annotation.StringDef;
 
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanModel;
 import com.google.gson.annotations.Expose;

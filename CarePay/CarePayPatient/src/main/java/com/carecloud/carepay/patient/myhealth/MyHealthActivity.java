@@ -6,15 +6,16 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.PermissionChecker;
-import android.support.v7.app.AlertDialog;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.PermissionChecker;
+import androidx.fragment.app.Fragment;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
+import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.myhealth.dtos.AllergyDto;
 import com.carecloud.carepay.patient.myhealth.dtos.LabDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MedicationDto;
