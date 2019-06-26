@@ -1,7 +1,7 @@
 package com.carecloud.carepaylibray.payments.models;
 
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;

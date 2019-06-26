@@ -2,7 +2,7 @@ package com.carecloud.carepay.practice.library.checkin.activities;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
+import com.google.android.material.textfield.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;

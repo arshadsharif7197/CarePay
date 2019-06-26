@@ -3,7 +3,7 @@ package com.carecloud.carepaylibray.customcomponents;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
-import android.support.design.widget.TextInputLayout;
+import com.google.android.material.textfield.TextInputLayout;
 import android.util.AttributeSet;
 
 import com.carecloud.carepaylibrary.R;
