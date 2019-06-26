@@ -2,16 +2,17 @@ package com.carecloud.carepay.patient.payment.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.adapters.PaymentHistoryAdapter;
+import com.carecloud.carepay.patient.payment.dialogs.PaymentHistoryDetailDialogFragment;
 import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -29,8 +30,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_HISTORY;
 
 import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_HISTORY;
 
@@ -213,7 +212,13 @@ public class PatientPaymentHistoryFragment extends BaseFragment
     @Override
     public void onHistoryItemClicked(PaymentHistoryItem item) {
         if (!refreshLayout.isRefreshing()) {
-            callback.displayPaymentHistoryDetails(item);
+            displayPaymentHistoryDetails(item);
         }
+    }
+
+    private void displayPaymentHistoryDetails(PaymentHistoryItem item) {
+        PaymentHistoryDetailDialogFragment fragment = PaymentHistoryDetailDialogFragment
+                .newInstance(item, paymentsModel.getPaymentPayload().getUserPractice(item.getMetadata().getPracticeId()));
+        callback.displayDialogFragment(fragment, false);
     }
 }

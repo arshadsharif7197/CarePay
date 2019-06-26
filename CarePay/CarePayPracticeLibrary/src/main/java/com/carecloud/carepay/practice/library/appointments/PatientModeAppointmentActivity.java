@@ -2,7 +2,7 @@ package com.carecloud.carepay.practice.library.appointments;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -214,7 +214,7 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
 
     @Override
     public void onCreditCardSelected(PaymentCreditCardsPayloadDTO papiPaymentMethod) {
-
+        //Works only when chooseCreditCardFragment is used in selectMode
     }
 
     @Override
@@ -350,5 +350,10 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
 
     private void logout() {
         goToHome(appointmentsResultModel.getMetadata().getTransitions().getLogout());
+    }
+
+    @Override
+    public void onPaymentCashFinished() {
+        //NA
     }
 }

@@ -91,12 +91,18 @@
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/patientNameLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/checkinPatientNameTextSize"
+                    android:gravity="center_horizontal"
                     android:padding="4dp"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/checkinPatientNameTextSize"
-                    app:customAssetFont="proxima_nova_extra_bold"
+                    android:layout_marginStart="@dimen/checkinPatientNameMarginSize"
+                    android:layout_marginEnd="@dimen/checkinPatientNameMarginSize"
+                    android:maxLines="1"
+                    app:autoSizeTextType="uniform"
+                    app:autoSizeMinTextSize="@dimen/checkinPatientNameMinTextSize"
+                    app:autoSizeStepGranularity="1sp"
+                    app:customAssetFont="proxima_nova_semi_bold"
                     tools:text="Stan Jolly" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -316,7 +322,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/patientBalancesRecycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />

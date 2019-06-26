@@ -1,7 +1,7 @@
 package com.carecloud.carepay.patient.consentforms;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -9,7 +9,6 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
-import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormPracticeFormsFragment;
 import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormProvidersListFragment;
 import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormViewPagerFragment;
 import com.carecloud.carepay.patient.consentforms.fragments.FilledFormFragment;

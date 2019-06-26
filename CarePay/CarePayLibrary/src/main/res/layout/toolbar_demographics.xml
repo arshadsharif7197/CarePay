@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/demographics_toolbar"
     style="@style/CustomToolbarStyle">
 
@@ -9,4 +9,4 @@
         style="@style/ResponsibilityToolbarTextStyle"
         android:text="@string/demographics_title" />
 
-</android.support.v7.widget.Toolbar>
+</androidx.appcompat.widget.Toolbar>

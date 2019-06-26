@@ -1,22 +1,17 @@
 package com.carecloud.carepaylibray.payments.fragments;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -203,7 +198,6 @@ public class PartialPaymentDialog extends BaseDialogFragment implements View.OnC
 
     @Override
     public void beforeTextChanged(CharSequence str, int start, int count, int after) {
-        //amountSymbol.setTextColor(context.getResources().getColor(R.color.white));
         balanceBeforeTextChange = str.toString();
     }
 
@@ -315,7 +309,7 @@ public class PartialPaymentDialog extends BaseDialogFragment implements View.OnC
         return fullAmount;
     }
 
-    private void createPaymentModel(double payAmount) {
+    protected void createPaymentModel(double payAmount) {
         IntegratedPaymentPostModel postModel = paymentsDTO.getPaymentPayload().getPaymentPostModel();
         if (postModel == null) {
             postModel = new IntegratedPaymentPostModel();

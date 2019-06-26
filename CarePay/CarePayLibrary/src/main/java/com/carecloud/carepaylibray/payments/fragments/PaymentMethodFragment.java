@@ -2,12 +2,11 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -20,7 +19,6 @@ import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.payments.adapter.PaymentMethodAdapter;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodInterface;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentPatientBalancesPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
@@ -110,10 +108,10 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
     }
 
     private void initializeViews(View view) {
-        Button createPaymentPlanButton = view.findViewById(R.id.createPaymentPlanButton);
-        createPaymentPlanButton.setOnClickListener(createPaymentPlanButtonListener);
-        createPaymentPlanButton.setText(Label.getLabel("payment_create_plan_text"));
-        createPaymentPlanButton.setEnabled(false);//TODO enable this when ready to support payment plans
+//        Button createPaymentPlanButton = view.findViewById(R.id.createPaymentPlanButton);
+//        createPaymentPlanButton.setOnClickListener(createPaymentPlanButtonListener);
+//        createPaymentPlanButton.setText(Label.getLabel("payment_create_plan_text"));
+//        createPaymentPlanButton.setEnabled(false);//TODO enable this when ready to support payment plans
 
         paymentMethodList = view.findViewById(R.id.list_payment_types);
         final PaymentMethodAdapter paymentMethodAdapter = new PaymentMethodAdapter(getContext(), paymentMethodsList, paymentTypeMap);
@@ -152,6 +150,7 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
                 fragment.setLargeAlertInterface(new LargeAlertDialogFragment.LargeAlertInterface() {
                     @Override
                     public void onActionButton() {
+                        onPaymentCashFinished();
                     }
                 });
                 fragment.show(getFragmentManager(), LargeAlertDialogFragment.class.getName());
@@ -159,7 +158,7 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
                 break;
 
             case CarePayConstants.TYPE_CREDIT_CARD:
-                callback.onPaymentMethodAction(paymentMethod, amount, paymentsModel);
+                onPaymentMethodAction(paymentMethod, amount, paymentsModel);
                 logPaymentMethodSelection(getString(R.string.payment_credit_card));
                 break;
 
@@ -169,28 +168,38 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
 
     }
 
-    private View.OnClickListener createPaymentPlanButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (paymentsModel != null) {
+    protected void onPaymentMethodAction(PaymentsMethodsDTO paymentMethod,
+                                         double amount,
+                                         PaymentsModel paymentsModel) {
+        callback.onPaymentMethodAction(paymentMethod, amount, paymentsModel);
+    }
 
-                double previousBalance = 0;
-                double coPay = 0;
+    protected void onPaymentCashFinished() {
+        //do nothing for patient app
+    }
 
-                for (PaymentPatientBalancesPayloadDTO payment : paymentList.get(0).getPayload()) {//// TODO: 10/18/17 support multipractice whenever payment plans are ready
-                    if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PREVIOUS_BALANCE)) {
-                        previousBalance = Double.parseDouble(payment.getTotal());
-                    } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
-                        coPay = Double.parseDouble(payment.getTotal());
-                    }
-                }
-
-                if ((previousBalance + coPay) > 0) {
-                    callback.onPaymentPlanAction(paymentsModel);
-                }
-            }
-        }
-    };
+//    private View.OnClickListener createPaymentPlanButtonListener = new View.OnClickListener() {
+//        @Override
+//        public void onClick(View view) {
+//            if (paymentsModel != null) {
+//
+//                double previousBalance = 0;
+//                double coPay = 0;
+//
+//                for (PaymentPatientBalancesPayloadDTO payment : paymentList.get(0).getPayload()) {//// TODO: 10/18/17 support multipractice whenever payment plans are ready
+//                    if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PREVIOUS_BALANCE)) {
+//                        previousBalance = Double.parseDouble(payment.getTotal());
+//                    } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
+//                        coPay = Double.parseDouble(payment.getTotal());
+//                    }
+//                }
+//
+//                if ((previousBalance + coPay) > 0) {
+//                    callback.onPaymentPlanAction(paymentsModel);
+//                }
+//            }
+//        }
+//    };
 
     protected List<PaymentsMethodsDTO> getPaymentMethodList() {
         UserPracticeDTO userPracticeDTO = callback.getPracticeInfo(paymentsModel);

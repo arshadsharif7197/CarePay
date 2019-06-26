@@ -1,11 +1,12 @@
 package com.carecloud.carepay.patient.payment.dialogs;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +14,14 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
-import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.fragments.PaymentHistoryDetailFragment;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentPlanPayloadDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -31,8 +35,9 @@ import java.util.Locale;
 
 public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFragment {
 
-    private PaymentFragmentActivityInterface callback;
+    private FragmentActivityInterface callback;
     private UserPracticeDTO userPracticeDTO;
+    private PaymentsModel paymentsModel;
 
     /**
      * Get new instance of PaymentHistoryDetailDialogFragment
@@ -56,7 +61,7 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
     @Override
     protected void attachCallback(Context context) {
         try {
-            callback = (PaymentFragmentActivityInterface) context;
+            callback = (FragmentActivityInterface) context;
         } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement PaymentFragmentActivityInterface");
         }
@@ -67,6 +72,7 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
         super.onCreate(icicle);
         Bundle args = getArguments();
         userPracticeDTO = DtoHelper.getConvertedDTO(UserPracticeDTO.class, args);
+        paymentsModel = (PaymentsModel) callback.getDto();
     }
 
     @Override
@@ -86,48 +92,47 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
 
         String paymentMethod = getPaymentMethod(historyItem.getPayload().getPapiPaymentMethod());
         View paymentPlanDetailsButton = view.findViewById(R.id.paymentPlanDetailsButton);
-        TextView paymentPlanNameTextView = (TextView) view.findViewById(R.id.paymentPlanNameTextView);
+        TextView paymentPlanNameTextView = view.findViewById(R.id.paymentPlanNameTextView);
         if (historyItem.getPayload().getMetadata().getPaymentPlan() != null) {
             paymentPlanDetailsButton.setVisibility(View.VISIBLE);
             paymentPlanDetailsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    callback.displayPaymentPlanHistoryDetails(historyItem,
-                            historyItem.getPayload().getMetadata().getPaymentPlan());
+                    displayPaymentPlanHistoryDetails(historyItem, historyItem.getPayload().getMetadata().getPaymentPlan());
                 }
             });
             paymentMethod = Label.getLabel("payment_plan_payment_text");
             paymentPlanNameTextView.setText(historyItem.getPayload().getMetadata()
                     .getPaymentPlan().getDescription());
             paymentPlanNameTextView.setVisibility(View.VISIBLE);
-        } else if(historyItem.getPayload().getExecution().equals(PaymentConstants.ANDROID_PAY_PAYMENT_TYPE)) {
-            paymentMethod = CarePayConstants.TYPE_GOOGLE_PAY;;
-        } else{
+        } else if (historyItem.getPayload().getExecution().equals(PaymentConstants.ANDROID_PAY_PAYMENT_TYPE)) {
+            paymentMethod = CarePayConstants.TYPE_GOOGLE_PAY;
+        } else {
             paymentPlanDetailsButton.setVisibility(View.GONE);
             paymentPlanNameTextView.setVisibility(View.GONE);
         }
-        TextView transactionType = (TextView) view.findViewById(R.id.transaction_type);
+        TextView transactionType = view.findViewById(R.id.transaction_type);
         transactionType.setText(paymentMethod);
 
-        TextView practiceName = (TextView) view.findViewById(R.id.practice_name);
+        TextView practiceName = view.findViewById(R.id.practice_name);
         practiceName.setText(userPracticeDTO.getPracticeName());
 
         DateUtil dateUtil = DateUtil.getInstance().setDateRaw(historyItem.getPayload().getDate())
                 .shiftDateToGMT();
-        TextView transactionDate = (TextView) view.findViewById(R.id.transaction_date);
+        TextView transactionDate = view.findViewById(R.id.transaction_date);
         transactionDate.setText(dateUtil.getDateAsMonthLiteralDayOrdinalYear());
 
-        TextView transactionNumber = (TextView) view.findViewById(R.id.transaction_number);
+        TextView transactionNumber = view.findViewById(R.id.transaction_number);
         transactionNumber.setText(historyItem.getPayload().getConfirmation());
 
-        TextView transactionTotal = (TextView) view.findViewById(R.id.transaction_total);
+        TextView transactionTotal = view.findViewById(R.id.transaction_total);
         transactionTotal.setText(NumberFormat.getCurrencyInstance(Locale.US).format(totalPaid));
 
-        RecyclerView itemsRecycler = (RecyclerView) view.findViewById(R.id.items_recycler);
+        RecyclerView itemsRecycler = view.findViewById(R.id.items_recycler);
         itemsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         initItemsRecycler(itemsRecycler);
 
-        final NestedScrollView scrollView = (NestedScrollView) view.findViewById(R.id.scrollView);
+        final NestedScrollView scrollView = view.findViewById(R.id.scrollView);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -140,11 +145,34 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
             View refundLayout = view.findViewById(R.id.refund_layout);
             refundLayout.setVisibility(View.VISIBLE);
 
-            TextView refundAmount = (TextView) view.findViewById(R.id.transaction_refunded);
+            TextView refundAmount = view.findViewById(R.id.transaction_refunded);
             refundAmount.setText(NumberFormat.getCurrencyInstance(Locale.US)
                     .format(historyItem.getPayload().getTotalRefunded()));
         }
 
+    }
+
+    private void displayPaymentPlanHistoryDetails(final PaymentHistoryItem historyItem, PaymentPlanPayloadDTO paymentPlan) {
+        String taskId = paymentPlan.getMetadata().getTaskId();
+        PaymentPlanDTO selectedPaymentPlan = null;
+        for (PaymentPlanDTO paymentPlanDTO : paymentsModel.getPaymentPayload().getPatientPaymentPlans()) {
+            if (taskId.equals(paymentPlanDTO.getPayload().getMetadata().getTaskId())) {
+                selectedPaymentPlan = paymentPlanDTO;
+                break;
+            }
+        }
+
+        final UserPracticeDTO selectedUserPractice = paymentsModel.getPaymentPayload().getUserPractice(historyItem.getMetadata().getPracticeId());
+        PaymentPlanHistoryDetailDialogFragment planHistoryFragment = PaymentPlanHistoryDetailDialogFragment
+                .newInstance(selectedPaymentPlan, selectedUserPractice);
+        planHistoryFragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                showDialog();
+            }
+        });
+        callback.displayDialogFragment(planHistoryFragment, false);
+        hideDialog();
     }
 
     @Override
