@@ -18,6 +18,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.profile.ProfileDto;
+import com.carecloud.carepaylibray.profile.UserLinks;
 
 /**
  * @author pjohnson on 2019-06-13.
@@ -60,6 +61,10 @@ public class ProfileListFragment extends BaseDialogFragment implements ProfilesM
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUpToolbar(view);
+        setUpProfilesList(view);
+    }
+
+    private void setUpProfilesList(View view) {
         RecyclerView profilesRecyclerView = view.findViewById(R.id.profilesRecyclerView);
         profilesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         ProfilesMenuRecyclerAdapter adapter = new ProfilesMenuRecyclerAdapter(delegateDto.getPayload()
@@ -79,5 +84,10 @@ public class ProfileListFragment extends BaseDialogFragment implements ProfilesM
     @Override
     public void onProfileClicked(ProfileDto profile, int position) {
         callback.addFragment(ProfileDetailFragment.newInstance(position), true);
+    }
+
+    public void refreshList(UserLinks userLinks) {
+        delegateDto.getPayload().setUserLinks(userLinks);
+        setUpProfilesList(getView());
     }
 }

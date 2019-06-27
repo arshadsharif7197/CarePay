@@ -2,6 +2,7 @@ package com.carecloud.carepay.patient.delegate;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +15,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadInfoDTO;
-import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.profile.ProfileDto;
+import com.carecloud.carepaylibray.profile.ProfileLink;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.google.gson.JsonObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,9 +36,9 @@ import java.util.Map;
 /**
  * @author pjohnson on 2019-06-14.
  */
-public class ProfileDetailFragment extends BaseDialogFragment {
+public class ProfileDetailFragment extends BaseDialogFragment implements ProfilePermissionsRecyclerAdapter.ProfileEditInterface {
 
-    private FragmentActivityInterface callback;
+    private ProfileManagementInterface callback;
     private DelegateDto delegateDto;
     private ProfileDto selectedProfile;
 
@@ -47,10 +53,10 @@ public class ProfileDetailFragment extends BaseDialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof FragmentActivityInterface) {
-            callback = (FragmentActivityInterface) context;
+        if (context instanceof ProfileManagementInterface) {
+            callback = (ProfileManagementInterface) context;
         } else {
-            throw new ClassCastException("context must implements FragmentActivityInterface");
+            throw new ClassCastException("context must implements ProfileManagementInterface");
         }
     }
 
@@ -127,8 +133,11 @@ public class ProfileDetailFragment extends BaseDialogFragment {
     private void setUpPermissionList(View view) {
         RecyclerView permissionsRecyclerView = view.findViewById(R.id.permissionsRecyclerView);
         permissionsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        permissionsRecyclerView.setAdapter(new ProfilePermissionsRecyclerAdapter(selectedProfile.getProfile()
-                .getLinks(), getPracticesMap(delegateDto)));
+        ProfilePermissionsRecyclerAdapter adapter = new ProfilePermissionsRecyclerAdapter(selectedProfile
+                .getProfile().getLinks(), getPracticesMap(delegateDto),
+                delegateDto.getPayload().getDelegate() == null);
+        adapter.setCallback(this);
+        permissionsRecyclerView.setAdapter(adapter);
     }
 
     private Map<String, UserPracticeDTO> getPracticesMap(DelegateDto delegateDto) {
@@ -144,5 +153,35 @@ public class ProfileDetailFragment extends BaseDialogFragment {
                 .getCapitalizedUserName(demographics.getPayload()
                         .getPersonalDetails().getFirstName(), demographics
                         .getPayload().getPersonalDetails().getLastName());
+    }
+
+    @Override
+    public void onDisconnectClicked(ProfileLink profileLink) {
+        JsonObject postBodyObj = new JsonObject();
+        postBodyObj.addProperty("practice_mgmt", profileLink.getPracticeMgmt());
+        postBodyObj.addProperty("practice_id", profileLink.getPracticeId());
+        postBodyObj.addProperty("patient_id", profileLink.getPatientId());
+        postBodyObj.addProperty("delegate_user_id", profileLink.getDelegateUserId());
+        postBodyObj.addProperty("action", "REVOKE_ACCESS");
+        TransitionDTO nextPageTransition = delegateDto.getMetadata().getTransitions().getAction();
+        getWorkflowServiceHelper().execute(nextPageTransition, new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                showProgressDialog();
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                hideProgressDialog();
+                DelegateDto delegateDto = DtoHelper.getConvertedDTO(DelegateDto.class, workflowDTO);
+                callback.updateProfiles(delegateDto.getPayload().getUserLinks());
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                hideProgressDialog();
+                Log.e("Pablo", "error");
+            }
+        }, postBodyObj.toString());
     }
 }

@@ -11,7 +11,11 @@ public class DelegateDto implements DTO {
 
     @SerializedName("payload")
     @Expose
-    DelegatePayload payload = new DelegatePayload();
+    private DelegatePayload payload = new DelegatePayload();
+
+    @SerializedName("metadata")
+    @Expose
+    private DelegateMetadata metadata = new DelegateMetadata();
 
     public DelegatePayload getPayload() {
         return payload;
@@ -19,5 +23,13 @@ public class DelegateDto implements DTO {
 
     public void setPayload(DelegatePayload payload) {
         this.payload = payload;
+    }
+
+    public DelegateMetadata getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(DelegateMetadata metadata) {
+        this.metadata = metadata;
     }
 }

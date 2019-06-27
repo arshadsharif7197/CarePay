@@ -11,6 +11,9 @@ public class ProfileLink {
     @SerializedName("practice_id")
     @Expose
     private String practiceId;
+    @SerializedName("practice_mgmt")
+    @Expose
+    private String practiceMgmt;
     @SerializedName("patient_id")
     @Expose
     private String patientId;
@@ -23,6 +26,9 @@ public class ProfileLink {
     @SerializedName("expiration_dt")
     @Expose
     private String expirationDate;
+    @SerializedName("delegate_user_id")
+    @Expose
+    private String delegateUserId;
 
 
     public PermissionDto getPermissionDto() {
@@ -63,5 +69,21 @@ public class ProfileLink {
 
     public void setExpirationDate(String expirationDate) {
         this.expirationDate = expirationDate;
+    }
+
+    public String getPracticeMgmt() {
+        return practiceMgmt;
+    }
+
+    public void setPracticeMgmt(String practiceMgmt) {
+        this.practiceMgmt = practiceMgmt;
+    }
+
+    public String getDelegateUserId() {
+        return delegateUserId;
+    }
+
+    public void setDelegateUserId(String delegateUserId) {
+        this.delegateUserId = delegateUserId;
     }
 }

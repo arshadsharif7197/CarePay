@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,10 +33,15 @@ class ProfilePermissionsRecyclerAdapter extends RecyclerView.Adapter<ProfilePerm
 
     private final List<ProfileLink> links;
     private final Map<String, UserPracticeDTO> practicesMap;
+    private final boolean showButtons;
+    private ProfileEditInterface callback;
 
-    public ProfilePermissionsRecyclerAdapter(List<ProfileLink> links, Map<String, UserPracticeDTO> practicesMap) {
+    public ProfilePermissionsRecyclerAdapter(List<ProfileLink> links,
+                                             Map<String, UserPracticeDTO> practicesMap,
+                                             boolean showButtons) {
         this.links = links;
         this.practicesMap = practicesMap;
+        this.showButtons = showButtons;
     }
 
     @Override
@@ -52,14 +58,11 @@ class ProfilePermissionsRecyclerAdapter extends RecyclerView.Adapter<ProfilePerm
         PicassoHelper.get().loadImage(holder.practiceImageView.getContext(),
                 holder.practiceImageView,
                 holder.practiceShortNameTextView, userPracticeDTO.getPracticePhoto());
-        holder.toggleImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                holder.permissionsContainer.setVisibility(!holder.toggleImageView.isSelected()
-                        ? View.VISIBLE : View.GONE);
-                holder.toggleImageView.setSelected(!holder.toggleImageView.isSelected());
-                rotateIcon(holder.toggleImageView);
-            }
+        holder.toggleImageView.setOnClickListener(view -> {
+            holder.permissionsContainer.setVisibility(!holder.toggleImageView.isSelected()
+                    ? View.VISIBLE : View.GONE);
+            holder.toggleImageView.setSelected(!holder.toggleImageView.isSelected());
+            rotateIcon(holder.toggleImageView);
         });
         holder.practiceNameTextView.setText(StringUtil.capitalize(userPracticeDTO.getPracticeName()));
         holder.expirationDateTextView.setText(String.format(Label
@@ -67,6 +70,9 @@ class ProfilePermissionsRecyclerAdapter extends RecyclerView.Adapter<ProfilePerm
                 DateUtil.getInstance().setDateRaw(profileLink.getExpirationDate())
                         .toStringWithFormatMmSlashDdSlashYyyy()));
         setUpPermissionsNames(holder.profilePermissionRecycler, profileLink);
+        holder.disconnectButton.setVisibility(showButtons ? View.VISIBLE : View.GONE);
+        holder.mergeButton.setVisibility(showButtons ? View.VISIBLE : View.GONE);
+        holder.disconnectButton.setOnClickListener(v -> callback.onDisconnectClicked(profileLink));
     }
 
     private void setUpPermissionsNames(RecyclerView recyclerView, ProfileLink profileLink) {
@@ -196,6 +202,8 @@ class ProfilePermissionsRecyclerAdapter extends RecyclerView.Adapter<ProfilePerm
         TextView practiceNameTextView;
         TextView expirationDateTextView;
         RecyclerView profilePermissionRecycler;
+        Button disconnectButton;
+        Button mergeButton;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -206,6 +214,16 @@ class ProfilePermissionsRecyclerAdapter extends RecyclerView.Adapter<ProfilePerm
             expirationDateTextView = itemView.findViewById(R.id.expirationDateTextView);
             permissionsContainer = itemView.findViewById(R.id.permissionsContainer);
             profilePermissionRecycler = itemView.findViewById(R.id.profilePermissionRecycler);
+            disconnectButton = itemView.findViewById(R.id.disconnectButton);
+            mergeButton = itemView.findViewById(R.id.mergeButton);
         }
+    }
+
+    public void setCallback(ProfileEditInterface callback) {
+        this.callback = callback;
+    }
+
+    public interface ProfileEditInterface {
+        void onDisconnectClicked(ProfileLink profileLink);
     }
 }
