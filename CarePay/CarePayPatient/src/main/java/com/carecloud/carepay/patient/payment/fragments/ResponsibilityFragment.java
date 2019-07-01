@@ -80,22 +80,17 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_responsibility, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
         toolbar.setTitle("");
         getPaymentLabels();
         TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
@@ -142,17 +137,12 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         return filteredList;
     }
 
-    protected void setUpBottomSheet(final View view) {
+    private void setUpBottomSheet(final View view) {
         View payTotalAmountContainer = view.findViewById(R.id.payTotalAmountContainer);
         View partialPaymentContainer = view.findViewById(R.id.partialPaymentContainer);
         View payLaterContainer = view.findViewById(R.id.payLaterContainer);
         payLaterContainer.setVisibility(getArguments().getBoolean("payLaterButtonVisibility") ? View.VISIBLE : View.GONE);
-        payLaterContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                actionCallback.onPayLaterClicked(selectedBalance);
-            }
-        });
+        payLaterContainer.setOnClickListener(view13 -> actionCallback.onPayLaterClicked(selectedBalance));
 
         if (total > 0) {
             payTotalAmountContainer.setClickable(true);
@@ -163,19 +153,9 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
             payLaterContainer.setEnabled(true);
         }
 
-        payTotalAmountContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                doPayment();
-            }
-        });
+        payTotalAmountContainer.setOnClickListener(view1 -> doPayment());
 
-        partialPaymentContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                actionCallback.onPartialPaymentClicked(total, selectedBalance);
-            }
-        });
+        partialPaymentContainer.setOnClickListener(view12 -> actionCallback.onPartialPaymentClicked(total, selectedBalance));
 
         partialPaymentContainer.setVisibility(isPartialPayAvailable(selectedBalance.getMetadata()
                 .getPracticeId(), total) ? View.VISIBLE : View.GONE);
@@ -193,16 +173,13 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         paymentPlanContainer.setVisibility(paymentPlanEnabled ? View.VISIBLE : View.GONE);
         paymentPlanContainer.setEnabled(paymentPlanEnabled);
         paymentPlanContainer.setClickable(paymentPlanEnabled);
-        paymentPlanContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PendingBalanceDTO selectedBalancesItem = paymentDTO.getPaymentPayload()
-                        .getPatientBalances().get(0).getBalances().get(0);//this should be a safe assumption for checkin
-                PendingBalanceDTO reducedBalancesItem = paymentDTO.getPaymentPayload()
-                        .reduceBalanceItems(selectedBalancesItem, false);
-                actionCallback.displayDialogFragment(PatientPaymentPlanAmountDialog
-                        .newInstance(paymentDTO, reducedBalancesItem), true);
-            }
+        paymentPlanContainer.setOnClickListener(view14 -> {
+            PendingBalanceDTO selectedBalancesItem = paymentDTO.getPaymentPayload()
+                    .getPatientBalances().get(0).getBalances().get(0);//this should be a safe assumption for checkin
+            PendingBalanceDTO reducedBalancesItem = paymentDTO.getPaymentPayload()
+                    .reduceBalanceItems(selectedBalancesItem, false);
+            actionCallback.displayDialogFragment(PatientPaymentPlanAmountDialog
+                    .newInstance(paymentDTO, reducedBalancesItem), true);
         });
         if (mustAddToExisting) {
             TextView paymentPlanTextView = paymentPlanContainer.findViewById(R.id.paymentPlanTextView);
@@ -224,20 +201,10 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
             }
         });
         Button consolidatedPaymentButton = view.findViewById(R.id.consolidatedPaymentButton);
-        consolidatedPaymentButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            }
-        });
+        consolidatedPaymentButton.setOnClickListener(v -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED));
 
         Button cancelButton = view.findViewById(R.id.cancelButton);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-            }
-        });
+        cancelButton.setOnClickListener(v -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN));
 
         TextView totalPatientResponsibilityValue = view.findViewById(R.id.totalPatientResponsibilityValue);
         totalPatientResponsibilityValue.setText(currencyFormat.format(total));
@@ -255,7 +222,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         }
     }
 
-    protected void doPayment() {
+    private void doPayment() {
         createPaymentModel(total);
         actionCallback.onPayButtonClicked(total, paymentDTO);
     }

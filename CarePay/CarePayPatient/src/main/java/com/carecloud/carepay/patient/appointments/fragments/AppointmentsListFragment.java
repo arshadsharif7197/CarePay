@@ -49,7 +49,6 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
     private SwipeRefreshLayout refreshLayout;
     private View noAppointmentView;
 
-    private List<AppointmentDTO> appointmentsItems;
     private RecyclerView appointmentRecyclerView;
 
     private PatientAppointmentNavigationCallback callback;
@@ -163,7 +162,7 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
         if (canViewAnyAppointment(appointmentsResultModel.getPayload().getAppointments(),
                 appointmentsResultModel.getPayload().getUserPractices())) {
             if (appointmentsResultModel.getPayload().getAppointments().size() > 0) {
-                appointmentsItems = appointmentsResultModel.getPayload().getAppointments();
+                List<AppointmentDTO> appointmentsItems = appointmentsResultModel.getPayload().getAppointments();
                 noAppointmentView.setVisibility(View.GONE);
                 floatingActionButton.setVisibility(canScheduleAppointments ? View.VISIBLE : View.GONE);
                 appointmentRecyclerView.setVisibility(View.VISIBLE);
@@ -253,12 +252,9 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
     }
 
     private void setRefreshAction() {
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshLayout.setRefreshing(false);
-                doRefreshAction();
-            }
+        refreshLayout.setOnRefreshListener(() -> {
+            refreshLayout.setRefreshing(false);
+            doRefreshAction();
         });
     }
 
