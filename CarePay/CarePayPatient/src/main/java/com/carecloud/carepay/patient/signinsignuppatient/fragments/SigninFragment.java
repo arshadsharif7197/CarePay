@@ -2,15 +2,12 @@ package com.carecloud.carepay.patient.signinsignuppatient.fragments;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyPermanentlyInvalidatedException;
 import android.security.keystore.KeyProperties;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import com.google.android.material.textfield.TextInputLayout;
-import androidx.core.hardware.fingerprint.FingerprintManagerCompat;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -24,11 +21,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.hardware.fingerprint.FingerprintManagerCompat;
+
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
 import com.carecloud.carepay.patient.selectlanguage.fragments.SelectLanguageFragment;
+import com.carecloud.carepay.patient.session.PatientSessionService;
 import com.carecloud.carepay.patient.utils.FingerprintUiHelper;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -45,6 +47,7 @@ import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.PlainWebViewFragment;
+import com.carecloud.carepaylibray.session.SessionService;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.signinsignup.fragments.ResetPasswordFragment;
@@ -54,6 +57,7 @@ import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.newrelic.agent.android.NewRelic;
 
@@ -167,8 +171,8 @@ public class SigninFragment extends BaseFragment {
         view.findViewById(R.id.signup_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.replaceFragment(new SignupFragment(), true);
-                reset();
+//                callback.replaceFragment(new SignupFragment(), true);
+//                reset();
             }
         });
 
@@ -225,7 +229,7 @@ public class SigninFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 PlainWebViewFragment fragment = PlainWebViewFragment
-                        .newInstance(HttpConstants.getRetailUrl()+CarePayConstants.GET_STARTED_URL);
+                        .newInstance(HttpConstants.getRetailUrl() + CarePayConstants.GET_STARTED_URL);
                 callback.replaceFragment(fragment, true);
             }
         });
@@ -332,6 +336,9 @@ public class SigninFragment extends BaseFragment {
                 getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants
                         .DEMOGRAPHICS_ADDRESS_BUNDLE, null);
                 getApplicationPreferences().setLandingScreen(true);
+
+                Intent serviceIntent = new Intent(getActivity(), PatientSessionService.class);
+                getActivity().startService(serviceIntent);
                 if (shouldShowNotificationScreen) {
                     manageNotificationAsLandingScreen(workflowDTO.toString());
                 } else {

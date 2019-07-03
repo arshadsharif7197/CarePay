@@ -2,11 +2,12 @@ package com.carecloud.carepay.practice.library.base;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.customdialog.IConfirmPracticeAppPin;
@@ -17,13 +18,15 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
+import com.carecloud.carepaylibray.session.SessionService;
+import com.carecloud.carepaylibray.session.SessionedActivityInterface;
 
 import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class BasePracticeActivity extends BaseActivity implements IConfirmPracticeAppPin {
+public abstract class BasePracticeActivity extends BaseActivity implements IConfirmPracticeAppPin, SessionedActivityInterface {
 
     private long lastFullScreenSet;
 
@@ -34,7 +37,12 @@ public abstract class BasePracticeActivity extends BaseActivity implements IConf
                 R.style.PracticeModeActivity : R.style.PatientModeActivity);
         setSystemUiVisibility();
         setNavigationBarVisibility();
-        Log.d("New Relic", getClass().getName());
+        getSupportFragmentManager().addOnBackStackChangedListener(() -> {
+            Log.e("Session", "manageSession");
+            if (manageSession()) {
+//                startService(new Intent(this, SessionService.class));
+            }
+        });
     }
 
     @Override
@@ -234,5 +242,15 @@ public abstract class BasePracticeActivity extends BaseActivity implements IConf
 
     public interface SimpleCallback {
         void callback();
+    }
+
+    @Override
+    public boolean manageSession() {
+        return true;
+    }
+
+    @Override
+    protected void stopSessionService() {
+
     }
 }

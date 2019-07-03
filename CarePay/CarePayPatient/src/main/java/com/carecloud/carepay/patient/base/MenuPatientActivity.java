@@ -5,19 +5,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.navigation.NavigationView;
-import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
@@ -28,6 +28,7 @@ import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.notifications.activities.NotificationActivity;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.retail.activities.RetailActivity;
+import com.carecloud.carepay.patient.session.PatientSessionService;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -41,9 +42,11 @@ import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
+import com.carecloud.carepaylibray.session.SessionService;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -316,6 +319,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             getAppAuthorizationHelper().setAccessToken(null);
+            finishSessionService();
             navigateToWorkflow(workflowDTO);
         }
 
@@ -417,7 +421,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         return transitionMessaging;
     }
 
-    protected void displayMessagesScreen(){
+    protected void displayMessagesScreen() {
         //backward compat for pending notification merge
         startActivity(MessagesActivity.class);
     }
@@ -515,5 +519,9 @@ public abstract class MenuPatientActivity extends BasePatientActivity
         if (badgeReceiver != null) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(badgeReceiver);
         }
+    }
+
+    private void finishSessionService() {
+        stopService(new Intent(this, PatientSessionService.class));
     }
 }
