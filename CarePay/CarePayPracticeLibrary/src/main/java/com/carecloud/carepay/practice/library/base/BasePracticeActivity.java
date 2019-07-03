@@ -4,13 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.customdialog.IConfirmPracticeAppPin;
+import com.carecloud.carepay.practice.library.session.PracticeSessionService;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -18,8 +18,8 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
-import com.carecloud.carepaylibray.session.SessionService;
 import com.carecloud.carepaylibray.session.SessionedActivityInterface;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import org.apache.commons.lang3.NotImplementedException;
 
@@ -29,6 +29,7 @@ import java.util.Map;
 public abstract class BasePracticeActivity extends BaseActivity implements IConfirmPracticeAppPin, SessionedActivityInterface {
 
     private long lastFullScreenSet;
+    protected static TransitionDTO logoutTransition;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,12 +38,16 @@ public abstract class BasePracticeActivity extends BaseActivity implements IConf
                 R.style.PracticeModeActivity : R.style.PatientModeActivity);
         setSystemUiVisibility();
         setNavigationBarVisibility();
-        getSupportFragmentManager().addOnBackStackChangedListener(() -> {
-            Log.e("Session", "manageSession");
-            if (manageSession()) {
-//                startService(new Intent(this, SessionService.class));
-            }
-        });
+        if (manageSession()) {
+            getSupportFragmentManager().addOnBackStackChangedListener(() -> {
+                Log.e("Session", "manageSession");
+                Bundle bundle = new Bundle();
+                DtoHelper.bundleDto(bundle, getLogoutTransition());
+                Intent intent = new Intent(this, PracticeSessionService.class);
+                intent.putExtras(bundle);
+                startService(intent);
+            });
+        }
     }
 
     @Override
@@ -50,15 +55,12 @@ public abstract class BasePracticeActivity extends BaseActivity implements IConf
         super.onResume();
         if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             final View rootView = findViewById(android.R.id.content);
-            rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    long now = System.currentTimeMillis();
-                    if (now - lastFullScreenSet > 1000) {
-                        Log.d("Base", "Display Full Screen");
-                        onProgressDialogCancel();
-                        lastFullScreenSet = now;
-                    }
+            rootView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+                long now = System.currentTimeMillis();
+                if (now - lastFullScreenSet > 1000) {
+                    Log.d("Base", "Display Full Screen");
+                    onProgressDialogCancel();
+                    lastFullScreenSet = now;
                 }
             });
         }
@@ -246,11 +248,16 @@ public abstract class BasePracticeActivity extends BaseActivity implements IConf
 
     @Override
     public boolean manageSession() {
-        return true;
+        return false;
+    }
+
+    @Override
+    public TransitionDTO getLogoutTransition() {
+        return null;
     }
 
     @Override
     protected void stopSessionService() {
-
+        stopService(new Intent(this, PracticeSessionService.class));
     }
 }

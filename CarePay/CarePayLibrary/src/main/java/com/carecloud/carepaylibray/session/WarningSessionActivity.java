@@ -29,12 +29,6 @@ public abstract class WarningSessionActivity extends BaseActivity {
         setFinishOnTouchOutside(false);
         TextView logoutButton = findViewById(R.id.logoutButton);
         logoutButton.setOnClickListener(v -> {
-            getApplicationMode().clearUserPracticeDTO();
-            AppAuthorizationHelper authHelper = getAppAuthorizationHelper();
-            authHelper.setUser(null);
-            authHelper.setAccessToken(null);
-            authHelper.setIdToken(null);
-            authHelper.setRefreshToken(null);
             restartApp();
         });
         TextView continueButton = findViewById(R.id.continueButton);
@@ -45,25 +39,10 @@ public abstract class WarningSessionActivity extends BaseActivity {
         alertMessage = Label.getLabel("practice.idleSignOut.message");
         counterTextView.setText(String.format(alertMessage, countDown--));
         runnable = this::countDownMethod;
+        counterTextView.postDelayed(runnable, ONE_SECOND);
     }
 
     protected abstract void onContinueButton();
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (countDown > 0) {
-            counterTextView.postDelayed(runnable, ONE_SECOND);
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (runnable != null) {
-            counterTextView.removeCallbacks(runnable);
-        }
-    }
 
     private void countDownMethod() {
         if (countDown > 0) {

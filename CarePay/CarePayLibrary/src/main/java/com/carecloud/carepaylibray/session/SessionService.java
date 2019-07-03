@@ -15,9 +15,11 @@ import com.carecloud.carepaylibray.CarePayApplication;
 public abstract class SessionService extends Service {
 
 
-    private static final long SESSION_TIMEOUT = 1000 * 65 *10;
+    protected static final long PATIENT_SESSION_TIMEOUT = 1000 * 60 * 10;
+    protected static final long PRACTICE_SESSION_TIMEOUT = 1000 * 60 * 3;
     private Handler handler;
     private Runnable timeOutRunnable;
+    protected long sessionTimeout;
 
     @Nullable
     @Override
@@ -31,13 +33,6 @@ public abstract class SessionService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    protected void setUpHandler() {
-        if (timeOutRunnable != null) {
-            handler.removeCallbacks(timeOutRunnable);
-        }
-        handler.postDelayed(timeOutRunnable, SESSION_TIMEOUT);
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -46,9 +41,17 @@ public abstract class SessionService extends Service {
             if (((CarePayApplication) getApplicationContext()).isForeground()) {
                 callWarningActivity();
             } else {
-                setUpHandler();
+                //TODO handle background logout
+//                setUpHandler();
             }
         };
+    }
+
+    protected void setUpHandler() {
+        if (timeOutRunnable != null) {
+            handler.removeCallbacks(timeOutRunnable);
+        }
+        handler.postDelayed(timeOutRunnable, sessionTimeout);
     }
 
     protected abstract void callWarningActivity();

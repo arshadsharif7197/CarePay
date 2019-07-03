@@ -78,9 +78,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-
         homeScreenDTO = getConvertedDTO(HomeScreenDTO.class);
         homeScreenMode = HomeScreenMode.valueOf(homeScreenDTO.getState().toUpperCase());
         if (homeScreenMode.equals(HomeScreenMode.PRACTICE_HOME)) {
@@ -136,6 +134,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         changeScreenMode(homeScreenMode);
         getNews();
+        stopSessionService();
     }
 
     private void populateLanguageSpinner() {

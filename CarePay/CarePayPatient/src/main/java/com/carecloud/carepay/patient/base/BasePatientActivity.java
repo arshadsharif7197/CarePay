@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.carecloud.carepay.patient.session.PatientSessionService;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.session.SessionedActivityInterface;
@@ -39,6 +40,11 @@ public abstract class BasePatientActivity extends BaseActivity implements Sessio
     @Override
     public boolean manageSession() {
         return true;
+    }
+
+    @Override
+    public TransitionDTO getLogoutTransition() {
+        return null;
     }
 
     @Override

@@ -1014,4 +1014,9 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
     public void replaceFragment(Fragment fragment, boolean addToBackStack) {
         //NA
     }
+
+    @Override
+    public boolean manageSession() {
+        return false;
+    }
 }
