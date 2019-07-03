@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseActivity;
 
@@ -41,7 +42,7 @@ public abstract class WarningSessionActivity extends BaseActivity {
             onContinueButton();
         });
         counterTextView = findViewById(R.id.counterTextView);
-        alertMessage = "Your session is about to expire.\nYou will be logged out in\n %d seconds";
+        alertMessage = Label.getLabel("practice.idleSignOut.message");
         counterTextView.setText(String.format(alertMessage, countDown--));
         runnable = this::countDownMethod;
     }
