@@ -1,7 +1,8 @@
 package com.carecloud.carepay.patient.appointments.adapters;
 
 import android.content.Context;
-import android.view.View;
+
+import androidx.annotation.NonNull;
 
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -12,7 +13,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +47,7 @@ public class AppointmentListAdapter extends BaseAppointmentAdapter {
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         AppointmentDTO appointmentDTO = sortedAppointments.get(position);
         AppointmentsPayloadDTO appointmentsPayload = appointmentDTO.getPayload();
 
@@ -69,21 +69,13 @@ public class AppointmentListAdapter extends BaseAppointmentAdapter {
         bindView(holder, appointmentsPayload, shouldShowCheckoutButton);
 
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (callback != null) {
-                    callback.onItemTapped(sortedAppointments.get(position));
-                }
+        holder.itemView.setOnClickListener(view -> {
+            if (callback != null) {
+                callback.onItemTapped(sortedAppointments.get(position));
             }
         });
 
-        holder.checkOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.onCheckoutTapped(sortedAppointments.get(position));
-            }
-        });
+        holder.checkOutButton.setOnClickListener(view -> callback.onCheckoutTapped(sortedAppointments.get(position)));
 
     }
 
@@ -99,32 +91,28 @@ public class AppointmentListAdapter extends BaseAppointmentAdapter {
     }
 
     private void sortAppointments() {
-        Collections.sort(appointmentItems, new Comparator<AppointmentDTO>() {
-            @Override
-            public int compare(AppointmentDTO left, AppointmentDTO right) {
-                AppointmentDisplayStyle leftStyle = getDisplayStyle(left.getPayload());
-                AppointmentDisplayStyle rightStyle = getDisplayStyle(right.getPayload());
+        Collections.sort(appointmentItems, (left, right) -> {
+            AppointmentDisplayStyle leftStyle = getDisplayStyle(left.getPayload());
+            AppointmentDisplayStyle rightStyle = getDisplayStyle(right.getPayload());
 
-                Date leftDate = DateUtil.getInstance().setDateRaw(left.getPayload().getStartTime()).getDate();
-                Date rightDate = DateUtil.getInstance().setDateRaw(right.getPayload().getStartTime()).getDate();
+            Date leftDate = DateUtil.getInstance().setDateRaw(left.getPayload().getStartTime()).getDate();
+            Date rightDate = DateUtil.getInstance().setDateRaw(right.getPayload().getStartTime()).getDate();
 
-                //Check-in should go on top
-                if (leftStyle == AppointmentDisplayStyle.CHECKED_IN
-                        || rightStyle == AppointmentDisplayStyle.CHECKED_IN) {
-                    if (leftStyle != rightStyle) {
-                        if (leftStyle == AppointmentDisplayStyle.CHECKED_IN) {//left should come first
-                            return -1;
-                        } else {//right should come first
-                            return 1;
-                        }
-                    } else {
-                        //compare the dates
-                        return leftDate.compareTo(rightDate);
+            //Check-in should go on top
+            if (leftStyle == AppointmentDisplayStyle.CHECKED_IN
+                    || rightStyle == AppointmentDisplayStyle.CHECKED_IN) {
+                if (leftStyle != rightStyle) {
+                    if (leftStyle == AppointmentDisplayStyle.CHECKED_IN) {//left should come first
+                        return -1;
+                    } else {//right should come first
+                        return 1;
                     }
+                } else {
+                    //compare the dates
+                    return leftDate.compareTo(rightDate);
                 }
-                return leftDate.compareTo(rightDate);
             }
-
+            return leftDate.compareTo(rightDate);
         });
 
         addHeaders();
