@@ -11,6 +11,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 /**
@@ -64,6 +65,13 @@ public class PatientModePaymentPlanFullFragment extends PaymentPlanFragment {
         fragment.setOnCancelListener(onDialogCancelListener);
         callback.displayDialogFragment(fragment, true);
         hideDialog();
+    }
+
+    @Override
+    protected void createPaymentPlanNextStep(PaymentPlanPostModel postModel) {
+        PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
+                .newInstance(paymentsModel, postModel);
+        callback.displayDialogFragment(fragment, true);
     }
 
 
