@@ -1,6 +1,7 @@
 package com.carecloud.carepay.patient.base;
 
 import android.os.Build;
+import android.os.StrictMode;
 import android.provider.Settings;
 
 import com.carecloud.carepay.patient.BuildConfig;
@@ -29,13 +30,19 @@ public class CarePayPatientApplication extends CarePayApplication {
         mixpanelAPI = MixpanelAPI.getInstance(this.getApplicationContext(), BuildConfig.MIX_PANEL_TOKEN);
         setHttpConstants();
         registerActivityLifecycleCallbacks(new CarePayActivityLifecycleCallbacks());
+        if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                    .detectNonSdkApiUsage()
+                    .penaltyLog()
+                    .build());
+        }
     }
 
     /**
      * Http constants initialization
      */
     private void setHttpConstants() {
-        DeviceIdentifierDTO deviceIdentifierDTO=new DeviceIdentifierDTO();
+        DeviceIdentifierDTO deviceIdentifierDTO = new DeviceIdentifierDTO();
         deviceIdentifierDTO.setDeviceIdentifier(Settings.Secure.ANDROID_ID);
         deviceIdentifierDTO.setDeviceType(CarePayConstants.ANDROID_DEVICE);
         deviceIdentifierDTO.setDevicePlatform(CarePayConstants.PLATFORM_ANDROID);
@@ -55,7 +62,7 @@ public class CarePayPatientApplication extends CarePayApplication {
     }
 
     @Override
-    public void onAtomicRestart(){
+    public void onAtomicRestart() {
         super.onAtomicRestart();
         applicationMode.clearUserPracticeDTO();
         applicationMode = null;
