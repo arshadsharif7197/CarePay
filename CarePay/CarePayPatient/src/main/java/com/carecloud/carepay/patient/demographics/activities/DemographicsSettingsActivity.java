@@ -33,6 +33,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
@@ -72,6 +73,8 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demographics_settings);
 
+        Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
+        boolean editProfile = extra.getBoolean(NavigationStateConstants.PROFILE_UPDATE);
         demographicsSettingsDTO = getConvertedDTO(DemographicDTO.class);
         rootView = findViewById(R.id.activity_demographics_settings);
 
@@ -79,8 +82,13 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
                 demographicsSettingsDTO.getPayload().getDemographics().getPayload().getAddress());
 
         if (savedInstanceState == null) {
-            DemographicsSettingsFragment fragment = DemographicsSettingsFragment.newInstance();
-            replaceFragment(fragment, false);
+            if (editProfile) {
+                EditProfileFragment editProfileFragment = EditProfileFragment.newInstance();
+                replaceFragment(editProfileFragment, false);
+            } else {
+                DemographicsSettingsFragment fragment = DemographicsSettingsFragment.newInstance();
+                replaceFragment(fragment, false);
+            }
         }
     }
 

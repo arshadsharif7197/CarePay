@@ -92,6 +92,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
     protected static String profileName;
     private static final int MANAGE_PROFILES_REQUEST_CODE = 101;
     private ImageView profileListTriggerIcon;
+    private boolean editProfile = false;
 
     @Override
     protected void onCreate(Bundle icicle) {
@@ -201,6 +202,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         navigationView.findViewById(R.id.manageProfilesMenuItem).setOnClickListener(menuItemClickListener);
         navigationView.findViewById(R.id.settingsMenuItem).setOnClickListener(menuItemClickListener);
         navigationView.findViewById(R.id.logOutMenuItem).setOnClickListener(menuItemClickListener);
+        navigationView.findViewById(R.id.editProfile).setOnClickListener(menuItemClickListener);
 
         profileListTriggerIcon = findViewById(R.id.profileListTriggerIcon);
         profileListTriggerIcon.setSelected(false);
@@ -415,9 +417,15 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
                     transition = transitionProfile;
                     callback = manageProfilesCallback;
                     break;
+                case R.id.editProfile:
+                    callback = demographicsSettingsCallBack;
+                    transition = transitionProfile;
+                    editProfile = true;
+                    break;
                 case R.id.settingsMenuItem:
                     callback = demographicsSettingsCallBack;
                     transition = transitionProfile;
+                    editProfile = false;
                     break;
                 case R.id.logOutMenuItem:
                     transition = transitionLogout;
@@ -479,7 +487,9 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             PatientNavigationHelper.setAccessPaymentsBalances(false);
-            navigateToWorkflow(workflowDTO);
+            Bundle info = new Bundle();
+            info.putBoolean(NavigationStateConstants.PROFILE_UPDATE, editProfile);
+            navigateToWorkflow(workflowDTO, info);
         }
 
         @Override

@@ -95,7 +95,6 @@ public class DemographicsSettingsFragment extends BaseFragment {
     }
 
     private void setUpUi(View view) {
-        CarePayTextView patientNameTextView = view.findViewById(R.id.patient_name);
         PatientModel demographicsPersonalDetails = demographicsSettingsDTO.getPayload().getDemographics()
                 .getPayload().getPersonalDetails();
         String firstName = demographicsPersonalDetails.getFirstName();
@@ -104,24 +103,8 @@ public class DemographicsSettingsFragment extends BaseFragment {
         if (fullname.isEmpty()) {
             fullname = "N/A";
         }
-        patientNameTextView.setText(fullname);
-        CarePayTextView patientIdTextView = view.findViewById(R.id.patient_id);
-        patientIdTextView.setText(demographicsSettingsDTO.getPayload().getCurrentEmail());
 
         initializeHelpButton(view);
-
-        String imageUrl = demographicsPersonalDetails.getProfilePhoto();
-        if (!StringUtil.isNullOrEmpty(imageUrl)) {
-            ImageView profileImageview = view.findViewById(R.id.providerPicImageView);
-            Picasso.with(getContext())
-                    .load(imageUrl)
-                    .placeholder(R.drawable.icn_placeholder_user_profile_png)
-                    .resize(160, 160)
-                    .centerCrop()
-                    .transform(new CircleImageTransform())
-                    .into(profileImageview);
-
-        }
 
         pushNotificationCheckBox = view.findViewById(R.id.pushNotificationCheckBox);
         pushNotificationCheckBox.setChecked(demographicsSettingsDTO.getPayload().getDemographicSettingsNotificationDTO().getPayload().isPush());
@@ -160,14 +143,6 @@ public class DemographicsSettingsFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 callback.logOut();
-            }
-        });
-
-        CarePayTextView editTextView = view.findViewById(R.id.editTextView);
-        editTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.displayEditProfileFragment();
             }
         });
 
