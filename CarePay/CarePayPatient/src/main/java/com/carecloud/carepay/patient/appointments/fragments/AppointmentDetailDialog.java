@@ -689,16 +689,13 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         }
     };
 
-    private View.OnClickListener visitSummaryClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    != PermissionChecker.PERMISSION_GRANTED && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        MY_PERMISSIONS_VS_WRITE_EXTERNAL_STORAGE);
-            } else {
-                callVisitSummaryService();
-            }
+    private View.OnClickListener visitSummaryClick = view -> {
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PermissionChecker.PERMISSION_GRANTED && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    MY_PERMISSIONS_VS_WRITE_EXTERNAL_STORAGE);
+        } else {
+            callVisitSummaryService();
         }
     };
 

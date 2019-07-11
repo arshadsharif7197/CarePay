@@ -4,11 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import android.util.Log;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
@@ -261,6 +262,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         body.addProperty("appointment_id", appointment.getPayload().getId());
         body.addProperty("practice_mgmt", appointment.getMetadata().getPracticeMgmt());
         body.addProperty("practice_id", appointment.getMetadata().getPracticeId());
+        body.addProperty("patient_id", appointment.getMetadata().getPatientId());
         body.addProperty("format", "pdf");
         viewHandler.getWorkflowServiceHelper().execute(transition, callback, body.toString());
     }
@@ -832,7 +834,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             intent.setAction(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(url));
 
-            if(intent.resolveActivity(getContext().getPackageManager()) != null){
+            if (intent.resolveActivity(getContext().getPackageManager()) != null) {
                 ((Activity) getContext()).startActivityForResult(intent, 555);
             }
         }
