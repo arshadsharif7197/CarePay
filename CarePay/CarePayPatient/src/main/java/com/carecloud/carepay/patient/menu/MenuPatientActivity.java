@@ -239,16 +239,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         updateProfileList(profile);
         updateBadgeCounterViews();
         onProfileChanged(profile);
-        updateMenu(profile);
         closeMenu();
-    }
-
-    private void updateMenu(ProfileDto profile) {
-        if (profile.getProfile().isBreezeUser()) {
-            navigationView.findViewById(R.id.settingsMenuItem).setVisibility(View.VISIBLE);
-        } else {
-            navigationView.findViewById(R.id.settingsMenuItem).setVisibility(View.GONE);
-        }
     }
 
     private void showManageProfilesItemMenu(boolean show) {
