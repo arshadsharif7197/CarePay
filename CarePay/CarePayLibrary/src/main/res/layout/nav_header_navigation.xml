@@ -35,6 +35,15 @@
         tools:text="Pablo Johnson" />
 
     <ImageView
+        android:id="@+id/editProfile"
+        android:layout_width="@dimen/dimen_18dp"
+        android:layout_height="@dimen/dimen_18dp"
+        android:layout_toEndOf="@id/userNameTextView"
+        android:layout_below="@id/appointmentDrawerIdImageView"
+        android:src="@drawable/icon_pencil_white_background"
+        android:layout_marginStart="@dimen/dimen_8dp"/>
+
+    <ImageView
         android:id="@+id/profileListTriggerIcon"
         android:layout_width="@dimen/profileListTriggerIconSize"
         android:layout_height="@dimen/profileListTriggerIconSize"
