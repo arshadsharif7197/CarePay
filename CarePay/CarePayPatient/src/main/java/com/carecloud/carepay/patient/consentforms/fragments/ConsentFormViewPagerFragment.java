@@ -4,17 +4,16 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.tabs.TabLayout;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormPracticeFormInterface;
@@ -23,7 +22,7 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
-import com.carecloud.carepaylibray.consentforms.models.UserFormDTO;
+import com.google.android.material.tabs.TabLayout;
 
 /**
  * @author pjohnson on 2/08/18.
@@ -77,16 +76,16 @@ public class ConsentFormViewPagerFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        UserFormDTO userFormDto = consentFormDto.getPayload().getUserForms().get(selectedPracticeIndex);
-        setUpToolbar(view, userFormDto);
+        UserPracticeDTO practiceDTO = consentFormDto.getPayload().getPracticesInformation().get(selectedPracticeIndex);
+        setUpToolbar(view, practiceDTO);
         setupViewPager(view);
     }
 
-    protected void setUpToolbar(View view, UserFormDTO practiceForms) {
+    protected void setUpToolbar(View view, UserPracticeDTO practiceDTO) {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         String practiceName = "";
         for (UserPracticeDTO practiceInformation : consentFormDto.getPayload().getPracticesInformation()) {
-            if (practiceForms.getMetadata().getPracticeId().equals(practiceInformation.getPracticeId())) {
+            if (practiceDTO.getPracticeId().equals(practiceInformation.getPracticeId())) {
                 practiceName = practiceInformation.getPracticeName();
             }
         }

@@ -118,11 +118,6 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Consent
     }
 
     @Override
-    public void onProviderSelected(UserFormDTO practiceForm, int position) {
-        addFragment(ConsentFormViewPagerFragment.newInstance(position), true);
-    }
-
-    @Override
     public void showForms(List<PracticeForm> selectedForms,
                           List<ConsentFormUserResponseDTO> responses,
                           int selectedProviderIndex, boolean showSignButton) {
