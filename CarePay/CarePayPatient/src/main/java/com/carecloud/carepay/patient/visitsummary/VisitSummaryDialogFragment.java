@@ -5,7 +5,6 @@ import android.Manifest;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -14,12 +13,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.textfield.TextInputLayout;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.PermissionChecker;
-import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -34,6 +27,12 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.PermissionChecker;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
@@ -59,6 +58,7 @@ import com.carecloud.carepaylibray.utils.FileDownloadUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -73,8 +73,6 @@ import java.util.Map;
  */
 public class VisitSummaryDialogFragment extends BaseDialogFragment {
 
-    private static final int FROM_DATE = 100;
-    private static final int TO_DATE = 101;
     public static final long RETRY_TIME = 10000;
     private static final int MY_PERMISSIONS_VS_WRITE_EXTERNAL_STORAGE = 10;
     public static final int MAX_NUMBER_RETRIES = 6;
@@ -119,7 +117,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater,
+    public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_visit_summary, container, false);
@@ -131,7 +129,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         setUpUI(view);
     }
 
-    BroadcastReceiver receiver = new BroadcastReceiver() {
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(final Context context, Intent intent) {
             String action = intent.getAction();
@@ -149,28 +147,20 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
 //                        exportButton.setProgressEnabled(false);
                         if (format.equals("pdf")) {
                             exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.openFile"));
-                            exportButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    String downloadLocalUri = cursor
-                                            .getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
-                                    if (downloadLocalUri != null) {
-                                        String downloadMimeType = cursor.getString(cursor
-                                                .getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE));
-                                        FileDownloadUtil
-                                                .openDownloadedAttachment(context, Uri.parse(downloadLocalUri), downloadMimeType);
-                                    }
+                            exportButton.setOnClickListener(v -> {
+                                String downloadLocalUri = cursor
+                                        .getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+                                if (downloadLocalUri != null) {
+                                    String downloadMimeType = cursor.getString(cursor
+                                            .getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE));
+                                    FileDownloadUtil
+                                            .openDownloadedAttachment(context, Uri.parse(downloadLocalUri), downloadMimeType);
                                 }
                             });
                         } else {
                             exportButton.setText(Label
                                     .getLabel("visitSummary.createVisitSummary.button.label.openDirectory"));
-                            exportButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    FileDownloadUtil.openDownloadDirectory(getContext());
-                                }
-                            });
+                            exportButton.setOnClickListener(v -> FileDownloadUtil.openDownloadDirectory(getContext()));
                         }
                         enqueueId = -1;
                     } else if (DownloadManager.STATUS_PAUSED == cursor.getInt(columnIndex)) {
@@ -205,12 +195,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
     private void setUpUI(View view) {
         View closeView = view.findViewById(R.id.dialog_close_header);
         if (closeView != null) {
-            view.findViewById(R.id.dialog_close_header).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dismiss();
-                }
-            });
+            view.findViewById(R.id.dialog_close_header).setOnClickListener(view1 -> dismiss());
         }
 
         final TextView practiceTextView = view.findViewById(R.id.practiceTextView);
@@ -223,43 +208,29 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
             practiceTextView.setText(selectedPractice.getPracticeName());
             practiceTextView.getOnFocusChangeListener().onFocusChange(practiceTextView, true);
         } else {
-            practiceTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showChooseDialog(getContext(), practices,
-                            Label.getLabel("visitSummary.createVisitSummary.choosePracticeDialog.title.choose"),
-                            new OnOptionSelectedListener() {
-                                @Override
-                                public void onOptionSelected(String option, int index) {
-                                    selectedPractice = practices.get(index);
-                                    practiceTextView.setText(selectedPractice.getPracticeName());
-                                    practiceTextView.getOnFocusChangeListener().onFocusChange(practiceTextView, true);
-                                    enableExportButton();
-                                }
-                            });
-                }
-            });
+            practiceTextView.setOnClickListener(v -> showChooseDialog(getContext(), practices,
+                    Label.getLabel("visitSummary.createVisitSummary.choosePracticeDialog.title.choose"),
+                    (option, index) -> {
+                        selectedPractice = practices.get(index);
+                        practiceTextView.setText(selectedPractice.getPracticeName());
+                        practiceTextView.getOnFocusChangeListener().onFocusChange(practiceTextView, true);
+                        enableExportButton();
+                    }));
         }
 
         TextInputLayout dateFromTextInputLayout = view.findViewById(R.id.dateFromTextInputLayout);
         dateFromTextView = view.findViewById(R.id.dateFromTextView);
-        dateFromTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showCalendar(FROM_DATE, dateFromTextView.getText().toString());
-            }
-        });
-        dateFromTextView.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(dateFromTextInputLayout, null));
+        dateFromTextView.setOnClickListener(v -> showCalendar(DatePickerFragment.FROM_DATE_FLAG,
+                dateFromTextView.getText().toString()));
+        dateFromTextView.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(dateFromTextInputLayout,
+                null));
 
         TextInputLayout dateToTextInputLayout = view.findViewById(R.id.dateToTextInputLayout);
         dateToTextView = view.findViewById(R.id.dateToTextView);
-        dateToTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showCalendar(TO_DATE, dateToTextView.getText().toString());
-            }
-        });
-        dateToTextView.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(dateToTextInputLayout, null));
+        dateToTextView.setOnClickListener(v -> showCalendar(DatePickerFragment.TO_DATE_FLAG,
+                dateToTextView.getText().toString()));
+        dateToTextView.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(dateToTextInputLayout,
+                null));
 
         TextInputLayout emailTextInputLayout = view.findViewById(R.id.emailTextInputLayout);
         emailEditText = view.findViewById(R.id.emailEditText);
@@ -281,12 +252,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         });
         emailEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(emailTextInputLayout, null));
 
-        CompoundButton.OnCheckedChangeListener optionListener = new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                enableExportButton();
-            }
-        };
+        CompoundButton.OnCheckedChangeListener optionListener = (compoundButton, b) -> enableExportButton();
         pdfOption = view.findViewById(R.id.pdfOption);
         xmlOption = view.findViewById(R.id.xmlOption);
         pdfOption.setOnCheckedChangeListener(optionListener);
@@ -353,13 +319,14 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         Calendar fromCalendar = Calendar.getInstance();
         Calendar toCalendar = Calendar.getInstance();
         Calendar showCalendar = Calendar.getInstance();
-        toCalendar.add(Calendar.DATE, 1);
-        if (flag == FROM_DATE) {
-            fromCalendar.set(2000, 1, 1);
+        if (flag == DatePickerFragment.FROM_DATE_FLAG) {
+            fromCalendar.set(2000, 0, 1);
             if (toDate != null) {
                 toCalendar.setTimeInMillis(toDate.getTime());
+                toCalendar.set(Calendar.HOUR_OF_DAY, 23);
             }
         } else {
+            toCalendar.add(Calendar.DATE, 1);
             if (fromDate != null) {
                 fromCalendar.setTimeInMillis(fromDate.getTime());
                 showCalendar = fromCalendar;
@@ -375,27 +342,24 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                         toCalendar.getTime(),
                         selectedDate,
                         showCalendar.getTime(),
-                        new DatePickerFragment.DateRangePickerDialogListener() {
-                            @Override
-                            public void onDateSelected(Date selectedDate, int flag) {
-                                if (flag == FROM_DATE) {
-                                    if (selectedDate != null) {
-                                        fromDate = selectedDate;
-                                        dateFromTextView.setText(DateUtil.getInstance().setDate(fromDate)
-                                                .toStringWithFormatMmSlashDdSlashYyyy());
-                                        dateFromTextView.getOnFocusChangeListener().onFocusChange(dateFromTextView, true);
-                                        dateToTextView.setEnabled(true);
-                                    }
-                                } else {
-                                    if (selectedDate != null) {
-                                        toDate = selectedDate;
-                                        dateToTextView.setText(DateUtil.getInstance().setDate(toDate)
-                                                .toStringWithFormatMmSlashDdSlashYyyy());
-                                        dateToTextView.getOnFocusChangeListener().onFocusChange(dateToTextView, true);
-                                    }
+                        (selectedDate1, flag1) -> {
+                            if (flag1 == DatePickerFragment.FROM_DATE_FLAG) {
+                                if (selectedDate1 != null) {
+                                    fromDate = selectedDate1;
+                                    dateFromTextView.setText(DateUtil.getInstance().setDate(fromDate)
+                                            .toStringWithFormatMmSlashDdSlashYyyy());
+                                    dateFromTextView.getOnFocusChangeListener().onFocusChange(dateFromTextView, true);
+                                    dateToTextView.setEnabled(true);
                                 }
-                                enableExportButton();
+                            } else {
+                                if (selectedDate1 != null) {
+                                    toDate = selectedDate1;
+                                    dateToTextView.setText(DateUtil.getInstance().setDate(toDate)
+                                            .toStringWithFormatMmSlashDdSlashYyyy());
+                                    dateToTextView.getOnFocusChangeListener().onFocusChange(dateToTextView, true);
+                                }
                             }
+                            enableExportButton();
                         },
                         flag);
         callback.displayDialogFragment(fragment, true);
@@ -407,14 +371,11 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                                   final OnOptionSelectedListener listener) {
 
         final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        dialog.setNegativeButton(Label.getLabel("demographics_cancel_label"), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int pos) {
-                dialogInterface.dismiss();
-            }
-        });
+        dialog.setNegativeButton(Label.getLabel("demographics_cancel_label"),
+                (dialogInterface, pos) -> dialogInterface.dismiss());
 
-        View customView = LayoutInflater.from(context).inflate(R.layout.alert_list_layout, null, false);
+        View customView = LayoutInflater.from(context).inflate(R.layout.alert_list_layout,
+                null, false);
         dialog.setView(customView);
         TextView titleTextView = customView.findViewById(R.id.title_view);
         titleTextView.setText(title);
@@ -430,15 +391,12 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         alert.requestWindowFeature(Window.FEATURE_NO_TITLE);
         alert.show();
 
-        AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long row) {
-                UserPracticeDTO practice = (UserPracticeDTO) adapterView.getAdapter().getItem(position);
-                if (listener != null) {
-                    listener.onOptionSelected(practice.getPracticeName(), position);
-                }
-                alert.dismiss();
+        AdapterView.OnItemClickListener clickListener = (adapterView, view, position, row) -> {
+            UserPracticeDTO practice = (UserPracticeDTO) adapterView.getAdapter().getItem(position);
+            if (listener != null) {
+                listener.onOptionSelected(practice.getPracticeName(), position);
             }
+            alert.dismiss();
         };
         listView.setOnItemClickListener(clickListener);
     }
@@ -510,12 +468,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                 } else if (status.equals("queued") || status.equals("working")) {
                     retryIntent++;
                     handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            callForStatus(jobId, selectedPractice, format);
-                        }
-                    }, RETRY_TIME);
+                    handler.postDelayed(() -> callForStatus(jobId, selectedPractice, format), RETRY_TIME);
                 }
             }
 
