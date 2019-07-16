@@ -2,18 +2,18 @@ package com.carecloud.carepay.patient.payment.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
@@ -25,6 +25,7 @@ import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -168,7 +169,8 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
         }
 
         boolean paymentPlanEnabled = !paymentDTO.getPaymentPayload().isPaymentPlanCreated() &&
-                isPaymentPlanAvailable(selectedBalance.getMetadata().getPracticeId(), total);
+                isPaymentPlanAvailable(selectedBalance.getMetadata().getPracticeId(), total)
+                && paymentDTO.getPaymentPayload().getDelegate() == null; //TODO: SHMRK-9463 Take out last validation when MW handle PP
         View paymentPlanContainer = view.findViewById(R.id.paymentPlanContainer);
         paymentPlanContainer.setVisibility(paymentPlanEnabled ? View.VISIBLE : View.GONE);
         paymentPlanContainer.setEnabled(paymentPlanEnabled);
