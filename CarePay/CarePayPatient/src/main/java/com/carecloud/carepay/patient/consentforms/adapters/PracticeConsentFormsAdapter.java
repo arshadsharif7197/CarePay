@@ -1,12 +1,12 @@
 package com.carecloud.carepay.patient.consentforms.adapters;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormsProviderInterface;
@@ -27,28 +27,27 @@ import java.util.Map;
 
 public class PracticeConsentFormsAdapter extends RecyclerView.Adapter<PracticeConsentFormsAdapter.ViewHolder> {
 
-    private final List<UserPracticeDTO> practices;
-    private final Map<String, Boolean> practicesPermissionsMap;
-    private final Map<String, UserFormDTO> practiceFormsMap;
+    private final List<UserFormDTO> practiceFormsList;
+    private final Map<String, UserPracticeDTO> practicesInformationMap;
     private ConsentFormsProviderInterface callback;
 
-    public PracticeConsentFormsAdapter(List<UserPracticeDTO> practices,
-                                       Map<String, Boolean> practicesPermissions,
-                                       Map<String, UserFormDTO> practiceFormsMap) {
-        this.practices = practices;
-        this.practiceFormsMap = practiceFormsMap;
-        practicesPermissionsMap = practicesPermissions;
+    public PracticeConsentFormsAdapter(List<UserFormDTO> practiceFormsList,
+                                       Map<String, UserPracticeDTO> practicesInformation) {
+        this.practiceFormsList = practiceFormsList;
+        practicesInformationMap = practicesInformation;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         return new ViewHolder(inflater.inflate(R.layout.item_consent_form, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final UserPracticeDTO practice = practices.get(position);
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
+        final UserFormDTO formDto = practiceFormsList.get(position);
+        UserPracticeDTO practice = practicesInformationMap.get(formDto.getMetadata().getPracticeId());
         holder.practiceNameTextView.setText(practice.getPracticeName());
         holder.practiceAddressTextView.setText(practice.getAddressDTO().getFullAddress());
         holder.practiceShortNameTextView.setText(StringUtil.getShortName(practice.getPracticeName()));
@@ -70,35 +69,25 @@ public class PracticeConsentFormsAdapter extends RecyclerView.Adapter<PracticeCo
                         holder.practiceShortNameTextView.setVisibility(View.VISIBLE);
                     }
                 });
-
-        UserFormDTO formDto = null;
-        if (practicesPermissionsMap.get(practice.getPracticeId()) != null
-                && practicesPermissionsMap.get(practice.getPracticeId())) {
-            formDto = practiceFormsMap.get(practice.getPracticeId());
-            holder.formStatusTextView.setVisibility(View.VISIBLE);
-            if (formDto.getPendingForms().getForms().size() == 0) {
-                holder.formStatusTextView.setText(Label.getLabel("consentForms.providersList.item.label.formsFilledStatus"));
-                holder.formStatusTextView.setTextColor(holder.formStatusTextView.getContext()
-                        .getResources().getColor(R.color.cadet_gray));
-            } else if (formDto.getPendingForms().getForms().size() == 1) {
-                holder.formStatusTextView.setText(String.format(Label
-                                .getLabel("consentForms.providersList.item.label.pendingFormCount"),
-                        formDto.getPendingForms().getForms().size()));
-                holder.formStatusTextView.setTextColor(holder.formStatusTextView.getContext()
-                        .getResources().getColor(R.color.lightning_yellow));
-            } else {
-                holder.formStatusTextView.setText(String.format(Label
-                                .getLabel("consentForms.providersList.item.label.pendingFormsCount"),
-                        formDto.getPendingForms().getForms().size()));
-                holder.formStatusTextView.setTextColor(holder.formStatusTextView.getContext()
-                        .getResources().getColor(R.color.lightning_yellow));
-            }
+        if (formDto.getPendingForms().getForms().size() == 0) {
+            holder.formStatusTextView.setText(Label.getLabel("consentForms.providersList.item.label.formsFilledStatus"));
+            holder.formStatusTextView.setTextColor(holder.formStatusTextView.getContext()
+                    .getResources().getColor(R.color.cadet_gray));
+        } else if (formDto.getPendingForms().getForms().size() == 1) {
+            holder.formStatusTextView.setText(String.format(Label
+                            .getLabel("consentForms.providersList.item.label.pendingFormCount"),
+                    formDto.getPendingForms().getForms().size()));
+            holder.formStatusTextView.setTextColor(holder.formStatusTextView.getContext()
+                    .getResources().getColor(R.color.lightning_yellow));
         } else {
-            holder.formStatusTextView.setVisibility(View.GONE);
+            holder.formStatusTextView.setText(String.format(Label
+                            .getLabel("consentForms.providersList.item.label.pendingFormsCount"),
+                    formDto.getPendingForms().getForms().size()));
+            holder.formStatusTextView.setTextColor(holder.formStatusTextView.getContext()
+                    .getResources().getColor(R.color.lightning_yellow));
         }
 
-        UserFormDTO finalFormDto = formDto;
-        holder.container.setOnClickListener(v -> callback.onProviderSelected(finalFormDto, position));
+        holder.container.setOnClickListener(v -> callback.onProviderSelected(formDto, position));
     }
 
     public void setCallback(ConsentFormsProviderInterface callback) {
@@ -107,7 +96,7 @@ public class PracticeConsentFormsAdapter extends RecyclerView.Adapter<PracticeCo
 
     @Override
     public int getItemCount() {
-        return practices.size();
+        return practiceFormsList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

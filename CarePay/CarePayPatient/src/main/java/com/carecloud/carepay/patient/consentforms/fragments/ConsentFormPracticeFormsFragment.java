@@ -2,16 +2,16 @@ package com.carecloud.carepay.patient.consentforms.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.consentforms.adapters.ConsentFormsAdapter;
@@ -19,7 +19,6 @@ import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormPractice
 import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormsFormsInterface;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
@@ -96,7 +95,7 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         selectedForms = new ArrayList<>();
         signSelectedFormsButton = view.findViewById(R.id.signSelectedFormsButton);
@@ -117,18 +116,16 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
     }
 
     protected void setUpRecyclerView(View view) {
-        String practiceId = consentFormDto.getPayload().getPracticesInformation()
-                .get(selectedPracticeIndex).getPracticeId();
-        UserFormDTO userFormDto = getSelectedUserForm(practiceId);
+        UserFormDTO userFormDto = consentFormDto.getPayload().getUserForms().get(selectedPracticeIndex);
         RecyclerView practiceConsentFormsRecyclerView = view
                 .findViewById(R.id.providerConsentFormsRecyclerView);
         practiceConsentFormsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        if (!consentFormDto.getPayload().canViewForms(practiceId)) {
+        List<PracticeForm> practiceForms = getPracticeForms(userFormDto);
+        if (!consentFormDto.getPayload().canViewForms(userFormDto.getMetadata().getPracticeId())) {
             showNoPermissionScreen(view);
             practiceConsentFormsRecyclerView.setVisibility(View.GONE);
             return;
         }
-        List<PracticeForm> practiceForms = getPracticeForms(userFormDto);
         if (practiceForms.isEmpty()) {
             showEmptyScreen(view);
             practiceConsentFormsRecyclerView.setVisibility(View.GONE);
@@ -141,15 +138,6 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
             paging = userFormDto.getHistoryForms().getPaging();
             practiceConsentFormsRecyclerView.addOnScrollListener(scrollListener);
         }
-    }
-
-    private UserFormDTO getSelectedUserForm(String practiceId) {
-        for (UserFormDTO userForm : consentFormDto.getPayload().getUserForms()) {
-            if (practiceId.equals(userForm.getMetadata().getPracticeId())) {
-                return userForm;
-            }
-        }
-        return null;
     }
 
     private void showNoPermissionScreen(View view) {
@@ -217,8 +205,8 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
 
     @Override
     public boolean canReviewForms() {
-        String practiceId = consentFormDto.getPayload().getPracticesInformation()
-                .get(selectedPracticeIndex).getPracticeId();
+        String practiceId = consentFormDto.getPayload().getUserForms()
+                .get(selectedPracticeIndex).getMetadata().getPracticeId();
         return consentFormDto.getPayload().canReviewForms(practiceId);
     }
 
@@ -242,11 +230,11 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
     }
 
     private void loadNextPage() {
-        UserPracticeDTO practiceDTO = consentFormDto.getPayload().getPracticesInformation()
-                .get(selectedPracticeIndex);
+        PendingBalanceMetadataDTO metadata = consentFormDto.getPayload().getUserForms()
+                .get(selectedPracticeIndex).getMetadata();
         HashMap<String, String> query = new HashMap<>();
-        query.put("practice_mgmt", practiceDTO.getPracticeMgmt());
-        query.put("practice_id", practiceDTO.getPracticeId());
+        query.put("practice_mgmt", metadata.getPracticeMgmt());
+        query.put("practice_id", metadata.getPracticeId());
         query.put("page_number", String.valueOf(paging.getCurrentPage() + 1));
         query.put("page_count", String.valueOf(ITEMS_PER_PAGE));
 
