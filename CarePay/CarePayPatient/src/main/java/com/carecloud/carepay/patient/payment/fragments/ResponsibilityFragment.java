@@ -106,9 +106,9 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
 
 
         total = 0;
-
-        fillDetailAdapter(view, filterBalances(selectedBalance.getPayload()));
-        for (PendingBalancePayloadDTO payment : selectedBalance.getPayload()) {
+        List<PendingBalancePayloadDTO> filteredBalances = filterBalances(selectedBalance.getPayload());
+        fillDetailAdapter(view, filteredBalances);
+        for (PendingBalancePayloadDTO payment : filteredBalances) {
             total = SystemUtil.safeAdd(total, payment.getAmount());
             if (!payment.getType().equals(PendingBalancePayloadDTO.PATIENT_BALANCE)) {
                 //not an amount that can be added to a plan
