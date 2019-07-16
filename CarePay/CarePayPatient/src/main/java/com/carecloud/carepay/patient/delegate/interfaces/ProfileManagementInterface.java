@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.delegate;
+package com.carecloud.carepay.patient.delegate.interfaces;
 
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.profile.UserLinks;

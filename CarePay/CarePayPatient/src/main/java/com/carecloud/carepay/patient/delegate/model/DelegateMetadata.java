@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.delegate;
+package com.carecloud.carepay.patient.delegate.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * @author pjohnson on 2019-06-27.
  */
-class DelegateMetadata {
+public class DelegateMetadata {
 
     @Expose
     @SerializedName("transitions")

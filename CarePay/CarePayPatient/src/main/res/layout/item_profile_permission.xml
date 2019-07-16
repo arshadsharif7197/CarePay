@@ -120,20 +120,6 @@
                 breeze:textKey="profile.profileDetail.item.button.disconnect"
                 tools:text="Disconnect" />
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                android:id="@+id/mergeButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="@dimen/dimen_10dp"
-                android:background="@drawable/button_default_background"
-                android:textAllCaps="true"
-                android:textColor="@color/colorPrimary"
-                android:textSize="14sp"
-                app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="profile.profileDetail.item.button.merge"
-                tools:text="Merge with another account" />
-
         </LinearLayout>
 
     </RelativeLayout>

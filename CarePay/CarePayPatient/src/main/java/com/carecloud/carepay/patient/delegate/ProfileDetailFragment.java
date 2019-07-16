@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +16,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.delegate.adapters.ProfilePermissionsRecyclerAdapter;
+import com.carecloud.carepay.patient.delegate.interfaces.ProfileConfirmationCallback;
+import com.carecloud.carepay.patient.delegate.interfaces.ProfileManagementInterface;
+import com.carecloud.carepay.patient.delegate.model.DelegateDto;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
@@ -128,6 +133,14 @@ public class ProfileDetailFragment extends BaseDialogFragment implements Profile
                 .getPersonalDetails().getEmailAddress());
 
         setUpPermissionList(view);
+
+        Button mergeButton = view.findViewById(R.id.mergeButton);
+        if (delegateDto.getPayload().getDelegate() == null) {
+            mergeButton.setVisibility(View.VISIBLE);
+            mergeButton.setOnClickListener(view1 -> callback.addFragment(MergeProfileListFragment
+                            .newInstance(selectedProfile),
+                    true));
+        }
     }
 
     private void setUpPermissionList(View view) {
@@ -157,6 +170,28 @@ public class ProfileDetailFragment extends BaseDialogFragment implements Profile
 
     @Override
     public void onDisconnectClicked(ProfileLink profileLink) {
+        showConfirmDialog(selectedProfile, profileLink);
+    }
+
+    private void showConfirmDialog(ProfileDto profile, ProfileLink profileLink) {
+        ConfirmProfileActionDialogFragment fragment = ConfirmProfileActionDialogFragment.newInstance(profile,
+                Label.getLabel("profile.confirmAction.dialog.title.disconnect"),
+                Label.getLabel("profile.confirmAction.dialog.message.disconnect"));
+        fragment.setCallback(new ProfileConfirmationCallback() {
+            @Override
+            public void confirmAction(ProfileDto profile) {
+                disconnectProfile(profileLink);
+            }
+
+            @Override
+            public void cancel() {
+
+            }
+        });
+        fragment.show(getFragmentManager(), "merge");
+    }
+
+    private void disconnectProfile(ProfileLink profileLink) {
         JsonObject postBodyObj = new JsonObject();
         postBodyObj.addProperty("practice_mgmt", profileLink.getPracticeMgmt());
         postBodyObj.addProperty("practice_id", profileLink.getPracticeId());
@@ -180,7 +215,7 @@ public class ProfileDetailFragment extends BaseDialogFragment implements Profile
             @Override
             public void onFailure(String exceptionMessage) {
                 hideProgressDialog();
-                Log.e("Pablo", "error");
+                Log.e("Error", "error");
             }
         }, postBodyObj.toString());
     }

@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.delegate;
+package com.carecloud.carepay.patient.delegate.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,7 +30,7 @@ import java.util.Map;
 /**
  * @author pjohnson on 2019-06-14.
  */
-class ProfilePermissionsRecyclerAdapter extends RecyclerView.Adapter<ProfilePermissionsRecyclerAdapter.ViewHolder> {
+public class ProfilePermissionsRecyclerAdapter extends RecyclerView.Adapter<ProfilePermissionsRecyclerAdapter.ViewHolder> {
 
     private final List<ProfileLink> links;
     private final Map<String, UserPracticeDTO> practicesMap;
@@ -45,13 +46,13 @@ class ProfilePermissionsRecyclerAdapter extends RecyclerView.Adapter<ProfilePerm
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_profile_permission,
                 parent, false));
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         ProfileLink profileLink = links.get(position);
         UserPracticeDTO userPracticeDTO = practicesMap.get(profileLink.getPracticeId());
         holder.practiceShortNameTextView.setText(StringUtil.getShortName(userPracticeDTO.getPracticeName()));
@@ -71,7 +72,6 @@ class ProfilePermissionsRecyclerAdapter extends RecyclerView.Adapter<ProfilePerm
                         .toStringWithFormatMmSlashDdSlashYyyy()));
         setUpPermissionsNames(holder.profilePermissionRecycler, profileLink);
         holder.disconnectButton.setVisibility(showButtons ? View.VISIBLE : View.GONE);
-        holder.mergeButton.setVisibility(showButtons ? View.VISIBLE : View.GONE);
         holder.disconnectButton.setOnClickListener(v -> callback.onDisconnectClicked(profileLink));
     }
 
@@ -203,7 +203,6 @@ class ProfilePermissionsRecyclerAdapter extends RecyclerView.Adapter<ProfilePerm
         TextView expirationDateTextView;
         RecyclerView profilePermissionRecycler;
         Button disconnectButton;
-        Button mergeButton;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -215,7 +214,6 @@ class ProfilePermissionsRecyclerAdapter extends RecyclerView.Adapter<ProfilePerm
             permissionsContainer = itemView.findViewById(R.id.permissionsContainer);
             profilePermissionRecycler = itemView.findViewById(R.id.profilePermissionRecycler);
             disconnectButton = itemView.findViewById(R.id.disconnectButton);
-            mergeButton = itemView.findViewById(R.id.mergeButton);
         }
     }
 

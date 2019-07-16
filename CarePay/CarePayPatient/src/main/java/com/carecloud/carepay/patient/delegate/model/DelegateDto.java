@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.delegate;
+package com.carecloud.carepay.patient.delegate.model;
 
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.google.gson.annotations.Expose;
