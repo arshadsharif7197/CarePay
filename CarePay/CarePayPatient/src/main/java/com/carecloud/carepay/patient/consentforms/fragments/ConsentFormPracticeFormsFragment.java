@@ -2,6 +2,8 @@ package com.carecloud.carepay.patient.consentforms.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -86,27 +88,24 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater,
+    public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_consent_forms_provider, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         selectedForms = new ArrayList<>();
         signSelectedFormsButton = view.findViewById(R.id.signSelectedFormsButton);
         if (mode == ConsentFormViewPagerFragment.PENDING_MODE) {
-            signSelectedFormsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    List<ConsentFormUserResponseDTO> localSelectedFormResponse = new ArrayList<>();
-                    for (PracticeForm form : selectedForms) {
-                        localSelectedFormResponse.add(form.getFormUserResponseDTO());
-                    }
-                    callback.showForms(selectedForms, localSelectedFormResponse, selectedPracticeIndex, true);
+            signSelectedFormsButton.setOnClickListener(v -> {
+                List<ConsentFormUserResponseDTO> localSelectedFormResponse = new ArrayList<>();
+                for (PracticeForm form : selectedForms) {
+                    localSelectedFormResponse.add(form.getFormUserResponseDTO());
                 }
+                callback.showForms(selectedForms, localSelectedFormResponse, selectedPracticeIndex, true);
             });
             if (canReviewForms()) {
                 signSelectedFormsButton.setVisibility(View.VISIBLE);
@@ -213,7 +212,7 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
 
     private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
         @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
             super.onScrolled(recyclerView, dx, dy);
             if (hasMorePages()) {

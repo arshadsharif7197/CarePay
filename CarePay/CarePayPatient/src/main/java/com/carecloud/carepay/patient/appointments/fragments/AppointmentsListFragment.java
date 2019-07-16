@@ -91,14 +91,14 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater,
+    public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_appointments_list, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle) {
+    public void onViewCreated(@NonNull View view, Bundle icicle) {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         appointmentRecyclerView = view.findViewById(R.id.appointments_recycler_view);
         appointmentRecyclerView.setLayoutManager(layoutManager);
@@ -129,19 +129,9 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
         floatingActionButton = view.findViewById(R.id.fab);
         canScheduleAppointments = canScheduleAppointments();
         if (canScheduleAppointments) {
-            floatingActionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    callback.newAppointment();
-                }
-            });
+            floatingActionButton.setOnClickListener(view1 -> callback.newAppointment());
             newAppointmentClassicButton.setVisibility(View.VISIBLE);
-            newAppointmentClassicButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    callback.newAppointment();
-                }
-            });
+            newAppointmentClassicButton.setOnClickListener(v -> callback.newAppointment());
         } else {
             floatingActionButton.setVisibility(View.GONE);
             noAppointmentMessage.setVisibility(View.GONE);

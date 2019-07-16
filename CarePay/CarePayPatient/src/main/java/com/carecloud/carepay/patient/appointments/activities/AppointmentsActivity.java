@@ -3,19 +3,19 @@ package com.carecloud.carepay.patient.appointments.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import android.util.Log;
+
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import android.util.Log;
-import android.view.MenuItem;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentFragment;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentTabHostFragment;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
-import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
+import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.rate.RateDialog;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
@@ -119,19 +119,14 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                 break;
             case PatientAppointmentPresenter.CHECK_IN_FLOW_REQUEST_CODE:
                 if (resultCode == RESULT_CANCELED) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            refreshAppointments();
-                            showRateDialogFragment();
-                        }
+                    new Handler().postDelayed(() -> {
+                        refreshAppointments();
+                        showRateDialogFragment();
                     }, 100);
                 } else if (resultCode == RESULT_OK) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            showRateDialogFragment();
-                        }
+                    new Handler().postDelayed(() -> {
+                        refreshAppointments();
+                        showRateDialogFragment();
                     }, 100);
                 }
                 break;
@@ -195,7 +190,6 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         for (int i = 0; i < backStackCount; i++) {
             fragmentManager.popBackStackImmediate();
         }
-        MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_appointments);
         displayToolbar(true, getScreenTitle(Label.getLabel("navigation_link_appointments")));
         toolbarHidden = false;
         refreshAppointments();

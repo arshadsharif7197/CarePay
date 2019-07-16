@@ -3,11 +3,6 @@ package com.carecloud.carepay.patient.notifications.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,6 +11,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.notifications.adapters.NotificationsAdapter;
@@ -30,7 +31,6 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.models.Paging;
-import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.SwipeViewHolder;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -105,7 +105,7 @@ public class NotificationFragment extends BaseFragment
         supportedNotificationTypes.add(NotificationType.payments);
         supportedNotificationTypes.add(NotificationType.secure_message);
         supportedNotificationTypes.add(NotificationType.pending_survey);
-        setHasOptionsMenu(true);
+
         Bundle args = getArguments();
         notificationsDTO = DtoHelper.getConvertedDTO(NotificationsDTO.class, args);
         notificationItems = filterNotifications(notificationsDTO.getPayload().getNotifications(),
@@ -113,23 +113,23 @@ public class NotificationFragment extends BaseFragment
         paging = notificationsDTO.getPayload().getPaging();
         addAppStatusNotification();
         handler = new Handler();
+        if (notificationsDTO.getPayload().getDelegate() == null) {
+            setHasOptionsMenu(true);
+        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_notification, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle) {
+    public void onViewCreated(@NonNull View view, Bundle icicle) {
         noNotificationLayout = view.findViewById(R.id.no_notification_layout);
         refreshLayout = view.findViewById(R.id.swipeRefreshLayout);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshLayout.setRefreshing(true);
-                loadNextPage(true);
-            }
+        refreshLayout.setOnRefreshListener(() -> {
+            refreshLayout.setRefreshing(true);
+            loadNextPage(true);
         });
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -142,13 +142,13 @@ public class NotificationFragment extends BaseFragment
 
         notificationsRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 deleteNotificationRunnable.run();
             }
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 int last = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
                 if (last > notificationsAdapter.getItemCount() - BOTTOM_ROW_OFFSET && !isPaging) {
@@ -189,12 +189,7 @@ public class NotificationFragment extends BaseFragment
                         Label.getLabel("notification.notificationList.button.label.deleteAllMessage"),
                         Label.getLabel("cancel"),
                         Label.getLabel("confirm"));
-        fragment.setCallback(new ConfirmationCallback() {
-            @Override
-            public void onConfirm() {
-                deleteAllNotifications();
-            }
-        });
+        fragment.setCallback(this::deleteAllNotifications);
         String tag = fragment.getClass().getName();
         fragment.show(getFragmentManager().beginTransaction(), tag);
     }
@@ -378,7 +373,7 @@ public class NotificationFragment extends BaseFragment
 
     private class DeleteNotificationRunnable implements Runnable {
 
-        public void setNotificationItem(NotificationItem notificationItem) {
+        void setNotificationItem(NotificationItem notificationItem) {
             this.notificationItem = notificationItem;
         }
 
