@@ -40,11 +40,9 @@ public class PatientModePaymentPlanFullFragment extends PaymentPlanFragment {
     @Override
     protected void setupToolBar(View view) {
         Button cancelButton = view.findViewById(R.id.cancel_button);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancel();
-            }
+        cancelButton.setOnClickListener(v -> {
+            cancel();
+            onBackPressed();
         });
     }
 

@@ -150,11 +150,11 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
                 callback.displayDialogFragment(fragment, true);
                 hideDialog();
             } else {
-                dismiss();
                 fragment = PatientModePaymentPlanFullFragment
                         .newInstance(paymentsModel, selectedBalance, amount);
                 fragment.setOnCancelListener(onDialogCancelListener);
                 callback.navigateToFragment(fragment, true);
+                hideDialog();
             }
         }
 
