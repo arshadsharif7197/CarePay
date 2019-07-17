@@ -1,12 +1,14 @@
 package com.carecloud.carepay.patient.payment.adapters;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
@@ -19,7 +21,6 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
      *
      * @param context             context
      * @param paymentHistoryItems payment history
-     * @param practiceMap
+     * @param practiceMap practiceMap
      */
     public PaymentHistoryAdapter(Context context,
                                  List<PaymentHistoryItem> paymentHistoryItems,
@@ -61,8 +62,9 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
         this.practiceMap = practiceMap;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         if (viewType == VIEW_TYPE_LOADING) {
             view = LayoutInflater.from(context).inflate(R.layout.item_loading, parent, false);
@@ -73,7 +75,7 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         if (position >= paymentHistoryItems.size()) {
             return;
         }
@@ -107,12 +109,7 @@ public class PaymentHistoryAdapter extends RecyclerView.Adapter<PaymentHistoryAd
             holder.transactionFlag.setVisibility(View.VISIBLE);
         }
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.onHistoryItemClicked(item);
-            }
-        });
+        holder.itemView.setOnClickListener(view -> callback.onHistoryItemClicked(item));
 
         UserPracticeDTO practiceDTO = practiceMap.get(item.getMetadata().getPracticeId());
         holder.locationName.setText(practiceDTO.getPracticeName());
