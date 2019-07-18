@@ -17,7 +17,7 @@ import com.carecloud.carepaylibray.base.BaseActivity;
 public abstract class WarningSessionActivity extends BaseActivity {
 
     private static final long ONE_SECOND = 1000;
-    private int countDown = 60;
+    private int countDown = 10;
     private TextView counterTextView;
     private String alertMessage;
     private Runnable runnable;

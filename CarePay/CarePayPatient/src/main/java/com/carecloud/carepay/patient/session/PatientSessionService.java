@@ -18,6 +18,7 @@ public class PatientSessionService extends SessionService {
     @Override
     protected void callWarningActivity() {
         Intent intent = new Intent(this, PatientWarningSessionActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 }
