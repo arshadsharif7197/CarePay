@@ -26,7 +26,7 @@ public abstract class BreezeDataBase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             BreezeDataBase.class, "clover_breeze_database")
-                            .addMigrations(MIGRATION_1_2)
+                            .addMigrations(MIGRATION_1_2, MIGRATION_2_1)
                             .build();
                 }
             }
@@ -39,6 +39,25 @@ public abstract class BreezeDataBase extends RoomDatabase {
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE CloverQueuePaymentRecord"
                     + " ADD COLUMN patientUsername TEXT");
+        }
+    };
+
+    private static final Migration MIGRATION_2_1 = new Migration(2, 1) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS new_CloverQueuePaymentRecord " +
+                    "(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+                    "patientID TEXT," +
+                    "practiceID TEXT," +
+                    "practiceMgmt TEXT," +
+                    "queueTransition TEXT," +
+                    "paymentModelJsonEnc TEXT," +
+                    "paymentModelJson TEXT," +
+                    "username TEXT)");
+            database.execSQL("INSERT INTO new_CloverQueuePaymentRecord (id, patientID, practiceID, practiceMgmt, queueTransition, paymentModelJsonEnc, paymentModelJson, username) " +
+                    "SELECT id, patientID, practiceID, practiceMgmt, queueTransition, paymentModelJsonEnc, paymentModelJson, username FROM CloverQueuePaymentRecord");
+            database.execSQL("DROP TABLE CloverQueuePaymentRecord");
+            database.execSQL("ALTER TABLE new_CloverQueuePaymentRecord RENAME TO CloverQueuePaymentRecord");
         }
     };
 
