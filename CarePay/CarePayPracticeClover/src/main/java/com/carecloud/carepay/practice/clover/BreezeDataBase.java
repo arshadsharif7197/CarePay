@@ -37,8 +37,17 @@ public abstract class BreezeDataBase extends RoomDatabase {
     private static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
-            database.execSQL("ALTER TABLE CloverQueuePaymentRecord"
-                    + " ADD COLUMN patientUsername TEXT");
+            database.execSQL("DROP TABLE CloverQueuePaymentRecord");
+            database.execSQL("CREATE TABLE IF NOT EXISTS CloverQueuePaymentRecord " +
+                    "(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+                    "patientID TEXT," +
+                    "practiceID TEXT," +
+                    "practiceMgmt TEXT," +
+                    "queueTransition TEXT," +
+                    "paymentModelJsonEnc TEXT," +
+                    "paymentModelJson TEXT," +
+                    "username TEXT," +
+                    "patientUsername TEXT)");
         }
     };
 
