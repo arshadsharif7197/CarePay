@@ -154,7 +154,7 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
                         .newInstance(paymentsModel, selectedBalance, amount);
                 fragment.setOnCancelListener(onDialogCancelListener);
                 callback.navigateToFragment(fragment, true);
-                hideDialog();
+                hideDialog(true);
             }
         }
 
