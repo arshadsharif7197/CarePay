@@ -80,6 +80,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
     private String insuranceTypeRepeatedErrorMessage;
     private View nextButton;
     private boolean insuranceChanged;
+    private boolean photoAdded;
 
 
     public static SettingsDocumentsFragment newInstance() {
@@ -103,6 +104,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         demographicsSettingsDTO = (DemographicDTO) callback.getDto();
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, DtoHelper.getStringDTO(demographicsSettingsDTO));
         insuranceChanged = false;
+        photoAdded = false;
     }
 
     @Override
@@ -137,7 +139,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
     }
 
     private void checkForUnsavedChanges() {
-        if (insuranceChanged) {
+        if (insuranceChanged || photoAdded) {
             ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment
                     .newInstance(Label.getLabel("demographics_insurance_unsaved_alert_title"),
                             Label.getLabel("demographics_insurance_unsaved_alert_message"));
@@ -441,6 +443,8 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
                 page = BACK_PIC;
                 hasBackImage = true;
             }
+            nextButton.setEnabled(true);
+            photoAdded = true;
 
             DemographicIdDocPayloadDTO docPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getIdDocument();
             for (DemographicIdDocPhotoDTO docPhotoDTO : docPayloadDTO.getIdDocPhothos()) {
