@@ -261,6 +261,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         body.addProperty("appointment_id", appointment.getPayload().getId());
         body.addProperty("practice_mgmt", appointment.getMetadata().getPracticeMgmt());
         body.addProperty("practice_id", appointment.getMetadata().getPracticeId());
+        body.addProperty("patient_id", appointment.getMetadata().getPatientId());
         body.addProperty("format", "pdf");
         viewHandler.getWorkflowServiceHelper().execute(transition, callback, body.toString());
     }
