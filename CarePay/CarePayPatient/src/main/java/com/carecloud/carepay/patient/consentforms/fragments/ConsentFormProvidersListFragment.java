@@ -70,7 +70,7 @@ public class ConsentFormProvidersListFragment extends BaseFragment implements Co
 
     protected void setUpList(View view) {
         List<UserFormDTO> practiceList = consentFormDto.getPayload().getUserForms();
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.consentFormsRecyclerView);
+        RecyclerView recyclerView = view.findViewById(R.id.consentFormsRecyclerView);
         if (practiceList.size() > 0) {
             Map<String, UserPracticeDTO> practicesInformation = getPracticesInformation(consentFormDto.getPayload()
                     .getPracticesInformation());
@@ -95,6 +95,6 @@ public class ConsentFormProvidersListFragment extends BaseFragment implements Co
 
     @Override
     public void onProviderSelected(UserFormDTO practiceForm, int position) {
-        callback.onProviderSelected(practiceForm, position);
+        callback.addFragment(ConsentFormViewPagerFragment.newInstance(position), true);
     }
 }
