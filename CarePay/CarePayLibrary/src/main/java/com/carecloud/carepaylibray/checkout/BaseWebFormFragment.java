@@ -6,10 +6,10 @@ import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,7 +80,7 @@ public abstract class BaseWebFormFragment extends BaseFragment {
                 validateForm();
             }
         });
-        nextButton.setEnabled(false);
+        enableNextButton(false);
         nextButton.setText(Label.getLabel("checkout_forms_done"));
 
         progressIndicator = (StepProgressBar) view.findViewById(R.id.progress_indicator);
@@ -245,7 +245,7 @@ public abstract class BaseWebFormFragment extends BaseFragment {
                 @Override
                 public void run() {
                     displayNextForm(filledForms);
-                    nextButton.setEnabled(true);
+                    enableNextButton(true);
                 }
             });
 
@@ -313,7 +313,7 @@ public abstract class BaseWebFormFragment extends BaseFragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                nextButton.setEnabled(true);
+                                enableNextButton(true);
                                 hideProgressDialog();
                             }
                         });
@@ -325,7 +325,7 @@ public abstract class BaseWebFormFragment extends BaseFragment {
     }
 
     private void getNextStep() {
-        nextButton.setEnabled(false);
+        enableNextButton(false);
         if (displayedFormsIndex < totalForms - 1) {
             ++displayedFormsIndex;
             displayNextForm(filledForms);
@@ -347,14 +347,14 @@ public abstract class BaseWebFormFragment extends BaseFragment {
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
             super.onReceivedError(view, request, error);
             hideProgressDialog();
-            nextButton.setEnabled(true);
+            enableNextButton(true);
         }
 
         @Override
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
             super.onReceivedError(view, errorCode, description, failingUrl);
             hideProgressDialog();
-            nextButton.setEnabled(true);
+            enableNextButton(true);
         }
 
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -362,17 +362,22 @@ public abstract class BaseWebFormFragment extends BaseFragment {
         public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
             super.onReceivedHttpError(view, request, errorResponse);
             hideProgressDialog();
-            nextButton.setEnabled(true);
+            enableNextButton(true);
         }
 
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
             super.onReceivedSslError(view, handler, error);
             hideProgressDialog();
-            nextButton.setEnabled(true);
+            enableNextButton(true);
         }
 
     }
 
-
+    protected void enableNextButton(boolean isEnabled) {
+        if (nextButton != null) {
+            nextButton.setSelected(isEnabled);
+            nextButton.setClickable(isEnabled);
+        }
+    }
 }

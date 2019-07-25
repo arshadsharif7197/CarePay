@@ -2,8 +2,8 @@ package com.carecloud.carepay.practice.library.payments.dialogs;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -178,7 +178,7 @@ public class FindPatientDialog extends BaseDialogFragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            if(isAdded()) {
+            if (isAdded()) {
                 findViewById(R.id.patient_searched_list).setVisibility(View.GONE);
                 findViewById(R.id.patient_not_found_text).setVisibility(View.VISIBLE);
             }

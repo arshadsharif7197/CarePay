@@ -15,7 +15,7 @@
         android:textColor="@color/colorPrimary"
         android:layout_height="wrap_content" />
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         style="@style/TextInputLayoutStyle">
 
         <EditText
@@ -28,7 +28,7 @@
             android:inputType="textEmailAddress"
             android:textColor="@color/lightSlateGray"/>
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/howfeelingTextView"
@@ -158,7 +158,7 @@
         android:layout_marginTop="@dimen/apt_popup_message_margin"
         android:gravity="right"
         android:layout_height="wrap_content" />
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_marginTop="@dimen/optional_text_edit"
         android:layout_height="wrap_content">
@@ -172,5 +172,5 @@
             android:hint="Describe briefly another concern"
             android:textColor="@color/colorPrimary" />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 </LinearLayout>

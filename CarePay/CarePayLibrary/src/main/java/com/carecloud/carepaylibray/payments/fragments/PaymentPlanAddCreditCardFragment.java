@@ -2,7 +2,7 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 import android.view.View;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -149,8 +149,7 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
         if (paymentPlanPostModel != null) {
             paymentPlanPostModel.setPapiPaymentMethod(papiPaymentMethod);
             paymentPlanPostModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
-            dismiss();
-            callback.onDisplayPaymentPlanTerms(paymentsModel, paymentPlanPostModel);
+            onDisplayPaymentPlanTerms(paymentsModel, paymentPlanPostModel);
         }
 
         if (paymentPlanDTO != null) {
@@ -165,6 +164,12 @@ public class PaymentPlanAddCreditCardFragment extends AddNewCreditCardFragment {
             }
             makePlanPayment();
         }
+    }
+
+    protected void onDisplayPaymentPlanTerms(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
+        dismiss();
+        PaymentPlanTermsFragment fragment = PaymentPlanTermsFragment.newInstance(paymentsModel, paymentPlanPostModel);
+        callback.replaceFragment(fragment, true);
     }
 
     private void makePlanPayment() {

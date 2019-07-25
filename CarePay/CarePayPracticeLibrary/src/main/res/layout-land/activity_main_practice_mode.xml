@@ -335,7 +335,7 @@
         breeze:textKey="officenews_button"
         tools:text="Office News" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/office_news_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

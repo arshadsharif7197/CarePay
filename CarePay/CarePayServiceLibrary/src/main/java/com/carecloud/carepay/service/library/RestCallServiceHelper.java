@@ -1,6 +1,6 @@
 package com.carecloud.carepay.service.library;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.webkit.MimeTypeMap;
 
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;

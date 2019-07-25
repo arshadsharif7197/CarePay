@@ -18,6 +18,7 @@
 #-dontobfuscate
 #-dontshrink
 -dontoptimize
+-dontshrink
 -keepclassmembers class * extends java.lang.Enum {
     <fields>;
     public static **[] values();
