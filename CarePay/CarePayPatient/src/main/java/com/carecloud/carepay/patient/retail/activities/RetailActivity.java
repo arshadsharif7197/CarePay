@@ -2,14 +2,14 @@ package com.carecloud.carepay.patient.retail.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
+import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
@@ -27,6 +27,8 @@ import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.profile.Profile;
+import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.retail.fragments.RetailFragment;
 import com.carecloud.carepaylibray.retail.models.RetailModel;
 import com.carecloud.carepaylibray.retail.models.RetailPracticeDTO;
@@ -111,9 +113,8 @@ public class RetailActivity extends MenuPatientActivity implements RetailPatient
     @Override
     protected void onResume() {
         super.onResume();
-        MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_purchase);
-        menuItem.setChecked(true);
-        title = menuItem.getTitle().toString();
+        selectMenuItem(R.id.shopMenuItem);
+        title = getScreenTitle(Label.getLabel("shop_button"));
         if (!hideToolbar) {
             displayToolbar(true);
         }
@@ -319,5 +320,17 @@ public class RetailActivity extends MenuPatientActivity implements RetailPatient
     @Override
     public DTO getDto() {
         return retailModel;
+    }
+
+    @Override
+    protected void onProfileChanged(ProfileDto profile) {
+        title = getScreenTitle(Label.getLabel("shop_button"));
+        displayToolbar(true, title);
+        callRetailService();
+    }
+
+    @Override
+    protected Profile getCurrentProfile() {
+        return retailModel.getPayload().getDelegate();
     }
 }

@@ -67,7 +67,6 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                                                            PendingBalancePayloadDTO paymentPayload,
                                                            PendingBalanceDTO selectedBalance,
                                                            boolean showPaymentButtons) {
-        // Supply inputs as an argument
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPayload);
@@ -132,7 +131,12 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
 
         setUpStatementButton(view);
         setUpDetails(view);
-        setUpBottomSheet(view, canMakePayments);
+        if (paymentReceiptModel.getPaymentPayload().havePermissionsToMakePayments(selectedBalance
+                .getMetadata().getPracticeId())) {
+            setUpBottomSheet(view, canMakePayments);
+        } else {
+            view.findViewById(R.id.consolidatedPaymentButton).setVisibility(View.INVISIBLE);
+        }
     }
 
     private void setUpStatementButton(View view) {
@@ -145,7 +149,8 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                 break;
             }
         }
-        if (statement != null && !statement.getStatements().isEmpty()) {
+        if (statement != null && !statement.getStatements().isEmpty()
+                && paymentReceiptModel.getPaymentPayload().canSeeStatement(selectedBalance.getMetadata().getPracticeId())) {
             View statementButton = view.findViewById(R.id.statement_button);
             statementButton.setVisibility(View.VISIBLE);
             finalStatement = statement;
@@ -166,12 +171,13 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
     }
 
     private void setUpDetails(View view) {
-        RecyclerView paymentDetailsRecyclerView = view
-                .findViewById(R.id.payment_receipt_details_view);
-        paymentDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        PaymentItemsListAdapter adapter = new PaymentItemsListAdapter(getContext(),
-                paymentPayload.getDetails());
-        paymentDetailsRecyclerView.setAdapter(adapter);
+        if (paymentReceiptModel.getPaymentPayload().canViewBalanceDetails(selectedBalance.getMetadata().getPracticeId())) {
+            RecyclerView paymentDetailsRecyclerView = view.findViewById(R.id.payment_receipt_details_view);
+            paymentDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            PaymentItemsListAdapter adapter = new PaymentItemsListAdapter(getContext(),
+                    paymentPayload.getDetails());
+            paymentDetailsRecyclerView.setAdapter(adapter);
+        }
     }
 
     private void setUpBottomSheet(View view, boolean canMakePayments) {
@@ -211,7 +217,8 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
         });
 
         View partialPaymentContainer = view.findViewById(R.id.partialPaymentContainer);
-        partialPaymentContainer.setVisibility(isPartialPayAvailable(selectedBalance.getMetadata().getPracticeId(), paymentPayload.getAmount())
+        partialPaymentContainer.setVisibility(isPartialPayAvailable(selectedBalance.getMetadata()
+                .getPracticeId(), paymentPayload.getAmount())
                 ? View.VISIBLE : View.GONE);
         partialPaymentContainer.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,4 +1,4 @@
-package com.carecloud.carepay.service.library.unifiedauth;
+package com.carecloud.carepaylibray.unifiedauth;
 
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.google.gson.annotations.Expose;
