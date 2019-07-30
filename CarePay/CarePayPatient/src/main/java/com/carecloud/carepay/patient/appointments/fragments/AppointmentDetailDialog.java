@@ -12,9 +12,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.PermissionChecker;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +20,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.PermissionChecker;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
@@ -511,7 +512,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
 
     private boolean shouldShowCancelButton(Set<String> enabledLocations) {
         return appointmentDTO.getPayload().isAppointmentCancellable(callback.getPracticeSettings())
-                && isLocationWithBreezeEnabled(enabledLocations);
+                && isLocationWithBreezeEnabled(enabledLocations)
+                && appointmentResultModel.getPayload().canScheduleAppointments(appointmentDTO.getMetadata().getPracticeId());
     }
 
     private boolean isLocationWithBreezeEnabled(Set<String> enabledLocations) {
