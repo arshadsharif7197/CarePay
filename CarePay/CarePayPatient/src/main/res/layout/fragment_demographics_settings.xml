@@ -139,6 +139,35 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/manageDelegateContainer"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/signup_clickable_textview_height"
+                android:layout_marginTop="@dimen/dimen_8dp"
+                android:background="@drawable/grey_bottom_border"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_42dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:src="@drawable/icn_manage_profiles" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/manageDelegateTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:gravity="start|center_vertical"
+                    android:textColor="@color/textview_default_textcolor"
+                    android:textSize="@dimen/textview_default_textsize"
+                    android:textStyle="bold"
+                    app:customAssetFont="proxima_nova_regular"
+                    tools:text="Manage Delegates"
+                    breeze:textKey="patient.delegate.delegateList.title.label" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/notificationsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

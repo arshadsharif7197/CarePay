@@ -3,6 +3,8 @@ package com.carecloud.carepaylibray.profile;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * @author pjohnson on 3/4/19.
  */
@@ -29,6 +31,9 @@ public class ProfileLink {
     @SerializedName("delegate_user_id")
     @Expose
     private String delegateUserId;
+    @SerializedName("permissions_hierarchy")
+    @Expose
+    private List<Permission> permissionsHierarchy;
 
 
     public PermissionDto getPermissionDto() {
@@ -85,5 +90,13 @@ public class ProfileLink {
 
     public void setDelegateUserId(String delegateUserId) {
         this.delegateUserId = delegateUserId;
+    }
+
+    public List<Permission> getPermissionsHierarchy() {
+        return permissionsHierarchy;
+    }
+
+    public void setPermissionsHierarchy(List<Permission> permissionsHierarchy) {
+        this.permissionsHierarchy = permissionsHierarchy;
     }
 }

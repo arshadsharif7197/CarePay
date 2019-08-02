@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.delegate;
+package com.carecloud.carepay.patient.delegate.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

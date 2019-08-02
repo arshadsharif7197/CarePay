@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.delegate;
+package com.carecloud.carepay.patient.delegate.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
