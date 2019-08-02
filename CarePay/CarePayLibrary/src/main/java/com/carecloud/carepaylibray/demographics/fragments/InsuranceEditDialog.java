@@ -8,6 +8,9 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.textfield.TextInputLayout;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
@@ -24,6 +27,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -90,6 +94,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     private EditText otherProviderEditText;
     private View otherProviderLayout;
     private ScrollView scrollView;
+    private Button scanFrontButton;
+    private Button scanBackButton;
 
     private boolean hadInsurance;
     private boolean isPatientMode;
@@ -314,6 +320,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         otherProviderEditText = view.findViewById(R.id.otherProviderEditText);
         otherProviderLayout = view.findViewById(R.id.otherProviderLayout);
         scrollView = view.findViewById(R.id.demographicsScrollView);
+        scanFrontButton = view.findViewById(com.carecloud.carepaylibrary.R.id.demogrDocsFrontScanButton);
+        scanBackButton = view.findViewById(com.carecloud.carepaylibrary.R.id.demogrDocsBackScanButton);
 
         if (getDialog() != null || (hadInsurance && !isPatientMode) || !isCheckin) {
             saveInsuranceButton = (Button) findViewById(R.id.save_insurance_changes);
@@ -372,6 +380,18 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             }
         });
         checkIfEnableButton();
+        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT) {
+            setUpBottomSheet(view);
+        } else {
+            scanFrontButton.setOnClickListener(view12 -> {
+                documentScannerAdapter.setFrontCaptureImage();
+                mediaScannerPresenter.handlePictureAction();
+            });
+            scanBackButton.setOnClickListener(view1 -> {
+                documentScannerAdapter.setBackCaptureImage();
+                mediaScannerPresenter.handlePictureAction();
+            });
+        }
     }
 
 
@@ -1278,4 +1298,54 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
     }
 
+    private void setUpBottomSheet(View view) {
+        final View shadow = view.findViewById(R.id.shadow);
+        LinearLayout llBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
+        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
+        bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    shadow.setClickable(false);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                shadow.setAlpha(slideOffset);
+            }
+        });
+        scanFrontButton.setOnClickListener(view15 -> {
+            documentScannerAdapter.setFrontCaptureImage();
+            bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_EXPANDED);
+            shadow.setClickable(true);
+        });
+        scanBackButton.setOnClickListener(view14 -> {
+            documentScannerAdapter.setBackCaptureImage();
+            bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_EXPANDED);
+            shadow.setClickable(true);
+        });
+
+        Button cancelButton = view.findViewById(R.id.cancelButton);
+        cancelButton.setOnClickListener(v -> bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN));
+        shadow.setOnClickListener(view1 -> bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN));
+        shadow.setClickable(false);
+
+        View takePhotoContainer = view.findViewById(R.id.takePhotoContainer);
+        takePhotoContainer.setOnClickListener(view12 -> {
+            mediaScannerPresenter.handlePictureAction();
+            bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
+        });
+
+        View chooseFileContainer = view.findViewById(R.id.chooseFileContainer);
+        chooseFileContainer.setOnClickListener(view13 -> {
+            mediaScannerPresenter.selectFile();
+            bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
+        });
+    }
+
+    private void bottomMenuAction(BottomSheetBehavior bottomSheetBehavior, int stateHidden) {
+        bottomSheetBehavior.setState(stateHidden);
+    }
 }
