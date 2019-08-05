@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.patientsplash;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -52,7 +53,11 @@ public class SplashActivity extends BasePatientActivity {
         NewRelic.withApplicationToken(newRelicId).start(this.getApplication());
 
         Intent intent = new Intent(this, RegistrationIntentService.class);
-        startService(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent);
+        }else{
+            startService(intent);
+        }
 
         Intent queueIntent = new Intent(getContext(), AndroidPayQueueUploadService.class);
         startService(queueIntent);//send any pending android pay payments
