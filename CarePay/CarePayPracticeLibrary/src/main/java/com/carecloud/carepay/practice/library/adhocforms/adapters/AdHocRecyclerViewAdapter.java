@@ -1,5 +1,6 @@
-package com.carecloud.carepay.practice.library.adhocforms;
+package com.carecloud.carepay.practice.library.adhocforms.adapters;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,14 +26,15 @@ public class AdHocRecyclerViewAdapter extends RecyclerView.Adapter<AdHocRecycler
         this.forms = forms;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_adhoc_form_title, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.formNameTextView.setText(forms.get(position).getPayload().get("title").toString()
                 .replace("\"", ""));
         if (displayedFormsIndex == position) {
@@ -58,7 +60,7 @@ public class AdHocRecyclerViewAdapter extends RecyclerView.Adapter<AdHocRecycler
 
         public ViewHolder(View itemView) {
             super(itemView);
-            formNameTextView = (CarePayTextView) itemView.findViewById(R.id.formNameTextView);
+            formNameTextView = itemView.findViewById(R.id.formNameTextView);
         }
     }
 }

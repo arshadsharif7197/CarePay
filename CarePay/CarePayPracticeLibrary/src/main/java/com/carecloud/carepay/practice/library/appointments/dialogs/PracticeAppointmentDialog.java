@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.adhocforms.AdHocFormsListFragment;
+import com.carecloud.carepay.practice.library.adhocforms.fragments.AdHocFormsListFragment;
 import com.carecloud.carepay.practice.library.appointments.interfaces.PracticeAppointmentDialogListener;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.dobverification.DoBVerificationActivity;

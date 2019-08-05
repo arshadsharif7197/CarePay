@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.adhocforms.AdHocFormsListFragment;
+import com.carecloud.carepay.practice.library.adhocforms.fragments.AdHocFormsListFragment;
 import com.carecloud.carepay.practice.library.appointments.createappointment.AvailabilityHourFragment;
 import com.carecloud.carepay.practice.library.appointments.createappointment.CreateAppointmentFragment;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAppointmentDialog;
