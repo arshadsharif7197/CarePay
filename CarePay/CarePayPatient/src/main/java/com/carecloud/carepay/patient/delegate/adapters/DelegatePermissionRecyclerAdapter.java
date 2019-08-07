@@ -4,7 +4,6 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -21,7 +20,6 @@ import java.util.Map;
  */
 public class DelegatePermissionRecyclerAdapter extends ProfilePermissionsRecyclerAdapter {
     private DelegateEditInterface callback;
-    private List<Permission> permissions;
 
     public DelegatePermissionRecyclerAdapter(List<ProfileLink> links,
                                              Map<String, UserPracticeDTO> practicesMap,
@@ -29,14 +27,16 @@ public class DelegatePermissionRecyclerAdapter extends ProfilePermissionsRecycle
         super(links, practicesMap, showButtons);
     }
 
-    protected void setUpPermissionsNames(RecyclerView recyclerView, ProfileLink profileLink) {
-        permissions = getPermissionsList(profileLink
+    protected void setUpPermissionsNames(ViewHolder viewHolder, ProfileLink profileLink) {
+        List<Permission> permissions = getPermissionsList(profileLink
                 .getPermissionDto().getPermissions(), true);
-        if (recyclerView.getAdapter() == null) {
-            recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+        if (viewHolder.profilePermissionRecycler.getAdapter() == null) {
+            viewHolder.profilePermissionRecycler.setLayoutManager(new LinearLayoutManager(viewHolder
+                    .profilePermissionRecycler.getContext()));
             Map<String, List<Permission>> permissionMap = getPermissionMap(profileLink, permissions);
             initializeCheckboxes(permissions);
-            recyclerView.setAdapter(new DelegatePermissionsNameAdapter(permissions, permissionMap));
+            viewHolder.profilePermissionRecycler.setAdapter(new DelegatePermissionsNameAdapter(permissions,
+                    permissionMap, showButtons, enable -> viewHolder.updatePermissionsButton.setEnabled(enable)));
         }
     }
 
@@ -89,9 +89,12 @@ public class DelegatePermissionRecyclerAdapter extends ProfilePermissionsRecycle
         holder.disconnectButton.setOnClickListener(v -> {
             callback.onRevokedAccessClicked(profileLink);
         });
-        holder.updatePermissionsButton.setVisibility(View.VISIBLE);
-        holder.updatePermissionsButton.setOnClickListener(v -> callback
-                .onUpdatePermissionsClicked(profileLink, permissions));
+        holder.updatePermissionsButton.setVisibility(showButtons ? View.VISIBLE : View.GONE);
+        holder.updatePermissionsButton.setOnClickListener(v -> {
+            List<Permission> permissionsList = ((DelegatePermissionsNameAdapter) holder.profilePermissionRecycler
+                    .getAdapter()).getPermissions();
+            callback.onUpdatePermissionsClicked(profileLink, permissionsList);
+        });
     }
 
     public void setCallback(DelegateEditInterface callback) {

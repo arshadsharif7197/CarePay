@@ -32,9 +32,9 @@ import java.util.Map;
  */
 public class ProfilePermissionsRecyclerAdapter extends RecyclerView.Adapter<ProfilePermissionsRecyclerAdapter.ViewHolder> {
 
-    protected final List<ProfileLink> links;
+    final List<ProfileLink> links;
     private final Map<String, UserPracticeDTO> practicesMap;
-    private final boolean showButtons;
+    final boolean showButtons;
     private ProfileEditInterface callback;
 
     public ProfilePermissionsRecyclerAdapter(List<ProfileLink> links,
@@ -45,6 +45,7 @@ public class ProfilePermissionsRecyclerAdapter extends RecyclerView.Adapter<Prof
         this.showButtons = showButtons;
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_profile_permission,
@@ -70,15 +71,16 @@ public class ProfilePermissionsRecyclerAdapter extends RecyclerView.Adapter<Prof
                         .getLabel("profile.profileDetail.item.permission.expires"),
                 DateUtil.getInstance().setDateRaw(profileLink.getExpirationDate())
                         .toStringWithFormatMmSlashDdSlashYyyy()));
-        setUpPermissionsNames(holder.profilePermissionRecycler, profileLink);
+        setUpPermissionsNames(holder, profileLink);
         holder.disconnectButton.setVisibility(showButtons ? View.VISIBLE : View.GONE);
         holder.disconnectButton.setOnClickListener(v -> callback.onDisconnectClicked(profileLink));
     }
 
-    protected void setUpPermissionsNames(RecyclerView recyclerView, ProfileLink profileLink) {
-        if (recyclerView.getAdapter() == null) {
-            recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-            recyclerView.setAdapter(new PermissionsNameAdapter(getPermissionsList(profileLink
+    protected void setUpPermissionsNames(ViewHolder viewHolder, ProfileLink profileLink) {
+        if (viewHolder.profilePermissionRecycler.getAdapter() == null) {
+            viewHolder.profilePermissionRecycler.setLayoutManager(new LinearLayoutManager(viewHolder
+                    .profilePermissionRecycler.getContext()));
+            viewHolder.profilePermissionRecycler.setAdapter(new PermissionsNameAdapter(getPermissionsList(profileLink
                     .getPermissionDto().getPermissions(), false)));
         }
     }
@@ -86,96 +88,115 @@ public class ProfilePermissionsRecyclerAdapter extends RecyclerView.Adapter<Prof
     List<Permission> getPermissionsList(Permissions permissions, boolean alsoDisabled) {
         List<Permission> permissionList = new ArrayList<>();
         if (permissions.getViewAppointments() != null
+                && !StringUtil.isNullOrEmpty(permissions.getViewAppointments().getLabel())
                 && (permissions.getViewAppointments().isEnabled() || alsoDisabled)) {
             permissions.getViewAppointments().setKey("view_appointments");
             permissionList.add(permissions.getViewAppointments());
         }
         if (permissions.getScheduleAppointments() != null
+                && !StringUtil.isNullOrEmpty(permissions.getScheduleAppointments().getLabel())
                 && (permissions.getScheduleAppointments().isEnabled() || alsoDisabled)) {
             permissions.getScheduleAppointments().setKey("schedule_appointments");
             permissionList.add(permissions.getScheduleAppointments());
         }
         if (permissions.getCheckInAndCheckOut() != null
+                && !StringUtil.isNullOrEmpty(permissions.getCheckInAndCheckOut().getLabel())
                 && (permissions.getCheckInAndCheckOut().isEnabled() || alsoDisabled)) {
             permissions.getCheckInAndCheckOut().setKey("checkin_and_checkout");
             permissionList.add(permissions.getCheckInAndCheckOut());
         }
         if (permissions.getViewAllMyHealth() != null
+                && !StringUtil.isNullOrEmpty(permissions.getViewAllMyHealth().getLabel())
                 && (permissions.getViewAllMyHealth().isEnabled() || alsoDisabled)) {
             permissions.getViewAllMyHealth().setKey("view_all_my_health");
             permissionList.add(permissions.getViewAllMyHealth());
         }
         if (permissions.getViewCareTeam() != null
+                && !StringUtil.isNullOrEmpty(permissions.getViewCareTeam().getLabel())
                 && (permissions.getViewCareTeam().isEnabled() || alsoDisabled)) {
             permissions.getViewCareTeam().setKey("view_care_team");
             permissionList.add(permissions.getViewCareTeam());
         }
         if (permissions.getViewAllergies() != null
+                && !StringUtil.isNullOrEmpty(permissions.getViewAllergies().getLabel())
                 && (permissions.getViewAllergies().isEnabled() || alsoDisabled)) {
             permissions.getViewAllergies().setKey("view_allergies");
             permissionList.add(permissions.getViewAllergies());
         }
         if (permissions.getViewConditions() != null
+                && !StringUtil.isNullOrEmpty(permissions.getViewConditions().getLabel())
                 && (permissions.getViewConditions().isEnabled() || alsoDisabled)) {
             permissions.getViewConditions().setKey("view_conditions");
             permissionList.add(permissions.getViewConditions());
         }
         if (permissions.getViewMedications() != null
+                && !StringUtil.isNullOrEmpty(permissions.getViewMedications().getLabel())
                 && (permissions.getViewMedications().isEnabled() || alsoDisabled)) {
             permissions.getViewMedications().setKey("view_medications");
             permissionList.add(permissions.getViewMedications());
         }
         if (permissions.getViewLabResults() != null
+                && !StringUtil.isNullOrEmpty(permissions.getViewLabResults().getLabel())
                 && (permissions.getViewLabResults().isEnabled() || alsoDisabled)) {
             permissions.getViewLabResults().setKey("view_lab_results");
             permissionList.add(permissions.getViewLabResults());
         }
         if (permissions.getViewAndCreateVisitSummaries() != null
+                && !StringUtil.isNullOrEmpty(permissions.getViewAndCreateVisitSummaries().getLabel())
                 && (permissions.getViewAndCreateVisitSummaries().isEnabled() || alsoDisabled)) {
             permissions.getViewAndCreateVisitSummaries().setKey("view_and_create_visit_summaries");
             permissionList.add(permissions.getViewAndCreateVisitSummaries());
         }
         if (permissions.getViewBalanceAndHistoricalPayments() != null
+                && !StringUtil.isNullOrEmpty(permissions.getViewBalanceAndHistoricalPayments().getLabel())
                 && (permissions.getViewBalanceAndHistoricalPayments().isEnabled() || alsoDisabled)) {
             permissions.getViewBalanceAndHistoricalPayments().setKey("view_balance_and_historical_payments");
             permissionList.add(permissions.getViewBalanceAndHistoricalPayments());
         }
         if (permissions.getMakePayments() != null
+                && !StringUtil.isNullOrEmpty(permissions.getMakePayments().getLabel())
                 && (permissions.getMakePayments().isEnabled() || alsoDisabled)) {
             permissions.getMakePayments().setKey("make_payments");
             permissionList.add(permissions.getMakePayments());
         }
         if (permissions.getViewPatientStatements() != null
+                && !StringUtil.isNullOrEmpty(permissions.getViewPatientStatements().getLabel())
                 && (permissions.getViewPatientStatements().isEnabled() || alsoDisabled)) {
             permissions.getViewPatientStatements().setKey("view_patient_statements");
             permissionList.add(permissions.getViewPatientStatements());
         }
         if (permissions.getViewBalanceDetails() != null
+                && !StringUtil.isNullOrEmpty(permissions.getViewBalanceDetails().getLabel())
                 && (permissions.getViewBalanceDetails().isEnabled() || alsoDisabled)) {
             permissions.getViewBalanceDetails().setKey("view_balance_details");
             permissionList.add(permissions.getViewBalanceDetails());
         }
         if (permissions.getViewNotifications() != null
+                && !StringUtil.isNullOrEmpty(permissions.getViewNotifications().getLabel())
                 && (permissions.getViewNotifications().isEnabled() || alsoDisabled)) {
             permissions.getViewNotifications().setKey("view_notifications");
             permissionList.add(permissions.getViewNotifications());
         }
         if (permissions.getMessageProviders() != null
+                && !StringUtil.isNullOrEmpty(permissions.getMessageProviders().getLabel())
                 && (permissions.getMessageProviders().isEnabled() || alsoDisabled)) {
             permissions.getMessageProviders().setKey("message_providers");
             permissionList.add(permissions.getMessageProviders());
         }
         if (permissions.getViewForms() != null
+                && !StringUtil.isNullOrEmpty(permissions.getViewForms().getLabel())
                 && (permissions.getViewForms().isEnabled() || alsoDisabled)) {
             permissions.getViewForms().setKey("view_forms");
             permissionList.add(permissions.getViewForms());
         }
         if (permissions.getReviewForms() != null
+                && !StringUtil.isNullOrEmpty(permissions.getReviewForms().getLabel())
                 && (permissions.getReviewForms().isEnabled() || alsoDisabled)) {
             permissions.getReviewForms().setKey("review_forms");
             permissionList.add(permissions.getReviewForms());
         }
         if (permissions.getViewAndSubmitSurveys() != null
+                && !StringUtil.isNullOrEmpty(permissions.getViewAndSubmitSurveys().getLabel())
                 && (permissions.getViewAndSubmitSurveys().isEnabled() || alsoDisabled)) {
             permissions.getViewAndSubmitSurveys().setKey("view_and_submit_surveys");
             permissionList.add(permissions.getViewAndSubmitSurveys());

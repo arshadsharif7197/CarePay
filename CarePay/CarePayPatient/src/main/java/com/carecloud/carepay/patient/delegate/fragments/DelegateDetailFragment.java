@@ -39,6 +39,7 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.JsonObject;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -145,11 +146,14 @@ public class DelegateDetailFragment extends BaseDialogFragment
     }
 
     private void setUpPermissionList(View view) {
+        Date birthdate = DateUtil.getInstance().setDateRaw(delegateDto.getPayload().getDemographics()
+                .getPayload().getPersonalDetails().getDateOfBirth()).getDate();
+        int age = DateUtil.getInstance().getAge(birthdate);
         RecyclerView permissionsRecyclerView = view.findViewById(R.id.permissionsRecyclerView);
         permissionsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         DelegatePermissionRecyclerAdapter adapter = new DelegatePermissionRecyclerAdapter(selectedProfile
                 .getProfile().getLinks(), getPracticesMap(delegateDto),
-                delegateDto.getPayload().getDelegate() == null);
+                delegateDto.getPayload().getDelegate() == null && age >= 13);
         adapter.setCallback(this);
         permissionsRecyclerView.setAdapter(adapter);
     }
