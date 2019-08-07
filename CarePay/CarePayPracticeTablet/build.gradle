@@ -67,7 +67,7 @@ android {
             buildConfigField 'String', 'API_START_URL', '"https://breeze-entry.qa.carecloud.com/workflow/shamrock/practice_mode/practice_mode_signin/start"'
             buildConfigField 'String', 'X_API_KEY', '"VMGQTfHsuP5PSi3UbyXWh7xGWMflwZtHa55LZyXr"'
             buildConfigField 'String', 'WEBCLIENT_URL', '"wss://star-cluster.development.carecloud.com"'
-            buildConfigField 'String', 'FORMS_BASE_URL', '"https://settings.gobreeze.com"'
+            buildConfigField 'String', 'FORMS_BASE_URL', '"https://settings.qa.gobreeze.com"'
             buildConfigField 'String', 'DEEPSTREAM_URL', '"wss://deepstream.qa.carecloud.com:443"'
             buildConfigField 'String', 'PAYMENTS_BASE_URL', '"https://payments.qa.carecloud.com/"'
             buildConfigField 'String', 'PAYMENTS_API_KEY', '"8RSwxNIMfv30WxgpTOuTza0fEvAFJJH07xDxgP4i"'
