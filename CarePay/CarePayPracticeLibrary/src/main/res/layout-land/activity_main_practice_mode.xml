@@ -193,7 +193,7 @@
                 android:layout_above="@id/homePaymentsLabel"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="@dimen/dimen_20dp"
-                android:contentDescription="Payments"
+                android:contentDescription="@string/content_description_payments"
                 android:src="@drawable/icn_payments_selector" />
 
             <View
@@ -229,7 +229,7 @@
                 android:layout_above="@id/homeAppointmentsLabel"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="@dimen/dimen_20dp"
-                android:contentDescription="Appointments"
+                android:contentDescription="@string/content_description_appointments"
                 android:src="@drawable/icn_appointements_selector" />
         </RelativeLayout>
 

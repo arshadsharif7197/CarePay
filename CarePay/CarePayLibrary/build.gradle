@@ -69,9 +69,9 @@ dependencies {
     api 'com.marcok.stepprogressbar:stepprogressbar:1.0.1'
     api 'com.google.firebase:firebase-messaging:17.3.2'
     api 'fr.tvbarthel.blurdialogfragment:lib:2.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
-    androidTestImplementation 'androidx.test:runner:1.1.0'
-    androidTestImplementation 'androidx.test:rules:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
     api project(':payeezysdk')
 //    compile project(':shamrocksdk')
     api 'com.github.Carecloud:shamrock_android_sdk:2.0.3'

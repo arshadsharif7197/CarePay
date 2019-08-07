@@ -28,7 +28,7 @@
     <string name="content_description_password">Password</string>
     <string name="content_description_add_appointment">Add Appointment</string>
     <string name="content_description_patient_search">Patient Search</string>
-    <string name="content_description_patient_list">Patients</string>
+    <string name="content_description_patient_list">Patient List</string>
     <string name="content_description_provider_list">Providers</string>
     <string name="content_description_continue">Continue</string>
     <string name="content_description_available_hours">Available Hours</string>
@@ -37,5 +37,15 @@
     <string name="content_description_check_in_home">Check-in Home</string>
     <string name="content_description_lock_icon">Lock Icon</string>
     <string name="content_description_check_in">Check-In</string>
+    <string name="content_description_available_hours_list">Available Hours List</string>
+    <string name="content_description_check_available_times">Check Available Times</string>
+    <string name="content_description_choose_provider">Choose Provider</string>
+    <string name="content_description_choose_visit_type">Choose Visit Type</string>
+    <string name="content_description_choose_location">Choose Location</string>
+    <string name="content_description_location_list">Location List</string>
+    <string name="content_description_provider_list_2">Provider List</string>
+    <string name="content_description_visit_type_list">Visit Type List</string>
+    <string name="content_description_appointments">Appointments</string>
+    <string name="content_description_payments">Payments</string>
 
 </resources>

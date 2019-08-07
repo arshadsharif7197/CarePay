@@ -15,7 +15,8 @@
         android:id="@+id/providers_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar_layout" />
+        android:layout_below="@id/toolbar_layout"
+        android:contentDescription="@string/content_description_provider_list_2"/>
 
     <RelativeLayout
         android:id="@+id/emptyStateScreen"
