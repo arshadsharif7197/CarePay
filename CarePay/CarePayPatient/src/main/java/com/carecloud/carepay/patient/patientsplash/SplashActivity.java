@@ -53,11 +53,7 @@ public class SplashActivity extends BasePatientActivity {
         NewRelic.withApplicationToken(newRelicId).start(this.getApplication());
 
         Intent intent = new Intent(this, RegistrationIntentService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(intent);
-        }else{
-            startService(intent);
-        }
+        startService(intent);
 
         Intent queueIntent = new Intent(getContext(), AndroidPayQueueUploadService.class);
         startService(queueIntent);//send any pending android pay payments
