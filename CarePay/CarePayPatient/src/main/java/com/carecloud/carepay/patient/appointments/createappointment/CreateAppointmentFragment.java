@@ -78,6 +78,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
     private void showPracticeList(View view) {
         RecyclerView practicesRecyclerView = view.findViewById(R.id.practicesRecyclerView);
         List<UserPracticeDTO> filteredList = filterPracticesList(appointmentsModelDto.getPayload().getUserPractices());
+        selectedPractice = filteredList.get(0);
         if (filteredList.size() > 1 && !isReschedule) {
             practicesRecyclerView.setVisibility(View.VISIBLE);
             practicesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
@@ -91,7 +92,6 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
             });
             practicesRecyclerView.setAdapter(adapter);
         } else {
-            selectedPractice = filteredList.get(0);
             practicesRecyclerView.setVisibility(View.GONE);
         }
     }
