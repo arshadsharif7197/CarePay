@@ -91,6 +91,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
             });
             practicesRecyclerView.setAdapter(adapter);
         } else {
+            selectedPractice = filteredList.get(0);
             practicesRecyclerView.setVisibility(View.GONE);
         }
     }
