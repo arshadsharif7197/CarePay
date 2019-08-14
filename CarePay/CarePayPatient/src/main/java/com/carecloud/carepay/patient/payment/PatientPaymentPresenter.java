@@ -64,7 +64,8 @@ public class PatientPaymentPresenter extends PaymentPresenter
 
     @Override
     public void startPaymentProcess(PaymentsModel paymentsModel) {
-        ResponsibilityFragment responsibilityFragment = ResponsibilityFragment.newInstance(paymentsModel, null, true);
+        ResponsibilityFragment responsibilityFragment = ResponsibilityFragment.newInstance(paymentsModel,
+                null, true, null);
         viewHandler.navigateToFragment(responsibilityFragment, true);
     }
 

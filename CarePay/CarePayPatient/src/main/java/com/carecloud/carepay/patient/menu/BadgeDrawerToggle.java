@@ -1,10 +1,12 @@
-package com.carecloud.carepay.patient.base;
+package com.carecloud.carepay.patient.menu;
 
 import android.app.Activity;
 import android.content.Context;
-import androidx.drawerlayout.widget.DrawerLayout;
+import android.view.View;
+
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -15,6 +17,7 @@ import java.lang.reflect.Method;
 public class BadgeDrawerToggle extends ActionBarDrawerToggle {
 
     private BadgeDrawerArrowDrawable badgeDrawable;
+    private DrawerInterface callback;
 
     public BadgeDrawerToggle(Activity activity, DrawerLayout drawerLayout,
                              int openDrawerContentDescRes,
@@ -84,9 +87,24 @@ public class BadgeDrawerToggle extends ActionBarDrawerToggle {
             Method getActionBarThemedContextMethod = mActivityImpl.getClass()
                     .getDeclaredMethod("getActionBarThemedContext");
             return (Context) getActionBarThemedContextMethod.invoke(mActivityImpl);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public void onDrawerClosed(View drawerView) {
+        super.onDrawerClosed(drawerView);
+        if (callback != null) {
+            callback.onDrawerClosed(drawerView);
+        }
+    }
+
+    public void setCallback(DrawerInterface callback) {
+        this.callback = callback;
+    }
+
+    public interface DrawerInterface {
+        void onDrawerClosed(View drawerView);
     }
 }

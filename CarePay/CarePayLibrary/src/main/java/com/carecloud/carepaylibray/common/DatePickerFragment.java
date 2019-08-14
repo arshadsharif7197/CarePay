@@ -2,14 +2,16 @@ package com.carecloud.carepaylibray.common;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
@@ -24,6 +26,9 @@ import java.util.Date;
 public class DatePickerFragment extends BaseDialogFragment {
 
     private static final int DEFAULT_FLAG = 0;
+    public static final int FROM_DATE_FLAG = 100;
+    public static final int TO_DATE_FLAG = 101;
+
     private DateRangePickerDialogListener listener;
     private Date startDate;
     private Date endDate;
@@ -63,6 +68,7 @@ public class DatePickerFragment extends BaseDialogFragment {
                                                  DateRangePickerDialogListener callback,
                                                  int flag) {
         Bundle args = new Bundle();
+        args.putString("dialogTitle", dialogTitle);
         args.putSerializable("startDate", startDate);
         args.putSerializable("endDate", endDate);
         if (selectedDate != null) {
@@ -99,13 +105,13 @@ public class DatePickerFragment extends BaseDialogFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_date_picker, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         inflateToolbar(view);
         initCalendarView(view);
@@ -127,24 +133,14 @@ public class DatePickerFragment extends BaseDialogFragment {
 
         Date today = new Date();
         View todayButton = toolbar.findViewById(R.id.today_button);
-        todayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onTodayClicked();
-            }
-        });
-        if (today.before(startDate)) {
+        todayButton.setOnClickListener(v -> onTodayClicked());
+        if (today.before(startDate) || flag == FROM_DATE_FLAG) {
             todayButton.setVisibility(View.GONE);
         }
 
         TextView toolbarTitleTextView = toolbar.findViewById(R.id.add_appointment_toolbar_title);
         toolbarTitleTextView.setText(toolbarTitle);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> dismiss());
     }
 
     private void initCalendarView(View view) {
@@ -174,12 +170,7 @@ public class DatePickerFragment extends BaseDialogFragment {
     }
 
     private void scrollToDate(final Date date) {
-        calendarPickerView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                calendarPickerView.scrollToDate(date);
-            }
-        }, 200);
+        calendarPickerView.postDelayed(() -> calendarPickerView.scrollToDate(date), 200);
     }
 
     private void updateSelectedDates() {
@@ -198,14 +189,11 @@ public class DatePickerFragment extends BaseDialogFragment {
         applyDateButton.setEnabled(true);
     }
 
-    protected void initButtons(View view) {
+    private void initButtons(View view) {
         applyDateButton = view.findViewById(R.id.applyDateRangeButton);
-        applyDateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onDateSelected(selectedDate, flag);
-                dismiss();
-            }
+        applyDateButton.setOnClickListener(v -> {
+            listener.onDateSelected(selectedDate, flag);
+            dismiss();
         });
         applyDateButton.setEnabled(false);
     }

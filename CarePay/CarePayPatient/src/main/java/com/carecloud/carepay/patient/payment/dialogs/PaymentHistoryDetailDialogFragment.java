@@ -1,16 +1,17 @@
 package com.carecloud.carepay.patient.payment.dialogs;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.core.widget.NestedScrollView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
@@ -76,31 +77,22 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_payment_history_detail, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle) {
+    public void onViewCreated(@NonNull View view, Bundle icicle) {
         View closeButton = view.findViewById(R.id.dialog_close_header);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
-        });
+        closeButton.setOnClickListener(view1 -> dismiss());
 
         String paymentMethod = getPaymentMethod(historyItem.getPayload().getPapiPaymentMethod());
         View paymentPlanDetailsButton = view.findViewById(R.id.paymentPlanDetailsButton);
         TextView paymentPlanNameTextView = view.findViewById(R.id.paymentPlanNameTextView);
         if (historyItem.getPayload().getMetadata().getPaymentPlan() != null) {
             paymentPlanDetailsButton.setVisibility(View.VISIBLE);
-            paymentPlanDetailsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    displayPaymentPlanHistoryDetails(historyItem, historyItem.getPayload().getMetadata().getPaymentPlan());
-                }
-            });
+            paymentPlanDetailsButton.setOnClickListener(view12 -> displayPaymentPlanHistoryDetails(historyItem,
+                    historyItem.getPayload().getMetadata().getPaymentPlan()));
             paymentMethod = Label.getLabel("payment_plan_payment_text");
             paymentPlanNameTextView.setText(historyItem.getPayload().getMetadata()
                     .getPaymentPlan().getDescription());
@@ -133,12 +125,7 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
         initItemsRecycler(itemsRecycler);
 
         final NestedScrollView scrollView = view.findViewById(R.id.scrollView);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                scrollView.scrollTo(0, 0);
-            }
-        }, 100);
+        new Handler().postDelayed(() -> scrollView.scrollTo(0, 0), 100);
 
         double refundedAmount = historyItem.getPayload().getTotalRefunded();
         if (refundedAmount > 0D) {
@@ -152,7 +139,8 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
 
     }
 
-    private void displayPaymentPlanHistoryDetails(final PaymentHistoryItem historyItem, PaymentPlanPayloadDTO paymentPlan) {
+    private void displayPaymentPlanHistoryDetails(final PaymentHistoryItem historyItem,
+                                                  PaymentPlanPayloadDTO paymentPlan) {
         String taskId = paymentPlan.getMetadata().getTaskId();
         PaymentPlanDTO selectedPaymentPlan = null;
         for (PaymentPlanDTO paymentPlanDTO : paymentsModel.getPaymentPayload().getPatientPaymentPlans()) {
@@ -162,22 +150,20 @@ public class PaymentHistoryDetailDialogFragment extends PaymentHistoryDetailFrag
             }
         }
 
-        final UserPracticeDTO selectedUserPractice = paymentsModel.getPaymentPayload().getUserPractice(historyItem.getMetadata().getPracticeId());
+        final UserPracticeDTO selectedUserPractice = paymentsModel.getPaymentPayload()
+                .getUserPractice(historyItem.getMetadata().getPracticeId());
         PaymentPlanHistoryDetailDialogFragment planHistoryFragment = PaymentPlanHistoryDetailDialogFragment
                 .newInstance(selectedPaymentPlan, selectedUserPractice);
-        planHistoryFragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                showDialog();
-            }
-        });
+        planHistoryFragment.setOnCancelListener(dialog -> showDialog());
         callback.displayDialogFragment(planHistoryFragment, false);
         hideDialog();
     }
 
     @Override
     protected void initItemsRecycler(RecyclerView recycler) {
-        itemsRecycler = recycler;
-        setAdapter();
+        if (paymentsModel.getPaymentPayload().canViewBalanceDetails(userPracticeDTO.getPracticeId())) {
+            itemsRecycler = recycler;
+            setAdapter();
+        }
     }
 }

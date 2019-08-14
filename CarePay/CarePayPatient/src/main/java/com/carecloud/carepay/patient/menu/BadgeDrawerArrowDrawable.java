@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.base;
+package com.carecloud.carepay.patient.menu;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -9,6 +9,8 @@ import android.graphics.Typeface;
 import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.Objects;
 
@@ -24,7 +26,7 @@ public class BadgeDrawerArrowDrawable extends DrawerArrowDrawable {
     private Paint backgroundPaint;
     private Paint textPaint;
     private String text;
-    private boolean enabled = true;
+    private boolean enabled;
 
     public BadgeDrawerArrowDrawable(Context context) {
         super(context);
@@ -39,13 +41,15 @@ public class BadgeDrawerArrowDrawable extends DrawerArrowDrawable {
         textPaint.setTypeface(Typeface.DEFAULT_BOLD);
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setTextSize(SIZE_FACTOR * getIntrinsicHeight());
+        enabled = true;
     }
 
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
 
-        if (!enabled) {
+        if (!enabled
+                || (!StringUtil.isNullOrEmpty(ApplicationPreferences.getInstance().getProfileId()))) {
             return;
         }
 

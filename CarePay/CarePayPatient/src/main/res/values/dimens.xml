@@ -16,8 +16,21 @@
     <dimen name="encryptedCheckBoxVerticalMargin">10dp</dimen>
     <dimen name="commonDialogPadding">10dp</dimen>
 
+    <dimen name="mainMenuItemContainerTopPadding">5dp</dimen>
+    <dimen name="menuItemSeparatorVerticalMargin">5dp</dimen>
+    <dimen name="profileImageViewSize">60dp</dimen>
+    <dimen name="profileHeaderHeight">50dp</dimen>
+
     <!--Rate Dialog-->
     <dimen name="rateDialogPadding">20dp</dimen>
     <dimen name="rateDialogOptionHeight">60dp</dimen>
     <dimen name="rateDialogTitleTextSize">21sp</dimen>
+
+    <!--Profile Management-->
+    <dimen name="itemProfileNameTextSize">17sp</dimen>
+    <dimen name="itemProfileRelationTextSize">14sp</dimen>
+    <dimen name="profileNameTextSize">17sp</dimen>
+    <dimen name="profileDetailLabelTextSize">13sp</dimen>
+    <dimen name="profileDetailLabelMarginBottom">10dp</dimen>
+    <dimen name="itemProfilePermissionHeight">110dp</dimen>
 </resources>
