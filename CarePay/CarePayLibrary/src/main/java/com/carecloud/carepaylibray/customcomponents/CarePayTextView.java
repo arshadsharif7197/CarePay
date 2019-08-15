@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 
@@ -31,7 +30,7 @@ import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.PROXIMA
  * This is a custom textview component that allow t set custom font from assets
  */
 
-public class CarePayTextView extends android.support.v7.widget.AppCompatTextView {
+public class CarePayTextView extends androidx.appcompat.widget.AppCompatTextView {
     Context context;
     int fontAttribute;
 

@@ -20,7 +20,7 @@
         android:scaleType="fitCenter"
         android:src="@drawable/breeze_logo_dark" />
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/tutorial_view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

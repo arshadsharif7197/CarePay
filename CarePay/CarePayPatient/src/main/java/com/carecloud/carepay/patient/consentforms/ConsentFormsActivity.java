@@ -1,15 +1,13 @@
 package com.carecloud.carepay.patient.consentforms;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
-import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.base.MenuPatientActivity;
+import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
-import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormPracticeFormsFragment;
 import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormProvidersListFragment;
 import com.carecloud.carepay.patient.consentforms.fragments.ConsentFormViewPagerFragment;
 import com.carecloud.carepay.patient.consentforms.fragments.FilledFormFragment;
@@ -17,12 +15,15 @@ import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormActivity
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.consentforms.models.ConsentFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.UserFormDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.profile.Profile;
+import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.util.HashMap;
@@ -86,10 +87,9 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Consent
     @Override
     protected void onResume() {
         super.onResume();
-        MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_forms);
-        menuItem.setChecked(true);
+        selectMenuItem(R.id.formsMenuItem);
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-            displayToolbar(true, menuItem.getTitle().toString());
+            displayToolbar(true, getScreenTitle(Label.getLabel("adhoc_show_forms_button_label")));
         }
     }
 
@@ -98,8 +98,7 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Consent
     public void onBackPressed() {
         super.onBackPressed();
         if (getSupportFragmentManager().getBackStackEntryCount() < 1) {
-            MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_forms);
-            displayToolbar(true, menuItem.getTitle().toString());
+            displayToolbar(true, getScreenTitle(Label.getLabel("adhoc_show_forms_button_label")));
         }
     }
 
@@ -116,11 +115,6 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Consent
     @Override
     public void addFragment(Fragment fragment, boolean addToBackStack) {
         addFragment(R.id.container_main, fragment, addToBackStack);
-    }
-
-    @Override
-    public void onProviderSelected(UserFormDTO practiceForm, int position) {
-        addFragment(ConsentFormViewPagerFragment.newInstance(position), true);
     }
 
     @Override
@@ -164,4 +158,15 @@ public class ConsentFormsActivity extends MenuPatientActivity implements Consent
             Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+    @Override
+    protected void onProfileChanged(ProfileDto profile) {
+        displayToolbar(true, getScreenTitle(Label.getLabel("adhoc_show_forms_button_label")));
+        callConsentFormsService(null);
+    }
+
+    @Override
+    protected Profile getCurrentProfile() {
+        return consentFormsDTO.getPayload().getDelegate();
+    }
 }
