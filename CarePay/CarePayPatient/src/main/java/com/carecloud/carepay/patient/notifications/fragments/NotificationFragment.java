@@ -439,6 +439,11 @@ public class NotificationFragment extends BaseFragment
                         .canViewSurveyNotifications(notificationItem.getMetadata().getPracticeId()))) {
                     continue;
                 }
+                if (notificationType.equals(NotificationType.secure_message)
+                        && (!notificationsDTO.getPayload()
+                        .canMessageProviders(notificationItem.getMetadata().getPracticeId()))) {
+                    continue;
+                }
                 filteredList.add(notificationItem);
             } else {
                 Log.d("test", "test");
