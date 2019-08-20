@@ -444,6 +444,12 @@ public class NotificationFragment extends BaseFragment
                         .canMessageProviders(notificationItem.getMetadata().getPracticeId()))) {
                     continue;
                 }
+                if (notificationType.equals(NotificationType.payments)
+                        && !"patient_statement".equals(notificationItem.getMetadata().getNotificationSubtype())
+                        && (!notificationsDTO.getPayload()
+                        .havePermissionsToMakePayments(notificationItem.getMetadata().getPracticeId()))) {
+                    continue;
+                }
                 filteredList.add(notificationItem);
             } else {
                 Log.d("test", "test");
