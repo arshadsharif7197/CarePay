@@ -444,6 +444,11 @@ public class NotificationFragment extends BaseFragment
                         .canMessageProviders(notificationItem.getMetadata().getPracticeId()))) {
                     continue;
                 }
+                if (notificationType.equals(NotificationType.pending_forms)
+                        && (!notificationsDTO.getPayload()
+                        .canReviewForms(notificationItem.getMetadata().getPracticeId()))) {
+                    continue;
+                }
                 if (notificationType.equals(NotificationType.payments)
                         && !"patient_statement".equals(notificationItem.getMetadata().getNotificationSubtype())
                         && (!notificationsDTO.getPayload()
