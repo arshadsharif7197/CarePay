@@ -254,14 +254,17 @@ public class NotificationFragment extends BaseFragment
     }
 
     private boolean canViewAnyNotification(List<UserPracticeDTO> userPractices) {
-        boolean atLeastOneHasPermission = false;
         for (UserPracticeDTO practice : userPractices) {
-            if (notificationsDTO.getPayload().canViewNotifications(practice.getPracticeId())) {
-                atLeastOneHasPermission = true;
+            if (notificationsDTO.getPayload().canViewSurveyNotifications(practice.getPracticeId())
+                    || notificationsDTO.getPayload().canMessageProviders(practice.getPracticeId())
+                    || notificationsDTO.getPayload().canReviewForms(practice.getPracticeId())
+                    || notificationsDTO.getPayload().canSeeStatement(practice.getPracticeId())
+                    || notificationsDTO.getPayload().havePermissionsToMakePayments(practice.getPracticeId())
+                    || notificationsDTO.getPayload().canViewAppointments(practice.getPracticeId())) {
+                return true;
             }
         }
-        return atLeastOneHasPermission
-                || (userPractices.isEmpty() && notificationsDTO.getPayload().getDelegate() == null);
+        return false;
     }
 
     @Override
