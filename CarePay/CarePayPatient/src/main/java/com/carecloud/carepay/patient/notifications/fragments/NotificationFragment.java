@@ -449,15 +449,20 @@ public class NotificationFragment extends BaseFragment
                         .canReviewForms(notificationItem.getMetadata().getPracticeId()))) {
                     continue;
                 }
-                if (notificationType.equals(NotificationType.payments)
-                        && !"patient_statement".equals(notificationItem.getMetadata().getNotificationSubtype())
-                        && (!notificationsDTO.getPayload()
-                        .havePermissionsToMakePayments(notificationItem.getMetadata().getPracticeId()))) {
-                    continue;
+                if (notificationType.equals(NotificationType.payments)) {
+                    if ("patient_statement".equals(notificationItem.getMetadata().getNotificationSubtype())
+                            && (!notificationsDTO.getPayload()
+                            .canSeeStatement(notificationItem.getMetadata().getPracticeId()))) {
+                        continue;
+                    } else if (!"patient_statement".equals(notificationItem.getMetadata().getNotificationSubtype())
+                            && (!notificationsDTO.getPayload()
+                            .havePermissionsToMakePayments(notificationItem.getMetadata().getPracticeId()))) {
+                        continue;
+                    }
                 }
                 filteredList.add(notificationItem);
             } else {
-                Log.d("test", "test");
+                Log.d("Error", "error notifications");
             }
         }
         return filteredList;
