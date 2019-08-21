@@ -460,6 +460,11 @@ public class NotificationFragment extends BaseFragment
                         continue;
                     }
                 }
+                if (notificationType.equals(NotificationType.appointment)
+                        && (!notificationsDTO.getPayload()
+                        .canViewAppointments(notificationItem.getMetadata().getPracticeId()))) {
+                    continue;
+                }
                 filteredList.add(notificationItem);
             } else {
                 Log.d("Error", "error notifications");
