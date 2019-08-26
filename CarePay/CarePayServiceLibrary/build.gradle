@@ -35,6 +35,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.6.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.6.0'
     implementation 'androidx.annotation:annotation:1.0.0'
+    api 'com.squareup.okhttp3:logging-interceptor:3.6.0'
     //Cognito
     api 'com.amazonaws:aws-android-sdk-cognitoidentityprovider:2.3.1'
 
