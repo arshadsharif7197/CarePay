@@ -1,6 +1,6 @@
 package com.carecloud.carepay.practice.library.models;
 
-import android.support.v4.util.ArraySet;
+import androidx.collection.ArraySet;
 
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 

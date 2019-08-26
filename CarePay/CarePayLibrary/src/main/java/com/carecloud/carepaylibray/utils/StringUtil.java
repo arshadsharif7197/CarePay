@@ -388,7 +388,7 @@ public class StringUtil {
      * @return modified String
      */
     public static String capitalize(String capString) {
-        if(isNullOrEmpty(capString)){
+        if (isNullOrEmpty(capString)) {
             return "";
         }
         StringBuffer capBuffer = new StringBuffer();

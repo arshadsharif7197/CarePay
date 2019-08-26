@@ -1,6 +1,6 @@
 package com.carecloud.carepaylibray.appointments.interfaces;
 
-import android.support.v4.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 
 import com.carecloud.carepaylibray.appointments.createappointment.availabilityhour.BaseAvailabilityHourFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
