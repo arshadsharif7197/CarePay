@@ -1,6 +1,6 @@
 package com.carecloud.carepay.practice.tablet.PageObjects
 
-import com.carecloud.carepay.practice.tablet.Actions.CustomViewActions
+import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 import com.carecloud.carepay.practice.tablet.R
 import com.carecloud.carepay.practice.tablet.Tests.appContext
 

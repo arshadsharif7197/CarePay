@@ -1,4 +1,4 @@
-package com.carecloud.carepay.practice.tablet.Actions
+package com.carecloud.carepaylibray.androidTest.actions
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
