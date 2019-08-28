@@ -24,8 +24,8 @@
 
             <ImageView
                 android:id="@+id/homeModeSwitchClickable"
-                android:layout_width="20dp"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/home_settings_icon_width"
+                android:layout_height="@dimen/home_settings_icon_height"
                 android:layout_gravity="start"
                 android:contentDescription="@string/content_description_change_mode"
                 android:background="@drawable/icn_gear_vd" />
