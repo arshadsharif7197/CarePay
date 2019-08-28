@@ -21,27 +21,33 @@
             android:layout_height="0dp"
             android:layout_weight=".52" />
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight=".18" />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight=".30" />
-
         <ImageView
             style="@style/HomeButtonIconStyle"
             android:contentDescription="@string/home_icon_check_in"
             android:src="@drawable/face_icon" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".18" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/homeChangeModePatientOptionText"
             style="@style/ChangeModeDialogOptions"
             android:hint="@string/home_icon_check_in"
             app:customAssetFont="proxima_nova_semi_bold" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".30" />
     </LinearLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="1.5dp"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary" />
 
     <LinearLayout
         android:id="@+id/dialog_logout_option"
@@ -56,32 +62,26 @@
             android:layout_height="0dp"
             android:layout_weight=".51" />
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight=".15" />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight=".34" />
-
         <ImageView
             style="@style/HomeButtonIconStyle"
             android:contentDescription="@string/home_icon_check_in"
             android:src="@drawable/log_out" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".15" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/homeChangeModeLogoutOptionText"
             style="@style/ChangeModeDialogOptions"
             android:hint="@string/home_icon_check_in"
             app:customAssetFont="proxima_nova_semi_bold" />
-    </LinearLayout>
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="1.5dp"
-        android:layout_height="match_parent"
-        android:background="@color/colorPrimary" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".34" />
+    </LinearLayout>
 
 </LinearLayout>
