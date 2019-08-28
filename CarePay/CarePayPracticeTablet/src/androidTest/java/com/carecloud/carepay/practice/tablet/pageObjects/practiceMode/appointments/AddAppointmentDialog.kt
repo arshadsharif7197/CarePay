@@ -1,8 +1,8 @@
-package com.carecloud.carepay.practice.tablet.PageObjects.Appointments
+package com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.appointments
 
-import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 import com.carecloud.carepay.practice.tablet.R
-import com.carecloud.carepay.practice.tablet.Tests.appContext
+import com.carecloud.carepay.practice.tablet.tests.appContext
+import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 
 /**
  * Created by drodriguez on 08/12/19.
@@ -26,7 +26,7 @@ class AddAppointmentDialog : CustomViewActions() {
     }
 
     fun chooseLocation(): AddAppointmentDialog {
-        click(appContext.getString(R.string.content_description_choose_location),true)
+        click(appContext.getString(R.string.content_description_choose_location), true)
         clickOnRecyclerViewItem(appContext.getString(R.string.content_description_location_list), 0)
         return this
     }

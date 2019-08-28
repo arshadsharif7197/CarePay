@@ -1,8 +1,8 @@
-package com.carecloud.carepay.practice.tablet.Tests.Appointments
+package com.carecloud.carepay.practice.tablet.tests.practiceMode.appointments
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.carecloud.carepay.practice.tablet.PageObjects.PracticeMainScreen
-import com.carecloud.carepay.practice.tablet.Tests.BaseTest
+import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.PracticeMainScreen
+import com.carecloud.carepay.practice.tablet.tests.BaseTest
 import org.junit.Test
 import org.junit.runner.RunWith
 

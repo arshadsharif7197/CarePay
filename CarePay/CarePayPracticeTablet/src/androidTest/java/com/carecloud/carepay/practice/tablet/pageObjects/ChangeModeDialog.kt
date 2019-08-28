@@ -1,8 +1,8 @@
-package com.carecloud.carepay.practice.tablet.PageObjects
+package com.carecloud.carepay.practice.tablet.pageObjects
 
-import com.carecloud.carepay.practice.tablet.PageObjects.patientMode.SplashScreen
+import com.carecloud.carepay.practice.tablet.pageObjects.patientMode.SplashScreen
 import com.carecloud.carepay.practice.tablet.R
-import com.carecloud.carepay.practice.tablet.Tests.appContext
+import com.carecloud.carepay.practice.tablet.tests.appContext
 import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 
 /**
