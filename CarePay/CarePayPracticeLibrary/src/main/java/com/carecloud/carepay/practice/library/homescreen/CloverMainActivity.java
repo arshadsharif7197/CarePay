@@ -409,7 +409,9 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     protected void onResume() {
         super.onResume();
         disableUnavailableItems();
-        updateCheckinCounts();
+        if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
+            updateCheckinCounts();
+        }
     }
 
     private void disableUnavailableItems() {

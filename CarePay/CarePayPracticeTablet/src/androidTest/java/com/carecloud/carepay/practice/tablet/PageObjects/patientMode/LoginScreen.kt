@@ -1,14 +1,14 @@
-package com.carecloud.carepay.practice.tablet.PageObjects
+package com.carecloud.carepay.practice.tablet.PageObjects.patientMode
 
-import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 import com.carecloud.carepay.practice.tablet.R
 import com.carecloud.carepay.practice.tablet.Tests.appContext
+import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 
 /**
- * Created by drodriguez on 08/12/19.
+ * @author pjohnson on 2019-08-28.
  */
-
 class LoginScreen : CustomViewActions() {
+
     init {
         verifyViewVisible(appContext.getString(R.string.content_description_email))
     }
@@ -23,8 +23,9 @@ class LoginScreen : CustomViewActions() {
         return this
     }
 
-    fun pressLoginButton(): SelectPracticeDialog {
+    fun pressLoginButton(): CheckInScreen {
         click(appContext.getString(R.string.content_description_sign_in))
-        return SelectPracticeDialog()
+        return CheckInScreen()
     }
+
 }

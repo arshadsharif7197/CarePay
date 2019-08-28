@@ -47,5 +47,14 @@
     <string name="content_description_visit_type_list">Visit Type List</string>
     <string name="content_description_appointments">Appointments</string>
     <string name="content_description_payments">Payments</string>
+    <string name="content_description_change_mode_dialog">Change Mode Dialog</string>
+    <string name="content_description_change_mode">Change Mode</string>
+    <string name="content_description_patient_mode">Patient Mode</string>
+    <string name="content_description_patient_mode_splash">Patient Mode Splash</string>
+    <string name="content_description_patient_mode_splash_continue">Continue</string>
+    <string name="content_description_patient_mode_main">Patient Mode Main Screen</string>
+    <string name="content_description_how_to_login_screen">How To Login Screen</string>
+    <string name="content_description_how_to_login_login_button">Login Button</string>
+    <string name="content_description_check_in_screen">Check In Screen</string>
 
 </resources>

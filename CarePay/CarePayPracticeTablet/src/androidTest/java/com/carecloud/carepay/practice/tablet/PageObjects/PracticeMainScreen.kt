@@ -23,4 +23,9 @@ class PracticeMainScreen : CustomViewActions() {
         return AppointmentsScreen()
     }
 
+    fun pressChangeModeButton(): ChangeModeDialog {
+        click(appContext.getString(R.string.content_description_change_mode))
+        return ChangeModeDialog()
+    }
+
 }
