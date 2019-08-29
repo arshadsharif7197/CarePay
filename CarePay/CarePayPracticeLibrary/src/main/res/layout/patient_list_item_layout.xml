@@ -112,7 +112,7 @@
             card_view:customAssetFont="proxima_nova_semi_bold"
             tools:text="05:35 PM" />
 
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/visit_type_video"
             android:layout_width="@dimen/dimen_24dp"
             android:layout_height="wrap_content"

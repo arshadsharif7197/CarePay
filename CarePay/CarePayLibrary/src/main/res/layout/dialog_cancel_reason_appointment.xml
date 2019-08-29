@@ -55,8 +55,6 @@
                     android:layout_marginTop="@dimen/apt_dl_margin"
                     android:divider="?android:attr/dividerHorizontal"
                     android:orientation="vertical" />
-
-
             </LinearLayout>
         </ScrollView>
 

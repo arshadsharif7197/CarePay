@@ -1,8 +1,6 @@
 package com.carecloud.carepaylibray.payments.interfaces;
 
-import android.support.v4.app.Fragment;
-
-import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import androidx.fragment.app.Fragment;
 
 /**
  * @author pjohnson on 29/05/17.

@@ -1,6 +1,6 @@
 package com.carecloud.carepaylibray.payments.interfaces;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;

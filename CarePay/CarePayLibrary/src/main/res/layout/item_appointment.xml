@@ -218,7 +218,7 @@
                 breeze:textKey="appointment_video_visit_indicator"
                 tools:text="Video Visit"/>
 
-            <android.support.v7.widget.AppCompatImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="@dimen/dimen_24dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/icn_video_visit"/>

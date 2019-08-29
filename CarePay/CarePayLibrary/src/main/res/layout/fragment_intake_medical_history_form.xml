@@ -57,7 +57,7 @@
     <View
         style="@style/Consent_Form_View_Style"
         android:layout_width="match_parent" />
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         style="@style/TextInputLayoutStyle">
 
         <EditText
@@ -69,5 +69,5 @@
             android:inputType="textEmailAddress"
             android:paddingBottom="@dimen/apt_dl_margin"/>
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 </LinearLayout>
