@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/round_border"
+    android:elevation="@dimen/dimen_5dp"
+    android:fadingEdgeLength="@dimen/dimen_5dp"
+    android:minHeight="@dimen/itemProfilePermissionHeight"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="@dimen/dimen_5dp"
+    app:cardMaxElevation="@dimen/dimen_5dp"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:padding="@dimen/dimen_10dp">
+
+        <RelativeLayout
+            android:id="@+id/mainContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/practiceShortNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="@drawable/round_list_tv"
+                android:gravity="center_vertical|center_horizontal"
+                android:src="@drawable/icn_placeholder_user_profile_png"
+                android:textColor="@color/lightSlateGray"
+                android:textSize="@dimen/apt_dl_text_big"
+                app:customAssetFont="gotham_rounded_medium" />
+
+            <ImageView
+                android:id="@+id/practiceImageView"
+                android:layout_width="@dimen/payment_details_dialog_icon_size"
+                android:layout_height="@dimen/payment_details_dialog_icon_size"
+                android:layout_centerVertical="true" />
+
+            <ImageView
+                android:id="@+id/toggleImageView"
+                android:layout_width="@dimen/dimen_20dp"
+                android:layout_height="@dimen/dimen_20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_drop_down" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/textview_margin"
+                android:layout_toStartOf="@id/toggleImageView"
+                android:layout_toEndOf="@id/practiceImageView"
+                android:gravity="center_vertical|start"
+                android:orientation="vertical">
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/practiceNameTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="start"
+                    android:textColor="@color/payne_gray"
+                    android:textSize="@dimen/textview_default_textsize"
+                    android:textStyle="bold"
+                    app:customAssetFont="proxima_nova_semi_bold"
+                    tools:text="Dr. Ellie Burton" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/expirationDateTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="start"
+                    android:textColor="@color/lightSlateGray"
+                    android:textSize="@dimen/textview_textsize"
+                    app:customAssetFont="proxima_nova_regular"
+                    tools:text="Expires on 12/12/2019" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/permissionsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mainContainer"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/separatorHeight"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:background="@color/light_gray" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/profilePermissionRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/button_red_background"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="profile.profileDetail.item.button.disconnect"
+                tools:text="Disconnect" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:background="@drawable/button_default_background"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="profile.profileDetail.item.button.merge"
+                tools:text="Merge with another account" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

@@ -2,9 +2,10 @@ package com.carecloud.carepay.practice.library.payments.dialogs;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,12 +51,6 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
     private ResponsibilityHeaderModel headerModel;
 
     private boolean mustAddToExisting = false;
-
-    @Override
-    public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
-        callback.onDetailItemClick(paymentsModel, paymentLineItem);
-        dismiss();
-    }
 
     /**
      * @param paymentsModel the payment model
@@ -180,7 +175,8 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
     private void initializePaymentLines(View view, List<PendingBalanceDTO> balances) {
         RecyclerView amountDetails = view.findViewById(R.id.payment_responsibility_balance_details);
         amountDetails.setLayoutManager(new LinearLayoutManager(getContext()));
-        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(getContext(), getAllPendingBalancePayloads(balances), this);
+        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(getContext(),
+                getAllPendingBalancePayloads(balances), this, true);
         amountDetails.setAdapter(adapter);
     }
 
@@ -261,7 +257,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
 
         void onMiddleActionTapped(PaymentsModel paymentsModel, double amount);
 
-        void onDetailItemClick(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem);
+        void displayDialogFragment(DialogFragment fragment, boolean addToBackStack);
     }
 
     private void createPaymentModel(double payAmount) {
@@ -360,7 +356,7 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
         PaymentsPayloadSettingsDTO settingsDTO = paymentsModel.getPaymentPayload()
                 .getPaymentSettings().get(0);
         PaymentsSettingsPaymentPlansDTO paymentPlanSettings = settingsDTO.getPayload().getPaymentPlans();
-        if(!paymentPlanSettings.isPaymentPlansEnabled()){
+        if (!paymentPlanSettings.isPaymentPlansEnabled()) {
             return false;
         }
 
@@ -373,10 +369,10 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
             if (maxAllowablePayment >= rule.getMinBalance().getValue() &&
                     maxAllowablePayment <= rule.getMaxBalance().getValue()) {
                 //found a valid rule that covers this balance
-                if(paymentsModel.getPaymentPayload().getActivePlans(practiceId).isEmpty()){
+                if (paymentsModel.getPaymentPayload().getActivePlans(practiceId).isEmpty()) {
                     //don't already have an existing plan so this is the first plan
                     return true;
-                }else if(paymentPlanSettings.isCanHaveMultiple()){
+                } else if (paymentPlanSettings.isCanHaveMultiple()) {
                     // already have a plan so need to see if I can create a new one
                     return true;
                 }
@@ -389,12 +385,21 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
         if (minAllowablePayment > balance) {
             minAllowablePayment = balance;
         }
-        if(paymentPlanSettings.isAddBalanceToExisting() &&
+        if (paymentPlanSettings.isAddBalanceToExisting() &&
                 !paymentsModel.getPaymentPayload().getValidPlans(practiceId, minAllowablePayment).isEmpty()) {
             mustAddToExisting = true;
             return true;
         }
 
         return false;
+    }
+
+    @Override
+    public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
+        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
+                .newInstance(paymentsModel, paymentLineItem, false);
+        dialog.setOnCancelListener(onDialogCancelListener);
+        callback.displayDialogFragment(dialog, true);
+        hideDialog();
     }
 }

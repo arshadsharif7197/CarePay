@@ -14,8 +14,8 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AlertDialog;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.appcompat.app.AlertDialog;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -210,6 +210,27 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler {
 
     public static boolean isNotEmptyString(String string) {
         return string != null && !string.isEmpty() && !string.equals("null");
+    }
+
+    public static Bitmap getScaledBitmap(Bitmap original, int maxPixels){
+        int width = original.getWidth();
+        int height = original.getHeight();
+
+        if(width < maxPixels && height < maxPixels){
+            return original;
+        }
+
+        float aspectRatio = (float) width / (float) height;
+        if(aspectRatio > 1){
+            //landscape image
+            width = maxPixels;
+            height = (int) (maxPixels/aspectRatio);
+        }else{
+            //portrait image
+            height = maxPixels;
+            width = (int) (maxPixels/aspectRatio);
+        }
+        return Bitmap.createScaledBitmap(original, width, height, true);
     }
 
     /**

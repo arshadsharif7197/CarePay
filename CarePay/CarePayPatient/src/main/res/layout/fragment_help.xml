@@ -183,7 +183,7 @@
             app:customAssetFont="proxima_nova_regular"
             breeze:textKey="help_overlay_label" />
 
-        <android.support.v7.widget.SwitchCompat
+        <androidx.appcompat.widget.SwitchCompat
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
