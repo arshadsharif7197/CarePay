@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.adhocforms.AdHocRecyclerViewNameAdapter;
+import com.carecloud.carepay.practice.library.adhocforms.adapters.AdHocRecyclerViewNameAdapter;
 import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckCompleteInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.Defs;
