@@ -94,6 +94,7 @@ public class PatientPendingPaymentFragment extends BaseFragment
             practiceMap.put(userPracticeDTO.getPracticeId(), userPracticeDTO);
         }
         if (hasPayments() || hasPaymentPlans()) {
+            filterPaymentPlans(paymentsDTO.getPaymentPayload().getUserPractices());
             PaymentBalancesAdapter paymentBalancesAdapter = new PaymentBalancesAdapter(
                     getActivity(), getPendingBalancesList(paymentsDTO, practiceMap),
                     PatientPendingPaymentFragment.this, paymentsDTO, practiceMap);
@@ -102,6 +103,20 @@ public class PatientPendingPaymentFragment extends BaseFragment
             showNoPaymentsLayout();
         }
 
+    }
+
+    private void filterPaymentPlans(List<UserPracticeDTO> userPractices) {
+        List<PaymentPlanDTO> filteredList = new ArrayList<>();
+        for (PaymentPlanDTO paymentPlanDTO : paymentsDTO.getPaymentPayload().getPatientPaymentPlans()) {
+            for (UserPracticeDTO userPracticeDTO : userPractices) {
+                if (paymentsDTO.getPaymentPayload().canViewBalanceAndHistoricalPayments(userPracticeDTO.getPracticeId())
+                        && paymentPlanDTO.getMetadata().getPracticeId().equals(userPracticeDTO.getPracticeId())) {
+                    filteredList.add(paymentPlanDTO);
+                }
+            }
+        }
+
+        paymentsDTO.getPaymentPayload().setPatientPaymentPlans(filteredList);
     }
 
     private void showNoPaymentsLayout() {

@@ -14,6 +14,7 @@ import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthDataInterface;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
+import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -59,21 +60,8 @@ public class CareTeamRecyclerViewAdapter extends RecyclerView.Adapter<CareTeamRe
             holder.providerSpecialityTextView.setText(String.format("%s, %s",
                     provider.getSpecialityName(), provider.getPractice()));
             holder.initials.setText(StringUtil.getShortName(provider.getFullName()));
-            Picasso.with(holder.providerImageView.getContext()).load(provider.getPhoto())
-                    .transform(new CircleImageTransform())
-                    .into(holder.providerImageView, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            holder.providerImageView.setVisibility(View.VISIBLE);
-                            holder.initials.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onError() {
-                            holder.providerImageView.setVisibility(View.GONE);
-                            holder.initials.setVisibility(View.VISIBLE);
-                        }
-                    });
+            PicassoHelper.get().loadImage(holder.providerImageView.getContext(),
+                    holder.providerImageView, holder.initials, provider.getPhoto());
             holder.row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

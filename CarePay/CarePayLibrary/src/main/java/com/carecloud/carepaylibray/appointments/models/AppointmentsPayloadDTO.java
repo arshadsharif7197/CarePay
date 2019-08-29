@@ -747,7 +747,6 @@ public class AppointmentsPayloadDTO {
         }
     }
 
-
     public boolean isRescheduleEnabled(String practiceId, List<PortalSettingDTO> portalSettings) {
         for (PortalSettingDTO portalSettingsDto : portalSettings) {
             if (portalSettingsDto.getMetadata().getPracticeId().equals(practiceId)) {
@@ -762,7 +761,7 @@ public class AppointmentsPayloadDTO {
         return false;
     }
 
-    public boolean canStartVideoVisit(){
+    public boolean canStartVideoVisit() {
         Date apptStartDate = DateUtil.getInstance().setDateRaw(getStartTime()).getDate();
         Date currentDate = DateUtil.getInstance().setToCurrent().getDate();
         return getVisitType().hasVideoOption() &&
