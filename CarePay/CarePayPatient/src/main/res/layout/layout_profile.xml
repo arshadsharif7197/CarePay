@@ -8,6 +8,7 @@
     android:layout_marginEnd="@dimen/dimen_5dp"
     android:layout_marginBottom="@dimen/dimen_10dp"
     android:layout_weight="1"
+    android:contentDescription="@string/content_description_choose_profile_screen"
     android:background="@drawable/round_fifteen_white_background">
 
     <View

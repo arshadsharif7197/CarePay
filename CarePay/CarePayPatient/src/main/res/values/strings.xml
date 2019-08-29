@@ -21,4 +21,11 @@
     <string name="msg_field_type_value_provider">provider</string>
     <string name="msg_query_source">source</string>
     <string name="msg_query_source_value">desktop:patientPortal:messaging:sendMessage</string>
+
+    <string name="content_description_signin">signInScreen</string>
+    <string name="content_description_signin_user">signInScreenUser</string>
+    <string name="content_description_signin_password">signInScreenPassword</string>
+    <string name="content_description_signin_button">signInScreenButton</string>
+    <string name="content_description_choose_profile_screen">chooseProfileScreen</string>
+    <string name="content_description_appointment_screen">appointmentScreen</string>
 </resources>

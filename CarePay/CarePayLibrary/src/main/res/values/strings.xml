@@ -438,5 +438,6 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="content_description_location_list">Location List</string>
     <string name="content_description_provider_list_2">Provider List</string>
     <string name="content_description_visit_type_list">Visit Type List</string>
+    <string name="content_description_appointment_screen">appointmentScreen</string>
 
 </resources>

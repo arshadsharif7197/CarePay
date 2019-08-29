@@ -15,10 +15,15 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.*
 import org.hamcrest.Matchers.notNullValue
+import androidx.test.espresso.util.HumanReadables
+import androidx.test.espresso.PerformException
+import androidx.test.espresso.util.TreeIterables
+import androidx.test.espresso.matcher.ViewMatchers.isRoot
+import org.hamcrest.Matchers.not
+import java.util.concurrent.TimeoutException
+
 
 /**
  * Created by drodriguez on 08/12/19.
@@ -48,6 +53,14 @@ open class CustomViewActions {
      */
     protected fun verifyViewVisible(contentDescription: String) {
         onView(withContentDescription(contentDescription)).check(matches(notNullValue())).check(matches(isDisplayed()))
+    }
+
+    /**
+     * Verifies a view is not visible
+     * @param contentDescription Content description of the view
+     */
+    protected fun verifyViewNotVisible(contentDescription: String) {
+        onView(withContentDescription(contentDescription)).check(matches(notNullValue())).check(matches(not(isDisplayed())))
     }
 
     /**
@@ -90,6 +103,58 @@ open class CustomViewActions {
 
             override fun perform(uiController: UiController, view: View) {
                 view.performClick()
+            }
+        }
+    }
+
+    /**
+     * Wait for a specific view
+     * @param contentDescription The content description of the view to wait for.
+     * @param milliseconds The timeout of until when to wait for.
+     */
+    protected fun wait(contentDescription: String, milliseconds: Long){
+        onView(isRoot()).perform(waitId(contentDescription, milliseconds))
+    }
+
+
+    /**
+     * Perform action of waiting for a specific view content description.
+     * @param contentDescription The content description of the view to wait for.
+     * @param millis The timeout of until when to wait for.
+     */
+    fun waitId(contentDescription: String, millis: Long): ViewAction {
+        return object : ViewAction {
+            override fun getConstraints(): Matcher<View> {
+                return isRoot()
+            }
+
+            override fun getDescription(): String {
+                return "wait for a specific view with content description <$contentDescription> during $millis millis."
+            }
+
+            override fun perform(uiController: UiController, view: View) {
+                uiController.loopMainThreadUntilIdle()
+                val startTime = System.currentTimeMillis()
+                val endTime = startTime + millis
+                val viewMatcher = withContentDescription(contentDescription)
+
+                do {
+                    for (child in TreeIterables.breadthFirstViewTraversal(view)) {
+                        // found view with required ID
+                        if (viewMatcher.matches(child)) {
+                            return
+                        }
+                    }
+
+                    uiController.loopMainThreadForAtLeast(50)
+                } while (System.currentTimeMillis() < endTime)
+
+                // timeout happens
+                throw PerformException.Builder()
+                        .withActionDescription(this.description)
+                        .withViewDescription(HumanReadables.describe(view))
+                        .withCause(TimeoutException())
+                        .build()
             }
         }
     }
