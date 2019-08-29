@@ -16,6 +16,9 @@
         <activity
             android:name=".adhocforms.AdHocFormsActivity"
             android:screenOrientation="sensorLandscape" />
+        <activity
+            android:name="com.carecloud.carepay.practice.library.dobverification.DoBVerificationActivity"
+            android:screenOrientation="sensorLandscape"/>
         <service android:name=".payments.IntegratedPaymentsQueueUploadService" android:enabled="true"/>
         <service android:name=".homescreen.AppointmentCountUpdateService" android:enabled="true" />
     </application>

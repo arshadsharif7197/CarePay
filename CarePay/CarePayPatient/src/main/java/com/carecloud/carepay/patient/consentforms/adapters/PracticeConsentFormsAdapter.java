@@ -1,6 +1,7 @@
 package com.carecloud.carepay.patient.consentforms.adapters;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,14 +37,15 @@ public class PracticeConsentFormsAdapter extends RecyclerView.Adapter<PracticeCo
         practicesInformationMap = practicesInformation;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         return new ViewHolder(inflater.inflate(R.layout.item_consent_form, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final UserFormDTO formDto = practiceFormsList.get(position);
         UserPracticeDTO practice = practicesInformationMap.get(formDto.getMetadata().getPracticeId());
         holder.practiceNameTextView.setText(practice.getPracticeName());
@@ -85,12 +87,7 @@ public class PracticeConsentFormsAdapter extends RecyclerView.Adapter<PracticeCo
                     .getResources().getColor(R.color.lightning_yellow));
         }
 
-        holder.container.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callback.onProviderSelected(formDto, position);
-            }
-        });
+        holder.container.setOnClickListener(v -> callback.onProviderSelected(formDto, position));
     }
 
     public void setCallback(ConsentFormsProviderInterface callback) {
@@ -113,11 +110,11 @@ public class PracticeConsentFormsAdapter extends RecyclerView.Adapter<PracticeCo
 
         public ViewHolder(View itemView) {
             super(itemView);
-            formStatusTextView = (TextView) itemView.findViewById(R.id.formStatusTextView);
-            practiceNameTextView = (TextView) itemView.findViewById(R.id.providerNameTextView);
-            practiceAddressTextView = (TextView) itemView.findViewById(R.id.providerAddressTextView);
-            practiceShortNameTextView = (TextView) itemView.findViewById(R.id.providerShortNameTextView);
-            practiceImageView = (ImageView) itemView.findViewById(R.id.providerImageView);
+            formStatusTextView = itemView.findViewById(R.id.formStatusTextView);
+            practiceNameTextView = itemView.findViewById(R.id.providerNameTextView);
+            practiceAddressTextView = itemView.findViewById(R.id.providerAddressTextView);
+            practiceShortNameTextView = itemView.findViewById(R.id.providerShortNameTextView);
+            practiceImageView = itemView.findViewById(R.id.providerImageView);
             container = itemView.findViewById(R.id.container);
         }
     }

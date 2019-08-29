@@ -79,7 +79,7 @@
             android:background="@drawable/bg_green_overlay"
             android:contentDescription="@string/content_description_request_appointment"
             android:gravity="center"
-            android:textAllCaps="true"
+            android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="@dimen/respons_button_text_size"
             app:customAssetFont="gotham_rounded_medium" />

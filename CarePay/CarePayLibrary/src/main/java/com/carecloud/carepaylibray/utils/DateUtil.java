@@ -223,7 +223,29 @@ public class DateUtil {
                     this.isToday() ? today : dayLiteral, monthLiteralAbbr, day, getOrdinalSuffix(day));
         } else {
             //"%s %d de %s"
-            return String.format(Locale.getDefault(), FORMAT_ES_DAY_LIT_DATE_MONTH_LIT, dayLiteral, day, monthLiteral);
+            return String.format(Locale.getDefault(), FORMAT_ES_DAY_LIT_DATE_MONTH_LIT, this.isToday() ? today : dayLiteral, day, monthLiteral);
+        }
+    }
+
+    /**
+     * Format the date as "EEEE, MMM d" (eg Monday, Oct 10th)
+     *
+     * @return A string containing the formatted date
+     */
+    public String getDateAsDayMonthDayOrdinalYear(String today, String tomorrow) {
+        String dayString = dayLiteral;
+        if (this.isToday()) {
+            dayString = today;
+        } else if (this.isTomorrow()) {
+            dayString = tomorrow;
+        }
+        if (getUserLanguage().equals("en")) {
+            //"%s, %s %d%s"
+            return String.format(Locale.getDefault(), Label.getLabel("date_day_month_day_ordinal_format"),
+                    dayString, monthLiteralAbbr, day, getOrdinalSuffix(day));
+        } else {
+            //"%s %d de %s"
+            return String.format(Locale.getDefault(), FORMAT_ES_DAY_LIT_DATE_MONTH_LIT, dayString, day, monthLiteral);
         }
     }
 

@@ -169,7 +169,7 @@
                     android:layout_weight="1"
                     android:gravity="end">
 
-                    <android.support.v7.widget.AppCompatImageView
+                    <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/visit_type_video"
                         android:layout_width="@dimen/dimen_24dp"
                         android:layout_height="wrap_content"

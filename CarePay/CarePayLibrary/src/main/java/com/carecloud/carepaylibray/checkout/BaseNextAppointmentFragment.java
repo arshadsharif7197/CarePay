@@ -3,9 +3,9 @@ package com.carecloud.carepaylibray.checkout;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.Nullable;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -272,16 +272,20 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
         visitTimeResetImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedTimeSlot = null;
-                visitTimeTextView.setText(null);
-                setHint(visitTimeTextView, visitTimeTextInputLayout, null);
-                visitTimeResetImage.setVisibility(View.GONE);
-                visitTimeTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
-                        getResources().getDrawable(R.drawable.icon_drop_down), null);
-                setDefaultMessage();
-                enableScheduleAppointmentButton();
+                resetVisitTime();
             }
         });
+    }
+
+    private void resetVisitTime() {
+        selectedTimeSlot = null;
+        visitTimeTextView.setText(null);
+        setHint(visitTimeTextView, visitTimeTextInputLayout, null);
+        visitTimeResetImage.setVisibility(View.GONE);
+        visitTimeTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                getResources().getDrawable(R.drawable.icon_drop_down), null);
+        setDefaultMessage();
+        enableScheduleAppointmentButton();
     }
 
     private void setUpProviderMessage(View view, ProviderDTO provider) {
@@ -452,11 +456,8 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
         visitTypeTextView.setText(StringUtil.capitalize(visitType.getName()));
         setHint(visitTypeTextView, visitTypeTextInputLayout, StringUtil.capitalize(visitType.getName()));
 
-        setDefaultMessage();
-        selectedTimeSlot = null;
-        setHint(visitTimeTextView, visitTimeTextInputLayout, null);
         enableTimeSlotField();
-        enableScheduleAppointmentButton();
+        resetVisitTime();
     }
 
     @Override

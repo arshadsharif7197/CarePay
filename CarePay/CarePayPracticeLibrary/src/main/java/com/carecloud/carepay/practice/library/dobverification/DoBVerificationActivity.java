@@ -1,7 +1,7 @@
 package com.carecloud.carepay.practice.library.dobverification;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -105,6 +105,8 @@ public class DoBVerificationActivity extends BasePracticeActivity {
             }
         });
 
+        dobEditText.setOnClickListener(selectEndOnClick);
+
         findViewById(R.id.lockImageView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -149,8 +151,14 @@ public class DoBVerificationActivity extends BasePracticeActivity {
     }
 
     private String getPatientName() {
-        String firstName = doBDto.getPayload().getDemographicDTO().getPayload()
-                .getPersonalDetails().getFirstName().substring(0, 1);
+        String firstName;
+        if (StringUtil.isNullOrEmpty(doBDto.getPayload().getDemographicDTO().getPayload()
+                .getPersonalDetails().getFirstName())) {
+            firstName = "";
+        } else {
+            firstName = doBDto.getPayload().getDemographicDTO().getPayload()
+                    .getPersonalDetails().getFirstName().substring(0, 1);
+        }
         String lastName = doBDto.getPayload().getDemographicDTO().getPayload()
                 .getPersonalDetails().getLastName();
         return StringUtil.capitalize(String.format("%s. %s", firstName, lastName));
@@ -281,4 +289,12 @@ public class DoBVerificationActivity extends BasePracticeActivity {
         super.onSaveInstanceState(outState);
         outState.putInt("retries", retries);
     }
+
+    protected View.OnClickListener selectEndOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            EditText editText = (EditText) view;
+            editText.setSelection(editText.length());
+        }
+    };
 }

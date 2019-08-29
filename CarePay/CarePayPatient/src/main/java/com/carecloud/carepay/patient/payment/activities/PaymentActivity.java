@@ -2,24 +2,28 @@ package com.carecloud.carepay.patient.payment.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
+import com.carecloud.carepay.patient.base.ToolbarInterface;
 import com.carecloud.carepay.patient.payment.PatientPaymentPresenter;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
+import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-public class PaymentActivity extends BasePatientActivity implements PaymentViewHandler {
+public class PaymentActivity extends BasePatientActivity implements PaymentViewHandler, FragmentActivityInterface,
+        ToolbarInterface {
     PaymentsModel paymentsDTO;
     AppointmentDTO appointmentDTO;
     PatientPaymentPresenter presenter;
@@ -63,14 +67,14 @@ public class PaymentActivity extends BasePatientActivity implements PaymentViewH
         return true;
     }
 
-    private void initPresenter(){
+    private void initPresenter() {
         Bundle info = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
         AppointmentDTO appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, info);
 
         String defaultPatientId;
-        if(appointmentDTO != null){
+        if (appointmentDTO != null) {
             defaultPatientId = appointmentDTO.getMetadata().getPatientId();
-        }else {
+        } else {
             defaultPatientId = paymentsDTO.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata().getPatientId();
         }
         this.presenter = new PatientPaymentPresenter(this, paymentsDTO, defaultPatientId);
@@ -101,7 +105,7 @@ public class PaymentActivity extends BasePatientActivity implements PaymentViewH
 
     @Override
     public void exitPaymentProcess(boolean cancelled, boolean paymentPlanCreated, boolean paymentMade) {
-        if(getCallingActivity()!=null){
+        if (getCallingActivity() != null) {
             setResult(cancelled ? RESULT_CANCELED : RESULT_OK);
         }
         finish();
@@ -110,7 +114,7 @@ public class PaymentActivity extends BasePatientActivity implements PaymentViewH
     @Nullable
     @Override
     public String getAppointmentId() {
-        if(appointmentDTO != null){
+        if (appointmentDTO != null) {
             return appointmentDTO.getMetadata().getAppointmentId();
         }
         return null;
@@ -127,4 +131,23 @@ public class PaymentActivity extends BasePatientActivity implements PaymentViewH
         return this;
     }
 
+    @Override
+    public void addFragment(Fragment fragment, boolean addToBackStack) {
+        addFragment(R.id.payment_frag_holder, fragment, addToBackStack && !isFirstFragment);
+    }
+
+    @Override
+    public void replaceFragment(Fragment fragment, boolean addToBackStack) {
+        replaceFragment(R.id.payment_frag_holder, fragment, addToBackStack && !isFirstFragment);
+    }
+
+    @Override
+    public DTO getDto() {
+        return paymentsDTO;
+    }
+
+    @Override
+    public void displayToolbar(boolean display, String title) {
+//        ((MenuPatientActivity) this).displayToolbar(display, title);
+    }
 }

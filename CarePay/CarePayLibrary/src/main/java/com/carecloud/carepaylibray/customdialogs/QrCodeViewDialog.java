@@ -1,7 +1,7 @@
 package com.carecloud.carepaylibray.customdialogs;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;

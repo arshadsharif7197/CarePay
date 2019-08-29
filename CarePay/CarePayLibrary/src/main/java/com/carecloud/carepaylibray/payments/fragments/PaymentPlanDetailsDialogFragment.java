@@ -2,7 +2,6 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +9,16 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.customdialogs.BasePaymentDetailsFragmentDialog;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanPayloadDTO;
@@ -36,38 +38,20 @@ import java.util.Locale;
  * Created by lmenendez on 1/26/18
  */
 
-public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragmentDialog {
+public abstract class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragmentDialog {
 
     private PaymentsModel paymentsModel;
     protected PaymentPlanDTO paymentPlanDTO;
     private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 
-    private PaymentPlanEditInterface callback;
+    protected FragmentActivityInterface callback;
     protected View payButton;
-
-    /**
-     * @param paymentsModel  the payment model
-     * @param paymentPlanDTO the Payment Plan Dto
-     * @return new instance of a PaymentPlanDetailsDialogFragment
-     */
-    public static PaymentPlanDetailsDialogFragment newInstance(PaymentsModel paymentsModel,
-                                                               PaymentPlanDTO paymentPlanDTO) {
-        // Supply inputs as an argument
-        Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
-        DtoHelper.bundleDto(args, paymentPlanDTO);
-
-        PaymentPlanDetailsDialogFragment dialog = new PaymentPlanDetailsDialogFragment();
-        dialog.setArguments(args);
-
-        return dialog;
-    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (PaymentPlanEditInterface) context;
+            callback = (FragmentActivityInterface) context;
         } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement PaymentPlanEditInterface");
         }
@@ -83,15 +67,16 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_payment_plan_details, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         PaymentPlanPayloadDTO planPayload = paymentPlanDTO.getPayload();
-        UserPracticeDTO userPracticeDTO = callback.getPracticeInfo(paymentsModel);
+        UserPracticeDTO userPracticeDTO = paymentsModel.getPaymentPayload()
+                .getUserPractice(paymentPlanDTO.getMetadata().getPracticeId());
 
         TextView installmentDetail = view.findViewById(R.id.planInstallmentDetail);
         installmentDetail.setText(currencyFormatter.format(planPayload.getPaymentPlanDetails().getAmount()));
@@ -108,7 +93,7 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
         UserPracticeDTO practice = paymentReceiptModel.getPaymentPayload()
                 .getUserPractice(paymentPlanDTO.getMetadata().getPracticeId());
         if (!StringUtil.isNullOrEmpty(practice.getPracticePhoto())) {
-            PicassoHelper.get().loadImage(getContext(), (ImageView) view.findViewById(R.id.practiceImageView),
+            PicassoHelper.get().loadImage(getContext(), view.findViewById(R.id.practiceImageView),
                     practiceInitials, practice.getPracticePhoto());
         }
 
@@ -147,36 +132,19 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
 
         ImageView dialogCloseHeader = view.findViewById(R.id.dialog_close_header);
         if (dialogCloseHeader != null) {
-            dialogCloseHeader.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dismiss();
-                }
-            });
+            dialogCloseHeader.setOnClickListener(view1 -> dismiss());
         }
 
         payButton = view.findViewById(R.id.payment_details_pay_now_button);
-        payButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.onMakeOneTimePayment(paymentsModel, paymentPlanDTO);
-                dismiss();
-            }
-        });
+        payButton.setOnClickListener(view12 -> onMakeOneTimePayment(paymentsModel, paymentPlanDTO));
 
         View editPlanButton = view.findViewById(R.id.editPlanButton);
-        editPlanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callback.onEditPaymentPlan(paymentsModel, paymentPlanDTO);
-                dismiss();
-            }
-        });
+        editPlanButton.setOnClickListener(v -> onEditPaymentPlan(paymentsModel, paymentPlanDTO));
 
         final ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload().
                 findScheduledPayment(paymentPlanDTO);
+        View scheduledPaymentLayout = view.findViewById(R.id.scheduledPaymentLayout);
         if (scheduledPayment != null) {
-            View scheduledPaymentLayout = view.findViewById(R.id.scheduledPaymentLayout);
             scheduledPaymentLayout.setVisibility(View.VISIBLE);
             TextView scheduledPaymentMessage = view.findViewById(R.id.scheduledPaymentMessage);
             DateUtil.getInstance().setDateRaw(scheduledPayment.getPayload().getPaymentDate());
@@ -184,14 +152,29 @@ public class PaymentPlanDetailsDialogFragment extends BasePaymentDetailsFragment
                     StringUtil.getFormattedBalanceAmount(scheduledPayment.getPayload().getAmount()),
                     DateUtil.getInstance().toStringWithFormatMmSlashDdSlashYyyy());
             scheduledPaymentMessage.setText(message);
-            scheduledPaymentLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    callback.onStartEditScheduledPayment(paymentsModel, paymentPlanDTO, scheduledPayment);
-                    dismiss();
-                }
-            });
+            scheduledPaymentLayout.setOnClickListener(view13 -> onStartEditScheduledPayment(paymentsModel,
+                    paymentPlanDTO, scheduledPayment));
         }
+
+        if (!paymentsModel.getPaymentPayload().havePermissionsToMakePayments(paymentPlanDTO
+                .getMetadata().getPracticeId())
+                || paymentsModel.getPaymentPayload().getDelegate() != null) {//TODO: SHMRK-9463 Take out last validation when MW handle PP
+            payButton.setVisibility(View.GONE);
+            editPlanButton.setVisibility(View.GONE);
+            scheduledPaymentLayout.setVisibility(View.GONE);
+        }
+    }
+
+    protected abstract void onMakeOneTimePayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
+
+    protected abstract void onEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
+
+    protected void onStartEditScheduledPayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO,
+                                               ScheduledPaymentModel scheduledPayment) {
+        EditOneTimePaymentDialog dialog = EditOneTimePaymentDialog.newInstance(paymentsModel, paymentPlanDTO,
+                scheduledPayment);
+        callback.displayDialogFragment(dialog, false);
+        dismiss();
     }
 
     private String getNextDate(PaymentPlanPayloadDTO planPayload) {

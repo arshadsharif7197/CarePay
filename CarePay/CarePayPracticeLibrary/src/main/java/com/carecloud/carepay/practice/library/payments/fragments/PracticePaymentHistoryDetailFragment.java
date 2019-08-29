@@ -1,11 +1,12 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.payments.fragments.PaymentHistoryDetailFragment;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItemPayload;
@@ -34,7 +36,7 @@ import java.util.Locale;
 
 public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFragment {
 
-    private PracticePaymentHistoryCallback callback;
+    private PaymentInterface callback;
     private PaymentsModel paymentsModel;
 
     /**
@@ -87,8 +89,7 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callback.showPaymentHistory(paymentsModel);
-                dismiss();
+                cancel();
             }
         });
 
@@ -154,8 +155,15 @@ public class PracticePaymentHistoryDetailFragment extends PaymentHistoryDetailFr
         if (isCloverPayment && !isCloverDevice) {
             new CustomMessageToast(getContext(), Label.getLabel("payment_refund_clover_error"), CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
         } else {
-            dismiss();
-            callback.startRefundProcess(historyItem, paymentsModel);
+            RefundProcessFragment fragment = RefundProcessFragment.newInstance(historyItem, paymentsModel);
+            fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialogInterface) {
+                    showDialog();
+                }
+            });
+            callback.displayDialogFragment(fragment, true);
+            hideDialog();
         }
     }
 
