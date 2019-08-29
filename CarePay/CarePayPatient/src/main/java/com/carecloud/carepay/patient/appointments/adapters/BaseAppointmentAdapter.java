@@ -1,8 +1,8 @@
 package com.carecloud.carepay.patient.appointments.adapters;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +41,7 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
     protected List<AppointmentDTO> sortedAppointments = new ArrayList<>();
     protected List<UserPracticeDTO> userPracticeDTOs;
     protected Map<String, Set<String>> enabledPracticeLocations;
+    protected SelectAppointmentCallback callback;
 
 
     @Override
@@ -273,7 +274,9 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
             }
         }
 
-        return isBreezePractice && isTheLocationWithBreezeEnabled && appointmentDTO.getPayload().canCheckOut();
+        return isBreezePractice && isTheLocationWithBreezeEnabled
+                && appointmentDTO.getPayload().canCheckOut()
+                && callback.canCheckOut(appointmentDTO);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -337,5 +340,13 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
 
         }
 
+    }
+
+    public interface SelectAppointmentCallback {
+        void onItemTapped(AppointmentDTO appointmentDTO);
+
+        void onCheckoutTapped(AppointmentDTO appointmentDTO);
+
+        boolean canCheckOut(AppointmentDTO appointmentDTO);
     }
 }

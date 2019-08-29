@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.patientsplash;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 

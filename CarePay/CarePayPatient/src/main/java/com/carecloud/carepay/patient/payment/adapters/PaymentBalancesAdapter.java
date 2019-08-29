@@ -1,7 +1,7 @@
 package com.carecloud.carepay.patient.payment.adapters;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +22,6 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -33,7 +32,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
     private final Map<String, UserPracticeDTO> practiceMap;
 
     private Context context;
-    private List<? extends PaymentListItem> listItems = new ArrayList<>();
+    private List<? extends PaymentListItem> listItems;
     private OnBalanceListItemClickListener listener;
     private PaymentsModel paymentsModel;
     private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
@@ -71,7 +70,7 @@ public class PaymentBalancesAdapter extends RecyclerView.Adapter<PaymentBalances
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        String practiceId = null;
+        String practiceId;
         if (getItemViewType(position) == VIEW_TYPE_BALANCE) {
             final PaymentsBalancesItem pendingBalance = (PaymentsBalancesItem) listItems.get(position);
             String locationName = pendingBalance.getMetadata().getPracticeName();

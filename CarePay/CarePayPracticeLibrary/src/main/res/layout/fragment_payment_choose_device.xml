@@ -104,7 +104,7 @@
             android:minHeight="@dimen/list_dialog_min_height_small"
             android:background="@color/white">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/processing_devices_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
