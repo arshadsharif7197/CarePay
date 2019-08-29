@@ -1,12 +1,17 @@
-package com.carecloud.carepay.practice.library.adhocforms;
+package com.carecloud.carepay.practice.library.adhocforms.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+
+import com.carecloud.carepay.practice.library.adhocforms.AdHocFormCompletedDialogFragment;
+import com.carecloud.carepay.practice.library.adhocforms.AdHocFormsInterface;
+import com.carecloud.carepay.practice.library.adhocforms.AdHocFormsModel;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -17,6 +22,7 @@ import com.carecloud.carepaylibray.checkout.BaseWebFormFragment;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.intake.models.AppointmentMetadataModel;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -79,15 +85,10 @@ public class AdHocFormFragment extends BaseWebFormFragment {
         setHeader(Label.getLabel("adhoc_form_title"));
         lastFormButtonLabel = Label.getLabel("adhoc_sign_form_button_label");
         nextButton.setText(Label.getLabel("adhoc_sign_form_button_label"));
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         if (toolbar != null) {
             toolbar.setNavigationIcon(null);
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getActivity().onBackPressed();
-                }
-            });
+            toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
         }
         callback.highlightFormName(getDisplayedFormsIndex());
     }
@@ -96,7 +97,7 @@ public class AdHocFormFragment extends BaseWebFormFragment {
     protected void displayNextForm(List<ConsentFormUserResponseDTO> filledForms) {
         int displayedFormsIndex = getDisplayedFormsIndex();
         if (getDisplayedFormsIndex() < getTotalForms()) {
-            Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolbar_layout);
+            Toolbar toolbar = getView().findViewById(R.id.toolbar_layout);
             if (getDisplayedFormsIndex() == 0) {
                 toolbar.setNavigationIcon(null);
             } else {
@@ -165,7 +166,7 @@ public class AdHocFormFragment extends BaseWebFormFragment {
         getWorkflowServiceHelper().execute(transitionDTO, updateFormCallBack, body, queries, header);
     }
 
-    WorkflowServiceCallback updateFormCallBack = new WorkflowServiceCallback() {
+    private WorkflowServiceCallback updateFormCallBack = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             showProgressDialog();
@@ -174,7 +175,7 @@ public class AdHocFormFragment extends BaseWebFormFragment {
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            callback.showAllDone(workflowDTO);
+            showAllDone(workflowDTO);
             nextButton.setEnabled(true);
         }
 
@@ -186,6 +187,13 @@ public class AdHocFormFragment extends BaseWebFormFragment {
             Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+    private void showAllDone(WorkflowDTO workflowDTO) {
+        AdHocFormsModel localAdHocFormsModel = DtoHelper.getConvertedDTO(AdHocFormsModel.class, workflowDTO);
+        adhocFormsModel.getPayload().setFilledForms(localAdHocFormsModel.getPayload().getFilledForms());
+        adhocFormsModel.getPayload().setDemographicDTO(localAdHocFormsModel.getPayload().getDemographicDTO());
+        callback.showAllDone(AdHocFormCompletedDialogFragment.newInstance());
+    }
 
     @Override
     protected void validateForm() {
@@ -205,7 +213,7 @@ public class AdHocFormFragment extends BaseWebFormFragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("formIndex", getDisplayedFormsIndex());
         Gson gson = new Gson();

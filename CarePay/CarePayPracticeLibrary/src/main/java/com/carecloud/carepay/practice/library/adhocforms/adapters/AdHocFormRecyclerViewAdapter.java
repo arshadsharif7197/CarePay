@@ -1,12 +1,13 @@
-package com.carecloud.carepay.practice.library.adhocforms;
+package com.carecloud.carepay.practice.library.adhocforms.adapters;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.label.Label;
@@ -30,14 +31,14 @@ public class AdHocFormRecyclerViewAdapter extends RecyclerView
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_adhoc_form, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final PracticeForm practiceForm = forms.get(position);
         holder.formNameTextView.setText(practiceForm.getPayload().get("title").getAsString());
         if (practiceForm.getLastModifiedDate() != null) {
@@ -50,18 +51,15 @@ public class AdHocFormRecyclerViewAdapter extends RecyclerView
         }
         holder.formCheckBox.setOnCheckedChangeListener(null);
         holder.formCheckBox.setChecked(practiceForm.isSelected());
-        holder.formCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                practiceForm.setSelected(!practiceForm.isSelected());
-                callback.onFormSelected(practiceForm, isChecked);
-                if (practiceForm.isSelected()) {
-                    holder.formNameTextView.setTextColor(holder.formLastEditDateTextView
-                            .getContext().getResources().getColor(R.color.colorPrimary));
-                } else {
-                    holder.formNameTextView.setTextColor(holder.formLastEditDateTextView
-                            .getContext().getResources().getColor(R.color.slateGray));
-                }
+        holder.formCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            practiceForm.setSelected(!practiceForm.isSelected());
+            callback.onFormSelected(practiceForm, isChecked);
+            if (practiceForm.isSelected()) {
+                holder.formNameTextView.setTextColor(holder.formLastEditDateTextView
+                        .getContext().getResources().getColor(R.color.colorPrimary));
+            } else {
+                holder.formNameTextView.setTextColor(holder.formLastEditDateTextView
+                        .getContext().getResources().getColor(R.color.slateGray));
             }
         });
 
@@ -80,9 +78,9 @@ public class AdHocFormRecyclerViewAdapter extends RecyclerView
 
         ViewHolder(View itemView) {
             super(itemView);
-            formNameTextView = (TextView) itemView.findViewById(R.id.formNameTextView);
-            formLastEditDateTextView = (TextView) itemView.findViewById(R.id.formLastEditDateTextView);
-            formCheckBox = (CheckBox) itemView.findViewById(R.id.formCheckBox);
+            formNameTextView = itemView.findViewById(R.id.formNameTextView);
+            formLastEditDateTextView = itemView.findViewById(R.id.formLastEditDateTextView);
+            formCheckBox = itemView.findViewById(R.id.formCheckBox);
         }
     }
 

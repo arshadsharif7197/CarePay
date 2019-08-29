@@ -1,18 +1,21 @@
-package com.carecloud.carepay.practice.library.adhocforms;
+package com.carecloud.carepay.practice.library.adhocforms.fragments;
 
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.adhocforms.adapters.AdHocFormRecyclerViewAdapter;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -74,13 +77,13 @@ public class AdHocFormsListFragment extends BaseDialogFragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_adhoc_forms_list, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         selectedForms = new SelectedAdHocForms();
         if (!dto.getMetadata().getDataModels().getAllPracticeForms().isEmpty()) {
@@ -94,45 +97,39 @@ public class AdHocFormsListFragment extends BaseDialogFragment
             recyclerView.setAdapter(adapter);
 
             fillNowFormButton = view.findViewById(R.id.fillNowFormButton);
-            fillNowFormButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Map<String, String> queryMap = new HashMap<>();
-                    queryMap.put("patient_id", patientId);
-                    TransitionDTO adHocFormsTransition = dto.getMetadata().getTransitions().getAdHocFormsPatientMode();
-                    JsonObject jsonObject = new JsonObject();
-                    JsonArray jsonArray = new JsonArray();
-                    for (String uuidForm : selectedForms.getForms()) {
-                        JsonObject uuiiJson = new JsonObject();
-                        uuiiJson.addProperty("form_uuid", uuidForm);
-                        jsonArray.add(uuiiJson);
-                    }
-                    jsonObject.add("adhoc_forms", jsonArray);
-                    getWorkflowServiceHelper().execute(adHocFormsTransition, adHocServiceCallback,
-                            jsonObject.toString(), queryMap);
+            fillNowFormButton.setOnClickListener(view1 -> {
+                Map<String, String> queryMap = new HashMap<>();
+                queryMap.put("patient_id", patientId);
+                TransitionDTO adHocFormsTransition = dto.getMetadata().getTransitions().getAdHocFormsPatientMode();
+                JsonObject jsonObject = new JsonObject();
+                JsonArray jsonArray = new JsonArray();
+                for (String uuidForm : selectedForms.getForms()) {
+                    JsonObject uuiiJson = new JsonObject();
+                    uuiiJson.addProperty("form_uuid", uuidForm);
+                    jsonArray.add(uuiiJson);
                 }
+                jsonObject.add("adhoc_forms", jsonArray);
+                getWorkflowServiceHelper().execute(adHocFormsTransition, adHocServiceCallback,
+                        jsonObject.toString(), queryMap);
             });
 
             sendFormButton = view.findViewById(R.id.sendFormButton);
-            sendFormButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Map<String, String> queryMap = new HashMap<>();
-                    queryMap.put("patient_id", patientId);
-                    queryMap.put("practice_mgmt", dto.getPayload().getUserPractices().get(0).getPracticeMgmt());
-                    queryMap.put("practice_id", dto.getPayload().getUserPractices().get(0).getPracticeId());
-                    JsonObject jsonObject = new JsonObject();
-                    JsonArray jsonArray = new JsonArray();
-                    for (String uuidForm : selectedForms.getForms()) {
-                        JsonObject uuiiJson = new JsonObject();
-                        uuiiJson.addProperty("form_uuid", uuidForm);
-                        jsonArray.add(uuiiJson);
-                    }
-                    jsonObject.add("pending_forms", jsonArray);
-                    TransitionDTO adHocFormsTransition = dto.getMetadata().getTransitions().getUpdatePendingForms();
-                    getWorkflowServiceHelper().execute(adHocFormsTransition, sendFormsServiceCallback,
-                            jsonObject.toString(), queryMap);
+            sendFormButton.setOnClickListener(v -> {
+                Map<String, String> queryMap = new HashMap<>();
+                queryMap.put("patient_id", patientId);
+                queryMap.put("practice_mgmt", dto.getPayload().getUserPractices().get(0).getPracticeMgmt());
+                queryMap.put("practice_id", dto.getPayload().getUserPractices().get(0).getPracticeId());
+                JsonObject jsonObject = new JsonObject();
+                JsonArray jsonArray = new JsonArray();
+                for (String uuidForm : selectedForms.getForms()) {
+                    JsonObject uuiiJson = new JsonObject();
+                    uuiiJson.addProperty("form_uuid", uuidForm);
+                    jsonArray.add(uuiiJson);
                 }
+                jsonObject.add("pending_forms", jsonArray);
+                TransitionDTO adHocFormsTransition = dto.getMetadata().getTransitions().getUpdatePendingForms();
+                getWorkflowServiceHelper().execute(adHocFormsTransition, sendFormsServiceCallback,
+                        jsonObject.toString(), queryMap);
             });
 
         } else {
@@ -142,15 +139,10 @@ public class AdHocFormsListFragment extends BaseDialogFragment
         }
 
         View close = view.findViewById(R.id.closeViewLayout);
-        close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                cancel();
-            }
-        });
+        close.setOnClickListener(view12 -> cancel());
     }
 
-    WorkflowServiceCallback sendFormsServiceCallback = new WorkflowServiceCallback() {
+    private WorkflowServiceCallback sendFormsServiceCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             showProgressDialog();
@@ -175,7 +167,7 @@ public class AdHocFormsListFragment extends BaseDialogFragment
         }
     };
 
-    WorkflowServiceCallback adHocServiceCallback = new WorkflowServiceCallback() {
+    private WorkflowServiceCallback adHocServiceCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             showProgressDialog();
