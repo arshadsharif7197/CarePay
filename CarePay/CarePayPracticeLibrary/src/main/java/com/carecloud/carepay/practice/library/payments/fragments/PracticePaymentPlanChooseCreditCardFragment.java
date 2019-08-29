@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
@@ -94,7 +96,7 @@ public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseC
         args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethodLabel);
         args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
 
-        if(paymentDate != null) {
+        if (paymentDate != null) {
             DateUtil.getInstance().setDate(paymentDate);
             args.putString(KEY_DATE, DateUtil.getInstance().toStringWithFormatYyyyDashMmDashDd());
         }
@@ -128,7 +130,7 @@ public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseC
         paymentPlanDTO = DtoHelper.getConvertedDTO(PaymentPlanDTO.class, args);
 
         String dateString = args.getString(KEY_DATE);
-        if(dateString != null){
+        if (dateString != null) {
             DateUtil.getInstance().setDateRaw(dateString);
             paymentDate = DateUtil.getInstance().getDate();
         }
@@ -138,7 +140,7 @@ public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseC
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
 
-        Button addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
+        Button addNewCardButton = view.findViewById(R.id.addNewCardButton);
         addNewCardButton.setOnClickListener(addNewCardButtonListener);
 
         nextButton.setOnClickListener(nextButtonListener);
@@ -151,16 +153,13 @@ public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseC
             @Override
             public void onClick(View v) {
                 cancel();
-                if (paymentPlanPostModel != null) {
-                    callback.onStartPaymentPlan(paymentsModel, paymentPlanPostModel);
-                }
             }
         });
 
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE) ||
                 HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_2_DEVICE);
         Button swipeCardButton = view.findViewById(R.id.swipeCreditCarNowButton);
-        if(isCloverDevice && paymentPlanDTO != null && (paymentDate == null || DateUtil.isToday(paymentDate))) {
+        if (isCloverDevice && paymentPlanDTO != null && (paymentDate == null || DateUtil.isToday(paymentDate))) {
             swipeCardButton.setVisibility(View.VISIBLE);
         } else {
             swipeCardButton.setVisibility(View.GONE);
@@ -175,15 +174,53 @@ public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseC
         @Override
         public void onClick(View view) {
             if (paymentPlanPostModel != null) {
-                callback.onAddPaymentPlanCard(paymentsModel, paymentPlanPostModel, onlySelectMode);
+                onAddPaymentPlanCard(paymentsModel, paymentPlanPostModel, onlySelectMode);
             }
             if (paymentPlanDTO != null) {
-                ((OneTimePaymentInterface) callback).onAddPaymentPlanCard(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
+                onAddPaymentPlanCard(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
             }
-
-            dismiss();
         }
     };
+
+    private void onAddPaymentPlanCard(PaymentsModel paymentsModel,
+                                      PaymentPlanPostModel paymentPlanPostModel,
+                                      boolean onlySelectMode) {
+        PracticePaymentPlanAddCreditCardFragment fragment;
+        if (!onlySelectMode && paymentPlanPostModel != null) {
+            fragment = PracticePaymentPlanAddCreditCardFragment
+                    .newInstance(paymentsModel, paymentPlanPostModel);
+        } else {
+            fragment = PracticePaymentPlanAddCreditCardFragment
+                    .newInstance(paymentsModel, (PaymentPlanDTO) null, onlySelectMode);
+        }
+        fragment.setOnCancelListener(onDialogCancelListener);
+        callback.displayDialogFragment(fragment, false);
+        hideDialog();
+    }
+
+    private void onAddPaymentPlanCard(final PaymentsModel paymentsModel,
+                                      final PaymentPlanDTO paymentPlanDTO,
+                                      boolean onlySelectMode,
+                                      final Date paymentDate) {
+        PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
+                .newInstance(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
+        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                showDialog();
+            }
+        });
+        fragment.setChangePaymentMethodListener(new LargeAlertDialogFragment.LargeAlertInterface() {
+            @Override
+            public void onActionButton() {
+                PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
+                        .newInstance(paymentsModel, paymentPlanDTO, false, paymentDate);
+                callback.displayDialogFragment(fragment, false);
+            }
+        });
+        callback.displayDialogFragment(fragment, false);
+        hideDialog();
+    }
 
     private View.OnClickListener nextButtonListener = new View.OnClickListener() {
         @Override
@@ -206,8 +243,7 @@ public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseC
                         paymentPlanPostModel.setPapiPaymentMethod(papiPaymentMethod);
                         paymentPlanPostModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
 
-                        callback.onDisplayPaymentPlanTerms(paymentsModel, paymentPlanPostModel);
-                        dismiss();
+                        onDisplayPaymentPlanTerms(paymentsModel, paymentPlanPostModel);
                     }
 
                     if (paymentPlanDTO != null) {
@@ -216,7 +252,7 @@ public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseC
                         postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
                         amountToMakePayment = postModel.getAmount();
 
-                        if(paymentDate != null){
+                        if (paymentDate != null) {
                             DateUtil.getInstance().setDate(paymentDate);
                             postModel.setPaymentDate(DateUtil.getInstance().toStringWithFormatYyyyDashMmDashDd());
                         }
@@ -226,6 +262,14 @@ public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseC
             }
         }
     };
+
+    private void onDisplayPaymentPlanTerms(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
+        PracticePaymentPlanTermsFragment fragment = PracticePaymentPlanTermsFragment
+                .newInstance(paymentsModel, paymentPlanPostModel);
+        fragment.setOnCancelListener(onDialogCancelListener);
+        callback.displayDialogFragment(fragment, false);
+        hideDialog();
+    }
 
     private void makePlanPayment() {
         Map<String, String> queries = new HashMap<>();
@@ -240,9 +284,9 @@ public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseC
         Gson gson = new Gson();
         String paymentModelJson = gson.toJson(paymentsModel.getPaymentPayload().getPaymentPostModel());
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePlanPayment();
-        if(paymentDate != null){
+        if (paymentDate != null) {
             getWorkflowServiceHelper().execute(transitionDTO, schedulePaymentCallback, paymentModelJson, queries, header);
-        }else {
+        } else {
             getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, paymentModelJson, queries, header);
         }
     }
@@ -256,7 +300,7 @@ public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseC
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            ((OneTimePaymentInterface)callback).showScheduledPaymentConfirmation(workflowDTO);
+            ((OneTimePaymentInterface) callback).showScheduledPaymentConfirmation(workflowDTO);
             if (getDialog() != null) {
                 dismiss();
             }
@@ -270,8 +314,8 @@ public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseC
     };
 
     @Override
-    protected void showConfirmation(WorkflowDTO workflowDTO){
-        ((OneTimePaymentInterface)callback).showPaymentConfirmation(workflowDTO, true);
+    protected void showConfirmation(WorkflowDTO workflowDTO) {
+        ((OneTimePaymentInterface) callback).showPaymentConfirmation(workflowDTO, true);
     }
 
 }

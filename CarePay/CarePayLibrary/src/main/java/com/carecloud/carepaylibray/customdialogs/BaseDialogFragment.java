@@ -4,7 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +24,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
     private Dialog dialog;
     private View view;
     private boolean isPracticeAppPatientMode;
-    private BlurDialogEngine mBlurEngine = null;
+    private BlurDialogEngine mBlurEngine;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,7 +56,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements View.
         if (isPracticeAppPatientMode) {
             setNavigationBarVisibility();
         }
-//        setUpBlur();
+        setUpBlur();
     }
 
     private void setUpBlur() {

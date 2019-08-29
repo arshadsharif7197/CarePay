@@ -2,9 +2,9 @@ package com.carecloud.carepaylibray.base;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
@@ -132,13 +132,6 @@ public abstract class BaseFragment extends Fragment implements ISession {
         ISession session = (ISession) getActivityProxy();
         if (null != session) {
             session.hideErrorNotification();
-        }
-    }
-
-    protected void hideDefaultActionBar() {
-        ActionBar actionBar = ((AppCompatActivity) getActivityProxy()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
         }
     }
 

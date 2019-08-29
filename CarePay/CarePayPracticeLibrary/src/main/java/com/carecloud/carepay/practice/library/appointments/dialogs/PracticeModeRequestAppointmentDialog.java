@@ -1,8 +1,8 @@
 package com.carecloud.carepay.practice.library.appointments.dialogs;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -47,23 +47,23 @@ public class PracticeModeRequestAppointmentDialog extends PatientModeRequestAppo
 
         DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime());
         TextView toolbar = view.findViewById(R.id.content_view_header_title);
-        toolbar.setText(dateUtil.getDateAsDayMonthDayOrdinalYear(Label.getLabel("appointments_web_today_heading")));
+        toolbar.setText(dateUtil.getDateAsDayMonthDayOrdinalYear(Label.getLabel("appointments_web_today_heading"), Label.getLabel("add_appointment_tomorrow")));
         toolbar.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.background_top_rounded_dark_blue));
 
         TextView providerImageTextView = view.findViewById(R.id.provider_short_name);
         providerImageTextView.setText(StringUtil.getShortName(patientModel.getFullName()));
         TextView patientNameTextView = view.findViewById(R.id.provider_doctor_name);
         if (StringUtil.isNullOrEmpty(patientModel.getPhoneNumber())) {
-            patientNameTextView.setText(patientModel.getFullName());
+            patientNameTextView.setText(StringUtil.capitalize(patientModel.getFullName()));
         } else {
             patientNameTextView.setText(String
-                    .format("%s | %s", patientModel.getFullName(),
+                    .format("%s | %s", StringUtil.capitalize(patientModel.getFullName()),
                             StringUtil.formatPhoneNumber(patientModel.getPhoneNumber())));
         }
 
         TextView providerNameTextView = view.findViewById(R.id.providerName);
         providerNameTextView.setVisibility(View.VISIBLE);
-        providerNameTextView.setText(appointmentDTO.getPayload().getResource().getProvider().getFullName());
+        providerNameTextView.setText(StringUtil.capitalize(appointmentDTO.getPayload().getResource().getProvider().getFullName()));
         view.findViewById(R.id.provider_place_address).setVisibility(View.GONE);
         view.findViewById(R.id.provider_place_name).setVisibility(View.GONE);
         view.findViewById(R.id.addressSeparator).setVisibility(View.GONE);

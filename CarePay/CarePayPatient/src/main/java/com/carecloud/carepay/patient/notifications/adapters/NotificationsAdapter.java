@@ -3,8 +3,8 @@ package com.carecloud.carepay.patient.notifications.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.view.LayoutInflater;
@@ -192,12 +192,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icn_survey));
         holder.imageView.setVisibility(View.VISIBLE);
         holder.initials.setBackgroundResource(R.drawable.round_list_tv_primary);
+        holder.initials.setText("");
         holder.header.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
         holder.header.setText(Label.getLabel("survey.notificationList.item.title.newSurvey"));
         String message = Label.getLabel("survey.notificationList.item.message.newSurvey");
-        UserPracticeDTO practice = ApplicationPreferences.getInstance()
-                .getUserPractice(notificationItem.getMetadata().getPracticeId());
-        String practiceName = practice.getPracticeName();
+        String practiceName = callback.getUserPracticeById(notificationItem.getMetadata().getPracticeId())
+                .getPracticeName();
         holder.message.setTextColor(ContextCompat.getColor(context, R.color.charcoal));
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder(String
                 .format(message, practiceName));
@@ -241,8 +241,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     private void displaySecureMessageNotification(NotificationViewHolder holder,
                                                   NotificationItem notificationItem) {
-        UserPracticeDTO practiceDTO = callback.getUserPracticeById(notificationItem.getMetadata().getPracticeId());
-        String practiceName = practiceDTO.getPracticeName();
+        String practiceName = notificationItem.getPayload().getPracticeName();
         holder.initials.setText(StringUtil.getShortName(practiceName));
         holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
         holder.initials.setBackgroundResource(R.drawable.round_list_tv_dark_gray);
@@ -262,6 +261,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_msg);
         holder.cellAvatar.setVisibility(View.VISIBLE);
 
+        UserPracticeDTO practiceDTO = callback.getUserPracticeById(notificationItem.getMetadata().getPracticeId());
         loadImage(holder, practiceDTO.getPracticePhoto(), false);
     }
 
@@ -365,9 +365,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.cellAvatar.setVisibility(View.VISIBLE);
         holder.header.setText(Label.getLabel("notifications.notificationList.statement.newStatementTitle"));
         holder.header.setTextColor(ContextCompat.getColor(context, R.color.emerald));
-        UserPracticeDTO practice = ApplicationPreferences.getInstance()
-                .getUserPractice(notificationItem.getMetadata().getPracticeId());
-        String practiceName = practice.getPracticeName();
+        String practiceName = notificationItem.getPayload().getPracticeName();
         holder.message.setText(String.format(Label
                 .getLabel("notifications.notificationList.statement.newStatementMessage"), practiceName));
         holder.initials.setBackgroundResource(R.drawable.round_list_tv_green);
@@ -392,7 +390,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.initials.setText(StringUtil.getShortName(provider.getName()));
         holder.header.setText("Notification");
 
-        AppointmentDisplayStyle displayStyle = AppointmentDisplayUtil.determineDisplayStyle(appointment.getPayload(), false);
+        AppointmentDisplayStyle displayStyle = AppointmentDisplayUtil
+                .determineDisplayStyle(appointment.getPayload(), false);
         notificationItem.getPayload().getAppointment().getPayload().setDisplayStyle(displayStyle);
 
         switch (displayStyle) {
@@ -475,7 +474,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         if (!StringUtil.isNullOrEmpty(photoUrl)) {
             loadImage(holder, photoUrl, false);
         }
-
     }
 
     private void loadImage(final NotificationViewHolder holder, String photoUrl,
@@ -522,16 +520,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 }
             }
         }
-
         textView.setText(stringBuilder);
-    }
-
-    private String getTimeStamp(NotificationItem notificationItem) {
-        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(notificationItem.getMetadata().getCreatedDt());
-        if (dateUtil.isToday()) {
-            return Label.getLabel("today_label");
-        }
-        return dateUtil.toStringWithFormatMmSlashDdSlashYyyy();
     }
 
     private void resetViews(NotificationViewHolder holder) {
@@ -545,6 +534,14 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.deleteButton.setVisibility(View.VISIBLE);
         holder.undoButton.setVisibility(View.GONE);
         holder.notificationItemView.setVisibility(View.VISIBLE);
+    }
+
+    private String getTimeStamp(NotificationItem notificationItem) {
+        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(notificationItem.getMetadata().getCreatedDt());
+        if (dateUtil.isToday()) {
+            return Label.getLabel("today_label");
+        }
+        return dateUtil.toStringWithFormatMmSlashDdSlashYyyy();
     }
 
     class NotificationViewHolder extends SwipeViewHolder {

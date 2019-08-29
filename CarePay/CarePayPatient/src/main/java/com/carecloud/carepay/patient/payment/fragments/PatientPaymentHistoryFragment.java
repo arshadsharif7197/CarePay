@@ -2,16 +2,19 @@ package com.carecloud.carepay.patient.payment.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.adapters.PaymentHistoryAdapter;
+import com.carecloud.carepay.patient.payment.dialogs.PaymentHistoryDetailDialogFragment;
 import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -29,8 +32,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_HISTORY;
 
 import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_HISTORY;
 
@@ -74,27 +75,23 @@ public class PatientPaymentHistoryFragment extends BaseFragment
         paymentsModel = (PaymentsModel) callback.getDto();
         paging = paymentsModel.getPaymentPayload().getTransactionHistory().getPageDetails();
         paymentHistoryItems = filterPaymentHistory(paymentsModel.getPaymentPayload()
-                .getTransactionHistory().getPaymentHistoryList());
+                        .getTransactionHistory().getPaymentHistoryList(),
+                paymentsModel.getPaymentPayload().getUserPractices());
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_patient_balance_history, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         noPaymentsLayout = view.findViewById(R.id.no_payment_layout);
         setUpRecyclerView(view);
         refreshLayout = view.findViewById(R.id.swipeRefreshLayout);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                callback.onRequestRefresh(PAGE_HISTORY);
-            }
-        });
+        refreshLayout.setOnRefreshListener(() -> callback.onRequestRefresh(PAGE_HISTORY));
     }
 
     private void setUpRecyclerView(View view) {
@@ -131,12 +128,19 @@ public class PatientPaymentHistoryFragment extends BaseFragment
         noPaymentsLayout.setVisibility(View.VISIBLE);
     }
 
-    private List<PaymentHistoryItem> filterPaymentHistory(List<PaymentHistoryItem> paymentHistoryItems) {
+    private List<PaymentHistoryItem> filterPaymentHistory(List<PaymentHistoryItem> paymentHistoryItems,
+                                                          List<UserPracticeDTO> userPractices) {
         List<PaymentHistoryItem> output = new ArrayList<>();
         for (PaymentHistoryItem item : paymentHistoryItems) {
-            if (item.getPayload().getTotalPaid() > 0
-                    || item.getPayload().getProcessingErrors().isEmpty()) {
-                output.add(item);
+            for (UserPracticeDTO userPracticeDTO : userPractices) {
+                if (paymentsModel.getPaymentPayload().canViewBalanceAndHistoricalPayments(userPracticeDTO.getPracticeId())) {
+                    if ((item.getPayload().getTotalPaid() > 0
+                            || item.getPayload().getProcessingErrors().isEmpty())
+                            && item.getMetadata().getPracticeId().equals(userPracticeDTO.getPracticeId())) {
+                        output.add(item);
+                    }
+
+                }
             }
         }
         return output;
@@ -163,7 +167,7 @@ public class PatientPaymentHistoryFragment extends BaseFragment
 
     private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
         @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
             super.onScrolled(recyclerView, dx, dy);
             if (hasMorePages()) {
@@ -189,13 +193,16 @@ public class PatientPaymentHistoryFragment extends BaseFragment
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             adapter.setLoading(false);
-            PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-            Paging nextPage = paymentsModel.getPaymentPayload().getTransactionHistory().getPageDetails();
+            PaymentsModel localPaymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+            Paging nextPage = localPaymentsModel.getPaymentPayload().getTransactionHistory().getPageDetails();
             if (nextPage.getCurrentPage() != paging.getCurrentPage()) {
                 paging = nextPage;
-                List<PaymentHistoryItem> newItems = paymentsModel.getPaymentPayload()
+                List<PaymentHistoryItem> newItems = localPaymentsModel.getPaymentPayload()
                         .getTransactionHistory().getPaymentHistoryList();
-                List<PaymentHistoryItem> filteredItems = filterPaymentHistory(newItems);
+                List<PaymentHistoryItem> filteredItems = filterPaymentHistory(newItems,
+                        localPaymentsModel.getPaymentPayload().getDelegate() == null
+                                ? paymentsModel.getPaymentPayload().getUserPractices()
+                                : localPaymentsModel.getPaymentPayload().getUserLinks().getDelegatePracticeInformation());
                 setAdapter(filteredItems);
                 paymentHistoryItems.addAll(filteredItems);
             }
@@ -213,7 +220,13 @@ public class PatientPaymentHistoryFragment extends BaseFragment
     @Override
     public void onHistoryItemClicked(PaymentHistoryItem item) {
         if (!refreshLayout.isRefreshing()) {
-            callback.displayPaymentHistoryDetails(item);
+            displayPaymentHistoryDetails(item);
         }
+    }
+
+    private void displayPaymentHistoryDetails(PaymentHistoryItem item) {
+        PaymentHistoryDetailDialogFragment fragment = PaymentHistoryDetailDialogFragment
+                .newInstance(item, paymentsModel.getPaymentPayload().getUserPractice(item.getMetadata().getPracticeId()));
+        callback.displayDialogFragment(fragment, false);
     }
 }
