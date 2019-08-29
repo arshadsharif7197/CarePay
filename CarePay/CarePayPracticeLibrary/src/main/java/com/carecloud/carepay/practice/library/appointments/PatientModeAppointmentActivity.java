@@ -69,27 +69,12 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
     }
 
     private void setUpUI() {
-        findViewById(R.id.provider_logout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logout();
-            }
-        });
-        findViewById(R.id.btnHome).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logout();
-            }
-        });
+        findViewById(R.id.provider_logout).setOnClickListener(v -> logout());
+        findViewById(R.id.btnHome).setOnClickListener(v -> logout());
 
         setUpSteps();
         availabilityButton = findViewById(R.id.availabilityButton);
-        availabilityButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callAvailabilityService();
-            }
-        });
+        availabilityButton.setOnClickListener(v -> callAvailabilityService());
 
     }
 
@@ -146,46 +131,28 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
 
     private void setUpLocationStep() {
         View locationContainer = findViewById(R.id.locationStepContainer);
+        locationContainer.setContentDescription(getString(R.string.content_description_choose_location));
         TextView locationStepTitleTextView = locationContainer.findViewById(R.id.stepTitleTextView);
         locationStepTitleTextView.setText(Label.getLabel("add_appointment_location"));
         locationStepNoDataTextView = locationContainer.findViewById(R.id.stepNoDataTextView);
         locationStepNoDataTextView.setText(Label.getLabel("add_appointment_location_hint"));
-        locationStepNoDataTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showFragment(LocationListFragment.newInstance(selectedPractice, selectedVisitType, selectedResource));
-            }
-        });
+        locationStepNoDataTextView.setOnClickListener(v -> showFragment(LocationListFragment.newInstance(selectedPractice, selectedVisitType, selectedResource)));
         locationCard = locationContainer.findViewById(R.id.stepContainer);
-        locationCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showFragment(LocationListFragment.newInstance(selectedPractice, selectedVisitType, selectedResource));
-            }
-        });
+        locationCard.setOnClickListener(v -> showFragment(LocationListFragment.newInstance(selectedPractice, selectedVisitType, selectedResource)));
         ImageView profilePicImageView = locationCard.findViewById(R.id.profilePicImageView);
         profilePicImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_step_location));
     }
 
     private void setUpVisitTypeStep() {
         View visitTypeContainer = findViewById(R.id.visitTypeStepContainer);
+        visitTypeContainer.setContentDescription(getString(R.string.content_description_choose_visit_type));
         TextView visitTypeStepTitleTextView = visitTypeContainer.findViewById(R.id.stepTitleTextView);
         visitTypeStepTitleTextView.setText(Label.getLabel("add_appointment_visit_type"));
         visitTypeStepNoDataTextView = visitTypeContainer.findViewById(R.id.stepNoDataTextView);
         visitTypeStepNoDataTextView.setText(Label.getLabel("add_appointment_visit_type_hint"));
-        visitTypeStepNoDataTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showFragment(VisitTypeListFragment.newInstance(selectedPractice, selectedLocation, selectedResource));
-            }
-        });
+        visitTypeStepNoDataTextView.setOnClickListener(v -> showFragment(VisitTypeListFragment.newInstance(selectedPractice, selectedLocation, selectedResource)));
         visitTypeCard = visitTypeContainer.findViewById(R.id.stepContainer);
-        visitTypeCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showFragment(VisitTypeListFragment.newInstance(selectedPractice, selectedLocation, selectedResource));
-            }
-        });
+        visitTypeCard.setOnClickListener(v -> showFragment(VisitTypeListFragment.newInstance(selectedPractice, selectedLocation, selectedResource)));
         ImageView profilePicImageView = visitTypeCard.findViewById(R.id.profilePicImageView);
         profilePicImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_visit_type_placeholder));
 
@@ -193,23 +160,14 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
 
     private void setUpProviderStep() {
         View providerContainer = findViewById(R.id.providerStepContainer);
+        providerContainer.setContentDescription(getString(R.string.content_description_choose_provider));
         TextView providerStepTitleTextView = providerContainer.findViewById(R.id.stepTitleTextView);
         providerStepTitleTextView.setText(Label.getLabel("add_appointment_provider"));
         providerStepNoDataTextView = providerContainer.findViewById(R.id.stepNoDataTextView);
         providerStepNoDataTextView.setText(Label.getLabel("add_appointment_provider_hint"));
-        providerStepNoDataTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showFragment(ProviderListFragment.newInstance(selectedPractice, selectedVisitType, selectedLocation));
-            }
-        });
+        providerStepNoDataTextView.setOnClickListener(v -> showFragment(ProviderListFragment.newInstance(selectedPractice, selectedVisitType, selectedLocation)));
         providerCard = providerContainer.findViewById(R.id.stepContainer);
-        providerCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showFragment(ProviderListFragment.newInstance(selectedPractice, selectedVisitType, selectedLocation));
-            }
-        });
+        providerCard.setOnClickListener(v -> showFragment(ProviderListFragment.newInstance(selectedPractice, selectedVisitType, selectedLocation)));
     }
 
     @Override
@@ -258,13 +216,10 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
         TextView profileShortNameTextView = providerCard.findViewById(R.id.profileShortNameTextView);
         profileShortNameTextView.setText(StringUtil.getShortName(resource.getProvider().getSpecialty().getName()));
         profileShortNameTextView.setVisibility(View.VISIBLE);
-        resetImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedResource = null;
-                providerCard.setVisibility(View.GONE);
-                providerStepNoDataTextView.setVisibility(View.VISIBLE);
-            }
+        resetImageView.setOnClickListener(v -> {
+            selectedResource = null;
+            providerCard.setVisibility(View.GONE);
+            providerStepNoDataTextView.setVisibility(View.VISIBLE);
         });
         ImageView profilePicImageView = providerCard.findViewById(R.id.profilePicImageView);
         PicassoHelper.get().loadImage(this, profilePicImageView, profileShortNameTextView,
@@ -289,13 +244,10 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
             subtitle.setText(Label.getLabel("createAppointment.visitTypeList.item.label.noPrepaymentMessage"));
         }
         ImageView resetImageView = visitTypeCard.findViewById(R.id.resetImageView);
-        resetImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedVisitType = null;
-                visitTypeCard.setVisibility(View.GONE);
-                visitTypeStepNoDataTextView.setVisibility(View.VISIBLE);
-            }
+        resetImageView.setOnClickListener(v -> {
+            selectedVisitType = null;
+            visitTypeCard.setVisibility(View.GONE);
+            visitTypeStepNoDataTextView.setVisibility(View.VISIBLE);
         });
         enableAvailableButton();
     }
@@ -310,13 +262,10 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
         TextView subtitle = locationCard.findViewById(R.id.subTitle);
         subtitle.setText(locationDTO.getAddress().geAddressStringWithShortZipWOCounty2Lines());
         ImageView resetImageView = locationCard.findViewById(R.id.resetImageView);
-        resetImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedLocation = null;
-                locationCard.setVisibility(View.GONE);
-                locationStepNoDataTextView.setVisibility(View.VISIBLE);
-            }
+        resetImageView.setOnClickListener(v -> {
+            selectedLocation = null;
+            locationCard.setVisibility(View.GONE);
+            locationStepNoDataTextView.setVisibility(View.VISIBLE);
         });
         enableAvailableButton();
     }
@@ -325,12 +274,7 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
     public void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO,
                                                     final BaseAvailabilityHourFragment baseAvailabilityHourFragment) {
         PatientModeRequestAppointmentDialog fragment = PatientModeRequestAppointmentDialog.newInstance(appointmentDTO);
-        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialogInterface) {
-                baseAvailabilityHourFragment.showDialog();
-            }
-        });
+        fragment.setOnCancelListener(dialogInterface -> baseAvailabilityHourFragment.showDialog());
         showFragment(fragment);
     }
 

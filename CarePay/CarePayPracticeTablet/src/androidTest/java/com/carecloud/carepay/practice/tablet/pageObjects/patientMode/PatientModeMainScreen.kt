@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.tablet.pageObjects.patientMode
 
+import com.carecloud.carepay.practice.tablet.PageObjects.PatientMode.AddAppointmentFlow
 import com.carecloud.carepay.practice.tablet.R
 import com.carecloud.carepay.practice.tablet.tests.appContext
 import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
@@ -9,12 +10,12 @@ import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
  */
 class PatientModeMainScreen : CustomViewActions() {
 
-    init {
-        verifyViewVisible(appContext.getString(R.string.content_description_patient_mode_main))
-    }
-
-    fun pressCheckInButton(): HowToLoginScreen {
+    fun pressCheckInButton(): HowToLoginScreen<CheckInScreen> {
         click(appContext.getString(R.string.content_description_check_in))
-        return HowToLoginScreen()
+        return HowToLoginScreen(screenAfterLogin = CheckInScreen())
+    }
+    fun pressAppointmentButton(): HowToLoginScreen<AddAppointmentFlow<PatientModeMainScreen>> {
+        click(appContext.getString(R.string.content_description_appointments_button))
+        return HowToLoginScreen(screenAfterLogin = AddAppointmentFlow(screenAfterAppointment = PatientModeMainScreen()))
     }
 }

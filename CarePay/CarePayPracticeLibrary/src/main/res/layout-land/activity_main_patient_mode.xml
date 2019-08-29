@@ -322,7 +322,8 @@
                 android:layout_weight="1"
                 android:background="@drawable/home_button_selector_bottom_right"
                 android:clickable="true"
-                android:padding="@dimen/patientHomeBottomButtonPadding">
+                android:padding="@dimen/patientHomeBottomButtonPadding"
+                android:contentDescription="@string/content_description_appointments_button">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/homeAppointmentsLabel"
@@ -338,7 +339,6 @@
                     android:layout_above="@id/homeAppointmentsLabel"
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="@dimen/dimen_15dp"
-                    android:contentDescription="Appointments"
                     android:src="@drawable/icn_appointements_selector" />
             </RelativeLayout>
         </LinearLayout>
