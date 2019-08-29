@@ -25,6 +25,7 @@ import com.carecloud.carepaylibray.appointments.createappointment.CreateAppointm
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
@@ -353,7 +354,10 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
 
     private void onAppointmentRequestSuccess() {
         getFragmentManager().popBackStack();
-        String appointmentRequestSuccessMessage = Label.getLabel("appointment_request_success_message_HTML");
+        boolean autoScheduleAppointments = getAutomaticallyApproveRequests();
+        String appointmentRequestSuccessMessage = Label.getLabel(autoScheduleAppointments ?
+                "appointment_schedule_success_message_HTML" :
+                "appointment_request_success_message_HTML");
         SystemUtil.showSuccessToast(getContext(), appointmentRequestSuccessMessage);
     }
 
@@ -543,4 +547,13 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
     protected abstract void showVisitTypeFragment();
 
     protected abstract void showAvailabilityFragment();
+
+    private boolean getAutomaticallyApproveRequests() {
+        AppointmentsSettingDTO appointmentsSettingDTO = appointmentsResultModel.getPayload()
+                .getAppointmentsSetting(selectedPractice.getPracticeId());
+        if (appointmentsSettingDTO == null) {
+            return false;
+        }
+        return appointmentsSettingDTO.getRequests().getAutomaticallyApproveRequests();
+    }
 }
