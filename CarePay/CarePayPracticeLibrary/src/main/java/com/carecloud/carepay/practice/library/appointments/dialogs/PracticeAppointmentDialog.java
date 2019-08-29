@@ -1,7 +1,6 @@
 package com.carecloud.carepay.practice.library.appointments.dialogs;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -12,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
@@ -94,9 +94,6 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
         try {
             callback = (PracticeAppointmentDialogListener) context;
         } catch (ClassCastException e) {
@@ -117,12 +114,12 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.dialog_practice_appointment, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         initializeViews(view);
@@ -130,16 +127,10 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
 
         TextView apptTime = view.findViewById(R.id.appointment_start_time);
         apptTime.setTextColor(ContextCompat.getColor(getContext(), timeColor));
-        (findViewById(R.id.closeViewLayout)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+        (findViewById(R.id.closeViewLayout)).setOnClickListener(v -> dismiss());
     }
 
 
-    @SuppressWarnings("deprecation")
     private void initializeViews(View view) {
         setupDialogStyle();
 
@@ -248,33 +239,17 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     }
 
     private void initializeButtons() {
-        initializeButton(R.id.button_left_action, leftActionLabel, new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onLeftActionTapped(appointmentDTO);
+        initializeButton(R.id.button_left_action, leftActionLabel, view -> onLeftActionTapped(appointmentDTO));
+        initializeButton(R.id.button_right_action, rightActionLabel, view -> {
+            if (appointmentDTO.getPayload().getVisitType().hasVideoOption()) {
+                ((VideoAppointmentCallback) callback).startVideoVisit(appointmentDTO);
+                dismiss();
+                return;
             }
+            onRightActionTapped(appointmentDTO);
         });
 
-        initializeButton(R.id.button_right_action, rightActionLabel, new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (null != callback) {
-                    if (appointmentDTO.getPayload().getVisitType().hasVideoOption()) {
-                        ((VideoAppointmentCallback) callback).startVideoVisit(appointmentDTO);
-                        dismiss();
-                        return;
-                    }
-                }
-                onRightActionTapped(appointmentDTO);
-            }
-        });
-
-        initializeButton(R.id.button_middle_action, middleActionLabel, new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showAdHocFormsDialog(appointmentDTO);
-            }
-        });
+        initializeButton(R.id.button_middle_action, middleActionLabel, view -> showAdHocFormsDialog(appointmentDTO));
 
 
         switch (style) {
@@ -303,12 +278,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         } else {
             CancelAppointmentConfirmDialogFragment fragment = CancelAppointmentConfirmDialogFragment
                     .newInstance(appointmentDTO);
-            fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialogInterface) {
-                    showDialog();
-                }
-            });
+            fragment.setOnCancelListener(dialogInterface -> showDialog());
             fragment.show(getFragmentManager(), fragment.getClass().getName());
             hideDialog();
         }
@@ -342,9 +312,9 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
                 getString(R.string.event_appointment_accepted)), queryMap);
     }
 
-    WorkflowServiceCallback getAppointmentsServiceCallback(final AppointmentDTO appointmentDTO,
-                                                           final String successMessage,
-                                                           final String eventName) {
+    private WorkflowServiceCallback getAppointmentsServiceCallback(final AppointmentDTO appointmentDTO,
+                                                                   final String successMessage,
+                                                                   final String eventName) {
         return new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
@@ -447,7 +417,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         };
     }
 
-    protected void enableById(int id, boolean enabled) {
+    private void enableById(int id, boolean enabled) {
         View view = findViewById(id);
         if (view != null) {
             view.setEnabled(enabled);
@@ -462,7 +432,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         getWorkflowServiceHelper().execute(adHocForms, getAdHocServiceCallback(appointmentDTO), queryMap);
     }
 
-    WorkflowServiceCallback getAdHocServiceCallback(final AppointmentDTO appointmentDTO) {
+    private WorkflowServiceCallback getAdHocServiceCallback(final AppointmentDTO appointmentDTO) {
         return new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
@@ -477,14 +447,9 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
                         .fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
                 AdHocFormsListFragment fragment = AdHocFormsListFragment
                         .newInstance(appointmentsResultModel, appointmentDTO.getMetadata().getPatientId());
-                fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialogInterface) {
-                        showDialog();
-                    }
-                });
+                fragment.setOnCancelListener(dialogInterface -> showDialog(true));
                 callback.displayDialogFragment(fragment, false);
-                hideDialog();
+                hideDialog(true);
             }
 
             @Override
