@@ -272,16 +272,20 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
         visitTimeResetImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedTimeSlot = null;
-                visitTimeTextView.setText(null);
-                setHint(visitTimeTextView, visitTimeTextInputLayout, null);
-                visitTimeResetImage.setVisibility(View.GONE);
-                visitTimeTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
-                        getResources().getDrawable(R.drawable.icon_drop_down), null);
-                setDefaultMessage();
-                enableScheduleAppointmentButton();
+                resetVisitTime();
             }
         });
+    }
+
+    private void resetVisitTime() {
+        selectedTimeSlot = null;
+        visitTimeTextView.setText(null);
+        setHint(visitTimeTextView, visitTimeTextInputLayout, null);
+        visitTimeResetImage.setVisibility(View.GONE);
+        visitTimeTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                getResources().getDrawable(R.drawable.icon_drop_down), null);
+        setDefaultMessage();
+        enableScheduleAppointmentButton();
     }
 
     private void setUpProviderMessage(View view, ProviderDTO provider) {
@@ -452,11 +456,8 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
         visitTypeTextView.setText(StringUtil.capitalize(visitType.getName()));
         setHint(visitTypeTextView, visitTypeTextInputLayout, StringUtil.capitalize(visitType.getName()));
 
-        setDefaultMessage();
-        selectedTimeSlot = null;
-        setHint(visitTimeTextView, visitTimeTextInputLayout, null);
         enableTimeSlotField();
-        enableScheduleAppointmentButton();
+        resetVisitTime();
     }
 
     @Override
