@@ -9,9 +9,6 @@ import com.carecloud.carepay.practice.tablet.tests.appContext
  */
 
 class SelectPracticeDialog : CustomViewActions() {
-    init {
-        verifyViewVisible(appContext.getString(R.string.content_description_continue))
-    }
 
     fun selectPractice(practiceName: String): SelectPracticeDialog {
         clickOnSpecificText(practiceName)

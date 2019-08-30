@@ -1,31 +1,30 @@
-package com.carecloud.carepay.practice.tablet.pageObjects.patientMode
+package com.carecloud.carepay.practice.tablet.pageObjects.shared.login
 
+import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 import com.carecloud.carepay.practice.tablet.R
 import com.carecloud.carepay.practice.tablet.tests.appContext
-import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 
 /**
- * @author pjohnson on 2019-08-28.
+ * Created by drodriguez on 08/12/19.
  */
-class LoginScreen : CustomViewActions() {
 
+class LoginScreen<T>(private val screenAfterLogin: T) : CustomViewActions() {
     init {
         verifyViewVisible(appContext.getString(R.string.content_description_email))
     }
 
-    fun typeUsername(username: String): LoginScreen {
+    fun typeUsername(username: String): LoginScreen<T> {
         type(appContext.getString(R.string.content_description_email), username, true)
         return this
     }
 
-    fun typePassword(password: String): LoginScreen {
+    fun typePassword(password: String): LoginScreen<T> {
         type(appContext.getString(R.string.content_description_password), password, true)
         return this
     }
 
-    fun pressLoginButton(): CheckInScreen {
+    fun pressLoginButton(): T {
         click(appContext.getString(R.string.content_description_sign_in))
-        return CheckInScreen()
+        return screenAfterLogin
     }
-
 }

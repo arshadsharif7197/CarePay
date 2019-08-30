@@ -4,9 +4,10 @@ import android.content.Context
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
-import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.login.LoginScreen
+import com.carecloud.carepay.practice.tablet.pageObjects.shared.login.LoginScreen
 
 import com.carecloud.carepay.practice.tablet.PracticeTabletSplashActivity
+import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.login.SelectPracticeDialog
 import com.carecloud.carepay.service.library.EspressoIdlingResource
 
 import org.junit.After
@@ -33,7 +34,7 @@ open class BaseTest {
         appContext = InstrumentationRegistry.getInstrumentation().targetContext
 
         // Each test includes the same login steps
-        LoginScreen()
+        LoginScreen(screenAfterLogin = SelectPracticeDialog())
                 .typeUsername("rainforestbrzmanqa01@e.rainforest.com")
                 .typePassword("Rainforest123#")
                 .pressLoginButton()

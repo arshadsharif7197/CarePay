@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.appointments
 
 import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
+import com.carecloud.carepay.practice.tablet.PageObjects.PatientMode.AddAppointmentFlow
 import com.carecloud.carepay.practice.tablet.R
 import com.carecloud.carepay.practice.tablet.tests.appContext
 
@@ -9,18 +10,14 @@ import com.carecloud.carepay.practice.tablet.tests.appContext
  */
 
 class AppointmentsScreen : CustomViewActions() {
-    init {
-        verifyViewVisible(appContext.getString(R.string.content_description_add_appointment))
-    }
-
     fun pressAddAppointmentButton(): AppointmentsScreen {
         click(appContext.getString(R.string.content_description_add_appointment))
         return this
     }
 
-    fun searchForPatient(): AddAppointmentDialog {
+    fun searchForPatient(): AddAppointmentFlow<AppointmentsScreen> {
         type(appContext.getString(R.string.content_description_patient_search), "qa\n")
         clickOnRecyclerViewItem(appContext.getString(R.string.content_description_patient_list), 0)
-        return AddAppointmentDialog()
+        return AddAppointmentFlow(screenAfterAppointment = AppointmentsScreen())
     }
 }

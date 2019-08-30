@@ -12,17 +12,17 @@ import org.junit.runner.RunWith
  */
 
 @RunWith(AndroidJUnit4::class)
-class AddAppointmentPracticeTest : BaseTest() {
+class PRAddAppointmentTest : BaseTest() {
 
     @Test
-    fun addAppointmentPracticeTest() {
+    fun prAddAppointmentPracticeTest() {
 
         PracticeMainScreen().pressAppointmentsButton()
                 .pressAddAppointmentButton()
                 .searchForPatient()
-                .chooseProvider()
-                .chooseVisitType()
-                .chooseLocation()
+                .selectProvider()
+                .selectVisitType()
+                .selectLocation()
                 .pressCheckAvailableTimes()
                 .chooseAppointmentTime()
                 .pressScheduleAppointment()

@@ -1,4 +1,4 @@
-package com.carecloud.carepay.practice.tablet.tests.patientMode
+package com.carecloud.carepay.practice.tablet.tests.patientMode.appointments
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.PracticeMainScreen
@@ -7,21 +7,29 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * @author pjohnson on 2019-08-28.
+ * Created by drodriguez on 2019-08-28.
  */
+
 @RunWith(AndroidJUnit4::class)
-class LoginTest : BaseTest(){
+class PMCreateAppointmentTest : BaseTest() {
 
     @Test
-    fun patientModeLoginTest() {
+    fun pmCreateAppointmentTest() {
         PracticeMainScreen()
                 .pressChangeModeButton()
                 .pressPatientModeButton()
                 .pressLetsStartButton()
-                .pressCheckInButton()
+                .pressAppointmentButton()
                 .pressLoginButton()
                 .typeUsername("dev_emails+dev.rsanchez@carecloud.com")
                 .typePassword("Test123!")
                 .pressLoginButton()
+                .selectProvider()
+                .selectVisitType()
+                .selectLocation()
+                .pressCheckAvailableTimes()
+                .chooseAppointmentTime()
+                .pressScheduleAppointment()
+
     }
 }

@@ -71,7 +71,7 @@
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="patientMode.appointmentCreation.availabilityButton.label.available"
                 tools:text="Check Available Times"
-                android:contentDescription="@string/content_description_check_available_times" />
+                android:contentDescription="@string/content_description_check_available_times_button" />
 
         </FrameLayout>
 
