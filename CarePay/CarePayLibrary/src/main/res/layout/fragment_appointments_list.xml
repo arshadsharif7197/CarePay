@@ -38,7 +38,8 @@
         app:backgroundTint="@color/overlay_green"
         app:layout_anchor="@id/appointments_recycler_view"
         app:layout_anchorGravity="bottom|end"
-        app:layout_behavior="com.carecloud.carepay.patient.utils.FloatingActionButtonScrollBehavior" />
+        app:layout_behavior="com.carecloud.carepay.patient.utils.FloatingActionButtonScrollBehavior"
+        android:contentDescription="@string/content_description_add_appointment_button"/>
 
     <FrameLayout
         android:id="@+id/shimmerLayout"
