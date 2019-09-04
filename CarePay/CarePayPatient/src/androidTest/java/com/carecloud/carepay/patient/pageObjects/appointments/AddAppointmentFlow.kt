@@ -13,9 +13,9 @@ class AddAppointmentFlow<T>(private val screenAfterAppointment: T) : CustomViewA
         clickOnRecyclerViewItem(appContext.getString(R.string.content_description_location_list), 1)
         return this
     }
-    fun selectProvider(): AddAppointmentFlow<T> {
+    fun selectProvider(providerName: String): AddAppointmentFlow<T> {
         click(appContext.getString(R.string.content_description_choose_provider))
-        clickOnRecyclerViewItem(appContext.getString(R.string.content_description_provider_list_2), 0)
+        clickOnRecyclerViewItem(appContext.getString(R.string.content_description_provider_list_2), textMatch = providerName)
         return this
     }
     fun selectVisitType(): AddAppointmentFlow<T> {
@@ -39,8 +39,8 @@ class AddAppointmentFlow<T>(private val screenAfterAppointment: T) : CustomViewA
         return screenAfterAppointment
     }
 
-    fun switchBE() : AddAppointmentFlow<T> {
-        clickOnRecyclerViewItem(appContext.getString(R.string.content_description_list_of_practices), 1)
+    fun switchBE(chosenBe: String) : AddAppointmentFlow<T> {
+        clickOnRecyclerViewItem(appContext.getString(R.string.content_description_list_of_practices), chosenBe)
         return this
     }
 }

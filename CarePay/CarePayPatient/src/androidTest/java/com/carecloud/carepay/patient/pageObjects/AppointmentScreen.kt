@@ -15,4 +15,8 @@ class AppointmentScreen : CustomViewActions() {
         return AddAppointmentFlow(screenAfterAppointment = AppointmentScreen())
     }
 
+    fun verifyAppointmentIsOnList(textMatch: String) : AppointmentScreen {
+        verifyItemInRecyclerView(appContext.getString(R.string.content_description_appointments_list), textMatch)
+        return this
+    }
 }

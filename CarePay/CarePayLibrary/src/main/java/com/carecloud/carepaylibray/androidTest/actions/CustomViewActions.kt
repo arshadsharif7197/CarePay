@@ -19,8 +19,10 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import org.hamcrest.Matchers.notNullValue
 import androidx.test.espresso.util.HumanReadables
 import androidx.test.espresso.PerformException
+import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.util.TreeIterables
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
+import org.hamcrest.Description
 import org.hamcrest.Matchers.not
 import java.util.concurrent.TimeoutException
 
@@ -71,6 +73,27 @@ open class CustomViewActions {
     protected fun clickOnRecyclerViewItem(contentDescription: String, position: Int) {
         onView(withContentDescription(contentDescription)).
                 perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(position, ViewActions.click()))
+    }
+
+    /**
+     * Click on an item in a recycler view list based on text
+     * @param contentDescription Content description of the view
+     * @param textMatch Text to match with element on list
+     */
+    protected fun clickOnRecyclerViewItem(contentDescription: String, textMatch: String) {
+        onView(withContentDescription(contentDescription)).perform(
+                RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
+                        hasDescendant(withText(textMatch)), ViewActions.click()))
+    }
+
+    /**
+     * Verify if item is visible in Recycler view
+     * @param contentDescription Content description of the view
+     * @param textMatch Text to match with element on list
+     */
+    protected fun verifyItemInRecyclerView(contentDescription: String, textMatch: String) {
+        onView(withContentDescription(contentDescription)).check(matches(hasDescendant(withText(textMatch))))
+
     }
 
     /**

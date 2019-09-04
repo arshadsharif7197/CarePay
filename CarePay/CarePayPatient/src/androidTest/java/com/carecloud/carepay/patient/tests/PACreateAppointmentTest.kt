@@ -17,8 +17,8 @@ class PACreateAppointmentTest : BaseTest() {
     fun paCreateAppointmentTest() {
         AppointmentScreen()
                 .addNewAppointment()
-                .switchBE()
-                .selectProvider()
+                .switchBE("Lisa J. Learn D.O., PA")
+                .selectProvider("Pamela Banes")
                 .selectVisitType()
                 .selectLocation()
                 .pressCheckAvailableTimes()

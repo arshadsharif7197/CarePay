@@ -15,7 +15,7 @@ class SelectLocationDialog : CustomViewActions() {
     }
 
     fun selectLocation(locationName: String): SelectLocationDialog {
-        clickOnRecyclerViewItem(appContext.getString(R.string.content_description_provider_list), 2)
+        clickOnRecyclerViewItem(appContext.getString(R.string.content_description_provider_list), textMatch = locationName)
         return this
     }
 
