@@ -1,6 +1,7 @@
 package com.carecloud.carepaylibray.androidTest.actions
 
 import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 import androidx.test.espresso.UiController
@@ -16,20 +17,20 @@ import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
-import org.hamcrest.Matchers.notNullValue
 import androidx.test.espresso.util.HumanReadables
 import androidx.test.espresso.PerformException
-import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.util.TreeIterables
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
-import org.hamcrest.Description
-import org.hamcrest.Matchers.not
 import java.util.concurrent.TimeoutException
+import android.widget.TextView
+import androidx.core.view.children
+import org.hamcrest.Matchers.*
 
 
 /**
  * Created by drodriguez on 08/12/19.
  */
+var stringHolder = mutableListOf<String>()
 
 open class CustomViewActions {
     /**
@@ -38,7 +39,8 @@ open class CustomViewActions {
      * @param customClick If view is not visible more than 90% use custom click
      */
     protected fun click(contentDescription: String, customClick: Boolean = false) {
-        onView(withContentDescription(contentDescription)).perform(if (customClick) customClickAction() else ViewActions.click())
+        onView(allOf(withContentDescription(contentDescription), isDisplayed()))
+                .perform(if (customClick) customClickAction() else ViewActions.click())
     }
 
     /**
@@ -71,6 +73,7 @@ open class CustomViewActions {
      * @param position Position of element on list
      */
     protected fun clickOnRecyclerViewItem(contentDescription: String, position: Int) {
+        getTextFromRecyclerViewItem(contentDescription, position)
         onView(withContentDescription(contentDescription)).
                 perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(position, ViewActions.click()))
     }
@@ -93,7 +96,6 @@ open class CustomViewActions {
      */
     protected fun verifyItemInRecyclerView(contentDescription: String, textMatch: String) {
         onView(withContentDescription(contentDescription)).check(matches(hasDescendant(withText(textMatch))))
-
     }
 
     /**
@@ -107,6 +109,23 @@ open class CustomViewActions {
             onView(withContentDescription(contentDescription)).perform(typeText(stringToType), closeSoftKeyboard())
         } else {
             onView(withContentDescription(contentDescription)).perform(typeText(stringToType))
+        }
+    }
+
+    /**
+     * Get text from recycler view item using either position or matching text
+     * @param contentDescription Content description of the view
+     * @param position Index position of the item on the list
+     * @param textMatch Text used to match item on the list
+     */
+    private fun getTextFromRecyclerViewItem(contentDescription: String, position: Int = -1, textMatch: String = "") {
+        if (position >= 0 && textMatch.isEmpty()) {
+            onView(withContentDescription(contentDescription)).
+                    perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(position, getText()))
+        } else if (textMatch.isNotEmpty()) {
+            onView(withContentDescription(contentDescription)).perform(
+                    RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
+                            hasDescendant(withText(textMatch)), getText()))
         }
     }
 
@@ -180,5 +199,27 @@ open class CustomViewActions {
                         .build()
             }
         }
+    }
+
+    /**
+     * Loops thru all children views and extracts the text from each TextView
+     * Good for verifying recycler view items
+     */
+    private fun getText(): ViewAction {
+        stringHolder = mutableListOf()
+        return object : ViewAction {
+            override fun getConstraints(): Matcher<View> {
+                return isAssignableFrom(View::class.java)
+            }
+
+            override fun getDescription(): String {
+                return "getting text from a TextView"
+            }
+
+            override fun perform(uiController: UiController, view: View) {
+                (view as ViewGroup).children.forEach { view -> if(view is TextView) stringHolder.add(view.text.toString()) }
+            }
+        }
+
     }
 }

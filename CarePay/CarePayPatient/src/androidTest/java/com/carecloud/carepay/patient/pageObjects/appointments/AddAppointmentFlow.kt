@@ -1,12 +1,17 @@
-package com.carecloud.carepay.practice.tablet.PageObjects.PatientMode
+package com.carecloud.carepay.patient.pageObjects.appointments
 
 import com.carecloud.carepay.patient.R
 import com.carecloud.carepay.patient.appContext
 import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
+import com.carecloud.carepaylibray.androidTest.actions.stringHolder
 
 /**
  * Created by drodriguez on 2019-08-28.
  */
+
+var appointmentTime = ""
+var providerName = ""
+
 class AddAppointmentFlow<T>(private val screenAfterAppointment: T) : CustomViewActions() {
     fun selectLocation() : AddAppointmentFlow<T> {
         click(appContext.getString(R.string.content_description_choose_location))
@@ -31,6 +36,7 @@ class AddAppointmentFlow<T>(private val screenAfterAppointment: T) : CustomViewA
 
     fun chooseAppointmentTime(): AddAppointmentFlow<T> {
         clickOnRecyclerViewItem(appContext.getString(R.string.content_description_available_hours_list), 1)
+        appointmentTime = stringHolder[0]
         return this
     }
 

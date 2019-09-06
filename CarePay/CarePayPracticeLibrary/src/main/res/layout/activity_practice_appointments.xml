@@ -244,6 +244,7 @@
         android:layout_marginTop="@dimen/listPatientsMarginTop"
         android:layout_marginEnd="@dimen/paymentContainerHorizontalMargin"
         android:layout_marginBottom="@dimen/paymentContainerBottomMargin"
-        android:background="@drawable/payments_list_background" />
+        android:background="@drawable/payments_list_background"
+        android:contentDescription="@string/content_description_appointments_list"/>
 
 </LinearLayout>
