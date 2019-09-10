@@ -24,6 +24,9 @@ import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import java.util.concurrent.TimeoutException
 import android.widget.TextView
 import androidx.core.view.children
+import androidx.core.view.forEach
+import androidx.test.espresso.Espresso.onData
+import androidx.test.espresso.matcher.RootMatchers
 import org.hamcrest.Matchers.*
 
 
@@ -88,6 +91,15 @@ open class CustomViewActions {
                 RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
                         hasDescendant(withText(textMatch)), ViewActions.click()))
     }
+    /**
+     * Click on an item in a recycler view list based on text
+     * @param contentDescription Content description of the view
+     * @param textMatch Text to match with element on list
+     */
+    protected fun clickOnRecyclerViewItemChildren(contentDescription: String, position: Int, textMatch: String) {
+        onView(withContentDescription(contentDescription)).
+                perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(position, clickWithinRecyclerViewItem(textMatch)))
+    }
 
     /**
      * Verify if item is visible in Recycler view
@@ -110,6 +122,23 @@ open class CustomViewActions {
         } else {
             onView(withContentDescription(contentDescription)).perform(typeText(stringToType))
         }
+    }
+
+    /**
+     * Click on a popup window item
+     * @param textMatch Text to match in the popup
+     */
+    protected fun clickInPopupWindow(textMatch: String) {
+        onView(withText(textMatch)).inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
+    }
+
+    /**
+     * Click on an item on an adapter list
+     * @param contentDescription Content descriprion of the list
+     * @param position position of item on the list
+     */
+    protected fun clickOnItemOnList(contentDescription: String, position: Int) {
+        onData(anything()).inAdapterView(withContentDescription(contentDescription)).atPosition(position).perform(ViewActions.click())
     }
 
     /**
@@ -217,9 +246,40 @@ open class CustomViewActions {
             }
 
             override fun perform(uiController: UiController, view: View) {
-                (view as ViewGroup).children.forEach { view -> if(view is TextView) stringHolder.add(view.text.toString()) }
+                for (child in TreeIterables.breadthFirstViewTraversal(view)) {
+                    if (child is TextView) {
+                        stringHolder.add(child.text.toString())
+                    }
+                }
+//                (view as ViewGroup).children.forEach { view -> if(view is TextView) stringHolder.add(view.text.toString()) }
             }
         }
 
+    }
+
+    /**
+     * Searches a view's children, no matter the level until it find a match and clicks it
+     * @param textMatch Text of the view to find
+     */
+    private fun clickWithinRecyclerViewItem(textMatch: String): ViewAction {
+        return object : ViewAction {
+            override fun getConstraints(): Matcher<View> {
+                return isAssignableFrom(View::class.java)
+            }
+
+            override fun getDescription(): String {
+                return "getting text from a TextView"
+            }
+
+            override fun perform(uiController: UiController, view: View) {
+                val viewMatcher = withText(textMatch)
+                for (child in TreeIterables.breadthFirstViewTraversal(view)) {
+                    if (viewMatcher.matches(child)) {
+                        child.performClick()
+                        return
+                    }
+                }
+            }
+        }
     }
 }

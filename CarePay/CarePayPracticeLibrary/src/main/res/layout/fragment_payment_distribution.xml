@@ -110,7 +110,8 @@
                     android:textColor="@color/emerald"
                     android:textSize="@dimen/amountLabelTextSize"
                     app:customAssetFont="proxima_nova_semi_bold"
-                    tools:text="$325.00" />
+                    tools:text="$325.00"
+                    android:contentDescription="@string/content_description_total_amount_being_paid"/>
 
             </LinearLayout>
 
@@ -237,7 +238,8 @@
                             android:id="@+id/balances_recycler"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/dimen_20dp" />
+                            android:layout_marginBottom="@dimen/dimen_20dp"
+                            android:contentDescription="@string/content_description_patient_balances_list"/>
 
 
                         <LinearLayout
@@ -364,7 +366,8 @@
                         android:background="@drawable/green_rounded_button_selector"
                         app:customAssetFont="gotham_rounded_medium"
                         breeze:textKey="practice_payments_detail_dialog_pay"
-                        tools:text="Pay" />
+                        tools:text="Pay"
+                        android:contentDescription="@string/content_description_pay_button"/>
 
                 </LinearLayout>
 

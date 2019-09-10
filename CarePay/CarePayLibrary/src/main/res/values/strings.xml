@@ -446,4 +446,8 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="content_description_list_of_practices">List of Practices</string>
     <string name="content_description_available_hours_list">Available Hours List</string>
     <string name="content_description_appointments_list">Appointments List</string>
+    <string name="content_description_pay_button">Pay Button</string>
+    <string name="content_description_payment_types_list">Payment Types List</string>
+    <string name="content_description_credit_cards_list">Credit Cards List</string>
+    <string name="content_description_ok_button">Ok Button</string>
 </resources>

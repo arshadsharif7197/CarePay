@@ -28,6 +28,5 @@ class PRAddAppointmentTest : BaseTest() {
                 .pressCheckAvailableTimes()
                 .chooseAppointmentTime()
                 .pressScheduleAppointment()
-                .verifyAppointmentisOnList(appointmentTime)
     }
 }
