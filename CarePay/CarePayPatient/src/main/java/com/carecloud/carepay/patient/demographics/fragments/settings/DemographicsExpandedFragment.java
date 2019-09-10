@@ -269,7 +269,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
     protected void setUpPhysicianField(View view, final PhysicianDto physician,
                                        DemographicPhysicianSection demographicsField,
                                        int containerLayout, int inputLayoutId, int editTextId,
-                                       int optionalViewId, final int physicianType) {
+                                       int requiredViewId, final int physicianType) {
         view.findViewById(containerLayout).setVisibility(demographicsField.isDisplay() ? View.VISIBLE : View.GONE);
         final TextInputLayout inputLayout = view.findViewById(inputLayoutId);
         final EditText editText = view.findViewById(editTextId);
@@ -279,14 +279,9 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         }
         editText.getOnFocusChangeListener().onFocusChange(editText,
                 !StringUtil.isNullOrEmpty(editText.getText().toString().trim()));
-        final View optionalView = view.findViewById(optionalViewId);
-        optionalView.setVisibility(!demographicsField.isRequired() && physician == null ? View.VISIBLE : View.GONE);
-        editText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.showSearchPhysicianFragmentDialog(physician, physicianType);
-            }
-        });
+        final View optionalView = view.findViewById(requiredViewId);
+        optionalView.setVisibility(demographicsField.isRequired() && physician == null ? View.VISIBLE : View.GONE);
+        editText.setOnClickListener(view1 -> callback.showSearchPhysicianFragmentDialog(physician, physicianType));
     }
 
     private void setUpEmergencyContact(View view, PatientModel emergencyContact) {
@@ -347,7 +342,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                     || employmentStatus.toLowerCase().equals("part time");
         }
 
-        if (!employmentInfoSection.getProperties().getEmploymentStatus().isRequired()
+        if (employmentInfoSection.getProperties().getEmploymentStatus().isRequired()
                 && StringUtil.isNullOrEmpty(employmentStatus)) {
             employmentStatusRequired.setVisibility(View.VISIBLE);
         }
