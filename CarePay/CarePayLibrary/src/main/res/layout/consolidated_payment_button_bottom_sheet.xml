@@ -56,7 +56,8 @@
         android:id="@+id/payTotalAmountContainer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_60dp"
-        android:background="?android:selectableItemBackground">
+        android:background="?android:selectableItemBackground"
+        android:contentDescription="@string/content_description_pay_total_amount_button">
 
         <ImageView
             android:id="@+id/totalAmountProgressBar"
@@ -93,7 +94,8 @@
         android:id="@+id/partialPaymentContainer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_60dp"
-        android:background="?android:selectableItemBackground">
+        android:background="?android:selectableItemBackground"
+        android:contentDescription="@string/content_description_make_partial_payment_button">
 
         <ImageView
             android:id="@+id/partialPaymentProgressBar"

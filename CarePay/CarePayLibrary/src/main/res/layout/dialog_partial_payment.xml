@@ -85,7 +85,8 @@
                     android:textColorHint="@color/white_transparent"
                     android:textCursorDrawable="@color/transparent_apt"
                     android:textSize="@dimen/payment_header_amount_size"
-                    app:customAssetFont="gotham_rounded_medium" />
+                    app:customAssetFont="gotham_rounded_medium"
+                    android:contentDescription="@string/content_description_enter_payment_amount"/>
             </LinearLayout>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -136,7 +137,8 @@
                 android:background="@drawable/bg_green_selector"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="payment_partial_amount_button"
-                tools:text="PAY PARTIAL AMOUNT" />
+                tools:text="PAY PARTIAL AMOUNT"
+                android:contentDescription="@string/content_description_make_partial_payment_button"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

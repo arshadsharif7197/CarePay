@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.androidTest.actions
 
 import android.view.View
-import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 import androidx.test.espresso.UiController
@@ -23,12 +22,10 @@ import androidx.test.espresso.util.TreeIterables
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import java.util.concurrent.TimeoutException
 import android.widget.TextView
-import androidx.core.view.children
-import androidx.core.view.forEach
+
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.matcher.RootMatchers
 import org.hamcrest.Matchers.*
-
 
 /**
  * Created by drodriguez on 08/12/19.
@@ -77,7 +74,7 @@ open class CustomViewActions {
      */
     protected fun clickOnRecyclerViewItem(contentDescription: String, position: Int) {
         getTextFromRecyclerViewItem(contentDescription, position)
-        onView(withContentDescription(contentDescription)).
+        onView(allOf(withContentDescription(contentDescription), isDisplayed())).
                 perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(position, ViewActions.click()))
     }
 
@@ -149,10 +146,10 @@ open class CustomViewActions {
      */
     private fun getTextFromRecyclerViewItem(contentDescription: String, position: Int = -1, textMatch: String = "") {
         if (position >= 0 && textMatch.isEmpty()) {
-            onView(withContentDescription(contentDescription)).
+            onView(allOf(withContentDescription(contentDescription), isDisplayed())).
                     perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(position, getText()))
         } else if (textMatch.isNotEmpty()) {
-            onView(withContentDescription(contentDescription)).perform(
+            onView(allOf(withContentDescription(contentDescription), isDisplayed())).perform(
                     RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
                             hasDescendant(withText(textMatch)), getText()))
         }
@@ -183,10 +180,13 @@ open class CustomViewActions {
      * @param contentDescription The content description of the view to wait for.
      * @param milliseconds The timeout of until when to wait for.
      */
-    protected fun wait(contentDescription: String, milliseconds: Long){
-        onView(isRoot()).perform(waitId(contentDescription, milliseconds))
+    protected fun wait(contentDescription: String = "", milliseconds: Long){
+        if (contentDescription.isNotEmpty()) {
+            onView(isRoot()).perform(waitId(contentDescription, milliseconds))
+        } else {
+            onView(isRoot()).perform(waitFor(milliseconds))
+        }
     }
-
 
     /**
      * Perform action of waiting for a specific view content description.
@@ -279,6 +279,25 @@ open class CustomViewActions {
                         return
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * Perform action of waiting for a specific time.
+     */
+    private fun waitFor(millis: Long): ViewAction {
+        return object : ViewAction {
+            override fun getConstraints(): Matcher<View> {
+                return isRoot()
+            }
+
+            override fun getDescription(): String {
+                return "Wait for $millis milliseconds."
+            }
+
+            override fun perform(uiController: UiController, view: View) {
+                uiController.loopMainThreadForAtLeast(millis)
             }
         }
     }

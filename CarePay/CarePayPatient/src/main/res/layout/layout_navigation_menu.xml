@@ -68,49 +68,56 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:imageSource="@drawable/icn_drawer_appointments"
-                app:labelTextKey="navigation_link_appointments" />
+                app:labelTextKey="navigation_link_appointments"
+                android:contentDescription="@string/content_description_appointments_screen_button"/>
 
             <com.carecloud.carepaylibray.customcomponents.CustomMenuItem
                 android:id="@+id/myHealthMenuItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:imageSource="@drawable/icn_drawer_my_health"
-                app:labelTextKey="navigation_link_my_health" />
+                app:labelTextKey="navigation_link_my_health"
+                android:contentDescription="@string/content_description_my_health_screen_button"/>
 
             <com.carecloud.carepaylibray.customcomponents.CustomMenuItem
                 android:id="@+id/paymentsMenuItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:imageSource="@drawable/ic_icn_drawer_payments_default"
-                app:labelTextKey="navigation_link_payments" />
+                app:labelTextKey="navigation_link_payments"
+                android:contentDescription="@string/content_description_payments_screen_button"/>
 
             <com.carecloud.carepaylibray.customcomponents.CustomMenuItem
                 android:id="@+id/messagesMenuItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:imageSource="@drawable/icn_messages"
-                app:labelTextKey="navigation_link_messages" />
+                app:labelTextKey="navigation_link_messages"
+                android:contentDescription="@string/content_description_messages_screen_button"/>
 
             <com.carecloud.carepaylibray.customcomponents.CustomMenuItem
                 android:id="@+id/formsMenuItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:imageSource="@drawable/ic_forms"
-                app:labelTextKey="adhoc_show_forms_button_label" />
+                app:labelTextKey="adhoc_show_forms_button_label"
+                android:contentDescription="@string/content_description_forms_screen_button"/>
 
             <com.carecloud.carepaylibray.customcomponents.CustomMenuItem
                 android:id="@+id/shopMenuItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:imageSource="@drawable/icn_drawer_purchase_default"
-                app:labelTextKey="shop_button" />
+                app:labelTextKey="shop_button"
+                android:contentDescription="@string/content_description_shop_screen_button"/>
 
             <com.carecloud.carepaylibray.customcomponents.CustomMenuItem
                 android:id="@+id/notificationsMenuItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:imageSource="@drawable/icn_drawer_notifications"
-                app:labelTextKey="notifications_heading" />
+                app:labelTextKey="notifications_heading"
+                android:contentDescription="@string/content_description_notifications_screen_button"/>
 
             <View
                 android:layout_width="match_parent"
