@@ -1,6 +1,6 @@
 package com.carecloud.carepay.practice.tablet.pageObjects.patientMode
 
-import com.carecloud.carepay.practice.tablet.PageObjects.PatientMode.AddAppointmentFlow
+import com.carecloud.carepay.practice.tablet.pageObjects.shared.appointments.AddAppointmentFlow
 import com.carecloud.carepay.practice.tablet.R
 import com.carecloud.carepay.practice.tablet.tests.appContext
 import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions

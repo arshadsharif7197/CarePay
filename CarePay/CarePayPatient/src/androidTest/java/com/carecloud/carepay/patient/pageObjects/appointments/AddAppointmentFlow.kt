@@ -1,8 +1,7 @@
-package com.carecloud.carepay.practice.tablet.pageObjects.shared.appointments
+package com.carecloud.carepay.patient.pageObjects.appointments
 
-import com.carecloud.carepay.practice.tablet.R
-import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.appointments.AppointmentsScreen
-import com.carecloud.carepay.practice.tablet.tests.appContext
+import com.carecloud.carepay.patient.R
+import com.carecloud.carepay.patient.appContext
 import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 import com.carecloud.carepaylibray.androidTest.actions.stringHolder
 
@@ -11,16 +10,17 @@ import com.carecloud.carepaylibray.androidTest.actions.stringHolder
  */
 
 var appointmentTime = ""
+var providerName = ""
 
 class AddAppointmentFlow<T>(private val screenAfterAppointment: T) : CustomViewActions() {
     fun selectLocation() : AddAppointmentFlow<T> {
-        click(appContext.getString(R.string.content_description_choose_location), screenAfterAppointment is AppointmentsScreen)
+        click(appContext.getString(R.string.content_description_choose_location))
         clickOnRecyclerViewItem(appContext.getString(R.string.content_description_location_list), 1)
         return this
     }
-    fun selectProvider(): AddAppointmentFlow<T> {
+    fun selectProvider(providerName: String): AddAppointmentFlow<T> {
         click(appContext.getString(R.string.content_description_choose_provider))
-        clickOnRecyclerViewItem(appContext.getString(R.string.content_description_provider_list_2), 0)
+        clickOnRecyclerViewItem(appContext.getString(R.string.content_description_provider_list_2), textMatch = providerName)
         return this
     }
     fun selectVisitType(): AddAppointmentFlow<T> {
@@ -43,5 +43,10 @@ class AddAppointmentFlow<T>(private val screenAfterAppointment: T) : CustomViewA
     fun pressScheduleAppointment(): T {
         click(appContext.getString(R.string.content_description_request_appointment))
         return screenAfterAppointment
+    }
+
+    fun switchBE(chosenBe: String) : AddAppointmentFlow<T> {
+        clickOnRecyclerViewItem(appContext.getString(R.string.content_description_list_of_practices), chosenBe)
+        return this
     }
 }

@@ -21,7 +21,8 @@
         android:paddingTop="@dimen/dimen_15dp"
         android:paddingEnd="@dimen/dimen_10dp"
         android:paddingBottom="@dimen/dimen_15dp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:contentDescription="@string/content_description_list_of_practices"/>
 
     <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:id="@+id/checkAvailabilityButton"
