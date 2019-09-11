@@ -119,7 +119,8 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
             paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, args);
             paymentAmount = args.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
         }
-        androidPayAdapter = new AndroidPayAdapter(getActivity(), paymentsModel.getPaymentPayload().getMerchantServices(), getChildFragmentManager());
+        androidPayAdapter = new AndroidPayAdapter(getActivity(), paymentsModel
+                .getPaymentPayload().getMerchantServices(), getChildFragmentManager());
         callback.setAndroidPayTargetFragment(this);
     }
 
@@ -167,20 +168,20 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
     public void onViewCreated(View view, Bundle icicle) {
         initToolbar(view);
 
-        TextView account = (TextView) view.findViewById(R.id.pay_account);
+        TextView account = view.findViewById(R.id.pay_account);
         account.setText(maskedWallet.getEmail());
 
-        TextView method = (TextView) view.findViewById(R.id.pay_method);
+        TextView method = view.findViewById(R.id.pay_method);
         method.setText(maskedWallet.getPaymentDescriptions()[0]);
 
-        TextView address = (TextView) view.findViewById(R.id.pay_billing_address);
+        TextView address = view.findViewById(R.id.pay_billing_address);
         address.setText(buildAddress());
 
 
-        detailsContainer = (ViewGroup) view.findViewById(R.id.androidpay_invoice_container);
+        detailsContainer = view.findViewById(R.id.androidpay_invoice_container);
         buttonConfirm = view.findViewById(R.id.button_place_order);
 
-        TextView textView = (TextView) view.findViewById(R.id.paymentAmount);
+        TextView textView = view.findViewById(R.id.paymentAmount);
         textView.setText(NumberFormat.getCurrencyInstance(Locale.US).format(paymentAmount));
 
 //        initChildFragments();
@@ -197,19 +198,14 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
     }
 
     private void initToolbar(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
 
         if (toolbar != null) {
-            TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
+            TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
             title.setText(Label.getLabel("payment_patient_balance_toolbar"));
 
             toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getActivity().onBackPressed();
-                }
-            });
+            toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
         }
     }
 
@@ -280,12 +276,7 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
             hideProgressDialog();
             PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             papiAccount = paymentsModel.getPaymentPayload().getPapiAccountByType(PaymentConstants.ANDROID_PAY_PAPI_ACCOUNT_TYPE);
-            buttonConfirm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    androidPayAdapter.createFullWallet(maskedWallet, paymentAmount);
-                }
-            });
+            buttonConfirm.setOnClickListener(view -> androidPayAdapter.createFullWallet(maskedWallet, paymentAmount));
         }
 
         @Override
@@ -378,7 +369,8 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
             queries.put("practice_id", userPracticeDTO.getPracticeId());
             queries.put("patient_id", userPracticeDTO.getPatientId());
         } else {
-            PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
+            PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload()
+                    .getPatientBalances().get(0).getBalances().get(0).getMetadata();
             queries.put("practice_mgmt", metadata.getPracticeMgmt());
             queries.put("practice_id", metadata.getPracticeId());
             queries.put("patient_id", metadata.getPatientId());
@@ -413,7 +405,8 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
             public void onFailure(String exceptionMessage) {
                 hideProgressDialog();
                 System.out.print(exceptionMessage);
-                logPaymentFail("Failed to reach make payments endpoint", true, rawResponse, exceptionMessage);
+                logPaymentFail("Failed to reach make payments endpoint", true,
+                        rawResponse, exceptionMessage);
 
             }
         };
@@ -447,7 +440,8 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
             practiceId = userPracticeDTO.getPracticeId();
             practiceMgmt = userPracticeDTO.getPatientId();
         } else {
-            PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
+            PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload()
+                    .getPatientBalances().get(0).getBalances().get(0).getMetadata();
             patientId = metadata.getPracticeMgmt();
             practiceId = metadata.getPracticeId();
             practiceMgmt = metadata.getPatientId();
@@ -488,7 +482,13 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
         }
     }
 
-    private void queuePayment(double amount, IntegratedPaymentPostModel postModel, String patientID, String practiceId, String practiceMgmt, String paymentJson, String errorMessage) {
+    private void queuePayment(double amount,
+                              IntegratedPaymentPostModel postModel,
+                              String patientID,
+                              String practiceId,
+                              String practiceMgmt,
+                              String paymentJson,
+                              String errorMessage) {
         if (postModel != null) {
 
             if (postModel.getExecution() == null) {
@@ -529,7 +529,8 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
         paymentRecord.setPatientID(patientID);
         paymentRecord.setPracticeID(practiceId);
         paymentRecord.setPracticeMgmt(practiceMgmt);
-        paymentRecord.setQueueTransition(gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getQueuePayment()));
+        paymentRecord.setQueueTransition(gson.toJson(paymentsModel.getPaymentsMetadata()
+                .getPaymentsTransitions().getQueuePayment()));
         paymentRecord.setUsername(getApplicationPreferences().getUserId());
 
         String paymentModelJsonEnc = EncryptionUtil.encrypt(getContext(), paymentModelJson, practiceId);
@@ -539,12 +540,9 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
             paymentRecord.setPaymentModelJson(paymentModelJson);
         }
 
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                BreezeDataBase database = BreezeDataBase.getDatabase(getContext());
-                database.getAndroidPayDao().insert(paymentRecord);
-            }
+        Executors.newSingleThreadExecutor().execute(() -> {
+            BreezeDataBase database = BreezeDataBase.getDatabase(getContext());
+            database.getAndroidPayDao().insert(paymentRecord);
         });
 
         Intent intent = new Intent(getContext(), AndroidPayQueueUploadService.class);

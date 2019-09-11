@@ -1,13 +1,14 @@
 package com.carecloud.carepay.patient.payment.androidpay;
 
 import android.content.Intent;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
@@ -23,7 +24,6 @@ import com.carecloud.carepaylibray.payments.models.PapiAccountsDTO;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.wallet.AutoResolveHelper;
 import com.google.android.gms.wallet.CardRequirements;
@@ -74,7 +74,7 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
 
     }
 
-    public interface AndroidPayProcessingCallback{
+    public interface AndroidPayProcessingCallback {
         void onAndroidPayFailed(String message);
 
         void onAndroidPaySuccess(JsonElement jsonElement);
@@ -86,7 +86,7 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
 
     private FragmentActivity activity;
     private FragmentManager fragMan;
-    private List<MerchantServicesDTO> merchantServicesList = new ArrayList<>();
+    private List<MerchantServicesDTO> merchantServicesList;
 
     private static GoogleApiClient googleApiClient;
 
@@ -94,11 +94,14 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
 
     /**
      * Constructor
-     * @param activity activity
+     *
+     * @param activity             activity
      * @param merchantServicesList merchant services list
-     * @param fragmentManager frament manager
+     * @param fragmentManager      frament manager
      */
-    public AndroidPayAdapter(FragmentActivity activity, @NonNull List<MerchantServicesDTO> merchantServicesList, FragmentManager fragmentManager){
+    public AndroidPayAdapter(FragmentActivity activity,
+                             @NonNull List<MerchantServicesDTO> merchantServicesList,
+                             FragmentManager fragmentManager) {
         this.activity = activity;
         this.fragMan = fragmentManager;
         this.merchantServicesList = merchantServicesList;
@@ -107,11 +110,11 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
 
     /**
      * Constructor
-     * @param activity activity
+     *
+     * @param activity             activity
      * @param merchantServicesList merchant services list
-     * @param merchantServicesList
      */
-    public AndroidPayAdapter(FragmentActivity activity, @NonNull List<MerchantServicesDTO> merchantServicesList){
+    public AndroidPayAdapter(FragmentActivity activity, @NonNull List<MerchantServicesDTO> merchantServicesList) {
         this.activity = activity;
         this.fragMan = activity.getSupportFragmentManager();
         this.merchantServicesList = merchantServicesList;
@@ -121,15 +124,16 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
     /**
      * disconnect google Api client
      */
-    public void disconnectClient(){
+    public void disconnectClient() {
         disconnectGoogleAPI();
     }
 
     /**
      * Check if android pay is avaiable and init android pay
+     *
      * @param callback callback
      */
-    public void initAndroidPay(final AndroidPayReadyCallback callback){
+    public void initAndroidPay(final AndroidPayReadyCallback callback) {
         IsReadyToPayRequest req = IsReadyToPayRequest.newBuilder()
                 .addAllowedCardNetwork(WalletConstants.CardNetwork.MASTERCARD)
                 .addAllowedCardNetwork(WalletConstants.CardNetwork.VISA)
@@ -139,24 +143,21 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
         setGoogleApiClient();
 
         Task<Boolean> task = paymentsClient.isReadyToPay(req);
-        task.addOnCompleteListener(new OnCompleteListener<Boolean>() {
-            @Override
-            public void onComplete(@NonNull Task<Boolean> task) {
-                try {
-                    boolean result = task.getResult(ApiException.class);
-                    if(result){
-                        callback.onAndroidPayReady();
-                    }
-                }catch (ApiException apx){
-                    apx.printStackTrace();
-                }
+        task.addOnCompleteListener(task1 -> {
+            try {
+                boolean result = task1.getResult(ApiException.class);
+//                if (result) {
+                    callback.onAndroidPayReady();
+//                }
+            } catch (ApiException apx) {
+                apx.printStackTrace();
             }
         });
     }
 
     //region GoogleClient
     private void setGoogleApiClient() {
-        if(paymentsClient == null){
+        if (paymentsClient == null) {
             paymentsClient = Wallet.getPaymentsClient(activity,
                     new Wallet.WalletOptions.Builder()
                             .setEnvironment(PaymentConstants.WALLET_ENVIRONMENT)
@@ -165,7 +166,7 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
     }
 
     private void disconnectGoogleAPI() {
-        if(paymentsClient != null){
+        if (paymentsClient != null) {
             paymentsClient = null;
         }
     }
@@ -181,7 +182,8 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
 
     /**
      * Creates a Eallet Button fragment
-     * @param amount amount to make payment
+     *
+     * @param amount    amount to make payment
      * @param container container to insert fragment
      */
     public void createWalletButton(Double amount, ViewGroup container) {
@@ -208,10 +210,11 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
 
     /**
      * Creates a Wallet Details Fragment
-     * @param maskedWallet  maskedWallet
-     * @param container  container to insert fragment
+     *
+     * @param maskedWallet maskedWallet
+     * @param container    container to insert fragment
      */
-    public void createWalletDetails(MaskedWallet maskedWallet, ViewGroup container){
+    public void createWalletDetails(MaskedWallet maskedWallet, ViewGroup container) {
         SupportWalletFragment walletFragment = SupportWalletFragment.newInstance(walletDetailOptions);
 
         // Now initialize the Wallet Fragment
@@ -229,10 +232,11 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
 
     /**
      * Send a full wallet request for payment
+     *
      * @param maskedWallet masked wallet
-     * @param amount amount of payment
+     * @param amount       amount of payment
      */
-    public void createFullWallet(MaskedWallet maskedWallet, Double amount){
+    public void createFullWallet(MaskedWallet maskedWallet, Double amount) {
         setGoogleApiClient();
         Wallet.Payments.loadFullWallet(googleApiClient,
                 createFullWalletRequest(maskedWallet, amount),
@@ -240,7 +244,7 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
 
     }
 
-    private FullWalletRequest createFullWalletRequest(MaskedWallet maskedWallet, Double amount){
+    private FullWalletRequest createFullWalletRequest(MaskedWallet maskedWallet, Double amount) {
         FullWalletRequest.Builder builder = FullWalletRequest.newBuilder()
                 .setGoogleTransactionId(maskedWallet.getGoogleTransactionId())
                 .setCart(Cart.newBuilder()
@@ -277,13 +281,13 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
 
     private String getAndroidPublicKey() {
         MerchantServicesDTO androidPayMerchantService = getAndroidPayMerchantService();
-        if(androidPayMerchantService != null){
+        if (androidPayMerchantService != null) {
             return androidPayMerchantService.getMetadata().getAndroidPublicKey();
         }
         return "";
     }
 
-    private MerchantServicesDTO getAndroidPayMerchantService(){
+    private MerchantServicesDTO getAndroidPayMerchantService() {
         for (MerchantServicesDTO merchantServices : merchantServicesList) {
             if (merchantServices.getCode().equals(PaymentConstants.ANDROID_PAY_MERCHANT_SERVICE)) {
                 return merchantServices;
@@ -341,7 +345,7 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
     //endregion
 
     //region Payment Request
-    private TransactionInfo getTransactionInfo(double amount){
+    private TransactionInfo getTransactionInfo(double amount) {
         return TransactionInfo.newBuilder()
                 .setTotalPriceStatus(WalletConstants.TOTAL_PRICE_STATUS_FINAL)
                 .setTotalPrice(String.valueOf(amount))
@@ -349,7 +353,7 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
                 .build();
     }
 
-    private CardRequirements getCardRequirements(){
+    private CardRequirements getCardRequirements() {
         return CardRequirements.newBuilder()
                 .addAllowedCardNetwork(WalletConstants.CARD_NETWORK_AMEX)
                 .addAllowedCardNetwork(WalletConstants.CARD_NETWORK_DISCOVER)
@@ -358,15 +362,7 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
                 .build();
     }
 
-    @Deprecated
-    private PaymentMethodTokenizationParameters getTokenizationParameters(){
-        return PaymentMethodTokenizationParameters.newBuilder()
-                .setPaymentMethodTokenizationType(WalletConstants.PAYMENT_METHOD_TOKENIZATION_TYPE_DIRECT)
-                .addParameter("publicKey", getAndroidPublicKey())
-                .build();
-    }
-
-    private PaymentMethodTokenizationParameters getTokenizationParameters(PapiAccountsDTO papiAccount){
+    private PaymentMethodTokenizationParameters getTokenizationParameters(PapiAccountsDTO papiAccount) {
         return PaymentMethodTokenizationParameters.newBuilder()
                 .setPaymentMethodTokenizationType(WalletConstants.PAYMENT_METHOD_TOKENIZATION_TYPE_PAYMENT_GATEWAY)
                 .addParameter("gateway", PaymentConstants.MERCHANT_GATEWAY)
@@ -374,17 +370,7 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
                 .build();
     }
 
-    @Deprecated
-    private PaymentDataRequest createPaymentDataRequest(double amount){
-        return PaymentDataRequest.newBuilder()
-                .setTransactionInfo(getTransactionInfo(amount))
-                .addAllowedPaymentMethod(WalletConstants.PAYMENT_METHOD_TOKENIZED_CARD)
-                .setCardRequirements(getCardRequirements())
-                .setPaymentMethodTokenizationParameters(getTokenizationParameters())
-                .build();
-    }
-
-    private PaymentDataRequest createPaymentDataRequest(double amount, PapiAccountsDTO papiAccount){
+    private PaymentDataRequest createPaymentDataRequest(double amount, PapiAccountsDTO papiAccount) {
         return PaymentDataRequest.newBuilder()
                 .setTransactionInfo(getTransactionInfo(amount))
                 .addAllowedPaymentMethod(WalletConstants.PAYMENT_METHOD_TOKENIZATION_TYPE_PAYMENT_GATEWAY)
@@ -395,41 +381,34 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
 
     /**
      * Initialize Google Payment Request
+     *
      * @param amount amount to pay
      */
-    @Deprecated
-    public void createAndroidPayRequest(double amount){
-        setGoogleApiClient();
-        PaymentDataRequest paymentDataRequest = createPaymentDataRequest(amount);
-        if(paymentDataRequest != null){
-            AutoResolveHelper.resolveTask(paymentsClient.loadPaymentData(paymentDataRequest), activity, PaymentConstants.REQUEST_CODE_GOOGLE_PAYMENT);
-        }
-    }
-
-    /**
-     * Initialize Google Payment Request
-     * @param amount amount to pay
-     */
-    public void createAndroidPayRequest(double amount, PapiAccountsDTO papiAccount){
+    public void createAndroidPayRequest(double amount, PapiAccountsDTO papiAccount) {
         setGoogleApiClient();
         PaymentDataRequest paymentDataRequest = createPaymentDataRequest(amount, papiAccount);
-        if(paymentDataRequest != null){
-            AutoResolveHelper.resolveTask(paymentsClient.loadPaymentData(paymentDataRequest), activity, PaymentConstants.REQUEST_CODE_GOOGLE_PAYMENT);
+        if (paymentDataRequest != null) {
+            AutoResolveHelper.resolveTask(paymentsClient.loadPaymentData(paymentDataRequest),
+                    activity, PaymentConstants.REQUEST_CODE_GOOGLE_PAYMENT);
         }
     }
 
 
     /**
      * Handle Google Payment result
-     * @param data intent data for successful result
+     *
+     * @param data            intent data for successful result
      * @param papiAccountsDTO papiAccountsDTO
-     * @param paymentAmount payment Amount
-     * @param callback callback for processing results
+     * @param paymentAmount   payment Amount
+     * @param callback        callback for processing results
      */
-    public void handleGooglePaymentData(Intent data, PapiAccountsDTO papiAccountsDTO, Double paymentAmount, @NonNull AndroidPayProcessingCallback callback){
+    public void handleGooglePaymentData(Intent data,
+                                        PapiAccountsDTO papiAccountsDTO,
+                                        Double paymentAmount,
+                                        @NonNull AndroidPayProcessingCallback callback) {
         PaymentData paymentData = PaymentData.getFromIntent(data);
 
-        if(paymentData != null) {
+        if (paymentData != null) {
             String token = paymentData.getPaymentMethodToken().getToken();
             processPaymentWithPayeezy(token, papiAccountsDTO, paymentAmount, callback);
         }
@@ -441,13 +420,17 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
 
     /**
      * Complete android pay request and process payment
-     * @param fullWallet full wallet
+     *
+     * @param fullWallet      full wallet
      * @param papiAccountsDTO papi account for payment
-     * @param paymentAmount amount of payment
-     * @param callback callback
+     * @param paymentAmount   amount of payment
+     * @param callback        callback
      */
     @Deprecated
-    public void sendRequestToPayeezy(FullWallet fullWallet, PapiAccountsDTO papiAccountsDTO, Double paymentAmount, @NonNull AndroidPayProcessingCallback callback) {
+    public void sendRequestToPayeezy(FullWallet fullWallet,
+                                     PapiAccountsDTO papiAccountsDTO,
+                                     Double paymentAmount,
+                                     @NonNull AndroidPayProcessingCallback callback) {
         try {
             //  Parse the Json token retrieved from the Full Wallet.
             String tokenJSON = fullWallet.getPaymentMethodToken().getToken();
@@ -459,25 +442,27 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
 
             //  Create a First Data Json request
             MerchantServicesDTO payeezyMerchantService = getAndroidPayMerchantService();
-            if(payeezyMerchantService == null){
+            if (payeezyMerchantService == null) {
                 callback.onAndroidPayFailed("No Merchant Service Available");
                 return;
             }
-            JSONObject requestPayload = getRequestPayload(encryptedMessage, signature, publicKey, payeezyMerchantService, paymentAmount);
+            JSONObject requestPayload = getRequestPayload(encryptedMessage, signature,
+                    publicKey, payeezyMerchantService, paymentAmount);
             final String payloadString = requestPayload.toString();
 
-            if(papiAccountsDTO == null){
+            if (papiAccountsDTO == null) {
                 callback.onAndroidPayFailed("No Account Available");
                 return;
             }
             final Map<String, String> HMACMap = computeHMAC(payloadString, payeezyMerchantService, papiAccountsDTO);
-            if(HMACMap.isEmpty()){
+            if (HMACMap.isEmpty()) {
                 callback.onAndroidPayFailed("An unknown error has occurred");
                 return;
             }
 
-            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),payloadString);
-            RestCallServiceHelper restCallServiceHelper = new RestCallServiceHelper(callback.getSession().getAppAuthorizationHelper(), callback.getSession().getApplicationMode());
+            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), payloadString);
+            RestCallServiceHelper restCallServiceHelper = new RestCallServiceHelper(callback
+                    .getSession().getAppAuthorizationHelper(), callback.getSession().getApplicationMode());
             restCallServiceHelper.executeRequest(RestDef.POST,
                     payeezyMerchantService.getMetadata().getBaseUrl(),
                     getPayeezyServiceCallback(callback),
@@ -494,7 +479,10 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
         }
     }
 
-    private void processPaymentWithPayeezy(String tokenJSON, PapiAccountsDTO papiAccountsDTO, Double paymentAmount, @NonNull AndroidPayProcessingCallback callback){
+    private void processPaymentWithPayeezy(String tokenJSON,
+                                           PapiAccountsDTO papiAccountsDTO,
+                                           Double paymentAmount,
+                                           @NonNull AndroidPayProcessingCallback callback) {
         try {
             JSONObject jsonTokenData = new JSONObject(tokenJSON);
 
@@ -518,7 +506,8 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
             }
 
             RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), payloadString);
-            RestCallServiceHelper restCallServiceHelper = new RestCallServiceHelper(callback.getSession().getAppAuthorizationHelper(), callback.getSession().getApplicationMode());
+            RestCallServiceHelper restCallServiceHelper = new RestCallServiceHelper(callback.getSession().getAppAuthorizationHelper(),
+                    callback.getSession().getApplicationMode());
             restCallServiceHelper.executeRequest(RestDef.POST,
                     payeezyMerchantService.getMetadata().getBaseUrl(),
                     getPayeezyServiceCallback(callback),
@@ -529,7 +518,7 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
                     HMACMap,
                     body,
                     "v1/transactions");
-        }catch (JSONException jsx){
+        } catch (JSONException jsx) {
             jsx.printStackTrace();
             callback.onAndroidPayFailed("An unknown error has occurred");
         }
@@ -537,7 +526,11 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
     }
 
     @Deprecated
-    private JSONObject getRequestPayload(String data, String signature, String ephemeralPublicKey, MerchantServicesDTO payeezyMerchantService, Double paymentAmount) {
+    private JSONObject getRequestPayload(String data,
+                                         String signature,
+                                         String ephemeralPublicKey,
+                                         MerchantServicesDTO payeezyMerchantService,
+                                         Double paymentAmount) {
         Map<String, Object> pm = new HashMap<>();
         pm.put("merchant_ref", "orderid");
         pm.put("transaction_type", "purchase");
@@ -560,7 +553,7 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
         return new JSONObject(pm);
     }
 
-    private JSONObject getGooglePaymentsPayload(JSONObject jsonToken, Double paymentAmount) throws JSONException{
+    private JSONObject getGooglePaymentsPayload(JSONObject jsonToken, Double paymentAmount) throws JSONException {
         Map<String, Object> payloadMap = new HashMap<>();
         payloadMap.put("currency_code", PaymentConstants.CURRENCY_CODE_USD);
         payloadMap.put("amount", String.valueOf(Math.round(paymentAmount * 100)));
@@ -579,7 +572,8 @@ public class AndroidPayAdapter implements GoogleApiClient.OnConnectionFailedList
         return new JSONObject(payloadMap);
     }
 
-    private static Map<String, String> computeHMAC(String payload, MerchantServicesDTO payeezyMerchantService, PapiAccountsDTO papiAccountsDTO) {
+    private static Map<String, String> computeHMAC(String payload, MerchantServicesDTO payeezyMerchantService,
+                                                   PapiAccountsDTO papiAccountsDTO) {
         String apiSecret = payeezyMerchantService.getMetadata().getApiSecret();
         String apiKey = payeezyMerchantService.getMetadata().getApiKey();
         String token = papiAccountsDTO.getBankAccount().getToken();
