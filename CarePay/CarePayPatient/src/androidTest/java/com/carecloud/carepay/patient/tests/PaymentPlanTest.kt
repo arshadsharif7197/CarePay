@@ -15,7 +15,14 @@ class PaymentPlanTest : BaseTest() {
     @Test
     fun createPaymentPlanTest() {
         AppointmentScreen()
-                .openPaymentScreen()
-                .createPaymentPlan()
+                .openNavigationDrawer()
+                .goToPayments()
+                .chooseBalance(0)
+                .chooseCreatePaymentPlan()
+                .typeAmount("100")
+                .clickCreateButton()
+                .typePlanName("Automated test")
+                .typeNumberOfMonths("5")
+                .clickCreateButton()
     }
 }

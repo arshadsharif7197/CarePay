@@ -455,4 +455,6 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="content_description_make_partial_payment_button">Make Partial Payment button</string>
     <string name="content_description_enter_payment_amount">Enter Payment Amount</string>
     <string name="content_description_payment_methods">Payment Methods</string>
+    <string name="content_description_create_payment_plan_button">Create Payment Plan</string>
+    <string name="content_description_amount_screen">Amount Screen</string>
 </resources>

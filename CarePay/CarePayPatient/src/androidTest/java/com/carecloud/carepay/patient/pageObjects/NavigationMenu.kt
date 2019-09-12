@@ -9,8 +9,10 @@ import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
  * Created by drodriguez on 2019-09-10.
  */
 class NavigationMenu : CustomViewActions() {
+
     fun goToPayments(): PaymentsScreen {
         click(appContext.getString(R.string.content_description_payments_screen_button))
         return PaymentsScreen()
     }
+
 }
