@@ -61,5 +61,8 @@
     <string name="content_description_total_amount_being_paid">Total amount being paid</string>
     <string name="content_description_apply_amount_button">Apply amount button</string>
     <string name="content_description_patient_balances_list">Patient Balances List</string>
+    <string name="content_description_payments_button">Payments button</string>
+    <string name="content_description_pay_partial_button">Pay Partial button</string>
+    <string name="content_description_pay_total_button">Pay Total button</string>
 
 </resources>

@@ -76,7 +76,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:orientation="horizontal"
-            android:scrollbars="horizontal" />
+            android:scrollbars="horizontal"
+            android:contentDescription="@string/content_description_payments_list"/>
 
     </FrameLayout>
 

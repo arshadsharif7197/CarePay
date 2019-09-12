@@ -8,12 +8,12 @@ import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 /**
  * Created by drodriguez on 2019-09-06.
  */
-class EnterAmountDialog: CustomViewActions() {
-    fun enterAmount(amount: String): PaymentsDialog {
+class EnterAmountDialog<T>(private val nextScreen: T): CustomViewActions() {
+    fun enterAmount(amount: String): T {
         amount.forEach { n ->
             clickOnSpecificText(n.toString())
         }
         click(appContext.getString(R.string.content_description_apply_amount_button))
-        return PaymentsDialog()
+        return nextScreen
     }
 }
