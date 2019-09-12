@@ -52,11 +52,27 @@ open class CustomViewActions {
     }
 
     /**
+     * Default click action on specific id
+     * @param id id of the view
+     */
+    protected fun clickOnSpecificId(id: Int) {
+        onView(withId(id)).perform(ViewActions.click())
+    }
+
+    /**
      * Verifies a view is visible
      * @param contentDescription Content description of the view
      */
     protected fun verifyViewVisible(contentDescription: String) {
         onView(withContentDescription(contentDescription)).check(matches(notNullValue())).check(matches(isDisplayed()))
+    }
+
+    /**
+     * Verifies a view is visible
+     * @param id Id of the view
+     */
+    protected fun verifyViewVisible(id: Int) {
+        onView(withId(id)).check(matches(notNullValue())).check(matches(isDisplayed()))
     }
 
     /**
@@ -87,6 +103,16 @@ open class CustomViewActions {
         onView(withContentDescription(contentDescription)).perform(
                 RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
                         hasDescendant(withText(textMatch)), ViewActions.click()))
+    }
+
+    /**
+     * Click on an item in a recycler view list based on position
+     * @param id id of the view
+     * @param position Position of element on list
+     */
+    protected fun clickOnRecyclerViewItem(id: Int, position: Int) {
+        onView(withId(id)).
+                perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(position, ViewActions.click()))
     }
 
     /**

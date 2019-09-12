@@ -14,10 +14,7 @@ class LoginTest : BaseTest() {
 
     @Test
     fun loginPatientTest() {
-        LoginScreen()
-                .typeUser("dev_emails+dev.rsanchez@carecloud.com")
-                .typePassword("Test123!")
-                .pressLoginButton()
+        //All is done in the BaseTest()
     }
 
 
