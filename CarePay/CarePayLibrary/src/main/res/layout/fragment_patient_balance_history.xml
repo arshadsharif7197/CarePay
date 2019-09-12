@@ -57,7 +57,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/payment_list_recycler"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:contentDescription="@string/content_description_payments_list"/>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </RelativeLayout>

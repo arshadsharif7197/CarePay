@@ -19,4 +19,9 @@ class AppointmentScreen : CustomViewActions() {
         verifyItemInRecyclerView(appContext.getString(R.string.content_description_appointments_list), textMatch)
         return this
     }
+
+    fun openNavigationDrawer(): NavigationMenu {
+        click(appContext.getString(R.string.navigation_drawer_open))
+        return NavigationMenu()
+    }
 }

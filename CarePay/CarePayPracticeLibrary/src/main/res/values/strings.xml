@@ -57,5 +57,9 @@
     <string name="content_description_check_in_screen">Check In Screen</string>
     <string name="content_description_appointments_button">Appointments Button</string>
     <string name="content_description_check_available_times_button">Check Available Times Button</string>
+    <string name="content_description_find_a_patient">Find a Patient</string>
+    <string name="content_description_total_amount_being_paid">Total amount being paid</string>
+    <string name="content_description_apply_amount_button">Apply amount button</string>
+    <string name="content_description_patient_balances_list">Patient Balances List</string>
 
 </resources>

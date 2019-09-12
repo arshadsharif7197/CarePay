@@ -4,6 +4,7 @@ import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.appointments.AppointmentsScreen
 import com.carecloud.carepay.practice.tablet.R
 import com.carecloud.carepay.practice.tablet.pageObjects.ChangeModeDialog
+import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.payments.PaymentsScreen
 import com.carecloud.carepay.practice.tablet.tests.appContext
 
 /**
@@ -15,8 +16,9 @@ class PracticeMainScreen : CustomViewActions() {
         verifyViewVisible(appContext.getString(R.string.content_description_appointments))
     }
 
-    fun pressPaymentButton() {
+    fun pressPaymentButton(): PaymentsScreen {
         click(appContext.getString(R.string.content_description_payments))
+        return PaymentsScreen()
     }
 
     fun pressAppointmentsButton(): AppointmentsScreen {
