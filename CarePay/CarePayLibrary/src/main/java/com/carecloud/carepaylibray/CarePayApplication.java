@@ -8,7 +8,6 @@ import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepay.service.library.base.IApplicationSession;
-import com.orm.SugarContext;
 
 /**
  * Created by pjohnson on 15/03/17
@@ -25,13 +24,11 @@ public abstract class CarePayApplication extends MultiDexApplication implements 
     public void onCreate() {
         super.onCreate();
         Platform.setPlatform(new AndroidPlatform(this));
-        SugarContext.init(this);
     }
 
     @Override
     public void onTerminate() {
         super.onTerminate();
-        SugarContext.terminate();
     }
 
     @Override

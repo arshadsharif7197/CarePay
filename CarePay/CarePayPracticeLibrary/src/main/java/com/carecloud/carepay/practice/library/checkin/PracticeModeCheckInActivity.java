@@ -4,6 +4,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+import android.view.DragEvent;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -11,11 +17,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.Log;
-import android.view.DragEvent;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
@@ -34,6 +35,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticePayment
 import com.carecloud.carepay.practice.library.payments.fragments.RefundDetailFragment;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentNavigationCallback;
 import com.carecloud.carepay.practice.library.payments.interfaces.ShamrockPaymentsCallback;
+import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionUserPractice;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -197,29 +199,23 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     @NonNull
     private View.OnClickListener onGoBackButtonClick() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // send a broadcast
-                Intent intent = new Intent();
-                intent.setAction("NEW_CHECKEDIN_NOTIFICATION");
-                intent.putExtra("appointments_checking_in", "" + checkingInAdapter.getItemCount());
-                sendBroadcast(intent);
-                onBackPressed();
-            }
+        return view -> {
+            // send a broadcast
+            Intent intent = new Intent();
+            intent.setAction("NEW_CHECKEDIN_NOTIFICATION");
+            intent.putExtra("appointments_checking_in", "" + checkingInAdapter.getItemCount());
+            sendBroadcast(intent);
+            onBackPressed();
         };
     }
 
     @NonNull
     private View.OnClickListener onFilterIconClick() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FilterDialog filterDialog = new FilterDialog(getContext(),
-                        findViewById(R.id.activity_checked_in), filterModel);
+        return view -> {
+            FilterDialog filterDialog = new FilterDialog(getContext(),
+                    findViewById(R.id.activity_checked_in), filterModel);
 
-                filterDialog.showPopWindow();
-            }
+            filterDialog.showPopWindow();
         };
     }
 
@@ -231,9 +227,9 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         if (null == payload) {
             return;
         }
-
-        String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
-        String userId = getApplicationMode().getUserPracticeDTO().getUserId();
+        PracticeSelectionUserPractice practice = checkInDTO.getPayload().getUserPracticesList().get(0);
+        String practiceId = practice.getPracticeId();
+        String userId = practice.getUserId();
         Set<String> providersSavedFilteredIds = getApplicationPreferences()
                 .getSelectedProvidersIds(practiceId, userId);
         Set<String> locationsSavedFilteredIds = getApplicationPreferences()
@@ -331,12 +327,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         handler.postDelayed(refreshAllLanes, 1000 * 60 * 3);
     }
 
-    private Runnable refreshAllLanes = new Runnable() {
-        @Override
-        public void run() {
-            refreshLists(false);
-        }
-    };
+    private Runnable refreshAllLanes = () -> refreshLists(false);
 
     private void addPatientOnFilterList(ArrayList<FilterDataDTO> patients,
                                         AppointmentsPayloadDTO appointmentPayloadDTO,
@@ -355,20 +346,20 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         }
     }
 
-    private void addProviderOnProviderFilterList(ArrayList<FilterDataDTO> doctors,
-                                                 AppointmentsPayloadDTO appointmentPayloadDTO,
-                                                 Set<String> selectedProvidersIds) {
-        ProviderDTO providerDTO = appointmentPayloadDTO.getProvider();
-        FilterDataDTO filterDataDTO = new FilterDataDTO(providerDTO.getId(), providerDTO.getName(),
-                FilterDataDTO.FilterDataType.PROVIDER);
-        if (doctors.indexOf(filterDataDTO) < 0) {
-            if ((selectedProvidersIds != null) && selectedProvidersIds
-                    .contains(String.valueOf(providerDTO.getId()))) {
-                filterDataDTO.setChecked(true);
-            }
-            doctors.add(filterDataDTO);
-        }
-    }
+//    private void addProviderOnProviderFilterList(ArrayList<FilterDataDTO> doctors,
+//                                                 AppointmentsPayloadDTO appointmentPayloadDTO,
+//                                                 Set<String> selectedProvidersIds) {
+//        ProviderDTO providerDTO = appointmentPayloadDTO.getProvider();
+//        FilterDataDTO filterDataDTO = new FilterDataDTO(providerDTO.getId(), providerDTO.getName(),
+//                FilterDataDTO.FilterDataType.PROVIDER);
+//        if (doctors.indexOf(filterDataDTO) < 0) {
+//            if ((selectedProvidersIds != null) && selectedProvidersIds
+//                    .contains(String.valueOf(providerDTO.getId()))) {
+//                filterDataDTO.setChecked(true);
+//            }
+//            doctors.add(filterDataDTO);
+//        }
+//    }
 
     View.OnDragListener onCheckingInListDragListener = new View.OnDragListener() {
         @Override
@@ -625,7 +616,6 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         if (fragment instanceof PracticeModePaymentPlanFragment) {
             ((PracticeModePaymentPlanFragment) fragment).replacePaymentMethod(creditCard);
             ((PracticeModePaymentPlanFragment) fragment).showDialog();
-            return;
         }
     }
 
@@ -723,12 +713,8 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
 
     private void displayPendingTransactionDialog(boolean isRefund) {
         PaymentQueuedDialogFragment dialogFragment = PaymentQueuedDialogFragment.newInstance(isRefund);
-        DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                hidePaymentDistributionFragment(new UpdatePatientBalancesDTO());
-            }
-        };
+        DialogInterface.OnDismissListener dismissListener = dialog
+                -> hidePaymentDistributionFragment(new UpdatePatientBalancesDTO());
         dialogFragment.setOnDismissListener(dismissListener);
         displayDialogFragment(dialogFragment, false);
     }
@@ -780,8 +766,9 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         queryMap.put("start_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
         queryMap.put("end_date", DateUtil.getInstance().setToCurrent().toStringWithFormatYyyyDashMmDashDd());
 
-        String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
-        String userId = getApplicationMode().getUserPracticeDTO().getUserId();
+        PracticeSelectionUserPractice practice = checkInDTO.getPayload().getUserPracticesList().get(0);
+        String practiceId = practice.getPracticeId();
+        String userId = practice.getUserId();
         Set<String> locationsSavedFilteredIds = getApplicationPreferences().getSelectedLocationsIds(practiceId, userId);
 
         if (locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()) {

@@ -62,7 +62,7 @@
 
         </FrameLayout>
 
-        <Spinner
+        <TextView
             android:id="@+id/languageSpinner"
             android:layout_width="@dimen/home_spinner_width"
             android:layout_height="@dimen/home_spinner_height"
