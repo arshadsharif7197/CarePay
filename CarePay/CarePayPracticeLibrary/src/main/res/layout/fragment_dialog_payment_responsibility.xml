@@ -182,7 +182,8 @@
                 android:textSize="@dimen/respons_button_text_size"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="payment_partial_payment_text"
-                tools:text="Pay Partial" />
+                tools:text="Pay Partial"
+                android:contentDescription="@string/content_description_pay_partial_button"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/payment_pay_button"
@@ -196,7 +197,8 @@
                 android:textSize="@dimen/respons_button_text_size"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="payment_pay_total_button"
-                tools:text="Pay Total" />
+                tools:text="Pay Total"
+                android:contentDescription="@string/content_description_pay_total_button"/>
         </LinearLayout>
 
     </RelativeLayout>

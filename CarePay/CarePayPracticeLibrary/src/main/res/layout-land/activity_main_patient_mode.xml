@@ -245,7 +245,8 @@
                 android:layout_weight="1"
                 android:background="@drawable/home_button_selector_bottom_left"
                 android:clickable="true"
-                android:padding="@dimen/patientHomeBottomButtonPadding">
+                android:padding="@dimen/patientHomeBottomButtonPadding"
+                android:contentDescription="@string/content_description_payments_button">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/homePaymentsLabel"
@@ -261,7 +262,6 @@
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="@dimen/dimen_30dp"
-                    android:contentDescription="Payments"
                     android:src="@drawable/icn_payments_selector" />
             </RelativeLayout>
 
