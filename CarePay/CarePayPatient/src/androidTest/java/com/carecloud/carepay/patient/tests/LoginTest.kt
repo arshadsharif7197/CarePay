@@ -16,6 +16,4 @@ class LoginTest : BaseTest() {
     fun loginPatientTest() {
         //All is done in the BaseTest()
     }
-
-
 }

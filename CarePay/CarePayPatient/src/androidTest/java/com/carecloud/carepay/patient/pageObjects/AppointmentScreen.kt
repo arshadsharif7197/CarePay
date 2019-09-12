@@ -1,12 +1,8 @@
 package com.carecloud.carepay.patient.pageObjects
 
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.contrib.DrawerActions
-import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.carecloud.carepay.patient.R
 import com.carecloud.carepay.patient.appContext
 import com.carecloud.carepay.patient.pageObjects.appointments.AddAppointmentFlow
-import com.carecloud.carepay.patient.pageObjects.payments.PaymentScreen
 import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 
 /**
@@ -24,9 +20,8 @@ class AppointmentScreen : CustomViewActions() {
         return this
     }
 
-    fun openPaymentScreen(): PaymentScreen {
-        onView(withId(R.id.drawer_layout)).perform(DrawerActions.open())
-        clickOnSpecificId(R.id.paymentsMenuItem)
-        return PaymentScreen()
+    fun openNavigationDrawer(): NavigationMenu {
+        click(appContext.getString(R.string.navigation_drawer_open))
+        return NavigationMenu()
     }
 }

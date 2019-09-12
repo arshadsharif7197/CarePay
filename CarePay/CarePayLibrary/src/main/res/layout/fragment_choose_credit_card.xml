@@ -20,7 +20,8 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/nextButton"
             android:choiceMode="singleChoice"
-            android:visibility="visible" />
+            android:visibility="visible"
+            android:contentDescription="@string/content_description_credit_cards_list"/>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/addNewCardButton"
@@ -46,7 +47,8 @@
             android:background="@drawable/button_selector_green"
             android:textAllCaps="true"
             app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="demographics_pay_button_text" />
+            breeze:textKey="demographics_pay_button_text"
+            android:contentDescription="@string/content_description_pay_button"/>
     </RelativeLayout>
 
 </LinearLayout>
