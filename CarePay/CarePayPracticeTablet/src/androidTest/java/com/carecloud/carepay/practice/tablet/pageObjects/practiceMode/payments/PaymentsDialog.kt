@@ -9,9 +9,9 @@ import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
  * Created by drodriguez on 2019-09-06.
  */
 class PaymentsDialog: CustomViewActions() {
-    fun changeTotalBeingPaid(): EnterAmountDialog {
+    fun changeTotalBeingPaid(): EnterAmountDialog<PaymentsDialog> {
         click(appContext.getString(R.string.content_description_total_amount_being_paid))
-        return EnterAmountDialog()
+        return EnterAmountDialog(PaymentsDialog())
     }
 
     fun selectProviderForItemOnList(position: Int): PaymentsDialog {
