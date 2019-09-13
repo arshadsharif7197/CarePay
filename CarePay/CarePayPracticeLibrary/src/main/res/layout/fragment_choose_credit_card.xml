@@ -3,6 +3,7 @@
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:layout_width="match_parent"
     android:layout_height="@dimen/commonPracticeDialogHeight"
+    android:contentDescription="@string/content_description_credit_cards_screen"
     android:orientation="horizontal">
 
     <LinearLayout

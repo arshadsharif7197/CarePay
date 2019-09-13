@@ -1,31 +1,30 @@
 package com.carecloud.carepaylibray.androidTest.actions
 
 import android.view.View
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-
+import androidx.test.espresso.Espresso.onData
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.PerformException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers
-
-import org.hamcrest.Matcher
-
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.RootMatchers
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.espresso.util.HumanReadables
-import androidx.test.espresso.PerformException
 import androidx.test.espresso.util.TreeIterables
-import androidx.test.espresso.matcher.ViewMatchers.isRoot
-import java.util.concurrent.TimeoutException
-import android.widget.TextView
-
-import androidx.test.espresso.Espresso.onData
-import androidx.test.espresso.matcher.RootMatchers
+import org.hamcrest.BaseMatcher
+import org.hamcrest.Description
+import org.hamcrest.Factory
+import org.hamcrest.Matcher
 import org.hamcrest.Matchers.*
+import java.util.concurrent.TimeoutException
+
 
 /**
  * Created by drodriguez on 08/12/19.
@@ -90,8 +89,7 @@ open class CustomViewActions {
      */
     protected fun clickOnRecyclerViewItem(contentDescription: String, position: Int) {
         getTextFromRecyclerViewItem(contentDescription, position)
-        onView(allOf(withContentDescription(contentDescription), isDisplayed())).
-                perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(position, ViewActions.click()))
+        onView(allOf(withContentDescription(contentDescription), isDisplayed())).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(position, ViewActions.click()))
     }
 
     /**
@@ -104,14 +102,28 @@ open class CustomViewActions {
                 RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
                         hasDescendant(withText(textMatch)), ViewActions.click()))
     }
+
+    /**
+     * Click on an item in a recycler view list based on text
+     * @param itemContentDescription Content description of the view
+     * @param textMatch Text to match with element on list
+     */
+    protected fun clickOnRecyclerViewItem(itemContentDescription: String,
+                                          recyclerViewContentDescription: String,
+                                          textMatch: String) {
+        onData(withContentDescription(itemContentDescription))
+                .inAdapterView(withContentDescription("recyclerViewContentDescription"))
+                .perform(RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
+                        hasDescendant(withText(textMatch)), ViewActions.click()))
+    }
+
     /**
      * Click on an item in a recycler view list based on text
      * @param contentDescription Content description of the view
      * @param textMatch Text to match with element on list
      */
     protected fun clickOnRecyclerViewItemChildren(contentDescription: String, position: Int, textMatch: String) {
-        onView(withContentDescription(contentDescription)).
-                perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(position, clickWithinRecyclerViewItem(textMatch)))
+        onView(withContentDescription(contentDescription)).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(position, clickWithinRecyclerViewItem(textMatch)))
     }
 
     /**
@@ -120,8 +132,7 @@ open class CustomViewActions {
      * @param position Position of element on list
      */
     protected fun clickOnRecyclerViewItem(id: Int, position: Int) {
-        onView(withId(id)).
-                perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(position, ViewActions.click()))
+        onView(withId(id)).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(position, ViewActions.click()))
     }
 
     /**
@@ -172,8 +183,7 @@ open class CustomViewActions {
      */
     private fun getTextFromRecyclerViewItem(contentDescription: String, position: Int = -1, textMatch: String = "") {
         if (position >= 0 && textMatch.isEmpty()) {
-            onView(allOf(withContentDescription(contentDescription), isDisplayed())).
-                    perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(position, getText()))
+            onView(allOf(withContentDescription(contentDescription), isDisplayed())).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(position, getText()))
         } else if (textMatch.isNotEmpty()) {
             onView(allOf(withContentDescription(contentDescription), isDisplayed())).perform(
                     RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
@@ -206,7 +216,7 @@ open class CustomViewActions {
      * @param contentDescription The content description of the view to wait for.
      * @param milliseconds The timeout of until when to wait for.
      */
-    protected fun wait(contentDescription: String = "", milliseconds: Long){
+    protected fun wait(contentDescription: String = "", milliseconds: Long) {
         if (contentDescription.isNotEmpty()) {
             onView(isRoot()).perform(waitId(contentDescription, milliseconds))
         } else {
@@ -219,7 +229,7 @@ open class CustomViewActions {
      * @param contentDescription The content description of the view to wait for.
      * @param millis The timeout of until when to wait for.
      */
-    fun waitId(contentDescription: String, millis: Long): ViewAction {
+    private fun waitId(contentDescription: String, millis: Long): ViewAction {
         return object : ViewAction {
             override fun getConstraints(): Matcher<View> {
                 return isRoot()
@@ -327,4 +337,5 @@ open class CustomViewActions {
             }
         }
     }
+    
 }

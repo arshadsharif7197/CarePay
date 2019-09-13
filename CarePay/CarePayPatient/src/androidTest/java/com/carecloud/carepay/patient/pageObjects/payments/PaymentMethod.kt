@@ -2,6 +2,7 @@ package com.carecloud.carepay.patient.pageObjects.payments
 
 import com.carecloud.carepay.patient.R
 import com.carecloud.carepay.patient.appContext
+import com.carecloud.carepay.patient.pageObjects.payments.paymentPlan.TermsAndConditionsScreen
 import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 
 /**
@@ -15,6 +16,11 @@ class PaymentMethod : CustomViewActions() {
         click(appContext.getString(R.string.content_description_pay_button))
         click(appContext.getString(R.string.content_description_ok_button))
         return PaymentsScreen()
+    }
+
+    fun chooseCreditCardMethod(paymentMethodPosition: Int): CreditCardScreen<TermsAndConditionsScreen> {
+        clickOnItemOnList(appContext.getString(R.string.content_description_payment_methods), paymentMethodPosition)
+        return CreditCardScreen(screenAfterChoosingCard = TermsAndConditionsScreen())
     }
 
 }

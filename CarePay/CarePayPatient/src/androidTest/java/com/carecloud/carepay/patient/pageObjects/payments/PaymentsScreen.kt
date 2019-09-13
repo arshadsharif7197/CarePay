@@ -2,6 +2,8 @@ package com.carecloud.carepay.patient.pageObjects.payments
 
 import com.carecloud.carepay.patient.R
 import com.carecloud.carepay.patient.appContext
+import com.carecloud.carepay.patient.pageObjects.AppointmentScreen
+import com.carecloud.carepay.patient.pageObjects.payments.paymentPlan.PaymentPlanDetailScreen
 import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 
 /**
@@ -23,5 +25,15 @@ class PaymentsScreen : CustomViewActions() {
         clickOnRecyclerViewItem(appContext.getString(R.string.content_description_payments_list), position)
         click(appContext.getString(R.string.content_description_payment_options_button))
         return ChoosePaymentType()
+    }
+
+    fun verifyPaymentPlanIsOnList(textMatch: String): PaymentsScreen {
+        verifyItemInRecyclerView(appContext.getString(R.string.content_description_payments_list), textMatch)
+        return this
+    }
+
+    fun choosePaymentPlan(paymentPlanName: String) : PaymentPlanDetailScreen {
+        clickOnRecyclerViewItem(appContext.getString(R.string.content_description_payments_list), textMatch = paymentPlanName)
+        return PaymentPlanDetailScreen()
     }
 }

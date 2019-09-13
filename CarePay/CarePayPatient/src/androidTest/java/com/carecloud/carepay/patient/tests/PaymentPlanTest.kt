@@ -12,17 +12,35 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class PaymentPlanTest : BaseTest() {
 
+    private val paymentPlanName = "Automated test"
+    private val paymentPlanAmount = "100"
+
+//    @Test
+//    fun createPaymentPlanTest() {
+//        AppointmentScreen()
+//                .openNavigationDrawer()
+//                .goToPayments()
+//                .chooseBalance(0)
+//                .chooseCreatePaymentPlan()
+//                .typeAmount("100")
+//                .clickCreateButton()
+//                .typePlanName("Automated test")
+//                .typeNumberOfMonths("5")
+//                .clickCreateButton()
+//                .chooseCreditCardMethod(0)
+//                .chooseCreditCard()
+//                .acceptTermsAndConditions()
+//                .clickOk()
+////                .verifyPaymentPlanIsOnList(paymentPlanName)
+////                .verifyPaymentPlanIsOnList(paymentPlanAmount)
+//    }
+
     @Test
-    fun createPaymentPlanTest() {
+    fun deletePaymentPlanTest() {
         AppointmentScreen()
                 .openNavigationDrawer()
                 .goToPayments()
-                .chooseBalance(0)
-                .chooseCreatePaymentPlan()
-                .typeAmount("100")
-                .clickCreateButton()
-                .typePlanName("Automated test")
-                .typeNumberOfMonths("5")
-                .clickCreateButton()
+                .choosePaymentPlan("")
+
     }
 }

@@ -457,4 +457,10 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="content_description_payment_methods">Payment Methods</string>
     <string name="content_description_create_payment_plan_button">Create Payment Plan</string>
     <string name="content_description_amount_screen">Amount Screen</string>
+    <string name="create_payment_plan_screen">Create Payment Plan Screen</string>
+    <string name="content_description_payment_plan_name">Payment Plan Name</string>
+    <string name="content_description_number_of_months">Number of months</string>
+    <string name="content_description_credit_cards_screen">Credit Cards Screen</string>
+    <string name="content_description_terms_and_conditions_screen">Terms And Conditions Screen</string>
+    <string name="content_description_payment_plan_confirmation_screen">Payment Plan Confirmation Screen</string>
 </resources>

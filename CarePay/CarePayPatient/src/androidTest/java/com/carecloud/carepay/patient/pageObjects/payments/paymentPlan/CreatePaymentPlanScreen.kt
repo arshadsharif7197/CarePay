@@ -1,5 +1,7 @@
 package com.carecloud.carepay.patient.pageObjects.payments.paymentPlan
 
+import com.carecloud.carepay.patient.R
+import com.carecloud.carepay.patient.appContext
 import com.carecloud.carepay.patient.pageObjects.payments.PaymentMethod
 import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 
@@ -9,21 +11,21 @@ import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 class CreatePaymentPlanScreen : CustomViewActions() {
 
     init {
-        verifyViewVisible("")
+        verifyViewVisible(appContext.getString(R.string.create_payment_plan_screen))
     }
 
-    fun typePlanName(name:String): CreatePaymentPlanScreen{
-        type("", name )
+    fun typePlanName(name: String): CreatePaymentPlanScreen {
+        type(appContext.getString(R.string.content_description_payment_plan_name), name, true)
         return this
     }
 
-    fun typeNumberOfMonths(numberOfMonths:String): CreatePaymentPlanScreen{
-        type("", numberOfMonths )
+    fun typeNumberOfMonths(numberOfMonths: String): CreatePaymentPlanScreen {
+        type(appContext.getString(R.string.content_description_number_of_months), numberOfMonths, true)
         return this
     }
 
-    fun clickCreateButton(): PaymentMethod{
-        click("")
+    fun clickCreateButton(): PaymentMethod {
+        click(appContext.getString(R.string.content_description_create_payment_plan_button))
         return PaymentMethod()
     }
 }

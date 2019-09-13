@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:contentDescription="@string/payment_plan_"
+    android:contentDescription="@string/create_payment_plan_screen"
     android:orientation="vertical">
 
     <include
@@ -147,6 +147,7 @@
                             app:customAssetFont="proxima_nova_regular"
                             app:hintTextAppearance="@style/FloatingLabelStyle"
                             breeze:hintKey="payment_plan_name"
+                            android:contentDescription="@string/content_description_payment_plan_name"
                             tools:hint="Plan Name" />
 
                     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
@@ -249,6 +250,7 @@
                             app:customAssetFont="proxima_nova_regular"
                             app:hintTextAppearance="@style/FloatingLabelStyle"
                             breeze:hintKey="payment_number_of_months"
+                            android:contentDescription="@string/content_description_number_of_months"
                             tools:hint="Number of months" />
 
                     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
@@ -363,6 +365,7 @@
         android:textColor="@color/white"
         android:textSize="@dimen/respons_button_text_size"
         breeze:textKey="payment_create_plan"
+        android:contentDescription="@string/content_description_create_payment_plan_button"
         tools:text="Create Plan" />
 
 </LinearLayout>
