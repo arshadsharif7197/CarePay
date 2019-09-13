@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:contentDescription="@string/create_payment_plan_screen"
+    android:contentDescription="@string/content_description_payment_plan_screen"
     android:orientation="vertical">
 
     <include
@@ -49,9 +49,9 @@
                     android:id="@+id/payment_plan_total"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_70dp"
-                    android:layout_marginEnd="@dimen/dimen_10dp"
                     android:layout_marginStart="@dimen/dimen_10dp"
                     android:layout_marginTop="@dimen/dimen_10dp"
+                    android:layout_marginEnd="@dimen/dimen_10dp"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_60"
                     app:customAssetFont="gotham_rounded_medium"
@@ -90,8 +90,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_26dp"
-                android:paddingEnd="@dimen/dimen_17dp"
                 android:paddingStart="@dimen/dimen_17dp"
+                android:paddingEnd="@dimen/dimen_17dp"
                 android:visibility="gone">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
@@ -124,9 +124,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingEnd="@dimen/dimen_17dp"
                 android:paddingStart="@dimen/dimen_17dp"
-                android:paddingTop="@dimen/dimen_26dp">
+                android:paddingTop="@dimen/dimen_26dp"
+                android:paddingEnd="@dimen/dimen_17dp">
 
                 <FrameLayout
                     android:id="@+id/paymentPlanNameLayout"
@@ -143,11 +143,11 @@
                         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                             android:id="@+id/paymentPlanName"
                             style="@style/SigninSignupEditStyle"
+                            android:contentDescription="@string/content_description_payment_plan_name"
                             android:imeOptions="actionNext"
                             app:customAssetFont="proxima_nova_regular"
                             app:hintTextAppearance="@style/FloatingLabelStyle"
                             breeze:hintKey="payment_plan_name"
-                            android:contentDescription="@string/content_description_payment_plan_name"
                             tools:hint="Plan Name" />
 
                     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
@@ -244,13 +244,13 @@
                         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                             android:id="@+id/paymentMonthCount"
                             style="@style/SigninSignupEditStyle"
+                            android:contentDescription="@string/content_description_number_of_months"
                             android:imeOptions="actionNext"
                             android:inputType="number"
                             android:textColor="@color/primary_color_enabled_selector"
                             app:customAssetFont="proxima_nova_regular"
                             app:hintTextAppearance="@style/FloatingLabelStyle"
                             breeze:hintKey="payment_number_of_months"
-                            android:contentDescription="@string/content_description_number_of_months"
                             tools:hint="Number of months" />
 
                     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
@@ -298,8 +298,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="@dimen/dimen_10dp"
-                    android:paddingEnd="@dimen/dimen_10dp"
                     android:paddingStart="@dimen/dimen_10dp"
+                    android:paddingEnd="@dimen/dimen_10dp"
                     android:textColor="@color/optional_gray"
                     android:textSize="@dimen/text_size_13"
                     android:visibility="invisible"
@@ -321,8 +321,8 @@
                 android:id="@+id/editButtonsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/dimen_17dp"
                 android:layout_marginStart="@dimen/dimen_17dp"
+                android:layout_marginEnd="@dimen/dimen_17dp"
                 android:orientation="vertical"
                 android:visibility="gone">
 
@@ -332,6 +332,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dimen_10dp"
                     android:background="@drawable/button_selector_always_click_green"
+                    android:contentDescription="@string/content_description_save_payment_plan_changes"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:textSize="@dimen/respons_button_text_size"
@@ -343,6 +344,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_red_border"
+                    android:contentDescription="@string/content_description_payment_plan_delete_button"
                     android:foreground="?selectableItemBackground"
                     android:textAllCaps="true"
                     android:textColor="@color/harvard_crimson"
@@ -361,11 +363,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_5dp"
         android:background="@drawable/button_selector_always_click"
+        android:contentDescription="@string/content_description_create_payment_plan_button"
         android:textAllCaps="true"
         android:textColor="@color/white"
         android:textSize="@dimen/respons_button_text_size"
         breeze:textKey="payment_create_plan"
-        android:contentDescription="@string/content_description_create_payment_plan_button"
         tools:text="Create Plan" />
 
 </LinearLayout>

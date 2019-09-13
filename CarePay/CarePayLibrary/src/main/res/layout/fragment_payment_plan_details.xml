@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:contentDescription="@string/content_description_payment_plan_screen"
     android:orientation="vertical">
 
     <LinearLayout
@@ -178,6 +179,7 @@
                 android:layout_marginStart="@dimen/dimen_5dp"
                 android:layout_marginEnd="@dimen/dimen_5dp"
                 android:background="@drawable/button_default_background"
+                android:contentDescription="@string/content_description_payment_plan_edit_button"
                 android:foreground="?android:selectableItemBackground"
                 android:gravity="center"
                 android:padding="@dimen/dimen_10dp"

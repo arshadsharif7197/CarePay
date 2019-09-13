@@ -11,7 +11,7 @@ import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 class CreatePaymentPlanScreen : CustomViewActions() {
 
     init {
-        verifyViewVisible(appContext.getString(R.string.create_payment_plan_screen))
+        verifyViewVisible(appContext.getString(R.string.content_description_payment_plan_screen))
     }
 
     fun typePlanName(name: String): CreatePaymentPlanScreen {

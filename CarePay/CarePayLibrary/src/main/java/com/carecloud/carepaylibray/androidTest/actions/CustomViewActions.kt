@@ -9,8 +9,7 @@ import androidx.test.espresso.PerformException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
-import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.RootMatchers
@@ -18,11 +17,10 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.espresso.util.HumanReadables
 import androidx.test.espresso.util.TreeIterables
-import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
-import org.hamcrest.Factory
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.*
+import org.hamcrest.TypeSafeMatcher
 import java.util.concurrent.TimeoutException
 
 
@@ -155,6 +153,20 @@ open class CustomViewActions {
             onView(withContentDescription(contentDescription)).perform(typeText(stringToType), closeSoftKeyboard())
         } else {
             onView(withContentDescription(contentDescription)).perform(typeText(stringToType))
+        }
+    }
+
+    /**
+     * Replace into text input
+     * @param contentDescription Content description of the view
+     * @param stringToType String to type into text input
+     * @param closeKeyboard Boolean to close keyboard after type, in case next step is hidden by keyboard view
+     */
+    protected fun replaceText(contentDescription: String, stringToType: String, closeKeyboard: Boolean = false) {
+        if (closeKeyboard) {
+            onView(withContentDescription(contentDescription)).perform(replaceText(stringToType), closeSoftKeyboard())
+        } else {
+            onView(withContentDescription(contentDescription)).perform(replaceText(stringToType))
         }
     }
 
@@ -337,5 +349,22 @@ open class CustomViewActions {
             }
         }
     }
-    
+
+    protected fun scrollDown(contentDescription: String) {
+        onView(withContentDescription(contentDescription)).perform(swipeUp())
+    }
+
+    fun withIndex(matcher: Matcher<View>, index: Int): Matcher<View> {
+        var currentIndex = 0
+        return object : TypeSafeMatcher<View>() {
+            override fun describeTo(description: Description) {
+                description.appendText(String.format("with index: %d ", index))
+                matcher.describeTo(description)
+            }
+
+            public override fun matchesSafely(view: View): Boolean {
+                return matcher.matches(view) && currentIndex++ == index
+            }
+        }
+    }
 }
