@@ -131,7 +131,6 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         if (!threads.isEmpty()) {
             noMessagesLayout.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
-            actionButton.setVisibility(messagingModel.getPayload().getUserPractices().size() == 0 ? View.GONE : View.VISIBLE);
             refreshLayoutView.setEnabled(true);
         } else if (delegateUser != null && !callback.canSendProvidersMessages()){
             noMessagesLayout.setVisibility(View.VISIBLE);
@@ -146,9 +145,6 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
             recyclerView.setVisibility(View.GONE);
             actionButton.setVisibility(View.GONE);
             refreshLayoutView.setEnabled(false);
-            if (messagingModel.getPayload().getUserPractices().size() == 0) {
-                butonNewMessage.setVisibility(View.GONE);
-            }
         }
     }
 
