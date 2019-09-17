@@ -1,8 +1,8 @@
-package com.carecloud.carepay.patient.pageObjects.payments.paymentPlan
+package com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.payments.paymentPlan
 
-import com.carecloud.carepay.patient.R
-import com.carecloud.carepay.patient.appContext
-import com.carecloud.carepay.patient.pageObjects.payments.PaymentsScreen
+import com.carecloud.carepay.practice.tablet.R
+import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.payments.PaymentsScreen
+import com.carecloud.carepay.practice.tablet.tests.appContext
 import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 
 /**
@@ -14,9 +14,8 @@ class PaymentPlanConfirmationScreen : CustomViewActions() {
         verifyViewVisible(appContext.getString(R.string.content_description_payment_plan_confirmation_screen))
     }
 
-    fun clickOk() : PaymentsScreen{
+    fun clickOkButton() : PaymentsScreen{
         click(appContext.getString(R.string.content_description_ok_button))
         return PaymentsScreen()
     }
-
 }

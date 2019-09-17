@@ -17,7 +17,7 @@ class PRMakeFullPayment: BaseTest() {
 
         PracticeMainScreen()
                 .pressPaymentButton()
-                .searchForPatient()
+                .searchForPatient("qa\n")
                 .changeTotalBeingPaid()
                 .enterAmount("20")
                 .selectProviderForItemOnList(0)

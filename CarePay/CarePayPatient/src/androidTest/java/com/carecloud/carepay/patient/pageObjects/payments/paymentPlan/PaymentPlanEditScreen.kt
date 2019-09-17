@@ -6,7 +6,7 @@ import com.carecloud.carepay.patient.pageObjects.ConfirmationScreen
 import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 
 /**
- * @author pjohnson on 2019-09-13.
+ * @author pjohnson on 2019-09-10.
  */
 class PaymentPlanEditScreen : CustomViewActions() {
 

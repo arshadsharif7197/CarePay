@@ -8,19 +8,19 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.PerformException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
-import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.GeneralLocation
+import androidx.test.espresso.action.GeneralSwipeAction
+import androidx.test.espresso.action.Press
+import androidx.test.espresso.action.Swipe
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.RootMatchers
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.espresso.util.HumanReadables
 import androidx.test.espresso.util.TreeIterables
-import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.*
-import org.hamcrest.TypeSafeMatcher
 import java.util.concurrent.TimeoutException
 
 
@@ -37,7 +37,7 @@ open class CustomViewActions {
      */
     protected fun click(contentDescription: String, customClick: Boolean = false) {
         onView(allOf(withContentDescription(contentDescription), isDisplayed()))
-                .perform(if (customClick) customClickAction() else ViewActions.click())
+                .perform(if (customClick) customClickAction() else click())
     }
 
     /**
@@ -45,7 +45,7 @@ open class CustomViewActions {
      * @param text Text of the view
      */
     protected fun clickOnSpecificText(text: String) {
-        onView(withText(text)).perform(ViewActions.click())
+        onView(withText(text)).perform(click())
     }
 
     /**
@@ -53,7 +53,7 @@ open class CustomViewActions {
      * @param id id of the view
      */
     protected fun clickOnSpecificId(id: Int) {
-        onView(withId(id)).perform(ViewActions.click())
+        onView(withId(id)).perform(click())
     }
 
     /**
@@ -87,7 +87,7 @@ open class CustomViewActions {
      */
     protected fun clickOnRecyclerViewItem(contentDescription: String, position: Int) {
         getTextFromRecyclerViewItem(contentDescription, position)
-        onView(allOf(withContentDescription(contentDescription), isDisplayed())).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(position, ViewActions.click()))
+        onView(allOf(withContentDescription(contentDescription), isDisplayed())).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(position, click()))
     }
 
     /**
@@ -98,7 +98,7 @@ open class CustomViewActions {
     protected fun clickOnRecyclerViewItem(contentDescription: String, textMatch: String) {
         onView(withContentDescription(contentDescription)).perform(
                 RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
-                        hasDescendant(withText(textMatch)), ViewActions.click()))
+                        hasDescendant(withText(textMatch)), click()))
     }
 
     /**
@@ -112,7 +112,7 @@ open class CustomViewActions {
         onData(withContentDescription(itemContentDescription))
                 .inAdapterView(withContentDescription("recyclerViewContentDescription"))
                 .perform(RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
-                        hasDescendant(withText(textMatch)), ViewActions.click()))
+                        hasDescendant(withText(textMatch)), click()))
     }
 
     /**
@@ -121,7 +121,35 @@ open class CustomViewActions {
      * @param textMatch Text to match with element on list
      */
     protected fun clickOnRecyclerViewItemChildren(contentDescription: String, position: Int, textMatch: String) {
-        onView(withContentDescription(contentDescription)).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(position, clickWithinRecyclerViewItem(textMatch)))
+        onView(withContentDescription(contentDescription)).perform(RecyclerViewActions
+                .actionOnItemAtPosition<RecyclerView.ViewHolder>(position, clickWithinRecyclerViewItem(textMatch)))
+    }
+
+    /**
+     * Click on an item in a recycler view list based on id
+     * @param contentDescription Content description of the recycler view
+     * @param position Position of the item
+     * @param id ID to match with element on list
+     */
+    protected fun clickOnRecyclerViewItemChildrenWithId(contentDescription: String, position: Int, id: Int) {
+        onView(withContentDescription(contentDescription)).perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(position, clickChildViewWithId(id)))
+    }
+
+    /**
+     * Click on an item in a recycler view list based on id
+     * @param contentDescription Content description of the recycler view
+     * @param itemContentDescription Content description of the item
+     * @param id ID to match with element on list
+     */
+    protected fun clickOnSpecificRecyclerViewItemChildrenWithId(contentDescription: String,
+                                                                itemContentDescription: String,
+                                                                id: Int) {
+        onView(withContentDescription(contentDescription)).perform(
+                RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
+                        hasDescendant(withContentDescription(itemContentDescription)),
+//                        withContentDescription(itemContentDescription),
+                        clickChildViewWithId(id)))
     }
 
     /**
@@ -130,7 +158,7 @@ open class CustomViewActions {
      * @param position Position of element on list
      */
     protected fun clickOnRecyclerViewItem(id: Int, position: Int) {
-        onView(withId(id)).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(position, ViewActions.click()))
+        onView(withId(id)).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(position, click()))
     }
 
     /**
@@ -175,7 +203,7 @@ open class CustomViewActions {
      * @param textMatch Text to match in the popup
      */
     protected fun clickInPopupWindow(textMatch: String) {
-        onView(withText(textMatch)).inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
+        onView(withText(textMatch)).inRoot(RootMatchers.isPlatformPopup()).perform(click())
     }
 
     /**
@@ -184,7 +212,7 @@ open class CustomViewActions {
      * @param position position of item on the list
      */
     protected fun clickOnItemOnList(contentDescription: String, position: Int) {
-        onData(anything()).inAdapterView(withContentDescription(contentDescription)).atPosition(position).perform(ViewActions.click())
+        onData(anything()).inAdapterView(withContentDescription(contentDescription)).atPosition(position).perform(click())
     }
 
     /**
@@ -195,7 +223,8 @@ open class CustomViewActions {
      */
     private fun getTextFromRecyclerViewItem(contentDescription: String, position: Int = -1, textMatch: String = "") {
         if (position >= 0 && textMatch.isEmpty()) {
-            onView(allOf(withContentDescription(contentDescription), isDisplayed())).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(position, getText()))
+            onView(allOf(withContentDescription(contentDescription), isDisplayed())).perform(RecyclerViewActions
+                    .actionOnItemAtPosition<RecyclerView.ViewHolder>(position, getText()))
         } else if (textMatch.isNotEmpty()) {
             onView(allOf(withContentDescription(contentDescription), isDisplayed())).perform(
                     RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
@@ -210,7 +239,7 @@ open class CustomViewActions {
     private fun customClickAction(): ViewAction {
         return object : ViewAction {
             override fun getConstraints(): Matcher<View> {
-                return ViewMatchers.isEnabled()
+                return isEnabled()
             }
 
             override fun getDescription(): String {
@@ -232,7 +261,9 @@ open class CustomViewActions {
         if (contentDescription.isNotEmpty()) {
             onView(isRoot()).perform(waitId(contentDescription, milliseconds))
         } else {
-            onView(isRoot()).perform(waitFor(milliseconds))
+            onView(isRoot()).perform(waitFor(milliseconds)).withFailureHandler { error, viewMatcher ->
+
+            }
         }
     }
 
@@ -331,6 +362,23 @@ open class CustomViewActions {
         }
     }
 
+    private fun clickChildViewWithId(id: Int): ViewAction {
+        return object : ViewAction {
+            override fun getConstraints(): Matcher<View>? {
+                return null
+            }
+
+            override fun getDescription(): String {
+                return "Click on a child view with specified id."
+            }
+
+            override fun perform(uiController: UiController, view: View) {
+                val v = view.findViewById<View>(id)
+                v.performClick()
+            }
+        }
+    }
+
     /**
      * Perform action of waiting for a specific time.
      */
@@ -354,17 +402,9 @@ open class CustomViewActions {
         onView(withContentDescription(contentDescription)).perform(swipeUp())
     }
 
-    fun withIndex(matcher: Matcher<View>, index: Int): Matcher<View> {
-        var currentIndex = 0
-        return object : TypeSafeMatcher<View>() {
-            override fun describeTo(description: Description) {
-                description.appendText(String.format("with index: %d ", index))
-                matcher.describeTo(description)
-            }
-
-            public override fun matchesSafely(view: View): Boolean {
-                return matcher.matches(view) && currentIndex++ == index
-            }
-        }
+    protected fun scrollABitDown(contentDescription: String) {
+        onView(withContentDescription(contentDescription)).perform(GeneralSwipeAction(Swipe.SLOW, GeneralLocation.CENTER,
+                GeneralLocation.TOP_CENTER, Press.FINGER))
     }
+
 }
