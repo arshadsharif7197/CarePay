@@ -8,6 +8,7 @@ import android.os.Bundle;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
 import com.carecloud.carepay.patient.checkout.AppointmentCheckoutActivity;
 import com.carecloud.carepay.patient.consentforms.ConsentFormsActivity;
+import com.carecloud.carepay.patient.delegate.ProfilesActivity;
 import com.carecloud.carepay.patient.demographics.activities.DemographicsSettingsActivity;
 import com.carecloud.carepay.patient.demographics.activities.NewDemographicsActivity;
 import com.carecloud.carepay.patient.demographics.activities.ReviewDemographicsActivity;
@@ -216,6 +217,10 @@ public class PatientNavigationHelper {
                 break;
             case NavigationStateConstants.PATIENT_MY_HEALTH:
                 intent = new Intent(context, MyHealthActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                break;
+            case NavigationStateConstants.DELEGATE_PROFILES:
+                intent = new Intent(context, ProfilesActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
 

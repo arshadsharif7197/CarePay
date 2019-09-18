@@ -196,9 +196,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.header.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
         holder.header.setText(Label.getLabel("survey.notificationList.item.title.newSurvey"));
         String message = Label.getLabel("survey.notificationList.item.message.newSurvey");
-        UserPracticeDTO practice = ApplicationPreferences.getInstance()
-                .getUserPractice(notificationItem.getMetadata().getPracticeId());
-        String practiceName = practice.getPracticeName();
+        String practiceName = callback.getUserPracticeById(notificationItem.getMetadata().getPracticeId())
+                .getPracticeName();
         holder.message.setTextColor(ContextCompat.getColor(context, R.color.charcoal));
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder(String
                 .format(message, practiceName));
@@ -242,8 +241,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     private void displaySecureMessageNotification(NotificationViewHolder holder,
                                                   NotificationItem notificationItem) {
-        UserPracticeDTO practiceDTO = callback.getUserPracticeById(notificationItem.getMetadata().getPracticeId());
-        String practiceName = practiceDTO.getPracticeName();
+        String practiceName = notificationItem.getPayload().getPracticeName();
         holder.initials.setText(StringUtil.getShortName(practiceName));
         holder.initials.setTextColor(ContextCompat.getColor(context, R.color.white));
         holder.initials.setBackgroundResource(R.drawable.round_list_tv_dark_gray);
@@ -263,6 +261,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.cellAvatar.setImageResource(R.drawable.icn_cell_avatar_badge_msg);
         holder.cellAvatar.setVisibility(View.VISIBLE);
 
+        UserPracticeDTO practiceDTO = callback.getUserPracticeById(notificationItem.getMetadata().getPracticeId());
         loadImage(holder, practiceDTO.getPracticePhoto(), false);
     }
 
@@ -366,9 +365,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.cellAvatar.setVisibility(View.VISIBLE);
         holder.header.setText(Label.getLabel("notifications.notificationList.statement.newStatementTitle"));
         holder.header.setTextColor(ContextCompat.getColor(context, R.color.emerald));
-        UserPracticeDTO practice = ApplicationPreferences.getInstance()
-                .getUserPractice(notificationItem.getMetadata().getPracticeId());
-        String practiceName = practice.getPracticeName();
+        String practiceName = notificationItem.getPayload().getPracticeName();
         holder.message.setText(String.format(Label
                 .getLabel("notifications.notificationList.statement.newStatementMessage"), practiceName));
         holder.initials.setBackgroundResource(R.drawable.round_list_tv_green);
@@ -393,7 +390,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.initials.setText(StringUtil.getShortName(provider.getName()));
         holder.header.setText("Notification");
 
-        AppointmentDisplayStyle displayStyle = AppointmentDisplayUtil.determineDisplayStyle(appointment.getPayload(), false);
+        AppointmentDisplayStyle displayStyle = AppointmentDisplayUtil
+                .determineDisplayStyle(appointment.getPayload(), false);
         notificationItem.getPayload().getAppointment().getPayload().setDisplayStyle(displayStyle);
 
         switch (displayStyle) {

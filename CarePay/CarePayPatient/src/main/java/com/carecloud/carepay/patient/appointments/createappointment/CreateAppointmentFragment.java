@@ -1,14 +1,16 @@
 package com.carecloud.carepay.patient.appointments.createappointment;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.adapters.PracticesAdapter;
@@ -21,6 +23,9 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author pjohnson on 1/15/19.
@@ -48,7 +53,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater,
+    public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_create_appointment, container, false);
@@ -64,12 +69,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
     private void setUpToolbar(View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
         TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(Label.getLabel("appointments_heading"));
         callback.displayToolbar(false, null);
@@ -77,24 +77,33 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
 
     private void showPracticeList(View view) {
         RecyclerView practicesRecyclerView = view.findViewById(R.id.practicesRecyclerView);
-        if (appointmentsModelDto.getPayload().getUserPractices().size() > 1 && !isReschedule) {
+        List<UserPracticeDTO> filteredList = filterPracticesList(appointmentsModelDto.getPayload().getUserPractices());
+        selectedPractice = filteredList.get(0);
+        if (filteredList.size() > 1 && !isReschedule) {
             practicesRecyclerView.setVisibility(View.VISIBLE);
             practicesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
                     LinearLayoutManager.HORIZONTAL, false));
-            PracticesAdapter adapter = new PracticesAdapter(appointmentsModelDto.getPayload().getUserPractices());
-            adapter.setCallback(new PracticesAdapter.PracticeSelectInterface() {
-                @Override
-                public void onPracticeSelected(UserPracticeDTO userPracticeDTO) {
-                    if (!selectedPractice.getPracticeId().equals(userPracticeDTO.getPracticeId())) {
-                        resetForm();
-                    }
-                    selectedPractice = userPracticeDTO;
+            PracticesAdapter adapter = new PracticesAdapter(filteredList);
+            adapter.setCallback(userPracticeDTO -> {
+                if (!selectedPractice.getPracticeId().equals(userPracticeDTO.getPracticeId())) {
+                    resetForm();
                 }
+                selectedPractice = userPracticeDTO;
             });
             practicesRecyclerView.setAdapter(adapter);
         } else {
             practicesRecyclerView.setVisibility(View.GONE);
         }
+    }
+
+    private List<UserPracticeDTO> filterPracticesList(List<UserPracticeDTO> userPractices) {
+        List<UserPracticeDTO> filteredList = new ArrayList<>();
+        for (UserPracticeDTO practiceDTO : userPractices) {
+            if (appointmentsModelDto.getPayload().canScheduleAppointments(practiceDTO.getPracticeId())) {
+                filteredList.add(practiceDTO);
+            }
+        }
+        return filteredList;
     }
 
     @Override

@@ -609,6 +609,9 @@ public class CloverPaymentActivity extends BaseActivity {
         paymentRecord.setPracticeMgmt(practiceMgmt);
         paymentRecord.setQueueTransition(queueTransitionString);
         paymentRecord.setUsername(getApplicationMode().getUserPracticeDTO().getUserName());
+        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            paymentRecord.setPatientUsername(patientBalance.getDemographics().getMetadata().getUsername());
+        }
 
         String paymentModelJsonEnc = EncryptionUtil.encrypt(getContext(), paymentModelJson, practiceId);
         paymentRecord.setPaymentModelJsonEnc(paymentModelJsonEnc);

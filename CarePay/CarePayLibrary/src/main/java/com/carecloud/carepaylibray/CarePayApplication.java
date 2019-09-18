@@ -12,7 +12,6 @@ import com.carecloud.carepay.service.library.base.IApplicationSession;
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
-import com.orm.SugarContext;
 
 /**
  * Created by pjohnson on 15/03/17
@@ -36,7 +35,6 @@ public abstract class CarePayApplication extends MultiDexApplication implements 
     @Override
     public void onTerminate() {
         super.onTerminate();
-        SugarContext.terminate();
     }
 
     @Override
