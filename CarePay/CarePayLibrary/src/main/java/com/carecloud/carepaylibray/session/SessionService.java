@@ -15,7 +15,7 @@ import com.carecloud.carepaylibray.CarePayApplication;
 public abstract class SessionService extends Service {
 
 
-    protected static final long PATIENT_SESSION_TIMEOUT = 1000 * 60 * 10;
+    protected static final long PATIENT_SESSION_TIMEOUT = 1000 * 60 * 9;
     protected static final long PRACTICE_SESSION_TIMEOUT = 1000 * 60 * 3;
     private Handler handler;
     private Runnable timeOutRunnable;
