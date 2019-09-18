@@ -23,7 +23,7 @@ class PRMakeFullPayment: BaseTest() {
                 .selectProviderForItemOnList(0)
                 .selectLocationForItemOnList(0)
                 .pressPayButton()
-                .selectCreditCardPayment()
+                .selectCreditCardPayment(1)
                 .pressPayButton()
     }
 }

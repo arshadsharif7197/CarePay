@@ -8,18 +8,18 @@ import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 /**
  * @author pjohnson on 2019-09-12.
  */
-class CreatePaymentPlanScreen : CustomViewActions() {
+class PaymentPlanScreen : CustomViewActions() {
 
     init {
         verifyViewVisible(appContext.getString(R.string.content_description_payment_plan_screen))
     }
 
-    fun typePlanName(name: String): CreatePaymentPlanScreen {
+    fun typePlanName(name: String): PaymentPlanScreen {
         type(appContext.getString(R.string.content_description_payment_plan_name), name, true)
         return this
     }
 
-    fun typeNumberOfMonths(numberOfMonths: String): CreatePaymentPlanScreen {
+    fun typeNumberOfMonths(numberOfMonths: String): PaymentPlanScreen {
         type(appContext.getString(R.string.content_description_number_of_months), numberOfMonths, true)
         return this
     }

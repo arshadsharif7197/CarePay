@@ -69,5 +69,8 @@
     <string name="content_description_payment_plan_item_list">Payment plan item list</string>
     <string name="content_description_payment_plan_scroll">Payment Plan Scroll</string>
     <string name="content_description_payment_plan_detail_button">Payment Plan Detail</string>
+    <string name="content_description_key_one">one</string>
+    <string name="content_description_key_five">five</string>
+    <string name="content_description_key_zero">zero</string>
 
 </resources>

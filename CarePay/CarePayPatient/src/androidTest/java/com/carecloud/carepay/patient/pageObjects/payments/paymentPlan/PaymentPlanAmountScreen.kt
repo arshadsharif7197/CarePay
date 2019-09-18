@@ -18,9 +18,9 @@ class PaymentPlanAmountScreen : CustomViewActions() {
         return this
     }
 
-    fun clickCreateButton(): CreatePaymentPlanScreen {
+    fun clickCreateButton(): PaymentPlanScreen {
         click(appContext.getString(R.string.content_description_make_partial_payment_button))
-        return CreatePaymentPlanScreen()
+        return PaymentPlanScreen()
     }
 
 

@@ -243,12 +243,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
                 .reduceBalanceItems(selectedPendingBalance, false);
         PracticePaymentPlanAmountFragment fragment = PracticePaymentPlanAmountFragment
                 .newInstance(paymentsModel, selectedPendingBalance, true);
-        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                startPaymentProcess(paymentsModel);
-            }
-        });
+        fragment.setOnCancelListener(dialog -> startPaymentProcess(paymentsModel));
         displayDialogFragment(fragment, true);
     }
 

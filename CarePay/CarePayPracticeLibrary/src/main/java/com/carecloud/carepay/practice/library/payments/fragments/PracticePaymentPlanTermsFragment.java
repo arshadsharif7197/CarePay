@@ -43,12 +43,7 @@ public class PracticePaymentPlanTermsFragment extends PaymentPlanTermsFragment {
 
         View close = view.findViewById(R.id.closeViewLayout);
         if (close != null) {
-            close.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    cancel();
-                }
-            });
+            close.setOnClickListener(view1 -> cancel());
         }
 
     }
