@@ -220,7 +220,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         View mainMenuItemContainer = findViewById(R.id.mainMenuItemContainer);
         View profilesRecyclerView = findViewById(R.id.profilesRecyclerView);
         mainMenuItemContainer.setVisibility(View.VISIBLE);
-        profilesRecyclerView.setVisibility(View.INVISIBLE);
+        profilesRecyclerView.setVisibility(View.GONE);
         showManageProfilesItemMenu(false);
     }
 
@@ -313,8 +313,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         View profilesRecyclerView = findViewById(R.id.profilesRecyclerView);
         boolean showProfilesRecyclerView = !profileListTriggerIcon.isSelected();
         showManageProfilesItemMenu(showProfilesRecyclerView);
-        profilesRecyclerView.setVisibility(showProfilesRecyclerView ? View.VISIBLE : View.INVISIBLE);
-        mainMenuItemContainer.setVisibility(showProfilesRecyclerView ? View.INVISIBLE : View.VISIBLE);
+        profilesRecyclerView.setVisibility(showProfilesRecyclerView ? View.VISIBLE : View.GONE);
+        mainMenuItemContainer.setVisibility(showProfilesRecyclerView ? View.GONE : View.VISIBLE);
         profileListTriggerIcon.setSelected(!profileListTriggerIcon.isSelected());
     }
 
