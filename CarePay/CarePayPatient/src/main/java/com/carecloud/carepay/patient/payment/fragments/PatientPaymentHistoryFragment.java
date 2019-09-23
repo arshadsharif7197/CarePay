@@ -2,15 +2,15 @@ package com.carecloud.carepay.patient.payment.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.payment.adapters.PaymentHistoryAdapter;
@@ -74,6 +74,7 @@ public class PatientPaymentHistoryFragment extends BaseFragment
         super.onCreate(icicle);
         paymentsModel = (PaymentsModel) callback.getDto();
         paging = paymentsModel.getPaymentPayload().getTransactionHistory().getPageDetails();
+        paging.setCurrentPage(0);
         paymentHistoryItems = filterPaymentHistory(paymentsModel.getPaymentPayload()
                         .getTransactionHistory().getPaymentHistoryList(),
                 paymentsModel.getPaymentPayload().getUserPractices());
@@ -155,6 +156,9 @@ public class PatientPaymentHistoryFragment extends BaseFragment
     }
 
     private void loadNextPage() {
+        if (paging.getCurrentPage() == 0) {
+            paymentHistoryItems.clear();
+        }
         NextPagingDTO next = new NextPagingDTO();
         next.setNextPage(paging.getCurrentPage() + 1);
         next.setPageCount(ITEMS_PER_PAGE);
