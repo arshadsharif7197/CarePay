@@ -121,4 +121,6 @@ public abstract class CarePayApplication extends MultiDexApplication implements 
     public void onActivityDestroyed(Activity activity) {
 
     }
+
+    public abstract void restartSession(Activity activity);
 }

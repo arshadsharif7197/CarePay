@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 
 import com.carecloud.carepay.practice.library.homescreen.AppointmentCountUpdateService;
 import com.carecloud.carepay.practice.library.session.PracticeSessionService;
@@ -97,11 +98,17 @@ public class CarePayPracticeApplication extends CarePayApplication {
         super.onActivityResumed(activity);
         if (activity instanceof SessionedActivityInterface
                 && ((SessionedActivityInterface) activity).manageSession()) {
-            Bundle bundle = new Bundle();
-            DtoHelper.bundleDto(bundle, ((SessionedActivityInterface) activity).getLogoutTransition());
-            Intent intent = new Intent(this, PracticeSessionService.class);
-            intent.putExtras(bundle);
-            startService(intent);
+            restartSession(activity);
         }
+    }
+
+    @Override
+    public void restartSession(Activity activity) {
+        Log.e("Session", "manageSession");
+        Bundle bundle = new Bundle();
+        DtoHelper.bundleDto(bundle, ((SessionedActivityInterface) activity).getLogoutTransition());
+        Intent intent = new Intent(this, PracticeSessionService.class);
+        intent.putExtras(bundle);
+        startService(intent);
     }
 }

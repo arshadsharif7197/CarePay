@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.provider.Settings;
+import android.util.Log;
 
 import com.carecloud.carepay.patient.BuildConfig;
 import com.carecloud.carepay.patient.session.PatientSessionService;
@@ -12,7 +13,6 @@ import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
 import com.carecloud.carepaylibray.CarePayApplication;
-import com.carecloud.carepaylibray.session.SessionService;
 import com.carecloud.carepaylibray.session.SessionedActivityInterface;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.newrelic.agent.android.NewRelic;
@@ -84,12 +84,18 @@ public class CarePayPatientApplication extends CarePayApplication {
         super.onActivityResumed(activity);
         if (activity instanceof SessionedActivityInterface
                 && ((SessionedActivityInterface) activity).manageSession()) {
-            startService(new Intent(this, PatientSessionService.class));
+            restartSession(activity);
         }
     }
 
     @Override
     public void onActivityPaused(Activity activity) {
         super.onActivityPaused(activity);
+    }
+
+    @Override
+    public void restartSession(Activity activity) {
+        Log.e("Session", "manageSession");
+        startService(new Intent(this, PatientSessionService.class));
     }
 }

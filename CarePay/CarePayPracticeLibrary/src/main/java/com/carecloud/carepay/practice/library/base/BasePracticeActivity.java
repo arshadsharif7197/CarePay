@@ -16,10 +16,10 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.session.SessionedActivityInterface;
-import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import org.apache.commons.lang3.NotImplementedException;
 
@@ -40,12 +40,7 @@ public abstract class BasePracticeActivity extends BaseActivity implements IConf
         setNavigationBarVisibility();
         if (manageSession()) {
             getSupportFragmentManager().addOnBackStackChangedListener(() -> {
-                Log.e("Session", "manageSession");
-                Bundle bundle = new Bundle();
-                DtoHelper.bundleDto(bundle, getLogoutTransition());
-                Intent intent = new Intent(this, PracticeSessionService.class);
-                intent.putExtras(bundle);
-                startService(intent);
+                ((CarePayApplication) getApplicationContext()).restartSession(this);
             });
         }
     }

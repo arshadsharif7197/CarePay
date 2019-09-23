@@ -19,7 +19,7 @@ public abstract class BasePatientActivity extends BaseActivity implements Sessio
         getSupportFragmentManager().addOnBackStackChangedListener(() -> {
             Log.e("Session", "manageSession");
             if (manageSession()) {
-                startService(new Intent(this, PatientSessionService.class));
+                ((CarePayPatientApplication) getApplicationContext()).restartSession(this);
             }
         });
     }
