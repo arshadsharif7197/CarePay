@@ -277,9 +277,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/mainContainer"
-                android:layout_alignParentBottom="true"
                 android:layout_marginStart="@dimen/dimen_2dp"
                 android:layout_marginEnd="@dimen/dimen_2dp" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/mergeButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/permissionsRecyclerView"
+                android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="@dimen/dimen_10dp"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:background="@drawable/button_default_background"
+                android:foreground="?selectableItemBackground"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                android:visibility="gone"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="profile.profileDetail.item.button.merge"
+                tools:text="Merge with another account" />
 
         </RelativeLayout>
 

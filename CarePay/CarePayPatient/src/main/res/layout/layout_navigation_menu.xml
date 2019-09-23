@@ -36,7 +36,7 @@
                 android:id="@+id/settingsMenuItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:labelTextKey="navigation_link_profile_settings" />
+                app:labelTextKey="navigation_link_settings" />
 
             <com.carecloud.carepaylibray.customcomponents.CustomMenuItem
                 android:id="@+id/logOutMenuItem"

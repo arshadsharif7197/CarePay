@@ -111,10 +111,12 @@ public class NotificationFragment extends BaseFragment
         notificationItems = filterNotifications(notificationsDTO.getPayload().getNotifications(),
                 supportedNotificationTypes);
         paging = notificationsDTO.getPayload().getPaging();
-        addAppStatusNotification();
         handler = new Handler();
         if (notificationsDTO.getPayload().getDelegate() == null) {
             setHasOptionsMenu(true);
+            addAppStatusNotification();
+        } else if (notificationsDTO.getPayload().getDelegate() != null && notificationItems.size() > 0) {
+            addAppStatusNotification();
         }
     }
 
@@ -326,7 +328,10 @@ public class NotificationFragment extends BaseFragment
                 if (refresh) {
                     notificationItems = filterNotifications(notificationsDTO.getPayload().getNotifications(),
                             supportedNotificationTypes);
-                    addAppStatusNotification();
+                    if (notificationsDTO.getPayload().getDelegate() == null ||
+                            notificationsDTO.getPayload().getDelegate() != null && notificationItems.size() > 0) {
+                        addAppStatusNotification();
+                    }
                 } else {
                     notificationItems.addAll(filterNotifications(notificationsDTO.getPayload().getNotifications(),
                             supportedNotificationTypes));

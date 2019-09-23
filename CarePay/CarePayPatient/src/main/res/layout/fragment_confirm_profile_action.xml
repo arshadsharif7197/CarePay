@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/round_white_background"
+    android:orientation="vertical"
+    android:padding="@dimen/dimen_10dp">
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/dialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:gravity="center"
+        android:textColor="@color/charcoal"
+        android:textSize="@dimen/text_size_21"
+        app:customAssetFont="gotham_rounded_medium"
+        breeze:textKey=""
+        tools:text="Merge Profiles?" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/dialogMessage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_marginBottom="@dimen/dimen_10dp"
+        android:gravity="center"
+        android:textColor="@color/cadet_gray"
+        android:textSize="@dimen/text_size_18sp"
+        app:customAssetFont="proxima_nova_regular"
+        breeze:textKey=""
+        tools:text="The demographic information\nfrom Lauren Conant will be\nmerged with and replaced by the\ndemographics of Reed Conant.\n\nThis action cannot be undone. Do\you wish to continue?" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/dimen_5dp"
+        android:weightSum="2">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/noButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_default_background"
+            android:foreground="?selectableItemBackground"
+            android:textColor="@color/colorPrimary"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="button_no"
+            tools:text="No" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayButton
+            android:id="@+id/yesButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_10dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_default_background"
+            android:foreground="?selectableItemBackground"
+            android:textColor="@color/colorPrimary"
+            app:customAssetFont="gotham_rounded_medium"
+            breeze:textKey="button_yes"
+            tools:text="Yes" />
+
+    </LinearLayout>
+
+</LinearLayout>
