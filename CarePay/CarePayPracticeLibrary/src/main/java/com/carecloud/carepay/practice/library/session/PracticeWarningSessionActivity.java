@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -44,7 +45,11 @@ public class PracticeWarningSessionActivity extends WarningSessionActivity {
     @Override
     protected void restartApp() {
         TransitionDTO logoutTransition = DtoHelper.getConvertedDTO(TransitionDTO.class, getIntent().getExtras());
-        getWorkflowServiceHelper().execute(logoutTransition, new WorkflowServiceCallback() {
+        logOut(logoutTransition, false);
+    }
+
+    private void logOut(TransitionDTO transition, boolean shouldContinue) {
+        getWorkflowServiceHelper().execute(transition, new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
                 showProgressDialog();
@@ -54,7 +59,12 @@ public class PracticeWarningSessionActivity extends WarningSessionActivity {
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
                 getAppAuthorizationHelper().setUser(null);
-                PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+                if (shouldContinue) {
+                    PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+                } else {
+                    TransitionDTO patientModeTransition = ApplicationPreferences.getInstance().getPatientModeTransition();
+                    logOut(patientModeTransition, true);
+                }
             }
 
             @Override
