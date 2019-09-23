@@ -1,6 +1,5 @@
 package com.carecloud.carepay.practice.library.adhocforms;
 
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 
@@ -15,5 +14,5 @@ public interface AdHocFormsInterface extends FragmentActivityInterface {
 
     void highlightFormName(int displayedFormsIndex);
 
-    void showAllDone(WorkflowDTO workflowDTO);
+    void showAllDone(AdHocFormCompletedDialogFragment workflowDTO);
 }
