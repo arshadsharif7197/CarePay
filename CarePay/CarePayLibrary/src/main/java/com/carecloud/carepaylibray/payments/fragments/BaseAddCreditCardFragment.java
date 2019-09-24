@@ -449,23 +449,19 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         creditCard.setType(cardType);
 
         CallPayeezy callPayeezy = new CallPayeezy();
-        callPayeezy.doCall(creditCard, merchantServiceDTO, new CallPayeezy.AuthorizeCreditCardCallback() {
-
-            @Override
-            public void onAuthorizeCreditCard(TokenizeResponse tokenizeResponse) {
-                if (tokenizeResponse != null) {
-                    if (tokenizeResponse.getToken() != null) {
-                        creditCardsPayloadDTO.setToken(tokenizeResponse.getToken().getValue());
-                        authoriseCreditCardResponseCallback.onAuthorizeCreditCardSuccess();
-                    } else {
-                        nextButton.setEnabled(true);
-                        authoriseCreditCardResponseCallback.onAuthorizeCreditCardFailed();
-
-                    }
+        callPayeezy.doCall(creditCard, merchantServiceDTO, tokenizeResponse -> {
+            if (tokenizeResponse != null) {
+                if (tokenizeResponse.getToken() != null) {
+                    creditCardsPayloadDTO.setToken(tokenizeResponse.getToken().getValue());
+                    authoriseCreditCardResponseCallback.onAuthorizeCreditCardSuccess();
                 } else {
                     nextButton.setEnabled(true);
                     authoriseCreditCardResponseCallback.onAuthorizeCreditCardFailed();
+
                 }
+            } else {
+                nextButton.setEnabled(true);
+                authoriseCreditCardResponseCallback.onAuthorizeCreditCardFailed();
             }
         });
 
