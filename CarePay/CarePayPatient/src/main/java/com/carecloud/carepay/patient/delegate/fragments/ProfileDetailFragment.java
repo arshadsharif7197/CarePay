@@ -124,11 +124,21 @@ public class ProfileDetailFragment extends BaseDialogFragment implements Profile
         genderValueTextView.setText(selectedProfile.getProfile().getDemographics().getPayload()
                 .getPersonalDetails().getGender());
         TextView phoneTypeValueTextView = view.findViewById(R.id.phoneTypeValueTextView);
-        phoneTypeValueTextView.setText(selectedProfile.getProfile().getDemographics().getPayload()
-                .getAddress().getPhoneNumberType());
+        String phoneNumberType = selectedProfile.getProfile().getDemographics().getPayload()
+                .getAddress().getPhoneNumberType();
+        if (StringUtil.isNullOrEmpty(phoneNumberType)) {
+            phoneNumberType = "N/A";
+        }
+        phoneTypeValueTextView.setText(phoneNumberType);
+
         TextView phoneNumberValueTextView = view.findViewById(R.id.phoneNumberValueTextView);
-        phoneNumberValueTextView.setText(StringUtil.formatPhoneNumber(selectedProfile.getProfile()
-                .getDemographics().getPayload().getAddress().getPhone()));
+        String phoneType = StringUtil.formatPhoneNumber(selectedProfile.getProfile()
+                .getDemographics().getPayload().getAddress().getPhone());
+        if (StringUtil.isNullOrEmpty(phoneType)) {
+            phoneType = "N/A";
+        }
+        phoneNumberValueTextView.setText(phoneType);
+        
         TextView emailValueTextView = view.findViewById(R.id.emailValueTextView);
         emailValueTextView.setText(selectedProfile.getProfile().getDemographics().getPayload()
                 .getPersonalDetails().getEmailAddress());

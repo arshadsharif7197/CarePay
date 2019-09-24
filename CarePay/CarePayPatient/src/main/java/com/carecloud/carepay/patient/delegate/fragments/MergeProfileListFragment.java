@@ -193,10 +193,6 @@ public class MergeProfileListFragment extends BaseDialogFragment implements Prof
 
     private void showErrorDialog() {
         showErrorNotification(Label.getLabel("profile.errorMerge.dialog.message.merge"));
-//        LargeAlertDialogFragment fragment = LargeAlertDialogFragment
-//                .newInstance(Label.getLabel("profile.errorMerge.dialog.message.merge"),
-//                        Label.getLabel("ok"));
-//        fragment.show(getFragmentManager(), "merge");
     }
 
     private String getProfileName(DemographicPayloadInfoDTO demographics) {
