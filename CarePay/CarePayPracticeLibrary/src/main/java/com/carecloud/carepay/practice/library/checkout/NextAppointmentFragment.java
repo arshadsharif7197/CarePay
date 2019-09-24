@@ -11,11 +11,13 @@ import com.carecloud.carepay.practice.library.appointments.createappointment.Loc
 import com.carecloud.carepay.practice.library.appointments.createappointment.ProviderListFragment;
 import com.carecloud.carepay.practice.library.appointments.createappointment.VisitTypeListFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityDataDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityMetadataDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentAvailabilityPayloadDTO;
 import com.carecloud.carepaylibray.checkout.BaseNextAppointmentFragment;
+import com.carecloud.carepaylibray.utils.DateUtil;
 
 import java.util.ArrayList;
 
@@ -77,5 +79,12 @@ public class NextAppointmentFragment extends BaseNextAppointmentFragment {
     @Override
     protected void showChooseLocationFragment() {
         callback.showFragment(LocationListFragment.newInstance(selectedPractice, selectedVisitType, selectedResource));
+    }
+
+    @Override
+    public String getNextAppointmentDate(String time) {
+        DateUtil dateUtil = DateUtil.getInstance().setDateRaw(time);
+        return dateUtil.getDateAsWeekdayFullMonthDayYear(Label.getLabel("today_label"),
+                Label.getLabel("add_appointment_tomorrow")) + " - " + dateUtil.getTime12Hour();
     }
 }

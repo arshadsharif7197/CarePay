@@ -68,7 +68,7 @@ public class PatientModeRequestAppointmentDialog extends BaseRequestAppointmentD
 //        setDialogTitle(dateUtil.getDateAsDayMonthDayOrdinalYear(Label.getLabel("appointments_web_today_heading")));
 
         TextView appointment_date = view.findViewById(R.id.content_view_header_title);
-        appointment_date.setText(dateUtil.getDateAsWeekdayMonthDayYear(
+        appointment_date.setText(dateUtil.getDateAsWeekdayFullMonthDayYear(
                 Label.getLabel("appointments_web_today_heading"), Label.getLabel("add_appointment_tomorrow")));
 
         TextView appointmentTimeTextView = view.findViewById(R.id.appointment_time);

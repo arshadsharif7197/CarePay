@@ -146,7 +146,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
 
         DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentPayloadDTO.getStartTime());
 
-        String appointmentDateStr = dateUtil.getInstance().getDateAsWeekdayMonthDayYear(Label
+        String appointmentDateStr = dateUtil.getInstance().getDateAsWeekdayFullMonthDayYear(Label
                 .getLabel("appointments_web_today_heading"), Label.getLabel("add_appointment_tomorrow"));
 
         setTextViewById(R.id.appointment_start_day, appointmentDateStr);
