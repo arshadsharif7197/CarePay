@@ -196,7 +196,7 @@ public class DoBVerificationActivity extends BasePracticeActivity {
     private void showErrorDialog() {
         String message = Label.getLabel("dobVerification.gameOver.dialog.title.message");
         LargeAlertDialogFragment fragment = LargeAlertDialogFragment
-                .newInstance(message, Label.getLabel("ok"));
+                .newInstance(message, Label.getLabel("ok"), 36);
         fragment.show(getSupportFragmentManager(), ConfirmDialogFragment.class.getName());
     }
 
