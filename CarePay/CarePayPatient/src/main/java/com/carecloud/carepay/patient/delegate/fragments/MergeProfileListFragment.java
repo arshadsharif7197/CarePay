@@ -112,16 +112,12 @@ public class MergeProfileListFragment extends BaseDialogFragment implements Prof
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
         toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
         TextView title = toolbar.findViewById(R.id.toolbarTitle);
-        title.setText(Label.getLabel("patient.delegate.profileList.title.merge"));
+        title.setText(Label.getLabel("profile.mergeProfile.header.label.mergeProfileWith"));
     }
 
     @Override
     public void onProfileClicked(ProfileDto profile, int position) {
-        if (canBeMerged(selectedProfile.getProfile(), profile.getProfile())) {
-            showMergeDialog(selectedProfile, profile);
-        } else {
-            showErrorDialog();
-        }
+        showMergeDialog(selectedProfile, profile);
     }
 
     private boolean canBeMerged(Profile selectedProfile, Profile profile) {
@@ -150,7 +146,11 @@ public class MergeProfileListFragment extends BaseDialogFragment implements Prof
         fragment.setCallback(new ProfileConfirmationCallback() {
             @Override
             public void confirmAction(ProfileDto profile) {
-                mergeProfiles(MergeProfileListFragment.this.selectedProfile.getProfile(), profile.getProfile());
+                if (canBeMerged(selectedProfile.getProfile(), profile.getProfile())) {
+                    mergeProfiles(MergeProfileListFragment.this.selectedProfile.getProfile(), profile.getProfile());
+                } else {
+                    showErrorDialog();
+                }
             }
 
             @Override
