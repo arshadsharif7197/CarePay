@@ -262,6 +262,7 @@ public class DateUtil {
      * @return A string containing the formatted date
      */
     public String getDateAsWeekdayMonthDayYear() {
+        if (monthLiteral.contains("Sept")) monthLiteral = "Sept";
         if (getUserLanguage().equals("en")) {
             return String.format(Locale.getDefault(), FORMAT_WD_MM_DD_YY, dayLiteral,
                     monthLiteral.length() > 4 ? monthLiteral.substring(0,3) : monthLiteral,
@@ -284,6 +285,7 @@ public class DateUtil {
         } else if (this.isTomorrow()) {
             dayString = tomorrow;
         }
+        if (monthLiteral.contains("Sept")) monthLiteral = "Sept";
         if (getUserLanguage().equals("en")) {
             return String.format(Locale.getDefault(), FORMAT_WD_MM_DD_YY, dayString,
                     monthLiteral.length() > 4 ? monthLiteral.substring(0,3) : monthLiteral,
@@ -321,6 +323,7 @@ public class DateUtil {
      * @return A string containing the formatted date
      */
     public String getDateAsMonthDayYearString() {
+        if (monthLiteral.contains("Sept")) monthLiteral = "Sept";
         if (getUserLanguage().equals("en")) {
             return String.format(Locale.getDefault(), FORMAT_MM_DD_YY,
                     monthLiteral.length() > 4 ? monthLiteral.substring(0,3) : monthLiteral,
