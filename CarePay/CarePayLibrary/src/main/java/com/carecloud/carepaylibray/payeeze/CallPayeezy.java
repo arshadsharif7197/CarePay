@@ -3,10 +3,12 @@ package com.carecloud.carepaylibray.payeeze;
 import android.util.Log;
 
 import com.carecloud.carepay.service.library.interceptors.JSONFormattedLoggingInterceptor;
+import com.carecloud.carepaylibrary.BuildConfig;
 import com.carecloud.carepaylibray.payeeze.model.CreditCard;
 import com.carecloud.carepaylibray.payeeze.model.TokenizeBody;
 import com.carecloud.carepaylibray.payeeze.model.TokenizeResponse;
 import com.carecloud.carepaylibray.payments.models.MerchantServiceMetadataDTO;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
 import java.security.NoSuchAlgorithmException;
@@ -51,13 +53,18 @@ public class CallPayeezy {
         tokenizeBody.setTaToken(merchantServiceDTO.getMasterTaToken());
         tokenizeBody.setCreditCard(creditCard);
 
-        Retrofit retrofit = getRetrofitService();
         Gson gson = new Gson();
         Map<String, String> headers = getSecurityKeys(merchantServiceDTO.getApiKey(),
                 merchantServiceDTO.getMasterMerchantToken(),
                 merchantServiceDTO.getApiSecret(), gson.toJson(tokenizeBody));
-
-        Call<TokenizeResponse> call = retrofit.create(PayeezyService.class).tokenizeCard(tokenizeBody, headers);
+        String tokenizationPostPath = merchantServiceDTO.getUrlPostPath();
+        if (StringUtil.isNullOrEmpty(tokenizationPostPath)) {
+            tokenizationPostPath = "/v1/transactions/tokens";
+        }
+        String tokenizationUrl = String.format("%s%s", merchantServiceDTO.getBaseUrl(), tokenizationPostPath);
+        Retrofit retrofit = getRetrofitService(merchantServiceDTO.getBaseUrl());
+        Call<TokenizeResponse> call = retrofit.create(PayeezyService.class)
+                .tokenizeCard(tokenizationUrl, tokenizeBody, headers);
         call.enqueue(new Callback<TokenizeResponse>() {
             @Override
             public void onResponse(Call<TokenizeResponse> call, Response<TokenizeResponse> response) {
@@ -66,19 +73,19 @@ public class CallPayeezy {
 
             @Override
             public void onFailure(Call<TokenizeResponse> call, Throwable t) {
-                Log.e("pablo", t.getMessage());
+                Log.e("Breeze", t.getMessage());
             }
         });
 
     }
 
-    private Retrofit getRetrofitService() {
+    private Retrofit getRetrofitService(String baseUrl) {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new JSONFormattedLoggingInterceptor());
         return new Retrofit.Builder()
-                .baseUrl("https://api-cert.payeezy.com/v1/")
+                .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient.build())
                 .build();

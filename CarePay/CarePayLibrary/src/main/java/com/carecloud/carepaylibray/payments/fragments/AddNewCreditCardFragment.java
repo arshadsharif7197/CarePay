@@ -154,6 +154,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
                 String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
                 Object[] values = {amountToMakePayment, getString(R.string.payment_card_on_file)};
                 MixPanelUtil.logEvent(getString(R.string.event_payment_failed), params, values);
+                callback.showErrorToast(payload.getProcessingErrors().get(0).getError());
             } else {
                 String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
                 Object[] values = {amountToMakePayment, getString(R.string.payment_new_card)};
