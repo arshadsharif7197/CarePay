@@ -109,6 +109,7 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
 //        createPaymentPlanButton.setText(Label.getLabel("payment_create_plan_text"));
 //        createPaymentPlanButton.setEnabled(false);//TODO enable this when ready to support payment plans
 
+        //TODO: Change this to recycler view!!
         ListView paymentMethodList = view.findViewById(R.id.list_payment_types);
         final PaymentMethodAdapter paymentMethodAdapter = new PaymentMethodAdapter(getContext(), paymentMethodsList, paymentTypeMap);
 

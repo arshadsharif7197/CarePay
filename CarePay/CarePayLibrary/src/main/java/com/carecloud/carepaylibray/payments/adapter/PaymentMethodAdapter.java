@@ -68,18 +68,18 @@ public class PaymentMethodAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.item_payment_method, parent, false);
         }
 
-        CarePayTextView paymentMethodText = (CarePayTextView) convertView.findViewById(R.id.payment_method_text);
+        CarePayTextView paymentMethodText = convertView.findViewById(R.id.payment_method_text);
         String methodLabel = Label.getLabel("payment_method_" + paymentMethodsList.get(position).getType());
         paymentMethodText.setText(methodLabel);
 
-        ImageView paymentMethodImage = (ImageView) convertView.findViewById(R.id.payment_method_image);
+        ImageView paymentMethodImage = convertView.findViewById(R.id.payment_method_image);
         Integer drawable = paymentTypeMap.get(paymentMethodsList.get(position).getType());
         if (drawable == null) {
             drawable = paymentTypeMap.get(CarePayConstants.TYPE_CREDIT_CARD);
         }
         paymentMethodImage.setImageResource(drawable);
 
-        ImageView paymentMethodCheck = (ImageView) convertView.findViewById(R.id.payment_method_check);
+        ImageView paymentMethodCheck = convertView.findViewById(R.id.payment_method_check);
 
         if (selectedItem == position) {
             paymentMethodText.setSelected(true);

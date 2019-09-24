@@ -123,11 +123,7 @@ public class SigninFragment extends BaseFragment {
             mKeyStore = KeyStore.getInstance("AndroidKeyStore");
             mKeyPairGenerator = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC, "AndroidKeyStore");
             createKeyPair();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (NoSuchProviderException e) {
+        } catch (NoSuchAlgorithmException | KeyStoreException | NoSuchProviderException e) {
             e.printStackTrace();
         }
     }
@@ -151,47 +147,29 @@ public class SigninFragment extends BaseFragment {
     private void setClickListeners(View view) {
 
         signInButton = view.findViewById(R.id.signin_button);
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signIn(emailEditText.getText().toString(), passwordEditText.getText().toString());
-            }
-        });
+        signInButton.setOnClickListener(view1 -> signIn(emailEditText.getText().toString(),
+                passwordEditText.getText().toString()));
 
-        view.findViewById(R.id.signup_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.replaceFragment(new SignupFragment(), true);
-                reset();
-            }
+        view.findViewById(R.id.signup_button).setOnClickListener(view12 -> {
+            callback.replaceFragment(new SignupFragment(), true);
+            reset();
         });
 
 
-        view.findViewById(R.id.changeLanguageText).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.replaceFragment(SelectLanguageFragment.newInstance(), true);
+        view.findViewById(R.id.changeLanguageText).setOnClickListener(view13 -> callback
+                .replaceFragment(SelectLanguageFragment.newInstance(), true));
+
+        view.findViewById(R.id.show_password_button).setOnClickListener(view14 -> {
+            if (passwordEditText.getInputType() != InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
+                setInputType(passwordEditText, InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            } else {
+                setInputType(passwordEditText, InputType.TYPE_CLASS_TEXT
+                        | InputType.TYPE_TEXT_VARIATION_PASSWORD);
             }
         });
 
-        view.findViewById(R.id.show_password_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (passwordEditText.getInputType() != InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
-                    setInputType(passwordEditText, InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                } else {
-                    setInputType(passwordEditText, InputType.TYPE_CLASS_TEXT
-                            | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                }
-            }
-        });
-
-        view.findViewById(R.id.forgotPasswordTextView).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.replaceFragment(ResetPasswordFragment.newInstance(), true);
-            }
-        });
+        view.findViewById(R.id.forgotPasswordTextView).setOnClickListener(view15 -> callback
+                .replaceFragment(ResetPasswordFragment.newInstance(), true));
 
         FingerprintManagerCompat fingerprintManagerCompat = FingerprintManagerCompat.from(getContext());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
@@ -215,13 +193,10 @@ public class SigninFragment extends BaseFragment {
             });
         }
 
-        view.findViewById(R.id.get_started).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PlainWebViewFragment fragment = PlainWebViewFragment
-                        .newInstance(HttpConstants.getRetailUrl() + CarePayConstants.GET_STARTED_URL);
-                callback.replaceFragment(fragment, true);
-            }
+        view.findViewById(R.id.get_started).setOnClickListener(view16 -> {
+            PlainWebViewFragment fragment = PlainWebViewFragment
+                    .newInstance(HttpConstants.getRetailUrl() + CarePayConstants.GET_STARTED_URL);
+            callback.replaceFragment(fragment, true);
         });
     }
 

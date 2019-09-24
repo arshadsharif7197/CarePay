@@ -77,11 +77,6 @@ public class PatientNavigationHelper {
             info = new Bundle();
         }
         switch (workflowDTO.getState()) {
-            case NavigationStateConstants.LANGUAGE_SELECTION:
-                intent = new Intent(context, SelectLanguageActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                break;
-
             case NavigationStateConstants.APPOINTMENTS: {
                 intent = new Intent(context, AppointmentsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
