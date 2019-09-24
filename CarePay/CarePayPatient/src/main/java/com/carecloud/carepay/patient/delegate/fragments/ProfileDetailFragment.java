@@ -177,7 +177,8 @@ public class ProfileDetailFragment extends BaseDialogFragment implements Profile
     private void showConfirmDialog(ProfileDto profile, ProfileLink profileLink) {
         ConfirmProfileActionDialogFragment fragment = ConfirmProfileActionDialogFragment.newInstance(profile,
                 Label.getLabel("profile.confirmAction.dialog.title.disconnect"),
-                Label.getLabel("profile.confirmAction.dialog.message.disconnect"));
+                String.format(Label.getLabel("profile.confirmAction.dialog.message.disconnect"),
+                        getProfileName(selectedProfile.getProfile().getDemographics())));
         fragment.setCallback(new ProfileConfirmationCallback() {
             @Override
             public void confirmAction(ProfileDto profile) {

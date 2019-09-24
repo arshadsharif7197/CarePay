@@ -60,9 +60,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_10dp"
             android:layout_weight="1"
-            android:background="@drawable/button_default_background"
+            android:background="@drawable/button_selector"
             android:foreground="?selectableItemBackground"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/white"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="button_yes"
             tools:text="Yes" />

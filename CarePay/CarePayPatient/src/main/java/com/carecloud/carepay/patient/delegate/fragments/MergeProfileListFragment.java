@@ -142,9 +142,8 @@ public class MergeProfileListFragment extends BaseDialogFragment implements Prof
     }
 
     private void showMergeDialog(ProfileDto selectedProfile, ProfileDto profile) {
-        String dialogMessage = String.format("The demographic information\nfrom %s will be\nmerged with and " +
-                        "replaced by the\ndemographics of %s.\n\nThis action cannot be undone." +
-                        " Do\nyou wish to continue?", getProfileName(selectedProfile.getProfile().getDemographics()),
+        String dialogMessage = String.format(Label.getLabel("profile.confirmAction.dialog.message.merge"),
+                getProfileName(selectedProfile.getProfile().getDemographics()),
                 getProfileName(profile.getProfile().getDemographics()));
         ConfirmProfileActionDialogFragment fragment = ConfirmProfileActionDialogFragment.newInstance(profile,
                 Label.getLabel("profile.confirmAction.dialog.title.merge"), dialogMessage);
@@ -193,10 +192,11 @@ public class MergeProfileListFragment extends BaseDialogFragment implements Prof
     }
 
     private void showErrorDialog() {
-        LargeAlertDialogFragment fragment = LargeAlertDialogFragment
-                .newInstance(Label.getLabel("profile.errorMerge.dialog.message.merge"),
-                        Label.getLabel("ok"));
-        fragment.show(getFragmentManager(), "merge");
+        showErrorNotification(Label.getLabel("profile.errorMerge.dialog.message.merge"));
+//        LargeAlertDialogFragment fragment = LargeAlertDialogFragment
+//                .newInstance(Label.getLabel("profile.errorMerge.dialog.message.merge"),
+//                        Label.getLabel("ok"));
+//        fragment.show(getFragmentManager(), "merge");
     }
 
     private String getProfileName(DemographicPayloadInfoDTO demographics) {
