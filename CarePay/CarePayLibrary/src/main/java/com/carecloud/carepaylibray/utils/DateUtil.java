@@ -295,6 +295,27 @@ public class DateUtil {
     }
 
     /**
+     * Format the date as: Monday, October 10th, 2019, using Today and Tomorrow strings when needed
+     *
+     * @return A string containing the formatted date
+     */
+    public String getDateAsWeekdayFullMonthDayYear(String today, String tomorrow) {
+        String dayString = dayLiteral;
+        if (this.isToday()) {
+            dayString = today;
+        } else if (this.isTomorrow()) {
+            dayString = tomorrow;
+        }
+        if (getUserLanguage().equals("en")) {
+            return String.format(Locale.getDefault(), FORMAT_WD_MM_DD_YY, dayString, monthLiteral,
+                    day, year);
+        } else {
+            return String.format(Locale.getDefault(), FORMAT_WD_MM_DD_YY_ES, StringUtil.capitalize(dayString), day,
+                    StringUtil.capitalize(monthLiteral), year);
+        }
+    }
+
+    /**
      * Format the date as: Oct 10, 2019 or 10 Oct 2019
      *
      * @return A string containing the formatted date
