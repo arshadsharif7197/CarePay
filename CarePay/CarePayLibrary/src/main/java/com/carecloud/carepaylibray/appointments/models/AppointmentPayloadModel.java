@@ -55,7 +55,7 @@ public class AppointmentPayloadModel extends DelegatePermissionBasePayloadDto im
     private List<ResourcesToScheduleDTO> resourcesToSchedule = new ArrayList<>();
     @SerializedName("appointments_settings")
     @Expose
-    private List<AppointmentsSettingDTO> appointmentsSettings = new ArrayList<AppointmentsSettingDTO>();
+    private List<AppointmentsSettingDTO> appointmentsSettings = new ArrayList<>();
     @SerializedName("demographics")
     @Expose
     private DemographicsSettingsDemographicsDTO demographicDTO = new DemographicsSettingsDemographicsDTO();
