@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
  */
 public class CreditCard {
 
+    @SerializedName("type")
     private String type;
     @SerializedName("cardholder_name")
     private String cardHolderName;
@@ -14,6 +15,7 @@ public class CreditCard {
     private String cardNumber;
     @SerializedName("exp_date")
     private String expDate;
+    @SerializedName("cvv")
     private String cvv;
 
     public String getType() {

@@ -7,7 +7,9 @@ import com.google.gson.annotations.SerializedName;
  */
 public class TokenizeBody {
 
+    @SerializedName("type")
     private String type;
+    @SerializedName("auth")
     private String auth;
     @SerializedName("ta_token")
     private String taToken = "NOIW";
