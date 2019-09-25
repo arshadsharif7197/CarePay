@@ -131,6 +131,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         if (!threads.isEmpty()) {
             noMessagesLayout.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
+            actionButton.setVisibility(View.VISIBLE);
             refreshLayoutView.setEnabled(true);
         } else if (delegateUser != null && !callback.canSendProvidersMessages()){
             noMessagesLayout.setVisibility(View.VISIBLE);
