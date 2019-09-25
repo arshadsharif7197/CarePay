@@ -3,7 +3,6 @@ package com.carecloud.carepaylibray.payeeze;
 import android.util.Log;
 
 import com.carecloud.carepay.service.library.interceptors.JSONFormattedLoggingInterceptor;
-import com.carecloud.carepaylibrary.BuildConfig;
 import com.carecloud.carepaylibray.payeeze.model.CreditCard;
 import com.carecloud.carepaylibray.payeeze.model.TokenizeBody;
 import com.carecloud.carepaylibray.payeeze.model.TokenizeResponse;
@@ -31,14 +30,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * @author pjohnson on 2019-06-21.
  */
 public class CallPayeezy {
-
-    private static final String NONCE = "nonce";
-    private static final String APIKEY = "apikey";
-    private static final String APISECRET = "pzsecret";
-    private static final String TOKEN = "token";
-    private static final String TIMESTAMP = "timestamp";
-    private static final String AUTHORIZE = "Authorization";
-    private static final String PAYLOAD = "payload";
 
     public interface AuthorizeCreditCardCallback {
         void onAuthorizeCreditCard(TokenizeResponse response);
@@ -99,13 +90,13 @@ public class CallPayeezy {
 
             nonce = Math.abs(SecureRandom.getInstance("SHA1PRNG").nextLong());
 
-            returnMap.put(NONCE, Long.toString(nonce));
-            returnMap.put(APIKEY, appId);
-            returnMap.put(TIMESTAMP, Long.toString(System.currentTimeMillis()));
-            returnMap.put(TOKEN, token);
-            returnMap.put(APISECRET, secureId);
-            returnMap.put(PAYLOAD, payLoad);
-            returnMap.put(AUTHORIZE, getMacValue(returnMap));
+            returnMap.put("nonce", Long.toString(nonce));
+            returnMap.put("apikey", appId);
+            returnMap.put("timestamp", Long.toString(System.currentTimeMillis()));
+            returnMap.put("token", token);
+            returnMap.put("pzsecret", secureId);
+            returnMap.put("payload", payLoad);
+            returnMap.put("Authorization", getMacValue(returnMap));
 
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e.getMessage(), e);
@@ -117,17 +108,17 @@ public class CallPayeezy {
 
     private String getMacValue(Map<String, String> data) throws Exception {
         Mac mac = Mac.getInstance("HmacSHA256");
-        String apiSecret = data.get(APISECRET);
+        String apiSecret = data.get("pzsecret");
         SecretKeySpec secret_key = new SecretKeySpec(apiSecret.getBytes(), "HmacSHA256");
         mac.init(secret_key);
         StringBuilder buff = new StringBuilder();
-        buff.append(data.get(APIKEY))
-                .append(data.get(NONCE))
-                .append(data.get(TIMESTAMP));
-        if (data.get(TOKEN) != null)
-            buff.append(data.get(TOKEN));
-        if (data.get(PAYLOAD) != null)
-            buff.append(data.get(PAYLOAD));
+        buff.append(data.get("apikey"))
+                .append(data.get("nonce"))
+                .append(data.get("timestamp"));
+        if (data.get("token") != null)
+            buff.append(data.get("token"));
+        if (data.get("payload") != null)
+            buff.append(data.get("payload"));
         String bufferData = buff.toString();
         byte[] macHash = mac.doFinal(bufferData.getBytes("UTF-8"));
 
