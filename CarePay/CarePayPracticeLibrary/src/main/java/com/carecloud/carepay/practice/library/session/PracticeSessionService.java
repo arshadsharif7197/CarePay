@@ -32,6 +32,7 @@ public class PracticeSessionService extends SessionService {
     @Override
     protected void callWarningActivity() {
         Intent intent = new Intent(this, PracticeWarningSessionActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if (logoutTransition != null) {
             Bundle bundle = new Bundle();
             DtoHelper.bundleDto(bundle, logoutTransition);
