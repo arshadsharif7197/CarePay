@@ -6,6 +6,7 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -206,5 +207,38 @@ public class DemographicInsurancePayloadDTO extends PatientModel {
 
     public void setPolicyMiddleNameHolder(String policyMiddleNameHolder) {
         this.policyMiddleNameHolder = policyMiddleNameHolder;
+    }
+
+    public boolean checkChanges(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass() || !(o instanceof DemographicInsurancePayloadDTO)) return false;
+        Field[] fields = this.getClass().getDeclaredFields();
+        DemographicInsurancePayloadDTO modifiedObj = (DemographicInsurancePayloadDTO) o;
+        for (Field field: fields) {
+            try {
+                Object obj1 = field.get(this);
+                Object obj2 = field.get(modifiedObj);
+                String fieldName = field.getName();
+                if (fieldName.equals("insurancePhotos")) {
+                    List<DemographicInsurancePhotoDTO> photos1 = ((List)obj1);
+                    List<DemographicInsurancePhotoDTO> photos2 = ((List)obj2);
+                    if (photos1.size() != photos2.size()) {
+                        return false;
+                    }
+                    for (int i = 0; i < photos2.size(); i++) {
+                        if (!photos2.get(i).getInsurancePhoto().equals(photos1.get(i).getInsurancePhoto())) {
+                            return false;
+                        }
+                    }
+                } else if(field.getType() == String.class && !(fieldName.equals("deleted") || fieldName.equals("insuranceId"))) {
+                    if (obj1 == null ? !StringUtil.isNullOrEmpty((String)obj2) : !((String)obj1).equalsIgnoreCase((String)obj2)) {
+                        return false;
+                    }
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
     }
 }
