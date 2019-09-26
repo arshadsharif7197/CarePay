@@ -83,6 +83,8 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
     private boolean photoAdded;
 
 
+    List<DemographicInsurancePayloadDTO> originalInsuranceList;
+
     public static SettingsDocumentsFragment newInstance() {
         return new SettingsDocumentsFragment();
     }
@@ -105,6 +107,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, DtoHelper.getStringDTO(demographicsSettingsDTO));
         insuranceChanged = false;
         photoAdded = false;
+        originalInsuranceList = demographicDTO.getPayload().getDemographics().getPayload().getInsurances();
     }
 
     @Override
@@ -234,13 +237,29 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
             noPrimaryInsuranceFound = true;
             showAlert = true;
         }
+        if (insuranceChanged) {
+            insuranceChanged = checkIfInsuranceListChanged(insuranceList) && !checkIfInsuranceDataMatches(insuranceList);
+        }
         nextButton.setEnabled(insuranceChanged &&
-                !checkIfHasDuplicateInsuranceType(insurancesTypeMap) &&
-                !checkIfInsuranceDataMatches());
+                !checkIfHasDuplicateInsuranceType(insurancesTypeMap));
 
         MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_has_identity_doc), hasOnePhoto);
 
         return insuranceList;
+    }
+
+    private boolean checkIfInsuranceListChanged(List<DemographicInsurancePayloadDTO> modifiedList) {
+        if (originalInsuranceList.size() != modifiedList.size()) {
+            return true;
+        } else {
+            for (int i = 0; i < originalInsuranceList.size(); i++) {
+                boolean match = originalInsuranceList.get(i).checkChanges(modifiedList.get(i));
+                if (!match) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private boolean checkIfHasDuplicateInsuranceType(Map<String, Integer> insurancesTypeMap) {
@@ -273,20 +292,20 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         return insuranceTypeRepeated;
     }
 
-    private boolean checkIfInsuranceDataMatches() {
-        List<DemographicInsurancePayloadDTO> insuranceList = demographicDTO.getPayload().getDemographics().getPayload().getInsurances();
-        if (insuranceList.size() > 0) {
-            DemographicInsurancePayloadDTO firstInsurance = insuranceList.get(insuranceList.size() - 1);
-            for (DemographicInsurancePayloadDTO insurance : insuranceList.subList(0, insuranceList.size() - 1)) {
+    private boolean checkIfInsuranceDataMatches(List<DemographicInsurancePayloadDTO> modifiedList) {
+        if (modifiedList.size() > 0) {
+            DemographicInsurancePayloadDTO firstInsurance = modifiedList.get(modifiedList.size() - 1);
+            for (DemographicInsurancePayloadDTO insurance : modifiedList.subList(0, modifiedList.size() - 1)) {
                 boolean match = checkEqualValues(insurance.getInsuranceProvider(), firstInsurance.getInsuranceProvider()) &&
                         checkEqualValues(insurance.getInsurancePlan(), firstInsurance.getInsurancePlan()) &&
                         checkEqualValues(insurance.getInsuranceMemberId(), firstInsurance.getInsuranceMemberId());
-                if (match)  {
+                if (match) {
                     insuranceDataRepeated = showAlert = true;
                     return true;
                 }
             }
         }
+        insuranceDataRepeated = showAlert = false;
         return false;
     }
 
@@ -369,9 +388,8 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
             DemographicDTO updatedModel = DtoHelper.getConvertedDTO(DemographicDTO.class, workflowDTO);
             demographicsSettingsDTO.getPayload().getDemographics().getPayload().setIdDocument(updatedModel.getPayload().getDemographics().getPayload().getIdDocument());
             demographicsSettingsDTO.getPayload().getDemographics().getPayload().setInsurances(updatedModel.getPayload().getDemographics().getPayload().getInsurances());
-
-            getActivity().onBackPressed();
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
+            getActivity().onBackPressed();
         }
 
         @Override
