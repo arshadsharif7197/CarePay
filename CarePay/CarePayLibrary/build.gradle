@@ -48,11 +48,11 @@ configurations {
 }
 dependencies {
     // support library
-    api 'androidx.appcompat:appcompat:1.0.0'
+    api 'androidx.appcompat:appcompat:1.1.0'
     api 'androidx.legacy:legacy-support-v4:1.0.0'
     api 'androidx.cardview:cardview:1.0.0'
     api 'com.google.android.material:material:1.0.0'
-    api 'androidx.multidex:multidex:2.0.0'
+    api 'androidx.multidex:multidex:2.0.1'
     // apache utils
     api 'org.apache.commons:commons-lang3:3.5'
     //datetime
@@ -67,11 +67,12 @@ dependencies {
     api 'com.google.zxing:core:3.2.1'
     api 'me.dm7.barcodescanner:zxing:1.9'
     api 'com.marcok.stepprogressbar:stepprogressbar:1.0.1'
-    api 'com.google.firebase:firebase-messaging:17.3.2'
+    api 'com.google.firebase:firebase-messaging:20.0.0'
     api 'fr.tvbarthel.blurdialogfragment:lib:2.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test:rules:1.1.0'
 //    compile project(':shamrocksdk')
     api 'com.github.Carecloud:shamrock_android_sdk:2.0.3'
+
 }

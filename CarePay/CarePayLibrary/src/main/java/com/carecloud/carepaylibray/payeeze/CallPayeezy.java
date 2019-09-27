@@ -66,7 +66,7 @@ public class CallPayeezy {
 
             @Override
             public void onFailure(Call<TokenizeResponse> call, Throwable t) {
-                Log.e("pablo", t.getMessage());
+                Log.e("Breeze", t.getMessage());
             }
         });
 

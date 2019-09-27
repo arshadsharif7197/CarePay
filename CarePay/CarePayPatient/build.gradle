@@ -154,14 +154,13 @@ dependencies {
     implementation project(':CarePayLibrary')
     implementation 'com.newrelic.agent.android:android-agent:5.22.0'
     // Android Pay
-    implementation 'com.google.android.gms:play-services-auth:16.0.0'
-    implementation 'com.google.android.gms:play-services-wallet:16.0.0'
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
     implementation 'com.facebook.shimmer:shimmer:0.3.0'
 
 
     // for testing
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.annotation:annotation:1.0.0'
+    androidTestImplementation 'androidx.annotation:annotation:1.1.0'
     androidTestImplementation('androidx.test.espresso:espresso-contrib:3.1.0') {
         exclude module: 'support-annotations'
         exclude group: 'com.android.support', module: 'appcompat'
@@ -170,9 +169,10 @@ dependencies {
         implementation 'com.marcok.stepprogressbar:stepprogressbar:1.0.1'
     }
 
-    def room_version = "1.1.1"
-    implementation 'androidx.room:room-runtime:2.0.0'
-    annotationProcessor 'androidx.room:room-compiler:2.0.0'
+    implementation 'androidx.room:room-runtime:2.1.0'
+    annotationProcessor 'androidx.room:room-compiler:2.1.0'
+
+    implementation 'com.google.android.gms:play-services-wallet:18.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

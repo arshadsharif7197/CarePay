@@ -11,7 +11,6 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
-import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.retail.fragments.RetailListFragment;
 import com.carecloud.carepay.patient.retail.interfaces.RetailPatientInterface;
@@ -34,10 +33,11 @@ import com.carecloud.carepaylibray.retail.models.RetailModel;
 import com.carecloud.carepaylibray.retail.models.RetailPracticeDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
-import com.google.android.gms.wallet.MaskedWallet;
 
 import java.util.HashMap;
 import java.util.Map;
+
+//import com.google.android.gms.wallet.MaskedWallet;
 
 /**
  * Created by lmenendez on 2/8/17
@@ -133,7 +133,6 @@ public class RetailActivity extends MenuPatientActivity implements RetailPatient
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET:
-            case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_FULL_WALLET:
                 forwardAndroidPayResult(requestCode, resultCode, data);
                 break;
@@ -280,12 +279,6 @@ public class RetailActivity extends MenuPatientActivity implements RetailPatient
     @Override
     public Fragment getAndroidPayTargetFragment() {
         return androidPayTargetFragment;
-    }
-
-    @Override
-    public void createWalletFragment(MaskedWallet maskedWallet, Double amount) {
-        replaceFragment(AndroidPayDialogFragment.newInstance(maskedWallet, paymentsModel, amount),
-                true);
     }
 
     @Override

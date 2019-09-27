@@ -2,6 +2,7 @@ package com.carecloud.carepay.patient.payment.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -10,7 +11,6 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
-import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.patient.payment.fragments.NoPaymentsFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
@@ -57,13 +57,14 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.android.gms.wallet.MaskedWallet;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFragment.PAGE_BALANCES;
+
+//import com.google.android.gms.wallet.MaskedWallet;
 
 /**
  * Created by jorge on 29/12/16
@@ -189,7 +190,6 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET:
-            case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_FULL_WALLET:
             case PaymentConstants.REQUEST_CODE_GOOGLE_PAYMENT:
                 forwardAndroidPayResult(requestCode, resultCode, data);
@@ -382,11 +382,6 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         pendingBalanceDTO.setMetadata(selectedBalancesItem.getMetadata());
         pendingBalanceDTO.getPayload().add(selectedBalancesItem.getBalance());
         this.selectedBalancesItem = pendingBalanceDTO;
-    }
-
-    @Override
-    public void createWalletFragment(MaskedWallet maskedWallet, Double amount) {
-        replaceFragment(AndroidPayDialogFragment.newInstance(maskedWallet, paymentsDTO, amount), true);
     }
 
     @Override

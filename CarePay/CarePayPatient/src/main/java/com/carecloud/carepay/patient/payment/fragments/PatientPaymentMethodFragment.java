@@ -4,27 +4,29 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.db.BreezeDataBase;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayAdapter;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayQueueUploadService;
-import com.carecloud.carepay.patient.db.BreezeDataBase;
 import com.carecloud.carepay.patient.payment.androidpay.models.AndroidPayQueuePaymentRecord;
 import com.carecloud.carepay.patient.payment.androidpay.models.PayeezyAndroidPayResponse;
 import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
+import com.carecloud.carepay.patient.utils.payments.PaymentsUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.RestCallServiceHelper;
+import com.carecloud.carepay.service.library.RestDef;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
@@ -33,6 +35,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
+import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.payments.models.PapiAccountsDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -48,8 +51,12 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.EncryptionUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.Task;
 import com.google.android.gms.wallet.AutoResolveHelper;
-import com.google.android.gms.wallet.MaskedWallet;
+import com.google.android.gms.wallet.IsReadyToPayRequest;
+import com.google.android.gms.wallet.PaymentData;
+import com.google.android.gms.wallet.PaymentDataRequest;
+import com.google.android.gms.wallet.PaymentsClient;
 import com.google.android.gms.wallet.WalletConstants;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -57,23 +64,29 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.newrelic.agent.android.NewRelic;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
+
+import okhttp3.RequestBody;
 
 import static com.carecloud.carepay.patient.R.id.paymentAmount;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PatientPaymentMethodFragment extends PaymentMethodFragment implements AndroidPayAdapter.AndroidPayReadyCallback, AndroidPayAdapter.AndroidPayProcessingCallback {
+public class PatientPaymentMethodFragment extends PaymentMethodFragment implements AndroidPayAdapter.AndroidPayProcessingCallback {
 
     //Patient Specific Stuff
     private ProgressBar paymentMethodFragmentProgressBar;
     private PatientPaymentMethodInterface callback;
 
     private AndroidPayAdapter androidPayAdapter;
-    private View androidPayButton;
+    private View mGooglePayButton;
+    private PaymentsClient mPaymentsClient;
     private PapiAccountsDTO papiAccount;
 
     protected boolean shouldInitAndroidPay = true;
@@ -112,12 +125,6 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         }
     }
 
-
-    @Override
-    public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
-    }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_payment_method, container, false);
@@ -126,7 +133,70 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     @Override
     public void onViewCreated(@NonNull View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
+
         paymentMethodFragmentProgressBar = view.findViewById(R.id.paymentMethodFragmentProgressBar);
+        // Initialize a Google Pay API client for an environment suitable for testing.
+        // It's recommended to create the PaymentsClient object inside of the onCreate method.
+        mPaymentsClient = PaymentsUtil.createPaymentsClient(getActivity());
+        mGooglePayButton = findViewById(R.id.google_pay_button);
+        possiblyShowGooglePayButton();
+    }
+
+    /**
+     * Determine the viewer's ability to pay with a payment method supported by your app and display a
+     * Google Pay payment button.
+     *
+     * @see <a href=
+     * "https://developers.google.com/android/reference/com/google/android/gms/wallet/PaymentsClient.html#isReadyToPay(com.google.android.gms.wallet.IsReadyToPayRequest)">PaymentsClient#IsReadyToPay</a>
+     */
+    private void possiblyShowGooglePayButton() {
+        final JSONObject isReadyToPayJson = PaymentsUtil.getIsReadyToPayRequest();
+        if (isReadyToPayJson == null) {
+            return;
+        }
+        IsReadyToPayRequest request = IsReadyToPayRequest.fromJson(isReadyToPayJson.toString());
+        if (request == null) {
+            return;
+        }
+
+        // The call to isReadyToPay is asynchronous and returns a Task. We need to provide an
+        // OnCompleteListener to be triggered when the result of the call is known.
+        Task<Boolean> task = mPaymentsClient.isReadyToPay(request);
+        task.addOnCompleteListener(getActivity(),
+                task1 -> {
+                    if (task1.isSuccessful()) {
+                        callback.setAndroidPayTargetFragment(this);
+                        getPapiAccount();
+                    } else {
+                        Log.w("isReadyToPay failed", task1.getException());
+                    }
+                });
+    }
+
+    // This method is called when the Pay with Google button is clicked.
+    public void requestPayment(PapiAccountsDTO papiAccount, double amountToMakePayment) {
+        // Disables the button to prevent multiple clicks.
+//        mGooglePayButton.setClickable(false);
+
+        // The price provided to the API should include taxes and shipping.
+        // This price is not displayed to the user.
+        String price = PaymentsUtil.microsToString(amountToMakePayment);
+
+//         TransactionInfo transaction = PaymentsUtil.createTransaction(price);
+        JSONObject paymentDataRequestJson = PaymentsUtil.getPaymentDataRequest(papiAccount, price);
+        if (paymentDataRequestJson == null) {
+            return;
+        }
+        PaymentDataRequest request =
+                PaymentDataRequest.fromJson(paymentDataRequestJson.toString());
+
+        // Since loadPaymentData may show the UI asking the user to select a payment method, we use
+        // AutoResolveHelper to wait for the user interacting with it. Once completed,
+        // onActivityResult will be called with the result.
+        if (request != null) {
+            AutoResolveHelper.resolveTask(
+                    mPaymentsClient.loadPaymentData(request), getActivity(), PaymentConstants.REQUEST_CODE_GOOGLE_PAYMENT);
+        }
     }
 
     @Override
@@ -154,21 +224,6 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
             errorCode = data.getIntExtra(WalletConstants.EXTRA_ERROR_CODE, -1);
         }
         switch (requestCode) {
-            case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
-                switch (resultCode) {
-                    case Activity.RESULT_OK:
-                        if (data != null) {
-                            MaskedWallet maskedWallet = data.getParcelableExtra(WalletConstants.EXTRA_MASKED_WALLET);
-                            callback.createWalletFragment(maskedWallet, amountToMakePayment);
-                        }
-                        break;
-                    case Activity.RESULT_CANCELED:
-                        break;
-                    default:
-                        handleError(errorCode);
-                        break;
-                }
-                break;
             case WalletConstants.RESULT_ERROR:
                 handleError(errorCode);
                 break;
@@ -178,7 +233,8 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
                         if (androidPayAdapter == null) {
                             androidPayAdapter = new AndroidPayAdapter(getActivity(), paymentsModel.getPaymentPayload().getMerchantServices());
                         }
-                        androidPayAdapter.handleGooglePaymentData(data, papiAccount, amountToMakePayment, this);
+//                        androidPayAdapter.handleGooglePaymentData(data, papiAccount, amountToMakePayment, this);
+                        handleGooglePaymentData(data, papiAccount, amountToMakePayment, this);
                         break;
                     case AutoResolveHelper.RESULT_ERROR:
                         Status status = AutoResolveHelper.getStatusFromIntent(data);
@@ -187,13 +243,67 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
                         }
                         break;
                     default:
-
                 }
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
                 break;
         }
+    }
+
+    private void handleGooglePaymentData(Intent data, PapiAccountsDTO papiAccountsDTO,
+                                         Double paymentAmount,
+                                         @NonNull AndroidPayAdapter.AndroidPayProcessingCallback callback) {
+        PaymentData paymentData = PaymentData.getFromIntent(data);
+        if (paymentData != null) {
+            String token = paymentData.getPaymentMethodToken().getToken();
+            processPaymentWithPayeezy(token, papiAccountsDTO, paymentAmount, callback);
+        }
+    }
+
+    private void processPaymentWithPayeezy(String tokenJSON,
+                                           PapiAccountsDTO papiAccountsDTO,
+                                           Double paymentAmount,
+                                           @NonNull AndroidPayAdapter.AndroidPayProcessingCallback callback) {
+        try {
+            JSONObject jsonTokenData = new JSONObject(tokenJSON);
+
+            //  Create a First Data Json request
+            MerchantServicesDTO payeezyMerchantService = getAndroidPayMerchantService();
+            if (payeezyMerchantService == null) {
+                callback.onAndroidPayFailed("No Merchant Service Available");
+                return;
+            }
+            JSONObject requestPayload = getGooglePaymentsPayload(jsonTokenData, paymentAmount);
+            final String payloadString = requestPayload.toString();
+
+            if (papiAccountsDTO == null) {
+                callback.onAndroidPayFailed("No Account Available");
+                return;
+            }
+            final Map<String, String> HMACMap = computeHMAC(payloadString, payeezyMerchantService, papiAccountsDTO);
+            if (HMACMap.isEmpty()) {
+                callback.onAndroidPayFailed("An unknown error has occurred");
+                return;
+            }
+
+            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), payloadString);
+            RestCallServiceHelper restCallServiceHelper = new RestCallServiceHelper(callback.getSession().getAppAuthorizationHelper(), callback.getSession().getApplicationMode());
+            restCallServiceHelper.executeRequest(RestDef.POST,
+                    payeezyMerchantService.getMetadata().getBaseUrl(),
+                    getPayeezyServiceCallback(callback),
+                    false,
+                    false,
+                    null,
+                    null,
+                    HMACMap,
+                    body,
+                    "v1/transactions");
+        } catch (JSONException jsx) {
+            jsx.printStackTrace();
+            callback.onAndroidPayFailed("An unknown error has occurred");
+        }
+
     }
 
     protected void setupTitleViews(View view) {
@@ -215,46 +325,46 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     }
 
     private void initAndroidPay() {
-        androidPayAdapter = new AndroidPayAdapter(getActivity(), paymentsModel.getPaymentPayload().getMerchantServices());
-        androidPayAdapter.initAndroidPay(this);
+//        androidPayAdapter = new AndroidPayAdapter(getActivity(), paymentsModel.getPaymentPayload().getMerchantServices());
+//        androidPayAdapter.initAndroidPay(this);
     }
 
 
-    private void addAndroidPayPaymentMethod() {
-        callback.setAndroidPayTargetFragment(this);
-        androidPayButton = findViewById(R.id.google_pay_button);
-    }
+//    private void addAndroidPayPaymentMethod() {
+//        callback.setAndroidPayTargetFragment(this);
+//        androidPayButton = findViewById(R.id.google_pay_button);
+//    }
 
     private void handleError(int errorCode) {
-        switch (errorCode) {
-            case WalletConstants.ERROR_CODE_SPENDING_LIMIT_EXCEEDED:
-                Toast.makeText(getContext(), "Way too much!!", Toast.LENGTH_LONG).show();
-                break;
-            case WalletConstants.ERROR_CODE_INVALID_PARAMETERS:
-            case WalletConstants.ERROR_CODE_AUTHENTICATION_FAILURE:
-            case WalletConstants.ERROR_CODE_BUYER_ACCOUNT_ERROR:
-            case WalletConstants.ERROR_CODE_MERCHANT_ACCOUNT_ERROR:
-            case WalletConstants.ERROR_CODE_SERVICE_UNAVAILABLE:
-            case WalletConstants.ERROR_CODE_UNSUPPORTED_API_VERSION:
-            case WalletConstants.ERROR_CODE_UNKNOWN:
-            default:
-                // unrecoverable error
-                String errorMessage = "Android Pay is unavailable" + "\n" +
-                        "Error code: " + errorCode;
-                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
-                break;
-        }
+//        switch (errorCode) {
+//            case WalletConstants.ERROR_CODE_SPENDING_LIMIT_EXCEEDED:
+//                Toast.makeText(getContext(), "Way too much!!", Toast.LENGTH_LONG).show();
+//                break;
+//            case WalletConstants.ERROR_CODE_INVALID_PARAMETERS:
+//            case WalletConstants.ERROR_CODE_AUTHENTICATION_FAILURE:
+//            case WalletConstants.ERROR_CODE_BUYER_ACCOUNT_ERROR:
+//            case WalletConstants.ERROR_CODE_MERCHANT_ACCOUNT_ERROR:
+//            case WalletConstants.ERROR_CODE_SERVICE_UNAVAILABLE:
+//            case WalletConstants.ERROR_CODE_UNSUPPORTED_API_VERSION:
+//            case WalletConstants.ERROR_CODE_UNKNOWN:
+//            default:
+//                // unrecoverable error
+//                String errorMessage = "Android Pay is unavailable" + "\n" +
+//                        "Error code: " + errorCode;
+//                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
+//                break;
+//        }
     }
 
 
-    @Override
-    public void onAndroidPayReady() {
-        showOrHideProgressDialog(false);
-        if (getActivity() != null) {
-            addAndroidPayPaymentMethod();
-            getPapiAccount();
-        }
-    }
+//    @Override
+//    public void onAndroidPayReady() {
+//        showOrHideProgressDialog(false);
+//        if (getActivity() != null) {
+//            addAndroidPayPaymentMethod();
+//            getPapiAccount();
+//        }
+//    }
 
     private void getPapiAccount() {
         UserPracticeDTO userPractice = callback.getPracticeInfo(paymentsModel);
@@ -278,12 +388,16 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         public void onPostExecute(WorkflowDTO workflowDTO) {
             PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             papiAccount = paymentsModel.getPaymentPayload().getPapiAccountByType(PaymentConstants.ANDROID_PAY_PAPI_ACCOUNT_TYPE);
+            papiAccount.setDefaultBankAccountMid(papiAccount.getBankAccount().getMetadata().getMid());
             if (papiAccount.getDefaultBankAccountMid() != null) {
-                androidPayButton.setVisibility(View.VISIBLE);
-                androidPayButton.setOnClickListener(view -> {
-                    androidPayAdapter.createAndroidPayRequest(amountToMakePayment, papiAccount);
-                    view.setVisibility(View.INVISIBLE);
-                });
+                mGooglePayButton.setVisibility(View.VISIBLE);
+                mGooglePayButton.setClickable(true);
+                mGooglePayButton.setOnClickListener(
+                        view1 -> requestPayment(papiAccount, amountToMakePayment));
+//                mGooglePayButton.setOnClickListener(view -> {
+//                    androidPayAdapter.createAndroidPayRequest(amountToMakePayment, papiAccount);
+//                    view.setVisibility(View.INVISIBLE);
+//                });
             }
         }
 
@@ -296,7 +410,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     @Override
     public void onAndroidPayFailed(String message) {
         showErrorNotification(message);
-        androidPayButton.setVisibility(View.VISIBLE);
+        mGooglePayButton.setVisibility(View.VISIBLE);
     }
 
     @Override

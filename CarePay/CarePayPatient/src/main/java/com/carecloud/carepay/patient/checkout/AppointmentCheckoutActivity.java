@@ -17,7 +17,6 @@ import com.carecloud.carepay.patient.appointments.createappointment.Availability
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
-import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanPaymentMethodFragment;
@@ -68,7 +67,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPo
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
-import com.google.android.gms.wallet.MaskedWallet;
+//import com.google.android.gms.wallet.MaskedWallet;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -161,7 +160,6 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET:
-            case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_FULL_WALLET:
             case PaymentConstants.REQUEST_CODE_GOOGLE_PAYMENT:
                 forwardAndroidPayResult(requestCode, resultCode, data);
@@ -591,11 +589,6 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     @Override
     public void onPaymentDismissed() {
 
-    }
-
-    @Override
-    public void createWalletFragment(MaskedWallet maskedWallet, Double amount) {
-        replaceFragment(AndroidPayDialogFragment.newInstance(maskedWallet, paymentsModel, amount), true);
     }
 
     @Override

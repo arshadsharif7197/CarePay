@@ -2,14 +2,14 @@ package com.carecloud.carepay.patient.appointments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.adapters.AppointmentHistoricAdapter;
@@ -30,6 +30,7 @@ import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.models.Paging;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -209,7 +210,7 @@ public class AppointmentHistoryFragment extends BaseFragment
                 , new WorkflowServiceCallback() {
                     @Override
                     public void onPreExecute() {
-                        if (showShimmerLayout) {
+                        if (showShimmerLayout && getActivity() != null) {
                             showShimmerEffect();
                         } else if (!refresh) {
                             adapter.setLoading(true);
