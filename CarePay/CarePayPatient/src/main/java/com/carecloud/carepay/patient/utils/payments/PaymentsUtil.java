@@ -14,6 +14,8 @@ import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -231,5 +233,25 @@ public class PaymentsUtil {
      */
     public static String microsToString(double micros) {
         return new BigDecimal(micros).divide(MICROS).setScale(2, RoundingMode.HALF_EVEN).toString();
+    }
+
+    public static JSONObject getGooglePaymentsPayload(JSONObject jsonTokenData, Double paymentAmount) throws JSONException {
+
+        Map<String, Object> payloadMap = new HashMap<>();
+        payloadMap.put("currency_code", PaymentConstants.CURRENCY_CODE_USD);
+        payloadMap.put("amount", String.valueOf(Math.round(paymentAmount * 100)));
+        payloadMap.put("merchant_ref", "orderid");//maybe we need actual order ID or a unique value??
+        payloadMap.put("transaction_type", "purchase");
+        payloadMap.put("method", "3DS");
+
+        Map<String, Object> map3DS = new HashMap<>();
+        map3DS.put("signature", jsonTokenData.getString("signature"));
+        map3DS.put("version", jsonTokenData.getString("protocolVersion"));
+        map3DS.put("data", jsonTokenData.getString("signedMessage"));
+        map3DS.put("type", "G");
+
+        payloadMap.put("3DS", map3DS);
+
+        return new JSONObject(payloadMap);
     }
 }

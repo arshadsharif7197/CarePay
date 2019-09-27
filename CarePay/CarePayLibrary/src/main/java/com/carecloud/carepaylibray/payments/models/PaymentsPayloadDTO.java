@@ -738,4 +738,13 @@ public class PaymentsPayloadDTO extends DelegatePermissionBasePayloadDto impleme
         }
     }
 
+    public MerchantServicesDTO getMerchantService(String merchantServiceCode) {
+        for (MerchantServicesDTO merchantService : merchantServices) {
+            if (merchantService.getCode().equals(merchantServiceCode)) {
+                return merchantService;
+            }
+        }
+        return null;
+    }
+
 }

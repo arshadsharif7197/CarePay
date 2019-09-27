@@ -1,7 +1,6 @@
 package com.carecloud.carepay.patient.payment.androidpay;
 
 import android.content.Intent;
-import android.util.Base64;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -10,8 +9,6 @@ import androidx.fragment.app.FragmentManager;
 
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.service.library.RestCallServiceCallback;
-import com.carecloud.carepay.service.library.RestCallServiceHelper;
-import com.carecloud.carepay.service.library.RestDef;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.payments.models.PapiAccountsDTO;
@@ -26,19 +23,11 @@ import com.google.android.gms.wallet.TransactionInfo;
 import com.google.android.gms.wallet.WalletConstants;
 import com.google.gson.JsonElement;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-
-import okhttp3.RequestBody;
 
 
 /**
@@ -330,12 +319,12 @@ public class AndroidPayAdapter {
      * @param callback        callback for processing results
      */
     public void handleGooglePaymentData(Intent data, PapiAccountsDTO papiAccountsDTO,
-                                  Double paymentAmount,
-                                  @NonNull AndroidPayProcessingCallback callback) {
+                                        Double paymentAmount,
+                                        @NonNull AndroidPayProcessingCallback callback) {
         PaymentData paymentData = PaymentData.getFromIntent(data);
         if (paymentData != null) {
             String token = paymentData.getPaymentMethodToken().getToken();
-            processPaymentWithPayeezy(token, papiAccountsDTO, paymentAmount, callback);
+//            processPaymentWithPayeezy(token, papiAccountsDTO, paymentAmount, callback);
         }
     }
 
@@ -398,50 +387,50 @@ public class AndroidPayAdapter {
 //        }
 //    }
 
-    private void processPaymentWithPayeezy(String tokenJSON,
-                                           PapiAccountsDTO papiAccountsDTO,
-                                           Double paymentAmount,
-                                           @NonNull AndroidPayProcessingCallback callback) {
-        try {
-            JSONObject jsonTokenData = new JSONObject(tokenJSON);
-
-            //  Create a First Data Json request
-            MerchantServicesDTO payeezyMerchantService = getAndroidPayMerchantService();
-            if (payeezyMerchantService == null) {
-                callback.onAndroidPayFailed("No Merchant Service Available");
-                return;
-            }
-            JSONObject requestPayload = getGooglePaymentsPayload(jsonTokenData, paymentAmount);
-            final String payloadString = requestPayload.toString();
-
-            if (papiAccountsDTO == null) {
-                callback.onAndroidPayFailed("No Account Available");
-                return;
-            }
-            final Map<String, String> HMACMap = computeHMAC(payloadString, payeezyMerchantService, papiAccountsDTO);
-            if (HMACMap.isEmpty()) {
-                callback.onAndroidPayFailed("An unknown error has occurred");
-                return;
-            }
-
-            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), payloadString);
-            RestCallServiceHelper restCallServiceHelper = new RestCallServiceHelper(callback.getSession().getAppAuthorizationHelper(), callback.getSession().getApplicationMode());
-            restCallServiceHelper.executeRequest(RestDef.POST,
-                    payeezyMerchantService.getMetadata().getBaseUrl(),
-                    getPayeezyServiceCallback(callback),
-                    false,
-                    false,
-                    null,
-                    null,
-                    HMACMap,
-                    body,
-                    "v1/transactions");
-        } catch (JSONException jsx) {
-            jsx.printStackTrace();
-            callback.onAndroidPayFailed("An unknown error has occurred");
-        }
-
-    }
+//    private void processPaymentWithPayeezy(String tokenJSON,
+//                                           PapiAccountsDTO papiAccountsDTO,
+//                                           Double paymentAmount,
+//                                           @NonNull AndroidPayProcessingCallback callback) {
+//        try {
+//            JSONObject jsonTokenData = new JSONObject(tokenJSON);
+//
+//            //  Create a First Data Json request
+//            MerchantServicesDTO payeezyMerchantService = getAndroidPayMerchantService();
+//            if (payeezyMerchantService == null) {
+//                callback.onAndroidPayFailed("No Merchant Service Available");
+//                return;
+//            }
+//            JSONObject requestPayload = getGooglePaymentsPayload(jsonTokenData, paymentAmount);
+//            final String payloadString = requestPayload.toString();
+//
+//            if (papiAccountsDTO == null) {
+//                callback.onAndroidPayFailed("No Account Available");
+//                return;
+//            }
+//            final Map<String, String> HMACMap = computeHMAC(payloadString, payeezyMerchantService, papiAccountsDTO);
+//            if (HMACMap.isEmpty()) {
+//                callback.onAndroidPayFailed("An unknown error has occurred");
+//                return;
+//            }
+//
+//            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), payloadString);
+//            RestCallServiceHelper restCallServiceHelper = new RestCallServiceHelper(callback.getSession().getAppAuthorizationHelper(), callback.getSession().getApplicationMode());
+//            restCallServiceHelper.executeRequest(RestDef.POST,
+//                    payeezyMerchantService.getMetadata().getBaseUrl(),
+//                    getPayeezyServiceCallback(callback),
+//                    false,
+//                    false,
+//                    null,
+//                    null,
+//                    HMACMap,
+//                    body,
+//                    "v1/transactions");
+//        } catch (JSONException jsx) {
+//            jsx.printStackTrace();
+//            callback.onAndroidPayFailed("An unknown error has occurred");
+//        }
+//
+//    }
 
     @Deprecated
     private JSONObject getRequestPayload(String data, String signature, String ephemeralPublicKey, MerchantServicesDTO payeezyMerchantService, Double paymentAmount) {
@@ -467,72 +456,74 @@ public class AndroidPayAdapter {
         return new JSONObject(pm);
     }
 
-    private JSONObject getGooglePaymentsPayload(JSONObject jsonToken, Double paymentAmount) throws JSONException {
-        Map<String, Object> payloadMap = new HashMap<>();
-        payloadMap.put("currency_code", PaymentConstants.CURRENCY_CODE_USD);
-        payloadMap.put("amount", String.valueOf(Math.round(paymentAmount * 100)));
-        payloadMap.put("merchant_ref", "orderid");//maybe we need actual order ID or a unique value??
-        payloadMap.put("transaction_type", "purchase");
-        payloadMap.put("method", "3DS");
+//    private JSONObject getGooglePaymentsPayload(JSONObject jsonToken, Double paymentAmount) throws JSONException {
+//        Map<String, Object> payloadMap = new HashMap<>();
+//        payloadMap.put("currency_code", PaymentConstants.CURRENCY_CODE_USD);
+//        payloadMap.put("amount", String.valueOf(Math.round(paymentAmount * 100)));
+//        payloadMap.put("merchant_ref", "orderid");//maybe we need actual order ID or a unique value??
+//        payloadMap.put("transaction_type", "purchase");
+//        payloadMap.put("method", "3DS");
+//
+//        Map<String, Object> map3DS = new HashMap<>();
+//        map3DS.put("signature", jsonToken.getString("signature"));
+//        map3DS.put("version", jsonToken.getString("protocolVersion"));
+//        map3DS.put("data", jsonToken.getString("signedMessage"));
+//        map3DS.put("type", "G");
+//
+//        payloadMap.put("3DS", map3DS);
+//
+//        return new JSONObject(payloadMap);
+//    }
 
-        Map<String, Object> map3DS = new HashMap<>();
-        map3DS.put("signature", jsonToken.getString("signature"));
-        map3DS.put("version", jsonToken.getString("protocolVersion"));
-        map3DS.put("data", jsonToken.getString("signedMessage"));
-        map3DS.put("type", "G");
-
-        payloadMap.put("3DS", map3DS);
-
-        return new JSONObject(payloadMap);
-    }
-
-    private static Map<String, String> computeHMAC(String payload, MerchantServicesDTO payeezyMerchantService, PapiAccountsDTO papiAccountsDTO) {
-        String apiSecret = payeezyMerchantService.getMetadata().getApiSecret();
-        String apiKey = payeezyMerchantService.getMetadata().getApiKey();
-        String token = papiAccountsDTO.getBankAccount().getToken();
-
-        Map<String, String> headerMap = new HashMap<>();
-        if (apiSecret != null) {
-            try {
-                String authorizeString;
-                String nonce = Long.toString(Math.abs(SecureRandom.getInstance("SHA1PRNG").nextLong()));
-                String timestamp = Long.toString(System.currentTimeMillis());
-
-                Mac mac = Mac.getInstance("HmacSHA256");
-                SecretKeySpec secretKey = new SecretKeySpec(apiSecret.getBytes(), "HmacSHA256");
-                mac.init(secretKey);
-
-                StringBuilder buffer = new StringBuilder()
-                        .append(apiKey)
-                        .append(nonce)
-                        .append(timestamp)
-                        .append(token)
-                        .append(payload);
-
-                byte[] macHash = mac.doFinal(buffer.toString().getBytes("UTF-8"));
-                authorizeString = Base64.encodeToString(bytesToHex(macHash).getBytes(), Base64.NO_WRAP);
-
-                headerMap.put("nonce", nonce);
-                headerMap.put("timestamp", timestamp);
-                headerMap.put("Authorization", authorizeString);
-                headerMap.put("token", token);
-                headerMap.put("apikey", apiKey);
-                headerMap.put("content-type", "Application/json");
-            } catch (Exception e) {
-                //  Nothing to do
-            }
-        }
-        return headerMap;
-    }
-
-
-    private static String bytesToHex(byte[] byteArray) {
-        StringBuilder sb = new StringBuilder(byteArray.length * 2);
-        for (byte b : byteArray) {
-            sb.append(String.format("%02x", b & 0xff));
-        }
-        return sb.toString();
-    }
+//    private static Map<String, String> computeHMAC(String payload,
+//                                                   MerchantServicesDTO payeezyMerchantService,
+//                                                   PapiAccountsDTO papiAccountsDTO) {
+//        String apiSecret = payeezyMerchantService.getMetadata().getApiSecret();
+//        String apiKey = payeezyMerchantService.getMetadata().getApiKey();
+//        String token = papiAccountsDTO.getBankAccount().getToken();
+//
+//        Map<String, String> headerMap = new HashMap<>();
+//        if (apiSecret != null) {
+//            try {
+//                String authorizeString;
+//                String nonce = Long.toString(Math.abs(SecureRandom.getInstance("SHA1PRNG").nextLong()));
+//                String timestamp = Long.toString(System.currentTimeMillis());
+//
+//                Mac mac = Mac.getInstance("HmacSHA256");
+//                SecretKeySpec secretKey = new SecretKeySpec(apiSecret.getBytes(), "HmacSHA256");
+//                mac.init(secretKey);
+//
+//                StringBuilder buffer = new StringBuilder()
+//                        .append(apiKey)
+//                        .append(nonce)
+//                        .append(timestamp)
+//                        .append(token)
+//                        .append(payload);
+//
+//                byte[] macHash = mac.doFinal(buffer.toString().getBytes("UTF-8"));
+//                authorizeString = Base64.encodeToString(bytesToHex(macHash), Base64.NO_WRAP);
+//
+//                headerMap.put("nonce", nonce);
+//                headerMap.put("timestamp", timestamp);
+//                headerMap.put("Authorization", authorizeString);
+//                headerMap.put("token", token);
+//                headerMap.put("apikey", apiKey);
+//                headerMap.put("content-type", "Application/json");
+//            } catch (Exception e) {
+//                //  Nothing to do
+//            }
+//        }
+//        return headerMap;
+//    }
+//
+//
+//    private static byte[] bytesToHex(byte[] byteArray) {
+//        StringBuilder sb = new StringBuilder(byteArray.length * 2);
+//        for (byte b : byteArray) {
+//            sb.append(String.format("%02x", b & 0xff));
+//        }
+//        return sb.toString().getBytes();
+//    }
 
 
     private RestCallServiceCallback getPayeezyServiceCallback(final AndroidPayProcessingCallback callback) {
