@@ -2,6 +2,7 @@ package com.carecloud.carepay.patient.pageObjects.checkin.demographics
 
 import com.carecloud.carepay.patient.R
 import com.carecloud.carepay.patient.appContext
+import com.carecloud.carepay.patient.pageObjects.appointments.AppointmentScreen
 import com.carecloud.carepay.patient.pageObjects.checkin.CheckInMedicationsScreen
 import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 
@@ -32,5 +33,10 @@ open class CheckInDemographicsScreen: CustomViewActions() {
     fun finishDemographics(): CheckInMedicationsScreen {
         click(appContext.getString(R.string.content_description_next_button))
         return CheckInMedicationsScreen()
+    }
+
+    fun goToNextstep(): CheckInDemographicsScreen {
+        click(appContext.getString(R.string.content_description_next_button))
+        return this
     }
 }

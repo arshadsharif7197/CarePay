@@ -41,7 +41,7 @@ open class CustomViewActions {
      * @param contentDescription Content description of the view
      * @param customClick If view is not visible more than 90% use custom click
      */
-    protected fun click(contentDescription: String, id: String = "", customClick: Boolean = false) {
+    protected fun click(contentDescription: String, customClick: Boolean = false) {
         onView(allOf(withContentDescription(contentDescription), isDisplayed()))
                 .perform(if (customClick) customClickAction() else ViewActions.click())
     }
