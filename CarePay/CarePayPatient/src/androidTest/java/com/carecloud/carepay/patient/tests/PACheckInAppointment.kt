@@ -1,6 +1,6 @@
 package com.carecloud.carepay.patient.tests
 
-import androidx.test.runner.AndroidJUnit4
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.patient.BaseTest
 import com.carecloud.carepay.patient.pageObjects.appointments.AppointmentScreen
 import org.junit.Test
@@ -16,11 +16,10 @@ class PACheckInAppointment : BaseTest() {
     fun paCheckInAppointment() {
         AppointmentScreen()
                 .clickOnAppointmentOnList(1)
-                .goToAddress()
-                .goToDemographics()
-                .goToNextstep()
-                .goToNextstep()
-                .goToNextstep()
-
+                .personalInfoNextStep()
+                .addressNextStep()
+                .demographicsNextStep()
+                .medicationsNextstep()
+                .allergiesNextstep()
     }
 }
