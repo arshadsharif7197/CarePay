@@ -1,5 +1,7 @@
 package com.carecloud.carepay.practice.tablet.pageObjects.patientMode.checkin
 
+import com.carecloud.carepay.practice.tablet.R
+import com.carecloud.carepay.practice.tablet.tests.appContext
 import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 
 /**
@@ -7,7 +9,7 @@ import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
  */
 class CheckInDemographics: CustomViewActions() {
     fun demographicsNextStep(): CheckInMedications {
-        clickOnSpecificText("NEXT STEP")
+        click(appContext.getString(R.string.content_description_next_button))
         return CheckInMedications()
     }
 }

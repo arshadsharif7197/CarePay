@@ -147,7 +147,8 @@
             android:textColor="@color/white"
             android:textSize="@dimen/respons_button_text_size"
             app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="demographics_review_next_button" />
+            breeze:textKey="demographics_review_next_button"
+            android:contentDescription="@string/content_description_next_button"/>
 
     </LinearLayout>
 

@@ -40,7 +40,7 @@ open class BaseTest {
                 .pressLoginButton()
                 .selectPractice("CareCloud Automation Environment")
                 .pressContinue()
-                .selectLocation("SOUTH MEDICAL CENTER")
+                .selectLocation("EAST CITY CLINIC")
                 .pressContinue()
     }
 

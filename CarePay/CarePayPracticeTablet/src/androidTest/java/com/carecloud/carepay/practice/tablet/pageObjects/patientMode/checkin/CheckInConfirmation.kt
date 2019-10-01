@@ -1,6 +1,8 @@
 package com.carecloud.carepay.practice.tablet.pageObjects.patientMode.checkin
 
+import com.carecloud.carepay.practice.tablet.R
 import com.carecloud.carepay.practice.tablet.pageObjects.patientMode.PatientModeMainScreen
+import com.carecloud.carepay.practice.tablet.tests.appContext
 import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 
 /**
@@ -8,7 +10,7 @@ import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
  */
 class CheckInConfirmation: CustomViewActions() {
     fun goHome(): PatientModeMainScreen {
-        clickOnSpecificText("Go Home")
+        click(appContext.getString(R.string.content_description_go_home_button))
         return PatientModeMainScreen()
     }
 }
