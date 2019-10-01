@@ -2,7 +2,7 @@ package com.carecloud.carepay.practice.library.appointments;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;

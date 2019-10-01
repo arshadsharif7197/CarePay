@@ -25,6 +25,10 @@ public class LabDto {
     @SerializedName("created_at")
     private String createdAt;
 
+    @Expose
+    @SerializedName("business_entity")
+    private BusinessEntity businessEntity;
+
     public Integer getId() {
         return id;
     }
@@ -55,5 +59,13 @@ public class LabDto {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public BusinessEntity getBusinessEntity() {
+        return businessEntity;
+    }
+
+    public void setBusinessEntity(BusinessEntity businessEntity) {
+        this.businessEntity = businessEntity;
     }
 }

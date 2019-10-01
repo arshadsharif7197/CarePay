@@ -4,7 +4,7 @@ package com.carecloud.carepay.practice.library.checkin.filters;
  * Created by sudhir_pingale on 10/19/2016.
  */
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

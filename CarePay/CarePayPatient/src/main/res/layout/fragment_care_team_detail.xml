@@ -12,7 +12,7 @@
         android:id="@+id/toolbar_layout"
         layout="@layout/toolbar_responsibility" />
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar_layout"
@@ -410,5 +410,5 @@
                 tools:text="DOWNLOAD MEDICAL RECORD" />
 
         </RelativeLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 </RelativeLayout>

@@ -2,8 +2,6 @@ package com.carecloud.carepay.patient.appointments.createappointment;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +9,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.label.Label;
@@ -43,12 +45,12 @@ public class RequestAppointmentDialogFragment extends BaseRequestAppointmentDial
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_request_appointment, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime());
         TextView dateTextView = view.findViewById(R.id.appointDateTextView);
@@ -76,12 +78,7 @@ public class RequestAppointmentDialogFragment extends BaseRequestAppointmentDial
 
         View dismissView = view.findViewById(R.id.dialogAppointDismiss);
         if (dismissView != null) {
-            dismissView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dismiss();
-                }
-            });
+            dismissView.setOnClickListener(v -> dismiss());
         }
 
         // Appointment Place address
@@ -92,12 +89,7 @@ public class RequestAppointmentDialogFragment extends BaseRequestAppointmentDial
             addressTextView.setText(placeAddress);
         }
         final String finalPlaceAddress = placeAddress;
-        view.findViewById(R.id.appointLocationImageView).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onMapView(finalPlaceAddress);
-            }
-        });
+        view.findViewById(R.id.appointLocationImageView).setOnClickListener(v -> onMapView(finalPlaceAddress));
 
 
         final String phoneNumber = appointmentDTO.getPayload().getProvider().getPhone();
@@ -107,12 +99,9 @@ public class RequestAppointmentDialogFragment extends BaseRequestAppointmentDial
             ((ImageView) view.findViewById(R.id.appointDailImageView))
                     .setImageDrawable(originalIcon);
         }
-        view.findViewById(R.id.appointDailImageView).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!StringUtil.isNullOrEmpty(phoneNumber)) {
-                    onPhoneCall(phoneNumber);
-                }
+        view.findViewById(R.id.appointDailImageView).setOnClickListener(v -> {
+            if (!StringUtil.isNullOrEmpty(phoneNumber)) {
+                onPhoneCall(phoneNumber);
             }
         });
 
@@ -133,7 +122,7 @@ public class RequestAppointmentDialogFragment extends BaseRequestAppointmentDial
         view.findViewById(R.id.appointDialogButtonLayout).setVisibility(View.VISIBLE);
         requestAppointmentButton = view.findViewById(R.id.requestAppointmentButton);
         requestAppointmentButton.setText(Label.getLabel(autoScheduleAppointments ?
-                "appointments_schedule_button" : "appointments_request_heading"));
+                "appointments_schedule_button" : "appointments_request_heading").toUpperCase());
         requestAppointmentButton.requestFocus();
 
         TextView reasonTextView = view.findViewById(R.id.reasonTextView);
@@ -145,19 +134,16 @@ public class RequestAppointmentDialogFragment extends BaseRequestAppointmentDial
             prepaidLayout.setVisibility(View.VISIBLE);
             TextView prepaidAmount = view.findViewById(R.id.prepaymentAmount);
             prepaidAmount.setText(NumberFormat.getCurrencyInstance(Locale.US).format(visitTypeDTO.getAmount()));
-            requestAppointmentButton.setText(Label.getLabel("appointments_prepayment_button"));
+            requestAppointmentButton.setText(Label.getLabel("appointments_prepayment_button").toUpperCase());
         } else {
             prepaidLayout.setVisibility(View.GONE);
         }
 
         final EditText reasonForVisitEditText = view.findViewById(R.id.reasonForVisitEditText);
-        requestAppointmentButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final String reasonForVisit = reasonForVisitEditText.getText().toString();
-                appointmentDTO.getPayload().setReasonForVisit(reasonForVisit);
-                requestAppointment(appointmentDTO);
-            }
+        requestAppointmentButton.setOnClickListener(v -> {
+            final String reasonForVisit = reasonForVisitEditText.getText().toString();
+            appointmentDTO.getPayload().setReasonForVisit(reasonForVisit);
+            requestAppointment(appointmentDTO);
         });
 
         ImageView appointUserPicImageView = view.findViewById(R.id.appointUserPicImageView);
@@ -165,11 +151,6 @@ public class RequestAppointmentDialogFragment extends BaseRequestAppointmentDial
         PicassoHelper.get().loadImage(getContext(), appointUserPicImageView, null, provider.getPhoto());
 
         final ScrollView scrollContainer = view.findViewById(R.id.containerScrollView);
-        scrollContainer.post(new Runnable() {
-            @Override
-            public void run() {
-                scrollContainer.fullScroll(View.FOCUS_UP);
-            }
-        });
+        scrollContainer.post(() -> scrollContainer.fullScroll(View.FOCUS_UP));
     }
 }

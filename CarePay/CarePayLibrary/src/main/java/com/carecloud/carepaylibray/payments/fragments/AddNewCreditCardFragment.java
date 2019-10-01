@@ -2,7 +2,7 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -144,9 +144,6 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
             nextButton.setEnabled(true);
             Log.d("makePaymentCallback", "=========================>\nworkflowDTO=" + workflowDTO.toString());
 
-            if (getDialog() != null) {
-                dismiss();
-            }
 
             PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
@@ -154,7 +151,14 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
                 String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
                 Object[] values = {amountToMakePayment, getString(R.string.payment_card_on_file)};
                 MixPanelUtil.logEvent(getString(R.string.event_payment_failed), params, values);
+                callback.showErrorToast(payload.getProcessingErrors().get(0).getError());
+                if (getDialog() != null) {
+                    dismiss();
+                }
             } else {
+                if (getDialog() != null) {
+                    dismiss();
+                }
                 String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
                 Object[] values = {amountToMakePayment, getString(R.string.payment_new_card)};
                 MixPanelUtil.logEvent(getString(R.string.event_payment_complete), params, values);
