@@ -22,9 +22,12 @@ import androidx.test.espresso.util.TreeIterables
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import java.util.concurrent.TimeoutException
 import android.widget.TextView
+import androidx.test.espresso.web.sugar.Web.onWebView
 
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.matcher.RootMatchers
+import androidx.test.espresso.web.model.Atoms
+import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import org.hamcrest.Matchers.*
 
 /**
@@ -103,8 +106,12 @@ open class CustomViewActions {
      * @param contentDescription Content description of the view
      * @param textMatch Text to match with element on list
      */
-    protected fun verifyItemInRecyclerView(contentDescription: String, textMatch: String) {
-        onView(withContentDescription(contentDescription)).check(matches(hasDescendant(withText(textMatch))))
+    protected fun verifyItemInRecyclerView(contentDescription: String, textMatch: String, exactMatch: Boolean = true) {
+        if (exactMatch) {
+            onView(withContentDescription(contentDescription)).check(matches(hasDescendant(withText(textMatch))))
+        } else {
+            onView(withContentDescription(contentDescription)).check(matches(hasDescendant(withText(containsString(textMatch)))))
+        }
     }
 
     /**
@@ -119,6 +126,10 @@ open class CustomViewActions {
         } else {
             onView(withContentDescription(contentDescription)).perform(typeText(stringToType))
         }
+    }
+
+    protected fun scrollWebView() {
+        onWebView().perform(Atoms.script("window.scrollTo(0, document.body.scrollHeight)"))
     }
 
     /**

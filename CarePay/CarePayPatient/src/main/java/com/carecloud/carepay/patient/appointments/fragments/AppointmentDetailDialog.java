@@ -347,6 +347,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                             rightButton.setVisibility(View.VISIBLE);
                             if (appointmentDTO.getPayload().canCheckInNow(callback.getPracticeSettings())) {
                                 rightButton.setText(Label.getLabel("appointments_check_in_now"));
+                                rightButton.setContentDescription(getContext().getString(R.string.content_description_checkin_appointment_button));
                             } else {
                                 rightButton.setText(Label.getLabel("appointments_check_in_early"));
                             }

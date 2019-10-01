@@ -75,7 +75,8 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/appointmentsListTopMargin"
                 android:orientation="horizontal"
-                android:scrollbars="horizontal" />
+                android:scrollbars="horizontal"
+                android:contentDescription="@string/content_description_add_appointment_button"/>
 
         </LinearLayout>
 

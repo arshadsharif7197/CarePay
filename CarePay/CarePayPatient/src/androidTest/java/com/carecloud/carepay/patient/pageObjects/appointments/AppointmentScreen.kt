@@ -1,8 +1,9 @@
-package com.carecloud.carepay.patient.pageObjects
+package com.carecloud.carepay.patient.pageObjects.appointments
 
 import com.carecloud.carepay.patient.R
 import com.carecloud.carepay.patient.appContext
-import com.carecloud.carepay.patient.pageObjects.appointments.AddAppointmentFlow
+import com.carecloud.carepay.patient.pageObjects.NavigationMenu
+import com.carecloud.carepay.patient.pageObjects.checkin.demographics.CheckInDemogPersonalInfoScreen
 import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 
 /**
@@ -23,5 +24,16 @@ class AppointmentScreen : CustomViewActions() {
     fun openNavigationDrawer(): NavigationMenu {
         click(appContext.getString(R.string.navigation_drawer_open))
         return NavigationMenu()
+    }
+
+    fun clickOnAppointmentOnList(position: Int): CheckInDemogPersonalInfoScreen {
+        clickOnRecyclerViewItem(appContext.getString(R.string.content_description_appointments_list), position)
+        click(appContext.getString(R.string.content_description_checkin_appointment_button))
+        return CheckInDemogPersonalInfoScreen()
+    }
+
+    fun discardReviewPopup(): AppointmentScreen {
+        click(appContext.getString(R.string.content_description_not_now_button))
+        return this
     }
 }

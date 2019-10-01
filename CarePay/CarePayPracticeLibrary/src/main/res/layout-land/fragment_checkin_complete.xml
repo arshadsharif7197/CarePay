@@ -661,7 +661,8 @@
                 android:textSize="@dimen/respons_button_text_size"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="check_in-out.succcess.button.label.home"
-                tools:text="Go Home" />
+                tools:text="Go Home"
+                android:contentDescription="@string/content_description_go_home_button"/>
 
         </LinearLayout>
 
