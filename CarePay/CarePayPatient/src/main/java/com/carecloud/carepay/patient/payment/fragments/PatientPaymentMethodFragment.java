@@ -248,9 +248,14 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment {
     private void handleGooglePaymentData(Intent data, PapiAccountsDTO papiAccountsDTO,
                                          Double paymentAmount) {
         PaymentData paymentData = PaymentData.getFromIntent(data);
-        if (paymentData != null) {
-            String token = paymentData.getPaymentMethodToken().getToken();
+        String paymentInformation = paymentData.toJson();
+        JSONObject paymentMethodData;
+        try {
+            paymentMethodData = new JSONObject(paymentInformation).getJSONObject("paymentMethodData");
+            String token = paymentMethodData.getJSONObject("tokenizationData").getString("token");
             processPaymentWithPayeezy(token, papiAccountsDTO, paymentAmount);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
@@ -543,7 +548,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment {
                 paymentModelJson, queries, header);
     }
 
-    private WorkflowServiceCallback getMakePaymentCallback(final JsonElement rawResponse) {
+    protected WorkflowServiceCallback getMakePaymentCallback(final JsonElement rawResponse) {
         return new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
