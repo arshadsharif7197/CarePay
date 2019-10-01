@@ -3,12 +3,9 @@ package com.carecloud.carepay.practice.library.customdialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +15,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
-import android.widget.TextView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.filters.CustomFilterListAdapter;
@@ -30,7 +29,6 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import java.util.ArrayList;
 import java.util.Set;
 
 public class FilterDialog extends PopupWindow
@@ -108,56 +106,45 @@ public class FilterDialog extends PopupWindow
         filterableDataRecyclerView = popupWindowLayout.findViewById(R.id.filterableDataRecyclerView);
 
         closeFilterWindowImageView = popupWindowLayout.findViewById(R.id.closeFilterWindowImageView);
-        closeFilterWindowImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SystemUtil.hideSoftKeyboard(context, getContentView());
-                if (searchPatientEditText.hasFocus()) {
-                    searchPatientEditText.clearFocus();
-                } else {
-                    dismiss();
-                }
+        closeFilterWindowImageView.setOnClickListener(view -> {
+            SystemUtil.hideSoftKeyboard(context, getContentView());
+            if (searchPatientEditText.hasFocus()) {
+                searchPatientEditText.clearFocus();
+            } else {
+                dismiss();
             }
         });
 
         setUpSearchEditText(popupWindowLayout);
 
         clearFiltersButton = popupWindowLayout.findViewById(R.id.clearFiltersButton);
-        clearFiltersButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isOnPatientFilter) {
+        clearFiltersButton.setOnClickListener(view -> {
+            if (isOnPatientFilter) {
 //                    filterModel.setPatients(new ArrayList<FilterDataDTO>());
-                    filterModel.clearPatients();
-                    patientAdapter.resetData();
-                    doctorsLocationsAdapter = new CustomFilterListAdapter(filterModel, FilterDialog.this);
-                    filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
+                filterModel.clearPatients();
+                patientAdapter.resetData();
+                doctorsLocationsAdapter = new CustomFilterListAdapter(filterModel, FilterDialog.this);
+                filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
+                callBack.applyFilter();
+            } else {
+                final Set<String> lastLocationFilter = filterModel.getFilteredLocationsIds();
+                filterModel.clearAll();
+                saveFilter();
+                doctorsLocationsAdapter = new CustomFilterListAdapter(filterModel, FilterDialog.this);
+                filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
+                callBack.showFilterFlag(false);
+                if (lastLocationFilter.isEmpty()) {
                     callBack.applyFilter();
                 } else {
-                    final Set<String> lastLocationFilter = filterModel.getFilteredLocationsIds();
-                    filterModel.clearAll();
-                    saveFilter();
-                    doctorsLocationsAdapter = new CustomFilterListAdapter(filterModel, FilterDialog.this);
-                    filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
-                    callBack.showFilterFlag(false);
-                    if (lastLocationFilter.isEmpty()) {
-                        callBack.applyFilter();
-                    } else {
-                        callBack.refreshData();
-                    }
+                    callBack.refreshData();
                 }
-                enableFilterButton();
-                clearPatientSearch();
             }
+            enableFilterButton();
+            clearPatientSearch();
         });
 
         View blankSpace = popupWindowLayout.findViewById(R.id.blankSpace);
-        blankSpace.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+        blankSpace.setOnClickListener(v -> dismiss());
     }
 
     private void clearPatientSearch() {
@@ -169,12 +156,7 @@ public class FilterDialog extends PopupWindow
 
     private void setUpSearchEditText(View popupWindowLayout) {
         clearSearchImageView = popupWindowLayout.findViewById(R.id.clearSearchImageView);
-        clearSearchImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                searchPatientEditText.setText("");
-            }
-        });
+        clearSearchImageView.setOnClickListener(view -> searchPatientEditText.setText(""));
 
         searchPatientEditText = popupWindowLayout.findViewById(R.id.searchPatientEditText);
         searchPatientEditText.setHint(Label.getLabel("practice_checkin_filter_find_patient_by_name"));
@@ -208,32 +190,26 @@ public class FilterDialog extends PopupWindow
             }
         });
 
-        searchPatientEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus) {
-                    filterableDataRecyclerView.setAdapter(patientAdapter);
-                    closeFilterWindowImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.icn_nav_back_white));
-                    isOnPatientFilter = true;
-                    clearFiltersButton.setText("practice.filter.clearFilters.button.clearPatients");
-                } else {
-                    filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
-                    closeFilterWindowImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.icn_close));
-                    isOnPatientFilter = false;
-                    clearFiltersButton.setText(Label.getLabel("practice.filter.clearFilters.button.clearAll"));
-                }
+        searchPatientEditText.setOnFocusChangeListener((view, hasFocus) -> {
+            if (hasFocus) {
+                filterableDataRecyclerView.setAdapter(patientAdapter);
+                closeFilterWindowImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.icn_nav_back_white));
+                isOnPatientFilter = true;
+                clearFiltersButton.setText(Label.getLabel("practice.filter.clearFilters.button.clearPatients"));
+            } else {
+                filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
+                closeFilterWindowImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.icn_close));
+                isOnPatientFilter = false;
+                clearFiltersButton.setText(Label.getLabel("practice.filter.clearFilters.button.clearAll"));
             }
         });
 
-        searchPatientEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    SystemUtil.hideSoftKeyboard(context, getContentView());
-                    return true;
-                }
-                return false;
+        searchPatientEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                SystemUtil.hideSoftKeyboard(context, getContentView());
+                return true;
             }
+            return false;
         });
     }
 
