@@ -48,7 +48,7 @@ public class CallPayeezy {
         Map<String, String> headers = getSecurityKeys(merchantServiceDTO.getApiKey(),
                 merchantServiceDTO.getMasterMerchantToken(),
                 merchantServiceDTO.getApiSecret(), gson.toJson(tokenizeBody));
-        String tokenizationPostPath = merchantServiceDTO.getUrlPostPath();
+        String tokenizationPostPath = merchantServiceDTO.getUrlPath(); //SHMRK-9709
         if (StringUtil.isNullOrEmpty(tokenizationPostPath)) {
             tokenizationPostPath = "/v1/transactions/tokens";
         }
