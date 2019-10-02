@@ -462,4 +462,8 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="content_description_search_input_box">Search input box</string>
     <string name="content_description_medications_and_allergies_list">Medications and Allergies list</string>
     <string name="content_description_go_home_button">Go Home button</string>
+    <string name="content_description_schedule_later_button">Schedule Later button</string>
+    <string name="content_description_visit_type_edit_text">Visit Type edit text</string>
+    <string name="content_description_visit_time_edit_text">Visit Time edit Text</string>
+    <string name="content_description_schedule_appointment_button">Schedule Appointment button</string>
 </resources>

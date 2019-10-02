@@ -7,28 +7,22 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * Created by drodriguez on 2019-09-27.
+ * Created by drodriguez on 2019-10-02.
  */
 @RunWith(AndroidJUnit4::class)
-class PMCheckInAppointment : BaseTest() {
-
+class PMCheckOutAppointment: BaseTest() {
     @Test
-    fun pmCheckInAppointment() {
+    fun pmCheckOutAppointment() {
         PracticeMainScreen()
                 .pressChangeModeButton()
                 .pressPatientModeButton()
                 .pressLetsStartButton()
-                .pressCheckInButton()
+                .pressCheckOutButton()
                 .pressLoginButton()
                 .typeUsername("dev_emails+qa.androidbreeze2@carecloud.com")
                 .typePassword("Test123!")
                 .pressLoginButton()
-                .checkInAppointment()
-                .personalInfoNextStep()
-                .addressNextStep()
-                .demographicsNextStep()
-                .medicationsNextStep()
-                .allergiesNextStep()
+                .scheduleLater()
                 .goHome()
     }
 }

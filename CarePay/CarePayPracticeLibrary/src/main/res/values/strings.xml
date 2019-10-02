@@ -64,5 +64,6 @@
     <string name="content_description_payments_button">Payments button</string>
     <string name="content_description_pay_partial_button">Pay Partial button</string>
     <string name="content_description_pay_total_button">Pay Total button</string>
+    <string name="content_description_check_out">Check-Out</string>
 
 </resources>
