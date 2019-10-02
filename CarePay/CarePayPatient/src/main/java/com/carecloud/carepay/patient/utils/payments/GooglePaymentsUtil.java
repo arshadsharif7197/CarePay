@@ -25,10 +25,10 @@ import java.util.Map;
  * existence. Please consult the documentation to learn more and feel free to remove ones not
  * relevant to your implementation.
  */
-public class PaymentsUtil {
+public class GooglePaymentsUtil {
     private static final BigDecimal MICROS = new BigDecimal(1000000d);
 
-    private PaymentsUtil() {
+    private GooglePaymentsUtil() {
     }
 
     /**
@@ -203,11 +203,11 @@ public class PaymentsUtil {
      */
     public static JSONObject getPaymentDataRequest(PapiAccountsDTO papiAccount, String price) {
         try {
-            JSONObject paymentDataRequest = PaymentsUtil.getBaseRequest();
+            JSONObject paymentDataRequest = getBaseRequest();
             paymentDataRequest.put(
-                    "allowedPaymentMethods", new JSONArray().put(PaymentsUtil.getCardPaymentMethod(papiAccount)));
-            paymentDataRequest.put("transactionInfo", PaymentsUtil.getTransactionInfo(price));
-            paymentDataRequest.put("merchantInfo", PaymentsUtil.getMerchantInfo());
+                    "allowedPaymentMethods", new JSONArray().put(getCardPaymentMethod(papiAccount)));
+            paymentDataRequest.put("transactionInfo", getTransactionInfo(price));
+            paymentDataRequest.put("merchantInfo", getMerchantInfo());
 
       /* An optional shipping address requirement is a top-level property of the PaymentDataRequest
       JSON object. */
@@ -227,7 +227,7 @@ public class PaymentsUtil {
     }
 
     /**
-     * Converts micros to a string format accepted by {@link PaymentsUtil#getPaymentDataRequest}.
+     * Converts micros to a string format accepted by {@link GooglePaymentsUtil#getPaymentDataRequest}.
      *
      * @param micros value of the price.
      */

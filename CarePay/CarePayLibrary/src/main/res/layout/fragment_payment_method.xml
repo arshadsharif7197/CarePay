@@ -7,19 +7,9 @@
     android:clickable="true"
     android:orientation="vertical">
 
-
     <include
         android:id="@+id/toolbar_layout"
         layout="@layout/toolbar_responsibility" />
-
-    <ProgressBar
-        android:id="@+id/paymentMethodFragmentProgressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-8dp"
-        android:indeterminate="true"
-        android:visibility="gone" />
 
     <ListView
         android:id="@+id/list_payment_types"

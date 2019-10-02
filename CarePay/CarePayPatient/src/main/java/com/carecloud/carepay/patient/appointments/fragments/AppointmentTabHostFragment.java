@@ -5,14 +5,14 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import com.google.android.material.tabs.TabLayout;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.viewpager.widget.ViewPager;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
@@ -21,6 +21,7 @@ import com.carecloud.carepay.patient.payment.adapters.PaymentsSectionsPagerAdapt
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.google.android.material.tabs.TabLayout;
 
 /**
  * Created by jorge on 29/12/16
@@ -126,7 +127,9 @@ public class AppointmentTabHostFragment extends BaseFragment {
         super.onResume();
         if (getActivity() instanceof AppointmentsActivity) {
             AppointmentsActivity activity = (AppointmentsActivity) this.getActivity();
-            activity.displayToolbar(true, null);
+            if (getActivity().getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                activity.displayToolbar(true, null);
+            }
 
             ActionBar supportActionBar = activity.getSupportActionBar();
             if (supportActionBar != null) {

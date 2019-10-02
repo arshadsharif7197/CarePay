@@ -145,7 +145,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     protected void onResume() {
         super.onResume();
         selectMenuItem(R.id.appointmentMenuItem);
-        if (!toolbarHidden) {
+        if (!toolbarHidden && getSupportFragmentManager().getBackStackEntryCount() == 0) {
             displayToolbar(true, getScreenTitle(Label.getLabel("navigation_link_appointments")));
         }
     }

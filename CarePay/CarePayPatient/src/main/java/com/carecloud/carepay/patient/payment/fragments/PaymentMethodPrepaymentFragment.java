@@ -2,11 +2,13 @@ package com.carecloud.carepay.patient.payment.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
@@ -24,7 +26,7 @@ import java.util.Locale;
  */
 
 public class PaymentMethodPrepaymentFragment extends PatientPaymentMethodFragment {
-    public static final String KEY_TITLE = "title";
+    private static final String KEY_TITLE = "title";
 
     private AppointmentPrepaymentCallback callback;
     private String titleString;
@@ -71,7 +73,7 @@ public class PaymentMethodPrepaymentFragment extends PatientPaymentMethodFragmen
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle) {
+    public void onViewCreated(@NonNull View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
 
         TextView prepaymentAmount = view.findViewById(R.id.prepaymentAmount);
@@ -88,12 +90,9 @@ public class PaymentMethodPrepaymentFragment extends PatientPaymentMethodFragmen
             toolbar.setTitle("");
 
             toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getActivity().onBackPressed();
-                    callback.onPaymentDismissed();
-                }
+            toolbar.setNavigationOnClickListener(view1 -> {
+                getActivity().onBackPressed();
+                callback.onPaymentDismissed();
             });
             if (callback instanceof PatientAppointmentPresenter) {
                 ((PatientAppointmentPresenter) callback).displayToolbar(false, null);

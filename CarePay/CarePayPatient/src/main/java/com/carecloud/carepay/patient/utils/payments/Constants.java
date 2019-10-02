@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * This file contains several constants you must edit before proceeding.
- * Please take a look at PaymentsUtil.java to see where the constants are used and to potentially
+ * Please take a look at GooglePaymentsUtil.java to see where the constants are used and to potentially
  * remove ones not relevant to your integration.
  *
  * <p>Required changes:
@@ -20,7 +20,7 @@ import java.util.List;
  *      unsure)
  * <li> Update CURRENCY_CODE to the currency you use.
  * <li> Update SHIPPING_SUPPORTED_COUNTRIES to list the countries where you currently ship. If this
- *      is not applicable to your app, remove the relevant bits from PaymentsUtil.java.
+ *      is not applicable to your app, remove the relevant bits from GooglePaymentsUtil.java.
  * <li> If you're integrating with your {@code PAYMENT_GATEWAY}, update
  *      PAYMENT_GATEWAY_TOKENIZATION_NAME and PAYMENT_GATEWAY_TOKENIZATION_PARAMETERS per the
  *      instructions they provided. You don't need to update DIRECT_TOKENIZATION_PUBLIC_KEY.
