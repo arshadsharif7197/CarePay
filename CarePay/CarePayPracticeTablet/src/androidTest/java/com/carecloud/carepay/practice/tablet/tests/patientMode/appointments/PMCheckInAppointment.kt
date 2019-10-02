@@ -29,6 +29,7 @@ class PMCheckInAppointment : BaseTest() {
                 .demographicsNextStep()
                 .medicationsNextStep()
                 .allergiesNextStep()
+                .verifyAppointmentStatus("Just Checked In")
                 .goHome()
     }
 }

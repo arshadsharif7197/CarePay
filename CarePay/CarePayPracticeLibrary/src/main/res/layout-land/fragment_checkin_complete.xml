@@ -131,7 +131,8 @@
                             android:textColor="@color/textview_default_textcolor"
                             android:textSize="@dimen/completeCheckInItemValueTextSize"
                             app:customAssetFont="gotham_rounded_medium"
-                            tools:text="Just checked-in" />
+                            tools:text="Just checked-in"
+                            android:contentDescription="@string/content_description_appointment_status_text_view"/>
 
                     </LinearLayout>
 

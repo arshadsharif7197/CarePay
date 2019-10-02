@@ -63,6 +63,15 @@ open class CustomViewActions {
     }
 
     /**
+     * Verifies a specific text is shown on a view
+     * @param contentDescription Content description of the view
+     * @param textMatch Text to match
+     */
+    protected fun verifyTextOnView(contentDescription: String, textMatch: String) {
+        onView(withContentDescription(contentDescription)).check(matches(withText(containsString(textMatch))))
+    }
+
+    /**
      * Verifies a view is not visible
      * @param contentDescription Content description of the view
      */

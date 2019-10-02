@@ -466,4 +466,5 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="content_description_visit_type_edit_text">Visit Type edit text</string>
     <string name="content_description_visit_time_edit_text">Visit Time edit Text</string>
     <string name="content_description_schedule_appointment_button">Schedule Appointment button</string>
+    <string name="content_description_appointment_status_text_view">Appointment status text view</string>
 </resources>
