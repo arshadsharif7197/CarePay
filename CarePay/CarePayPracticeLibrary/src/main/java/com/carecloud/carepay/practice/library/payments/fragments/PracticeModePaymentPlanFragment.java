@@ -506,20 +506,16 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         creditCard.setType(cardType);
 
         CallPayeezy callPayeezy = new CallPayeezy();
-        callPayeezy.doCall(creditCard, merchantServiceDTO, new CallPayeezy.AuthorizeCreditCardCallback() {
-
-            @Override
-            public void onAuthorizeCreditCard(TokenizeResponse tokenizeResponse) {
-                if (tokenizeResponse != null) {
-                    if (tokenizeResponse.getToken() != null) {
-                        selectedCreditCard.setToken(tokenizeResponse.getToken().getValue());
-                        onAuthorizeCreditCardSuccess();
-                    } else {
-                        onAuthorizeCreditCardFailed();
-                    }
+        callPayeezy.doCall(creditCard, merchantServiceDTO, tokenizeResponse -> {
+            if (tokenizeResponse != null) {
+                if (tokenizeResponse.getToken() != null) {
+                    selectedCreditCard.setToken(tokenizeResponse.getToken().getValue());
+                    onAuthorizeCreditCardSuccess();
                 } else {
                     onAuthorizeCreditCardFailed();
                 }
+            } else {
+                onAuthorizeCreditCardFailed();
             }
         });
     }
