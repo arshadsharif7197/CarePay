@@ -20,7 +20,7 @@ class PMCheckInAppointment : BaseTest() {
                 .pressLetsStartButton()
                 .pressCheckInButton()
                 .pressLoginButton()
-                .typeUsername("dev_emails+qa.androidbreeze1@carecloud.com")
+                .typeUsername("dev_emails+qa.androidbreeze2@carecloud.com")
                 .typePassword("Test123!")
                 .pressLoginButton()
                 .checkInAppointment()
@@ -29,6 +29,7 @@ class PMCheckInAppointment : BaseTest() {
                 .demographicsNextStep()
                 .medicationsNextStep()
                 .allergiesNextStep()
+                .verifyAppointmentStatus("Just Checked In")
                 .goHome()
     }
 }

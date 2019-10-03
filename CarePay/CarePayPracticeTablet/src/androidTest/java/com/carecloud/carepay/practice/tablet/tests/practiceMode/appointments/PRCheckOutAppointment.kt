@@ -7,22 +7,18 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * Created by drodriguez on 2019-10-01.
+ * Created by drodriguez on 2019-10-02.
  */
 @RunWith(AndroidJUnit4::class)
-class PMCheckInAppointment : BaseTest() {
+class PRCheckOutAppointment : BaseTest() {
 
     @Test
-    fun pmCheckInAppointment() {
+    fun pmCheckOutAppointment() {
         PracticeMainScreen()
                 .pressAppointmentsButton()
-                .checkInFirstAppointmentOnList()
-                .personalInfoNextStep()
-                .addressNextStep()
-                .demographicsNextStep()
-                .medicationsNextStep()
-                .allergiesNextStep()
-                .verifyAppointmentStatus("Just Checked In")
+                .checkOutFirstAppointmentOnList()
+                .scheduleLater()
+                .verifyAppointmentStatus("Just Checked Out")
                 .goHome()
     }
 }

@@ -33,7 +33,7 @@ open class BaseTest {
         appContext = InstrumentationRegistry.getInstrumentation().targetContext
 
         LoginScreen()
-                .typeUser("dev_emails+qa.androidbreeze1@carecloud.com")
+                .typeUser("dev_emails+qa.androidbreeze2@carecloud.com")
                 .typePassword("Test123!")
                 .pressLoginButton()
     }

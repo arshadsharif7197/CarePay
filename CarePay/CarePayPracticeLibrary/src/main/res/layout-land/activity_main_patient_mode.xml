@@ -194,7 +194,8 @@
                 android:layout_weight="1"
                 android:background="@drawable/home_button_selector_top_right"
                 android:clickable="true"
-                android:padding="@dimen/dimen_20dp">
+                android:padding="@dimen/dimen_20dp"
+                android:contentDescription="@string/content_description_check_out">
 
                 <View
                     android:id="@+id/checkoutFakeCenter"
@@ -217,7 +218,6 @@
                     android:layout_above="@id/homeCheckoutLabel"
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="@dimen/dimen_20dp"
-                    android:contentDescription="Check-Out"
                     android:src="@drawable/icn_checkout_selector" />
             </RelativeLayout>
 

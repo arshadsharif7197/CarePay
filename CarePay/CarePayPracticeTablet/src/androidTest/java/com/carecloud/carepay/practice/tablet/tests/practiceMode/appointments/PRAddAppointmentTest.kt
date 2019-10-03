@@ -21,7 +21,7 @@ class PRAddAppointmentTest : BaseTest() {
         PracticeMainScreen()
                 .pressAppointmentsButton()
                 .pressAddAppointmentButton()
-                .searchForPatient()
+                .searchForPatient("Second A Breeze")
                 .selectProvider()
                 .selectVisitType()
                 .selectLocation()
