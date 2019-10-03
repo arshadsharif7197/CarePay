@@ -9,8 +9,11 @@ public class TokenizeResponse {
 
     @SerializedName("correlation_id")
     private String correlationId;
+    @SerializedName("status")
     private String status;
+    @SerializedName("type")
     private String type;
+    @SerializedName("token")
     private Token token;
 
     public String getCorrelationId() {
