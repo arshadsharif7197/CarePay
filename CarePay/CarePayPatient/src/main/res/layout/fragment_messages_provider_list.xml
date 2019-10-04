@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/dimen_20dp"
             android:paddingEnd="@dimen/dimen_20dp"
-            breeze:textKey="messaging_no_providers"
+            breeze:textKey="messaging_no_enabled_providers"
             android:textSize="@dimen/text_size_21"
             android:textColor="#37474F"
             app:customAssetFont="gotham_rounded_medium" />
