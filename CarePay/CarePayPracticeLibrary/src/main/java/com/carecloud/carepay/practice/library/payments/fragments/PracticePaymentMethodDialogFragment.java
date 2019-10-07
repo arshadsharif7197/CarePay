@@ -3,7 +3,7 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,12 +72,9 @@ public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFr
             @Override
             public void onClick(View view) {
                 cancel();
-                if (onCancelListener == null) {
-                    dialogCallback.onDismissPaymentMethodDialog(paymentsModel);
-                }
             }
         });
-        TextView title = (TextView) view.findViewById(R.id.respons_toolbar_title);
+        TextView title = view.findViewById(R.id.respons_toolbar_title);
         ViewGroup.LayoutParams layoutParams = title.getLayoutParams();
         layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
         title.setLayoutParams(layoutParams);
@@ -86,7 +83,6 @@ public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFr
 
     @Override
     protected void handlePaymentButton(PaymentsMethodsDTO paymentMethod, final double amount) {
-        dismiss();
         if (paymentMethod.getType().equals(CarePayConstants.TYPE_CASH) &&
                 getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             ConfirmCashDialogFragment fragment = new ConfirmCashDialogFragment();
@@ -106,6 +102,7 @@ public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFr
             logPaymentMethodSelection(getString(com.carecloud.carepaylibrary.R.string.payment_cash));
         } else {
             super.handlePaymentButton(paymentMethod, amount);
+            hideDialog();
         }
     }
 
@@ -116,9 +113,29 @@ public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFr
     }
 
     @Override
-    protected void handleIntegratedPayment() {
-        super.handleIntegratedPayment();
-        dismiss();
+    protected void onPaymentCashFinished() {
+        callback.onPaymentCashFinished();
+    }
+
+    @Override
+    protected void onPaymentMethodAction(PaymentsMethodsDTO paymentMethod,
+                                         double amount,
+                                         PaymentsModel paymentsModel) {
+        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
+                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            PracticeChooseCreditCardFragment fragment = PracticeChooseCreditCardFragment
+                    .newInstance(paymentsModel,
+                            paymentMethod.getLabel(), amount);
+            fragment.setOnCancelListener(onDialogCancelListener);
+            callback.displayDialogFragment(fragment, true);
+            hideDialog();
+        } else {
+            PracticeAddNewCreditCardFragment fragment = PracticeAddNewCreditCardFragment
+                    .newInstance(paymentsModel, amount);
+            fragment.setOnCancelListener(onDialogCancelListener);
+            callback.displayDialogFragment(fragment, true);
+            hideDialog();
+        }
     }
 
 }

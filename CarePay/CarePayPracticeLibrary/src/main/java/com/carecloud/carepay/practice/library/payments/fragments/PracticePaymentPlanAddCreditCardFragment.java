@@ -110,9 +110,6 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
             @Override
             public void onClick(View v) {
                 cancel();
-                if (paymentPlanPostModel != null) {
-                    callback.onStartPaymentPlan(paymentsModel, paymentPlanPostModel);
-                }
             }
         });
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE) ||
@@ -155,6 +152,15 @@ public class PracticePaymentPlanAddCreditCardFragment extends PaymentPlanAddCred
     @Override
     protected void showConfirmation(WorkflowDTO workflowDTO){
         ((OneTimePaymentInterface)callback).showPaymentConfirmation(workflowDTO, true);
+    }
+
+    @Override
+    protected void onDisplayPaymentPlanTerms(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
+        PracticePaymentPlanTermsFragment fragment = PracticePaymentPlanTermsFragment
+                .newInstance(paymentsModel, paymentPlanPostModel);
+        fragment.setOnCancelListener(onDialogCancelListener);
+        callback.displayDialogFragment(fragment, true);
+        hideDialog();
     }
 
 }

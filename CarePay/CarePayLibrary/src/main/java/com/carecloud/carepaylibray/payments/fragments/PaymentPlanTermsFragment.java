@@ -2,9 +2,9 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
+import androidx.appcompat.widget.Toolbar;
 import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -166,11 +166,6 @@ public class PaymentPlanTermsFragment extends BasePaymentDialogFragment {
         }
     }
 
-    protected void onPaymentPlanSubmitted(WorkflowDTO workflowDTO) {
-        callback.onSubmitPaymentPlan(workflowDTO);
-        dismiss();
-    }
-
     private void submitPaymentPlan() {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("practice_mgmt", paymentPlanPostModel.getMetadata().getPracticeMgmt());
@@ -202,6 +197,11 @@ public class PaymentPlanTermsFragment extends BasePaymentDialogFragment {
             showErrorNotification(exceptionMessage);
         }
     };
+
+    protected void onPaymentPlanSubmitted(WorkflowDTO workflowDTO) {
+        callback.onSubmitPaymentPlan(workflowDTO);
+        dismiss();
+    }
 
 
 }

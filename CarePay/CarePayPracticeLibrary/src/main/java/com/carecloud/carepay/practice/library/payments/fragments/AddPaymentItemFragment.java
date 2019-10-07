@@ -1,10 +1,10 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +38,15 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
 
     private AddPaymentItemCallback callback;
 
+    public static AddPaymentItemFragment newInstance(List<SimpleChargeItem> simpleChargeItems) {
+        Bundle args = new Bundle();
+        Gson gson = new Gson();
+        args.putString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, gson.toJson(simpleChargeItems));
+        AddPaymentItemFragment fragment = new AddPaymentItemFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -66,8 +75,7 @@ public class AddPaymentItemFragment extends BaseDialogFragment implements AddPay
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dismiss();
-                callback.onDismissAddItemFragment();
+                cancel();
             }
         });
 

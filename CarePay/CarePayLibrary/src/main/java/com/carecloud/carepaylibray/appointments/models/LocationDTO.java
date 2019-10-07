@@ -54,6 +54,15 @@ public class LocationDTO extends AvailableLocationDTO {
         this.phoneDTOs = phoneDTOs;
     }
 
+    public String getPrimaryPhone() {
+        for (LocationDTO.PhoneDTO phoneDTO : getPhoneDTOs()) {
+            if (phoneDTO.isPrimary()) {
+                return phoneDTO.getPhoneNumber();
+            }
+        }
+        return null;
+    }
+
     public class PhoneDTO {
 
         @SerializedName("phone_number")
