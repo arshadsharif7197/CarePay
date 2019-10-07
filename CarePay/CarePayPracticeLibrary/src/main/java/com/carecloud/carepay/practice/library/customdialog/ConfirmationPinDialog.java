@@ -17,6 +17,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeSwitchPinResponseDTO;
 import com.carecloud.carepay.practice.library.session.PracticeSessionService;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -34,7 +35,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.HashMap;
 import java.util.Map;
-
 
 /**
  * Created by prem_mourya on 10/20/2016.
@@ -233,13 +233,12 @@ public class ConfirmationPinDialog extends BaseDialogFragment implements View.On
                 if (practiceActivity.getApplicationMode().getUserPracticeDTO() != null) {
                     String patientLanguage = practiceActivity.getApplicationPreferences().getUserLanguage();
                     if (!patientLanguage.equals(CarePayConstants.DEFAULT_LANGUAGE)) {
-                        final Map<String, String> headers = practiceActivity
-                                .getWorkflowServiceHelper().getApplicationStartHeaders();
+                        final Map<String, String> headers = practiceActivity.getWorkflowServiceHelper().getApplicationStartHeaders();
                         headers.put("username", practiceActivity.getApplicationPreferences().getUserName());
-                        practiceActivity.getApplicationPreferences().setUserLanguage(CarePayConstants.DEFAULT_LANGUAGE);
-                        practiceActivity.changeLanguage(languageTransition, CarePayConstants.DEFAULT_LANGUAGE, headers, () -> {
-                            //do nothing more
-                        });
+                        practiceActivity.changeLanguage(languageTransition,
+                                ApplicationPreferences.getInstance().getUserLanguage(), headers, () -> {
+                                    //do nothing more
+                                });
                     }
                     practiceActivity.getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
                     practiceActivity.getAppAuthorizationHelper().setUser(practiceActivity.getApplicationMode()
