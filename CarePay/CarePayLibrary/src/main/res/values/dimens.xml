@@ -532,6 +532,8 @@
     <dimen name="completeCheckInItemValueTextSize">16sp</dimen>
 
     <dimen name="largeAlertMessageTextSize">13sp</dimen>
+    <dimen name="exitImageSize">48dp</dimen>
+    <dimen name="exitImagePadding">15dp</dimen>
     <dimen name="patient_bottom_round_dimen">5dp</dimen>
     <dimen name="appointmentDialStartMargin">5dp</dimen>
     <dimen name="appoinmentDialogButtonsTopMargin">10dp</dimen>

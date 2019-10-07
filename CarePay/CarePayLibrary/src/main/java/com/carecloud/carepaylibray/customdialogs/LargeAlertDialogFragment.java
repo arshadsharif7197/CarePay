@@ -25,6 +25,7 @@ public class LargeAlertDialogFragment extends BaseDialogFragment implements View
     private String message;
     private int headerBackGroundColor;
     private int headerIcon;
+    private int messageTextSize;
 
     //For callback
     public interface LargeAlertInterface {
@@ -32,19 +33,22 @@ public class LargeAlertDialogFragment extends BaseDialogFragment implements View
     }
 
     public static LargeAlertDialogFragment newInstance(String message,
-                                                       String actionText) {
-        return newInstance(message, actionText, -1, -1);
+                                                       String actionText,
+                                                       int messageTextSize) {
+        return newInstance(message, actionText, -1, -1, messageTextSize);
     }
 
     public static LargeAlertDialogFragment newInstance(String message,
                                                        String actionText,
                                                        int headerBackGroundColor,
-                                                       int headerIcon) {
+                                                       int headerIcon,
+                                                       int messageTextSize) {
         Bundle args = new Bundle();
         args.putString("message", message);
         args.putString("actionText", actionText);
         args.putInt("headerBackGroundColor", headerBackGroundColor);
         args.putInt("headerIcon", headerIcon);
+        args.putInt("messageTextSize", messageTextSize);
         LargeAlertDialogFragment fragment = new LargeAlertDialogFragment();
         fragment.setArguments(args);
         return fragment;
@@ -57,6 +61,7 @@ public class LargeAlertDialogFragment extends BaseDialogFragment implements View
         message = args.getString("message");
         actionText = args.getString("actionText");
         headerBackGroundColor = args.getInt("headerBackGroundColor");
+        messageTextSize = args.getInt("messageTextSize");
         headerIcon = args.getInt("headerIcon");
     }
 
@@ -82,7 +87,8 @@ public class LargeAlertDialogFragment extends BaseDialogFragment implements View
             findViewById(R.id.headerIconImageView).setBackgroundResource(headerIcon);
         } else {
             findViewById(R.id.headerIconImageView).setVisibility(View.GONE);
-            largeMssageLabel.setTextSize(getResources().getDimension(R.dimen.largeAlertMessageTextSize));
+            largeMssageLabel.setTextSize(TypedValue.COMPLEX_UNIT_SP, messageTextSize);
+//            largeMssageLabel.setTextSize(getResources().getDimension(R.dimen.largeAlertMessageTextSize));
         }
     }
 

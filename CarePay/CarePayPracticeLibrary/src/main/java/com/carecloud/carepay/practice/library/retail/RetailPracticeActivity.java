@@ -1,10 +1,11 @@
 package com.carecloud.carepay.practice.library.retail;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
@@ -248,5 +249,15 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
             MixPanelUtil.endTimer(getString(R.string.timer_shopping));
         }
         super.onStop();
+    }
+
+    @Override
+    public boolean manageSession() {
+        return true;
+    }
+
+    @Override
+    public TransitionDTO getLogoutTransition() {
+        return retailModel.getMetadata().getTransitions().getLogout();
     }
 }

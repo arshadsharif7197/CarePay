@@ -331,9 +331,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         editText.getOnFocusChangeListener().onFocusChange(editText,
                 !StringUtil.isNullOrEmpty(editText.getText().toString().trim()));
         final View requiredView = view.findViewById(requiredViewId);
-        if (requiredView != null) {
-            requiredView.setVisibility(demographicsField.isRequired()
-                    && StringUtil.isNullOrEmpty(keyName) ? View.VISIBLE : View.GONE);
+        if (requiredView != null && demographicsField.isRequired()) {
+            requiredView.setVisibility(StringUtil.isNullOrEmpty(keyName) ? View.VISIBLE : View.GONE);
             editText.addTextChangedListener(getRequiredViewTextWatcher(requiredView));
         }
         if (demographicsOption != null) {
