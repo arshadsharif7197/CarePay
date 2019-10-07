@@ -147,6 +147,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
         if (statement != null && !statement.getStatements().isEmpty()
                 && paymentReceiptModel.getPaymentPayload().canSeeStatement(selectedBalance.getMetadata().getPracticeId())) {
             View statementButton = view.findViewById(R.id.statement_button);
+            view.findViewById(R.id.separator).setVisibility(View.VISIBLE);
             statementButton.setVisibility(View.VISIBLE);
             finalStatement = statement;
             statementButton.setOnClickListener(v -> {
