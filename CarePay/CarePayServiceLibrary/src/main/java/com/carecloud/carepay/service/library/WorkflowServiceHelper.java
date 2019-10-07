@@ -55,6 +55,7 @@ public class WorkflowServiceHelper {
     private static final int STATUS_CODE_UNAUTHORIZED = 401;
     private static final int STATUS_BAD_REQUEST = 400;
     private static final int STATUS_CODE_UNPROCESSABLE_ENTITY = 422;
+    private static final int STATUS_CODE_SERVER_ERROR = 500;
 
     private AppAuthorizationHelper appAuthorizationHelper;
     private ApplicationPreferences applicationPreferences;
@@ -370,7 +371,7 @@ public class WorkflowServiceHelper {
                 }
             }
 
-            private void onResponseBadRequest(Response<WorkflowDTO> response) throws IOException {
+            private void onResponseBadRequest(Response<WorkflowDTO> response) {
                 String message = response.message().toLowerCase();
                 String errorBodyString = "";
                 try {
