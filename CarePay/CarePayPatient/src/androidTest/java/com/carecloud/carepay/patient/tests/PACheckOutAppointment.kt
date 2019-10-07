@@ -7,17 +7,15 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * Created by drodriguez on 2019-09-12.
+ * Created by drodriguez on 2019-09-17.
  */
 @RunWith(AndroidJUnit4::class)
-class PAMakeFullPaymentTest: BaseTest() {
+class PACheckOutAppointment : BaseTest() {
+
     @Test
-    fun paMakeFullPaymentTest() {
+    fun paCheckOutAppointment() {
         AppointmentScreen()
-                .openNavigationDrawer()
-                .goToPayments()
-                .makePaymentFor(0)
-                .makeFullPaymemt()
-                .payUseCreditCardOnFile()
+                .checkOutFirstAppointmentOnList(1)
+                .scheduleAppointmentLater()
     }
 }

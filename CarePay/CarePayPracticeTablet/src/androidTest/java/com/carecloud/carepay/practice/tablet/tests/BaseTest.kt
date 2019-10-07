@@ -38,9 +38,9 @@ open class BaseTest {
                 .typeUsername("rainforestbrzmanqa01@e.rainforest.com")
                 .typePassword("Rainforest123#")
                 .pressLoginButton()
-                .selectPractice("Lisa J. Learn D.O., PA")
+                .selectPractice("CareCloud Automation Environment")
                 .pressContinue()
-                .selectLocation("LISA J. LEARN D.O., PA")
+                .selectLocation("EAST CITY CLINIC")
                 .pressContinue()
     }
 

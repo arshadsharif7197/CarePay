@@ -72,5 +72,6 @@
     <string name="content_description_key_one">one</string>
     <string name="content_description_key_five">five</string>
     <string name="content_description_key_zero">zero</string>
+    <string name="content_description_check_out">Check-Out</string>
 
 </resources>

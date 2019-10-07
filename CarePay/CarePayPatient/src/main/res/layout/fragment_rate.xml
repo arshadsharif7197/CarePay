@@ -64,6 +64,7 @@
         android:textSize="15sp"
         app:customAssetFont="proxima_nova_semi_bold"
         breeze:textKey="rate.dialog.option.label.notNow"
-        tools:text="Not now >>" />
+        tools:text="Not now >>"
+        android:contentDescription="@string/content_description_not_now_button"/>
 
 </LinearLayout>

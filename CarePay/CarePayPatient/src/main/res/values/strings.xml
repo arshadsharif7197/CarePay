@@ -36,4 +36,6 @@
     <string name="content_description_shop_screen_button">Shop Screen button</string>
     <string name="content_description_notifications_screen_button">Notifications Screen button</string>
     <string name="content_description_payment_options_button">Payment Options button</string>
+    <string name="content_description_not_now_button">Not Now button</string>
+    <string name="content_description_ok_button">Ok button</string>
 </resources>

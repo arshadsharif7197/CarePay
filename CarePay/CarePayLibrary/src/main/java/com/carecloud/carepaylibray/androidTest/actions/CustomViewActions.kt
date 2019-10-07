@@ -19,10 +19,11 @@ import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.espresso.util.HumanReadables
 import androidx.test.espresso.util.TreeIterables
+import androidx.test.espresso.web.model.Atoms
+import androidx.test.espresso.web.sugar.Web.onWebView
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.*
 import java.util.concurrent.TimeoutException
-
 
 /**
  * Created by drodriguez on 08/12/19.
@@ -70,6 +71,15 @@ open class CustomViewActions {
      */
     protected fun verifyViewVisible(id: Int) {
         onView(withId(id)).check(matches(notNullValue())).check(matches(isDisplayed()))
+    }
+
+    /**
+     * Verifies a specific text is shown on a view
+     * @param contentDescription Content description of the view
+     * @param textMatch Text to match
+     */
+    protected fun verifyTextOnView(contentDescription: String, textMatch: String) {
+        onView(withContentDescription(contentDescription)).check(matches(withText(containsString(textMatch))))
     }
 
     /**
@@ -166,8 +176,12 @@ open class CustomViewActions {
      * @param contentDescription Content description of the view
      * @param textMatch Text to match with element on list
      */
-    protected fun verifyItemInRecyclerView(contentDescription: String, textMatch: String) {
-        onView(withContentDescription(contentDescription)).check(matches(hasDescendant(withText(textMatch))))
+    protected fun verifyItemInRecyclerView(contentDescription: String, textMatch: String, exactMatch: Boolean = true) {
+        if (exactMatch) {
+            onView(withContentDescription(contentDescription)).check(matches(hasDescendant(withText(textMatch))))
+        } else {
+            onView(withContentDescription(contentDescription)).check(matches(hasDescendant(withText(containsString(textMatch)))))
+        }
     }
 
     /**
@@ -182,6 +196,10 @@ open class CustomViewActions {
         } else {
             onView(withContentDescription(contentDescription)).perform(typeText(stringToType))
         }
+    }
+
+    protected fun scrollWebView() {
+        onWebView().perform(Atoms.script("window.scrollTo(0, document.body.scrollHeight)"))
     }
 
     /**

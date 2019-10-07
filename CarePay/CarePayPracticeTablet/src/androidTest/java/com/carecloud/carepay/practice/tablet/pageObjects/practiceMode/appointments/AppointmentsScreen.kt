@@ -3,6 +3,8 @@ package com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.appointme
 import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 import com.carecloud.carepay.practice.tablet.pageObjects.shared.appointments.AddAppointmentFlow
 import com.carecloud.carepay.practice.tablet.R
+import com.carecloud.carepay.practice.tablet.pageObjects.patientMode.checkin.CheckInPersonalInfo
+import com.carecloud.carepay.practice.tablet.pageObjects.patientMode.checkout.CheckOutNextAppointmentScreen
 import com.carecloud.carepay.practice.tablet.tests.appContext
 
 /**
@@ -15,14 +17,30 @@ class AppointmentsScreen : CustomViewActions() {
         return this
     }
 
-    fun searchForPatient(): AddAppointmentFlow<AppointmentsScreen> {
-        type(appContext.getString(R.string.content_description_patient_search), "qa\n")
+    fun searchForPatient(patient: String): AddAppointmentFlow<AppointmentsScreen> {
+        type(appContext.getString(R.string.content_description_patient_search), patient + "\n")
+        wait(milliseconds = 2000)
         clickOnRecyclerViewItem(appContext.getString(R.string.content_description_patient_list), 0)
         return AddAppointmentFlow(screenAfterAppointment = AppointmentsScreen())
     }
 
-    fun verifyAppointmentisOnList(textMatch: String) : AppointmentsScreen {
-        verifyItemInRecyclerView(appContext.getString(R.string.content_description_appointments_list), textMatch)
+    fun verifyAppointmentIsOnList(textMatch: String) : AppointmentsScreen {
+        wait(milliseconds = 1000)
+        verifyItemInRecyclerView(appContext.getString(R.string.content_description_appointments_list), textMatch, false)
         return this
+    }
+
+    fun checkInFirstAppointmentOnList(): CheckInPersonalInfo {
+        clickOnRecyclerViewItem(appContext.getString(R.string.content_description_appointments_list), 0)
+        clickOnSpecificText("Check-in")
+        type(appContext.getString(R.string.content_description_email), "01011990", true)
+        click(appContext.getString(R.string.content_description_sign_in))
+        return CheckInPersonalInfo()
+    }
+
+    fun checkOutFirstAppointmentOnList(): CheckOutNextAppointmentScreen {
+        clickOnRecyclerViewItem(appContext.getString(R.string.content_description_appointments_list), 0)
+        clickOnSpecificText("Check-out")
+        return CheckOutNextAppointmentScreen()
     }
 }
