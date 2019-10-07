@@ -31,6 +31,8 @@ public class AppointmentDisplayUtil {
                 case CarePayConstants.BILLED:
                 case CarePayConstants.MANUALLY_BILLED:
                     return AppointmentDisplayStyle.CHECKED_OUT;
+                case CarePayConstants.DENIED:
+                    return AppointmentDisplayStyle.DENIED;
                 case CarePayConstants.REQUESTED:
                     if (appointmentsPayload.isAppointmentToday()) {
                         return AppointmentDisplayStyle.REQUESTED;

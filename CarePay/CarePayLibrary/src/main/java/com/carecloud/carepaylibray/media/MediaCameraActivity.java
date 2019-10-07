@@ -49,4 +49,9 @@ public class MediaCameraActivity extends BaseActivity implements MediaCameraFrag
         MediaCameraFragment cameraFragment = MediaCameraFragment.newInstance(tempFile, cameraType);
         replaceFragment(R.id.content_frame, cameraFragment, false);
     }
+
+    @Override
+    protected void stopSessionService() {
+
+    }
 }

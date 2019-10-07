@@ -2,8 +2,6 @@ package com.carecloud.carepay.practice.library.payments.dialogs;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -12,6 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.adapter.PatientSearchResultAdapter;
@@ -28,7 +30,6 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.gson.JsonArray;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,7 @@ import java.util.Map;
 public class FindPatientDialog extends BaseDialogFragment {
 
     private TransitionDTO transitionDTO;
-    private OnItemClickedListener clickedListener;
+    private OnItemClickedListener listener;
     private String titleLabel;
     private String query;
 
@@ -54,7 +55,6 @@ public class FindPatientDialog extends BaseDialogFragment {
         return fragment;
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,14 +66,16 @@ public class FindPatientDialog extends BaseDialogFragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initializeView();
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.dialog_find_patient, container, false);
     }
 
@@ -82,12 +84,9 @@ public class FindPatientDialog extends BaseDialogFragment {
         findPatientEditBox.addTextChangedListener(getTextChangedListener());
         findPatientEditBox.setOnKeyListener(getKeyListener());
 
-        findViewById(R.id.find_patient_close_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((ISession) getContext()).getWorkflowServiceHelper().interrupt();
-                dismiss();
-            }
+        findViewById(R.id.find_patient_close_button).setOnClickListener(view -> {
+            ((ISession) getContext()).getWorkflowServiceHelper().interrupt();
+            dismiss();
         });
 
         TextView titleView = (TextView) findViewById(R.id.find_patient_title);
@@ -95,34 +94,30 @@ public class FindPatientDialog extends BaseDialogFragment {
     }
 
     private View.OnKeyListener getKeyListener() {
-        return new View.OnKeyListener() {
+        return (view, keyCode, event) -> {
+            if ((event.getAction() == KeyEvent.ACTION_DOWN)
+                    && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                // Hide keyboard
+                InputMethodManager manager = (InputMethodManager) getContext()
+                        .getSystemService(Context.INPUT_METHOD_SERVICE);
+                manager.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
-            @Override
-            public boolean onKey(View view, int keyCode, KeyEvent event) {
-                if ((event.getAction() == KeyEvent.ACTION_DOWN)
-                        && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    // Hide keyboard
-                    InputMethodManager manager = (InputMethodManager) getContext()
-                            .getSystemService(Context.INPUT_METHOD_SERVICE);
-                    manager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                Map<String, String> queryMap = new HashMap<>();
+                queryMap.put("practice_mgmt", ((ISession) getContext()).getApplicationMode()
+                        .getUserPracticeDTO().getPracticeMgmt());
+                queryMap.put("practice_id", ((ISession) getContext()).getApplicationMode()
+                        .getUserPracticeDTO().getPracticeId());
 
-                    Map<String, String> queryMap = new HashMap<>();
-                    queryMap.put("practice_mgmt", ((ISession) getContext()).getApplicationMode()
-                            .getUserPracticeDTO().getPracticeMgmt());
-                    queryMap.put("practice_id", ((ISession) getContext()).getApplicationMode()
-                            .getUserPracticeDTO().getPracticeId());
+                query = ((CarePayEditText) view).getText().toString().toUpperCase();
+                JsonArray postModel = new JsonArray();
+                postModel.add(query);
+                String postBody = postModel.toString();
 
-                    query = ((CarePayEditText) view).getText().toString().toUpperCase();
-                    JsonArray postModel = new JsonArray();
-                    postModel.add(query);
-                    String postBody = postModel.toString();
-
-                    ((ISession) getContext()).getWorkflowServiceHelper().execute(transitionDTO, findPatientCallback,
-                            postBody, queryMap);
-                    return true;
-                }
-                return false;
+                ((ISession) getContext()).getWorkflowServiceHelper().execute(transitionDTO, findPatientCallback,
+                        postBody, queryMap);
+                return true;
             }
+            return false;
         };
     }
 
@@ -178,30 +173,27 @@ public class FindPatientDialog extends BaseDialogFragment {
 
         @Override
         public void onFailure(String exceptionMessage) {
-            if(isAdded()) {
+            if (isAdded()) {
                 findViewById(R.id.patient_searched_list).setVisibility(View.GONE);
                 findViewById(R.id.patient_not_found_text).setVisibility(View.VISIBLE);
             }
         }
 
         private void sortPatients(List<PatientModel> patients) {
-            Collections.sort(patients, new Comparator<PatientModel>() {
-                @Override
-                public int compare(PatientModel left, PatientModel right) {
-                    String leftName = left.getFullName();
-                    String rightName = right.getFullName();
+            Collections.sort(patients, (left, right) -> {
+                String leftName = left.getFullName();
+                String rightName = right.getFullName();
 
-                    boolean leftStartsWithQuery = leftName.startsWith(query);
-                    if (leftStartsWithQuery == rightName.startsWith(query)) {
-                        return leftName.compareTo(rightName);
-                    }
-
-                    if (leftStartsWithQuery) {
-                        return -1;
-                    }
-
-                    return 1;
+                boolean leftStartsWithQuery = leftName.startsWith(query);
+                if (leftStartsWithQuery == rightName.startsWith(query)) {
+                    return leftName.compareTo(rightName);
                 }
+
+                if (leftStartsWithQuery) {
+                    return -1;
+                }
+
+                return 1;
             });
         }
     };
@@ -223,17 +215,14 @@ public class FindPatientDialog extends BaseDialogFragment {
     }
 
     private void setOnItemClickedListener(PatientSearchResultAdapter adapter) {
-        adapter.setClickedListener(new PatientSearchResultAdapter.OnItemClickedListener() {
-            @Override
-            public void onItemClicked(PatientModel patient) {
-                dismiss();
-                clickedListener.onItemClicked(patient);
-            }
+        adapter.setClickedListener(patient -> {
+            listener.onItemClicked(patient);
+            dismiss();
         });
     }
 
-    public void setClickedListener(OnItemClickedListener clickedListener) {
-        this.clickedListener = clickedListener;
+    public void setListener(OnItemClickedListener listener) {
+        this.listener = listener;
     }
 
     public interface OnItemClickedListener {

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="@dimen/rateDialogPadding">
+
+    <ImageView
+        android:layout_width="@dimen/dimen_48dp"
+        android:layout_height="@dimen/dimen_48dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/rateDialogPadding"
+        android:src="@mipmap/ic_launcher" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/charcoal"
+        android:textSize="@dimen/rateDialogTitleTextSize"
+        app:customAssetFont="gotham_rounded_medium"
+        breeze:textKey="rate.dialog.title.label.message"
+        tools:text="We hope your experience\nhas been a breeze!" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/rateDialogPadding"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_marginEnd="@dimen/rateDialogPadding"
+        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:gravity="center"
+        android:textColor="@color/cadet_gray"
+        android:textSize="@dimen/rateDialogTitleTextSize"
+        app:customAssetFont="proxima_nova_regular"
+        breeze:textKey="rate.dialog.subTitle.label.message"
+        tools:text="Would you like to leave a review?" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/rateNowButton"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/rateDialogOptionHeight"
+        android:background="@drawable/button_selector"
+        android:foreground="?selectableItemBackground"
+        android:gravity="center"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        app:customAssetFont="gotham_rounded_medium"
+        breeze:textKey="rate.dialog.option.label.rateNow"
+        tools:text="Yes, rate it now" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/notNowButton"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/rateDialogOptionHeight"
+        android:layout_marginTop="@dimen/dimen_5dp"
+        android:background="?selectableItemBackground"
+        android:gravity="center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="15sp"
+        app:customAssetFont="proxima_nova_semi_bold"
+        breeze:textKey="rate.dialog.option.label.notNow"
+        tools:text="Not now >>" />
+
+</LinearLayout>

@@ -18,7 +18,10 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 
 public class PatientModeAddExistingPaymentPlanFragment extends AddExistingPaymentPlanFragment {
 
-    public static PatientModeAddExistingPaymentPlanFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO existingPlan, double amount){
+    public static PatientModeAddExistingPaymentPlanFragment newInstance(PaymentsModel paymentsModel,
+                                                                        PendingBalanceDTO selectedBalance,
+                                                                        PaymentPlanDTO existingPlan,
+                                                                        double amount) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
@@ -36,8 +39,7 @@ public class PatientModeAddExistingPaymentPlanFragment extends AddExistingPaymen
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
-                callback.onDismissPaymentPlan(paymentsModel);
+                cancel();
             }
         });
 
@@ -46,15 +48,15 @@ public class PatientModeAddExistingPaymentPlanFragment extends AddExistingPaymen
     @Override
     protected void setupHeader(View view) {
         super.setupHeader(view);
-        TextView headerPaymentAmount = (TextView) view.findViewById(R.id.headerPlanTotal);
+        TextView headerPaymentAmount = view.findViewById(R.id.headerPlanTotal);
         headerPaymentAmount.setText(currencyFormatter.format(paymentPlanAmount));
 
-        TextView patientBalance = (TextView) view.findViewById(R.id.patientBalance);
+        TextView patientBalance = view.findViewById(R.id.patientBalance);
         patientBalance.setText(currencyFormatter.format(paymentPlanAmount));
     }
 
     @Override
-    protected void onPlanEdited(WorkflowDTO workflowDTO){
+    protected void onPlanEdited(WorkflowDTO workflowDTO) {
         super.onPlanEdited(workflowDTO);
         dismiss();
     }

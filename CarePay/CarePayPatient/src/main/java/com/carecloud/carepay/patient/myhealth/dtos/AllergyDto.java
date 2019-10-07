@@ -40,6 +40,10 @@ public class AllergyDto {
     @SerializedName("practice")
     private String practice;
 
+    @Expose
+    @SerializedName("business_entity")
+    private BusinessEntity businessEntity;
+
     public Integer getId() {
         return id;
     }
@@ -94,5 +98,13 @@ public class AllergyDto {
 
     public void setPractice(String practice) {
         this.practice = practice;
+    }
+
+    public BusinessEntity getBusinessEntity() {
+        return businessEntity;
+    }
+
+    public void setBusinessEntity(BusinessEntity businessEntity) {
+        this.businessEntity = businessEntity;
     }
 }
