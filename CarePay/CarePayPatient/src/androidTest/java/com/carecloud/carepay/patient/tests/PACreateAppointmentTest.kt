@@ -13,7 +13,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class PACreateAppointmentTest : BaseTest() {
 
-    val provider = "Pamela Banes";
+    val provider = "Pamela Banes"
     @Test
     fun paCreateAppointmentTest() {
         AppointmentScreen()

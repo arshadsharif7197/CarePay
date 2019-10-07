@@ -7,9 +7,9 @@ import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 /**
  * Created by drodriguez on 2019-09-10.
  */
-class ChoosePaymentMethodDialog: CustomViewActions() {
-    fun selectCreditCardPayment(): ChoosePaymentMethodDialog {
-        clickOnItemOnList(appContext.getString(R.string.content_description_payment_types_list), 1)
+class ChoosePaymentMethodDialog : CustomViewActions() {
+    fun selectCreditCardPayment(position: Int): ChoosePaymentMethodDialog {
+        clickOnItemOnList(appContext.getString(R.string.content_description_payment_types_list), position)
         return this
     }
 

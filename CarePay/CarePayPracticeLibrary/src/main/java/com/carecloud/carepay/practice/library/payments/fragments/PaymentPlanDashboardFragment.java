@@ -1,17 +1,18 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.adapter.PaymentPlanDashboardAdapter;
@@ -110,12 +111,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
         }
 
         View closeButton = view.findViewById(R.id.closeViewLayout);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancel();
-            }
-        });
+        closeButton.setOnClickListener(v -> cancel());
 
     }
 
@@ -175,12 +171,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
         Button createPaymentPlanButton = view.findViewById(R.id.createPaymentPlanButton);
         Button createNewPlanButton = view.findViewById(R.id.createNewPlanButton);
 
-        View.OnClickListener createListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPaymentPlanCreationScreen();
-            }
-        };
+        View.OnClickListener createListener = v -> showPaymentPlanCreationScreen();
 
         createPaymentPlanButton.setOnClickListener(createListener);
         createPaymentPlanButton.setEnabled(userHasPermissionsToCreatePaymentPlan() && hasBalanceForPaymentPlan);
@@ -194,12 +185,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
                 .getPatientBalances().get(0).getBalances().get(0);
         PracticeModePaymentPlanFragment fragment = PracticeModePaymentPlanFragment
                 .newInstance(paymentsModel, selectedBalance);
-        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                showDialog();
-            }
-        });
+        fragment.setOnCancelListener(dialog -> showDialog());
         callback.displayDialogFragment(fragment, false);
         logMixPanelPaymentPlanStartedEvent(selectedBalance);
         hideDialog();
@@ -241,12 +227,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
     public void onAddBalanceClicked(PaymentPlanDTO paymentPlan) {
         PracticeModeAddToExistingPaymentPlanFragment fragment = PracticeModeAddToExistingPaymentPlanFragment
                 .newInstance(paymentsModel, paymentPlan);
-        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                showDialog();
-            }
-        });
+        fragment.setOnCancelListener(dialog -> showDialog());
         callback.displayDialogFragment(fragment, true);
         hideDialog();
 
@@ -270,12 +251,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
     public void onDetailClicked(PaymentPlanDTO paymentPlan, boolean completed) {
         PracticePaymentPlanDetailsDialogFragment fragment = PracticePaymentPlanDetailsDialogFragment
                 .newInstance(paymentsModel, paymentPlan, completed);
-        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                showDialog();
-            }
-        });
+        fragment.setOnCancelListener(dialog -> showDialog());
         callback.displayDialogFragment(fragment, true);
         hideDialog();
     }
@@ -287,7 +263,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.clear();
     }

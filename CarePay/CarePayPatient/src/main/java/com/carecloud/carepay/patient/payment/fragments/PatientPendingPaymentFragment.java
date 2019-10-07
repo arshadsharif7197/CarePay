@@ -68,7 +68,7 @@ public class PatientPendingPaymentFragment extends BaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_patient_balance_history, container, false);
+        return inflater.inflate(R.layout.fragment_patient_balance_pending, container, false);
     }
 
     @Override

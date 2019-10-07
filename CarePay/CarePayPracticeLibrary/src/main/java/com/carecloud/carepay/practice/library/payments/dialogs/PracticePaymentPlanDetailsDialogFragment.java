@@ -2,15 +2,17 @@ package com.carecloud.carepay.practice.library.payments.dialogs;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
@@ -53,7 +55,7 @@ public class PracticePaymentPlanDetailsDialogFragment extends BaseDialogFragment
     /**
      * @param paymentsModel  the payment model
      * @param paymentPlanDTO the Payment Plan Dto
-     * @param isCompleted
+     * @param isCompleted is completed
      * @return new instance of a PaymentPlanDetailsDialogFragment
      */
     public static PracticePaymentPlanDetailsDialogFragment newInstance(PaymentsModel paymentsModel,
@@ -96,7 +98,7 @@ public class PracticePaymentPlanDetailsDialogFragment extends BaseDialogFragment
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupToolbar(view, Label.getLabel("payment_payment_plan_details_txt"));
         setUpExistingCharges(view, paymentPlan.getPayload().getLineItems());
@@ -112,12 +114,7 @@ public class PracticePaymentPlanDetailsDialogFragment extends BaseDialogFragment
         }
 
         View closeButton = view.findViewById(R.id.closeViewLayout);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancel();
-            }
-        });
+        closeButton.setOnClickListener(v -> cancel());
     }
 
     private void setUpExistingCharges(View view, List<PaymentPlanLineItem> paymentPlanDetails) {
@@ -185,12 +182,7 @@ public class PracticePaymentPlanDetailsDialogFragment extends BaseDialogFragment
             scheduledPaymentMessage.setText(scheduledPaymentMessageString);
 
             View editScheduledPayment = view.findViewById(R.id.editScheduledPaymentButton);
-            editScheduledPayment.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showEditScheduledPaymentDialog(scheduledPayment);
-                }
-            });
+            editScheduledPayment.setOnClickListener(view1 -> showEditScheduledPaymentDialog(scheduledPayment));
         }
 
         if (paymentPlan.getPayload().getPaymentPlanDetails().isCancelled()) {
@@ -225,20 +217,10 @@ public class PracticePaymentPlanDetailsDialogFragment extends BaseDialogFragment
 
     private void setupButtons(View view) {
         Button editButton = view.findViewById(R.id.editButton);
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showEditPaymentPlanDialog();
-            }
-        });
+        editButton.setOnClickListener(v -> showEditPaymentPlanDialog());
         Button oneTimePaymentButton = view.findViewById(R.id.OneTimePaymentButton);
         oneTimePaymentButton.setSelected(true);
-        oneTimePaymentButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showOneTimePaymentDialog();
-            }
-        });
+        oneTimePaymentButton.setOnClickListener(v -> showOneTimePaymentDialog());
         if (((BasePracticeActivity) getActivity()).getApplicationMode().getApplicationType()
                 == ApplicationMode.ApplicationType.PRACTICE) {
             oneTimePaymentButton.setEnabled(paymentsModel.getPaymentPayload().getUserAuthModel()

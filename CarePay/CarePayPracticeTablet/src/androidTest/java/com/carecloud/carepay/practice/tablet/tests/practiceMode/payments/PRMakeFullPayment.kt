@@ -17,13 +17,13 @@ class PRMakeFullPayment: BaseTest() {
 
         PracticeMainScreen()
                 .pressPaymentButton()
-                .searchForPatient()
+                .searchForPatient("qa\n")
                 .changeTotalBeingPaid()
                 .enterAmount("20")
                 .selectProviderForItemOnList(0)
                 .selectLocationForItemOnList(0)
                 .pressPayButton()
-                .selectCreditCardPayment()
+                .selectCreditCardPayment(1)
                 .pressPayButton()
     }
 }
