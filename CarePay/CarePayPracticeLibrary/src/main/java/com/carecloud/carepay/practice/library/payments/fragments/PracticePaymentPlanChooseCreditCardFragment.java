@@ -185,8 +185,14 @@ public class PracticePaymentPlanChooseCreditCardFragment extends PracticeChooseC
     private void onAddPaymentPlanCard(PaymentsModel paymentsModel,
                                       PaymentPlanPostModel paymentPlanPostModel,
                                       boolean onlySelectMode) {
-        PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
-                .newInstance(paymentsModel, (PaymentPlanDTO) null, onlySelectMode);
+        PracticePaymentPlanAddCreditCardFragment fragment;
+        if (!onlySelectMode && paymentPlanPostModel != null) {
+            fragment = PracticePaymentPlanAddCreditCardFragment
+                    .newInstance(paymentsModel, paymentPlanPostModel);
+        } else {
+            fragment = PracticePaymentPlanAddCreditCardFragment
+                    .newInstance(paymentsModel, (PaymentPlanDTO) null, onlySelectMode);
+        }
         fragment.setOnCancelListener(onDialogCancelListener);
         callback.displayDialogFragment(fragment, false);
         hideDialog();

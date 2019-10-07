@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
+
     <include
         layout="@layout/app_bar_navigation"
         android:layout_width="match_parent"
@@ -17,10 +18,12 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_navigation"
-        app:menu="@menu/activity_navigation_drawer"
-        app:itemTextColor="@drawable/menuitem_selector"
-        app:itemBackground="@drawable/menuitem_selector_background"/>
+        android:animateLayoutChanges="true"
+        android:background="@color/white"
+        android:fitsSystemWindows="true">
+
+        <include layout="@layout/layout_navigation_menu" />
+
+    </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>

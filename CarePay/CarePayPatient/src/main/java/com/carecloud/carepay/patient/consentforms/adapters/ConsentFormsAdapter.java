@@ -90,7 +90,7 @@ public class ConsentFormsAdapter extends RecyclerView.Adapter<ConsentFormsAdapte
         if (mode == ConsentFormViewPagerFragment.PENDING_MODE) {
             holder.formDateTextView.setTextColor(context.getResources()
                     .getColor(R.color.cadet_gray));
-            holder.formCheckBox.setVisibility(View.VISIBLE);
+            holder.formCheckBox.setVisibility(callback.canReviewForms() ? View.VISIBLE : View.GONE);
             holder.formDateTextView.setTextColor(context.getResources()
                     .getColor(R.color.lightning_yellow));
 
@@ -103,7 +103,12 @@ public class ConsentFormsAdapter extends RecyclerView.Adapter<ConsentFormsAdapte
             holder.container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    holder.formCheckBox.setChecked(!form.isSelected());
+                    if (callback.canReviewForms()) {
+                        holder.formCheckBox.setChecked(!form.isSelected());
+                    } else {
+                        callback.onFilledFormSelected(form);
+                    }
+
                 }
             });
         } else {
