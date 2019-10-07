@@ -3,10 +3,11 @@ package com.carecloud.carepay.patient.signinsignuppatient;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
@@ -56,16 +57,16 @@ public class SigninSignupActivity extends BasePatientActivity implements Fragmen
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
 
-        if(getApplicationPreferences().mustForceUpdate()){
+        if (getApplicationPreferences().mustForceUpdate()) {
             ConfirmDialogFragment fragment = ConfirmDialogFragment
                     .newInstance(Label.getLabel("notifications.custom.forceUpdate.title"),
-                    Label.getLabel("notifications.custom.forceUpdate.message.android"),
-                    Label.getLabel("notifications.custom.forceUpdate.action"),
-                    false,
-                    R.layout.fragment_alert_dialog_single_action);
+                            Label.getLabel("notifications.custom.forceUpdate.message.android"),
+                            Label.getLabel("notifications.custom.forceUpdate.action"),
+                            false,
+                            R.layout.fragment_alert_dialog_single_action);
             fragment.setCallback(this);
             displayDialogFragment(fragment, false);
         }
@@ -112,5 +113,10 @@ public class SigninSignupActivity extends BasePatientActivity implements Fragmen
         } catch (android.content.ActivityNotFoundException anfe) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
         }
+    }
+
+    @Override
+    public boolean manageSession() {
+        return false;
     }
 }

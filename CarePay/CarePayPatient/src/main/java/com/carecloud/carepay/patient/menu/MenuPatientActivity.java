@@ -32,6 +32,7 @@ import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.notifications.activities.NotificationActivity;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.retail.activities.RetailActivity;
+import com.carecloud.carepay.patient.session.PatientSessionService;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -489,6 +490,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
             hideProgressDialog();
             getAppAuthorizationHelper().setAccessToken(null);
             ApplicationPreferences.getInstance().setProfileId(null);
+            finishSessionService();
             navigateToWorkflow(workflowDTO);
         }
 
@@ -721,5 +723,9 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
                 return String.format("%s de %s", mainTitle, profileName);
             }
         }
+    }
+
+    private void finishSessionService() {
+        stopService(new Intent(this, PatientSessionService.class));
     }
 }

@@ -44,6 +44,7 @@ public class DateUtil {
     private static final String FORMAT_MONTH_DAY_TIME12_EN = "MMM dd, h:mm a";
     private static final String FORMAT_MONTH_DAY_TIME12_ES = "dd MMM h:mm a";
     private static final String FORMAT_FULL_DATE_TIME12 = "MMM dd, yyyy, h:mm a";
+
     private static final int IS_A_FUTURE_DATE = 100;
     private static final int IS_A_TOO_OLD_DATE = -100;
     private static final int IS_A_BAD_FORMAT_DATE = -1;
@@ -52,6 +53,11 @@ public class DateUtil {
     private static final String FORMAT_ES_DATE_MONTH_LIT_YEAR = "%s de %s de %s";
     private static final String FORMAT_ES_DAY_LIT_DATE_MONTH_LIT = "%s %d de %s";
 
+    private static final String FORMAT_WD_MM_DD_YY = "%s, %s %s, %s";
+    private static final String FORMAT_WD_MM_DD_YY_ES = "%s, %s %s %s";
+
+    private static final String FORMAT_MM_DD_YY = "%s %s, %s";
+    private static final String FORMAT_MM_DD_YY_ES = "%s %s %s";
 
     private static DateUtil instance;
     //    private String[] mapFormats;
@@ -246,6 +252,85 @@ public class DateUtil {
         } else {
             //"%s %d de %s"
             return String.format(Locale.getDefault(), FORMAT_ES_DAY_LIT_DATE_MONTH_LIT, dayString, day, monthLiteral);
+        }
+    }
+
+    /**
+     * Format the date as: Monday, Oct 10th, 2019
+     * Used in Appointment detail dialog and request appointment dialog
+     *
+     * @return A string containing the formatted date
+     */
+    public String getDateAsWeekdayMonthDayYear() {
+        if (monthLiteral.contains("Sept")) monthLiteral = "Sept";
+        if (getUserLanguage().equals("en")) {
+            return String.format(Locale.getDefault(), FORMAT_WD_MM_DD_YY, dayLiteral,
+                    monthLiteral.length() > 4 ? monthLiteral.substring(0,3) : monthLiteral,
+                    day, year);
+        } else {
+            return String.format(Locale.getDefault(), FORMAT_WD_MM_DD_YY_ES, StringUtil.capitalize(dayLiteral), day,
+                    StringUtil.capitalize(monthLiteral.substring(0,3)), year);
+        }
+    }
+
+    /**
+     * Format the date as: Monday, Oct 10th, 2019, using Today and Tomorrow strings when needed
+     *
+     * @return A string containing the formatted date
+     */
+    public String getDateAsWeekdayMonthDayYear(String today, String tomorrow) {
+        String dayString = dayLiteral;
+        if (this.isToday()) {
+            dayString = today;
+        } else if (this.isTomorrow()) {
+            dayString = tomorrow;
+        }
+        if (monthLiteral.contains("Sept")) monthLiteral = "Sept";
+        if (getUserLanguage().equals("en")) {
+            return String.format(Locale.getDefault(), FORMAT_WD_MM_DD_YY, dayString,
+                    monthLiteral.length() > 4 ? monthLiteral.substring(0,3) : monthLiteral,
+                    day, year);
+        } else {
+            return String.format(Locale.getDefault(), FORMAT_WD_MM_DD_YY_ES, StringUtil.capitalize(dayString), day,
+                    StringUtil.capitalize(monthLiteral.substring(0,3)), year);
+        }
+    }
+
+    /**
+     * Format the date as: Monday, October 10th, 2019, using Today and Tomorrow strings when needed
+     *
+     * @return A string containing the formatted date
+     */
+    public String getDateAsWeekdayFullMonthDayYear(String today, String tomorrow) {
+        String dayString = dayLiteral;
+        if (this.isToday()) {
+            dayString = today;
+        } else if (this.isTomorrow()) {
+            dayString = tomorrow;
+        }
+        if (getUserLanguage().equals("en")) {
+            return String.format(Locale.getDefault(), FORMAT_WD_MM_DD_YY, dayString, monthLiteral,
+                    day, year);
+        } else {
+            return String.format(Locale.getDefault(), FORMAT_WD_MM_DD_YY_ES, StringUtil.capitalize(dayString), day,
+                    StringUtil.capitalize(monthLiteral), year);
+        }
+    }
+
+    /**
+     * Format the date as: Oct 10, 2019 or 10 Oct 2019
+     *
+     * @return A string containing the formatted date
+     */
+    public String getDateAsMonthDayYearString() {
+        if (monthLiteral.contains("Sept")) monthLiteral = "Sept";
+        if (getUserLanguage().equals("en")) {
+            return String.format(Locale.getDefault(), FORMAT_MM_DD_YY,
+                    monthLiteral.length() > 4 ? monthLiteral.substring(0,3) : monthLiteral,
+                    day, year);
+        } else {
+            return String.format(Locale.getDefault(), FORMAT_MM_DD_YY_ES, day,
+                    StringUtil.capitalize(monthLiteral.substring(0,3)), year);
         }
     }
 

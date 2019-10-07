@@ -7,11 +7,13 @@ import com.google.gson.annotations.SerializedName;
  */
 public class Token {
 
+    @SerializedName("type")
     private String type;
     @SerializedName("cardholder_name")
     private String cardHolderName;
     @SerializedName("exp_date")
     private String expDate;
+    @SerializedName("value")
     private String value;
 
     public String getType() {

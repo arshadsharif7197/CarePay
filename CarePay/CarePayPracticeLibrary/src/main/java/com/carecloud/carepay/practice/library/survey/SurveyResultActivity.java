@@ -44,4 +44,9 @@ public class SurveyResultActivity extends BasePracticeActivity implements Fragme
     public void onBackPressed() {
         //disable the action
     }
+
+    @Override
+    public boolean manageSession() {
+        return true;
+    }
 }
