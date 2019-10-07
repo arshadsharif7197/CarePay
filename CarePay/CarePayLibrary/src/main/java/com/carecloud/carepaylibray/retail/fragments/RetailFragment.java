@@ -227,6 +227,7 @@ public class RetailFragment extends BaseFragment {
 
         @Override
         public void onPageFinished(WebView webView, String url) {
+            boolean orderConfirmed = false;
             if (lastUrl == null || launchUrl == null) {
                 launchUrl = url;
             } else if (lastUrl.equals(url) && launchUrl.equals(url)) {
@@ -250,11 +251,14 @@ public class RetailFragment extends BaseFragment {
                     launchUrl = null;//reset launch url at this point
                 }
             }
+            if (url.contains("#!/~/orderConfirmation")) {
+                orderConfirmed = true;
+            }
             if (url.equals(returnUrl)) {
                 Log.d("Retail WebView", returnUrl);
                 loadedReturnUrl = true;
             }
-            if (!showToolbar && !shoppingWebView.canGoBack()) {//check if this is the last in the stack
+            if (!showToolbar && !shoppingWebView.canGoBack() || orderConfirmed) {//check if this is the last in the stack
                 toolbar.setVisibility(View.GONE);
                 callback.displayToolbar(true);
             }
