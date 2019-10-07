@@ -56,6 +56,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
     private boolean mustAddToExisting = false;
     private PatientStatementDTO finalStatement;
     private NumberFormat currencyFormat;
+    boolean showStatementButton;
 
     /**
      * @param paymentsModel      the payment model
@@ -66,12 +67,15 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
     public static PaymentDetailsFragmentDialog newInstance(PaymentsModel paymentsModel,
                                                            PendingBalancePayloadDTO paymentPayload,
                                                            PendingBalanceDTO selectedBalance,
-                                                           boolean showPaymentButtons) {
+                                                           boolean showPaymentButtons,
+                                                           boolean showStatementButton) {
+        // Supply inputs as an argument
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, paymentPayload);
         DtoHelper.bundleDto(args, selectedBalance);
         args.putBoolean("showPaymentButtons", showPaymentButtons);
+        args.putBoolean("showStatementButton", showStatementButton);
 
         PaymentDetailsFragmentDialog dialog = new PaymentDetailsFragmentDialog();
         dialog.setArguments(args);
@@ -123,6 +127,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
             canMakePayments = paymentReceiptModel.getPaymentPayload()
                     .canMakePayments(selectedBalance.getMetadata().getPracticeId());
         }
+        showStatementButton = getArguments().getBoolean("showStatementButton", false);
 
         setUpStatementButton(view);
         setUpDetails(view);
@@ -147,8 +152,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
         if (statement != null && !statement.getStatements().isEmpty()
                 && paymentReceiptModel.getPaymentPayload().canSeeStatement(selectedBalance.getMetadata().getPracticeId())) {
             View statementButton = view.findViewById(R.id.statement_button);
-            view.findViewById(R.id.separator).setVisibility(View.VISIBLE);
-            statementButton.setVisibility(View.VISIBLE);
+            statementButton.setVisibility(showStatementButton ? View.VISIBLE : View.GONE);
             finalStatement = statement;
             statementButton.setOnClickListener(v -> {
                 if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
