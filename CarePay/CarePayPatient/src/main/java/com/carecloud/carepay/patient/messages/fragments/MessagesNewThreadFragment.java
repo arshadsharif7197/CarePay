@@ -4,12 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -368,8 +368,7 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
                     attachmentPostModel = new AttachmentPostModel();
                     attachmentPostModel.setNodeId(uploadModel.getNodeId());
                     attachmentPostModel.setDescription(file.getName());
-                    attachmentPostModel.setFormat(MimeTypeMap.getSingleton()
-                            .getMimeTypeFromExtension(extension));
+                    attachmentPostModel.setFormat(extension);
                     if (attachmentPostModel.getFormat() == null && "json".equals(extension)) {
                         attachmentPostModel.setFormat("application/json");
                     }

@@ -1,11 +1,13 @@
 package com.carecloud.carepaylibray.payments.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
@@ -25,25 +27,25 @@ public class PaymentPlanHistoryDetailAdapter extends RecyclerView.Adapter<Paymen
     private List<PaymentPlanHistory> lineItems;
     private NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
 
-    private int countOnetimePayments;
     /**
      * Constructor
-     * @param context context
+     *
+     * @param context   context
      * @param lineItems list of history items
      */
-    public PaymentPlanHistoryDetailAdapter(Context context, List<PaymentPlanHistory> lineItems){
+    public PaymentPlanHistoryDetailAdapter(Context context, List<PaymentPlanHistory> lineItems) {
         this.context = context;
         this.lineItems = lineItems;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_plan_history_detail, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final PaymentPlanHistory lineItem = lineItems.get(position);
 
         double amount = lineItem.getAmount();
@@ -53,10 +55,9 @@ public class PaymentPlanHistoryDetailAdapter extends RecyclerView.Adapter<Paymen
                 .setDateRaw(lineItem.getDate())
                 .getDateAsMonthAbbrDayOrdinalYear());
 
-        if(lineItem.isOneTimePayment()){
+        if (lineItem.isOneTimePayment()) {
             holder.number.setText(Label.getLabel("payment_history_detail_extra_payment"));
-            countOnetimePayments++;
-        }else{
+        } else {
             String number = position + context.getString(R.string.dash);
             holder.number.setText(number);
         }
@@ -70,24 +71,25 @@ public class PaymentPlanHistoryDetailAdapter extends RecyclerView.Adapter<Paymen
 
     /**
      * Set new list of payment history items
+     *
      * @param items items
      */
-    public void setLineItems(List<PaymentPlanHistory> items){
+    public void setLineItems(List<PaymentPlanHistory> items) {
         this.lineItems = items;
         notifyDataSetChanged();
     }
 
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
         TextView number;
         TextView amount;
         TextView date;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
-            number = (TextView) itemView.findViewById(R.id.payment_number);
-            amount = (TextView) itemView.findViewById(R.id.payment_amount);
-            date = (TextView) itemView.findViewById(R.id.payment_date);
+            number = itemView.findViewById(R.id.payment_number);
+            amount = itemView.findViewById(R.id.payment_amount);
+            date = itemView.findViewById(R.id.payment_date);
         }
     }
 }

@@ -6,12 +6,9 @@ import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
@@ -29,9 +26,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
@@ -70,31 +74,33 @@ public abstract class BaseWebFormFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle) {
+    public void onViewCreated(@NonNull View view, Bundle icicle) {
         inflateToolbarViews(view);
         showProgressDialog();
-        nextButton = (Button) view.findViewById(R.id.consentButtonNext);
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                validateForm();
-            }
-        });
-        nextButton.setEnabled(false);
+        nextButton = view.findViewById(R.id.consentButtonNext);
+        nextButton.setOnClickListener(view1 -> validateForm());
+        enableNextButton(false);
         nextButton.setText(Label.getLabel("checkout_forms_done"));
 
-        progressIndicator = (StepProgressBar) view.findViewById(R.id.progress_indicator);
+        progressIndicator = view.findViewById(R.id.progress_indicator);
         if (totalForms > 1) {
             progressIndicator.setVisibility(View.VISIBLE);
             progressIndicator.setNumDots(totalForms);
 
             nextButton.setText(Label.getLabel("next_form_button_text"));
         } else {
+            nextButton.setText(lastFormButtonLabel);
             progressIndicator.setVisibility(View.GONE);
         }
 
-        webView = (WebView) view.findViewById(R.id.activity_main_webview_consent);
-        progressBar = (ProgressBar) view.findViewById(R.id.progressBarConsent);
+        webView = view.findViewById(R.id.activity_main_webview_consent);
+        webView.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                ((CarePayApplication) getActivity().getApplicationContext()).restartSession(getActivity());
+            }
+            return false;
+        });
+        progressBar = view.findViewById(R.id.progressBarConsent);
         progressBar.setVisibility(View.VISIBLE);
         initWebView();
 
@@ -109,22 +115,19 @@ public abstract class BaseWebFormFragment extends BaseFragment {
     }
 
     private void inflateToolbarViews(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         if (toolbar == null) {
             return;
         }
         toolbar.setTitle("");
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.icn_nav_back));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SystemUtil.hideSoftKeyboard(getActivity());
-                getActivity().onBackPressed();
-            }
+        toolbar.setNavigationOnClickListener(view1 -> {
+            SystemUtil.hideSoftKeyboard(getActivity());
+            getActivity().onBackPressed();
         });
 
-        header = (TextView) view.findViewById(R.id.toolbar_title);
+        header = view.findViewById(R.id.toolbar_title);
     }
 
 
@@ -192,9 +195,9 @@ public abstract class BaseWebFormFragment extends BaseFragment {
 
     protected void loadFormUrl(String formString, String function) {
         showProgressDialog();
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             webView.evaluateJavascript("javascript:window." + function + "('" + formString + "')", null);
-        }else {
+        } else {
             webView.loadUrl("javascript:window." + function + "('" + formString + "')");
         }
         if (displayedFormsIndex > -1 && progressIndicator.getNumDots() > displayedFormsIndex) {
@@ -241,12 +244,9 @@ public abstract class BaseWebFormFragment extends BaseFragment {
          */
         @JavascriptInterface
         public void webviewReady(String message) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    displayNextForm(filledForms);
-                    nextButton.setEnabled(true);
-                }
+            getActivity().runOnUiThread(() -> {
+                displayNextForm(filledForms);
+                enableNextButton(true);
             });
 
         }
@@ -258,15 +258,12 @@ public abstract class BaseWebFormFragment extends BaseFragment {
         @JavascriptInterface
         public void savedForm(final String response) {
             Log.d(LOG_TAG, "FORMS SAVED -" + response);
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    JsonObject jsonResponse = new JsonParser().parse(response).getAsJsonObject();
-                    jsonResponse.addProperty("version",
-                            formsList.get(getDisplayedFormsIndex()).getMetadata().getVersion());
-                    saveForm(jsonResponse);
-                    getNextStep();
-                }
+            getActivity().runOnUiThread(() -> {
+                JsonObject jsonResponse = new JsonParser().parse(response).getAsJsonObject();
+                jsonResponse.addProperty("version",
+                        formsList.get(getDisplayedFormsIndex()).getMetadata().getVersion());
+                saveForm(jsonResponse);
+                getNextStep();
             });
 
         }
@@ -277,16 +274,13 @@ public abstract class BaseWebFormFragment extends BaseFragment {
         @JavascriptInterface
         public void savedIntake(final String response) {
             Log.d(LOG_TAG, "FORMS SAVED -" + response);
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    JsonObject jsonResponse = new JsonParser().parse(response).getAsJsonObject();
+            getActivity().runOnUiThread(() -> {
+                JsonObject jsonResponse = new JsonParser().parse(response).getAsJsonObject();
 
-                    saveForm(jsonResponse);
+                saveForm(jsonResponse);
 
-                    getNextStep();
+                getNextStep();
 
-                }
             });
 
         }
@@ -306,18 +300,12 @@ public abstract class BaseWebFormFragment extends BaseFragment {
          */
         @JavascriptInterface
         public void loadedForm() {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (getActivity() != null) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                nextButton.setEnabled(true);
-                                hideProgressDialog();
-                            }
-                        });
-                    }
+            new Handler().postDelayed(() -> {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        enableNextButton(true);
+                        hideProgressDialog();
+                    });
                 }
             }, 500);
         }
@@ -325,7 +313,7 @@ public abstract class BaseWebFormFragment extends BaseFragment {
     }
 
     private void getNextStep() {
-        nextButton.setEnabled(false);
+        enableNextButton(false);
         if (displayedFormsIndex < totalForms - 1) {
             ++displayedFormsIndex;
             displayNextForm(filledForms);
@@ -347,14 +335,14 @@ public abstract class BaseWebFormFragment extends BaseFragment {
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
             super.onReceivedError(view, request, error);
             hideProgressDialog();
-            nextButton.setEnabled(true);
+            enableNextButton(true);
         }
 
         @Override
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
             super.onReceivedError(view, errorCode, description, failingUrl);
             hideProgressDialog();
-            nextButton.setEnabled(true);
+            enableNextButton(true);
         }
 
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -362,17 +350,22 @@ public abstract class BaseWebFormFragment extends BaseFragment {
         public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
             super.onReceivedHttpError(view, request, errorResponse);
             hideProgressDialog();
-            nextButton.setEnabled(true);
+            enableNextButton(true);
         }
 
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
             super.onReceivedSslError(view, handler, error);
             hideProgressDialog();
-            nextButton.setEnabled(true);
+            enableNextButton(true);
         }
 
     }
 
-
+    protected void enableNextButton(boolean isEnabled) {
+        if (nextButton != null) {
+            nextButton.setSelected(isEnabled);
+            nextButton.setClickable(isEnabled);
+        }
+    }
 }

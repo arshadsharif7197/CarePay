@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.widget.Toolbar
+<androidx.appcompat.widget.Toolbar
     android:id="@+id/respons_toolbar"
     style="@style/CustomToolbarStyle"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -16,4 +16,4 @@
         app:customAssetFont="gotham_rounded_medium"
         android:visibility="gone"/>
 
-</android.support.v7.widget.Toolbar>
+</androidx.appcompat.widget.Toolbar>

@@ -107,7 +107,7 @@
         style="@style/Consent_Form_View_Style"
         android:layout_width="match_parent"/>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/insurancecardNumberLabel"
         style="@style/TextInputLayoutStyle"
         app:hintTextAppearance="@style/FloatingLabelStyle">
@@ -117,7 +117,7 @@
             style="@style/SigninSignupEditStyle"
             android:imeOptions="actionNone"
             android:inputType="textFilter"/>
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

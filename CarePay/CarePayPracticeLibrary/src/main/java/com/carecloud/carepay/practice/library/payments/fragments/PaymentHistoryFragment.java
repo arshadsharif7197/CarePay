@@ -1,9 +1,10 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -124,8 +125,7 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dismiss();
-                callback.onDismissPaymentHistory();
+                cancel();
             }
         });
 
@@ -135,23 +135,6 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
         if (plans > 1) {
             plansLabel = String.format(Label.getLabel("payment_plan_count"), plans);
         }
-        TextView viewPlans = view.findViewById(R.id.viewPaymentPlans);
-//        hiding this button but leaving the old code just in case...
-//        viewPlans.setVisibility(plans > 0 ? View.VISIBLE : View.GONE);
-        viewPlans.setVisibility(View.GONE);
-        viewPlans.setText(plansLabel);
-        viewPlans.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (plans > 1) {
-                    callback.displayPaymentPlansList(paymentsModel);
-                } else {
-                    callback.onPaymentPlanSelected(paymentsModel,
-                            paymentsModel.getPaymentPayload().getActivePlans(practiceId).get(0));
-                }
-                dismiss();
-            }
-        });
 
         historyRecycler = view.findViewById(R.id.history_recycler_view);
         historyRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
@@ -179,8 +162,16 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
 
     @Override
     public void onHistoryItemClicked(PaymentHistoryItem item) {
-        callback.displayHistoryItemDetails(item, paymentsModel);
-        dismiss();
+        PracticePaymentHistoryDetailFragment fragment = PracticePaymentHistoryDetailFragment
+                .newInstance(item, paymentsModel);
+        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                showDialog();
+            }
+        });
+        callback.displayDialogFragment(fragment, true);
+        hideDialog();
     }
 
     private boolean hasMorePages() {
