@@ -12,9 +12,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.PermissionChecker;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +20,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.PermissionChecker;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
@@ -112,6 +113,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private AppointmentCalendarEvent calendarEvent;
     private boolean eventExists;
     private boolean isCalendarAvailable = false;
+    private AppointmentsResultModel appointmentResultModel;
 
 
     /**
@@ -187,6 +189,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         });
         isCalendarAvailable = getSaveCalendarEventIntent()
                 .resolveActivity(getActivity().getPackageManager()) != null;
+        appointmentResultModel = (AppointmentsResultModel) callback.getDto();
     }
 
     private void checkIfEventExists() {
@@ -249,7 +252,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
 
     private void setCommonValues() {
         DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime());
-        appointmentDateTextView.setText(dateUtil.getDateAsDayShortMonthDayOrdinal());
+        appointmentDateTextView.setText(dateUtil.getDateAsWeekdayMonthDayYear());
         appointmentTimeTextView.setText(dateUtil.getTime12Hour());
         appointmentVisitTypeTextView.setText(StringUtil.
                 capitalize(appointmentDTO.getPayload().getVisitType().getName()));
@@ -335,7 +338,9 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                         if (shouldShowCancelButton(enabledLocations)) {
                             cancelAppointment.setVisibility(View.VISIBLE);
                         }
-                        if (isLocationWithBreezeEnabled(enabledLocations)) {
+                        if (isLocationWithBreezeEnabled(enabledLocations)
+                                && appointmentResultModel.getPayload()
+                                .canCheckInCheckOut(appointmentDTO.getMetadata().getPracticeId())) {
                             leftButton.setVisibility(View.VISIBLE);
                             leftButton.setText(Label.getLabel("sigin_how_check_in_scan_qr_code"));
                             leftButton.setOnClickListener(scanClick);
@@ -400,7 +405,9 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                         if (shouldShowCancelButton(enabledLocations)) {
                             cancelAppointment.setVisibility(View.VISIBLE);
                         }
-                        if (isLocationWithBreezeEnabled(enabledLocations)) {
+                        if (isLocationWithBreezeEnabled(enabledLocations)
+                                && appointmentResultModel.getPayload()
+                                .canCheckInCheckOut(appointmentDTO.getMetadata().getPracticeId())) {
                             leftButton.setVisibility(View.VISIBLE);
                             leftButton.setText(Label.getLabel("sigin_how_check_in_scan_qr_code"));
                             leftButton.setOnClickListener(scanClick);
@@ -455,7 +462,10 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private void showCheckoutButton(Set<String> enabledLocations) {
         DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getEndTime());
         if (isLocationWithBreezeEnabled(enabledLocations)
-                && appointmentDTO.getPayload().canCheckOut() && DateUtil.getInstance().isWithinHours(24)) {
+                && appointmentDTO.getPayload().canCheckOut()
+                && DateUtil.getInstance().isWithinHours(24)
+                && appointmentResultModel.getPayload()
+                .canCheckInCheckOut(appointmentDTO.getMetadata().getPracticeId())) {
             actionsLayout.setVisibility(View.VISIBLE);
             leftButton.setVisibility(View.VISIBLE);
             leftButton.setText(Label.getLabel("appointment_request_checkout_now"));
@@ -484,7 +494,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                 appointmentPractice = userPracticeDTO;
             }
         }
-        if (appointmentPractice != null && appointmentPractice.isVisitSummaryEnabled()) {
+        if (appointmentPractice != null && appointmentPractice.isVisitSummaryEnabled()
+                && appointmentModelDto.getPayload().canViewAndCreateVisitSummaries(appointmentPractice.getPracticeId())) {
             for (PortalSettingDTO portalSettingDTO : appointmentModelDto.getPayload().getPortalSettings()) {
                 if (appointmentPractice.getPracticeId().equals(portalSettingDTO.getMetadata().getPracticeId())) {
                     for (PortalSetting portalSetting : portalSettingDTO.getPayload()) {
@@ -501,7 +512,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
 
     private boolean shouldShowCancelButton(Set<String> enabledLocations) {
         return appointmentDTO.getPayload().isAppointmentCancellable(callback.getPracticeSettings())
-                && isLocationWithBreezeEnabled(enabledLocations);
+                && isLocationWithBreezeEnabled(enabledLocations)
+                && appointmentResultModel.getPayload().canScheduleAppointments(appointmentDTO.getMetadata().getPracticeId());
     }
 
     private boolean isLocationWithBreezeEnabled(Set<String> enabledLocations) {
@@ -569,15 +581,15 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
 
     private String getPhoneNumber() {
         String phone = appointmentDTO.getPayload().getLocation().getPrimaryPhone();
-        if (StringUtil.isNullOrEmpty(phone)){
+        if (StringUtil.isNullOrEmpty(phone)) {
             for (LocationDTO.PhoneDTO phoneDTO : appointmentDTO.getPayload().getLocation().getPhoneDTOs()) {
-                if(!phoneDTO.isPrimary()){
+                if (!phoneDTO.isPrimary()) {
                     phone = phoneDTO.getPhoneNumber();
                 }
             }
         }
 
-        if (StringUtil.isNullOrEmpty(phone)){
+        if (StringUtil.isNullOrEmpty(phone)) {
             AppointmentsResultModel appointmentModelDto = ((PatientAppointmentPresenter) callback).getMainAppointmentDto();
             UserPracticeDTO practiceDTO = appointmentModelDto.getPayload().getPractice(appointmentDTO.getMetadata().getPracticeId());
             phone = practiceDTO.getPracticePhone();
@@ -689,16 +701,13 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         }
     };
 
-    private View.OnClickListener visitSummaryClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    != PermissionChecker.PERMISSION_GRANTED && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        MY_PERMISSIONS_VS_WRITE_EXTERNAL_STORAGE);
-            } else {
-                callVisitSummaryService();
-            }
+    private View.OnClickListener visitSummaryClick = view -> {
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PermissionChecker.PERMISSION_GRANTED && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    MY_PERMISSIONS_VS_WRITE_EXTERNAL_STORAGE);
+        } else {
+            callVisitSummaryService();
         }
     };
 
@@ -715,7 +724,6 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                 ((BaseActivity) getActivity()).hideProgressDialog();
                 rightButton.setEnabled(false);
                 rightButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.processing"));
-//                rightButton.setProgressEnabled(true);
                 callVisitSummaryStatusService(visitSummaryDTO.getPayload().getVisitSummaryRequest().getJobId());
             }
 
@@ -860,7 +868,6 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
 //                    int reasonIndex = cursor.getColumnIndex(DownloadManager.COLUMN_REASON);
                     if (DownloadManager.STATUS_SUCCESSFUL == cursor.getInt(columnIndex)) {
                         rightButton.setEnabled(true);
-//                        rightButton.setProgressEnabled(false);
                         rightButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.openFile"));
                         rightButton.setOnClickListener(new View.OnClickListener() {
                             @Override

@@ -2,13 +2,13 @@ package com.carecloud.carepay.patient.payment.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
+import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.dialogs.PaymentDetailsFragmentDialog;
@@ -20,6 +20,8 @@ import com.carecloud.carepay.patient.payment.fragments.PaymentBalanceHistoryFrag
 import com.carecloud.carepay.patient.payment.fragments.PaymentDisabledAlertDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityInterface;
+import com.carecloud.carepay.patient.rate.RateDialog;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
@@ -35,7 +37,6 @@ import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PartialPaymentDialog;
 import com.carecloud.carepaylibray.payments.fragments.PaymentConfirmationFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanEditFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
@@ -46,10 +47,11 @@ import com.carecloud.carepaylibray.payments.models.PaymentsBalancesItem;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
+import com.carecloud.carepaylibray.profile.Profile;
+import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
@@ -83,7 +85,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        toolBarTitle = Label.getLabel("payment_patient_balance_toolbar");
+        toolBarTitle = getScreenTitle(Label.getLabel("payment_patient_balance_toolbar"));
         displayToolbar(true, toolBarTitle);
         paymentsDTO = getConvertedDTO(PaymentsModel.class);
         inflateDrawer();
@@ -120,15 +122,28 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     private void initFragments() {
-        if (hasPayments() || hasPaymentPlans() || hasCharges()) {
+        if (!canViewBalanceAndHistoricalPayments(paymentsDTO.getPaymentPayload().getUserPractices())) {
+            showNoPermissionsLayout();
+        } else if (hasPayments() || hasPaymentPlans() || hasCharges()) {
             replaceFragment(PaymentBalanceHistoryFragment.newInstance(displayPage), false);
         } else {
             showNoPaymentsLayout();
         }
     }
 
-    public void showNoPaymentsLayout() {
-        replaceFragment(NoPaymentsFragment.newInstance(), false);
+    private void showNoPermissionsLayout() {
+        replaceFragment(NoPaymentsFragment.newInstance(true), false);
+    }
+
+    private boolean canViewBalanceAndHistoricalPayments(List<UserPracticeDTO> userPractices) {
+        boolean atLeastOneHasPermission = false;
+        for (UserPracticeDTO userPracticeDTO : userPractices) {
+            if (paymentsDTO.getPaymentPayload().canViewBalanceAndHistoricalPayments(userPracticeDTO.getPracticeId())) {
+                atLeastOneHasPermission = true;
+            }
+        }
+        return atLeastOneHasPermission
+                || (userPractices.isEmpty() && paymentsDTO.getPaymentPayload().getDelegate() == null);
     }
 
     private boolean hasCharges() {
@@ -167,7 +182,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     protected void onResume() {
         super.onResume();
-        navigationView.getMenu().findItem(R.id.nav_payments).setChecked(true);
+        selectMenuItem(R.id.paymentsMenuItem);
     }
 
     @Override
@@ -258,6 +273,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         displayPage = PAGE_BALANCES;
         initFragments();
         refreshBalance(true);
+        showRateDialogFragment();
     }
 
     @Override
@@ -322,6 +338,10 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void addFragment(Fragment fragment, boolean addToBackStack) {
         addFragment(R.id.container_main, fragment, addToBackStack);
+    }
+
+    public void showNoPaymentsLayout() {
+        replaceFragment(NoPaymentsFragment.newInstance(false), false);
     }
 
     @Override
@@ -539,6 +559,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
 
     @Override
     public void completePaymentPlanProcess(WorkflowDTO workflowDTO) {
+        showRateDialogFragment();
         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
         List<PaymentPlanDTO> paymentPlanList = this.paymentsDTO.getPaymentPayload().getPatientPaymentPlans();
 
@@ -559,6 +580,12 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         paymentPlanList.addAll(paymentsModel.getPaymentPayload().getPatientPaymentPlans());
         completePaymentProcess(workflowDTO);
 
+    }
+
+    private void showRateDialogFragment() {
+        if (ApplicationPreferences.getInstance().shouldShowRateDialog()) {
+            displayDialogFragment(RateDialog.newInstance(), true);
+        }
     }
 
     private void refreshBalance(boolean showProgress) {
@@ -598,6 +625,17 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
+    protected void onProfileChanged(ProfileDto profile) {
+        toolBarTitle = getScreenTitle(Label.getLabel("payment_patient_balance_toolbar"));
+        displayToolbar(true, toolBarTitle);
+        callPaymentsService();
+    }
+
+    @Override
+    protected Profile getCurrentProfile() {
+        return paymentsDTO.getPaymentPayload().getDelegate();
+    }
+
     public void navigateToFragment(Fragment fragment, boolean addToBackStack) {
         //NA
     }

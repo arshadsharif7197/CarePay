@@ -3,13 +3,14 @@ package com.carecloud.carepay.practice.library.patientmodecheckin.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.createappointment.AvailabilityHourFragment;
@@ -25,7 +26,6 @@ import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLangua
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePartialPaymentDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodPrepaymentFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanConfirmationFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -55,14 +55,12 @@ import com.carecloud.carepaylibray.checkout.CheckOutFormFragment;
 import com.carecloud.carepaylibray.checkout.CheckOutInterface;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanTermsFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCompletedInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
@@ -476,14 +474,11 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     }
 
-    private View.OnClickListener homeClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            AppointmentsResultModel appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
-            goToHome(appointmentsResultModel.getMetadata().getTransitions().getLogout());
+    private View.OnClickListener homeClick = view -> {
+        AppointmentsResultModel appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
+        goToHome(appointmentsResultModel.getMetadata().getTransitions().getLogout());
 
-            logCheckoutCancelled();
-        }
+        logCheckoutCancelled();
     };
 
     @Override
@@ -1057,6 +1052,22 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(AvailabilityHourFragment.class.getName());
         if (fragment instanceof DateCalendarRangeInterface) {
             ((DateCalendarRangeInterface) fragment).setDateRange(newStartDate, newEndDate);
+        }
+    }
+
+    @Override
+    public boolean manageSession() {
+        return true;
+    }
+
+    @Override
+    public TransitionDTO getLogoutTransition() {
+        if (appointmentsResultModel != null) {
+            return logoutTransition = appointmentsResultModel.getMetadata().getTransitions().getLogout();
+        } else if (paymentsModel != null) {
+            return logoutTransition = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getLogout();
+        } else {
+            return null;
         }
     }
 }

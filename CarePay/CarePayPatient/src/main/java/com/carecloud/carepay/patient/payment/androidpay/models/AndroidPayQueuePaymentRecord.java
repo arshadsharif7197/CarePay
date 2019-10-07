@@ -1,7 +1,7 @@
 package com.carecloud.carepay.patient.payment.androidpay.models;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 /**
  * Created by lmenendez on 4/19/17.

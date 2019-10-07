@@ -2,8 +2,8 @@ package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
+import androidx.annotation.Nullable;
+import com.google.android.material.textfield.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -78,7 +78,7 @@ public class AddressFragment extends CheckInDemographicsBaseFragment {
                 addressSection.getProperties().getAddress2().isDisplayed(),
                 demographicPayload.getAddress().getAddress2(),
                 addressSection.getProperties().getAddress2().isRequired(),
-                view.findViewById(R.id.addressLine2Required));
+                null);
         address2EditText.setEnabled(!StringUtil.isNullOrEmpty(demographicPayload.getAddress().getAddress1()));
 
         final TextInputLayout addressInputLayout = view.findViewById(R.id.address1TextInputLayout);

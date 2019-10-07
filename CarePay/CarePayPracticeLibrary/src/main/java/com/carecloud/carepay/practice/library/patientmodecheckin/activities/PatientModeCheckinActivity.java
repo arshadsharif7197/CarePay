@@ -3,27 +3,26 @@ package com.carecloud.carepay.practice.library.patientmodecheckin.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.dtos.PracticeAppointmentDTO;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
 import com.carecloud.carepay.practice.library.patientmodecheckin.PatientModeDemographicsPresenter;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePartialPaymentDialogFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanConfirmationFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -36,7 +35,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
-import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
@@ -47,22 +45,18 @@ import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.IcicleInterface;
 import com.carecloud.carepaylibray.media.MediaResultListener;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanConfirmationFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanTermsFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentNavigationCallback;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCompletedInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
-import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.google.gson.Gson;
@@ -109,7 +103,6 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         initializeHomeButton();
         initializeLeftNavigation();
         initializeLanguageSpinner();
-
     }
 
     private void initializeLanguageSpinner() {
@@ -118,25 +111,13 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         headers.put("username", getApplicationPreferences().getUserName());
         headers.put("username_patient", getApplicationPreferences().getPatientId());
         final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), true,
-                presenter.getLanguages(), new LanguageAdapter.LanguageInterface() {
-            @Override
-            public void onLanguageSelected(OptionDTO language) {
-                changeLanguage(presenter.getLanguageLink(), language.getCode().toLowerCase(), headers,
-                        new SimpleCallback() {
-                            @Override
-                            public void callback() {
-                                callSelfService(languageSwitch);
-                            }
-                        });
-            }
-        });
-        languageSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int offsetX = view.getWidth() / 2 - popupPickerLanguage.getWidth() / 2;
-                int offsetY = -view.getHeight() - popupPickerLanguage.getHeight();
-                popupPickerLanguage.showAsDropDown(view, offsetX, offsetY);
-            }
+                presenter.getLanguages(), language -> changeLanguage(presenter.getLanguageLink(),
+                language.getCode().toLowerCase(), headers,
+                () -> callSelfService(languageSwitch)));
+        languageSwitch.setOnClickListener(view -> {
+            int offsetX = view.getWidth() / 2 - popupPickerLanguage.getWidth() / 2;
+            int offsetY = -view.getHeight() - popupPickerLanguage.getHeight();
+            popupPickerLanguage.showAsDropDown(view, offsetX, offsetY);
         });
         languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
     }
@@ -197,7 +178,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     public void onSaveInstanceState(Bundle icicle) {
         super.onSaveInstanceState(icicle);
         Fragment fragment = presenter.getCurrentFragment();
-        if (fragment != null && fragment instanceof IcicleInterface) {
+        if (fragment instanceof IcicleInterface) {
             ((IcicleInterface) fragment).pushData((Bundle) icicle.clone());
         }
         icicle.clear();
@@ -258,24 +239,18 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     }
 
     private void initializeHomeButton() {
-        findViewById(R.id.checkinHomeClickable).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!presenter.handleHomeButtonClick()) {
-                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(null, null);
-                    confirmDialogFragment.setNegativeAction(true);
-                    confirmDialogFragment.setCallback(new ConfirmationCallback() {
-                        @Override
-                        public void onConfirm() {
-                            setResult(CarePayConstants.HOME_PRESSED);
-                            presenter.logCheckinCancelled();
-                            finish();
-                        }
-                    });
-                    String tag = confirmDialogFragment.getClass().getName();
-                    confirmDialogFragment.show(ft, tag);
-                }
+        findViewById(R.id.checkinHomeClickable).setOnClickListener(view -> {
+            if (!presenter.handleHomeButtonClick()) {
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(null, null);
+                confirmDialogFragment.setNegativeAction(true);
+                confirmDialogFragment.setCallback(() -> {
+                    setResult(CarePayConstants.HOME_PRESSED);
+                    presenter.logCheckinCancelled();
+                    finish();
+                });
+                String tag = confirmDialogFragment.getClass().getName();
+                confirmDialogFragment.show(ft, tag);
             }
         });
     }
@@ -323,13 +298,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         presenter.navigateToFragment(responsibilityFragment, true, true);
         updateCheckInFlow(CheckinFlowState.PAYMENT, 1, 1);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                paymentDTO = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowJson);
-
-            }
-        }).start();
+        new Thread(() -> paymentDTO = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowJson)).start();
     }
 
     @Override
@@ -832,5 +801,15 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
     @Override
     public DTO getDto() {
         return null;
+    }
+
+    @Override
+    public boolean manageSession() {
+        return true;
+    }
+
+    @Override
+    public TransitionDTO getLogoutTransition() {
+        return presenter.getLogoutTransition();
     }
 }

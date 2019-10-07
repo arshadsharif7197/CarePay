@@ -49,31 +49,33 @@
                 android:id="@+id/filterTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawableStart="@drawable/icn_filter"
+                android:drawablePadding="@dimen/dimen_10dp"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:drawablePadding="@dimen/dimen_10dp"
                 android:textColor="@color/colorPrimary"
-                android:drawableStart="@drawable/icn_filter"
                 android:textSize="@dimen/filterLabelTextSize"
+                android:visibility="gone"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="practice_checkin_filter" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/filterOnTextView"
+                android:id="@+id/filterTextViewOn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_green_overlay"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:paddingBottom="6dp"
-                android:paddingEnd="15dp"
-                android:paddingStart="15dp"
-                android:paddingTop="6dp"
-                android:textColor="@color/filter_on"
-                android:textSize="18sp"
+                android:paddingStart="@dimen/dimen_15dp"
+                android:paddingTop="@dimen/dimen_6dp"
+                android:paddingEnd="@dimen/dimen_15dp"
+                android:paddingBottom="@dimen/dimen_6dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_18sp"
                 android:visibility="gone"
-                app:customAssetFont="proxima_nova_extra_bold"
+                app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="practice_checkin_filter_On" />
+
         </LinearLayout>
     </RelativeLayout>
 
@@ -130,7 +132,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/checkingInCounterTextview">
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/checkinginRecyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -197,7 +199,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/waitingCounterTextview">
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/waitingRoomRecyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -258,7 +260,7 @@
                     app:customAssetFont="gotham_rounded_bold"
                     tools:text="0" />
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/checkingOutRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -299,7 +301,7 @@
                     app:customAssetFont="gotham_rounded_bold"
                     tools:text="0" />
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/checkedOutRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

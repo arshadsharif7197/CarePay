@@ -4,11 +4,13 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.tabs.TabLayout;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,14 +68,14 @@ public class ConsentFormViewPagerFragment extends BaseFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater,
+    public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_consent_forms_view_pager, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         UserFormDTO userFormDto = consentFormDto.getPayload().getUserForms().get(selectedPracticeIndex);
         setUpToolbar(view, userFormDto);
@@ -81,7 +83,7 @@ public class ConsentFormViewPagerFragment extends BaseFragment {
     }
 
     protected void setUpToolbar(View view, UserFormDTO practiceForms) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
         String practiceName = "";
         for (UserPracticeDTO practiceInformation : consentFormDto.getPayload().getPracticesInformation()) {
             if (practiceForms.getMetadata().getPracticeId().equals(practiceInformation.getPracticeId())) {
@@ -94,9 +96,9 @@ public class ConsentFormViewPagerFragment extends BaseFragment {
     }
 
     private void setupViewPager(View view) {
-        ViewPager viewPager = (ViewPager) view.findViewById(R.id.consentFormsPager);
+        ViewPager viewPager = view.findViewById(R.id.consentFormsPager);
 
-        TabLayout tabs = (TabLayout) view.findViewById(R.id.consentFormsTabs);
+        TabLayout tabs = view.findViewById(R.id.consentFormsTabs);
         tabs.setSelectedTabIndicatorColor(Color.WHITE);
         tabs.setTabTextColors(Color.LTGRAY, Color.WHITE);
         tabs.setupWithViewPager(viewPager);
@@ -134,7 +136,7 @@ public class ConsentFormViewPagerFragment extends BaseFragment {
     }
 
     private void setTabTitle(TabLayout.Tab tab, String title) {
-        TextView textView = (TextView) tab.getCustomView().findViewById(R.id.tab_title);
+        TextView textView = tab.getCustomView().findViewById(R.id.tab_title);
         textView.setText(title);
     }
 }
