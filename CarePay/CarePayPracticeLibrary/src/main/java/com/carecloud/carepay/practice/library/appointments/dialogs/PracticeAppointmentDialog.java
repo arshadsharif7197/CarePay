@@ -46,8 +46,6 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -140,12 +138,8 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
 
         DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentPayloadDTO.getStartTime());
 
-        String appointmentDateStr = DateUtil.getInstance().getDateAsDayShortMonthDayOrdinal();
-
-        if (dateUtil.isToday()) {
-            String dayLiteral = StringUtils.substringBefore(appointmentDateStr, COMMA);
-            appointmentDateStr = appointmentDateStr.replace(dayLiteral, Label.getLabel("today_label"));
-        }
+        String appointmentDateStr = dateUtil.getInstance().getDateAsWeekdayFullMonthDayYear(Label
+                .getLabel("appointments_web_today_heading"), Label.getLabel("add_appointment_tomorrow"));
 
         setTextViewById(R.id.appointment_start_day, appointmentDateStr);
         setTextViewById(R.id.appointment_start_time, DateUtil.getInstance().getTime12Hour());

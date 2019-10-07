@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
@@ -25,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,6 +35,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
@@ -71,7 +74,7 @@ public abstract class BaseWebFormFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle) {
+    public void onViewCreated(@NonNull View view, Bundle icicle) {
         inflateToolbarViews(view);
         showProgressDialog();
         nextButton = view.findViewById(R.id.consentButtonNext);
@@ -91,6 +94,12 @@ public abstract class BaseWebFormFragment extends BaseFragment {
         }
 
         webView = view.findViewById(R.id.activity_main_webview_consent);
+        webView.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                ((CarePayApplication) getActivity().getApplicationContext()).restartSession(getActivity());
+            }
+            return false;
+        });
         progressBar = view.findViewById(R.id.progressBarConsent);
         progressBar.setVisibility(View.VISIBLE);
         initWebView();
