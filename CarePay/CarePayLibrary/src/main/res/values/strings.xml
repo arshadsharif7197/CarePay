@@ -456,6 +456,7 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="content_description_enter_payment_amount">Enter Payment Amount</string>
     <string name="content_description_payment_methods">Payment Methods</string>
     <string name="content_description_checkin_appointment_button">Check-in Appointment button</string>
+    <string name="content_description_checkout_appointment_button">Check-out Appointment button</string>
     <string name="content_description_next_button">Next button</string>
     <string name="content_description_yes_button">Yes button</string>
     <string name="content_description_no_button">No button</string>
