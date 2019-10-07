@@ -2,7 +2,7 @@ package com.carecloud.carepaylibray.customdialogs;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentDetailInterface;

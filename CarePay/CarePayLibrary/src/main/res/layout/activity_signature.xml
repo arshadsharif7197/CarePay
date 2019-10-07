@@ -36,7 +36,7 @@
                 android:textColor="@color/cadet_gray"
                 android:textSize="@dimen/demographics_docs_button_text_size" />
 
-            <android.support.v7.widget.SwitchCompat
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switchButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
                 android:layout_marginTop="5dp"
                 android:background="@color/cadet_gray" />
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/legalFirstName"
                 style="@style/TextInputLayoutStyle"
                 android:layout_width="match_parent"
@@ -83,9 +83,9 @@
                     android:maxLength="100"
                     android:visibility="gone"
                     app:customAssetFont="proxima_nova_regular" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/legalLastName"
                 style="@style/TextInputLayoutStyle"
                 android:layout_width="match_parent"
@@ -109,7 +109,7 @@
                     android:maxLength="100"
                     android:visibility="gone"
                     app:customAssetFont="proxima_nova_regular" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

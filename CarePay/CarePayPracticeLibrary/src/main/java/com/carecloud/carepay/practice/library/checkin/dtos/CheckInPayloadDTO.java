@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.checkin.dtos;
 
+import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionUserPractice;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
@@ -45,92 +46,75 @@ public class CheckInPayloadDTO {
     @SerializedName("auth")
     @Expose
     private UserAuthModel userAuthModel = new UserAuthModel();
+    @SerializedName("user_practices")
+    @Expose
+    private List<PracticeSelectionUserPractice> userPracticesList = new ArrayList<>();
 
     /**
-     *
-     * @return
-     * The patientBalances
+     * @return The patientBalances
      */
     public List<PatientBalanceDTO> getPatientBalances() {
         return patientBalances;
     }
 
     /**
-     *
-     * @param patientBalances
-     * The patient_balances
+     * @param patientBalances The patient_balances
      */
     public void setPatientBalances(List<PatientBalanceDTO> patientBalances) {
         this.patientBalances = patientBalances;
     }
 
     /**
-     *
-     * @return
-     * The appointments
+     * @return The appointments
      */
     public List<AppointmentDTO> getAppointments() {
         return appointments;
     }
 
     /**
-     *
-     * @param appointments
-     * The appointments
+     * @param appointments The appointments
      */
     public void setAppointments(List<AppointmentDTO> appointments) {
         this.appointments = appointments;
     }
 
     /**
-     *
-     * @return
-     * The providerIndex
+     * @return The providerIndex
      */
     public List<ProviderIndexDTO> getProviderIndex() {
         return providerIndex;
     }
 
     /**
-     *
-     * @param providerIndex
-     * The provider_index
+     * @param providerIndex The provider_index
      */
     public void setProviderIndex(List<ProviderIndexDTO> providerIndex) {
         this.providerIndex = providerIndex;
     }
 
     /**
-     *
-     * @return
-     * The locationIndex
+     * @return The locationIndex
      */
     public List<LocationIndexDTO> getLocationIndex() {
         return locationIndex;
     }
 
     /**
-     *
-     * @param locationIndex
-     * The location_index
+     * @param locationIndex The location_index
      */
     public void setLocationIndex(List<LocationIndexDTO> locationIndex) {
         this.locationIndex = locationIndex;
     }
 
     /**
-     *
-     * @return
-     * The appointmentCounts
+     * @return The appointmentCounts
      */
     public AppointmentCountsDTO getAppointmentCounts() {
         return appointmentCounts;
     }
 
     /**
-     *
-     * @param appointmentCounts
-     * The appointment_counts
+     * @param appointmentCounts The appointment_counts
      */
     public void setAppointmentCounts(AppointmentCountsDTO appointmentCounts) {
         this.appointmentCounts = appointmentCounts;
@@ -166,5 +150,13 @@ public class CheckInPayloadDTO {
 
     public void setUserAuthModel(UserAuthModel userAuthModel) {
         this.userAuthModel = userAuthModel;
+    }
+
+    public List<PracticeSelectionUserPractice> getUserPracticesList() {
+        return userPracticesList;
+    }
+
+    public void setUserPracticesList(List<PracticeSelectionUserPractice> userPracticesList) {
+        this.userPracticesList = userPracticesList;
     }
 }

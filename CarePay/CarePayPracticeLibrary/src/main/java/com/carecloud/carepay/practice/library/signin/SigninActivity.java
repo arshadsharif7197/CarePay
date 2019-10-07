@@ -5,7 +5,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
+import com.google.android.material.textfield.TextInputLayout;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -39,9 +39,9 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
-import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
-import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
-import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
+import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInDTO;
+import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInResponse;
+import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
@@ -220,7 +220,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             @Override
             public void afterTextChanged(Editable editable) {
                 boolean isEmptyEmail = StringUtil.isNullOrEmpty(emailEditText.getText().toString());
-                if (!isEmptyEmail) { // clear the error
+                if (!isEmptyEmail) { // clearAll the error
                     signInEmailTextInputLayout.setError(null);
                     signInEmailTextInputLayout.setErrorEnabled(false);
                 }

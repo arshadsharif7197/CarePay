@@ -15,8 +15,9 @@
 
         <ImageView
             android:id="@+id/exitImageView"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="@dimen/exitImageSize"
+            android:layout_height="@dimen/exitImageSize"
+            android:padding="@dimen/exitImagePadding"
             android:scaleType="fitCenter"
             android:src="@drawable/icn_patient_mode_nav_close" />
 
