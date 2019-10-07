@@ -2,8 +2,6 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
@@ -14,6 +12,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
@@ -101,14 +103,14 @@ public class PartialPaymentDialog extends BaseDialogFragment implements View.OnC
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViews();
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(getContentLayout(), container, false);
     }
 
@@ -302,7 +304,14 @@ public class PartialPaymentDialog extends BaseDialogFragment implements View.OnC
 
             if (paymentList != null && paymentList.size() > 0) {
                 for (PendingBalancePayloadDTO payment : paymentList) {
-                    fullAmount += payment.getAmount();
+                    if (payment.getType().equals(PendingBalancePayloadDTO.PATIENT_BALANCE)) {
+                        if (paymentsDTO.getPaymentPayload().havePermissionsToMakePayments(selectedBalance
+                                .getMetadata().getPracticeId())) {
+                            fullAmount += payment.getAmount();
+                        }
+                    } else {
+                        fullAmount += payment.getAmount();
+                    }
                 }
             }
         }

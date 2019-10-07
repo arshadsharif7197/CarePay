@@ -1,6 +1,7 @@
 package com.carecloud.carepay.patient.demographics.activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -11,7 +12,10 @@ import android.view.View;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
-import com.carecloud.carepay.patient.base.MenuPatientActivity;
+import com.carecloud.carepay.patient.delegate.fragments.DelegateListFragment;
+import com.carecloud.carepay.patient.delegate.fragments.ProfileListFragment;
+import com.carecloud.carepay.patient.delegate.interfaces.DelegateManagementInterface;
+import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.demographics.fragments.settings.ChangePasswordFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsExpandedFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsInformationFragment;
@@ -33,8 +37,10 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
-import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
-import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
+import com.carecloud.carepaylibray.profile.UserLinks;
+import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInDTO;
+import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
@@ -49,6 +55,7 @@ import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactFragm
 import com.carecloud.carepaylibray.demographics.interfaces.PhysicianFragmentInterface;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
@@ -61,9 +68,10 @@ import java.util.Map;
  */
 public class DemographicsSettingsActivity extends BasePatientActivity implements
         DemographicsSettingsFragmentListener, InsuranceEditDialog.InsuranceEditDialogListener,
-        DemographicExtendedInterface {
+        DemographicExtendedInterface, DelegateManagementInterface {
 
     DemographicDTO demographicsSettingsDTO;
+    public static final int CHANGES_DONE = 103;
 
     private View rootView;
 
@@ -72,6 +80,8 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demographics_settings);
 
+        Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
+        boolean editProfile = extra.getBoolean(NavigationStateConstants.PROFILE_UPDATE);
         demographicsSettingsDTO = getConvertedDTO(DemographicDTO.class);
         rootView = findViewById(R.id.activity_demographics_settings);
 
@@ -79,8 +89,13 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
                 demographicsSettingsDTO.getPayload().getDemographics().getPayload().getAddress());
 
         if (savedInstanceState == null) {
-            DemographicsSettingsFragment fragment = DemographicsSettingsFragment.newInstance();
-            replaceFragment(fragment, false);
+            if (editProfile) {
+                EditProfileFragment editProfileFragment = EditProfileFragment.newInstance();
+                replaceFragment(editProfileFragment, false);
+            } else {
+                DemographicsSettingsFragment fragment = DemographicsSettingsFragment.newInstance();
+                replaceFragment(fragment, false);
+            }
         }
     }
 
@@ -320,4 +335,22 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
             Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
+
+    @Override
+    public void updateProfiles(UserLinks userLinks) {
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        DtoHelper.bundleDto(bundle, userLinks);
+        intent.putExtras(bundle);
+        setResult(CHANGES_DONE, intent);
+        if (userLinks.getDelegates().isEmpty()) {
+            finish();
+        } else {
+            getSupportFragmentManager().popBackStackImmediate();
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+            if (fragment instanceof DelegateListFragment) {
+                ((DelegateListFragment) fragment).refreshList(userLinks);
+            }
+        }
+    }
 }

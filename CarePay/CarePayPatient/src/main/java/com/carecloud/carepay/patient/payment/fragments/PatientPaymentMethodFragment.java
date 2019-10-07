@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.widget.Toolbar;
@@ -117,12 +119,12 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_payment_method, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle) {
+    public void onViewCreated(@NonNull View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         paymentMethodFragmentProgressBar = view.findViewById(R.id.paymentMethodFragmentProgressBar);
     }
@@ -199,12 +201,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         if (toolbar != null) {
             toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onBackPressed();
-                }
-            });
+            toolbar.setNavigationOnClickListener(view1 -> onBackPressed());
         }
     }
 
@@ -283,12 +280,9 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
             papiAccount = paymentsModel.getPaymentPayload().getPapiAccountByType(PaymentConstants.ANDROID_PAY_PAPI_ACCOUNT_TYPE);
             if (papiAccount.getDefaultBankAccountMid() != null) {
                 androidPayButton.setVisibility(View.VISIBLE);
-                androidPayButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        androidPayAdapter.createAndroidPayRequest(amountToMakePayment, papiAccount);
-                        view.setVisibility(View.INVISIBLE);
-                    }
+                androidPayButton.setOnClickListener(view -> {
+                    androidPayAdapter.createAndroidPayRequest(amountToMakePayment, papiAccount);
+                    view.setVisibility(View.INVISIBLE);
                 });
             }
         }
@@ -435,7 +429,6 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         };
     }
 
-
     protected IntegratedPaymentCardData getCreditCardModel(PayeezyAndroidPayResponse androidPayResponse) {
         IntegratedPaymentCardData creditCardModel = new IntegratedPaymentCardData();
         creditCardModel.setCardType(androidPayResponse.getCard().getType());
@@ -447,7 +440,6 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
 
         return creditCardModel;
     }
-
 
     protected void logPaymentFail(String message, boolean paymentSuccess, Object paymentJson, String error) {
         Map<String, Object> eventMap = new HashMap<>();

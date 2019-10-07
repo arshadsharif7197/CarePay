@@ -29,6 +29,7 @@ import java.util.List;
 
 public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl {
     public static final String KEY_HANDLE_HOME = "handle_home_button";
+    private final TransitionDTO logoutTransition;
 
     private boolean shouldHandleHomeButton = false;
     private PatientModeCheckinDTO patientModeCheckinDTO;
@@ -61,6 +62,7 @@ public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl 
         }
 
         patientModeCheckinDTO = demographicsView.getConvertedDTO(PatientModeCheckinDTO.class);
+        logoutTransition = patientModeCheckinDTO.getMetaData().getTransitions().getPatientHome();
         if (patientModeCheckinDTO != null) {
             if (patientModeCheckinDTO.getPayload().getCheckinModeDTO().getMetadata().getUsername() != null) {
                 username = patientModeCheckinDTO.getPayload().getCheckinModeDTO().getMetadata().getUsername();
@@ -168,5 +170,9 @@ public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl 
 
     public void setHandleHomeButton(boolean handle) {
         shouldHandleHomeButton = handle;
+    }
+
+    public TransitionDTO getLogoutTransition() {
+        return logoutTransition;
     }
 }

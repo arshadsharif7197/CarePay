@@ -86,24 +86,26 @@
                 android:src="@drawable/icon_care_team_no_data" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/careTeamNoDataTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/dimen_20dp"
-                android:text="No provider added to your Care Team"
                 android:textSize="@dimen/text_size_22sp"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="my_health_no_care_team_data_title" />
+                breeze:textKey="my_health_no_care_team_data_title"
+                tools:text="No provider added to your Care Team" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/careTeamNoDataSubTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/dimen_10dp"
-                android:text="We’ll list all your providers here."
                 android:textSize="@dimen/text_size_16"
                 app:customAssetFont="proxima_nova_regular"
-                breeze:textKey="my_health_no_care_team_data_subtitle" />
+                breeze:textKey="my_health_no_care_team_data_subtitle"
+                tools:text="We’ll list all your providers here." />
 
         </LinearLayout>
 
@@ -180,6 +182,7 @@
                 android:src="@drawable/icon_condition_no_data" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/conditionsNoDataTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -190,6 +193,7 @@
                 breeze:textKey="my_health_no_condition_data_title" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/conditionsNoDataSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -274,6 +278,7 @@
                 android:src="@drawable/icon_medication_no_data" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/medicationsNoDataTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -284,6 +289,7 @@
                 tools:text="No provider added to your Care Team" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/medicationsNoDataSubTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -368,6 +374,7 @@
                 android:src="@drawable/icon_allergy_no_data" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/allergiesNoDataTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -378,6 +385,7 @@
                 tools:text="No provider added to your Care Team" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/allergiesNoDataSubTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -462,6 +470,7 @@
                 android:src="@drawable/icon_lab_no_data" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/labsNoDataTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -472,6 +481,7 @@
                 tools:text="No provider added to your Care Team" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/labsNoDataSubTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
