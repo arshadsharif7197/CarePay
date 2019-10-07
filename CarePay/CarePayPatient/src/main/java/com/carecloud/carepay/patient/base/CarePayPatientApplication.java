@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.base;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
+import android.os.StrictMode;
 import android.provider.Settings;
 import android.util.Log;
 
@@ -32,6 +33,12 @@ public class CarePayPatientApplication extends CarePayApplication {
         super.onCreate();
         mixpanelAPI = MixpanelAPI.getInstance(this.getApplicationContext(), BuildConfig.MIX_PANEL_TOKEN);
         setHttpConstants();
+        if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                    .detectNonSdkApiUsage()
+                    .penaltyLog()
+                    .build());
+        }
     }
 
     /**
