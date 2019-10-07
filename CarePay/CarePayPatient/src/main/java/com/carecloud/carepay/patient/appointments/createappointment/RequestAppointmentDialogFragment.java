@@ -55,7 +55,7 @@ public class RequestAppointmentDialogFragment extends BaseRequestAppointmentDial
         DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime());
         TextView dateTextView = view.findViewById(R.id.appointDateTextView);
         TextView timeTextView = view.findViewById(R.id.appointTimeTextView);
-        timeTextView.setText(DateUtil.getInstance().getDateAsDayMonthDayOrdinal());
+        timeTextView.setText(DateUtil.getInstance().getDateAsWeekdayMonthDayYear());
         dateTextView.setText(DateUtil.getInstance().getTime12Hour());
 
         TextView shortNameTextView = view.findViewById(R.id.appointShortnameTextView);

@@ -156,4 +156,9 @@ public class SplashActivity extends BasePatientActivity {
             }
         };
     }
+
+    @Override
+    public boolean manageSession() {
+        return false;
+    }
 }

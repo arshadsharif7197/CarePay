@@ -1,20 +1,19 @@
 package com.carecloud.carepay.practice.library.dobverification;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
 import com.carecloud.carepay.practice.library.customdialog.ConfirmationPinDialog;
 import com.carecloud.carepay.practice.library.dobverification.model.DoBDto;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
@@ -28,7 +27,6 @@ import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
-import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -62,12 +60,7 @@ public class DoBVerificationActivity extends BasePracticeActivity {
 
     private void setUpUi() {
         final Button verifyButton = findViewById(R.id.verifyButton);
-        verifyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onVerifyButtonClick();
-            }
-        });
+        verifyButton.setOnClickListener(view -> onVerifyButtonClick());
         dobTextInputLayout = findViewById(R.id.dobTextInputLayout);
         dobEditText = findViewById(R.id.dobEditText);
         dobEditText.addTextChangedListener(new TextWatcher() {
@@ -94,25 +87,17 @@ public class DoBVerificationActivity extends BasePracticeActivity {
             }
         });
 
-        dobEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                if (view.length() == DOB_LENGTH) {
-                    onVerifyButtonClick();
-                    return true;
-                }
-                return false;
+        dobEditText.setOnEditorActionListener((view, actionId, event) -> {
+            if (view.length() == DOB_LENGTH) {
+                onVerifyButtonClick();
+                return true;
             }
+            return false;
         });
 
         dobEditText.setOnClickListener(selectEndOnClick);
 
-        findViewById(R.id.lockImageView).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showPasswordFragment();
-            }
-        });
+        findViewById(R.id.lockImageView).setOnClickListener(view -> showPasswordFragment());
 
         TextView subTitleTextView = findViewById(R.id.subTitleTextView);
         subTitleTextView.setText(String.format(Label.getLabel("dobVerification.main.subTitle.label.message"),
@@ -122,13 +107,10 @@ public class DoBVerificationActivity extends BasePracticeActivity {
         if (retries == 3) {
             showGameOverScreen();
         }
-        dobEditText.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                SystemUtil.hideSoftKeyboard(DoBVerificationActivity.this);
-                dobEditText.setFocusable(true);
-                dobEditText.setFocusableInTouchMode(true);
-            }
+        dobEditText.postDelayed(() -> {
+            SystemUtil.hideSoftKeyboard(DoBVerificationActivity.this);
+            dobEditText.setFocusable(true);
+            dobEditText.setFocusableInTouchMode(true);
         }, 100);
     }
 
@@ -229,20 +211,10 @@ public class DoBVerificationActivity extends BasePracticeActivity {
         headers.put("username_patient", getApplicationPreferences().getPatientId());
 
         final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), false,
-                doBDto.getPayload().getLanguages(), new LanguageAdapter.LanguageInterface() {
-            @Override
-            public void onLanguageSelected(OptionDTO language) {
-                changeLanguage(doBDto.getMetadata().getLinks().getLanguage(),
-                        language.getCode().toLowerCase(), headers);
-            }
-        });
+                doBDto.getPayload().getLanguages(), language -> changeLanguage(doBDto.getMetadata().getLinks().getLanguage(),
+                language.getCode().toLowerCase(), headers));
         TextView languageSpinner = findViewById(R.id.languageSpinner);
-        languageSpinner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                popupPickerLanguage.showAsDropDown(view);
-            }
-        });
+        languageSpinner.setOnClickListener(popupPickerLanguage::showAsDropDown);
         languageSpinner.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
     }
 
@@ -290,11 +262,8 @@ public class DoBVerificationActivity extends BasePracticeActivity {
         outState.putInt("retries", retries);
     }
 
-    protected View.OnClickListener selectEndOnClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            EditText editText = (EditText) view;
-            editText.setSelection(editText.length());
-        }
+    protected View.OnClickListener selectEndOnClick = view -> {
+        EditText editText = (EditText) view;
+        editText.setSelection(editText.length());
     };
 }
