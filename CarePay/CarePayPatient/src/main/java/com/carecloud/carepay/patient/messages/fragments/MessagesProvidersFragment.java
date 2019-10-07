@@ -2,10 +2,10 @@ package com.carecloud.carepay.patient.messages.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +29,7 @@ import java.util.List;
 public class MessagesProvidersFragment extends BaseFragment implements MessagesProvidersAdapter.SelectProviderCallback {
 
     private RecyclerView providersRecycler;
+    private View noProvidersMessage;
 
     private List<ProviderContact> providers = new ArrayList<>();
     private MessageNavigationCallback callback;
@@ -65,6 +66,7 @@ public class MessagesProvidersFragment extends BaseFragment implements MessagesP
 
         providersRecycler = view.findViewById(R.id.providers_recycler);
         providersRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        noProvidersMessage = view.findViewById(R.id.noProvidersMessage);
 
         setAdapter();
     }
@@ -94,6 +96,8 @@ public class MessagesProvidersFragment extends BaseFragment implements MessagesP
         providers = messagingModel.getPayload().getProviderContacts();
         MessagesProvidersAdapter adapter = new MessagesProvidersAdapter(getContext(), providers, this);
         providersRecycler.setAdapter(adapter);
+        providersRecycler.setVisibility(providers.isEmpty() ? View.GONE : View.VISIBLE);
+        noProvidersMessage.setVisibility(providers.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
 

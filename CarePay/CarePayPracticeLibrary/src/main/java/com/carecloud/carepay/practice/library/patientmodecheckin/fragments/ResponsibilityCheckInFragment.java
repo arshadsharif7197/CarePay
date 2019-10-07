@@ -3,11 +3,11 @@ package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +18,8 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckinActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.activities.PatientModeCheckoutActivity;
+import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanAmountFragment;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
@@ -99,7 +101,14 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
                                 actionCallback.onPartialPaymentClicked(total, selectedBalance);
                                 break;
                             case PaymentOptionsFragmentDialog.PAYMENT_OPTION_PAYMENT_PLAN:
-                                actionCallback.onPaymentPlanAction(paymentDTO);
+                                //this should be a safe assumption for checkin
+                                PendingBalanceDTO selectedBalancesItem = paymentDTO.getPaymentPayload()
+                                        .getPatientBalances().get(0).getBalances().get(0);
+                                PendingBalanceDTO reducedBalancesItem = paymentDTO.getPaymentPayload()
+                                        .reduceBalanceItems(selectedBalancesItem, false);
+                                PracticePaymentPlanAmountFragment fragment = PracticePaymentPlanAmountFragment
+                                        .newInstance(paymentDTO, reducedBalancesItem, false);
+                                actionCallback.displayDialogFragment(fragment, false);
                                 break;
                             case PaymentOptionsFragmentDialog.PAYMENT_OPTION_PAY_LATER:
                                 //Not Supported
@@ -169,6 +178,8 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
 
     @Override
     public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
-        actionCallback.displayBalanceDetails(paymentDTO, paymentLineItem, null);
+        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
+                .newInstance(paymentDTO, paymentLineItem, false);
+        actionCallback.displayDialogFragment(dialog, true);
     }
 }

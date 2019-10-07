@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.library.adhocforms;
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionUserPractice;
 import com.carecloud.carepaylibray.adhoc.AdhocFormsPatientModeInfo;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
+import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -31,6 +32,14 @@ public class AdHocFormsPayload {
     @SerializedName("adhoc_forms_patient_mode")
     @Expose
     private AdhocFormsPatientModeInfo adhocFormsPatientModeInfo = new AdhocFormsPatientModeInfo();
+
+    @Expose
+    @SerializedName("filled_forms")
+    private List<String> filledForms = new ArrayList<>();
+
+    @SerializedName("demographics")
+    @Expose
+    private DemographicsSettingsDemographicsDTO demographicDTO = new DemographicsSettingsDemographicsDTO();
 
 
     public List<OptionDTO> getLanguages() {
@@ -63,5 +72,21 @@ public class AdHocFormsPayload {
 
     public void setAdhocFormsPatientModeInfo(AdhocFormsPatientModeInfo adhocFormsPatientModeInfo) {
         this.adhocFormsPatientModeInfo = adhocFormsPatientModeInfo;
+    }
+
+    public List<String> getFilledForms() {
+        return filledForms;
+    }
+
+    public void setFilledForms(List<String> filledForms) {
+        this.filledForms = filledForms;
+    }
+
+    public DemographicsSettingsDemographicsDTO getDemographicDTO() {
+        return demographicDTO;
+    }
+
+    public void setDemographicDTO(DemographicsSettingsDemographicsDTO demographicDTO) {
+        this.demographicDTO = demographicDTO;
     }
 }

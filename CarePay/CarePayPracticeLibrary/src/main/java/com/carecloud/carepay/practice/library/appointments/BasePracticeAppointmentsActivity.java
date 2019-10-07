@@ -1,19 +1,16 @@
 package com.carecloud.carepay.practice.library.appointments;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.createappointment.AvailabilityHourFragment;
 import com.carecloud.carepay.practice.library.appointments.createappointment.CreateAppointmentFragment;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticeChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -117,8 +114,9 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     @Override
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
-        PracticeAddNewCreditCardFragment fragment = PracticeAddNewCreditCardFragment.newInstance(paymentsModel, amount);
-        displayDialogFragment(fragment, false);
+        //TODO: Delete this when refactor. This code is not used anymore
+//        PracticeAddNewCreditCardFragment fragment = PracticeAddNewCreditCardFragment.newInstance(paymentsModel, amount);
+//        displayDialogFragment(fragment, false);
     }
 
     @Override
@@ -130,27 +128,17 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     }
 
     @Override
-    public void onPaymentPlanAction(PaymentsModel paymentsModel) {
-
-    }
-
-    @Override
-    public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, final double amount,
-                                      final PaymentsModel paymentsModel) {
-        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
-                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
-            PracticeChooseCreditCardFragment fragment = PracticeChooseCreditCardFragment
-                    .newInstance(paymentsModel, selectedPaymentMethod.getLabel(), amount);
-            fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialogInterface) {
-                    onPayButtonClicked(amount, paymentsModel);
-                }
-            });
-            displayDialogFragment(fragment, false);
-        } else {
-            showAddCard(amount, paymentsModel);
-        }
+    public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount,
+                                      PaymentsModel paymentsModel) {
+        //TODO: Delete this when refactor. This code is not used anymore
+//        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
+//                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+//            DialogFragment fragment = PracticeChooseCreditCardFragment
+//                    .newInstance(paymentsModel, selectedPaymentMethod.getLabel(), amount);
+//            displayDialogFragment(fragment, false);
+//        } else {
+//            showAddCard(amount, paymentsModel);
+//        }
     }
 
     @Nullable
@@ -204,11 +192,6 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     }
 
     @Override
-    public void onDismissPaymentMethodDialog(PaymentsModel paymentsModel) {
-//        onHoursAndLocationSelected(appointmentSlot, null);
-    }
-
-    @Override
     public void showFragment(DialogFragment fragment) {
         String tag = fragment.getClass().getName();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -234,7 +217,6 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
         AppointmentsSlotsDTO slot = new AppointmentsSlotsDTO();
         slot.setStartTime(appointmentRequestDto.getAppointment().getStartTime());
         slot.setEndTime(appointmentRequestDto.getAppointment().getEndTime());
-//        setPracticeId(practiceId);
         startPrepaymentProcess(appointmentRequestDto, slot, amount);
     }
 
