@@ -1,22 +1,22 @@
 apply plugin: 'com.android.application'
 apply plugin: 'newrelic'
 android {
-    compileSdkVersion 26
+    compileSdkVersion 28
 
     defaultConfig {
         applicationId "com.carecloud.carepay.practice.tablet"
         minSdkVersion 17
         targetSdkVersion 26
-        versionCode 129
-        versionName "1.2.27"
+        versionCode 139
+        versionName "1.2.30.2"
         multiDexEnabled true
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         renderscriptTargetApi 22
         renderscriptSupportModeEnabled true
     }
     dexOptions {
         maxProcessCount 4
-        javaMaxHeapSize "12g"
+        javaMaxHeapSize "4g"
     }
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
@@ -132,6 +132,11 @@ android {
     }
     lintOptions {
         abortOnError false
+    }
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
     }
 }
 

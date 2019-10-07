@@ -4,14 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +11,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -128,23 +129,17 @@ public class MedicationsFragment extends BaseCheckinFragment implements
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_medications, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle) {
+    public void onViewCreated(@NonNull View view, Bundle icicle) {
         inflateToolbarViews(view);
         initViews(view);
         setAdapters();
         final NestedScrollView scrollView = view.findViewById(R.id.scroll_medications_allergy);
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                scrollView.scrollTo(0, 0);
-
-            }
-        }, 30);
+        handler.postDelayed(() -> scrollView.scrollTo(0, 0), 30);
         View container = view.findViewById(R.id.container_main);
         hideKeyboardOnViewTouch(container);
     }
@@ -173,7 +168,8 @@ public class MedicationsFragment extends BaseCheckinFragment implements
         continueButton.setSelected(false);
         continueButton.setClickable(false);
 
-        RecyclerView.LayoutManager medicationManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
+        RecyclerView.LayoutManager medicationManager = new LinearLayoutManager(getContext(),
+                RecyclerView.VERTICAL, true);
         medicationRecycler = view.findViewById(R.id.medication_recycler);
         medicationRecycler.setLayoutManager(medicationManager);
 
@@ -379,12 +375,9 @@ public class MedicationsFragment extends BaseCheckinFragment implements
         }
     };
 
-    private View.OnClickListener navigationClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            SystemUtil.hideSoftKeyboard(getActivity());
-            getActivity().onBackPressed();
-        }
+    private View.OnClickListener navigationClickListener = view -> {
+        SystemUtil.hideSoftKeyboard(getActivity());
+        getActivity().onBackPressed();
     };
 
 
@@ -419,7 +412,7 @@ public class MedicationsFragment extends BaseCheckinFragment implements
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             showErrorNotification(exceptionMessage);
-            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+            Log.e("Server Error", exceptionMessage);
         }
     };
 

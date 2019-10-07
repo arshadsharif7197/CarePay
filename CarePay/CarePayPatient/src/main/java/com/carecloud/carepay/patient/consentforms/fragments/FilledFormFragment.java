@@ -2,7 +2,7 @@ package com.carecloud.carepay.patient.consentforms.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -91,16 +91,11 @@ public class FilledFormFragment extends BaseWebFormFragment {
         showSignButton = getArguments().getBoolean("showSignButton", false);
         nextButton.setVisibility(showSignButton ? View.VISIBLE : View.GONE);
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
-        title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
+        title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(Label.getLabel("consentForms.consentForm.title.label.form"));
         callback.setToolbar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navigateBack();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> navigateBack());
         nextButton.setBackgroundResource(R.drawable.button_green_selector);
     }
 

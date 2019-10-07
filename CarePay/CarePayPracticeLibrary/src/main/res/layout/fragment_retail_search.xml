@@ -76,7 +76,7 @@
             android:background="@drawable/patient_mode_dialog_body_bg"
             android:minHeight="@dimen/list_dialog_min_height">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/search_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

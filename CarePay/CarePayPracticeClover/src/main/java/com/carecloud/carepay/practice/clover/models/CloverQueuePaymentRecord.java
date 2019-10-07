@@ -1,7 +1,7 @@
 package com.carecloud.carepay.practice.clover.models;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 /**
  * Created by lmenendez on 4/19/17.
@@ -19,6 +19,7 @@ public class CloverQueuePaymentRecord {
     private String paymentModelJsonEnc;
     private String paymentModelJson;
     private String username;
+    private String patientUsername;
 
     public String getPatientID() {
         return patientID;
@@ -82,5 +83,13 @@ public class CloverQueuePaymentRecord {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void setPatientUsername(String patientUsername) {
+        this.patientUsername = patientUsername;
+    }
+
+    public String getPatientUsername() {
+        return patientUsername;
     }
 }

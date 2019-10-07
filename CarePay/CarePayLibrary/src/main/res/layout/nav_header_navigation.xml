@@ -6,18 +6,18 @@
     android:layout_height="@dimen/nav_header_height"
     android:background="@drawable/side_nav_bar"
     android:gravity="bottom"
-    android:paddingBottom="13dp"
     android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingBottom="13dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
         android:id="@+id/appointmentDrawerIdImageView"
         android:layout_width="@dimen/dimen_70dp"
         android:layout_height="@dimen/dimen_70dp"
-        android:layout_marginBottom="@dimen/nav_image_padding"
         android:layout_marginTop="@dimen/nav_header_vertical_spacing"
+        android:layout_marginBottom="@dimen/nav_image_padding"
         android:src="@drawable/icn_placeholder_user_profile_png" />
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -34,17 +34,29 @@
         app:customAssetFont="proxima_nova_extra_bold"
         tools:text="Pablo Johnson" />
 
+    <ImageView
+        android:id="@+id/profileListTriggerIcon"
+        android:layout_width="@dimen/profileListTriggerIconSize"
+        android:layout_height="@dimen/profileListTriggerIconSize"
+        android:layout_below="@id/userNameTextView"
+        android:layout_alignParentEnd="true"
+        android:background="?selectableItemBackground"
+        android:paddingTop="@dimen/profileListTriggerIconPadding"
+        android:paddingBottom="@dimen/profileListTriggerIconPadding"
+        android:src="@drawable/ic_profile_arrow" />
+
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-        android:id="@+id/appointmentsDrawerIdTextView"
+        android:id="@+id/menuUserEmailTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/userNameTextView"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@id/profileListTriggerIcon"
         android:ellipsize="end"
         android:gravity="start"
         android:maxLines="1"
         android:textColor="@color/white"
         app:customAssetFont="proxima_nova_semi_bold"
         tools:text="someemail.that.is.too.long.to.show@on.asingleline.com" />
-
 
 </RelativeLayout>

@@ -1,8 +1,8 @@
 package com.carecloud.carepaylibray.interfaces;
 
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.widget.Toolbar;
 
 /**
  * @author pjohnson on 26/04/17.

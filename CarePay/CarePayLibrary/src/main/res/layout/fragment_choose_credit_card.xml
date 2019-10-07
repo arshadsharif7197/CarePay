@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:padding="@dimen/payment_method_parent_layout_padding">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list_credit_cards"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

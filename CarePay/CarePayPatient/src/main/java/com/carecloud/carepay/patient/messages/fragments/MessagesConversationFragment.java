@@ -4,10 +4,10 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -54,6 +54,7 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
     private RecyclerView recyclerView;
     private EditText messageTextInput;
     private View sendButton;
+    private View messageInputContainer;
 
     private boolean refreshing = true;
 
@@ -131,6 +132,8 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
 
         messageTextInput = view.findViewById(R.id.message_input);
         messageTextInput.addTextChangedListener(messageInputListener);
+
+        messageInputContainer = view.findViewById(R.id.messageInputContainer);
     }
 
     @Override
