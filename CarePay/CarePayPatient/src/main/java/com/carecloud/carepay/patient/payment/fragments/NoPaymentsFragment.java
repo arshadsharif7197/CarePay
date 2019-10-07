@@ -2,12 +2,16 @@ package com.carecloud.carepay.patient.payment.fragments;
 
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 
 /**
@@ -24,8 +28,12 @@ public class NoPaymentsFragment extends BaseFragment {
     /**
      * @return a new instance of NoPaymentsFragment
      */
-    public static NoPaymentsFragment newInstance() {
-        return new NoPaymentsFragment();
+    public static NoPaymentsFragment newInstance(boolean noPermission) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("noPermission", noPermission);
+        NoPaymentsFragment fragment = new NoPaymentsFragment();
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
@@ -33,5 +41,15 @@ public class NoPaymentsFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_no_payments, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (getArguments().getBoolean("noPermission", false)) {
+            TextView titleTextView = view.findViewById(R.id.no_payment_message_title);
+            titleTextView.setText(Label.getLabel("patient.delegation.delegates.permissions.label.noPermission"));
+            view.findViewById(R.id.no_payment_message_desc).setVisibility(View.GONE);
+        }
     }
 }

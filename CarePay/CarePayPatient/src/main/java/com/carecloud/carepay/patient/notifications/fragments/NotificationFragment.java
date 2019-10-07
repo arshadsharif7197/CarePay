@@ -3,11 +3,6 @@ package com.carecloud.carepay.patient.notifications.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,6 +10,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.notifications.adapters.NotificationsAdapter;
@@ -29,7 +31,6 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.models.Paging;
-import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.SwipeViewHolder;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -102,39 +103,39 @@ public class NotificationFragment extends BaseFragment
         supportedNotificationTypes.add(NotificationType.appointment);
         supportedNotificationTypes.add(NotificationType.pending_forms);
         supportedNotificationTypes.add(NotificationType.payments);
-        supportedNotificationTypes.add(NotificationType.pending_survey);
         supportedNotificationTypes.add(NotificationType.secure_message);
-        setHasOptionsMenu(true);
+        supportedNotificationTypes.add(NotificationType.pending_survey);
+
         Bundle args = getArguments();
         notificationsDTO = DtoHelper.getConvertedDTO(NotificationsDTO.class, args);
         notificationItems = filterNotifications(notificationsDTO.getPayload().getNotifications(),
                 supportedNotificationTypes);
         paging = notificationsDTO.getPayload().getPaging();
-        addAppStatusNotification();
-
-
         handler = new Handler();
+        if (notificationsDTO.getPayload().getDelegate() == null) {
+            setHasOptionsMenu(true);
+            addAppStatusNotification();
+        } else if (notificationsDTO.getPayload().getDelegate() != null && notificationItems.size() > 0) {
+            addAppStatusNotification();
+        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_notification, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle) {
+    public void onViewCreated(@NonNull View view, Bundle icicle) {
         noNotificationLayout = view.findViewById(R.id.no_notification_layout);
-        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshLayout.setRefreshing(true);
-                loadNextPage(true);
-            }
+        refreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        refreshLayout.setOnRefreshListener(() -> {
+            refreshLayout.setRefreshing(true);
+            loadNextPage(true);
         });
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        notificationsRecycler = (RecyclerView) view.findViewById(R.id.notifications_recycler);
+        notificationsRecycler = view.findViewById(R.id.notifications_recycler);
         notificationsRecycler.setLayoutManager(linearLayoutManager);
 
         SwipeHelper swipeHelper = new SwipeHelper(this);
@@ -143,13 +144,13 @@ public class NotificationFragment extends BaseFragment
 
         notificationsRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 deleteNotificationRunnable.run();
             }
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 int last = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
                 if (last > notificationsAdapter.getItemCount() - BOTTOM_ROW_OFFSET && !isPaging) {
@@ -160,7 +161,6 @@ public class NotificationFragment extends BaseFragment
                 }
             }
         });
-
         setAdapter();
     }
 
@@ -191,12 +191,7 @@ public class NotificationFragment extends BaseFragment
                         Label.getLabel("notification.notificationList.button.label.deleteAllMessage"),
                         Label.getLabel("cancel"),
                         Label.getLabel("confirm"));
-        fragment.setCallback(new ConfirmationCallback() {
-            @Override
-            public void onConfirm() {
-                deleteAllNotifications();
-            }
-        });
+        fragment.setCallback(this::deleteAllNotifications);
         String tag = fragment.getClass().getName();
         fragment.show(getFragmentManager().beginTransaction(), tag);
     }
@@ -229,21 +224,49 @@ public class NotificationFragment extends BaseFragment
 
 
     private void setAdapter() {
-        if (!notificationItems.isEmpty()) {
-            if (notificationsAdapter == null) {
-                notificationsAdapter = new NotificationsAdapter(getContext(), notificationItems, this);
-                notificationsRecycler.setAdapter(notificationsAdapter);
+        boolean canViewNotifications = canViewAnyNotification(notificationsDTO.getPayload().getDelegate() == null ?
+                notificationsDTO.getPayload().getPracticeInformation()
+                : notificationsDTO.getPayload().getUserLinks().getDelegatePracticeInformation());
+        if (canViewNotifications) {
+            if (!notificationItems.isEmpty()) {
+                if (notificationsAdapter == null) {
+                    notificationsAdapter = new NotificationsAdapter(getContext(), notificationItems, this);
+                    notificationsRecycler.setAdapter(notificationsAdapter);
+                } else {
+                    notificationsAdapter.setNotificationItems(notificationItems);
+                }
+
+                refreshLayout.setVisibility(View.VISIBLE);
+                noNotificationLayout.setVisibility(View.GONE);
+
             } else {
-                notificationsAdapter.setNotificationItems(notificationItems);
+                showEmptyScreen();
             }
-
-            refreshLayout.setVisibility(View.VISIBLE);
-            noNotificationLayout.setVisibility(View.GONE);
-
         } else {
-            refreshLayout.setVisibility(View.GONE);
-            noNotificationLayout.setVisibility(View.VISIBLE);
+            showEmptyScreen();
+            TextView titleTextView = noNotificationLayout.findViewById(R.id.no_notification_message_title);
+            titleTextView.setText(Label.getLabel("patient.delegation.delegates.permissions.label.noPermission"));
+            noNotificationLayout.findViewById(R.id.no_notificaton_message_desc).setVisibility(View.GONE);
         }
+    }
+
+    private void showEmptyScreen() {
+        refreshLayout.setVisibility(View.GONE);
+        noNotificationLayout.setVisibility(View.VISIBLE);
+    }
+
+    private boolean canViewAnyNotification(List<UserPracticeDTO> userPractices) {
+        for (UserPracticeDTO practice : userPractices) {
+            if (notificationsDTO.getPayload().canViewSurveyNotifications(practice.getPracticeId())
+                    || notificationsDTO.getPayload().canMessageProviders(practice.getPracticeId())
+                    || notificationsDTO.getPayload().canReviewForms(practice.getPracticeId())
+                    || notificationsDTO.getPayload().canSeeStatement(practice.getPracticeId())
+                    || notificationsDTO.getPayload().havePermissionsToMakePayments(practice.getPracticeId())
+                    || notificationsDTO.getPayload().canViewAppointments(practice.getPracticeId())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -264,7 +287,12 @@ public class NotificationFragment extends BaseFragment
 
     @Override
     public UserPracticeDTO getUserPracticeById(String practiceId) {
-        return getApplicationPreferences().getUserPractice(practiceId);
+        for (UserPracticeDTO practice : notificationsDTO.getPayload().getPracticeInformation()) {
+            if (practice.getPracticeId().equals(practiceId)) {
+                return practice;
+            }
+        }
+        return null;
     }
 
     private void loadNextPage(boolean refresh) {
@@ -300,7 +328,10 @@ public class NotificationFragment extends BaseFragment
                 if (refresh) {
                     notificationItems = filterNotifications(notificationsDTO.getPayload().getNotifications(),
                             supportedNotificationTypes);
-                    addAppStatusNotification();
+                    if (notificationsDTO.getPayload().getDelegate() == null ||
+                            notificationsDTO.getPayload().getDelegate() != null && notificationItems.size() > 0) {
+                        addAppStatusNotification();
+                    }
                 } else {
                     notificationItems.addAll(filterNotifications(notificationsDTO.getPayload().getNotifications(),
                             supportedNotificationTypes));
@@ -350,7 +381,7 @@ public class NotificationFragment extends BaseFragment
 
     private class DeleteNotificationRunnable implements Runnable {
 
-        public void setNotificationItem(NotificationItem notificationItem) {
+        void setNotificationItem(NotificationItem notificationItem) {
             this.notificationItem = notificationItem;
         }
 
@@ -411,9 +442,40 @@ public class NotificationFragment extends BaseFragment
                     //Prevent showing old notifications without pending form data
                     continue;
                 }
+                if (notificationType.equals(NotificationType.pending_survey)
+                        && (!notificationsDTO.getPayload()
+                        .canViewSurveyNotifications(notificationItem.getMetadata().getPracticeId()))) {
+                    continue;
+                }
+                if (notificationType.equals(NotificationType.secure_message)
+                        && (!notificationsDTO.getPayload()
+                        .canMessageProviders(notificationItem.getMetadata().getPracticeId()))) {
+                    continue;
+                }
+                if (notificationType.equals(NotificationType.pending_forms)
+                        && (!notificationsDTO.getPayload()
+                        .canReviewForms(notificationItem.getMetadata().getPracticeId()))) {
+                    continue;
+                }
+                if (notificationType.equals(NotificationType.payments)) {
+                    if ("patient_statement".equals(notificationItem.getMetadata().getNotificationSubtype())
+                            && (!notificationsDTO.getPayload()
+                            .canSeeStatement(notificationItem.getMetadata().getPracticeId()))) {
+                        continue;
+                    } else if (!"patient_statement".equals(notificationItem.getMetadata().getNotificationSubtype())
+                            && (!notificationsDTO.getPayload()
+                            .havePermissionsToMakePayments(notificationItem.getMetadata().getPracticeId()))) {
+                        continue;
+                    }
+                }
+                if (notificationType.equals(NotificationType.appointment)
+                        && (!notificationsDTO.getPayload()
+                        .canViewAppointments(notificationItem.getMetadata().getPracticeId()))) {
+                    continue;
+                }
                 filteredList.add(notificationItem);
             } else {
-                Log.d("test", "test");
+                Log.d("Error", "error notifications");
             }
         }
         return filteredList;

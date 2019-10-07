@@ -710,7 +710,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
         if (!pendingBalances.isEmpty()) {
             patientBalancesLayout.setVisibility(View.VISIBLE);
             PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(getContext(),
-                    getAllPendingBalancePayloads(pendingBalances), this);
+                    getAllPendingBalancePayloads(pendingBalances), this, true);
             patientBalancesRecycler.setAdapter(adapter);
         }
     }
