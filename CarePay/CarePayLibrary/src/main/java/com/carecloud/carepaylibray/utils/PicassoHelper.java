@@ -84,8 +84,8 @@ public class PicassoHelper {
         loadImage(context, imageView, viewToHide, null, photoUrl, size);
     }
 
-    public void loadImage(Context context, final ImageView imageView, final View viewToHide, final View viewToShow, String photoUrl,
-                          int size) {
+    public void loadImage(Context context, final ImageView imageView, final View viewToHide,
+                          final View viewToShow, String photoUrl, int size) {
         if (!StringUtil.isNullOrEmpty(photoUrl)) {
             Picasso.with(context).load(photoUrl)
                     .resize(size, size)

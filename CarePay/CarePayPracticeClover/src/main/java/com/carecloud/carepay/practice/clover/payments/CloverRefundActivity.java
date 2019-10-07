@@ -14,6 +14,7 @@ import com.carecloud.carepay.practice.clover.CloverQueueUploadService;
 import com.carecloud.carepay.practice.clover.R;
 import com.carecloud.carepay.practice.clover.models.CloverPaymentDTO;
 import com.carecloud.carepay.practice.clover.models.CloverQueuePaymentRecord;
+import com.carecloud.carepay.practice.library.splash.SplashActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.RestCallService;
 import com.carecloud.carepay.service.library.RestCallServiceHelper;
@@ -163,6 +164,11 @@ public class CloverRefundActivity extends BaseActivity {
     }
 
     @Override
+    protected void stopSessionService() {
+
+    }
+
+    @Override
     public void onBackPressed() {
         setResult(RESULT_CANCELED);
         disconnect();
@@ -288,12 +294,9 @@ public class CloverRefundActivity extends BaseActivity {
                     setAuthResult(authResult);
                 }else {
                     SystemUtil.showErrorToast(getContext(), Label.getLabel("clover_account_not_authorized"));
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            logRefundFail(Label.getLabel("clover_account_not_authorized"), false);
-                            finish();
-                        }
+                    handler.postDelayed(() -> {
+                        logRefundFail(Label.getLabel("clover_account_not_authorized"), false);
+                        finish();
                     }, 3000);
                 }
             }
@@ -637,12 +640,9 @@ public class CloverRefundActivity extends BaseActivity {
             paymentRecord.setPaymentModelJson(refundModelJson);
         }
 
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                BreezeDataBase dataBase = BreezeDataBase.getDatabase(getApplicationContext());
-                dataBase.getCloverPaymentDao().insert(paymentRecord);
-            }
+        Executors.newSingleThreadExecutor().execute(() -> {
+            BreezeDataBase dataBase = BreezeDataBase.getDatabase(getApplicationContext());
+            dataBase.getCloverPaymentDao().insert(paymentRecord);
         });
 
         Intent intent = new Intent(getContext(), CloverQueueUploadService.class);

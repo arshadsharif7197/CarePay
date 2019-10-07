@@ -6,16 +6,16 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.PermissionChecker;
-import androidx.appcompat.app.AlertDialog;
-import android.view.MenuItem;
+import androidx.fragment.app.Fragment;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
+import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.myhealth.dtos.AllergyDto;
 import com.carecloud.carepay.patient.myhealth.dtos.LabDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MedicationDto;
@@ -28,16 +28,20 @@ import com.carecloud.carepay.patient.myhealth.fragments.MedicationDetailFragment
 import com.carecloud.carepay.patient.myhealth.fragments.MyHealthListFragment;
 import com.carecloud.carepay.patient.myhealth.fragments.MyHealthMainFragment;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.profile.Profile;
+import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.FileDownloadUtil;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -101,10 +105,9 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
     @Override
     protected void onResume() {
         super.onResume();
-        MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_my_health);
-        menuItem.setChecked(true);
+        selectMenuItem(R.id.myHealthMenuItem);
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-            displayToolbar(true, menuItem.getTitle().toString());
+            displayToolbar(true, getScreenTitle(Label.getLabel("navigation_link_my_health")));
         }
     }
 
@@ -259,4 +262,27 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
         FileDownloadUtil.downloadPdf(getContext(), url, lab.getName(), ".pdf", lab.getPractice());
     }
 
+    @Override
+    protected void onProfileChanged(ProfileDto profile) {
+        displayToolbar(true, getScreenTitle(Label.getLabel("navigation_link_my_health")));
+        callMyHealthService(null);
+    }
+
+    @Override
+    protected Profile getCurrentProfile() {
+        return myHealthDto.getPayload().getDelegate();
+    }
+
+    @Override
+    protected String getScreenTitle(String mainTitle) {
+        if (StringUtil.isNullOrEmpty(ApplicationPreferences.getInstance().getProfileId())) {
+            return mainTitle;
+        } else {
+            if (ApplicationPreferences.getInstance().getUserLanguage().equals("en")) {
+                return String.format("%s's %s", profileName, Label.getLabel("my_health_delegate_title"));
+            } else {
+                return String.format("%s de %s", Label.getLabel("my_health_delegate_title"), profileName);
+            }
+        }
+    }
 }

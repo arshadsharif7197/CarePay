@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/splash_background"
+    android:clickable="true"
+    android:orientation="vertical"
+    android:visibility="gone">
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:gravity="center"
+        android:paddingStart="@dimen/dimen_30dp"
+        android:paddingEnd="@dimen/dimen_30dp"
+        android:textColor="@color/white"
+        android:textSize="21sp"
+        app:customAssetFont="gotham_rounded_medium"
+        breeze:textKey="profile.chooseProfile.header.label.selectProfile"
+        tools:text="Select a profile to continue" />
+
+    <ScrollView
+        android:id="@+id/mainScroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/dimen_17dp"
+        android:paddingTop="@dimen/dimen_30dp"
+        android:paddingEnd="@dimen/dimen_17dp"
+        android:paddingBottom="@dimen/dimen_30dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/profilesContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

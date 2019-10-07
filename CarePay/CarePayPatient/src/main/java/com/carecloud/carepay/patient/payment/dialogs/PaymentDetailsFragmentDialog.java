@@ -1,18 +1,9 @@
 package com.carecloud.carepay.patient.payment.dialogs;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import androidx.fragment.app.DialogFragment;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.PermissionChecker;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +11,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.PermissionChecker;
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.ToolbarInterface;
@@ -43,6 +42,7 @@ import com.carecloud.carepaylibray.utils.FileDownloadUtil;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.text.NumberFormat;
 import java.util.List;
@@ -94,12 +94,12 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_dialog_payment_details, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         boolean canMakePayments = false;
         if (paymentReceiptModel != null) {
@@ -131,7 +131,12 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
 
         setUpStatementButton(view);
         setUpDetails(view);
-        setUpBottomSheet(view, canMakePayments);
+        if (paymentReceiptModel.getPaymentPayload().havePermissionsToMakePayments(selectedBalance
+                .getMetadata().getPracticeId())) {
+            setUpBottomSheet(view, canMakePayments);
+        } else {
+            view.findViewById(R.id.consolidatedPaymentButton).setVisibility(View.INVISIBLE);
+        }
     }
 
     private void setUpStatementButton(View view) {
@@ -144,7 +149,8 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                 break;
             }
         }
-        if (statement != null && !statement.getStatements().isEmpty()) {
+        if (statement != null && !statement.getStatements().isEmpty()
+                && paymentReceiptModel.getPaymentPayload().canSeeStatement(selectedBalance.getMetadata().getPracticeId())) {
             View statementButton = view.findViewById(R.id.statement_button);
             statementButton.setVisibility(showStatementButton ? View.VISIBLE : View.GONE);
             finalStatement = statement;
@@ -162,12 +168,13 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
     }
 
     private void setUpDetails(View view) {
-        RecyclerView paymentDetailsRecyclerView = view
-                .findViewById(R.id.payment_receipt_details_view);
-        paymentDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        PaymentItemsListAdapter adapter = new PaymentItemsListAdapter(getContext(),
-                paymentPayload.getDetails());
-        paymentDetailsRecyclerView.setAdapter(adapter);
+        if (paymentReceiptModel.getPaymentPayload().canViewBalanceDetails(selectedBalance.getMetadata().getPracticeId())) {
+            RecyclerView paymentDetailsRecyclerView = view.findViewById(R.id.payment_receipt_details_view);
+            paymentDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            PaymentItemsListAdapter adapter = new PaymentItemsListAdapter(getContext(),
+                    paymentPayload.getDetails());
+            paymentDetailsRecyclerView.setAdapter(adapter);
+        }
     }
 
     private void setUpBottomSheet(View view, boolean canMakePayments) {
@@ -199,10 +206,12 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
         });
 
         View partialPaymentContainer = view.findViewById(R.id.partialPaymentContainer);
-        partialPaymentContainer.setVisibility(isPartialPayAvailable(selectedBalance.getMetadata().getPracticeId(), paymentPayload.getAmount())
+        partialPaymentContainer.setVisibility(isPartialPayAvailable(selectedBalance.getMetadata()
+                .getPracticeId(), paymentPayload.getAmount())
                 ? View.VISIBLE : View.GONE);
         partialPaymentContainer.setOnClickListener(view12 -> {
-            PatientPartialPaymentDialog fragment = PatientPartialPaymentDialog.newInstance(paymentReceiptModel, selectedBalance);
+            PatientPartialPaymentDialog fragment = PatientPartialPaymentDialog
+                    .newInstance(paymentReceiptModel, selectedBalance);
             fragment.setOnCancelListener(dialogInterface -> showDialog(true));
             callback.displayDialogFragment(fragment, true);
             hideDialog(true);
@@ -215,6 +224,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
         View paymentPlanContainer = view.findViewById(R.id.paymentPlanContainer);
         paymentPlanContainer.setVisibility(isPaymentPlanAvailable(selectedBalance.getMetadata()
                 .getPracticeId(), paymentPayload.getAmount())
+                && paymentReceiptModel.getPaymentPayload().getDelegate() == null //TODO: SHMRK-9463 Take out last validation when MW handle PP
                 ? View.VISIBLE : View.GONE);
         paymentPlanContainer.setOnClickListener(view13 -> {
             PendingBalanceDTO reducedBalancesItem = paymentReceiptModel.getPaymentPayload()
@@ -237,7 +247,8 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
 
 
         Button consolidatedPaymentButton = view.findViewById(R.id.consolidatedPaymentButton);
-        consolidatedPaymentButton.setOnClickListener(v -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED));
+        consolidatedPaymentButton.setOnClickListener(v -> bottomSheetBehavior
+                .setState(BottomSheetBehavior.STATE_EXPANDED));
 
         Button cancelButton = view.findViewById(R.id.cancelButton);
         cancelButton.setOnClickListener(v -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN));
@@ -268,7 +279,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
         FileDownloadUtil.downloadPdf(getContext(), url, fileName, ".pdf", statementDTO.getStatementDate());
     }
 
-    protected boolean isPartialPayAvailable(String practiceId, double total) {
+    private boolean isPartialPayAvailable(String practiceId, double total) {
         if (practiceId != null) {
             PaymentsPayloadSettingsDTO payloadSettingsDTO = paymentReceiptModel.getPaymentPayload().getPaymentSetting(practiceId);
             if (practiceId.equals(payloadSettingsDTO.getMetadata().getPracticeId())) {
@@ -283,7 +294,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
         return true;
     }
 
-    protected boolean isPaymentPlanAvailable(String practiceId, double balance) {
+    private boolean isPaymentPlanAvailable(String practiceId, double balance) {
         if (practiceId != null) {
             PaymentsPayloadSettingsDTO payloadSettingsDTO = paymentReceiptModel.getPaymentPayload().getPaymentSetting(practiceId);
             PaymentsSettingsPaymentPlansDTO paymentPlanSettings = payloadSettingsDTO.getPayload().getPaymentPlans();

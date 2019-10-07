@@ -2,13 +2,14 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
@@ -18,7 +19,6 @@ import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.payments.adapter.PaymentMethodAdapter;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodInterface;
-import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
@@ -38,19 +38,16 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
 
     public static final String TAG = PaymentMethodFragment.class.getSimpleName();
 
-    protected ListView paymentMethodList;
-
     protected PaymentsModel paymentsModel;
     protected double amountToMakePayment;
 
-    protected List<PatientBalanceDTO> paymentList = new ArrayList<>();
-    protected List<PaymentsMethodsDTO> paymentMethodsList = new ArrayList<>();
-    protected HashMap<String, Integer> paymentTypeMap;
+    private List<PaymentsMethodsDTO> paymentMethodsList = new ArrayList<>();
+    private HashMap<String, Integer> paymentTypeMap;
 
     protected PaymentMethodInterface callback;
     protected boolean onlySelectMode;
 
-    public abstract View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle);//make sure all implementations create a proper view
+    public abstract View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle icicle);//make sure all implementations create a proper view
 
 
     @Override
@@ -79,7 +76,6 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
             if (!paymentsModel.getPaymentPayload().getPaymentSettings().isEmpty()) {
                 paymentMethodsList = getPaymentMethodList();
             }
-            paymentList = paymentsModel.getPaymentPayload().getPatientBalances();
             initPaymentTypeMap();
         }
     }
@@ -93,7 +89,7 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle) {
+    public void onViewCreated(@NonNull View view, Bundle icicle) {
         setupTitleViews(view);
         initializeViews(view);
     }
@@ -113,16 +109,13 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
 //        createPaymentPlanButton.setText(Label.getLabel("payment_create_plan_text"));
 //        createPaymentPlanButton.setEnabled(false);//TODO enable this when ready to support payment plans
 
-        paymentMethodList = view.findViewById(R.id.list_payment_types);
+        ListView paymentMethodList = view.findViewById(R.id.list_payment_types);
         final PaymentMethodAdapter paymentMethodAdapter = new PaymentMethodAdapter(getContext(), paymentMethodsList, paymentTypeMap);
 
         paymentMethodList.setAdapter(paymentMethodAdapter);
-        paymentMethodList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                PaymentsMethodsDTO paymentMethod = paymentMethodsList.get(position);
-                handlePaymentButton(paymentMethod, amountToMakePayment);
-            }
+        paymentMethodList.setOnItemClickListener((parent, view1, position, id) -> {
+            PaymentsMethodsDTO paymentMethod = paymentMethodsList.get(position);
+            handlePaymentButton(paymentMethod, amountToMakePayment);
         });
 
     }
@@ -146,13 +139,8 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
             case CarePayConstants.TYPE_CASH:
                 LargeAlertDialogFragment fragment = LargeAlertDialogFragment.newInstance(Label.getLabel("payment_cash_message"),
                         Label.getLabel("payment_ok"),
-                        R.color.lemonGreen, R.drawable.icn_payment_cash_selected);
-                fragment.setLargeAlertInterface(new LargeAlertDialogFragment.LargeAlertInterface() {
-                    @Override
-                    public void onActionButton() {
-                        onPaymentCashFinished();
-                    }
-                });
+                        R.color.lemonGreen, R.drawable.icn_payment_cash_selected, 18);
+                fragment.setLargeAlertInterface(() -> onPaymentCashFinished());
                 fragment.show(getFragmentManager(), LargeAlertDialogFragment.class.getName());
                 logPaymentMethodSelection(getString(R.string.payment_cash));
                 break;
@@ -177,29 +165,6 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
     protected void onPaymentCashFinished() {
         //do nothing for patient app
     }
-
-//    private View.OnClickListener createPaymentPlanButtonListener = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//            if (paymentsModel != null) {
-//
-//                double previousBalance = 0;
-//                double coPay = 0;
-//
-//                for (PaymentPatientBalancesPayloadDTO payment : paymentList.get(0).getPayload()) {//// TODO: 10/18/17 support multipractice whenever payment plans are ready
-//                    if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.PREVIOUS_BALANCE)) {
-//                        previousBalance = Double.parseDouble(payment.getTotal());
-//                    } else if (payment.getBalanceType().equalsIgnoreCase(CarePayConstants.COPAY)) {
-//                        coPay = Double.parseDouble(payment.getTotal());
-//                    }
-//                }
-//
-//                if ((previousBalance + coPay) > 0) {
-//                    callback.onPaymentPlanAction(paymentsModel);
-//                }
-//            }
-//        }
-//    };
 
     protected List<PaymentsMethodsDTO> getPaymentMethodList() {
         UserPracticeDTO userPracticeDTO = callback.getPracticeInfo(paymentsModel);
