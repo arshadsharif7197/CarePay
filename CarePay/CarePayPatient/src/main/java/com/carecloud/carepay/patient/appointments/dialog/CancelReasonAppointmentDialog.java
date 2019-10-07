@@ -9,7 +9,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.widget.AppCompatRadioButton;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -39,7 +38,6 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
     private RadioGroup cancelReasonRadioGroup;
     private Button cancelAppointmentButton;
     private EditText reasonEditText;
-    private TextInputLayout reasonTextInputLayout;
 
     private int selectedReasonId = -1;
     private List<CancellationReasonDTO> cancellationReasons;
@@ -80,7 +78,7 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_cancel_reason_appointment, container, false);
+        return inflater.from(getContext()).inflate(R.layout.dialog_cancel_reason_appointment, container, false);
     }
 
     @Override
@@ -95,10 +93,9 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
     private void onInitialization() {
         ((CarePayTextView) findViewById(R.id.heading_text))
                 .setText(Label.getLabel("cancel_appointment_reasons_title"));
-        reasonTextInputLayout = (TextInputLayout) findViewById(R.id.reasonTextInputLayout);
         reasonEditText = (EditText) findViewById(R.id.reasonEditText);
         reasonEditText.setHint(Label.getLabel("cancel_appointment_other_reason_hint"));
-        reasonEditText.setHintTextColor(getResources().getColor(R.color.light_gray_dialog));
+        reasonEditText.setHintTextColor(getResources().getColor(R.color.gray));
 
         cancelReasonRadioGroup = (RadioGroup) findViewById(R.id.cancelReasonRadioGroup);
         cancelAppointmentButton = (Button) findViewById(R.id.cancelAppointmentButton);
@@ -150,16 +147,6 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
                 onSelectionRadioCancel(checkedRadioButton.isChecked());
             }
         });
-
-        reasonEditText.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                view.setFocusable(true);
-                view.setFocusableInTouchMode(true);
-                return false;
-            }
-        });
-
         cancelAppointmentButton.setOnClickListener(this);
     }
 
@@ -177,20 +164,16 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
     @SuppressWarnings("deprecation")
     private void onSelectionRadioCancel(boolean isSelected) {
         if (isSelected) {
-//            cancelAppointmentButton.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.button_red_border));
             cancelAppointmentButton.setEnabled(true);
-//            cancelAppointmentButton.setTextColor(ContextCompat.getColor(context, R.color.harvard_crimson));
         }
 
         // Check for other cancellation reason
         if (cancellationReasons.get(cancellationReasons.size() - 1).getAppointmentCancellationReason().getId() == selectedReasonId) {
-            reasonTextInputLayout.setVisibility(View.VISIBLE);
             reasonEditText.setEnabled(true);
-            reasonEditText.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+            reasonEditText.setHintTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
         } else {
-            reasonTextInputLayout.setVisibility(View.GONE);
             reasonEditText.setEnabled(false);
-            reasonEditText.setTextColor(ContextCompat.getColor(getContext(), R.color.light_gray_dialog));
+            reasonEditText.setHintTextColor(ContextCompat.getColor(getContext(), R.color.gray));
         }
     }
 

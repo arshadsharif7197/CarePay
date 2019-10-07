@@ -139,7 +139,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.exitFlow) {
             ConfirmDialogFragment fragment = ConfirmDialogFragment
-                    .newInstance(Label.getLabel("checkin_confirm_exit_title"),
+                    .newInstance(Label.getLabel("checkout_confirm_exit_title"),
                             Label.getLabel("checkin_confirm_exit_message"),
                             Label.getLabel("button_no"),
                             Label.getLabel("button_yes"));

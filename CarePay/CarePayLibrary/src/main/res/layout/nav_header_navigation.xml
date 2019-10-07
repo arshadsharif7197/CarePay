@@ -20,26 +20,42 @@
         android:layout_marginBottom="@dimen/nav_image_padding"
         android:src="@drawable/icn_placeholder_user_profile_png" />
 
-    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-        android:id="@+id/userNameTextView"
+    <LinearLayout
+        android:id="@+id/patientNameLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/appointmentDrawerIdImageView"
-        android:layout_alignParentStart="true"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:singleLine="true"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_size_20"
-        android:textStyle="bold"
-        app:customAssetFont="proxima_nova_extra_bold"
-        tools:text="Pablo Johnson" />
+        android:orientation="horizontal">
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/userNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_20"
+            android:textStyle="bold"
+            app:customAssetFont="proxima_nova_extra_bold"
+            tools:text="Pablo Johnson" />
+
+        <ImageView
+            android:id="@+id/editProfile"
+            android:layout_width="@dimen/dimen_18dp"
+            android:layout_height="@dimen/dimen_18dp"
+            android:layout_marginStart="@dimen/dimen_8dp"
+            android:layout_weight="0"
+            android:src="@drawable/icon_pencil_white_background" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/profileListTriggerIcon"
         android:layout_width="@dimen/profileListTriggerIconSize"
         android:layout_height="@dimen/profileListTriggerIconSize"
-        android:layout_below="@id/userNameTextView"
+        android:layout_below="@id/patientNameLayout"
         android:layout_alignParentEnd="true"
         android:background="?selectableItemBackground"
         android:paddingTop="@dimen/profileListTriggerIconPadding"
@@ -50,7 +66,7 @@
         android:id="@+id/menuUserEmailTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/userNameTextView"
+        android:layout_below="@id/patientNameLayout"
         android:layout_alignParentStart="true"
         android:layout_toStartOf="@id/profileListTriggerIcon"
         android:ellipsize="end"
