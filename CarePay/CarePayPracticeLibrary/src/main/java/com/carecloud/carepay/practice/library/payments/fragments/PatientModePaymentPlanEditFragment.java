@@ -6,9 +6,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanEditFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
@@ -41,8 +43,7 @@ public class PatientModePaymentPlanEditFragment extends PaymentPlanEditFragment 
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
-                callback.onDismissEditPaymentPlan(paymentsModel, paymentPlanDTO);
+                cancel();
             }
         });
     }
@@ -50,10 +51,10 @@ public class PatientModePaymentPlanEditFragment extends PaymentPlanEditFragment 
     @Override
     protected void setupHeader(View view) {
         super.setupHeader(view);
-        TextView headerPaymentAmount = (TextView) view.findViewById(R.id.headerPlanTotal);
+        TextView headerPaymentAmount = view.findViewById(R.id.headerPlanTotal);
         headerPaymentAmount.setText(currencyFormatter.format(paymentPlanAmount));
 
-        TextView patientBalance = (TextView) view.findViewById(R.id.patientBalance);
+        TextView patientBalance = view.findViewById(R.id.patientBalance);
         patientBalance.setText(currencyFormatter.format(paymentPlanAmount));
     }
 
@@ -74,5 +75,34 @@ public class PatientModePaymentPlanEditFragment extends PaymentPlanEditFragment 
     @Override
     protected Button getActionButton() {
         return editPaymentPlanButton;
+    }
+
+    @Override
+    protected void showCancelPaymentPlanConfirmDialog(final boolean deletePaymentPlan) {
+        String title = Label.getLabel("payment.cancelPaymentPlan.confirmation.popup.title");
+        String message = Label.getLabel("payment.cancelPaymentPlan.confirmation.popup.message");
+        if (deletePaymentPlan) {
+            title = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.title");
+            message = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.message");
+        }
+        ConfirmDialogFragment fragment = ConfirmDialogFragment.newInstance(title, message);
+        fragment.setOnCancelListener(onDialogCancelListener);
+        fragment.setCallback(new ConfirmationCallback() {
+            @Override
+            public void onConfirm() {
+                cancelPaymentPlan(deletePaymentPlan);
+            }
+        });
+        callback.displayDialogFragment(fragment, true);
+        hideDialog();
+    }
+
+    @Override
+    protected void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
+        PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
+                .newInstance(paymentsModel, paymentPlanDTO, true);
+        fragment.setOnCancelListener(onDialogCancelListener);
+        callback.displayDialogFragment(fragment, true);
+        hideDialog();
     }
 }

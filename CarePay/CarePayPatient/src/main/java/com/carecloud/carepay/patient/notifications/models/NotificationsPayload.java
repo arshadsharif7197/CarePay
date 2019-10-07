@@ -1,6 +1,8 @@
 package com.carecloud.carepay.patient.notifications.models;
 
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
+import com.carecloud.carepaylibray.base.dtos.DelegatePermissionBasePayloadDto;
 import com.carecloud.carepaylibray.base.models.Paging;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicPayloadDTO;
 import com.google.gson.annotations.Expose;
@@ -13,7 +15,7 @@ import java.util.List;
  * Created by lmenendez on 5/11/17.
  */
 
-public class NotificationsPayload {
+public class NotificationsPayload extends DelegatePermissionBasePayloadDto {
 
     @SerializedName("notifications")
     @Expose
@@ -24,6 +26,9 @@ public class NotificationsPayload {
     @SerializedName("demographics")
     @Expose
     private DemographicPayloadDTO demographicDTO = new DemographicPayloadDTO();
+    @SerializedName("practice_information")
+    @Expose
+    private List<UserPracticeDTO> practiceInformation = new ArrayList<>();
 
     @SerializedName("page_details")
     @Expose
@@ -59,5 +64,13 @@ public class NotificationsPayload {
 
     public void setPaging(Paging paging) {
         this.paging = paging;
+    }
+
+    public List<UserPracticeDTO> getPracticeInformation() {
+        return practiceInformation;
+    }
+
+    public void setPracticeInformation(List<UserPracticeDTO> practiceInformation) {
+        this.practiceInformation = practiceInformation;
     }
 }

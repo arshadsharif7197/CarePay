@@ -1,6 +1,6 @@
 package com.carecloud.carepaylibray.payments.models.history;
 
-import android.support.annotation.StringDef;
+import androidx.annotation.StringDef;
 
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;

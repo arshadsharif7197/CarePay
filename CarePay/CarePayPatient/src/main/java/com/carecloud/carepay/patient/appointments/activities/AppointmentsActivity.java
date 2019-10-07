@@ -3,20 +3,22 @@ package com.carecloud.carepay.patient.appointments.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.MenuItem;
+
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentFragment;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentTabHostFragment;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
-import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
+import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
+import com.carecloud.carepay.patient.rate.RateDialog;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -28,6 +30,8 @@ import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.profile.Profile;
+import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -48,8 +52,10 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         super.onCreate(savedInstanceState);
         Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
         boolean forceRefresh = false;
+        boolean showSurvey = false;
         if (extra != null) {
             forceRefresh = extra.getBoolean(CarePayConstants.REFRESH, false);
+            showSurvey = extra.getBoolean(CarePayConstants.SHOW_SURVEY, false);
         }
         appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
         if (appointmentsResultModel == null || forceRefresh) {
@@ -58,6 +64,9 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             resumeOnCreate();
         }
 
+        if (showSurvey || forceRefresh) {
+            showRateDialogFragment();
+        }
     }
 
     private void callAppointmentService() {
@@ -110,11 +119,14 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                 break;
             case PatientAppointmentPresenter.CHECK_IN_FLOW_REQUEST_CODE:
                 if (resultCode == RESULT_CANCELED) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            refreshAppointments();
-                        }
+                    new Handler().postDelayed(() -> {
+                        refreshAppointments();
+                        showRateDialogFragment();
+                    }, 100);
+                } else if (resultCode == RESULT_OK) {
+                    new Handler().postDelayed(() -> {
+                        refreshAppointments();
+                        showRateDialogFragment();
                     }, 100);
                 }
                 break;
@@ -124,13 +136,18 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         }
     }
 
+    private void showRateDialogFragment() {
+        if (ApplicationPreferences.getInstance().shouldShowRateDialog()) {
+            displayDialogFragment(RateDialog.newInstance(), true);
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
-        MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_appointments);
-        menuItem.setChecked(true);
+        selectMenuItem(R.id.appointmentMenuItem);
         if (!toolbarHidden) {
-            displayToolbar(true, menuItem.getTitle().toString());
+            displayToolbar(true, getScreenTitle(Label.getLabel("navigation_link_appointments")));
         }
     }
 
@@ -139,7 +156,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     }
 
     @Override
-    public void onBackPressed() {// sign-out from Cognito
+    public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -173,8 +190,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         for (int i = 0; i < backStackCount; i++) {
             fragmentManager.popBackStackImmediate();
         }
-        MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_appointments);
-        displayToolbar(true, menuItem.getTitle().toString());
+        displayToolbar(true, getScreenTitle(Label.getLabel("navigation_link_appointments")));
         toolbarHidden = false;
         refreshAppointments();
         if (showSuccess) {
@@ -208,5 +224,16 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     @Override
     public DTO getDto() {
         return appointmentsResultModel;
+    }
+
+    @Override
+    protected void onProfileChanged(ProfileDto profile) {
+        displayToolbar(true, getScreenTitle(Label.getLabel("navigation_link_appointments")));
+        callAppointmentService();
+    }
+
+    @Override
+    protected Profile getCurrentProfile() {
+        return appointmentsResultModel.getPayload().getDelegate();
     }
 }

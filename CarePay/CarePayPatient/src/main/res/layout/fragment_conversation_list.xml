@@ -18,7 +18,7 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/messages_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -34,6 +34,7 @@
         android:background="@color/light_gray" />
 
     <LinearLayout
+        android:id="@+id/messageInputContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

@@ -179,6 +179,10 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
     }
 
     private String getPatientId(String practiceId) {
+        if (appointmentModelDto.getPayload().getDelegate() != null) {
+            return appointmentModelDto.getPayload().getDelegate().getProfileLink(practiceId).getPatientId();
+        }
+
         PracticePatientIdsDTO[] practicePatientIdArray = ApplicationPreferences.getInstance()
                 .getObjectFromSharedPreferences(CarePayConstants.KEY_PRACTICE_PATIENT_IDS,
                         PracticePatientIdsDTO[].class);
