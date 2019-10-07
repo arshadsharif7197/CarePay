@@ -10,16 +10,12 @@ import org.junit.runner.RunWith
  * Created by drodriguez on 2019-09-17.
  */
 @RunWith(AndroidJUnit4::class)
-class PACheckInAppointment : BaseTest() {
+class PACheckOutAppointment : BaseTest() {
 
     @Test
-    fun paCheckInAppointment() {
+    fun paCheckOutAppointment() {
         AppointmentScreen()
-                .checkInFirstAppointmentOnList(1)
-                .personalInfoNextStep()
-                .addressNextStep()
-                .demographicsNextStep()
-                .medicationsNextstep()
-                .allergiesNextstep()
+                .checkOutFirstAppointmentOnList(1)
+                .scheduleAppointmentLater()
     }
 }

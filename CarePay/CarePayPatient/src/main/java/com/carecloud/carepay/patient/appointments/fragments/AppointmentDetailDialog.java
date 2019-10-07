@@ -470,6 +470,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
             actionsLayout.setVisibility(View.VISIBLE);
             leftButton.setVisibility(View.VISIBLE);
             leftButton.setText(Label.getLabel("appointment_request_checkout_now"));
+            leftButton.setContentDescription(getString(R.string.content_description_checkout_appointment_button));
             leftButton.setOnClickListener(checkOutClick);
         }
     }
