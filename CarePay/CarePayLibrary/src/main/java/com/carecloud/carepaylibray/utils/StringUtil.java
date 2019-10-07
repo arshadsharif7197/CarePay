@@ -8,8 +8,6 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.isNotEmptyString;
-
 import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,6 +15,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.isNotEmptyString;
 
 public class StringUtil {
 
@@ -55,10 +55,11 @@ public class StringUtil {
         String[] strArr = source.split(" ");
         for (String str : strArr) {
             char[] stringArray = str.trim().toCharArray();
-            stringArray[0] = Character.toUpperCase(stringArray[0]);
-            str = new String(stringArray);
-
-            res.append(str).append(" ");
+            if (stringArray.length > 0) {
+                stringArray[0] = Character.toUpperCase(stringArray[0]);
+                str = new String(stringArray);
+                res.append(str).append(" ");
+            }
         }
 
         return res.toString().trim();
@@ -388,7 +389,7 @@ public class StringUtil {
      * @return modified String
      */
     public static String capitalize(String capString) {
-        if(isNullOrEmpty(capString)){
+        if (isNullOrEmpty(capString)) {
             return "";
         }
         StringBuffer capBuffer = new StringBuffer();

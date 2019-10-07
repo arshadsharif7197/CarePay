@@ -11,7 +11,7 @@
         android:id="@+id/toolbar_layout"
         layout="@layout/toolbar_responsibility" />
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -306,7 +306,7 @@
 
             </LinearLayout>
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/balance_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -350,7 +350,7 @@
             </LinearLayout>
 
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:id="@+id/create_payment_plan_button"

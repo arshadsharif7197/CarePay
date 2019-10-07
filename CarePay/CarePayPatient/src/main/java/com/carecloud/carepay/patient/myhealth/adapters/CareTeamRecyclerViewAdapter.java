@@ -1,11 +1,12 @@
 package com.carecloud.carepay.patient.myhealth.adapters;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthProviderDto;
@@ -57,8 +58,8 @@ public class CareTeamRecyclerViewAdapter extends RecyclerView.Adapter<CareTeamRe
             holder.providerSpecialityTextView.setText(String.format("%s, %s",
                     provider.getSpecialityName(), provider.getPractice()));
             holder.initials.setText(StringUtil.getShortName(provider.getFullName()));
-            PicassoHelper.get().loadImage(holder.providerImageView.getContext(), holder.providerImageView,
-                    holder.initials, provider.getPhoto());
+            PicassoHelper.get().loadImage(holder.providerImageView.getContext(),
+                    holder.providerImageView, holder.initials, provider.getPhoto());
             holder.row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

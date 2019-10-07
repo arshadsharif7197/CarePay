@@ -1,4 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:id="@+id/appointmentsList"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,9 +11,48 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar_title_only" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/providers_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/noProvidersMessage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_60dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icn_empty_state_messages" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dimen_5dp"
+                android:src="@drawable/icn_close_red_circle" />
+
+        </RelativeLayout>
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/dimen_20dp"
+            android:paddingEnd="@dimen/dimen_20dp"
+            breeze:textKey="messaging_no_enabled_providers"
+            android:textSize="@dimen/text_size_21"
+            android:textColor="#37474F"
+            app:customAssetFont="gotham_rounded_medium" />
+
+    </LinearLayout>
+
 
 </LinearLayout>

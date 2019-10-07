@@ -1,7 +1,7 @@
 package com.carecloud.carepaylibray.utils;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepaylibrary.R;

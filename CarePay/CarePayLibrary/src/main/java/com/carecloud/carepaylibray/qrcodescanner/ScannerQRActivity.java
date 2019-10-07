@@ -2,8 +2,8 @@ package com.carecloud.carepaylibray.qrcodescanner;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
@@ -25,7 +25,7 @@ public class ScannerQRActivity extends BaseActivity implements ZXingScannerView.
         super.onCreate(state);
         setContentView(com.carecloud.carepaylibrary.R.layout.activity_qr_scanner);
         setupToolbar();
-        ViewGroup contentFrame = (ViewGroup) findViewById(R.id.content_frame);
+        ViewGroup contentFrame = findViewById(R.id.content_frame);
         zXingScannerView = new ZXingScannerView(this);
         contentFrame.addView(zXingScannerView);
     }
@@ -61,7 +61,7 @@ public class ScannerQRActivity extends BaseActivity implements ZXingScannerView.
      *
      * */
     public void setupToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarScanner);
+        Toolbar toolbar = findViewById(R.id.toolbarScanner);
         setSupportActionBar(toolbar);
         final ActionBar ab = getSupportActionBar();
         if(ab != null) {
@@ -78,6 +78,10 @@ public class ScannerQRActivity extends BaseActivity implements ZXingScannerView.
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
 
+    @Override
+    protected void stopSessionService() {
+        //NA
     }
 }

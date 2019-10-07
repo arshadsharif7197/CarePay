@@ -1,6 +1,7 @@
 
 package com.carecloud.carepaylibray.demographicsettings.models;
 
+import com.carecloud.carepaylibray.base.dtos.DelegatePermissionBasePayloadDto;
 import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.payments.models.PapiAccountsDTO;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
@@ -10,7 +11,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DemographicsSettingsPayloadDTO {
+public class DemographicsSettingsPayloadDTO extends DelegatePermissionBasePayloadDto {
 
     @SerializedName("languages")
     @Expose
