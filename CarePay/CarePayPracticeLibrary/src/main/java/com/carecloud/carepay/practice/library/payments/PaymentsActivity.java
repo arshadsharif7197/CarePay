@@ -3,10 +3,10 @@ package com.carecloud.carepay.practice.library.payments;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -23,9 +23,7 @@ import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDial
 import com.carecloud.carepay.practice.library.payments.dialogs.PracticeModePaymentPlanEditFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeModePaymentPlanFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanChooseCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanConfirmationFragment;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticeValidPlansFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.RefundDetailFragment;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentNavigationCallback;
 import com.carecloud.carepay.practice.library.payments.interfaces.ShamrockPaymentsCallback;
@@ -50,11 +48,9 @@ import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
-import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentModel;
 import com.carecloud.carepaylibray.payments.models.ScheduledPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.history.PaymentHistoryItem;
@@ -109,12 +105,7 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     private void setUpUI() {
         findViewById(R.id.practice_payment_find_patient).setOnClickListener(onFindPatientClick());
-        findViewById(R.id.goBackTextview).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
+        findViewById(R.id.goBackTextview).setOnClickListener(view -> onBackPressed());
         findViewById(R.id.change_date_range).setOnClickListener(selectDateRange);
         setUpFilter();
     }
@@ -169,15 +160,12 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
     private void initializePatientListView() {
         TwoColumnPatientListView patientListView = findViewById(R.id.list_patients);
         patientListView.setPaymentsModel(paymentsModel);
-        patientListView.setCallback(new TwoColumnPatientListView.TwoColumnPatientListViewListener() {
-            @Override
-            public void onPatientTapped(Object dto) {
-                PatientBalanceDTO balancessDTO = (PatientBalanceDTO) dto;
-                PatientModel patient = new PatientModel();
-                patient.setPatientId(balancessDTO.getBalances().get(0).getMetadata().getPatientId());
-                patientId = patient.getPatientId();
-                getPatientBalanceDetails(patientId);
-            }
+        patientListView.setCallback(dto -> {
+            PatientBalanceDTO balancessDTO = (PatientBalanceDTO) dto;
+            PatientModel patient = new PatientModel();
+            patient.setPatientId(balancessDTO.getBalances().get(0).getMetadata().getPatientId());
+            patientId = patient.getPatientId();
+            getPatientBalanceDetails(patientId);
         });
         applyFilter();
     }
@@ -268,40 +256,27 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     @NonNull
     private View.OnClickListener onFilterIconClick() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FilterDialog filterDialog = new FilterDialog(PaymentsActivity.this,
-                        findViewById(R.id.activity_practice_payment), filterModel
-                );
+        return view -> {
+            FilterDialog filterDialog = new FilterDialog(PaymentsActivity.this,
+                    findViewById(R.id.activity_practice_payment), filterModel
+            );
 
-                filterDialog.showPopWindow();
-            }
+            filterDialog.showPopWindow();
         };
     }
 
     private View.OnClickListener onFindPatientClick() {
-        return new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata()
-                        .getPaymentsLinks().getFindPatient();
-                FindPatientDialog findPatientDialog = FindPatientDialog.newInstance(transitionDTO, Label.getLabel("practice_payments_filter_find_patient_by_name"));
-                setFindPatientOnItemClickedListener(findPatientDialog);
-                displayDialogFragment(findPatientDialog, false);
-            }
-        };
-    }
-
-    private void setFindPatientOnItemClickedListener(FindPatientDialog findPatientDialog) {
-        findPatientDialog.setClickedListener(new FindPatientDialog.OnItemClickedListener() {
-            @Override
-            public void onItemClicked(PatientModel patient) {
+        return view -> {
+            TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata()
+                    .getPaymentsLinks().getFindPatient();
+            FindPatientDialog findPatientDialog = FindPatientDialog.newInstance(transitionDTO,
+                    Label.getLabel("practice_payments_filter_find_patient_by_name"));
+            findPatientDialog.setListener(patient -> {
                 patientId = patient.getPatientId();
                 getPatientBalanceDetails(patientId);
-            }
-        });
+            });
+            displayDialogFragment(findPatientDialog, false);
+        };
     }
 
     private void getPatientBalanceDetails(String patientId) {
@@ -407,12 +382,8 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
 
     private void displayPendingTransactionDialog(boolean isRefund) {
         PaymentQueuedDialogFragment dialogFragment = PaymentQueuedDialogFragment.newInstance(isRefund);
-        DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                hidePaymentDistributionFragment(new UpdatePatientBalancesDTO());
-            }
-        };
+        DialogInterface.OnDismissListener dismissListener = dialog
+                -> hidePaymentDistributionFragment(new UpdatePatientBalancesDTO());
         dialogFragment.setOnDismissListener(dismissListener);
         displayDialogFragment(dialogFragment, false);
     }
@@ -532,7 +503,6 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         if (fragment instanceof PracticeModePaymentPlanFragment) {
             ((PracticeModePaymentPlanFragment) fragment).showDialog();
             ((PracticeModePaymentPlanFragment) fragment).replacePaymentMethod(creditCard);
-            return;
         }
     }
 

@@ -21,14 +21,11 @@ android:
     - google-gdk-license-.+
 before_install:
   - chmod +x ./CarePay/gradlew
-  - chmod +x ./IntegratedPayments/gradlew
   - mkdir "$ANDROID_HOME/licenses" || true
   - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
   - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
   - ./CarePay/gradlew dependencies || true
-  - ./IntegratedPayments/gradlew dependencies || true
   - chmod +x ./CarePay/runner
-  - chmod +x ./IntegratedPayments/runner
   - pip install --user awscli
   - yes | sdkmanager "platforms;android-28"
   - yes | sdkmanager "build-tools;28.0.3"
@@ -41,8 +38,6 @@ cache:
     - $HOME/.gradle/wrapper/
 script:
    - jdk_switcher use oraclejdk8
-   - cd /home/travis/build/CareCloud/shamrock_android/IntegratedPayments
-   - ./runner testfairy
    - cd /home/travis/build/CareCloud/shamrock_android/CarePay
    - ./runner testfairy
 

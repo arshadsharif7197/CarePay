@@ -2,7 +2,7 @@ package com.carecloud.carepay.patient.patientsplash;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.test.InstrumentationRegistry;
+import androidx.test.InstrumentationRegistry;
 import android.util.Log;
 
 import com.carecloud.carepay.patient.patientsplash.dtos.SelectLanguageDTO;

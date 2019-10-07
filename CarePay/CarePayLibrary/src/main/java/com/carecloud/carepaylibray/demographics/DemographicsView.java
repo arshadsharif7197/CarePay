@@ -1,7 +1,7 @@
 package com.carecloud.carepaylibray.demographics;
 
 import android.content.Context;
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentManager;
 
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;

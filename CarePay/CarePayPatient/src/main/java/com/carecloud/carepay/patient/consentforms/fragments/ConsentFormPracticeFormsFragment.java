@@ -2,9 +2,11 @@ package com.carecloud.carepay.patient.consentforms.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,29 +88,28 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater,
+    public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_consent_forms_provider, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         selectedForms = new ArrayList<>();
-        signSelectedFormsButton = (Button) view.findViewById(R.id.signSelectedFormsButton);
+        signSelectedFormsButton = view.findViewById(R.id.signSelectedFormsButton);
         if (mode == ConsentFormViewPagerFragment.PENDING_MODE) {
-            signSelectedFormsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    List<ConsentFormUserResponseDTO> localSelectedFormResponse = new ArrayList<>();
-                    for (PracticeForm form : selectedForms) {
-                        localSelectedFormResponse.add(form.getFormUserResponseDTO());
-                    }
-                    callback.showForms(selectedForms, localSelectedFormResponse, selectedPracticeIndex, true);
+            signSelectedFormsButton.setOnClickListener(v -> {
+                List<ConsentFormUserResponseDTO> localSelectedFormResponse = new ArrayList<>();
+                for (PracticeForm form : selectedForms) {
+                    localSelectedFormResponse.add(form.getFormUserResponseDTO());
                 }
+                callback.showForms(selectedForms, localSelectedFormResponse, selectedPracticeIndex, true);
             });
-            signSelectedFormsButton.setVisibility(View.VISIBLE);
+            if (canReviewForms()) {
+                signSelectedFormsButton.setVisibility(View.VISIBLE);
+            }
         }
 
         setUpRecyclerView(view);
@@ -116,21 +117,18 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
 
     protected void setUpRecyclerView(View view) {
         UserFormDTO userFormDto = consentFormDto.getPayload().getUserForms().get(selectedPracticeIndex);
-        RecyclerView practiceConsentFormsRecyclerView = (RecyclerView) view
+        RecyclerView practiceConsentFormsRecyclerView = view
                 .findViewById(R.id.providerConsentFormsRecyclerView);
         practiceConsentFormsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         List<PracticeForm> practiceForms = getPracticeForms(userFormDto);
-        if (practiceForms.isEmpty()) {
-            view.findViewById(R.id.emptyStateScreen).setVisibility(View.VISIBLE);
-            TextView title = (TextView) view.findViewById(R.id.emptyStateTitleTextView);
-            title.setText(Label.getLabel(mode == ConsentFormViewPagerFragment.HISTORIC_MODE ?
-                    "adhoc.historyforms.empty.label.title" : "adhoc.pendingforms.empty.label.title"));
+        if (!consentFormDto.getPayload().canViewForms(userFormDto.getMetadata().getPracticeId())) {
+            showNoPermissionScreen(view);
             practiceConsentFormsRecyclerView.setVisibility(View.GONE);
-            signSelectedFormsButton.setVisibility(View.GONE);
-            ((TextView) view.findViewById(R.id.emptyStateSubTitleTextView)).setText(
-                    mode == ConsentFormViewPagerFragment.HISTORIC_MODE ?
-                            Label.getLabel("adhoc.historyforms.empty.label.description") :
-                            Label.getLabel("adhoc.forms.empty.label.description"));
+            return;
+        }
+        if (practiceForms.isEmpty()) {
+            showEmptyScreen(view);
+            practiceConsentFormsRecyclerView.setVisibility(View.GONE);
             return;
         }
         adapter = new ConsentFormsAdapter(getContext(), this, practiceForms, mode);
@@ -140,6 +138,26 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
             paging = userFormDto.getHistoryForms().getPaging();
             practiceConsentFormsRecyclerView.addOnScrollListener(scrollListener);
         }
+    }
+
+    private void showNoPermissionScreen(View view) {
+        view.findViewById(R.id.emptyStateScreen).setVisibility(View.VISIBLE);
+        TextView title = view.findViewById(R.id.emptyStateTitleTextView);
+        title.setText(Label.getLabel("patient.delegation.delegates.permissions.label.noPermission"));
+        signSelectedFormsButton.setVisibility(View.GONE);
+        view.findViewById(R.id.emptyStateSubTitleTextView).setVisibility(View.GONE);
+    }
+
+    private void showEmptyScreen(View view) {
+        view.findViewById(R.id.emptyStateScreen).setVisibility(View.VISIBLE);
+        TextView title = view.findViewById(R.id.emptyStateTitleTextView);
+        title.setText(Label.getLabel(mode == ConsentFormViewPagerFragment.HISTORIC_MODE ?
+                "adhoc.historyforms.empty.label.title" : "adhoc.pendingforms.empty.label.title"));
+        signSelectedFormsButton.setVisibility(View.GONE);
+        ((TextView) view.findViewById(R.id.emptyStateSubTitleTextView)).setText(
+                mode == ConsentFormViewPagerFragment.HISTORIC_MODE ?
+                        Label.getLabel("adhoc.historyforms.empty.label.description") :
+                        Label.getLabel("adhoc.forms.empty.label.description"));
     }
 
     private List<PracticeForm> getPracticeForms(UserFormDTO userFormDTO) {
@@ -185,9 +203,16 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
         callback.showForms(localSelectedForm, localSelectedFormResponse, selectedPracticeIndex, false);
     }
 
+    @Override
+    public boolean canReviewForms() {
+        String practiceId = consentFormDto.getPayload().getUserForms()
+                .get(selectedPracticeIndex).getMetadata().getPracticeId();
+        return consentFormDto.getPayload().canReviewForms(practiceId);
+    }
+
     private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
         @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
             super.onScrolled(recyclerView, dx, dy);
             if (hasMorePages()) {
@@ -197,7 +222,6 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
                     isPaging = true;
                 }
             }
-
         }
     };
 

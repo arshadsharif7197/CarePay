@@ -64,7 +64,7 @@
             android:orientation="vertical"
             android:weightSum="5">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/dialog_date_range_picker_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
                     android:layout_gravity="center"
                     app:customAssetFont="gotham_rounded_medium" />
 
-            </android.support.v7.widget.Toolbar>
+            </androidx.appcompat.widget.Toolbar>
 
             <LinearLayout
                 android:id="@+id/daysContainer"

@@ -1,7 +1,7 @@
 package com.carecloud.carepay.patient.selectlanguage;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;

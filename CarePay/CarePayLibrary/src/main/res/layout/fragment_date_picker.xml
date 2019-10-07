@@ -9,7 +9,7 @@
     android:padding="@dimen/dimen_20dp"
     android:weightSum="5">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/add_appointment_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
             breeze:textKey="today_appointments_heading"
             tools:text="Today" />
 
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
         android:layout_width="match_parent"
