@@ -268,9 +268,10 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment
                 .newInstance(Label.getLabel("demographics_insurance_primary_alert_title"),
-                        Label.getLabel("demographics_insurance_primary_alert_message_patient"));
+                        Label.getLabel("demographics_insurance_primary_alert_message_patient"),
+                        Label.getLabel("cancel"),
+                        Label.getLabel("ok"));
         confirmDialogFragment.setCallback(callback);
-        confirmDialogFragment.setNegativeAction(true);
         if (cancelListener != null) {
             confirmDialogFragment.setOnCancelListener(cancelListener);
         }
