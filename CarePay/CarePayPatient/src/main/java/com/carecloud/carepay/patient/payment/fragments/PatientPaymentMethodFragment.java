@@ -168,7 +168,16 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment {
                 task1 -> {
                     if (task1.isSuccessful()) {
                         callback.setAndroidPayTargetFragment(this);
-                        getPapiAccount();
+                        mGooglePayButton.setVisibility(View.VISIBLE);
+                        mGooglePayButton.setClickable(true);
+                        mGooglePayButton.setOnClickListener(
+                                view1 -> {
+                                    if (papiAccount == null) {
+                                        getPapiAccount();
+                                    } else {
+                                        requestPayment(papiAccount, amountToMakePayment);
+                                    }
+                                });
                     } else {
                         Log.w("isReadyToPay failed", task1.getException());
                     }
@@ -427,12 +436,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment {
             PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             papiAccount = paymentsModel.getPaymentPayload().getPapiAccountByType(PaymentConstants.ANDROID_PAY_PAPI_ACCOUNT_TYPE);
             papiAccount.setDefaultBankAccountMid(papiAccount.getBankAccount().getMetadata().getMid());
-            if (papiAccount.getDefaultBankAccountMid() != null) {
-                mGooglePayButton.setVisibility(View.VISIBLE);
-                mGooglePayButton.setClickable(true);
-                mGooglePayButton.setOnClickListener(
-                        view1 -> requestPayment(papiAccount, amountToMakePayment));
-            }
+            requestPayment(papiAccount, amountToMakePayment);
         }
 
         @Override
