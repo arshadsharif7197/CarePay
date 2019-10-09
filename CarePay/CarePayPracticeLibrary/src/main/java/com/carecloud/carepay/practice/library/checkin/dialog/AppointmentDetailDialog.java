@@ -113,6 +113,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
 
     private Handler handler;
     private PaymentsModel paymentDetailsModel;
+    private View spacerView;
 
     /**
      * Constructor.
@@ -214,6 +215,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
         shortName = (TextView) findViewById(R.id.patientNameLabelShort);
 
         checkboxLayout = findViewById(R.id.checkbox_layout);
+        spacerView = findViewById(R.id.spacer);
         queueTextLayout = findViewById(R.id.queue_text_layout);
         queueText = (TextView) findViewById(R.id.queue_text);
         patientBalancesLayout = findViewById(R.id.patientBalancesContainer);
@@ -508,9 +510,17 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
             switch (rank) {
                 case 1: {
                     //show single place in queue
-                    queueTextLayout.setVisibility(View.VISIBLE);
-                    checkboxLayout.setVisibility(View.GONE);
-                    queueText.setText(place);
+                    queueTextLayout.setVisibility(View.GONE);
+                    spacerView.setVisibility(View.GONE);
+                    checkboxLayout.setVisibility(View.VISIBLE);
+                    checkBoxes.get(1).setVisibility(View.GONE);
+                    checkBoxes.get(2).setVisibility(View.GONE);
+                    checkBoxes.get(3).setVisibility(View.GONE);
+                    checkBoxes.get(4).setVisibility(View.GONE);
+                    checkBoxes.get(0).setSelected(true);
+                    SpannableString spannableString = new SpannableString(place);
+                    spannableString.setSpan(new CarePayTypefaceSpan(bold), 0, place.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    checkBoxes.get(0).setText(spannableString);
                     break;
                 }
                 case 2: {

@@ -220,7 +220,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             @Override
             public void afterTextChanged(Editable editable) {
                 boolean isEmptyEmail = StringUtil.isNullOrEmpty(emailEditText.getText().toString());
-                if (!isEmptyEmail) { // clear the error
+                if (!isEmptyEmail) { // clearAll the error
                     signInEmailTextInputLayout.setError(null);
                     signInEmailTextInputLayout.setErrorEnabled(false);
                 }

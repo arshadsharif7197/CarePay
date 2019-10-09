@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.homescreen.dtos.PracticeHomeScreenTransitionsDTO;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -46,6 +47,7 @@ public class ChangeModeDialogFragment extends BaseDialogFragment implements View
         super.onCreate(icicle);
         transitions = DtoHelper.getConvertedDTO(PracticeHomeScreenTransitionsDTO.class,
                 getArguments().getString("transitions"));
+        ApplicationPreferences.getInstance().setPatientModeTransition(transitions.getPatientMode());
         options = new ArrayList<>();
         options.add(Label.getLabel("patient_mode_button"));
         options.add(Label.getLabel("logout_button"));
@@ -100,7 +102,7 @@ public class ChangeModeDialogFragment extends BaseDialogFragment implements View
         getWorkflowServiceHelper().execute(transitions.getLogout(), logOutCall, query, headers);
     }
 
-    WorkflowServiceCallback logOutCall = new WorkflowServiceCallback() {
+    private WorkflowServiceCallback logOutCall = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             showProgressDialog();
@@ -131,7 +133,7 @@ public class ChangeModeDialogFragment extends BaseDialogFragment implements View
         getWorkflowServiceHelper().execute(transitions.getPatientMode(), commonTransitionCallback, query);
     }
 
-    WorkflowServiceCallback commonTransitionCallback = new WorkflowServiceCallback() {
+    private WorkflowServiceCallback commonTransitionCallback = new WorkflowServiceCallback() {
         @Override
         public void onPreExecute() {
             showProgressDialog();

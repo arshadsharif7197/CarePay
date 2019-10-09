@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.delegate;
+package com.carecloud.carepay.patient.delegate.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * @author pjohnson on 2019-06-14.
  */
-class PermissionsNameAdapter extends RecyclerView.Adapter<PermissionsNameAdapter.ViewHolder> {
+public class PermissionsNameAdapter extends RecyclerView.Adapter<PermissionsNameAdapter.ViewHolder> {
 
     private final List<Permission> permissionsList;
 
