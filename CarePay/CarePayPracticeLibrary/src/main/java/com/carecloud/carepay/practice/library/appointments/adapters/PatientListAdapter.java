@@ -181,32 +181,32 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         int countDifferentDates = 0;
         int countByDay = 0;
         CardViewPatient header = null;
-        for (CardViewPatient patient : allPatients) {
+        for (CardViewPatient cardViewPatient : allPatients) {
             // Check filter by patient
-            if (filterModel.isFilteringByPatients() && !patients.containsKey(patient.id)) {
+            if (filterModel.isFilteringByPatients() && !patients.containsKey(cardViewPatient.id)) {
                 continue;
             }
             // Check filter by provider
-            if (filterModel.isFilteringByDoctors() && !doctors.containsKey(patient.providerId)) {
+            if (filterModel.isFilteringByDoctors() && !doctors.containsKey(cardViewPatient.providerId)) {
                 continue;
             }
             // Check filter by location
-            if (filterModel.isFilteringByLocations() && !locations.containsKey(patient.locationId)) {
+            if (filterModel.isFilteringByLocations() && !locations.containsKey(cardViewPatient.locationId)) {
                 continue;
             }
 
             sizeFilteredPatients++;
 
             // Count pending and filter by pending
-            if (patient.isRequested) {
+            if (cardViewPatient.isRequested) {
                 sizeFilteredPendingPatients++;
             } else if (filterModel.isFilteringByPending()) {
                 continue;
             }
 
-            if (patient.appointmentStartTime != null
-                    && !DateUtil.isSameDay(dateTime, patient.appointmentStartTime)) {
-                dateTime = patient.appointmentStartTime;
+            if (cardViewPatient.appointmentStartTime != null
+                    && !DateUtil.isSameDay(dateTime, cardViewPatient.appointmentStartTime)) {
+                dateTime = cardViewPatient.appointmentStartTime;
                 if (countByDay % 2 == 1) {
                     filteredPatients.add(new CardViewPatient());
                 }
@@ -221,7 +221,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 header.headCount++;
             }
 
-            filteredPatients.add(patient);
+            filteredPatients.add(cardViewPatient);
             countByDay++;
         }
 

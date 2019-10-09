@@ -299,6 +299,4 @@ public class HowToCheckInActivity extends BasePracticeActivity {
                 return;
         }
     }
-
-
 }

@@ -193,17 +193,6 @@ public class DelegatePermissionBasePayloadDto {
         return profileLink.getPermissionDto().getPermissions().getViewLabResults().isEnabled();
     }
 
-    public boolean canViewMessages(String practiceId) {
-        if (getDelegate() == null) {
-            return true;
-        }
-        ProfileLink profileLink = getDelegate().getProfileLink(practiceId);
-        if (profileLink == null) {
-            return false;
-        }
-        return profileLink.getPermissionDto().getPermissions().getViewMessages().isEnabled();
-    }
-
     public boolean canMessageProviders(String practiceId) {
         if (getDelegate() == null) {
             return true;

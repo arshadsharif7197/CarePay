@@ -19,6 +19,7 @@ import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentFeeDia
 import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentDetailDialog;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.checkout.AllDoneDialogFragment;
 import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
@@ -201,6 +202,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
                 viewHandler.hideProgressDialog();
                 if (workflowDTO.getState().equals(NavigationStateConstants.APPOINTMENTS)) {
                     bundle.putBoolean(CarePayConstants.REFRESH, true);
+                    AllDoneDialogFragment fragment = AllDoneDialogFragment.newInstance(workflowDTO);
+                    displayDialogFragment(fragment, true);
+                    return;
                 }
                 if (workflowDTO.getState().equals(NavigationStateConstants.PATIENT_PAY_CHECKOUT)) {
                     DtoHelper.bundleDto(bundle, appointmentDTO);

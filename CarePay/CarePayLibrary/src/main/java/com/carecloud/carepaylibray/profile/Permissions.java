@@ -11,9 +11,6 @@ public class Permissions {
     @SerializedName("checkin_and_checkout")
     @Expose
     private Permission checkInAndCheckOut;
-    @SerializedName("edit_account_settings")
-    @Expose
-    private Permission editAccountSettings;
     @SerializedName("make_payments")
     @Expose
     private Permission makePayments;
@@ -26,9 +23,6 @@ public class Permissions {
     @SerializedName("schedule_appointments")
     @Expose
     private Permission scheduleAppointments;
-    @SerializedName("view_account_settings")
-    @Expose
-    private Permission viewAccoutSettings;
     @SerializedName("view_allergies")
     @Expose
     private Permission viewAllergies;
@@ -65,9 +59,6 @@ public class Permissions {
     @SerializedName("view_medications")
     @Expose
     private Permission viewMedications;
-    @SerializedName("view_messages")
-    @Expose
-    private Permission viewMessages;
     @SerializedName("view_notifications")
     @Expose
     private Permission viewNotifications;
@@ -81,14 +72,6 @@ public class Permissions {
 
     public void setCheckInAndCheckOut(Permission checkInAndCheckOut) {
         this.checkInAndCheckOut = checkInAndCheckOut;
-    }
-
-    public Permission getEditAccountSettings() {
-        return editAccountSettings;
-    }
-
-    public void setEditAccountSettings(Permission editAccountSettings) {
-        this.editAccountSettings = editAccountSettings;
     }
 
     public Permission getMakePayments() {
@@ -121,14 +104,6 @@ public class Permissions {
 
     public void setScheduleAppointments(Permission scheduleAppointments) {
         this.scheduleAppointments = scheduleAppointments;
-    }
-
-    public Permission getViewAccoutSettings() {
-        return viewAccoutSettings;
-    }
-
-    public void setViewAccoutSettings(Permission viewAccoutSettings) {
-        this.viewAccoutSettings = viewAccoutSettings;
     }
 
     public Permission getViewAllergies() {
@@ -225,14 +200,6 @@ public class Permissions {
 
     public void setViewMedications(Permission viewMedications) {
         this.viewMedications = viewMedications;
-    }
-
-    public Permission getViewMessages() {
-        return viewMessages;
-    }
-
-    public void setViewMessages(Permission viewMessages) {
-        this.viewMessages = viewMessages;
     }
 
     public Permission getViewNotifications() {

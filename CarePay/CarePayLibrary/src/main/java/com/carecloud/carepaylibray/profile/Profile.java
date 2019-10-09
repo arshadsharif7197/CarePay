@@ -39,6 +39,9 @@ public class Profile {
     @SerializedName("demographics")
     private DemographicPayloadInfoDTO demographics;
     @Expose
+    @SerializedName("delegate_demographics")
+    private DemographicPayloadInfoDTO delegateDemographics;
+    @Expose
     @SerializedName("links")
     private List<ProfileLink> links;
 
@@ -106,6 +109,14 @@ public class Profile {
 
     public void setDemographics(DemographicPayloadInfoDTO demographics) {
         this.demographics = demographics;
+    }
+
+    public DemographicPayloadInfoDTO getDelegateDemographics() {
+        return delegateDemographics;
+    }
+
+    public void setDelegateDemographics(DemographicPayloadInfoDTO delegateDemographics) {
+        this.delegateDemographics = delegateDemographics;
     }
 
     public boolean isDelegate() {

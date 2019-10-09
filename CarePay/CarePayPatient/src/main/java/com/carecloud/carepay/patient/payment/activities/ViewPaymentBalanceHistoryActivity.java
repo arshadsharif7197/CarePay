@@ -204,7 +204,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     public void startPaymentProcess(PaymentsModel paymentsModel) {
         PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
                 .newInstance(paymentsModel, selectedBalancesItem.getPayload().get(0),
-                        selectedBalancesItem, paymentEnabled);
+                        selectedBalancesItem, paymentEnabled, true);
         displayDialogFragment(dialog, true);
     }
 
