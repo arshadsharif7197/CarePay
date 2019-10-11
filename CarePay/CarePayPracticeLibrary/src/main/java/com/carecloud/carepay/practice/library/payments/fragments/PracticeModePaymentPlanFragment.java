@@ -20,9 +20,8 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
-import com.carecloud.carepaylibray.payeeze.CallPayeezy;
+import com.carecloud.carepaylibray.payeeze.PayeezyCall;
 import com.carecloud.carepaylibray.payeeze.model.CreditCard;
-import com.carecloud.carepaylibray.payeeze.model.TokenizeResponse;
 import com.carecloud.carepaylibray.payments.adapter.CreditCardsListAdapter;
 import com.carecloud.carepaylibray.payments.fragments.BaseAddCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
@@ -482,14 +481,12 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
     }
 
     protected void authorizeCreditCard() {
-        String currency = "USD";
         String cvv = selectedCreditCard.getCvv();
         String expiryDate = selectedCreditCard.getExpireDt();
         String name = selectedCreditCard.getNameOnCard();
         String cardType = selectedCreditCard.getCardType();
         String number = selectedCreditCard.getCompleteNumber();
 
-        showProgressDialog();
         MerchantServiceMetadataDTO merchantServiceDTO = null;
         for (MerchantServicesDTO merchantService : paymentsModel.getPaymentPayload().getMerchantServices()) {
             if (merchantService.getName().toLowerCase().contains("payeezy")) {
@@ -505,21 +502,19 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         creditCard.setExpDate(expiryDate);
         creditCard.setType(cardType);
 
-        CallPayeezy callPayeezy = new CallPayeezy();
-        callPayeezy.doCall(creditCard, merchantServiceDTO, new CallPayeezy.AuthorizeCreditCardCallback() {
-
-            @Override
-            public void onAuthorizeCreditCard(TokenizeResponse tokenizeResponse) {
-                if (tokenizeResponse != null) {
-                    if (tokenizeResponse.getToken() != null) {
-                        selectedCreditCard.setToken(tokenizeResponse.getToken().getValue());
-                        onAuthorizeCreditCardSuccess();
-                    } else {
-                        onAuthorizeCreditCardFailed();
-                    }
+        showProgressDialog();
+        PayeezyCall payeezyCall = new PayeezyCall();
+        payeezyCall.doCall(creditCard, merchantServiceDTO, tokenizeResponse -> {
+            hideProgressDialog();
+            if (tokenizeResponse != null) {
+                if (tokenizeResponse.getToken() != null) {
+                    selectedCreditCard.setToken(tokenizeResponse.getToken().getValue());
+                    onAuthorizeCreditCardSuccess();
                 } else {
                     onAuthorizeCreditCardFailed();
                 }
+            } else {
+                onAuthorizeCreditCardFailed();
             }
         });
     }
