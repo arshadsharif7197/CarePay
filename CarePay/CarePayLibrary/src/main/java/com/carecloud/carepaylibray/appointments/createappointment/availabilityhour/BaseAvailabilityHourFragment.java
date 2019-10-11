@@ -308,7 +308,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
             public void onFailure(String exceptionMessage) {
                 hideProgressDialog();
                 showErrorNotification(exceptionMessage);
-                Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+                Log.e("Server Error", exceptionMessage);
             }
         }, queryMap);
     }
