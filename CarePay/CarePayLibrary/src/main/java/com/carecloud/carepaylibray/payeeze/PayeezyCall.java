@@ -14,6 +14,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -29,7 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * @author pjohnson on 2019-06-21.
  */
-public class CallPayeezy {
+public class PayeezyCall {
 
     public interface AuthorizeCreditCardCallback {
         void onAuthorizeCreditCard(TokenizeResponse response);
@@ -65,6 +66,7 @@ public class CallPayeezy {
             @Override
             public void onFailure(Call<TokenizeResponse> call, Throwable t) {
                 Log.e("Breeze", t.getMessage());
+                callback.onAuthorizeCreditCard(null);
             }
         });
 
@@ -74,6 +76,9 @@ public class CallPayeezy {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.connectTimeout(0, TimeUnit.MILLISECONDS);
+        httpClient.readTimeout(0, TimeUnit.MILLISECONDS);
+        httpClient.writeTimeout(0, TimeUnit.MILLISECONDS);
         httpClient.addInterceptor(new JSONFormattedLoggingInterceptor());
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
