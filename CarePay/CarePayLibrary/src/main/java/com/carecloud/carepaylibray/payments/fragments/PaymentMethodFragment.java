@@ -139,7 +139,7 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
             case CarePayConstants.TYPE_CASH:
                 LargeAlertDialogFragment fragment = LargeAlertDialogFragment.newInstance(Label.getLabel("payment_cash_message"),
                         Label.getLabel("payment_ok"),
-                        R.color.lemonGreen, R.drawable.icn_payment_cash_selected);
+                        R.color.lemonGreen, R.drawable.icn_payment_cash_selected, 18);
                 fragment.setLargeAlertInterface(() -> onPaymentCashFinished());
                 fragment.show(getFragmentManager(), LargeAlertDialogFragment.class.getName());
                 logPaymentMethodSelection(getString(R.string.payment_cash));

@@ -42,5 +42,7 @@
     <dimen name="profileListTriggerIconPadding">5dp</dimen>
 
     <dimen name="largeAlertMessageTextSize">13sp</dimen>
+
+    <dimen name="inputLayoutRequiredLabelTopMargin">30dp</dimen>
     <dimen name="patient_bottom_round_dimen">5dp</dimen>
 </resources>
