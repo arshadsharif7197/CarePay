@@ -2,7 +2,6 @@ package com.carecloud.carepay.patient.signinsignuppatient.fragments;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.security.keystore.KeyGenParameterSpec;
@@ -27,7 +26,6 @@ import androidx.core.hardware.fingerprint.FingerprintManagerCompat;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.selectlanguage.fragments.SelectLanguageFragment;
-import com.carecloud.carepay.patient.session.PatientSessionService;
 import com.carecloud.carepay.patient.utils.FingerprintUiHelper;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -40,14 +38,15 @@ import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.PlainWebViewFragment;
-import com.carecloud.carepaylibray.session.SessionService;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.signinsignup.fragments.ResetPasswordFragment;
 import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInResponse;
 import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInUser;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
@@ -269,12 +268,9 @@ public class SigninFragment extends BaseFragment {
 
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
-                Gson gson = new Gson();
                 hideProgressDialog();
                 setSignInButtonClickable(true);
-                String signInResponseString = gson.toJson(workflowDTO);
-                UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString,
-                        UnifiedSignInResponse.class);
+                UnifiedSignInResponse signInResponse = DtoHelper.getConvertedDTO(UnifiedSignInResponse.class, workflowDTO);
                 ApplicationPreferences.getInstance().setBadgeCounterTransition(signInResponse
                         .getMetadata().getTransitions().getBadgeCounter());
                 ApplicationPreferences.getInstance()
@@ -290,6 +286,13 @@ public class SigninFragment extends BaseFragment {
                 callback.addFragment(ChooseProfileFragment.newInstance(signInDTO.getMetadata().getTransitions().getAuthenticate(),
                         user, password, signInResponse.getPayload().getAuthorizationModel().getUserLinks()),
                         true);
+                if (getActivity().getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO) != null
+                        && getActivity().getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO)
+                        .getString("inviteId") != null) {
+                    callAcceptInviteEndpoint(signInResponse,
+                            getActivity().getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO)
+                                    .getString("inviteId"));
+                }
             }
 
             @Override
@@ -304,6 +307,30 @@ public class SigninFragment extends BaseFragment {
                 Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
             }
         };
+    }
+
+    private void callAcceptInviteEndpoint(UnifiedSignInResponse signInResponse, String inviteId) {
+        Map<String, String> query = new HashMap<>();
+        query.put("invite_id", inviteId);
+        Map<String, String> header = new HashMap<>();
+        header.put("id_token", getAppAuthorizationHelper().getIdToken());
+        getWorkflowServiceHelper().execute(signInResponse.getMetadata().getTransitions().getAcceptConnectInvite(),
+                new WorkflowServiceCallback() {
+                    @Override
+                    public void onPreExecute() {
+
+                    }
+
+                    @Override
+                    public void onPostExecute(WorkflowDTO workflowDTO) {
+                        Log.e("Pablo", "wuu");
+                    }
+
+                    @Override
+                    public void onFailure(String exceptionMessage) {
+                        showErrorNotification(exceptionMessage);
+                    }
+                }, query, header);
     }
 
     private boolean areAllFieldsValid(String email, String password) {
