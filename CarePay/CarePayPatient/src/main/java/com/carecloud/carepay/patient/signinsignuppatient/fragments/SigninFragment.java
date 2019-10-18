@@ -34,6 +34,7 @@ import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
@@ -312,8 +313,9 @@ public class SigninFragment extends BaseFragment {
     private void callAcceptInviteEndpoint(UnifiedSignInResponse signInResponse, String inviteId) {
         Map<String, String> query = new HashMap<>();
         query.put("invite_id", inviteId);
-        Map<String, String> header = new HashMap<>();
-        header.put("id_token", getAppAuthorizationHelper().getIdToken());
+        Map<String, String> headers = new HashMap<>();
+        headers.put("id_token", getAppAuthorizationHelper().getIdToken());
+        headers.put("x-api-key", HttpConstants.getApiStartKey());
         getWorkflowServiceHelper().execute(signInResponse.getMetadata().getTransitions().getAcceptConnectInvite(),
                 new WorkflowServiceCallback() {
                     @Override
@@ -323,14 +325,16 @@ public class SigninFragment extends BaseFragment {
 
                     @Override
                     public void onPostExecute(WorkflowDTO workflowDTO) {
-                        Log.e("Pablo", "wuu");
+                        if (workflowDTO.getPayload().getAsJsonObject("invite_info") != null) {
+                            callback.showSuccessToast(Label.getLabel("connectionInvite.banner.success"));
+                        }
                     }
 
                     @Override
                     public void onFailure(String exceptionMessage) {
-                        showErrorNotification(exceptionMessage);
+                        Log.e("Breeze", exceptionMessage);
                     }
-                }, query, header);
+                }, query, headers);
     }
 
     private boolean areAllFieldsValid(String email, String password) {
