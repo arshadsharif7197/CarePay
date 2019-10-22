@@ -13,6 +13,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
@@ -26,12 +27,14 @@ import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivit
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.consentforms.ConsentFormsActivity;
+import com.carecloud.carepay.patient.delegate.ProfilesActivity;
 import com.carecloud.carepay.patient.messages.activities.MessagesActivity;
 import com.carecloud.carepay.patient.myhealth.MyHealthActivity;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.notifications.activities.NotificationActivity;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.retail.activities.RetailActivity;
+import com.carecloud.carepay.patient.session.PatientSessionService;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -87,6 +90,9 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
     protected boolean toolbarVisibility = false;
     private BadgeDrawerArrowDrawable badgeDrawable;
     protected static String profileName;
+    private static final int MANAGE_PROFILES_REQUEST_CODE = 101;
+    private ImageView profileListTriggerIcon;
+    private boolean editProfile = false;
 
     @Override
     protected void onCreate(Bundle icicle) {
@@ -196,8 +202,9 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         navigationView.findViewById(R.id.manageProfilesMenuItem).setOnClickListener(menuItemClickListener);
         navigationView.findViewById(R.id.settingsMenuItem).setOnClickListener(menuItemClickListener);
         navigationView.findViewById(R.id.logOutMenuItem).setOnClickListener(menuItemClickListener);
+        navigationView.findViewById(R.id.editProfile).setOnClickListener(menuItemClickListener);
 
-        final ImageView profileListTriggerIcon = findViewById(R.id.profileListTriggerIcon);
+        profileListTriggerIcon = findViewById(R.id.profileListTriggerIcon);
         profileListTriggerIcon.setSelected(false);
         profileListTriggerIcon.setOnClickListener(v -> {
             toggleProfileList(profileListTriggerIcon);
@@ -206,7 +213,6 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
     }
 
     private void resetViews() {
-        View profileListTriggerIcon = findViewById(R.id.profileListTriggerIcon);
         if (profileListTriggerIcon.isSelected()) {
             profileListTriggerIcon.setSelected(false);
             rotateIcon(profileListTriggerIcon);
@@ -214,12 +220,13 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         View mainMenuItemContainer = findViewById(R.id.mainMenuItemContainer);
         View profilesRecyclerView = findViewById(R.id.profilesRecyclerView);
         mainMenuItemContainer.setVisibility(View.VISIBLE);
-        profilesRecyclerView.setVisibility(View.INVISIBLE);
+        profilesRecyclerView.setVisibility(View.GONE);
         showManageProfilesItemMenu(false);
     }
 
     private void populateProfilesList(UserLinks profileData) {
         if (MenuPatientActivity.profileData.getRepresentedUsers().size() > 0) {
+            profileListTriggerIcon.setVisibility(View.VISIBLE);
             RecyclerView profilesRecyclerView = findViewById(R.id.profilesRecyclerView);
             profilesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             ProfilesMenuRecyclerAdapter adapter = new ProfilesMenuRecyclerAdapter(profileData.getRepresentedUsers(),
@@ -227,7 +234,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
             adapter.setCallback(this);
             profilesRecyclerView.setAdapter(adapter);
         } else {
-            findViewById(R.id.profileListTriggerIcon).setVisibility(View.GONE);
+            profileListTriggerIcon.setVisibility(View.GONE);
         }
     }
 
@@ -243,8 +250,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
     }
 
     private void showManageProfilesItemMenu(boolean show) {
-        //TODO: Uncomment this when manage profiles is available
-//        navigationView.findViewById(R.id.manageProfilesMenuItem).setVisibility(show ? View.VISIBLE : View.GONE);
+        navigationView.findViewById(R.id.manageProfilesMenuItem).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private void enableBadge(ProfileDto profile) {
@@ -307,8 +313,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         View profilesRecyclerView = findViewById(R.id.profilesRecyclerView);
         boolean showProfilesRecyclerView = !profileListTriggerIcon.isSelected();
         showManageProfilesItemMenu(showProfilesRecyclerView);
-        profilesRecyclerView.setVisibility(showProfilesRecyclerView ? View.VISIBLE : View.INVISIBLE);
-        mainMenuItemContainer.setVisibility(showProfilesRecyclerView ? View.INVISIBLE : View.VISIBLE);
+        profilesRecyclerView.setVisibility(showProfilesRecyclerView ? View.VISIBLE : View.GONE);
+        mainMenuItemContainer.setVisibility(showProfilesRecyclerView ? View.GONE : View.VISIBLE);
         profileListTriggerIcon.setSelected(!profileListTriggerIcon.isSelected());
     }
 
@@ -402,9 +408,15 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
                     transition = transitionProfile;
                     callback = manageProfilesCallback;
                     break;
+                case R.id.editProfile:
+                    callback = demographicsSettingsCallBack;
+                    transition = transitionProfile;
+                    editProfile = true;
+                    break;
                 case R.id.settingsMenuItem:
                     callback = demographicsSettingsCallBack;
                     transition = transitionProfile;
+                    editProfile = false;
                     break;
                 case R.id.logOutMenuItem:
                     transition = transitionLogout;
@@ -446,7 +458,6 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
     };
 
     private void closeMenu() {
-        View profileListTriggerIcon = findViewById(R.id.profileListTriggerIcon);
         profileListTriggerIcon.setSelected(false);
         rotateIcon(profileListTriggerIcon);
         drawer.closeDrawer(GravityCompat.START);
@@ -467,7 +478,9 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             PatientNavigationHelper.setAccessPaymentsBalances(false);
-            navigateToWorkflow(workflowDTO);
+            Bundle info = new Bundle();
+            info.putBoolean(NavigationStateConstants.PROFILE_UPDATE, editProfile);
+            navigateToWorkflow(workflowDTO, info);
         }
 
         @Override
@@ -489,6 +502,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
             hideProgressDialog();
             getAppAuthorizationHelper().setAccessToken(null);
             ApplicationPreferences.getInstance().setProfileId(null);
+            finishSessionService();
             navigateToWorkflow(workflowDTO);
         }
 
@@ -531,7 +545,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             workflowDTO.setState(NavigationStateConstants.DELEGATE_PROFILES);
-            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
+            PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO,
+                    true, MANAGE_PROFILES_REQUEST_CODE);
         }
 
         @Override
@@ -721,5 +736,21 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
                 return String.format("%s de %s", mainTitle, profileName);
             }
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if ((requestCode == MANAGE_PROFILES_REQUEST_CODE) && (resultCode == ProfilesActivity.CHANGES_DONE)) {
+            Bundle bundle = data.getExtras();
+            UserLinks userLinks = DtoHelper.getConvertedDTO(UserLinks.class, bundle);
+            setProfileData(userLinks);
+            profileListTriggerIcon.clearAnimation();
+            populateProfilesList(profileData);
+        }
+    }
+
+    private void finishSessionService() {
+        stopService(new Intent(this, PatientSessionService.class));
     }
 }

@@ -1,12 +1,12 @@
 package com.carecloud.carepay.practice.library.appointments;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
-import androidx.fragment.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.fragment.app.FragmentManager;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.createappointment.AvailabilityHourFragment;
@@ -299,5 +299,15 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
     @Override
     public void onPaymentCashFinished() {
         //NA
+    }
+
+    @Override
+    public boolean manageSession() {
+        return true;
+    }
+
+    @Override
+    public TransitionDTO getLogoutTransition() {
+        return appointmentsResultModel.getMetadata().getTransitions().getLogout();
     }
 }

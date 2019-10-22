@@ -74,6 +74,7 @@ public class PatientPaymentHistoryFragment extends BaseFragment
         super.onCreate(icicle);
         paymentsModel = (PaymentsModel) callback.getDto();
         paging = paymentsModel.getPaymentPayload().getTransactionHistory().getPageDetails();
+        paging.setCurrentPage(0);
         paymentHistoryItems = filterPaymentHistory(paymentsModel.getPaymentPayload()
                         .getTransactionHistory().getPaymentHistoryList(),
                 paymentsModel.getPaymentPayload().getUserPractices());
@@ -155,6 +156,9 @@ public class PatientPaymentHistoryFragment extends BaseFragment
     }
 
     private void loadNextPage() {
+        if (paging.getCurrentPage() == 0) {
+            paymentHistoryItems.clear();
+        }
         NextPagingDTO next = new NextPagingDTO();
         next.setNextPage(paging.getCurrentPage() + 1);
         next.setPageCount(ITEMS_PER_PAGE);
@@ -173,8 +177,8 @@ public class PatientPaymentHistoryFragment extends BaseFragment
             if (hasMorePages()) {
                 int last = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
                 if (last > recyclerView.getAdapter().getItemCount() - BOTTOM_ROW_OFFSET && !isPaging) {
-                    loadNextPage();
                     isPaging = true;
+                    loadNextPage();
                 }
             }
 
@@ -204,7 +208,6 @@ public class PatientPaymentHistoryFragment extends BaseFragment
                                 ? paymentsModel.getPaymentPayload().getUserPractices()
                                 : localPaymentsModel.getPaymentPayload().getUserLinks().getDelegatePracticeInformation());
                 setAdapter(filteredItems);
-                paymentHistoryItems.addAll(filteredItems);
             }
             isPaging = false;
         }

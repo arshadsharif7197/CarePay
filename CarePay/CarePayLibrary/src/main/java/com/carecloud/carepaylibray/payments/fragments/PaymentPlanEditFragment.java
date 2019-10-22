@@ -15,9 +15,8 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsToggleOption;
-import com.carecloud.carepaylibray.payeeze.CallPayeezy;
+import com.carecloud.carepaylibray.payeeze.PayeezyCall;
 import com.carecloud.carepaylibray.payeeze.model.CreditCard;
-import com.carecloud.carepaylibray.payeeze.model.TokenizeResponse;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.MerchantServiceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
@@ -388,8 +387,10 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
         creditCardDto.setExpDate(expiryDate);
         creditCardDto.setType(cardType);
 
-        CallPayeezy callPayeezy = new CallPayeezy();
-        callPayeezy.doCall(creditCardDto, merchantServiceDTO, tokenizeResponse -> {
+        showProgressDialog();
+        PayeezyCall payeezyCall = new PayeezyCall();
+        payeezyCall.doCall(creditCardDto, merchantServiceDTO, tokenizeResponse -> {
+            hideProgressDialog();
             if (tokenizeResponse != null) {
                 if (tokenizeResponse.getToken() != null) {
                     creditCard.setToken(tokenizeResponse.getToken().getValue());

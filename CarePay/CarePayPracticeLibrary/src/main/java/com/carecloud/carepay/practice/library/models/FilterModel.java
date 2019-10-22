@@ -45,8 +45,9 @@ public class FilterModel {
      */
     public void setPatients(ArrayList<FilterDataDTO> newList) {
         sortListByName(newList);
-        checkPreviouslyChecked(this.patients, newList);
-        this.patients = newList;
+        checkPreviouslyChecked(patients, newList);
+        patients.clear();
+        patients.addAll(newList);
     }
 
     private void sortListByName(List<FilterDataDTO> filterableList) {
@@ -63,38 +64,53 @@ public class FilterModel {
     }
 
     private void checkPreviouslyChecked(List<FilterDataDTO> oldList, List<FilterDataDTO> newList) {
-        int oldIndex = 0;
-        int newIndex = 0;
+//        int oldIndex = 0;
+//        int newIndex = 0;
 
-        while (oldIndex < oldList.size() && newIndex < newList.size()) {
-            FilterDataDTO oldDTO = oldList.get(oldIndex);
-            FilterDataDTO newDTO = newList.get(newIndex);
-
-            int idComparison = oldDTO.getId().compareTo(newDTO.getId());
-            int displayTextComparison = oldDTO.getDisplayText().compareTo(newDTO.getDisplayText());
-
-            if (0 == idComparison) {
-                newDTO.setChecked(oldDTO.isChecked());
-                oldIndex++;
-                newIndex++;
-            } else if (displayTextComparison < 0) {
-                oldIndex++;
-            } else if (displayTextComparison > 0) {
-                newIndex++;
-            } else if (idComparison < 0) {
-                oldIndex++;
-            } else {
-                newIndex++;
+        for (FilterDataDTO newFilter : newList) {
+            for (FilterDataDTO oldFilter : oldList) {
+                if (newFilter.getId().equals(oldFilter.getId())) {
+                    newFilter.setChecked(oldFilter.isChecked());
+                }
             }
         }
+
+//        while (oldIndex < oldList.size() && newIndex < newList.size()) {
+//            FilterDataDTO oldDTO = oldList.get(oldIndex);
+//            FilterDataDTO newDTO = newList.get(newIndex);
+//
+//            int idComparison = oldDTO.getId().compareTo(newDTO.getId());
+//            int displayTextComparison = oldDTO.getDisplayText().compareTo(newDTO.getDisplayText());
+//
+//            if (0 == idComparison) {
+//                newDTO.setChecked(oldDTO.isChecked());
+//                oldIndex++;
+//                newIndex++;
+//            } else if (displayTextComparison < 0) {
+//                oldIndex++;
+//            } else if (displayTextComparison > 0) {
+//                newIndex++;
+//            } else if (idComparison < 0) {
+//                oldIndex++;
+//            } else {
+//                newIndex++;
+//            }
+//        }
     }
 
     /**
      * Clears filters
      */
-    public void clear() {
+    public void clearAll() {
         clear(doctors);
         clear(locations);
+        clear(patients);
+    }
+
+    /**
+     * Clears filters
+     */
+    public void clearPatients() {
         clear(patients);
     }
 
@@ -128,15 +144,13 @@ public class FilterModel {
      * @return checked patients
      */
     public ArrayList<FilterDataDTO> getCheckedPatients() {
-        ArrayList<FilterDataDTO> checked = new ArrayList<>();
-
+        ArrayList<FilterDataDTO> checkedPatients = new ArrayList<>();
         for (FilterDataDTO dto : patients) {
             if (dto.isChecked()) {
-                checked.add(dto);
+                checkedPatients.add(dto);
             }
         }
-
-        return checked;
+        return checkedPatients;
     }
 
     public Set<String> getFilteredDoctorsIds() {
@@ -161,6 +175,7 @@ public class FilterModel {
 
     public boolean areThereActiveFilters() {
         return !(getFilteredDoctorsIds().isEmpty()
-                && getFilteredLocationsIds().isEmpty());
+                && getFilteredLocationsIds().isEmpty()
+                && getCheckedPatients().isEmpty());
     }
 }

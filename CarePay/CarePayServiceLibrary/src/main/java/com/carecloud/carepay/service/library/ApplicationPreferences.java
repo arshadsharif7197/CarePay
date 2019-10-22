@@ -60,6 +60,7 @@ public class ApplicationPreferences {
     private static final String PREFERENCE_PROFILE_ID = "profileId";
     public static final String PREFERENCE_APPOINTMENT_COUNTS = "appointment_counts";
     private static final String PREFERENCE_LAST_DATE_RATE_DIALOG_SHOWN = "lastDateRateDialogShown";
+    private static final String PREFERENCE_PATIENT_MODE_TRANSITION = "patientModeTransition";
 
     private String patientId;
     private String practiceId;
@@ -81,6 +82,7 @@ public class ApplicationPreferences {
     private TransitionDTO badgeCounterTransition;
     private int messagesBadgeCounter;
     private int formsBadgeCounter;
+    private TransitionDTO patientModeTransition;
 
 
     public static ApplicationPreferences getInstance() {
@@ -565,5 +567,17 @@ public class ApplicationPreferences {
     public void setLastDateRateDialogShown() {
         String strDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         writeStringToSharedPref(PREFERENCE_LAST_DATE_RATE_DIALOG_SHOWN, strDate);
+    }
+
+    public TransitionDTO getPatientModeTransition() {
+        if (patientModeTransition == null) {
+            patientModeTransition = getObjectFromSharedPreferences(PREFERENCE_PATIENT_MODE_TRANSITION, TransitionDTO.class);
+        }
+        return patientModeTransition;
+    }
+
+    public void setPatientModeTransition(TransitionDTO patientModeTransition) {
+        this.patientModeTransition = patientModeTransition;
+        writeObjectToSharedPreference(PREFERENCE_PATIENT_MODE_TRANSITION, patientModeTransition);
     }
 }

@@ -6,9 +6,10 @@ android {
     defaultConfig {
         applicationId "com.carecloud.carepay.practice.clover"
         minSdkVersion 17
+        //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 25
-        versionCode 132
-        versionName "1.2.30"
+        versionCode 143
+        versionName "1.2.31"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         renderscriptTargetApi 22

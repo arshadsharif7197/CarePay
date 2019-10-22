@@ -3,14 +3,15 @@ package com.carecloud.carepay.practice.library.payments;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.View;
-import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
@@ -79,7 +80,6 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_payment);
         paymentResultModel = getConvertedDTO(PaymentsModel.class);
-
         setUpUI();
     }
 
@@ -89,19 +89,9 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
         } else {
             showPayments(paymentResultModel);
         }
-        findViewById(R.id.btnHome).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToHome(paymentResultModel.getPaymentsMetadata().getPaymentsTransitions().getLogout());
-            }
-        });
+        findViewById(R.id.btnHome).setOnClickListener(view -> goToHome(paymentResultModel.getPaymentsMetadata().getPaymentsTransitions().getLogout()));
         TextView logoutTextview = findViewById(R.id.logoutTextview);
-        logoutTextview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToHome(paymentResultModel.getPaymentsMetadata().getPaymentsTransitions().getLogout());
-            }
-        });
+        logoutTextview.setOnClickListener(view -> goToHome(paymentResultModel.getPaymentsMetadata().getPaymentsTransitions().getLogout()));
         logoutTextview.setText(Label.getLabel("practice_app_logout_text"));
     }
 
@@ -187,12 +177,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
     public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
         PracticePartialPaymentDialogFragment fragment = PracticePartialPaymentDialogFragment
                 .newInstance(paymentResultModel, owedAmount);
-        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialogInterface) {
-                startPaymentProcess(paymentResultModel);
-            }
-        });
+        fragment.setOnCancelListener(dialogInterface -> startPaymentProcess(paymentResultModel));
         displayDialogFragment(fragment, true);
 
         MixPanelUtil.logEvent(getString(R.string.event_payment_make_partial_payment),
@@ -204,12 +189,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
     public void onPayButtonClicked(double amount, PaymentsModel paymentsModel) {
         PracticePaymentMethodDialogFragment fragment = PracticePaymentMethodDialogFragment
                 .newInstance(paymentsModel, amount);
-        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialogInterface) {
-                startPaymentProcess(paymentResultModel);
-            }
-        });
+        fragment.setOnCancelListener(dialogInterface -> startPaymentProcess(paymentResultModel));
         displayDialogFragment(fragment, true);
 
         String[] params = {getString(R.string.param_balance_amount),
@@ -269,7 +249,7 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
     public void onCreditCardSelected(PaymentCreditCardsPayloadDTO creditCard) {
         Fragment fragment = getSupportFragmentManager()
                 .findFragmentByTag(PatientModePaymentPlanEditFragment.class.getName());
-        if (fragment != null && fragment instanceof PatientModePaymentPlanEditFragment) {
+        if (fragment instanceof PatientModePaymentPlanEditFragment) {
             ((PaymentPlanEditFragment) fragment).replacePaymentMethod(creditCard);
         }
     }
@@ -408,13 +388,10 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
         if (resultCode == CarePayConstants.PAYMENT_RETRY_PENDING_RESULT_CODE) {
             //Display a success notification and do some cleanup
             PaymentQueuedDialogFragment dialogFragment = new PaymentQueuedDialogFragment();
-            DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    Intent intent = getIntent();
-                    setResult(CarePayConstants.HOME_PRESSED, intent);
-                    finish();
-                }
+            DialogInterface.OnDismissListener dismissListener = dialog -> {
+                Intent intent = getIntent();
+                setResult(CarePayConstants.HOME_PRESSED, intent);
+                finish();
             };
             dialogFragment.setOnDismissListener(dismissListener);
             displayDialogFragment(dialogFragment, false);
@@ -605,5 +582,15 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
     @Override
     public void replaceFragment(Fragment fragment, boolean addToBackStack) {
         //NA
+    }
+
+    @Override
+    public boolean manageSession() {
+        return true;
+    }
+
+    @Override
+    public TransitionDTO getLogoutTransition() {
+        return paymentResultModel.getPaymentsMetadata().getPaymentsTransitions().getLogout();
     }
 }

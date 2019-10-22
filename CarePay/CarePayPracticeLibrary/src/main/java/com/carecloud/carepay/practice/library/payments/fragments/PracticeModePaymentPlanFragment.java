@@ -21,7 +21,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
-import com.carecloud.carepaylibray.payeeze.CallPayeezy;
+import com.carecloud.carepaylibray.payeeze.PayeezyCall;
 import com.carecloud.carepaylibray.payeeze.model.CreditCard;
 import com.carecloud.carepaylibray.payments.adapter.CreditCardsListAdapter;
 import com.carecloud.carepaylibray.payments.fragments.BaseAddCreditCardFragment;
@@ -41,6 +41,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPo
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -48,6 +49,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -297,6 +299,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
                 return false;
             } else {
                 clearError(installmentsInputLayout);
+                return false;
             }
         } else if (installments < 2) {
             setError(installmentsInputLayout,
@@ -317,12 +320,19 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
                 return false;
             } else {
                 clearError(R.id.paymentAmountInputLayout);
+                return false;
             }
         } else {
             clearError(R.id.paymentAmountInputLayout);
         }
 
-        return selectedCreditCard != null;
+        if (selectedCreditCard == null) {
+            return false;
+        }
+
+        Date expDate = DateUtil.getInstance().setDateRaw(selectedCreditCard.getExpireDt()).getDate();
+        expDate = DateUtil.getLastDayOfMonth(expDate);
+        return !expDate.before(new Date());
     }
 
     @Override
@@ -466,14 +476,12 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
     }
 
     protected void authorizeCreditCard() {
-        String currency = "USD";
         String cvv = selectedCreditCard.getCvv();
         String expiryDate = selectedCreditCard.getExpireDt();
         String name = selectedCreditCard.getNameOnCard();
         String cardType = selectedCreditCard.getCardType();
         String number = selectedCreditCard.getCompleteNumber();
 
-        showProgressDialog();
         MerchantServiceMetadataDTO merchantServiceDTO = null;
         for (MerchantServicesDTO merchantService : paymentsModel.getPaymentPayload().getMerchantServices()) {
             if (merchantService.getName().toLowerCase().contains("payeezy")) {
@@ -489,8 +497,10 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         creditCard.setExpDate(expiryDate);
         creditCard.setType(cardType);
 
-        CallPayeezy callPayeezy = new CallPayeezy();
-        callPayeezy.doCall(creditCard, merchantServiceDTO, tokenizeResponse -> {
+        showProgressDialog();
+        PayeezyCall payeezyCall = new PayeezyCall();
+        payeezyCall.doCall(creditCard, merchantServiceDTO, tokenizeResponse -> {
+            hideProgressDialog();
             if (tokenizeResponse != null) {
                 if (tokenizeResponse.getToken() != null) {
                     selectedCreditCard.setToken(tokenizeResponse.getToken().getValue());
