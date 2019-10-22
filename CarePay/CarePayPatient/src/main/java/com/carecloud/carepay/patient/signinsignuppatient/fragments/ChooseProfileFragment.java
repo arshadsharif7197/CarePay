@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.signinsignuppatient.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -16,6 +17,7 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
+import com.carecloud.carepay.patient.session.PatientSessionService;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -180,10 +182,13 @@ public class ChooseProfileFragment extends BaseDialogFragment {
                 ApplicationPreferences.getInstance().writeObjectToSharedPreference(CarePayConstants
                         .DEMOGRAPHICS_ADDRESS_BUNDLE, null);
                 ApplicationPreferences.getInstance().setLandingScreen(true);
+                Intent serviceIntent = new Intent(getActivity(), PatientSessionService.class);
+                getActivity().startService(serviceIntent);
                 if (shouldShowNotificationScreen) {
                     manageNotificationAsLandingScreen(workflowDTO.toString());
                 } else {
-                    PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
+                    PatientNavigationHelper.navigateToWorkflow(getActivity(),
+                            workflowDTO, getActivity().getIntent().getExtras());
                 }
                 ApplicationPreferences.getInstance().setUserName(user);
                 String encryptedPassword = EncryptionUtil.encrypt(getContext(), password, user);

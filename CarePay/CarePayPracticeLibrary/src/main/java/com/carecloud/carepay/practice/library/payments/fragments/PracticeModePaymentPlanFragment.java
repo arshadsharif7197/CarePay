@@ -1,17 +1,18 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.adapter.PaymentPlanItemAdapter;
@@ -20,9 +21,8 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
-import com.carecloud.carepaylibray.payeeze.CallPayeezy;
+import com.carecloud.carepaylibray.payeeze.PayeezyCall;
 import com.carecloud.carepaylibray.payeeze.model.CreditCard;
-import com.carecloud.carepaylibray.payeeze.model.TokenizeResponse;
 import com.carecloud.carepaylibray.payments.adapter.CreditCardsListAdapter;
 import com.carecloud.carepaylibray.payments.fragments.BaseAddCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
@@ -482,14 +482,12 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
     }
 
     protected void authorizeCreditCard() {
-        String currency = "USD";
         String cvv = selectedCreditCard.getCvv();
         String expiryDate = selectedCreditCard.getExpireDt();
         String name = selectedCreditCard.getNameOnCard();
         String cardType = selectedCreditCard.getCardType();
         String number = selectedCreditCard.getCompleteNumber();
 
-        showProgressDialog();
         MerchantServiceMetadataDTO merchantServiceDTO = null;
         for (MerchantServicesDTO merchantService : paymentsModel.getPaymentPayload().getMerchantServices()) {
             if (merchantService.getName().toLowerCase().contains("payeezy")) {
@@ -505,8 +503,10 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         creditCard.setExpDate(expiryDate);
         creditCard.setType(cardType);
 
-        CallPayeezy callPayeezy = new CallPayeezy();
-        callPayeezy.doCall(creditCard, merchantServiceDTO, tokenizeResponse -> {
+        showProgressDialog();
+        PayeezyCall payeezyCall = new PayeezyCall();
+        payeezyCall.doCall(creditCard, merchantServiceDTO, tokenizeResponse -> {
+            hideProgressDialog();
             if (tokenizeResponse != null) {
                 if (tokenizeResponse.getToken() != null) {
                     selectedCreditCard.setToken(tokenizeResponse.getToken().getValue());

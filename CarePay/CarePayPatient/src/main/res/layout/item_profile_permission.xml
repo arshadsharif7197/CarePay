@@ -108,6 +108,21 @@
                 android:layout_height="wrap_content" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/updatePermissionsButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/button_selector"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:visibility="gone"
+                android:textSize="14sp"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="profile.delegateDetail.item.button.update"
+                tools:text="Update Permissions" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                android:id="@+id/disconnectButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -118,19 +133,6 @@
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="profile.profileDetail.item.button.disconnect"
                 tools:text="Disconnect" />
-
-            <com.carecloud.carepaylibray.customcomponents.CarePayButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="@dimen/dimen_10dp"
-                android:background="@drawable/button_default_background"
-                android:textAllCaps="true"
-                android:textColor="@color/colorPrimary"
-                android:textSize="14sp"
-                app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="profile.profileDetail.item.button.merge"
-                tools:text="Merge with another account" />
 
         </LinearLayout>
 

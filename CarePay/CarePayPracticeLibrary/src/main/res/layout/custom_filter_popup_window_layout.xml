@@ -121,7 +121,7 @@
                 android:textColor="@color/clear_filter_text_color_selector"
                 android:textSize="@dimen/clearFiltersButtonTextSize"
                 android:visibility="visible"
-                breeze:textKey="practice_checkin_filter_clear_filters"
+                breeze:textKey="practice.filter.clearFilters.button.clearAll"
                 app:customAssetFont="gotham_rounded_medium"
                 tools:text="Clear Filters" />
 

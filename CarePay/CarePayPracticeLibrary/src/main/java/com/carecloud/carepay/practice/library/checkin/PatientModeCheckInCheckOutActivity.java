@@ -4,11 +4,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.adapters.AppointmentsListAdapter;
@@ -85,13 +86,10 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
             case CarePayConstants.CLOVER_PAYMENT_INTENT_REQUEST_CODE: {
                 if (resultCode == CarePayConstants.HOME_PRESSED) {
                     Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            //need to do this delayed because onActivityResult executes before onResume
-                            // and thus it does not show the progress dialog
-                            goToHome(appointmentsResultModel.getMetadata().getTransitions().getLogout());
-                        }
+                    handler.postDelayed(() -> {
+                        //need to do this delayed because onActivityResult executes before onResume
+                        // and thus it does not show the progress dialog
+                        goToHome(appointmentsResultModel.getMetadata().getTransitions().getLogout());
                     }, 300);
                 }
                 break;
@@ -179,14 +177,11 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
             findViewById(R.id.no_appointment_layout).setVisibility(View.VISIBLE);
 
             View scheduleButton = findViewById(R.id.schedule_appt_button);
-            scheduleButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //todo go to Appointment screen
-                    getApplicationPreferences().setAppointmentNavigationOption(Defs.NAVIGATE_APPOINTMENT);
-                    WorkflowDTO workflowDTO = getConvertedDTO(WorkflowDTO.class);
-                    PracticeNavigationHelper.navigateToWorkflow(PatientModeCheckInCheckOutActivity.this, workflowDTO);
-                }
+            scheduleButton.setOnClickListener(view -> {
+                //todo go to Appointment screen
+                getApplicationPreferences().setAppointmentNavigationOption(Defs.NAVIGATE_APPOINTMENT);
+                WorkflowDTO workflowDTO = getConvertedDTO(WorkflowDTO.class);
+                PracticeNavigationHelper.navigateToWorkflow(PatientModeCheckInCheckOutActivity.this, workflowDTO);
             });
         }
     }
@@ -231,12 +226,7 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
         if (resultCode == CarePayConstants.PAYMENT_RETRY_PENDING_RESULT_CODE) {
             //Display a success notification and do some cleanup
             PaymentQueuedDialogFragment dialogFragment = new PaymentQueuedDialogFragment();
-            DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    goToHome(appointmentsResultModel.getMetadata().getTransitions().getLogout());
-                }
-            };
+            DialogInterface.OnDismissListener dismissListener = dialog -> goToHome(appointmentsResultModel.getMetadata().getTransitions().getLogout());
             dialogFragment.setOnDismissListener(dismissListener);
             dialogFragment.show(getSupportFragmentManager(), dialogFragment.getClass().getName());
 
@@ -301,5 +291,14 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
         };
     }
 
+    @Override
+    public boolean manageSession() {
+        return true;
+    }
+
+    @Override
+    public TransitionDTO getLogoutTransition() {
+        return appointmentsResultModel.getMetadata().getTransitions().getLogout();
+    }
 
 }
