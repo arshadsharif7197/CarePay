@@ -39,6 +39,7 @@ public class DateUtil {
     private static final String FORMAT_MM_SLASH_DD_SLASH_YYYY_ES = "dd/MM/yyyy";
     private static final String FORMAT_MM_SLASH_DD_EN = "MM/dd";
     private static final String FORMAT_MM_SLASH_DD_ES = "dd/MM";
+    private static final String FORMAT_MM_SLASH_YY_EN = "MM/yy";
 
     private static final String FORMAT_HOURS_AM_PM = "h:mm a";
     private static final String FORMAT_MONTH_DAY_TIME12_EN = "MMM dd, h:mm a";
@@ -118,7 +119,8 @@ public class DateUtil {
                         FORMAT_ISO_8601_EN,
                         FORMAT_YYYY_DASH_MM_DASH_DD_EN,
                         FORMAT_MM_DASH_DD_DASH_YYYY_EN,
-                        FORMAT_MM_SLASH_DD_SLASH_YYYY_EN
+                        FORMAT_MM_SLASH_DD_SLASH_YYYY_EN,
+                        FORMAT_MM_SLASH_YY_EN
                 };
                 mapFormats.put(language, formatEn);
                 break;
@@ -803,6 +805,21 @@ public class DateUtil {
         checkCal.set(Calendar.DAY_OF_MONTH, calMaxDayMonth);
 
         return isSameDay(calendar, checkCal);
+    }
+
+    /**
+     * Returns the last day of the month for the provided Date
+     *
+     * @param date Current date set to
+     * @return true if day is last of the month
+     */
+    public static Date getLastDayOfMonth(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int calMaxDayMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        calendar.set(Calendar.DAY_OF_MONTH, calMaxDayMonth);
+
+        return calendar.getTime();
     }
 
     /**
