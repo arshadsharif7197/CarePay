@@ -15,6 +15,7 @@ public class BaseViewModel extends AndroidViewModel {
     private MutableLiveData<Boolean> loading = new MutableLiveData<>();
     private MutableLiveData<String> successMessage = new MutableLiveData<>();
     private MutableLiveData<String> errorMessage = new MutableLiveData<>();
+    private MutableLiveData<Boolean> skeleton = new MutableLiveData<>();
 
     public BaseViewModel(@NonNull Application application) {
         super(application);
@@ -42,5 +43,13 @@ public class BaseViewModel extends AndroidViewModel {
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage.setValue(errorMessage);
+    }
+
+    public MutableLiveData<Boolean> getSkeleton() {
+        return skeleton;
+    }
+
+    public void setSkeleton(Boolean showSkeleton) {
+        this.skeleton.setValue(showSkeleton);
     }
 }
