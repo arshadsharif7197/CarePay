@@ -28,7 +28,7 @@ open class BaseTest {
     var activityRule = ActivityTestRule(PracticeTabletSplashActivity::class.java)
 
     @Before
-    fun setup() {
+    open fun setup() {
         // used for checking if network calls are going on, will pause test until call is finished
         IdlingRegistry.getInstance().register(EspressoIdlingResource.getIdlingResource())
         appContext = InstrumentationRegistry.getInstrumentation().targetContext
