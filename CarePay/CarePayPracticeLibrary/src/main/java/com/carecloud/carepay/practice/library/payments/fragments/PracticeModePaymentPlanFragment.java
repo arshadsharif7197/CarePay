@@ -41,6 +41,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPo
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -48,6 +49,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -310,6 +312,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
                 return false;
             } else {
                 clearError(installmentsInputLayout);
+                return false;
             }
         } else if (installments < 2) {
             setError(installmentsInputLayout,
@@ -330,12 +333,19 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
                 return false;
             } else {
                 clearError(R.id.paymentAmountInputLayout);
+                return false;
             }
         } else {
             clearError(R.id.paymentAmountInputLayout);
         }
 
-        return selectedCreditCard != null;
+        if (selectedCreditCard == null) {
+            return false;
+        }
+
+        Date expDate = DateUtil.getInstance().setDateRaw(selectedCreditCard.getExpireDt()).getDate();
+        expDate = DateUtil.getLastDayOfMonth(expDate);
+        return !expDate.before(new Date());
     }
 
     @Override

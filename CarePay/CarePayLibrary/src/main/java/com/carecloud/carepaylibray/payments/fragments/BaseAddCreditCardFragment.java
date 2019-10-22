@@ -398,6 +398,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         creditCardsPayloadDTO.setCardNumber(getLastFour());
         creditCardsPayloadDTO.setNameOnCard(nameOnCardEditText.getText().toString().trim());
         creditCardsPayloadDTO.setCvv(verificationCodeEditText.getText().toString().trim());
+        creditCardsPayloadDTO.setExpireDtDisplay(expirationDateEditText.getText().toString().trim());
         String expiryDate = expirationDateEditText.getText().toString();
         expiryDate = expiryDate.substring(0, 2) + expiryDate.substring(expiryDate.length() - 2);
         creditCardsPayloadDTO.setExpireDt(expiryDate);
