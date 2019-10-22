@@ -88,8 +88,6 @@ public class AppointmentHistoryFragment extends BaseFragment
                 return object1.getPracticeName().compareTo(object2.getPracticeName());
             }
         });
-        selectedPractice = appointmentDto.getPayload().getUserPractices().get(0);
-        callAppointmentService(selectedPractice, true, true);
         excludedAppointmentStates = new ArrayList<>();
         excludedAppointmentStates.add(CarePayConstants.REQUESTED);
         excludedAppointmentStates.add(CarePayConstants.CHECKING_IN);
@@ -105,6 +103,14 @@ public class AppointmentHistoryFragment extends BaseFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         historicAppointmentsRecyclerView = view.findViewById(R.id.historicAppointmentsRecyclerView);
+
+        if (appointmentDto.getPayload().getUserPractices().isEmpty()) {
+            showNoAppointmentsLayout();
+        } else {
+            selectedPractice = appointmentDto.getPayload().getUserPractices().get(0);
+            callAppointmentService(selectedPractice, true, true);
+        }
+
         Map<String, Set<String>> enabledPracticeLocations = new HashMap<>();
         for (AppointmentDTO appointmentDTO : appointmentDto.getPayload().getAppointments()) {
             String practiceId = appointmentDTO.getMetadata().getPracticeId();
@@ -142,12 +148,26 @@ public class AppointmentHistoryFragment extends BaseFragment
         }
 
         FloatingActionButton floatingActionButton = view.findViewById(com.carecloud.carepaylibrary.R.id.fab);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.newAppointment();
+        if (canScheduleAppointments()) {
+            floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callback.newAppointment();
+                }
+            });
+        } else {
+            floatingActionButton.setVisibility(View.GONE);
+        }
+
+    }
+
+    private boolean canScheduleAppointments() {
+        for (UserPracticeDTO practiceDTO : appointmentDto.getPayload().getUserPractices()) {
+            if (appointmentDto.getPayload().canScheduleAppointments(practiceDTO.getPracticeId())) {
+                return true;
             }
-        });
+        }
+        return false;
     }
 
     private void showPracticeToolbar(View view) {
@@ -166,7 +186,7 @@ public class AppointmentHistoryFragment extends BaseFragment
         practicesRecyclerView.setAdapter(adapter);
     }
 
-    private void callAppointmentService(UserPracticeDTO userPracticeDTO,
+    private void callAppointmentService(final UserPracticeDTO userPracticeDTO,
                                         final boolean refresh,
                                         final boolean showShimmerLayout) {
         long currentPage;
@@ -222,6 +242,9 @@ public class AppointmentHistoryFragment extends BaseFragment
                                 .getPayload().getAppointments());
                         if (appointments.size() > 0) {
                             showHistoricAppointments(appointments, refresh);
+                        } else if (!appointmentDto.getPayload().canViewAppointments(userPracticeDTO.getPracticeId())) {
+                            //when there are no permissions to see appointments, MW sends no appointments
+                            showNoPermissionsLayout();
                         } else {
                             showNoAppointmentsLayout();
                         }
@@ -234,7 +257,7 @@ public class AppointmentHistoryFragment extends BaseFragment
                         }
                         isPaging = false;
                         adapter.setLoading(false);
-                        if (showShimmerLayout && ((BaseActivity) getActivity()).isVisible()) {
+                        if (showShimmerLayout && (getActivity() != null) && ((BaseActivity) getActivity()).isVisible()) {
                             hideShimmerEffect();
                         }
                         showErrorNotification(exceptionMessage);
@@ -243,7 +266,7 @@ public class AppointmentHistoryFragment extends BaseFragment
     }
 
     private void hideShimmerEffect() {
-        if(isAdded()) {
+        if (isAdded()) {
             getChildFragmentManager().popBackStackImmediate();
         }
     }
@@ -254,6 +277,16 @@ public class AppointmentHistoryFragment extends BaseFragment
                         R.layout.shimmer_default_item))
                 .addToBackStack(null)
                 .commit();
+    }
+
+    private void showNoPermissionsLayout() {
+        historicAppointmentsRecyclerView.setVisibility(View.GONE);
+        View noAppointmentsLayout = getView().findViewById(R.id.noAppointmentsLayout);
+        noAppointmentsLayout.setVisibility(View.VISIBLE);
+        noAppointmentsLayout.findViewById(R.id.newAppointmentClassicButton).setVisibility(View.GONE);
+        TextView no_apt_message_title = noAppointmentsLayout.findViewById(R.id.no_apt_message_title);
+        no_apt_message_title.setText(Label.getLabel("patient.delegation.delegates.permissions.label.noPermission"));
+        noAppointmentsLayout.findViewById(R.id.no_apt_message_desc).setVisibility(View.GONE);
     }
 
     private void showNoAppointmentsLayout() {
@@ -306,5 +339,11 @@ public class AppointmentHistoryFragment extends BaseFragment
 
     private boolean hasMorePages() {
         return paging.getCurrentPage() < paging.getTotalPages();
+    }
+
+    @Override
+    public boolean canCheckOut(AppointmentDTO appointmentDTO) {
+        return appointmentDto.getPayload()
+                .canCheckInCheckOut(appointmentDTO.getMetadata().getPracticeId());
     }
 }

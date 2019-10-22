@@ -50,6 +50,7 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
 
 
     protected ResponsibilityPaymentInterface actionCallback;
+    protected boolean hasPermissionToViewBalanceDetails = true;
 
     @Override
     public void attachCallback(Context context) {
@@ -79,9 +80,10 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
     }
 
     protected void fillDetailAdapter(View view, List<PendingBalancePayloadDTO> pendingBalancePayloads) {
-        RecyclerView paymentDetailsListRecyclerView = ((RecyclerView) view.findViewById(R.id.responsibility_line_item_recycle_view));
+        RecyclerView paymentDetailsListRecyclerView = view.findViewById(R.id.responsibility_line_item_recycle_view);
         paymentDetailsListRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(), pendingBalancePayloads, this);
+        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(),
+                pendingBalancePayloads, this, hasPermissionToViewBalanceDetails);
         paymentDetailsListRecyclerView.setAdapter(adapter);
     }
 

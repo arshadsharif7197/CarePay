@@ -20,7 +20,6 @@ import java.util.Set;
  */
 public class AppointmentHistoricAdapter extends BaseAppointmentAdapter {
 
-    private final SelectAppointmentCallback callback;
     private boolean isLoading;
 
     public AppointmentHistoricAdapter(Context context,
@@ -129,11 +128,5 @@ public class AppointmentHistoricAdapter extends BaseAppointmentAdapter {
 
     public void setLoading(boolean isLoading) {
         this.isLoading = isLoading;
-    }
-
-    public interface SelectAppointmentCallback {
-        void onItemTapped(AppointmentDTO appointmentDTO);
-
-        void onCheckoutTapped(AppointmentDTO appointmentDTO);
     }
 }

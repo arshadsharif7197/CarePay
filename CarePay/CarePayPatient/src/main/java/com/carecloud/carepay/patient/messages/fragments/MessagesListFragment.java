@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.MessageNavigationCallback;
@@ -19,9 +20,11 @@ import com.carecloud.carepay.patient.messages.models.MessagingModel;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.models.Paging;
 import com.carecloud.carepaylibray.customcomponents.SwipeViewHolder;
+import com.carecloud.carepaylibray.profile.Profile;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SwipeHelper;
 
@@ -42,7 +45,9 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
     private View noMessagesLayout;
     private View actionButton;
     private RecyclerView recyclerView;
-
+    private TextView noMessagesDescription;
+    private View butonNewMessage;
+    private TextView noMessagesTitle;
 
     private MessageNavigationCallback callback;
     private MessagingModel messagingModel;
@@ -83,6 +88,8 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         noMessagesLayout = view.findViewById(R.id.no_messages_layout);
         actionButton = view.findViewById(R.id.fab);
         actionButton.setOnClickListener(newMessageAction);
+        noMessagesDescription = view.findViewById(R.id.no_messages_description);
+        noMessagesTitle = view.findViewById(R.id.no_messages_title);
 
         recyclerView = view.findViewById(R.id.messages_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
@@ -92,7 +99,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         ItemTouchHelper notificationsTouchHelper = new ItemTouchHelper(swipeHelper);
         notificationsTouchHelper.attachToRecyclerView(recyclerView);
 
-        View butonNewMessage = view.findViewById(R.id.new_message_button);
+        butonNewMessage = view.findViewById(R.id.new_message_button);
         butonNewMessage.setOnClickListener(newMessageAction);
 
         refreshing = true;
@@ -120,17 +127,25 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
                     messagingModel.getPayload().getInbox().getUserId());
             recyclerView.setAdapter(adapter);
         }
-
-        if (threads.isEmpty()) {
-            noMessagesLayout.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
-            actionButton.setVisibility(View.GONE);
-            refreshLayoutView.setEnabled(false);
-        } else {
+        Profile delegateUser = messagingModel.getPayload().getDelegate();
+        if (!threads.isEmpty()) {
             noMessagesLayout.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
             actionButton.setVisibility(View.VISIBLE);
             refreshLayoutView.setEnabled(true);
+        } else if (delegateUser != null && !callback.canSendProvidersMessages()){
+            noMessagesLayout.setVisibility(View.VISIBLE);
+            noMessagesDescription.setVisibility(View.GONE);
+            noMessagesTitle.setText(Label.getLabel("patient.delegation.delegates.permissions.label.noPermission"));
+            butonNewMessage.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.GONE);
+            actionButton.setVisibility(View.GONE);
+            refreshLayoutView.setEnabled(false);
+        } else {
+            noMessagesLayout.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+            actionButton.setVisibility(View.GONE);
+            refreshLayoutView.setEnabled(false);
         }
     }
 
@@ -293,5 +308,4 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         TransitionDTO deleteMessage = messagingModel.getMetadata().getLinks().getDeleteMessage();
         getWorkflowServiceHelper().execute(deleteMessage, getMessageThreadsCallback, queryMap);
     }
-
 }

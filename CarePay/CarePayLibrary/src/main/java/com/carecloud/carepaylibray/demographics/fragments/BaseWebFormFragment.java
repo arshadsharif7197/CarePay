@@ -6,10 +6,6 @@ import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -30,10 +26,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
@@ -88,7 +91,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
                 callback = (CheckinFlowCallback) context;
             }
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached context must implement CheckinFlowCallback");
+            throw new ClassCastException("Attached context must implement CheckInFlowCallback");
         }
     }
 
@@ -98,27 +101,20 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         return inflater.inflate(R.layout.fragment_web_form, container, false);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
-    public void onViewCreated(View view, Bundle icicle) {
+    public void onViewCreated(@NonNull View view, Bundle icicle) {
         inflateToolbarViews(view);
         showProgressDialog();
 
         nextButton = view.findViewById(R.id.consentButtonNext);
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                validateForm();
+        nextButton.setOnClickListener(view1 -> validateForm());
+        nextButton.setOnTouchListener((buttonView, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN && !buttonView.isSelected()) {
+                showScrollAlert();
+                return true;
             }
-        });
-        nextButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View buttonView, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN && !buttonView.isSelected()) {
-                    showScrollAlert();
-                    return true;
-                }
-                return false;
-            }
+            return false;
         });
         enableNextButton(false);
 
@@ -131,6 +127,12 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         }
 
         webView = view.findViewById(R.id.activity_main_webview_consent);
+        webView.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                ((CarePayApplication) getActivity().getApplicationContext()).restartSession(getActivity());
+            }
+            return false;
+        });
         progressBar = view.findViewById(R.id.progressBarConsent);
         progressBar.setVisibility(View.VISIBLE);
         initWebView();
@@ -167,12 +169,9 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         toolbar.setTitle("");
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.icn_nav_back));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SystemUtil.hideSoftKeyboard(getActivity());
-                getActivity().onBackPressed();
-            }
+        toolbar.setNavigationOnClickListener(view1 -> {
+            SystemUtil.hideSoftKeyboard(getActivity());
+            getActivity().onBackPressed();
         });
 
 
@@ -184,7 +183,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
      * Init web view
      */
     @SuppressLint("SetJavaScriptEnabled")
-    public void initWebView() {
+    private void initWebView() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
@@ -294,12 +293,9 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
          */
         @JavascriptInterface
         public void webviewReady(String message) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    displayNextForm();
-                    enableNextButton(true);
-                }
+            getActivity().runOnUiThread(() -> {
+                displayNextForm();
+                enableNextButton(true);
             });
 
         }
@@ -311,17 +307,14 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         @JavascriptInterface
         public void savedForm(final String response) {
             Log.d(LOG_TAG, "FORMS SAVED -" + response);
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    JsonObject jsonResponse = new JsonParser().parse(response).getAsJsonObject();
-                    if (formsList != null) {
-                        jsonResponse.addProperty("version",
-                                formsList.get(getDisplayedFormsIndex()).getMetadata().getVersion());
-                    }
-                    saveForm(jsonResponse);
-                    getNextStep();
+            getActivity().runOnUiThread(() -> {
+                JsonObject jsonResponse = new JsonParser().parse(response).getAsJsonObject();
+                if (formsList != null) {
+                    jsonResponse.addProperty("version",
+                            formsList.get(getDisplayedFormsIndex()).getMetadata().getVersion());
                 }
+                saveForm(jsonResponse);
+                getNextStep();
             });
 
         }
@@ -332,16 +325,13 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
         @JavascriptInterface
         public void savedIntake(final String response) {
             Log.d(LOG_TAG, "FORMS SAVED -" + response);
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    JsonObject jsonResponse = new JsonParser().parse(response).getAsJsonObject();
+            getActivity().runOnUiThread(() -> {
+                JsonObject jsonResponse = new JsonParser().parse(response).getAsJsonObject();
 
-                    saveForm(jsonResponse);
+                saveForm(jsonResponse);
 
-                    getNextStep();
+                getNextStep();
 
-                }
             });
 
         }
@@ -361,18 +351,12 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
          */
         @JavascriptInterface
         public void loadedForm() {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (getActivity() != null) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                enableNextButton(true);
-                                hideProgressDialog();
-                            }
-                        });
-                    }
+            new Handler().postDelayed(() -> {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        enableNextButton(true);
+                        hideProgressDialog();
+                    });
                 }
             }, 500);
 
@@ -383,18 +367,12 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
          */
         @JavascriptInterface
         public void loadedIntake() {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (getActivity() != null) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                enableNextButton(pageScrollOffsetPercentage > 98);
-                                hideProgressDialog();
-                            }
-                        });
-                    }
+            new Handler().postDelayed(() -> {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        enableNextButton(pageScrollOffsetPercentage > 98);
+                        hideProgressDialog();
+                    });
                 }
             }, 500);
         }
@@ -405,13 +383,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
                 JSONObject json = new JSONObject(scrollPercentage);
                 pageScrollOffsetPercentage = json.getInt("pageScrollOffsetPercentage");
                 if (pageScrollOffsetPercentage > 98) {
-
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            formScrolledToBottom();
-                        }
-                    });
+                    getActivity().runOnUiThread(BaseWebFormFragment.this::formScrolledToBottom);
                 }
             } catch (JSONException e) {
                 pageScrollOffsetPercentage = 0;
@@ -522,7 +494,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("formIndex", getDisplayedFormsIndex());
         Gson gson = new Gson();
