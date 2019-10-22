@@ -46,10 +46,10 @@ public class RefundDetailFragment extends PracticePaymentHistoryDetailFragment {
             }
         });
 
-        ImageView cancelImage = (ImageView) view.findViewById(R.id.cancel_img);
+        ImageView cancelImage = view.findViewById(R.id.cancel_img);
         cancelImage.setImageResource(R.drawable.icn_close);
 
-        Button refundButton = (Button) view.findViewById(R.id.refund_button);
+        Button refundButton = view.findViewById(R.id.refund_button);
         refundButton.setText(Label.getLabel("payment_ok"));
         refundButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +62,7 @@ public class RefundDetailFragment extends PracticePaymentHistoryDetailFragment {
         if(refundId != null){
             int index = refundId.indexOf('/');
             if(index + 1 < refundId.length()) {
-                TextView transactionNumber = (TextView) view.findViewById(R.id.transaction_number);
+                TextView transactionNumber = view.findViewById(R.id.transaction_number);
                 transactionNumber.setText(refundId.substring(index+1));
             }
         }

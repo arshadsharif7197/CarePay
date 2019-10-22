@@ -1,34 +1,36 @@
 package com.carecloud.carepay.practice.library.dobverification;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
 import com.carecloud.carepay.practice.library.customdialog.ConfirmationPinDialog;
 import com.carecloud.carepay.practice.library.dobverification.model.DoBDto;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
-import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.utils.ValidationHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,24 +45,23 @@ public class DoBVerificationActivity extends BasePracticeActivity {
     private DoBDto doBDto;
     private EditText dobEditText;
     private int retries = 0;
+    private CarePayTextInputLayout dobTextInputLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dob_verification);
         doBDto = getConvertedDTO(DoBDto.class);
+        getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
+        getAppAuthorizationHelper().setUser(doBDto.getPayload().getCheckinModeDTO().getMetadata().getUsername());
 
         setUpUi();
     }
 
     private void setUpUi() {
         final Button verifyButton = findViewById(R.id.verifyButton);
-        verifyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onVerifyButtonClick();
-            }
-        });
+        verifyButton.setOnClickListener(view -> onVerifyButtonClick());
+        dobTextInputLayout = findViewById(R.id.dobTextInputLayout);
         dobEditText = findViewById(R.id.dobEditText);
         dobEditText.addTextChangedListener(new TextWatcher() {
             int lastLength;
@@ -78,7 +79,7 @@ public class DoBVerificationActivity extends BasePracticeActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 StringUtil.autoFormatDateOfBirth(editable, lastLength);
-                if (editable.length() == DOB_LENGTH) {
+                if (validateDoBValue(editable.toString())) {
                     verifyButton.setEnabled(true);
                 } else {
                     verifyButton.setEnabled(false);
@@ -86,23 +87,17 @@ public class DoBVerificationActivity extends BasePracticeActivity {
             }
         });
 
-        dobEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                if (view.length() == DOB_LENGTH) {
-                    onVerifyButtonClick();
-                    return true;
-                }
-                return false;
+        dobEditText.setOnEditorActionListener((view, actionId, event) -> {
+            if (view.length() == DOB_LENGTH) {
+                onVerifyButtonClick();
+                return true;
             }
+            return false;
         });
 
-        findViewById(R.id.lockImageView).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showPasswordFragment();
-            }
-        });
+        dobEditText.setOnClickListener(selectEndOnClick);
+
+        findViewById(R.id.lockImageView).setOnClickListener(view -> showPasswordFragment());
 
         TextView subTitleTextView = findViewById(R.id.subTitleTextView);
         subTitleTextView.setText(String.format(Label.getLabel("dobVerification.main.subTitle.label.message"),
@@ -112,19 +107,40 @@ public class DoBVerificationActivity extends BasePracticeActivity {
         if (retries == 3) {
             showGameOverScreen();
         }
-        dobEditText.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                SystemUtil.hideSoftKeyboard(DoBVerificationActivity.this);
-                dobEditText.setFocusable(true);
-                dobEditText.setFocusableInTouchMode(true);
-            }
+        dobEditText.postDelayed(() -> {
+            SystemUtil.hideSoftKeyboard(DoBVerificationActivity.this);
+            dobEditText.setFocusable(true);
+            dobEditText.setFocusableInTouchMode(true);
         }, 100);
     }
 
+    private boolean validateDoBValue(String dateString) {
+        if (!StringUtil.isNullOrEmpty(dateString)) {
+            String dateValidationResult = DateUtil.getDateOfBirthValidationResultMessage(dateString);
+            if (dateValidationResult != null) {
+                dobTextInputLayout.setErrorEnabled(true);
+                dobTextInputLayout.setError(dateValidationResult);
+                return false;
+            } else {
+                dobTextInputLayout.setError(null);
+                dobTextInputLayout.setErrorEnabled(false);
+            }
+        } else {
+            dobTextInputLayout.setError(null);
+            dobTextInputLayout.setErrorEnabled(false);
+        }
+        return true;
+    }
+
     private String getPatientName() {
-        String firstName = doBDto.getPayload().getDemographicDTO().getPayload()
-                .getPersonalDetails().getFirstName().substring(0, 1);
+        String firstName;
+        if (StringUtil.isNullOrEmpty(doBDto.getPayload().getDemographicDTO().getPayload()
+                .getPersonalDetails().getFirstName())) {
+            firstName = "";
+        } else {
+            firstName = doBDto.getPayload().getDemographicDTO().getPayload()
+                    .getPersonalDetails().getFirstName().substring(0, 1);
+        }
         String lastName = doBDto.getPayload().getDemographicDTO().getPayload()
                 .getPersonalDetails().getLastName();
         return StringUtil.capitalize(String.format("%s. %s", firstName, lastName));
@@ -137,6 +153,7 @@ public class DoBVerificationActivity extends BasePracticeActivity {
             String appointmentId = extra.getString(CarePayConstants.APPOINTMENT_ID);
             Bundle info = new Bundle();
             info.putString(CarePayConstants.APPOINTMENT_ID, appointmentId);
+            info.putBoolean(CarePayConstants.HANDLE_HOME, true);
             PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, info);
             finish();
         } else {
@@ -161,14 +178,21 @@ public class DoBVerificationActivity extends BasePracticeActivity {
     private void showErrorDialog() {
         String message = Label.getLabel("dobVerification.gameOver.dialog.title.message");
         LargeAlertDialogFragment fragment = LargeAlertDialogFragment
-                .newInstance(message, Label.getLabel("ok"));
+                .newInstance(message, Label.getLabel("ok"), 36);
         fragment.show(getSupportFragmentManager(), ConfirmDialogFragment.class.getName());
     }
 
     private boolean validateDoB(String dobInput) {
-        String dob = doBDto.getPayload().getDemographicDTO().getPayload().getPersonalDetails()
-                .getFormattedDateOfBirth();
-        return dob.equals(dobInput);
+        String dob;
+        boolean isGuest = !ValidationHelper.isValidEmail(getAppAuthorizationHelper().getCurrUser());
+        if (isGuest) {
+            dob = DateUtil.getInstance().setDateRaw(doBDto.getPayload().getAppointments().get(0)
+                    .getPayload().getPatient().getDateOfBirth()).toStringWithFormatMmSlashDdSlashYyyy();
+        } else {
+            dob = doBDto.getPayload().getDemographicDTO().getPayload().getPersonalDetails()
+                    .getFormattedDateOfBirth();
+        }
+        return dobInput.equals(dob);
     }
 
     private void showGameOverScreen() {
@@ -187,20 +211,10 @@ public class DoBVerificationActivity extends BasePracticeActivity {
         headers.put("username_patient", getApplicationPreferences().getPatientId());
 
         final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), false,
-                doBDto.getPayload().getLanguages(), new LanguageAdapter.LanguageInterface() {
-            @Override
-            public void onLanguageSelected(OptionDTO language) {
-                changeLanguage(doBDto.getMetadata().getLinks().getLanguage(),
-                        language.getCode().toLowerCase(), headers);
-            }
-        });
+                doBDto.getPayload().getLanguages(), language -> changeLanguage(doBDto.getMetadata().getLinks().getLanguage(),
+                language.getCode().toLowerCase(), headers));
         TextView languageSpinner = findViewById(R.id.languageSpinner);
-        languageSpinner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                popupPickerLanguage.showAsDropDown(view);
-            }
-        });
+        languageSpinner.setOnClickListener(popupPickerLanguage::showAsDropDown);
         languageSpinner.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
     }
 
@@ -247,4 +261,9 @@ public class DoBVerificationActivity extends BasePracticeActivity {
         super.onSaveInstanceState(outState);
         outState.putInt("retries", retries);
     }
+
+    protected View.OnClickListener selectEndOnClick = view -> {
+        EditText editText = (EditText) view;
+        editText.setSelection(editText.length());
+    };
 }

@@ -49,6 +49,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/payment_header_top_margin"
                 android:gravity="center_horizontal"
+                android:padding="@dimen/largeAlertMessageLabelPadding"
                 android:textColor="@color/white"
                 app:customAssetFont="proxima_nova_semi_bold" />
         </LinearLayout>
@@ -62,10 +63,11 @@
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/actionButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/commonButtonHeight"
                 android:layout_margin="@dimen/dimen_10dp"
                 android:background="@drawable/bg_yellow_overlay"
                 android:textColor="@color/white"
+                android:textSize="@dimen/respons_button_text_size"
                 app:customAssetFont="gotham_rounded_medium" />
 
         </FrameLayout>

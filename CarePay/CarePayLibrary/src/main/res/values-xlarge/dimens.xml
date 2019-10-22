@@ -26,5 +26,23 @@
     <dimen name="timeSlotItemPadding">15dp</dimen>
     <dimen name="timeSlotItemTextSize">20sp</dimen>
     <dimen name="locationItemHeight">90dp</dimen>
-    <dimen name="largeAlertMessageTextSize">18sp</dimen>
+
+    <!--Delegate-->
+    <dimen name="menuIconSize">40dp</dimen>
+    <dimen name="menuItemPadding">10dp</dimen>
+    <dimen name="menuIconPadding">5dp</dimen>
+    <dimen name="menuIconLabelStartMargin">10dp</dimen>
+    <dimen name="menuIconLabelTextSize">14sp</dimen>
+    <dimen name="menuIconStartMargin">5dp</dimen>
+    <dimen name="menuItemBadgeSize">25dp</dimen>
+    <dimen name="menuItemBadeTextSize">13sp</dimen>
+    <dimen name="badgeCounterEndMargin">10dp</dimen>
+    <dimen name="profileListTriggerIconSize">20dp</dimen>
+    <dimen name="profileListTriggerHorizontalMargin">5dp</dimen>
+    <dimen name="profileListTriggerIconPadding">5dp</dimen>
+
+    <dimen name="largeAlertMessageTextSize">13sp</dimen>
+
+    <dimen name="inputLayoutRequiredLabelTopMargin">30dp</dimen>
+    <dimen name="patient_bottom_round_dimen">5dp</dimen>
 </resources>

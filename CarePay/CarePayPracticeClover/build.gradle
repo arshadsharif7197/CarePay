@@ -1,22 +1,23 @@
 apply plugin: 'com.android.application'
 apply plugin: 'newrelic'
 android {
-    compileSdkVersion 26
+    compileSdkVersion 28
 
     defaultConfig {
         applicationId "com.carecloud.carepay.practice.clover"
         minSdkVersion 17
-        targetSdkVersion 26
-        versionCode 122
-        versionName "1.2.26"
+        //noinspection ExpiredTargetSdkVersion
+        targetSdkVersion 25
+        versionCode 143
+        versionName "1.2.31"
         multiDexEnabled true
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         renderscriptTargetApi 22
         renderscriptSupportModeEnabled true
     }
     dexOptions {
         maxProcessCount 4
-        javaMaxHeapSize "12g"
+        javaMaxHeapSize "4g"
     }
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
@@ -131,6 +132,11 @@ android {
     lintOptions {
         abortOnError false
     }
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -141,6 +147,6 @@ dependencies {
     implementation 'com.newrelic.agent.android:android-agent:5.22.0'
 
     def room_version = "1.1.1"
-    implementation "android.arch.persistence.room:runtime:$room_version"
-    annotationProcessor "android.arch.persistence.room:compiler:$room_version"
+    implementation 'androidx.room:room-runtime:2.0.0'
+    annotationProcessor 'androidx.room:room-compiler:2.0.0'
 }

@@ -1,8 +1,8 @@
 package com.carecloud.carepay.practice.library.patientmodecheckin;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.patientmodecheckin.models.PatientModeCheckinDTO;
@@ -15,24 +15,11 @@ import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenterImpl;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
-import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.CheckInDemographicsBaseFragment;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
-import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
-import com.carecloud.carepaylibray.demographics.fragments.FormsFragment;
-import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
-import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment;
-import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
-import com.carecloud.carepaylibray.demographics.fragments.IntakeFormsFragment;
-import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
-import com.carecloud.carepaylibray.medications.fragments.AllergiesFragment;
-import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragment;
-import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
-import com.carecloud.carepaylibray.medications.fragments.MedicationsFragment;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
-import com.carecloud.carepaylibray.utils.ValidationHelper;
 
 import java.util.List;
 
@@ -42,6 +29,7 @@ import java.util.List;
 
 public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl {
     public static final String KEY_HANDLE_HOME = "handle_home_button";
+    private final TransitionDTO logoutTransition;
 
     private boolean shouldHandleHomeButton = false;
     private PatientModeCheckinDTO patientModeCheckinDTO;
@@ -74,6 +62,7 @@ public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl 
         }
 
         patientModeCheckinDTO = demographicsView.getConvertedDTO(PatientModeCheckinDTO.class);
+        logoutTransition = patientModeCheckinDTO.getMetaData().getTransitions().getPatientHome();
         if (patientModeCheckinDTO != null) {
             if (patientModeCheckinDTO.getPayload().getCheckinModeDTO().getMetadata().getUsername() != null) {
                 username = patientModeCheckinDTO.getPayload().getCheckinModeDTO().getMetadata().getUsername();
@@ -177,5 +166,13 @@ public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl 
                 ((CheckInDemographicsBaseFragment) fragment).afterLanguageChanged(demographicDTO);
             }
         }
+    }
+
+    public void setHandleHomeButton(boolean handle) {
+        shouldHandleHomeButton = handle;
+    }
+
+    public TransitionDTO getLogoutTransition() {
+        return logoutTransition;
     }
 }

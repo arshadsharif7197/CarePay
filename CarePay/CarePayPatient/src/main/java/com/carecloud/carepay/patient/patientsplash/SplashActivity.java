@@ -100,6 +100,10 @@ public class SplashActivity extends BasePatientActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            if (getIntent().getData() != null) {
+                String inviteId = getIntent().getData().getQueryParameter("i");
+                getIntent().putExtra("inviteId", inviteId);
+            }
             navigateToWorkflow(workflowDTO, getIntent().getExtras());
             // end-splash activity and transition
             SplashActivity.this.finish();
@@ -154,5 +158,10 @@ public class SplashActivity extends BasePatientActivity {
                 Log.d(getClass().getName(), exceptionMessage);
             }
         };
+    }
+
+    @Override
+    public boolean manageSession() {
+        return false;
     }
 }

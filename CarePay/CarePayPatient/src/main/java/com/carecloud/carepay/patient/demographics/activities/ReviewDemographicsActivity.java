@@ -2,9 +2,9 @@ package com.carecloud.carepay.patient.demographics.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
+import com.carecloud.carepay.patient.base.ToolbarInterface;
 import com.carecloud.carepay.patient.payment.PatientPaymentPresenter;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -23,32 +24,21 @@ import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenterImpl;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
-import com.carecloud.carepaylibray.demographics.fragments.AddressFragment;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
-import com.carecloud.carepaylibray.demographics.fragments.DemographicsFragment;
-import com.carecloud.carepaylibray.demographics.fragments.FormsFragment;
-import com.carecloud.carepaylibray.demographics.fragments.HealthInsuranceFragment;
-import com.carecloud.carepaylibray.demographics.fragments.IdentificationFragment;
-import com.carecloud.carepaylibray.demographics.fragments.InsuranceEditDialog;
-import com.carecloud.carepaylibray.demographics.fragments.IntakeFormsFragment;
-import com.carecloud.carepaylibray.demographics.fragments.PersonalInfoFragment;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowState;
+import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.interfaces.IcicleInterface;
 import com.carecloud.carepaylibray.media.MediaResultListener;
-import com.carecloud.carepaylibray.medications.fragments.AllergiesFragment;
-import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergiesEmptyFragment;
-import com.carecloud.carepaylibray.medications.fragments.MedicationsAllergyFragment;
-import com.carecloud.carepaylibray.medications.fragments.MedicationsFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class ReviewDemographicsActivity extends BasePatientActivity implements DemographicsView,
-        PaymentViewHandler, ConfirmationCallback {
+        PaymentViewHandler, ConfirmationCallback, FragmentActivityInterface, ToolbarInterface {
 
 
     private static final String KEY_PAYMENT_DTO = "KEY_PAYMENT_DTO";
@@ -321,4 +311,23 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
         finish();
     }
 
+    @Override
+    public void addFragment(Fragment fragment, boolean addToBackStack) {
+        paymentPresenter.addFragment(fragment, addToBackStack);
+    }
+
+    @Override
+    public void replaceFragment(Fragment fragment, boolean addToBackStack) {
+        paymentPresenter.replaceFragment(fragment, addToBackStack);
+    }
+
+    @Override
+    public DTO getDto() {
+        return null;
+    }
+
+    @Override
+    public void displayToolbar(boolean display, String title) {
+
+    }
 }

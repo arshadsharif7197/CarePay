@@ -1,13 +1,14 @@
 package com.carecloud.carepay.patient.survey;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -124,10 +125,18 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
 
     private void finishFlow(WorkflowDTO workflowDTO) {
         if (workflowDTO == null || comesFromNotification) {
+            if (!surveyDto.getPayload().getSurvey().isAlreadyFilled()) {
+                Intent intent = new Intent();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(CarePayConstants.SHOW_SURVEY, true);
+                intent.putExtras(bundle);
+                getActivity().setResult(Activity.RESULT_OK, intent);
+            }
             getActivity().finish();
         } else {
             Bundle bundle = new Bundle();
             bundle.putBoolean(CarePayConstants.REFRESH, true);
+            bundle.putBoolean(CarePayConstants.SHOW_SURVEY, true);
             PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, bundle);
         }
     }
@@ -387,6 +396,7 @@ public class SurveyResultFragment extends BaseFragment implements BackPressedFra
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(CarePayConstants.REFRESH, true);
+                bundle.putBoolean(CarePayConstants.SHOW_SURVEY, true);
                 PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, bundle);
             }
         });
