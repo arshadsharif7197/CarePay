@@ -117,12 +117,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         }
 
         View closeButton = view.findViewById(R.id.closeViewLayout);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancel();
-            }
-        });
+        closeButton.setOnClickListener(v -> cancel());
     }
 
     protected void setUpAmounts(View view) {
@@ -155,26 +150,18 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
     @Override
     protected void setupButtons(final View view) {
         super.setupButtons(view);
-        createPlanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (validateFields(true)) {
-                    SystemUtil.hideSoftKeyboard(getContext(), view);
-                    if (selectedCreditCard != null && selectedCreditCard.getCreditCardsId() == null) {
-                        authorizeCreditCard();
-                    } else {
-                        mainButtonAction();
-                    }
+        createPlanButton.setOnClickListener(v -> {
+            if (validateFields(true)) {
+                SystemUtil.hideSoftKeyboard(getContext(), view);
+                if (selectedCreditCard != null && selectedCreditCard.getCreditCardsId() == null) {
+                    authorizeCreditCard();
+                } else {
+                    mainButtonAction();
                 }
             }
         });
         addNewCardButton = view.findViewById(R.id.addNewCardButton);
-        addNewCardButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onAddPaymentPlanCard(paymentsModel, null, true);
-            }
-        });
+        addNewCardButton.setOnClickListener(v -> onAddPaymentPlanCard(paymentsModel, null, true));
         if (paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             addNewCardButton.setText(Label.getLabel("payment_new_credit_card"));
         }
@@ -412,18 +399,15 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         if (prev != null) {
             ft.remove(prev);
         }
-        fragment.setCallback(new SelectAmountFragment.SelectAmountInterface() {
-            @Override
-            public void onAmountSelected(double amount) {
-                paymentPlanAmount = SystemUtil.safeSubtract(paymentPlanAmount, itemDTO.getAmountSelected());
-                itemDTO.setAmountSelected(amount);
-                itemDTO.setSelected(true);
-                paymentPlanAmount = SystemUtil.safeAdd(paymentPlanAmount, itemDTO.getAmountSelected());
-                paymentValueTextView.setText(currencyFormatter.format(paymentPlanAmount));
-                adapter.notifyDataSetChanged();
-                refreshNumberOfPayments(String.valueOf(installments));
-                enableCreatePlanButton();
-            }
+        fragment.setCallback(amount -> {
+            paymentPlanAmount = SystemUtil.safeSubtract(paymentPlanAmount, itemDTO.getAmountSelected());
+            itemDTO.setAmountSelected(amount);
+            itemDTO.setSelected(true);
+            paymentPlanAmount = SystemUtil.safeAdd(paymentPlanAmount, itemDTO.getAmountSelected());
+            paymentValueTextView.setText(currencyFormatter.format(paymentPlanAmount));
+            adapter.notifyDataSetChanged();
+            refreshNumberOfPayments(String.valueOf(installments));
+            enableCreatePlanButton();
         });
         fragment.show(ft, tag);
     }
