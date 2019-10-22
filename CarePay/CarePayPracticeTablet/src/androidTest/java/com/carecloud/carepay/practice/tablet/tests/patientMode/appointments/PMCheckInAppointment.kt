@@ -3,6 +3,10 @@ package com.carecloud.carepay.practice.tablet.tests.patientMode.appointments
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.PracticeMainScreen
 import com.carecloud.carepay.practice.tablet.tests.BaseTest
+import com.carecloud.carepaylibray.androidTest.graphql.createAppointment
+import com.carecloud.carepaylibray.androidTest.graphql.getBreezeToken
+import com.carecloud.carepaylibray.androidTest.providers.makeRequest
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -11,6 +15,14 @@ import org.junit.runner.RunWith
  */
 @RunWith(AndroidJUnit4::class)
 class PMCheckInAppointment : BaseTest() {
+
+    @Before
+    override
+    fun setup() {
+        val response = makeRequest(getBreezeToken(appMode = "practice"))
+        makeRequest(createAppointment(), authHeader = response.data?.getBreezeSessionToken?.xavier_token.toString())
+        super.setup()
+    }
 
     @Test
     fun pmCheckInAppointment() {
