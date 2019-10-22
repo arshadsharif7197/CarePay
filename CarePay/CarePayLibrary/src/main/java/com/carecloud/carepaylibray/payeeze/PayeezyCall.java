@@ -50,9 +50,6 @@ public class PayeezyCall {
                 merchantServiceDTO.getMasterMerchantToken(),
                 merchantServiceDTO.getApiSecret(), gson.toJson(tokenizeBody));
         String tokenizationPostPath = merchantServiceDTO.getUrlPostPath();
-        if (StringUtil.isNullOrEmpty(tokenizationPostPath)) {
-            tokenizationPostPath = "/v1/transactions/tokens";
-        }
         String tokenizationUrl = String.format("%s%s", merchantServiceDTO.getBaseUrl(), tokenizationPostPath);
         Retrofit retrofit = getRetrofitService(merchantServiceDTO.getBaseUrl());
         Call<TokenizeResponse> call = retrofit.create(PayeezyService.class)
@@ -65,6 +62,7 @@ public class PayeezyCall {
 
             @Override
             public void onFailure(Call<TokenizeResponse> call, Throwable t) {
+                callback.onAuthorizeCreditCard(null);
                 Log.e("Breeze", t.getMessage());
                 callback.onAuthorizeCreditCard(null);
             }
