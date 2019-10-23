@@ -89,15 +89,15 @@ public class MessagesViewModel extends BaseViewModel {
         return threadsObservable;
     }
 
-    public MutableLiveData<MessagingThreadDTO> getThreadMessagesObservable() {
-        if (threadMessagesObservable == null) {
+    public MutableLiveData<MessagingThreadDTO> getThreadMessagesObservable(boolean refresh) {
+        if (threadMessagesObservable == null || refresh) {
             threadMessagesObservable = new MutableLiveData<>();
         }
         return threadMessagesObservable;
     }
 
-    public MutableLiveData<MessagingThreadDTO> getNewMessageInThreadObservable() {
-        if (newMessageInThreadObservable == null) {
+    public MutableLiveData<MessagingThreadDTO> getNewMessageInThreadObservable(boolean refresh) {
+        if (newMessageInThreadObservable == null || refresh) {
             newMessageInThreadObservable = new MutableLiveData<>();
         }
         return newMessageInThreadObservable;

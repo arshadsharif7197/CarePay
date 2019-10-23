@@ -97,9 +97,9 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
     private void setUpViewModel() {
         viewModel = ViewModelProviders.of(getActivity()).get(MessagesViewModel.class);
         messagingDto = viewModel.getMessagesDto().getValue();
-        viewModel.getThreadMessagesObservable().observe(this, messagingThreadDTO
+        viewModel.getThreadMessagesObservable(true).observe(this, messagingThreadDTO
                 -> updateThreadMessages(messagingThreadDTO.getPayload()));
-        viewModel.getNewMessageInThreadObservable().observe(this, messagingThreadDTO
+        viewModel.getNewMessageInThreadObservable(true).observe(this, messagingThreadDTO
                 -> {
             updateThreadMessages(messagingThreadDTO.getPayload());
             MixPanelUtil.logEvent(getString(R.string.event_message_reply));
@@ -145,7 +145,7 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
     }
 
     private void initToolbar(View view) {
-        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        Toolbar toolbar = view.findViewById(R.id.toolbar    );
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(thread.getSubject());
 
