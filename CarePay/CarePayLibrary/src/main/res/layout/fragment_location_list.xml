@@ -15,7 +15,8 @@
         android:id="@+id/locationRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar_layout" />
+        android:layout_below="@id/toolbar_layout"
+        android:contentDescription="@string/content_description_location_list"/>
 
     <RelativeLayout
         android:id="@+id/emptyStateScreen"

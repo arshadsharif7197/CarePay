@@ -96,7 +96,7 @@ public class PatientPaymentHistoryFragment extends BaseFragment
     }
 
     private void setUpRecyclerView(View view) {
-        historyRecyclerView = view.findViewById(R.id.payment_list_recycler);
+        historyRecyclerView = view.findViewById(R.id.history_list_recycler);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         historyRecyclerView.addOnScrollListener(scrollListener);
         if (hasCharges()) {

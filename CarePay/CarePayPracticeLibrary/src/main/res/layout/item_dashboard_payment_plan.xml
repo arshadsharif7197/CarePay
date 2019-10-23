@@ -99,6 +99,7 @@
                 android:background="@drawable/blue_border_rounded_button_selector"
                 android:paddingBottom="@dimen/itemDashboardButtonVerticalPadding"
                 android:paddingTop="@dimen/itemDashboardButtonVerticalPadding"
+                android:contentDescription="@string/content_description_payment_plan_detail_button"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/itemDashboardButtonTextSize"
                 app:customAssetFont="gotham_rounded_medium"

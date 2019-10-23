@@ -60,7 +60,8 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_13"
                 app:customAssetFont="gotham_rounded_medium"
-                tools:text="Request Appointment" />
+                tools:text="Request Appointment"
+                android:contentDescription="@string/content_description_request_appointment"/>
         </LinearLayout>
 
         <ScrollView

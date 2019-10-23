@@ -187,7 +187,8 @@ public class ChooseProfileFragment extends BaseDialogFragment {
                 if (shouldShowNotificationScreen) {
                     manageNotificationAsLandingScreen(workflowDTO.toString());
                 } else {
-                    PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
+                    PatientNavigationHelper.navigateToWorkflow(getActivity(),
+                            workflowDTO, getActivity().getIntent().getExtras());
                 }
                 ApplicationPreferences.getInstance().setUserName(user);
                 String encryptedPassword = EncryptionUtil.encrypt(getContext(), password, user);

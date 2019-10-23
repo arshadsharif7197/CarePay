@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:contentDescription="@string/content_description_change_mode_dialog"
     android:gravity="center"
     android:orientation="horizontal">
 
@@ -12,6 +13,7 @@
         android:layout_height="@dimen/home_select_mode_button_height"
         android:background="@drawable/home_change_mode_selector_left"
         android:clickable="true"
+        android:contentDescription="@string/content_description_patient_mode"
         android:orientation="vertical">
 
         <FrameLayout

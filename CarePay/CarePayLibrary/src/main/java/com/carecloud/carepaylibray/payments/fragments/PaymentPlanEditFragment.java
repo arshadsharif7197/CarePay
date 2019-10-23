@@ -13,7 +13,6 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsToggleOption;
 import com.carecloud.carepaylibray.payeeze.PayeezyCall;
@@ -158,16 +157,13 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
         super.setupButtons(view);
         createPlanButton.setVisibility(View.GONE);
         view.findViewById(R.id.editButtonsLayout).setVisibility(View.VISIBLE);
-        editPaymentPlanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (validateFields(true)) {
-                    SystemUtil.hideSoftKeyboard(getContext(), view);
-                    if (creditCard != null && creditCard.getCreditCardsId() == null) {
-                        authorizeCreditCard();
-                    } else {
-                        updatePaymentPlan();
-                    }
+        editPaymentPlanButton.setOnClickListener(view1 -> {
+            if (validateFields(true)) {
+                SystemUtil.hideSoftKeyboard(getContext(), view1);
+                if (creditCard != null && creditCard.getCreditCardsId() == null) {
+                    authorizeCreditCard();
+                } else {
+                    updatePaymentPlan();
                 }
             }
         });
@@ -178,12 +174,7 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
             cancelPaymentPlanButton.setText(Label.getLabel("payment.editPaymentPlan.delete.button.label"));
         }
         final boolean finalDeletePaymentPlan = deletePaymentPlan;
-        cancelPaymentPlanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showCancelPaymentPlanConfirmDialog(finalDeletePaymentPlan);
-            }
-        });
+        cancelPaymentPlanButton.setOnClickListener(v -> showCancelPaymentPlanConfirmDialog(finalDeletePaymentPlan));
         cancelPaymentPlanButton.setVisibility(canCancelPlan(paymentPlanDTO.getMetadata().getPracticeId())
                 ? View.VISIBLE : View.GONE);
         enableCreatePlanButton();
@@ -197,12 +188,7 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
     }
 
     protected void showCancelPaymentPlanConfirmDialog(final boolean deletePaymentPlan) {
-        callback.showCancelPaymentPlanConfirmDialog(new ConfirmationCallback() {
-            @Override
-            public void onConfirm() {
-                cancelPaymentPlan(deletePaymentPlan);
-            }
-        }, deletePaymentPlan);
+        callback.showCancelPaymentPlanConfirmDialog(() -> cancelPaymentPlan(deletePaymentPlan), deletePaymentPlan);
     }
 
     protected void cancelPaymentPlan(final boolean deletePaymentPlan) {
@@ -256,12 +242,7 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
         if (creditCard != null) {
             setCreditCardInfo(creditCard, paymentMethodEditText);
         }
-        paymentMethodEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onEditPaymentPlanPaymentMethod(paymentsModel, paymentPlanDTO);
-            }
-        });
+        paymentMethodEditText.setOnClickListener(v -> onEditPaymentPlanPaymentMethod(paymentsModel, paymentPlanDTO));
     }
 
     protected abstract void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
