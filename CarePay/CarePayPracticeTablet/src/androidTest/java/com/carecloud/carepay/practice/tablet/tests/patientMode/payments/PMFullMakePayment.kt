@@ -37,6 +37,6 @@ class PMFullMakePayment: BaseTest() {
                 .pressLoginButton()
                 .selectFirstPayment()
                 .makeFullPayment()
-                .payUseCreditCardOnFile()
+                .payUseCreditCardOnFile(null)
     }
 }

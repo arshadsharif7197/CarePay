@@ -1,8 +1,10 @@
 package com.carecloud.carepay.practice.tablet.tests.patientMode.appointments
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.carecloud.carepay.practice.tablet.pageObjects.patientMode.checkin.*
 import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.PracticeMainScreen
 import com.carecloud.carepay.practice.tablet.tests.BaseTest
+import com.carecloud.carepaylibray.androidTest.graphql.changePaymentSetting
 import com.carecloud.carepaylibray.androidTest.graphql.createAppointment
 import com.carecloud.carepaylibray.androidTest.graphql.getBreezeToken
 import com.carecloud.carepaylibray.androidTest.providers.makeRequest
@@ -20,7 +22,10 @@ class PMCheckInAppointment : BaseTest() {
     override
     fun setup() {
         val response = makeRequest(getBreezeToken(appMode = "practice"))
-        makeRequest(createAppointment(), authHeader = response.data?.getBreezeSessionToken?.xavier_token.toString())
+        val tokens = response.data?.getBreezeSessionToken
+        makeRequest(createAppointment(), authHeader = tokens?.xavier_token.toString())
+        makeRequest(changePaymentSetting("neither"),
+                tokens?.cognito_token?.authenticationToken.toString())
         super.setup()
     }
 
@@ -35,12 +40,12 @@ class PMCheckInAppointment : BaseTest() {
                 .typeUsername("dev_emails+qa.androidbreeze2@carecloud.com")
                 .typePassword("Test123!")
                 .pressLoginButton()
-                .checkInAppointment()
-                .personalInfoNextStep()
-                .addressNextStep()
-                .demographicsNextStep()
-                .medicationsNextStep()
-                .allergiesNextStep()
+                .checkInAppointment(CheckInPersonalInfo())
+                .personalInfoNextStep(CheckInAddress())
+                .addressNextStep(CheckInDemographics())
+                .demographicsNextStep(CheckInMedications())
+                .medicationsNextStep(CheckInAllergies())
+                .allergiesNextStep(CheckInOutConfirmation())
                 .verifyAppointmentStatus("Just Checked In")
                 .goHome()
     }

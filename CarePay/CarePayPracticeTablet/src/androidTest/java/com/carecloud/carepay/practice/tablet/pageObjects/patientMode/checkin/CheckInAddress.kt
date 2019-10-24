@@ -8,8 +8,8 @@ import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
  * Created by drodriguez on 2019-09-30.
  */
 class CheckInAddress: CustomViewActions() {
-    fun addressNextStep(): CheckInDemographics {
+    fun <T>addressNextStep(next: T): T {
         click(appContext.getString(R.string.content_description_next_button))
-        return CheckInDemographics()
+        return next
     }
 }

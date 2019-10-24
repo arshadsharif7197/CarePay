@@ -8,8 +8,8 @@ import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
  * @author pjohnson on 2019-08-28.
  */
 class CheckInScreen : CustomViewActions() {
-    fun checkInAppointment(): CheckInPersonalInfo {
+    fun <T> checkInAppointment(next: T): T {
         clickOnSpecificText("START CHECK-IN")
-        return CheckInPersonalInfo()
+        return next
     }
 }

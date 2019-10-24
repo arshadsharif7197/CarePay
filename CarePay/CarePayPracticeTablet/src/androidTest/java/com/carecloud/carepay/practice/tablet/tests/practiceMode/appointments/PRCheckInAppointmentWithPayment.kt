@@ -16,7 +16,7 @@ import org.junit.runner.RunWith
  * Created by drodriguez on 2019-10-01.
  */
 @RunWith(AndroidJUnit4::class)
-class PMCheckInAppointment : BaseTest() {
+class PMCheckInAppointmentWithPayment : BaseTest() {
 
     @Before
     override
@@ -30,7 +30,7 @@ class PMCheckInAppointment : BaseTest() {
     }
 
     @Test
-    fun pmCheckInAppointment() {
+    fun pmCheckInAppointmentWithPayment() {
         PracticeMainScreen()
                 .pressAppointmentsButton()
                 .checkInFirstAppointmentOnList()
@@ -38,7 +38,10 @@ class PMCheckInAppointment : BaseTest() {
                 .addressNextStep(CheckInDemographics())
                 .demographicsNextStep(CheckInMedications())
                 .medicationsNextStep(CheckInAllergies())
-                .allergiesNextStep(CheckInOutConfirmation())
+                .allergiesNextStep(CheckInPaymentDetails())
+                .selectPaymentOptions()
+                .makeFullPayment()
+                .payUseCreditCardOnFile(CheckInOutConfirmation())
                 .verifyAppointmentStatus("Just Checked In")
                 .goHome()
     }

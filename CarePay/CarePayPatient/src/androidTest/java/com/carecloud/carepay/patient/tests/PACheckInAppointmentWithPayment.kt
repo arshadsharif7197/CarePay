@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.tests
 
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.patient.BaseTest
 import com.carecloud.carepay.patient.pageObjects.appointments.AppointmentScreen
 import com.carecloud.carepay.patient.pageObjects.checkin.CheckInAllergiesScreen
@@ -9,14 +10,17 @@ import com.carecloud.carepay.patient.pageObjects.checkin.demographics.CheckInDem
 import com.carecloud.carepay.patient.pageObjects.payments.PaymentLineItemsDetails
 import com.carecloud.carepaylibray.androidTest.graphql.changePaymentSetting
 import com.carecloud.carepaylibray.androidTest.graphql.createAppointment
+import com.carecloud.carepaylibray.androidTest.graphql.createSimpleCharge
 import com.carecloud.carepaylibray.androidTest.graphql.getBreezeToken
 import com.carecloud.carepaylibray.androidTest.providers.makeRequest
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 
 /**
  * Created by drodriguez on 2019-10-24.
  */
+@RunWith(AndroidJUnit4::class)
 class PACheckInAppointmentWithPayment: BaseTest() {
     @Before
     override
@@ -26,6 +30,7 @@ class PACheckInAppointmentWithPayment: BaseTest() {
         makeRequest(createAppointment(), authHeader = tokens?.xavier_token.toString())
         makeRequest(changePaymentSetting("checkin"),
                 tokens?.cognito_token?.authenticationToken.toString())
+        makeRequest(createSimpleCharge(), tokens?.xavier_token.toString())
         super.setup()
     }
 

@@ -26,6 +26,6 @@ class PMPartialMakePayment: BaseTest() {
                 .selectFirstPayment()
                 .makePartialPayment()
                 .enterAmount("20")
-                .payUseCreditCardOnFile()
+                .payUseCreditCardOnFile(null)
     }
 }
