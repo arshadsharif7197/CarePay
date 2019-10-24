@@ -30,7 +30,8 @@ class PAMakeFullPaymentTest: BaseTest() {
                 .openNavigationDrawer()
                 .goToPayments()
                 .makePaymentFor(0)
-                .makeFullPaymemt()
+                .selectPaymentOptions()
+                .makeFullPayment()
                 .payUseCreditCardOnFile()
     }
 }

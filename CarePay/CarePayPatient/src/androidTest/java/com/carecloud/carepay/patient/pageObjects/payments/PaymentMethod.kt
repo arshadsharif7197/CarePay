@@ -11,7 +11,7 @@ import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 class PaymentMethod : CustomViewActions() {
 
     fun payUseCreditCardOnFile(): PaymentsScreen {
-        clickOnItemOnList(appContext.getString(R.string.content_description_payment_methods), 1)
+        clickOnItemOnList(appContext.getString(R.string.content_description_payment_methods), 0)
         clickOnRecyclerViewItem(appContext.getString(R.string.content_description_credit_cards_list), 0)
         click(appContext.getString(R.string.content_description_pay_button))
         click(appContext.getString(R.string.content_description_ok_button))

@@ -21,8 +21,8 @@ class CheckInMedicationsScreen: CustomViewActions() {
         return this
     }
 
-    fun medicationsNextstep(): CheckInAllergiesScreen {
+    fun <T>medicationsNextstep(next: T): T {
         clickOnSpecificText("NEXT STEP")
-        return CheckInAllergiesScreen()
+        return next
     }
 }

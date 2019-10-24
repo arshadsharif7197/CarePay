@@ -21,10 +21,9 @@ class PaymentsScreen : CustomViewActions() {
         return ChoosePaymentType()
     }
 
-    fun makePaymentFor(position: Int): ChoosePaymentType {
+    fun makePaymentFor(position: Int): PaymentLineItemsDetails {
         clickOnRecyclerViewItem(appContext.getString(R.string.content_description_payments_list), position)
-        click(appContext.getString(R.string.content_description_payment_options_button))
-        return ChoosePaymentType()
+        return PaymentLineItemsDetails()
     }
 
     fun verifyPaymentPlanIsOnList(textMatch: String): PaymentsScreen {

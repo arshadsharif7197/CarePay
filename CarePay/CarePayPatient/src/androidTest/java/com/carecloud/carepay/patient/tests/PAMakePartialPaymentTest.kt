@@ -20,6 +20,7 @@ class PAMakePartialPaymentTest : BaseTest() {
                 .openNavigationDrawer()
                 .goToPayments()
                 .makePaymentFor(0)
+                .selectPaymentOptions()
                 .makePartialPayment(20)
                 .payUseCreditCardOnFile()
     }
