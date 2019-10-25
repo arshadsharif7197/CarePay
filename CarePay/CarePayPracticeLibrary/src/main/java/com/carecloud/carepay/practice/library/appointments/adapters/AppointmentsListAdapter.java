@@ -251,8 +251,8 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         }
 
         private void setDateTime(DateUtil dateUtil) {
-            appointmentDate.setText(dateUtil.getDateAsDayMonthDayOrdinalYear(Label
-                    .getLabel("appointments_web_today_heading")));
+            appointmentDate.setText(dateUtil.getDateAsWeekdayMonthDayYear(Label
+                    .getLabel("appointments_web_today_heading"), Label.getLabel("add_appointment_tomorrow")));
             appointmentTime.setText(dateUtil.getTime12Hour());
         }
 

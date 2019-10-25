@@ -28,7 +28,7 @@ public class MapFilterModel {
 
         doctors = map(filterModel.getDoctors());
         locations = map(filterModel.getLocations());
-        patients = map(filterModel.getPatients());
+        patients = map(filterModel.getCheckedPatients());
 
         filteringByDoctors = !doctors.isEmpty();
         filteringByLocations = !locations.isEmpty();
