@@ -235,4 +235,14 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
         MixPanelUtil.logEvent(getString(R.string.event_adhoc_forms_started), params, values);
 
     }
+
+    @Override
+    public boolean manageSession() {
+        return true;
+    }
+
+    @Override
+    public TransitionDTO getLogoutTransition() {
+        return adhocFormsModel.getMetadata().getTransitions().getLogout();
+    }
 }
