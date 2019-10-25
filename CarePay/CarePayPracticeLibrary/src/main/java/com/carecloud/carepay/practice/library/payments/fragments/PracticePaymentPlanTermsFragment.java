@@ -4,6 +4,8 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanTermsFragment;
@@ -36,17 +38,12 @@ public class PracticePaymentPlanTermsFragment extends PaymentPlanTermsFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle) {
+    public void onViewCreated(@NonNull View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
 
         View close = view.findViewById(R.id.closeViewLayout);
         if (close != null) {
-            close.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    cancel();
-                }
-            });
+            close.setOnClickListener(view1 -> cancel());
         }
 
     }

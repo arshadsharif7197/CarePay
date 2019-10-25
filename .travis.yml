@@ -15,6 +15,8 @@ android:
     - extra-google-m2repository
     - extra-android-m2repository # for design library
     - addon-google_apis-google-19
+    # - android-22
+    # - sys-img-armeabi-v7a-android-22
   licenses:
     - android-sdk-preview-license-.+
     - android-sdk-license-.+
@@ -37,12 +39,23 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 script:
-   - jdk_switcher use oraclejdk8
-   - cd /home/travis/build/CareCloud/shamrock_android/CarePay
-   - ./runner testfairy
+  - jdk_switcher use oraclejdk8
+  - cd /home/travis/build/CareCloud/shamrock_android/CarePay
+  - chmod +x ./scripts/*
+  # separating compile command in case it fails, so it doesnt run the rest of commands in file
+  - ./scripts/compile || travis_terminate 1;
+  - ./runner testfairy
+# after_script:
+#   # Emulator Management: Create, Start and Wait
+#   - cp -r ./skins/tablet  $ANDROID_HOME/platforms/android-22/skins/
+#   - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
+#   - emulator -avd test -skin tablet -no-audio -no-window &
+#   - android-wait-for-emulator
+#   - adb shell input keyevent 82 &
+#   - ./gradlew -p CarePayPracticeTablet connectedQaDebugAndroidTest || travis_terminate 1;
 
 branches:
-  only: 
+  only:
     - master
     - Staging
     - QA
