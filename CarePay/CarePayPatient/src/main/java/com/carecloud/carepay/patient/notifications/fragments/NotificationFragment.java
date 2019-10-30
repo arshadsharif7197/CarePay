@@ -224,9 +224,8 @@ public class NotificationFragment extends BaseFragment
 
 
     private void setAdapter() {
-        boolean canViewNotifications = canViewAnyNotification(notificationsDTO.getPayload().getDelegate() == null ?
-                notificationsDTO.getPayload().getPracticeInformation()
-                : notificationsDTO.getPayload().getUserLinks().getDelegatePracticeInformation());
+        boolean canViewNotifications = notificationsDTO.getPayload().getDelegate() == null ||
+                canViewAnyNotification(notificationsDTO.getPayload().getUserLinks().getDelegatePracticeInformation());
         if (canViewNotifications) {
             if (!notificationItems.isEmpty()) {
                 if (notificationsAdapter == null) {
