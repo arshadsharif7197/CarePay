@@ -156,7 +156,7 @@
                             android:focusableInTouchMode="false"
                             android:imeOptions="actionNext"
                             android:textSize="@dimen/nextAppointmentFieldTextSize"
-                            app:customAssetFont="gotham_rounded_light"
+                            app:customAssetFont="gotham_rounded_book"
                             breeze:hintKey="next_appointment_provider_hint" />
 
                     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
@@ -205,7 +205,7 @@
                             android:focusableInTouchMode="false"
                             android:imeOptions="actionNext"
                             android:textSize="@dimen/nextAppointmentFieldTextSize"
-                            app:customAssetFont="gotham_rounded_light"
+                            app:customAssetFont="gotham_rounded_book"
                             breeze:hintKey="add_appointment_location" />
 
                     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
@@ -255,7 +255,7 @@
                             android:focusableInTouchMode="false"
                             android:imeOptions="actionNext"
                             android:textSize="@dimen/nextAppointmentFieldTextSize"
-                            app:customAssetFont="gotham_rounded_light"
+                            app:customAssetFont="gotham_rounded_book"
                             breeze:hintKey="next_appointment_choose_visit_type_hint"
                             android:contentDescription="@string/content_description_visit_type_edit_text"/>
 
@@ -307,7 +307,7 @@
                             android:focusableInTouchMode="false"
                             android:imeOptions="actionDone"
                             android:textSize="@dimen/nextAppointmentFieldTextSize"
-                            app:customAssetFont="gotham_rounded_light"
+                            app:customAssetFont="gotham_rounded_book"
                             breeze:hintKey="next_appointment_choose_when_hint"
                             android:contentDescription="@string/content_description_visit_time_edit_text"/>
 

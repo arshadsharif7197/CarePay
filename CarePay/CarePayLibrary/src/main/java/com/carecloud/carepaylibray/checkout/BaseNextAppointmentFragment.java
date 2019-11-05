@@ -237,6 +237,7 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
                 showVisitTypeFragment();
             }
         });
+        setHint(visitTypeTextView, visitTypeTextInputLayout, null);
         visitTypeTextView.getOnFocusChangeListener().onFocusChange(visitTypeTextView,
                 !StringUtil.isNullOrEmpty(visitTypeTextView.getText().toString().trim()));
 
@@ -268,6 +269,7 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
                 showAvailabilityFragment();
             }
         });
+        setHint(visitTimeTextView, visitTimeTextInputLayout, null);
         visitTimeTextView.getOnFocusChangeListener().onFocusChange(visitTimeTextView,
                 !StringUtil.isNullOrEmpty(visitTimeTextView.getText().toString().trim()));
 
@@ -283,7 +285,6 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
     private void resetVisitTime() {
         selectedTimeSlot = null;
         visitTimeTextView.setText(null);
-        setHint(visitTimeTextView, visitTimeTextInputLayout, null);
         visitTimeResetImage.setVisibility(View.GONE);
         visitTimeTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
                 getResources().getDrawable(R.drawable.icon_drop_down), null);
