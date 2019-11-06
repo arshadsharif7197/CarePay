@@ -76,6 +76,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     public static final String IS_PATIENT_MODE = "IsPatientMode";
     public static final String IS_CHECK_IN = "IsCheckIn";
     public static final String KEY_POLICY_HOLDER_SELF = "self";
+    private static final String KEY_POLICY_HOLDER_SELF_ES = "yo";
     public static final String KEY_PROVIDER_OTHER = "other";
 
     public static final int NEW_INSURANCE = -1;
@@ -474,7 +475,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                 new OnOptionSelectedListener() {
                     @Override
                     public void onOptionSelected(DemographicsOption option) {
-                        isDataHolderSelf = selectedRelationshipOption.getName().toLowerCase().equals(KEY_POLICY_HOLDER_SELF);
+                        String policyHolderRelation = selectedRelationshipOption.getName().toLowerCase();
+                        isDataHolderSelf = policyHolderRelation.equals(KEY_POLICY_HOLDER_SELF) || policyHolderRelation.equals(KEY_POLICY_HOLDER_SELF_ES);
                         checkIfEnableButton();
                         otherPolicyHolderFields.setVisibility(isDataHolderSelf ? View.GONE : View.VISIBLE);
                         enableDependentFields(view,
@@ -489,7 +491,8 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                 }, false);
 
         if (editedIndex != NEW_INSURANCE) {
-            isDataHolderSelf = selectedRelationshipOption.getName().toLowerCase().trim().equals(KEY_POLICY_HOLDER_SELF);
+            String policyHolderRelation = selectedRelationshipOption.getName().toLowerCase();
+            isDataHolderSelf = policyHolderRelation.equals(KEY_POLICY_HOLDER_SELF) || policyHolderRelation.equals(KEY_POLICY_HOLDER_SELF_ES);
         }
         setupExtraFields(view, demographicInsurancePayload, insuranceModelProperties);
         enableDependentFields(view,
