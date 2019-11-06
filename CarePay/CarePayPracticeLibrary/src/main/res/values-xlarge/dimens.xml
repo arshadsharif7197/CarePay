@@ -768,6 +768,8 @@
     <dimen name="allergyMedicationEmptyMessageTextSize">40sp</dimen>
     <dimen name="medicationAllergyPadding">16dp</dimen>
     <dimen name="medicationAllergySearchPadding">20dp</dimen>
+    <dimen name="appointmentPlaceTextSize">16sp</dimen>
+    <dimen name="appointmentStatusVerticalMargin">22dp</dimen>
 
     <!--Complete Screen-->
     <dimen name="completeScreenCheckImageSize">120dp</dimen>

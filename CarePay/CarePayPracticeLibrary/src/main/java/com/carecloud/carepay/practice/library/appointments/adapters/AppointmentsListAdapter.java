@@ -2,12 +2,14 @@ package com.carecloud.carepay.practice.library.appointments.adapters;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -47,7 +49,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
      *
      * @param context               context
      * @param appointmentsArrayList appointmentsArrayList
-     * @param practiceInfo
+     * @param practiceInfo          practice Information
      */
     public AppointmentsListAdapter(Context context, List<AppointmentDTO> appointmentsArrayList,
                                    AppointmentsResultModel appointmentInfo,
@@ -60,8 +62,9 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         this.practiceInfo = practiceInfo;
     }
 
+    @NonNull
     @Override
-    public AppointmentsListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AppointmentsListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View appointmentsListItemView = LayoutInflater.from(context).inflate(
                 R.layout.cardview_appointments_item, parent, false);
         return new AppointmentsListViewHolder(appointmentsListItemView);
@@ -96,11 +99,11 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         private final View appointmentCardHeader;
         private final View appointmentLocationView;
         private final ImageView profileImage;
-        private final CarePayTextView appointmentStatusMissed;
-        private final CarePayTextView appointmentStatusCheckedIn;
-        private final CarePayTextView appointmentStatusRequested;
-        private final CarePayTextView appointmentStatusCanceled;
-        private final CarePayTextView appointmentStatusCheckedOut;
+        private final View appointmentStatusMissed;
+        private final View appointmentStatusRequested;
+        private final View appointmentStatusCheckedIn;
+        private final View appointmentStatusCheckedOut;
+        private final View appointmentStatusCanceled;
         private final CarePayTextView appointmentPlaceName;
         private final CarePayTextView appointmentPlaceAddress;
         private CarePayTextView shortName;
@@ -229,18 +232,14 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
 
         private void setCheckInButton(AppointmentDTO appointmentDTO, int position) {
             startCheckIn.setTag(position);
-            startCheckIn.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View view) {
-                    int position = (int) view.getTag();
-                    AppointmentDTO appointmentDTO = appointmentsArrayList.get(position);
-                    if (listener != null) {
-                        if (appointmentNavigationType == Defs.NAVIGATE_CHECKOUT) {
-                            listener.onStartCheckOut(appointmentDTO);
-                        } else {
-                            listener.onStartCheckIn(appointmentDTO);
-                        }
+            startCheckIn.setOnClickListener(view -> {
+                int position1 = (int) view.getTag();
+                AppointmentDTO appointmentDTO1 = appointmentsArrayList.get(position1);
+                if (listener != null) {
+                    if (appointmentNavigationType == Defs.NAVIGATE_CHECKOUT) {
+                        listener.onStartCheckOut(appointmentDTO1);
+                    } else {
+                        listener.onStartCheckIn(appointmentDTO1);
                     }
                 }
             });
