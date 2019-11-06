@@ -293,7 +293,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         }
 
         TextView textView = (TextView) view.findViewById(R.id.toolbar_title);
-        textView.setText(Label.getLabel("demographics_insurance_label"));
+        textView.setText(StringUtil.capitalize(Label.getLabel("demographics_add_insurance_link")));
     }
 
     @Override
