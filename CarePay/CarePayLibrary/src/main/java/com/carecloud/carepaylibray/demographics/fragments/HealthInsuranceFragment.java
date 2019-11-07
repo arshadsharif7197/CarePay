@@ -207,12 +207,14 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
         if (insuranceList.size() > 0) {
             DemographicInsurancePayloadDTO firstInsurance = insuranceList.get(insuranceList.size() - 1);
             for (DemographicInsurancePayloadDTO insurance : insuranceList.subList(0, insuranceList.size() - 1)) {
-                boolean match = checkEqualValues(insurance.getInsuranceProvider(), firstInsurance.getInsuranceProvider()) &&
-                        checkEqualValues(insurance.getInsurancePlan(), firstInsurance.getInsurancePlan()) &&
-                        checkEqualValues(insurance.getInsuranceMemberId(), firstInsurance.getInsuranceMemberId());
-                if (match) {
-                    insuranceDataRepeated = showAlert = true;
-                    return true;
+                if (!insurance.isDeleted()) {
+                    boolean match = checkEqualValues(insurance.getInsuranceProvider(), firstInsurance.getInsuranceProvider()) &&
+                            checkEqualValues(insurance.getInsurancePlan(), firstInsurance.getInsurancePlan()) &&
+                            checkEqualValues(insurance.getInsuranceMemberId(), firstInsurance.getInsuranceMemberId());
+                    if (match) {
+                        insuranceDataRepeated = showAlert = true;
+                        return true;
+                    }
                 }
             }
             insuranceDataRepeated = false;

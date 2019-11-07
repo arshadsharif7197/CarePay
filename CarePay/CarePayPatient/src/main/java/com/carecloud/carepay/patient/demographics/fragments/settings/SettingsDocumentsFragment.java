@@ -296,12 +296,14 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         if (modifiedList.size() > 0) {
             DemographicInsurancePayloadDTO firstInsurance = modifiedList.get(modifiedList.size() - 1);
             for (DemographicInsurancePayloadDTO insurance : modifiedList.subList(0, modifiedList.size() - 1)) {
-                boolean match = checkEqualValues(insurance.getInsuranceProvider(), firstInsurance.getInsuranceProvider()) &&
-                        checkEqualValues(insurance.getInsurancePlan(), firstInsurance.getInsurancePlan()) &&
-                        checkEqualValues(insurance.getInsuranceMemberId(), firstInsurance.getInsuranceMemberId());
-                if (match) {
-                    insuranceDataRepeated = showAlert = true;
-                    return true;
+                if (!insurance.isDeleted()) {
+                    boolean match = checkEqualValues(insurance.getInsuranceProvider(), firstInsurance.getInsuranceProvider()) &&
+                            checkEqualValues(insurance.getInsurancePlan(), firstInsurance.getInsurancePlan()) &&
+                            checkEqualValues(insurance.getInsuranceMemberId(), firstInsurance.getInsuranceMemberId());
+                    if (match) {
+                        insuranceDataRepeated = showAlert = true;
+                        return true;
+                    }
                 }
             }
         }
