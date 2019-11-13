@@ -424,6 +424,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                             changeInputComponentType(planEditText, true);
 
                             otherProviderLayout.setVisibility(View.VISIBLE);
+                            otherProviderRequiredView.setVisibility(View.VISIBLE);
                             otherProviderEditText.requestFocus();
                             otherProviderEditText.getText().clear();
 
