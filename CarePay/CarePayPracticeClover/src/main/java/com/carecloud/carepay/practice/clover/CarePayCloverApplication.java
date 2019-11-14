@@ -39,7 +39,6 @@ public class CarePayCloverApplication extends CarePayApplication
 
         mixpanelAPI = MixpanelAPI.getInstance(this.getApplicationContext(), BuildConfig.MIX_PANEL_TOKEN);
         setHttpConstants();
-        registerActivityLifecycleCallbacks(this);
         ShamrockSdk.init(HttpConstants.getPaymentsApiKey(), HttpConstants.getDeepStreamUrl(), HttpConstants.getPaymentsUrl());
     }
 

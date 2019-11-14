@@ -1,12 +1,13 @@
 package com.carecloud.carepay.practice.library.payments.adapter;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
@@ -30,6 +31,7 @@ public class PaymentPlanItemAdapter extends RecyclerView.Adapter<PaymentPlanItem
         this.currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext())
@@ -46,21 +48,13 @@ public class PaymentPlanItemAdapter extends RecyclerView.Adapter<PaymentPlanItem
                 .format(item.getAmountSelected()));
         holder.itemCheckBox.setOnCheckedChangeListener(null);
         holder.itemCheckBox.setChecked(item.isSelected());
-        holder.itemCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (callback.onItemChecked(item, isChecked)){
-                    item.setSelected(isChecked);
-                }
-                notifyItemChanged(position);
+        holder.itemCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (callback.onItemChecked(item, isChecked)) {
+                item.setSelected(isChecked);
             }
+            notifyItemChanged(position);
         });
-        holder.addToPlanContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callback.onAddToPlanClicked(item);
-            }
-        });
+        holder.addToPlanContainer.setOnClickListener(v -> callback.onAddToPlanClicked(item));
     }
 
     @Override
@@ -88,10 +82,10 @@ public class PaymentPlanItemAdapter extends RecyclerView.Adapter<PaymentPlanItem
 
         public ViewHolder(View itemView) {
             super(itemView);
-            itemNameTextView = (TextView) itemView.findViewById(R.id.itemNameTextView);
-            itemRemainingBalanceTextView = (TextView) itemView.findViewById(R.id.itemRemainingBalanceTextView);
-            itemAddToPlanTextView = (TextView) itemView.findViewById(R.id.itemAddToPlanTextView);
-            itemCheckBox = (CheckBox) itemView.findViewById(R.id.itemCheckBox);
+            itemNameTextView = itemView.findViewById(R.id.itemNameTextView);
+            itemRemainingBalanceTextView = itemView.findViewById(R.id.itemRemainingBalanceTextView);
+            itemAddToPlanTextView = itemView.findViewById(R.id.itemAddToPlanTextView);
+            itemCheckBox = itemView.findViewById(R.id.itemCheckBox);
             addToPlanContainer = itemView.findViewById(R.id.addToPlanContainer);
         }
     }

@@ -54,7 +54,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/toolbarLayout"
-            android:background="@drawable/patient_mode_dialog_body_bg" />
+            android:background="@drawable/patient_mode_dialog_body_bg"
+            android:contentDescription="@string/content_description_provider_list_2"/>
 
         <RelativeLayout
             android:id="@+id/emptyStateScreen"

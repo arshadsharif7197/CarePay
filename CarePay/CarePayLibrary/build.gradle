@@ -1,5 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'newrelic'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 28
@@ -74,5 +76,19 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.1.0'
 //    compile project(':shamrocksdk')
     api 'com.github.Carecloud:shamrock_android_sdk:2.0.3'
-
+    implementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'androidx.test:runner:1.2.0'
+    implementation 'androidx.test:rules:1.2.0'
+    implementation 'androidx.test.ext:junit:1.1.1'
+    implementation 'androidx.test.ext:truth:1.2.0'
+    implementation 'androidx.test.espresso:espresso-idling-resource:3.2.0'
+    implementation 'androidx.test.espresso:espresso-contrib:3.2.0'
+    api 'com.google.guava:guava:28.0-android'
+    implementation "androidx.core:core-ktx:1.0.2"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    api 'com.google.auto.value:auto-value-annotations:1.6.2'
+    implementation 'androidx.test.espresso:espresso-web:3.1.0'
+}
+repositories {
+    mavenCentral()
 }
