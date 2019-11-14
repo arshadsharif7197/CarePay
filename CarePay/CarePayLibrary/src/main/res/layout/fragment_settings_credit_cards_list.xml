@@ -1,8 +1,7 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -44,8 +43,8 @@
                 android:layout_gravity="center_horizontal"
                 android:textColor="@color/payne_gray"
                 android:textSize="@dimen/text_size_17"
-                breeze:textKey="no_credit_card_label"
-                app:customAssetFont="gotham_rounded_bold" />
+                app:customAssetFont="gotham_rounded_bold"
+                breeze:textKey="no_credit_card_label" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/no_credit_cards_info"
@@ -54,8 +53,8 @@
                 android:layout_gravity="center_horizontal"
                 android:textColor="@color/lightSlateGray"
                 android:textSize="@dimen/text_size_15"
-                breeze:textKey="no_credit_card_info"
-                app:customAssetFont="gotham_rounded_medium" />
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="no_credit_card_info" />
         </LinearLayout>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
@@ -66,11 +65,12 @@
             android:layout_alignParentBottom="true"
             android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
             android:background="@drawable/button_blue_border"
+            android:foreground="?selectableItemBackground"
             android:textAllCaps="true"
             android:textColor="@color/colorPrimary"
-            tools:text="Add New Card"
+            app:customAssetFont="proxima_nova_regular"
             breeze:textKey="credit_card_add_new"
-            app:customAssetFont="proxima_nova_regular"/>
+            tools:text="Add New Card" />
 
     </RelativeLayout>
 </LinearLayout>

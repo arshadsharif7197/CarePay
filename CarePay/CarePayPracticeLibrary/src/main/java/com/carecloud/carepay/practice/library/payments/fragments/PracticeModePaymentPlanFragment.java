@@ -332,6 +332,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
 
         Date expDate = DateUtil.getInstance().setDateRaw(selectedCreditCard.getExpireDt()).getDate();
         expDate = DateUtil.getLastDayOfMonth(expDate);
+        expDate = DateUtil.getLastHourOfDay(expDate);
         return !expDate.before(new Date());
     }
 
