@@ -15,6 +15,8 @@ import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +63,7 @@ public class InsuranceLineItemsListAdapter extends
         String provider = lineItem.getInsuranceProvider();
         holder.name.setText(provider + " " + (plan != null ? plan : ""));
         if (applicationType == ApplicationMode.ApplicationType.PATIENT) {
-            if (hasAnotherOfTheSameType(lineItem)) {
+            if (hasAnotherOfTheSameType(lineItem) || checkIfInsuranceDataMatchesAnother(lineItem)) {
                 holder.separator.setBackgroundColor(context.getResources().getColor(R.color.redAlert));
                 holder.name.setTextColor(context.getResources().getColor(R.color.redAlert));
             } else if (lineItem.getInsurancePhotos().size() == 0) {
@@ -86,7 +88,7 @@ public class InsuranceLineItemsListAdapter extends
             }
             holder.type.setText(StringUtil.getOrdinal(language, numeral));
         } else {
-            if (hasAnotherOfTheSameType(lineItem)) {
+            if (hasAnotherOfTheSameType(lineItem) || checkIfInsuranceDataMatchesAnother(lineItem)) {
                 showAlert(holder, R.drawable.icn_alert_red, R.color.redAlert);
                 holder.separator.setBackgroundColor(context.getResources().getColor(R.color.redAlert));
                 holder.name.setTextColor(context.getResources().getColor(R.color.redAlert));
@@ -129,6 +131,27 @@ public class InsuranceLineItemsListAdapter extends
         }
         return counter > 1;
     }
+
+    private boolean checkIfInsuranceDataMatchesAnother(DemographicInsurancePayloadDTO lineItem) {
+        if (insuranceList.size() > 1) {
+            for (DemographicInsurancePayloadDTO insurance : insuranceList) {
+                if(!insurance.isDeleted() && !lineItem.equals(insurance)) {
+                    boolean match = checkEqualValues(insurance.getInsuranceProvider(), lineItem.getInsuranceProvider()) &&
+                            checkEqualValues(insurance.getInsurancePlan(), lineItem.getInsurancePlan()) &&
+                            checkEqualValues(insurance.getInsuranceMemberId(), lineItem.getInsuranceMemberId());
+                    if (match) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean checkEqualValues(String value1, String value2) {
+        return StringUtils.equalsIgnoreCase(value1, value2) || StringUtils.isEmpty(value1) && StringUtils.isEmpty(value2);
+    }
+
 
     /**
      * @param insuranceList the insurances list

@@ -204,21 +204,25 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
 
     private boolean checkIfInsuranceDataMatches() {
         List<DemographicInsurancePayloadDTO> insuranceList = demographicDTO.getPayload().getDemographics().getPayload().getInsurances();
-        if (insuranceList.size() > 0) {
-            DemographicInsurancePayloadDTO firstInsurance = insuranceList.get(insuranceList.size() - 1);
-            for (DemographicInsurancePayloadDTO insurance : insuranceList.subList(0, insuranceList.size() - 1)) {
+        if (insuranceList.size() > 1) {
+            for (DemographicInsurancePayloadDTO insurance : insuranceList) {
                 if (!insurance.isDeleted()) {
-                    boolean match = checkEqualValues(insurance.getInsuranceProvider(), firstInsurance.getInsuranceProvider()) &&
-                            checkEqualValues(insurance.getInsurancePlan(), firstInsurance.getInsurancePlan()) &&
-                            checkEqualValues(insurance.getInsuranceMemberId(), firstInsurance.getInsuranceMemberId());
-                    if (match) {
-                        insuranceDataRepeated = showAlert = true;
-                        return true;
+                    for (DemographicInsurancePayloadDTO insuranceVerify : insuranceList) {
+                        if (!insuranceVerify.isDeleted() && !insurance.equals(insuranceVerify)){
+                            boolean match = checkEqualValues(insurance.getInsuranceProvider(), insuranceVerify.getInsuranceProvider()) &&
+                                    checkEqualValues(insurance.getInsurancePlan(), insuranceVerify.getInsurancePlan()) &&
+                                    checkEqualValues(insurance.getInsuranceMemberId(), insuranceVerify.getInsuranceMemberId());
+                            if (match) {
+                                insuranceDataRepeated = showAlert = true;
+                                return true;
+                            }
+                        }
                     }
+
                 }
             }
-            insuranceDataRepeated = false;
         }
+        insuranceDataRepeated = false;
         return false;
     }
 
