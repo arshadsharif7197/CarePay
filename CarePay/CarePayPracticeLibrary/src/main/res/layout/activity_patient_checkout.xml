@@ -24,18 +24,18 @@
             android:paddingStart="@dimen/checkInMainPanelStartPadding"
             android:paddingEnd="@dimen/checkInMainPanelEndPadding">
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/logoutTextview"
-                android:layout_width="@dimen/checkOutLogoutWidth"
-                android:layout_height="@dimen/checkOutLogoutHeight"
-                android:layout_alignParentStart="true"
-                android:layout_marginTop="@dimen/logOutTopMargin"
-                android:background="@drawable/bg_blue_overlay"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:textSize="@dimen/logOutTextSize"
-                app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="practice_app_logout_text" />
+<!--            <com.carecloud.carepaylibray.customcomponents.CarePayTextView-->
+<!--                android:id="@+id/logoutTextview"-->
+<!--                android:layout_width="@dimen/checkOutLogoutWidth"-->
+<!--                android:layout_height="@dimen/checkOutLogoutHeight"-->
+<!--                android:layout_alignParentStart="true"-->
+<!--                android:layout_marginTop="@dimen/logOutTopMargin"-->
+<!--                android:background="@drawable/bg_blue_overlay"-->
+<!--                android:gravity="center"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textSize="@dimen/logOutTextSize"-->
+<!--                app:customAssetFont="gotham_rounded_medium"-->
+<!--                breeze:textKey="practice_app_logout_text" />-->
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/checkoutMessage"
