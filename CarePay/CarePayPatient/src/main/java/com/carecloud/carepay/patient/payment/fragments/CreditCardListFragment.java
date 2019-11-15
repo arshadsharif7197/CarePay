@@ -28,7 +28,8 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreditCardListFragment extends BaseFragment implements CreditCardListAdapter.OnCreditCardDetailClickListener {
+public class CreditCardListFragment extends BaseFragment
+        implements CreditCardListAdapter.OnCreditCardDetailClickListener {
 
     private RecyclerView creditCardsListRecyclerView;
     private LinearLayout noCreditCardsView;
@@ -98,14 +99,16 @@ public class CreditCardListFragment extends BaseFragment implements CreditCardLi
      */
     public void loadCreditCardsList(DemographicDTO demographicsSettingsDTO) {
         if (demographicsSettingsDTO != null) {
-            List<DemographicsSettingsCreditCardsPayloadDTO> creditCardList = demographicsSettingsDTO.getPayload().getPatientCreditCards();
+            List<DemographicsSettingsCreditCardsPayloadDTO> creditCardList = demographicsSettingsDTO
+                    .getPayload().getPatientCreditCards();
 
             if (creditCardList.isEmpty()) {
                 creditCardsListRecyclerView.setVisibility(View.GONE);
                 noCreditCardsView.setVisibility(View.VISIBLE);
             } else {
                 noCreditCardsView.setVisibility(View.GONE);
-                creditCardsListRecyclerView.setAdapter(new CreditCardListAdapter(getContext(), creditCardList, this));
+                creditCardsListRecyclerView.setAdapter(new CreditCardListAdapter(getContext(),
+                        creditCardList, this));
             }
         }
     }

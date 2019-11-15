@@ -86,7 +86,6 @@ public class CreditCardListAdapter extends RecyclerView.Adapter<CreditCardListAd
 
         SettingsCreditCardListViewHolder(View itemView) {
             super(itemView);
-
             creditCardTextView = itemView.findViewById(R.id.credit_card_text);
             defaultTextView = itemView.findViewById(R.id.credit_card_default);
             cardIcon = itemView.findViewById(R.id.credit_card_image);
