@@ -2,7 +2,6 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import com.google.android.material.textfield.TextInputLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,9 +13,10 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsToggleOption;
+import com.carecloud.carepaylibray.payeeze.PayeezyCall;
+import com.carecloud.carepaylibray.payeeze.model.CreditCard;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.MerchantServiceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
@@ -36,25 +36,21 @@ import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.payments.utils.CreditCardUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
-import com.carecloud.carepaylibray.utils.PayeezyRequestTask;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
-import com.payeezy.sdk.payeezytokenised.TransactionDataProvider;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author pjohnson on 9/02/18.
  */
 
 public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
-        implements PayeezyRequestTask.AuthorizeCreditCardCallback,
-        BaseAddCreditCardFragment.IAuthoriseCreditCardResponse {
+        implements BaseAddCreditCardFragment.IAuthoriseCreditCardResponse {
 
     protected PaymentPlanDTO paymentPlanDTO;
     protected PaymentCreditCardsPayloadDTO creditCard;
@@ -161,16 +157,13 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
         super.setupButtons(view);
         createPlanButton.setVisibility(View.GONE);
         view.findViewById(R.id.editButtonsLayout).setVisibility(View.VISIBLE);
-        editPaymentPlanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (validateFields(true)) {
-                    SystemUtil.hideSoftKeyboard(getContext(), view);
-                    if (creditCard != null && creditCard.getCreditCardsId() == null) {
-                        authorizeCreditCard();
-                    } else {
-                        updatePaymentPlan();
-                    }
+        editPaymentPlanButton.setOnClickListener(view1 -> {
+            if (validateFields(true)) {
+                SystemUtil.hideSoftKeyboard(getContext(), view1);
+                if (creditCard != null && creditCard.getCreditCardsId() == null) {
+                    authorizeCreditCard();
+                } else {
+                    updatePaymentPlan();
                 }
             }
         });
@@ -181,12 +174,7 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
             cancelPaymentPlanButton.setText(Label.getLabel("payment.editPaymentPlan.delete.button.label"));
         }
         final boolean finalDeletePaymentPlan = deletePaymentPlan;
-        cancelPaymentPlanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showCancelPaymentPlanConfirmDialog(finalDeletePaymentPlan);
-            }
-        });
+        cancelPaymentPlanButton.setOnClickListener(v -> showCancelPaymentPlanConfirmDialog(finalDeletePaymentPlan));
         cancelPaymentPlanButton.setVisibility(canCancelPlan(paymentPlanDTO.getMetadata().getPracticeId())
                 ? View.VISIBLE : View.GONE);
         enableCreatePlanButton();
@@ -194,18 +182,13 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
 
     @Override
     protected void enableCreatePlanButton() {
-        boolean isEnabled = validateFields(false) ;
+        boolean isEnabled = validateFields(false);
         getActionButton().setSelected(isEnabled);
         getActionButton().setClickable(isEnabled);
     }
 
     protected void showCancelPaymentPlanConfirmDialog(final boolean deletePaymentPlan) {
-        callback.showCancelPaymentPlanConfirmDialog(new ConfirmationCallback() {
-            @Override
-            public void onConfirm() {
-                cancelPaymentPlan(deletePaymentPlan);
-            }
-        }, deletePaymentPlan);
+        callback.showCancelPaymentPlanConfirmDialog(() -> cancelPaymentPlan(deletePaymentPlan), deletePaymentPlan);
     }
 
     protected void cancelPaymentPlan(final boolean deletePaymentPlan) {
@@ -259,12 +242,7 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
         if (creditCard != null) {
             setCreditCardInfo(creditCard, paymentMethodEditText);
         }
-        paymentMethodEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onEditPaymentPlanPaymentMethod(paymentsModel, paymentPlanDTO);
-            }
-        });
+        paymentMethodEditText.setOnClickListener(v -> onEditPaymentPlanPaymentMethod(paymentsModel, paymentPlanDTO));
     }
 
     protected abstract void onEditPaymentPlanPaymentMethod(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO);
@@ -393,66 +371,39 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
         String cardType = creditCard.getCardType();
         String number = creditCard.getCompleteNumber();
 
-        try {
-            showProgressDialog();
-            MerchantServiceMetadataDTO merchantServiceDTO = null;
-            for (MerchantServicesDTO merchantService : paymentsModel.getPaymentPayload().getMerchantServices()) {
-                if (merchantService.getName().toLowerCase().contains("payeezy")) {
-                    merchantServiceDTO = merchantService.getMetadata();
-                    break;
-                }
+        showProgressDialog();
+        MerchantServiceMetadataDTO merchantServiceDTO = null;
+        for (MerchantServicesDTO merchantService : paymentsModel.getPaymentPayload().getMerchantServices()) {
+            if (merchantService.getName().toLowerCase().contains("payeezy")) {
+                merchantServiceDTO = merchantService.getMetadata();
+                break;
             }
-
-            String tokenUrl = merchantServiceDTO.getBaseUrl() + merchantServiceDTO.getUrlPath();
-            if (!tokenUrl.endsWith("?")) {
-                tokenUrl += "?";
-            }
-
-            TransactionDataProvider.tokenUrl = tokenUrl;
-            TransactionDataProvider.appIdCert = merchantServiceDTO.getApiKey();
-            TransactionDataProvider.secureIdCert = merchantServiceDTO.getApiSecret();
-            TransactionDataProvider.tokenCert = merchantServiceDTO.getMasterMerchantToken();
-            TransactionDataProvider.trTokenInt = merchantServiceDTO.getMasterTaToken();
-            TransactionDataProvider.jsSecurityKey = merchantServiceDTO.getMasterJsSecurityKey();
-            TransactionDataProvider.taToken = merchantServiceDTO.getMasterTaToken();
-
-            String tokenType = merchantServiceDTO.getTokenType();
-            String tokenAuth = merchantServiceDTO.getTokenizationAuth();
-            PayeezyRequestTask requestTask = new PayeezyRequestTask(getContext(), this);
-            requestTask.execute("gettokenvisa", tokenAuth, "", currency, tokenType, cardType, name,
-                    number, expiryDate, cvv);
-            System.out.println("first authorize call end");
-        } catch (Exception e) {
-            hideDialog();
-            System.out.println(e.getMessage());
         }
-        System.out.println("authorize call end");
-    }
 
-    @Override
-    public void onAuthorizeCreditCard(String resString) {
-        String valueString = "value";
-        if (resString != null && resString.contains(valueString)) {
+        final CreditCard creditCardDto = new CreditCard();
+        creditCardDto.setCardHolderName(name);
+        creditCardDto.setCardNumber(number);
+        creditCardDto.setCvv(cvv);
+        creditCardDto.setExpDate(expiryDate);
+        creditCardDto.setType(cardType);
 
-            String group1 = "(\\\"value\\\":\")";
-            String group2 = "(\\d+)";
-            String regex = group1 + group2;
-            String tokenValue = null;
-            Matcher matcher = Pattern.compile(regex).matcher(resString);
-            if (matcher.find()) {
-                tokenValue = matcher.group().replaceAll(group1, "");
-            }
-
-            if (tokenValue != null && tokenValue.matches(group2)) {
-                creditCard.setToken(tokenValue);
-                onAuthorizeCreditCardSuccess();
+        showProgressDialog();
+        PayeezyCall payeezyCall = new PayeezyCall();
+        payeezyCall.doCall(creditCardDto, merchantServiceDTO, tokenizeResponse -> {
+            hideProgressDialog();
+            if (tokenizeResponse != null) {
+                if (tokenizeResponse.getToken() != null) {
+                    creditCard.setToken(tokenizeResponse.getToken().getValue());
+                    onAuthorizeCreditCardSuccess();
+                } else {
+                    onAuthorizeCreditCardFailed();
+                }
             } else {
                 onAuthorizeCreditCardFailed();
             }
+        });
 
-        } else {
-            onAuthorizeCreditCardFailed();
-        }
+        System.out.println("authorize call end");
     }
 
     @Override
@@ -609,7 +560,7 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
         if (!option.isEnabled()) {
             stubRangeRules();
         }
-        if (option.getName().equals(paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode())){
+        if (option.getName().equals(paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyCode())) {
             resetPlanParameters();
         }
     }
@@ -645,13 +596,13 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
         int completedInstallments = paymentPlanDTO.getPayload().getPaymentPlanDetails().getFilteredHistory().size();
         boolean parametersModified = installments + completedInstallments != paymentPlanDTO.getPayload().getPaymentPlanDetails().getInstallments() ||
                 amounthPayment != paymentPlanDTO.getPayload().getPaymentPlanDetails().getAmount();
-        if(!parametersModified){
+        if (!parametersModified) {
             //clear any errors in these fields if parameters have not been modified
             clearError(R.id.paymentMonthCountInputLayout);
             clearError(R.id.paymentAmountInputLayout);
         }
 
-        if(!parametersModified){
+        if (!parametersModified) {
             clearError(R.id.paymentMonthCountInputLayout);
             clearError(R.id.paymentAmountInputLayout);
         }

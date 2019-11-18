@@ -47,7 +47,8 @@
             android:textAllCaps="true"
             android:textColor="@color/white"
             breeze:textKey="checkout_all_done_button_label"
-            tools:text="Ok" />
+            tools:text="Ok"
+            android:contentDescription="@string/content_description_ok_button"/>
     </LinearLayout>
 
 </LinearLayout>

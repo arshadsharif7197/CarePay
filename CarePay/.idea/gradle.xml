@@ -14,10 +14,10 @@
             <option value="$PROJECT_DIR$/CarePayPracticeLibrary" />
             <option value="$PROJECT_DIR$/CarePayPracticeTablet" />
             <option value="$PROJECT_DIR$/CarePayServiceLibrary" />
-            <option value="$PROJECT_DIR$/payeezysdk" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
+        <option name="testRunner" value="PLATFORM" />
       </GradleProjectSettings>
     </option>
   </component>

@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/commonPracticeDialogHeight"
+    android:contentDescription="@string/content_description_payment_plan_screen"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -114,7 +115,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@color/white">
+            android:background="@color/white"
+            android:contentDescription="@string/content_description_payment_plan_scroll">
 
             <LinearLayout
                 android:id="@+id/container_main"
@@ -177,6 +179,7 @@
                             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                                 android:id="@+id/paymentPlanName"
                                 style="@style/DemographicsReviewEditTextStyle"
+                                android:contentDescription="@string/content_description_payment_plan_name"
                                 android:imeOptions="actionNext"
                                 app:customAssetFont="proxima_nova_regular"
                                 app:hintTextAppearance="@style/FloatingLabelStyle"
@@ -286,6 +289,7 @@
                             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                                 android:id="@+id/paymentMonthCount"
                                 style="@style/DemographicsReviewEditTextStyle"
+                                android:contentDescription="@string/content_description_number_of_months"
                                 android:imeOptions="actionNext"
                                 android:inputType="number"
                                 android:textColor="@color/primary_color_enabled_selector"
@@ -496,6 +500,7 @@
                 android:layout_height="@dimen/commonButtonHeight"
                 android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:background="@drawable/green_rounded_button_selector_always_click"
+                android:contentDescription="@string/content_description_create_payment_plan_button"
                 android:gravity="center"
                 android:textAllCaps="false"
                 android:textColor="@color/white"

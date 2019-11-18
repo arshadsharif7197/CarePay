@@ -62,7 +62,7 @@ public class PatientModePaymentPlanFragment extends PaymentPlanFragment {
     @Override
     protected void onAddBalanceToExistingPlan() {
         PracticeValidPlansFragment fragment = PracticeValidPlansFragment
-                .newInstance(paymentsModel, selectedBalance, paymentPlanAmount, false);
+                .newInstance(paymentsModel, selectedBalance, paymentPlanAmount, true);
         fragment.setOnCancelListener(onDialogCancelListener);
         callback.displayDialogFragment(fragment, true);
         hideDialog();

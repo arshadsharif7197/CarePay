@@ -5,6 +5,7 @@
     android:layout_width="@dimen/dialog_width"
     android:layout_height="@dimen/commonPracticeDialogHeight"
     android:layout_gravity="center"
+    android:contentDescription="@string/content_description_payment_plan_confirmation_screen"
     android:orientation="vertical">
 
     <LinearLayout
@@ -12,10 +13,10 @@
         android:layout_height="wrap_content"
         android:background="@drawable/practice_mode_dialog_header_bg"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/paymentPlanConfirmationHeaderBottomPadding"
-        android:paddingEnd="@dimen/paymentPlanConfirmationHeaderHorizontalPadding"
         android:paddingStart="@dimen/paymentPlanConfirmationHeaderHorizontalPadding"
-        android:paddingTop="@dimen/paymentPlanConfirmationHeaderTopPadding">
+        android:paddingTop="@dimen/paymentPlanConfirmationHeaderTopPadding"
+        android:paddingEnd="@dimen/paymentPlanConfirmationHeaderHorizontalPadding"
+        android:paddingBottom="@dimen/paymentPlanConfirmationHeaderBottomPadding">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -97,8 +98,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:paddingTop="@dimen/confirmationDataVerticalPadding"
+                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/confirmationDataLabelTextSize"
                 app:customAssetFont="proxima_nova_regular"
@@ -111,8 +112,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:paddingTop="@dimen/confirmationDataVerticalPadding"
+                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/confirmationDataValueTextSize"
                 app:customAssetFont="proxima_nova_semi_bold" />
@@ -136,8 +137,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:paddingTop="@dimen/confirmationDataVerticalPadding"
+                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/confirmationDataLabelTextSize"
                 app:customAssetFont="proxima_nova_regular"
@@ -150,8 +151,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:paddingTop="@dimen/confirmationDataVerticalPadding"
+                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/confirmationDataValueTextSize"
                 app:customAssetFont="proxima_nova_semi_bold" />
@@ -175,8 +176,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:paddingTop="@dimen/confirmationDataVerticalPadding"
+                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/confirmationDataLabelTextSize"
                 app:customAssetFont="proxima_nova_regular"
@@ -189,8 +190,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:paddingTop="@dimen/confirmationDataVerticalPadding"
+                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/confirmationDataValueTextSize"
                 app:customAssetFont="proxima_nova_semi_bold" />
@@ -214,8 +215,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:paddingTop="@dimen/confirmationDataVerticalPadding"
+                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/confirmationDataLabelTextSize"
                 app:customAssetFont="proxima_nova_regular"
@@ -228,8 +229,8 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:paddingTop="@dimen/confirmationDataVerticalPadding"
+                android:paddingBottom="@dimen/confirmationDataVerticalPadding"
                 android:textColor="@color/textview_default_textcolor"
                 android:textSize="@dimen/confirmationDataValueTextSize"
                 app:customAssetFont="proxima_nova_semi_bold" />
@@ -257,6 +258,7 @@
             android:layout_height="@dimen/commonButtonHeight"
             android:layout_margin="@dimen/distributionButtonContainersPadding"
             android:background="@drawable/green_rounded_button_selector"
+            android:contentDescription="@string/content_description_ok_button"
             android:textSize="@dimen/respons_button_text_size"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="payment_ok" />

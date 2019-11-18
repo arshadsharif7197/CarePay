@@ -2,16 +2,18 @@ package com.carecloud.carepay.practice.library.payments.dialogs;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
@@ -103,17 +105,12 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         onInitialization(view);
         View closeView = view.findViewById(R.id.closeViewLayout);
         if (closeView != null) {
-            closeView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dismiss();
-                }
-            });
+            closeView.setOnClickListener(v -> dismiss());
         }
     }
 
@@ -209,12 +206,9 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
         if (leftButton != null) {
             leftButton.setVisibility(isPaymentPlanAvailable(owedAmount)
                     ? View.VISIBLE : View.GONE);
-            leftButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    callback.onLeftActionTapped(paymentsModel, owedAmount);
-                    dismiss();
-                }
+            leftButton.setOnClickListener(view1 -> {
+                callback.onLeftActionTapped(paymentsModel, owedAmount);
+                dismiss();
             });
             if (mustAddToExisting) {
                 leftButton.setText(Label.getLabel("payment_plan_add_existing_short"));
@@ -225,24 +219,18 @@ public class ResponsibilityFragmentDialog extends BaseDialogFragment
         if (middleButton != null) {
             middleButton.setVisibility(isPartialPayAvailable(owedAmount)
                     ? View.VISIBLE : View.GONE);
-            middleButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    callback.onMiddleActionTapped(paymentsModel, owedAmount);
-                    dismiss();
-                }
+            middleButton.setOnClickListener(view12 -> {
+                callback.onMiddleActionTapped(paymentsModel, owedAmount);
+                dismiss();
             });
         }
 
         View rightButton = view.findViewById(R.id.payment_pay_button);
         if (rightButton != null) {
-            rightButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    createPaymentModel(owedAmount);
-                    callback.onRightActionTapped(paymentsModel, owedAmount);
-                    dismiss();
-                }
+            rightButton.setOnClickListener(view13 -> {
+                createPaymentModel(owedAmount);
+                callback.onRightActionTapped(paymentsModel, owedAmount);
+                dismiss();
             });
         }
 

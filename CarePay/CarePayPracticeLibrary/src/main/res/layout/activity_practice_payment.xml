@@ -67,7 +67,8 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/filterLabelTextSize"
                 app:customAssetFont="proxima_nova_regular"
-                breeze:textKey="practice_payments_findPatient_label" />
+                breeze:textKey="practice_payments_findPatient_label"
+                android:contentDescription="@string/content_description_find_a_patient"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/filterTextView"

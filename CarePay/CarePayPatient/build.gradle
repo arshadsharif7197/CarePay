@@ -1,14 +1,16 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 apply plugin: 'newrelic'
 android {
     compileSdkVersion 28
-
+    buildToolsVersion "29.0.0"
     defaultConfig {
         applicationId "com.carecloud.carepay.patient"
         minSdkVersion 19
-        targetSdkVersion 26
-        versionCode 124
-        versionName "1.1.29"
+        targetSdkVersion 28
+        versionCode 140
+        versionName "1.1.32.1"
         multiDexEnabled true
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         renderscriptTargetApi 22
@@ -161,7 +163,7 @@ dependencies {
 
     // for testing
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.annotation:annotation:1.0.0'
+    androidTestImplementation 'androidx.annotation:annotation:1.1.0'
     androidTestImplementation('androidx.test.espresso:espresso-contrib:3.1.0') {
         exclude module: 'support-annotations'
         exclude group: 'com.android.support', module: 'appcompat'
@@ -170,9 +172,19 @@ dependencies {
         implementation 'com.marcok.stepprogressbar:stepprogressbar:1.0.1'
     }
 
-    def room_version = "1.1.1"
-    implementation 'androidx.room:room-runtime:2.0.0'
-    annotationProcessor 'androidx.room:room-compiler:2.0.0'
+
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    implementation "androidx.core:core-ktx:1.0.2"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.test.espresso:espresso-web:3.1.0'
+
+    implementation 'androidx.room:room-runtime:2.1.0'
+    annotationProcessor 'androidx.room:room-compiler:2.1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
+repositories {
+    mavenCentral()
+}

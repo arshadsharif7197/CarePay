@@ -10,7 +10,7 @@ public class UnifiedSignInResponseMetadata {
 
     @Expose
     @SerializedName("transitions")
-    UnifiedSignInTransitions transitions = new UnifiedSignInTransitions();
+    private UnifiedSignInTransitions transitions = new UnifiedSignInTransitions();
 
     public UnifiedSignInTransitions getTransitions() {
         return transitions;

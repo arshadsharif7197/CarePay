@@ -26,6 +26,11 @@
 
     </FrameLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:background="@color/light_gray" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -78,6 +83,7 @@
                         android:gravity="start|center_vertical"
                         android:paddingTop="@dimen/nextAppointmentProviderMessageVerticalPadding"
                         android:paddingBottom="@dimen/nextAppointmentProviderMessageVerticalPadding"
+                        android:textSize="@dimen/nextAppointmentHeaderTextSize"
                         android:textColor="@color/white"
                         app:customAssetFont="proxima_nova_regular"
                         breeze:textKey="next_appointment_default_provider_message" />
@@ -89,7 +95,6 @@
                     android:layout_width="@dimen/nextAppointmentProviderImageSize"
                     android:layout_height="@dimen/nextAppointmentProviderImageSize"
                     android:layout_alignParentEnd="true"
-                    android:scaleType="center"
                     android:src="@drawable/icn_placeholder_user_profile_png" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -136,10 +141,10 @@
                         style="@style/TextInputLayoutStyle"
                         android:layout_alignParentStart="true"
                         android:layout_toStartOf="@id/providerResetImage"
-                        android:paddingStart="@dimen/nextAppointmentFieldHorizontalPadding"
                         android:paddingTop="@dimen/nextAppointmentFieldTopMargin"
                         android:paddingEnd="@dimen/nextAppointmentFieldHorizontalPadding"
-                        app:customAssetFont="proxima_nova_semi_bold"
+                        app:customAssetFont="gotham_rounded_light"
+                        app:customFloatingFont="proxima_nova_extra_bold"
                         app:hintTextAppearance="@style/FloatingLabelStyle">
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
@@ -151,7 +156,7 @@
                             android:focusableInTouchMode="false"
                             android:imeOptions="actionNext"
                             android:textSize="@dimen/nextAppointmentFieldTextSize"
-                            app:customAssetFont="proxima_nova_semi_bold"
+                            app:customAssetFont="gotham_rounded_book"
                             breeze:hintKey="next_appointment_provider_hint" />
 
                     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
@@ -185,10 +190,10 @@
                         style="@style/TextInputLayoutStyle"
                         android:layout_alignParentStart="true"
                         android:layout_toStartOf="@id/locationResetImage"
-                        android:paddingStart="@dimen/nextAppointmentFieldHorizontalPadding"
                         android:paddingTop="@dimen/nextAppointmentFieldTopMargin"
                         android:paddingEnd="@dimen/nextAppointmentFieldHorizontalPadding"
-                        app:customAssetFont="proxima_nova_semi_bold"
+                        app:customAssetFont="gotham_rounded_light"
+                        app:customFloatingFont="proxima_nova_extra_bold"
                         app:hintTextAppearance="@style/FloatingLabelStyle">
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
@@ -200,7 +205,7 @@
                             android:focusableInTouchMode="false"
                             android:imeOptions="actionNext"
                             android:textSize="@dimen/nextAppointmentFieldTextSize"
-                            app:customAssetFont="proxima_nova_semi_bold"
+                            app:customAssetFont="gotham_rounded_book"
                             breeze:hintKey="add_appointment_location" />
 
                     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
@@ -234,10 +239,10 @@
                         style="@style/TextInputLayoutStyle"
                         android:layout_alignParentStart="true"
                         android:layout_toStartOf="@id/visitTypeResetImage"
-                        android:paddingStart="@dimen/nextAppointmentFieldHorizontalPadding"
                         android:paddingTop="@dimen/nextAppointmentFieldTopMargin"
                         android:paddingEnd="@dimen/nextAppointmentFieldHorizontalPadding"
-                        app:customAssetFont="proxima_nova_semi_bold"
+                        app:customAssetFont="gotham_rounded_light"
+                        app:customFloatingFont="proxima_nova_extra_bold"
                         app:hintTextAppearance="@style/FloatingLabelStyle">
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
@@ -250,8 +255,9 @@
                             android:focusableInTouchMode="false"
                             android:imeOptions="actionNext"
                             android:textSize="@dimen/nextAppointmentFieldTextSize"
-                            app:customAssetFont="proxima_nova_semi_bold"
-                            breeze:hintKey="next_appointment_choose_visit_type_hint" />
+                            app:customAssetFont="gotham_rounded_book"
+                            breeze:hintKey="next_appointment_choose_visit_type_hint"
+                            android:contentDescription="@string/content_description_visit_type_edit_text"/>
 
                     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
@@ -284,10 +290,10 @@
                         style="@style/TextInputLayoutStyle"
                         android:layout_alignParentStart="true"
                         android:layout_toStartOf="@id/visitTimeResetImage"
-                        android:paddingStart="@dimen/nextAppointmentFieldHorizontalPadding"
                         android:paddingTop="@dimen/nextAppointmentFieldTopMargin"
                         android:paddingEnd="@dimen/nextAppointmentFieldHorizontalPadding"
-                        app:customAssetFont="proxima_nova_semi_bold"
+                        app:customAssetFont="gotham_rounded_light"
+                        app:customFloatingFont="proxima_nova_extra_bold"
                         app:hintTextAppearance="@style/FloatingLabelStyle">
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayEditText
@@ -301,8 +307,9 @@
                             android:focusableInTouchMode="false"
                             android:imeOptions="actionDone"
                             android:textSize="@dimen/nextAppointmentFieldTextSize"
-                            app:customAssetFont="proxima_nova_semi_bold"
-                            breeze:hintKey="next_appointment_choose_when_hint" />
+                            app:customAssetFont="gotham_rounded_book"
+                            breeze:hintKey="next_appointment_choose_when_hint"
+                            android:contentDescription="@string/content_description_visit_time_edit_text"/>
 
                     </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
@@ -354,6 +361,11 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:background="@color/light_gray" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -372,7 +384,8 @@
             android:textSize="@dimen/respons_button_text_size"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="schedule_appointment_later_button_label"
-            tools:text="Schedule Later" />
+            tools:text="Schedule Later"
+            android:contentDescription="@string/content_description_schedule_later_button"/>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/scheduleAppointmentButton"
@@ -387,7 +400,8 @@
             android:textSize="@dimen/respons_button_text_size"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="schedule_appointment_button_label"
-            tools:text="Schedule Appointment" />
+            tools:text="Schedule Appointment"
+            android:contentDescription="@string/content_description_schedule_appointment_button"/>
 
     </LinearLayout>
 

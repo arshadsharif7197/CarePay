@@ -220,4 +220,9 @@ public class SurveyActivity extends BasePracticeActivity implements FragmentActi
         }
     }
 
+    @Override
+    public boolean manageSession() {
+        return true;
+    }
+
 }

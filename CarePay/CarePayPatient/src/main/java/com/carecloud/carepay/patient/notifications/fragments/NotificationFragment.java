@@ -111,10 +111,12 @@ public class NotificationFragment extends BaseFragment
         notificationItems = filterNotifications(notificationsDTO.getPayload().getNotifications(),
                 supportedNotificationTypes);
         paging = notificationsDTO.getPayload().getPaging();
-        addAppStatusNotification();
         handler = new Handler();
         if (notificationsDTO.getPayload().getDelegate() == null) {
             setHasOptionsMenu(true);
+            addAppStatusNotification();
+        } else if (notificationsDTO.getPayload().getDelegate() != null && notificationItems.size() > 0) {
+            addAppStatusNotification();
         }
     }
 
@@ -254,14 +256,17 @@ public class NotificationFragment extends BaseFragment
     }
 
     private boolean canViewAnyNotification(List<UserPracticeDTO> userPractices) {
-        boolean atLeastOneHasPermission = false;
         for (UserPracticeDTO practice : userPractices) {
-            if (notificationsDTO.getPayload().canViewNotifications(practice.getPracticeId())) {
-                atLeastOneHasPermission = true;
+            if (notificationsDTO.getPayload().canViewSurveyNotifications(practice.getPracticeId())
+                    || notificationsDTO.getPayload().canMessageProviders(practice.getPracticeId())
+                    || notificationsDTO.getPayload().canReviewForms(practice.getPracticeId())
+                    || notificationsDTO.getPayload().canSeeStatement(practice.getPracticeId())
+                    || notificationsDTO.getPayload().havePermissionsToMakePayments(practice.getPracticeId())
+                    || notificationsDTO.getPayload().canViewAppointments(practice.getPracticeId())) {
+                return true;
             }
         }
-        return atLeastOneHasPermission
-                || (userPractices.isEmpty() && notificationsDTO.getPayload().getDelegate() == null);
+        return false;
     }
 
     @Override
@@ -323,7 +328,10 @@ public class NotificationFragment extends BaseFragment
                 if (refresh) {
                     notificationItems = filterNotifications(notificationsDTO.getPayload().getNotifications(),
                             supportedNotificationTypes);
-                    addAppStatusNotification();
+                    if (notificationsDTO.getPayload().getDelegate() == null ||
+                            notificationsDTO.getPayload().getDelegate() != null && notificationItems.size() > 0) {
+                        addAppStatusNotification();
+                    }
                 } else {
                     notificationItems.addAll(filterNotifications(notificationsDTO.getPayload().getNotifications(),
                             supportedNotificationTypes));
@@ -439,9 +447,35 @@ public class NotificationFragment extends BaseFragment
                         .canViewSurveyNotifications(notificationItem.getMetadata().getPracticeId()))) {
                     continue;
                 }
+                if (notificationType.equals(NotificationType.secure_message)
+                        && (!notificationsDTO.getPayload()
+                        .canMessageProviders(notificationItem.getMetadata().getPracticeId()))) {
+                    continue;
+                }
+                if (notificationType.equals(NotificationType.pending_forms)
+                        && (!notificationsDTO.getPayload()
+                        .canReviewForms(notificationItem.getMetadata().getPracticeId()))) {
+                    continue;
+                }
+                if (notificationType.equals(NotificationType.payments)) {
+                    if ("patient_statement".equals(notificationItem.getMetadata().getNotificationSubtype())
+                            && (!notificationsDTO.getPayload()
+                            .canSeeStatement(notificationItem.getMetadata().getPracticeId()))) {
+                        continue;
+                    } else if (!"patient_statement".equals(notificationItem.getMetadata().getNotificationSubtype())
+                            && (!notificationsDTO.getPayload()
+                            .havePermissionsToMakePayments(notificationItem.getMetadata().getPracticeId()))) {
+                        continue;
+                    }
+                }
+                if (notificationType.equals(NotificationType.appointment)
+                        && (!notificationsDTO.getPayload()
+                        .canViewAppointments(notificationItem.getMetadata().getPracticeId()))) {
+                    continue;
+                }
                 filteredList.add(notificationItem);
             } else {
-                Log.d("test", "test");
+                Log.d("Error", "error notifications");
             }
         }
         return filteredList;

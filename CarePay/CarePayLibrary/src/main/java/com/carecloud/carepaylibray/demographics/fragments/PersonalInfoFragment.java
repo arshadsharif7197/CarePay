@@ -119,7 +119,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
                 dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isDisplayed(),
                 demographicPayload.getPersonalDetails().getMiddleName(),
                 dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isRequired(),
-                view.findViewById(R.id.middleNameRequired));
+                null);
 
         setUpField((TextInputLayout) view.findViewById(R.id.reviewdemogrLastNameTextInput),
                 (EditText) view.findViewById(R.id.reviewdemogrLastNameEdit),
