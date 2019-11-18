@@ -78,8 +78,8 @@ public class CustomPopupNotification extends PopupWindow {
 
         setSwipeListener();
         View popupWindowLayout = this.getContentView();
-        ImageView popupIcon = (ImageView) popupWindowLayout.findViewById(R.id.popup_icon);
-        TextView popupMessageLabel = (TextView) popupWindowLayout.findViewById(R.id.popup_message_tv);
+        ImageView popupIcon = popupWindowLayout.findViewById(R.id.popup_icon);
+        TextView popupMessageLabel = popupWindowLayout.findViewById(R.id.popup_message_tv);
 
         switch (notificationType) {
             case TYPE_ALERT_NOTIFICATION:
@@ -151,21 +151,16 @@ public class CustomPopupNotification extends PopupWindow {
                 setStatusBarColor(errorColor);
             }
             Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
-                    if (hasStatusBar) {
-                        setStatusBarColor(statusBarColor);
+            handler.postDelayed(() -> {
+                if (hasStatusBar) {
+                    setStatusBarColor(statusBarColor);
+                }
+                if (isShowing()) {
+                    try {
+                        dismiss();
+                    } catch (IllegalArgumentException iae) {
+                        //do nothing
                     }
-                    if (isShowing()) {
-                        try {
-                            dismiss();
-                        } catch (IllegalArgumentException iae) {
-                            //do nothing
-                        }
-                    }
-
                 }
 
             }, CarePayConstants.CUSTOM_POPUP_AUTO_DISMISS_DURATION);

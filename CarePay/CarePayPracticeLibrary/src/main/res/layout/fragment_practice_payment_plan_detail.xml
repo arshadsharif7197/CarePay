@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/dialog_height"
+    android:contentDescription="@string/content_description_payment_plan_detail_screen"
     android:orientation="horizontal">
 
     <RelativeLayout
@@ -66,6 +67,7 @@
                 android:layout_marginEnd="@dimen/distributionButtonContainersPadding"
                 android:layout_weight="1"
                 android:background="@drawable/blue_border_rounded_button_selector"
+                android:contentDescription="@string/content_description_payment_plan_edit_button"
                 android:paddingStart="@dimen/dimen_15dp"
                 android:paddingEnd="@dimen/dimen_15dp"
                 android:textColor="@color/colorPrimary"

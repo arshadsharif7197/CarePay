@@ -11,7 +11,10 @@ public class UnifiedSignInTransitions {
 
     @Expose
     @SerializedName("badge_counters")
-    TransitionDTO badgeCounter = new TransitionDTO();
+    private TransitionDTO badgeCounter = new TransitionDTO();
+    @Expose
+    @SerializedName("accept_connect_invite")
+    private TransitionDTO acceptConnectInvite = new TransitionDTO();
 
     public TransitionDTO getBadgeCounter() {
         return badgeCounter;
@@ -19,5 +22,13 @@ public class UnifiedSignInTransitions {
 
     public void setBadgeCounter(TransitionDTO badgeCounter) {
         this.badgeCounter = badgeCounter;
+    }
+
+    public TransitionDTO getAcceptConnectInvite() {
+        return acceptConnectInvite;
+    }
+
+    public void setAcceptConnectInvite(TransitionDTO acceptConnectInvite) {
+        this.acceptConnectInvite = acceptConnectInvite;
     }
 }

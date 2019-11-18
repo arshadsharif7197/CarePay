@@ -2,15 +2,17 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.core.content.ContextCompat;
-import androidx.core.widget.NestedScrollView;
-import androidx.appcompat.widget.Toolbar;
 import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -89,17 +91,12 @@ public class PaymentPlanTermsFragment extends BasePaymentDialogFragment {
     }
 
     @Override
-    public void onViewCreated(final View view, Bundle icicle) {
+    public void onViewCreated(@NonNull final View view, Bundle icicle) {
         setupTitleViews(view);
         createButton = view.findViewById(R.id.createButton);
-        createButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                submitPaymentPlan();
-            }
-        });
+        createButton.setOnClickListener(view1 -> submitPaymentPlan());
 
-        termsText = (TextView) view.findViewById(R.id.paymentPlanTermsText);
+        termsText = view.findViewById(R.id.paymentPlanTermsText);
         PaymentsSettingsPaymentPlansDTO paymentPlansSettings = null;
         for (PaymentsPayloadSettingsDTO paymentSettings : paymentsModel.getPaymentPayload().getPaymentSettings()) {
             if (paymentSettings.getMetadata().getPracticeId().equals(paymentPlanPostModel.getMetadata().getPracticeId())) {
@@ -121,19 +118,10 @@ public class PaymentPlanTermsFragment extends BasePaymentDialogFragment {
             termsText.setText(Html.fromHtml(termsAndConditions));
         }
 
-        scrollView = (NestedScrollView) view.findViewById(R.id.scrollView);
-        scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                enableCreateButton();
-            }
-        });
-        scrollView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                enableCreateButton();
-            }
-        }, 100);
+        scrollView = view.findViewById(R.id.scrollView);
+        scrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener)
+                (v, scrollX, scrollY, oldScrollX, oldScrollY) -> enableCreateButton());
+        scrollView.postDelayed(this::enableCreateButton, 100);
     }
 
     private void enableCreateButton() {
@@ -144,19 +132,14 @@ public class PaymentPlanTermsFragment extends BasePaymentDialogFragment {
     }
 
     protected void setupTitleViews(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         if (toolbar != null) {
-            TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
+            TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
             title.setText(Label.getLabel("payment_terms"));
             toolbar.setTitle("");
             if (getDialog() == null) {
                 toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
-                toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        getActivity().onBackPressed();
-                    }
-                });
+                toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
             } else {
                 ViewGroup.LayoutParams layoutParams = title.getLayoutParams();
                 layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;

@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepaylibrary.R;
 
 
@@ -23,6 +24,8 @@ public class CarePayCameraView extends RelativeLayout {
     private CarePayCameraPreview carePayCameraPreview;
     private int currentCameraId = CarePayCameraPreview.NO_DEFINED_CAMERA;
     private Button flashButton;
+    private View closeButton;
+    private ApplicationMode.ApplicationType applicationType;
 
     /**
      * Public constructor with context
@@ -45,22 +48,13 @@ public class CarePayCameraView extends RelativeLayout {
      * @param cameraType the camera type
      */
     public CarePayCameraView(CarePayCameraCallback callback, Context context,
-                             CarePayCameraPreview.CameraType cameraType) {
+                             CarePayCameraPreview.CameraType cameraType, ApplicationMode.ApplicationType applicationType) {
         super(context);
         this.callback = callback;
         this.context = context;
         this.cameraType = cameraType;
+        this.applicationType = applicationType;
         init(null);
-    }
-
-    /**
-     * Public constructor with context
-     *
-     * @param context    sender context
-     * @param cameraType the camera type
-     */
-    public CarePayCameraView(Context context, CarePayCameraPreview.CameraType cameraType) {
-        this((CarePayCameraCallback) context, context, cameraType);
     }
 
     /**
@@ -99,35 +93,34 @@ public class CarePayCameraView extends RelativeLayout {
      */
     private void init(AttributeSet attrs) {
         inflate(context, R.layout.view_carepay_camera, this);
-        buttonCapture = (Button) findViewById(R.id.button_capture);
-        carePayCameraPreview = (CarePayCameraPreview) findViewById(R.id.camera_preview);
+        buttonCapture = findViewById(R.id.button_capture);
+        carePayCameraPreview = findViewById(R.id.camera_preview);
         carePayCameraPreview.setCameraType(cameraType);
         buttonCapture.setOnClickListener(onCaptureClick);
 
-        flashButton = (Button) findViewById(R.id.button_flash);
-        flashButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (view.isSelected()) {
-                    carePayCameraPreview.turnOffFlash();
-                } else {
-                    carePayCameraPreview.turnOnFlash();
-                }
-                view.setSelected(!view.isSelected());
+        if (applicationType != ApplicationMode.ApplicationType.PATIENT) {
+            closeButton = findViewById(R.id.closeViewLayout);
+            closeButton.setOnClickListener(view -> carePayCameraPreview.onClose());
+        }
 
+        flashButton = findViewById(R.id.button_flash);
+        flashButton.setOnClickListener(view -> {
+            if (view.isSelected()) {
+                carePayCameraPreview.turnOffFlash();
+            } else {
+                carePayCameraPreview.turnOnFlash();
             }
+            view.setSelected(!view.isSelected());
+
         });
 
-        Button changeCameraButton = (Button) findViewById(R.id.button_change_camera);
+        Button changeCameraButton = findViewById(R.id.button_change_camera);
         changeCameraButton.setEnabled(carePayCameraPreview.canChangeCamera());
-        changeCameraButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                currentCameraId = carePayCameraPreview.changeCamera();
-                callback.onChangeCamera(currentCameraId);
-                flashButton.setSelected(false);
-                flashButton.setEnabled(carePayCameraPreview.hasFlash());
-            }
+        changeCameraButton.setOnClickListener(view -> {
+            currentCameraId = carePayCameraPreview.changeCamera();
+            callback.onChangeCamera(currentCameraId);
+            flashButton.setSelected(false);
+            flashButton.setEnabled(carePayCameraPreview.hasFlash());
         });
 
     }
