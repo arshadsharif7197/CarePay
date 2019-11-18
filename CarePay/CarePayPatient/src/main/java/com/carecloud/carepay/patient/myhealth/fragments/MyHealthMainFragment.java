@@ -2,15 +2,19 @@ package com.carecloud.carepay.patient.myhealth.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.myhealth.MyHealthViewModel;
 import com.carecloud.carepay.patient.myhealth.adapters.AllergiesRecyclerViewAdapter;
 import com.carecloud.carepay.patient.myhealth.adapters.CareTeamRecyclerViewAdapter;
 import com.carecloud.carepay.patient.myhealth.adapters.ConditionsRecyclerViewAdapter;
@@ -71,19 +75,19 @@ public class MyHealthMainFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        myHealthDto = (MyHealthDto) callback.getDto();
+        MyHealthViewModel model  = ViewModelProviders.of(getActivity()).get(MyHealthViewModel.class);
+        myHealthDto = model.getMyHealthDto().getValue();
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
         return inflater.inflate(R.layout.fragment_my_health_main, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUpCareTeamRecyclerView(view);
         setUpConditionsRecyclerView(view);
@@ -114,12 +118,7 @@ public class MyHealthMainFragment extends BaseFragment {
             if (isVisitSummaryEnabled) break;
         }
         TextView visitSummaryButton = view.findViewById(R.id.visitSummaryButton);
-        visitSummaryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callback.displayDialogFragment(VisitSummaryDialogFragment.newInstance(), true);
-            }
-        });
+        visitSummaryButton.setOnClickListener(v -> callback.displayDialogFragment(VisitSummaryDialogFragment.newInstance(), true));
         visitSummaryButton.setVisibility(isVisitSummaryEnabled ? View.VISIBLE : View.GONE);
     }
 
@@ -151,12 +150,9 @@ public class MyHealthMainFragment extends BaseFragment {
             if (labs.size() <= MAX_ITEMS_TO_SHOW) {
                 seeAll.setVisibility(View.GONE);
             } else {
-                seeAll.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewLabList));
-                        callback.showListFragment(MyHealthListFragment.LABS);
-                    }
+                seeAll.setOnClickListener(view1 -> {
+                    MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewLabList));
+                    showListFragment(MyHealthListFragment.LABS);
                 });
             }
         }
@@ -215,12 +211,9 @@ public class MyHealthMainFragment extends BaseFragment {
             if (medications.size() <= MAX_ITEMS_TO_SHOW) {
                 seeAll.setVisibility(View.GONE);
             } else {
-                seeAll.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewMedicationList));
-                        callback.showListFragment(MyHealthListFragment.MEDICATIONS);
-                    }
+                seeAll.setOnClickListener(view1 -> {
+                    MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewMedicationList));
+                    showListFragment(MyHealthListFragment.MEDICATIONS);
                 });
             }
         }
@@ -279,12 +272,9 @@ public class MyHealthMainFragment extends BaseFragment {
             if (allergies.size() <= MAX_ITEMS_TO_SHOW) {
                 seeAll.setVisibility(View.GONE);
             } else {
-                seeAll.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewAllergyList));
-                        callback.showListFragment(MyHealthListFragment.ALLERGIES);
-                    }
+                seeAll.setOnClickListener(view1 -> {
+                    MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewAllergyList));
+                    showListFragment(MyHealthListFragment.ALLERGIES);
                 });
             }
         }
@@ -342,12 +332,9 @@ public class MyHealthMainFragment extends BaseFragment {
             if (assertions.size() <= MAX_ITEMS_TO_SHOW) {
                 seeAll.setVisibility(View.GONE);
             } else {
-                seeAll.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewConditionList));
-                        callback.showListFragment(MyHealthListFragment.CONDITIONS);
-                    }
+                seeAll.setOnClickListener(view1 -> {
+                    MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewConditionList));
+                    showListFragment(MyHealthListFragment.CONDITIONS);
                 });
             }
         }
@@ -406,15 +393,16 @@ public class MyHealthMainFragment extends BaseFragment {
             if (providers.size() <= MAX_ITEMS_TO_SHOW) {
                 seeAll.setVisibility(View.GONE);
             } else {
-                seeAll.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewCareTeamList));
-                        callback.showListFragment(MyHealthListFragment.CARE_TEAM);
-                    }
+                seeAll.setOnClickListener(view1 -> {
+                    MixPanelUtil.logEvent(getString(R.string.event_myHealth_viewCareTeamList));
+                    showListFragment(MyHealthListFragment.CARE_TEAM);
                 });
             }
         }
+    }
+
+    private void showListFragment(int type) {
+        callback.addFragment(MyHealthListFragment.newInstance(type), true);
     }
 
     private boolean hasPermissionsToViewCareTeam(List<MyHealthProviderDto> providers) {

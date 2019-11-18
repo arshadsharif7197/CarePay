@@ -2,16 +2,20 @@ package com.carecloud.carepay.patient.myhealth.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.myhealth.MyHealthViewModel;
 import com.carecloud.carepay.patient.myhealth.adapters.ReactionsRecyclerViewAdapter;
 import com.carecloud.carepay.patient.myhealth.dtos.AllergyDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
@@ -28,13 +32,13 @@ public class AllergyDetailFragment extends BaseFragment {
 
     private MyHealthInterface callback;
     private AllergyDto allergy;
+    private MyHealthDto myHealthDto;
 
     public AllergyDetailFragment() {
 
     }
 
     /**
-     *
      * @param id the allergy id
      * @return a new instance of AllergyDetailFragment
      */
@@ -65,11 +69,12 @@ public class AllergyDetailFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+        MyHealthViewModel model = ViewModelProviders.of(getActivity()).get(MyHealthViewModel.class);
+        myHealthDto = model.getMyHealthDto().getValue();
         allergy = getAllergy(getArguments().getInt("allergyId"));
     }
 
     private AllergyDto getAllergy(int allergyId) {
-        MyHealthDto myHealthDto = (MyHealthDto) callback.getDto();
         for (AllergyDto allergy : myHealthDto.getPayload().getMyHealthData().getAllergies().getAllergies()) {
             if (allergyId == allergy.getId()) {
                 return allergy;
@@ -80,38 +85,35 @@ public class AllergyDetailFragment extends BaseFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         return inflater.inflate(R.layout.fragment_allergy_detail, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUpToolbar(view);
-        TextView allergyNameTextView = (TextView) view.findViewById(R.id.allergyName);
+        TextView allergyNameTextView = view.findViewById(R.id.allergyName);
         allergyNameTextView.setText(allergy.getName());
-        TextView practiceValueTextView = (TextView) view.findViewById(R.id.practiceValueTextView);
+        TextView practiceValueTextView = view.findViewById(R.id.practiceValueTextView);
         practiceValueTextView.setText(allergy.getPractice());
-        TextView dateValueTextView = (TextView) view.findViewById(R.id.dateValueTextView);
+        TextView dateValueTextView = view.findViewById(R.id.dateValueTextView);
         dateValueTextView.setText(DateUtil.getInstance().setDateRaw(allergy.getOnsetAt())
                 .toStringWithFormatMmSlashDdSlashYyyy());
-        RecyclerView reactionsRecyclerView = (RecyclerView) view.findViewById(R.id.reactionsRecyclerView);
+        RecyclerView reactionsRecyclerView = view.findViewById(R.id.reactionsRecyclerView);
         reactionsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         reactionsRecyclerView.setAdapter(new ReactionsRecyclerViewAdapter(allergy.getReactions()));
     }
 
     private void setUpToolbar(View view) {
         callback.displayToolbar(false, null);
-        Toolbar toolbar = (Toolbar) view.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
-        TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
+        toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
+        TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(Label.getLabel("my_health_allergy_detail_title"));
     }
 }
