@@ -2,13 +2,15 @@ package com.carecloud.carepaylibray.appointments.createappointment.availabilityh
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -37,7 +39,6 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -100,12 +101,12 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
     private void initDates() {
         startDate = new Date();
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, 5);
+        cal.add(Calendar.DATE, 4);
         endDate = cal.getTime();
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUpPrepaymentMessage(view);
     }
@@ -128,15 +129,12 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
             availableHoursRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             availableHoursRecyclerView.setAdapter(new AvailabilityHourAdapter(getAllAvailableTimeSlots(appointmentModelDto
                     .getPayload().getAppointmentAvailability().getPayload().get(0).getSlots()),
-                    new AvailabilityHourAdapter.OnTimeSlotListItemClickListener() {
-                        @Override
-                        public void onTimeSlotListItemClickListener(AppointmentsSlotsDTO slot) {
-                            if (mode == SCHEDULE_MODE) {
-                                showAppointmentConfirmationFragment(slot);
-                            } else {
-                                dismiss();
-                                callback.setAppointmentSlot(slot);
-                            }
+                    slot -> {
+                        if (mode == SCHEDULE_MODE) {
+                            showAppointmentConfirmationFragment(slot);
+                        } else {
+                            dismiss();
+                            callback.setAppointmentSlot(slot);
                         }
                     }));
         } else {
@@ -149,12 +147,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
             Button changeDatesButton = noAppointmentLayout.findViewById(R.id.newAppointmentClassicButton);
             changeDatesButton.setVisibility(getChangeDatesToolbarButtonVisibility() ? View.VISIBLE : View.GONE);
             changeDatesButton.setText(Label.getLabel("change_dates"));
-            changeDatesButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    selectDateRange();
-                }
-            });
+            changeDatesButton.setOnClickListener(v -> selectDateRange());
         }
     }
 
@@ -216,17 +209,14 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
     }
 
     private List<AppointmentsSlotsDTO> getAllAvailableTimeSlots(List<AppointmentsSlotsDTO> slots) {
-        Collections.sort(slots, new Comparator<AppointmentsSlotsDTO>() {
-            @Override
-            public int compare(AppointmentsSlotsDTO lhs, AppointmentsSlotsDTO rhs) {
-                if (lhs != null && rhs != null) {
-                    Date d1 = DateUtil.getInstance().setDateRaw(lhs.getStartTime()).getDate();
-                    Date d2 = DateUtil.getInstance().setDateRaw(rhs.getStartTime()).getDate();
+        Collections.sort(slots, (lhs, rhs) -> {
+            if (lhs != null && rhs != null) {
+                Date d1 = DateUtil.getInstance().setDateRaw(lhs.getStartTime()).getDate();
+                Date d2 = DateUtil.getInstance().setDateRaw(rhs.getStartTime()).getDate();
 
-                    return d1.compareTo(d2);
-                }
-                return -1;
+                return d1.compareTo(d2);
             }
+            return -1;
         });
         return insertDayHeaders(slots);
     }
@@ -240,7 +230,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
             if (slotDate != null && !DateUtil.isSameDay(lastDate, slotDate)) {
                 headerTemplate = new AppointmentsSlotsDTO();
                 headerTemplate.setHeader(true);
-                headerTemplate.setStartTime(DateUtil.getFormattedDate(slotDate, today, tomorrow));
+                headerTemplate.setStartTime(DateUtil.getInstance().getDateAsWeekdayFullMonthDayYear(today, tomorrow));
                 slotsWithHeaders.add(headerTemplate);
                 lastDate = slotDate;
             }
@@ -318,7 +308,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
             public void onFailure(String exceptionMessage) {
                 hideProgressDialog();
                 showErrorNotification(exceptionMessage);
-                Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+                Log.e("Server Error", exceptionMessage);
             }
         }, queryMap);
     }

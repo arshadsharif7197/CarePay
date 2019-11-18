@@ -1,6 +1,6 @@
 package com.carecloud.carepaylibray.demographics.interfaces;
 
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.interfaces.DTOInterface;

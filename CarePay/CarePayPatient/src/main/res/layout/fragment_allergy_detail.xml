@@ -12,7 +12,7 @@
         android:id="@+id/toolbar_layout"
         layout="@layout/toolbar_responsibility" />
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar_layout"
@@ -139,7 +139,7 @@
                 breeze:textKey="my_health_reactions_label"
                 tools:text="REACTIONS" />
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/reactionsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -149,5 +149,5 @@
 
 
         </RelativeLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 </RelativeLayout>

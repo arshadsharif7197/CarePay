@@ -2,16 +2,21 @@ package com.carecloud.carepay.practice.clover;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 
 import com.carecloud.carepay.practice.clover.utils.ChipInterceptorUtil;
+import com.carecloud.carepay.practice.library.session.PracticeSessionService;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
 import com.carecloud.carepaylibray.CarePayApplication;
+import com.carecloud.carepaylibray.session.SessionedActivityInterface;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.shamrocksdk.ShamrockSdk;
 import com.clover.sdk.util.Platform;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -34,7 +39,6 @@ public class CarePayCloverApplication extends CarePayApplication
 
         mixpanelAPI = MixpanelAPI.getInstance(this.getApplicationContext(), BuildConfig.MIX_PANEL_TOKEN);
         setHttpConstants();
-        registerActivityLifecycleCallbacks(this);
         ShamrockSdk.init(HttpConstants.getPaymentsApiKey(), HttpConstants.getDeepStreamUrl(), HttpConstants.getPaymentsUrl());
     }
 
@@ -94,7 +98,17 @@ public class CarePayCloverApplication extends CarePayApplication
     }
 
     @Override
-    public void onAtomicRestart(){
+    public void restartSession(Activity activity) {
+        Log.e("Session", "manageSession");
+        Bundle bundle = new Bundle();
+        DtoHelper.bundleDto(bundle, ((SessionedActivityInterface) activity).getLogoutTransition());
+        Intent intent = new Intent(this, PracticeSessionService.class);
+        intent.putExtras(bundle);
+        startService(intent);
+    }
+
+    @Override
+    public void onAtomicRestart() {
         super.onAtomicRestart();
         applicationMode.clearUserPracticeDTO();
         applicationMode = null;
@@ -115,10 +129,10 @@ public class CarePayCloverApplication extends CarePayApplication
         return applicationMode;
     }
 
-    private String getDeviceType(){
-        if(Platform.isCloverStation()){
+    private String getDeviceType() {
+        if (Platform.isCloverStation()) {
             return CarePayConstants.CLOVER_DEVICE;
-        }else{
+        } else {
             return CarePayConstants.CLOVER_2_DEVICE;
         }
     }

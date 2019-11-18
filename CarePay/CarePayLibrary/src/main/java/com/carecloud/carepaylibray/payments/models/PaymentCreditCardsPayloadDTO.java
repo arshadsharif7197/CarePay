@@ -47,6 +47,8 @@ public class PaymentCreditCardsPayloadDTO {
 
     private transient String completeNumber;
 
+    private transient String expireDtDisplay;
+
     /**
      * @return The cardType
      */
@@ -197,5 +199,13 @@ public class PaymentCreditCardsPayloadDTO {
 
     public String getCompleteNumber() {
         return completeNumber;
+    }
+
+    public void setExpireDtDisplay(String expireDtDisplay) {
+        this.expireDtDisplay = expireDtDisplay;
+    }
+
+    public String getExpireDtDisplay() {
+        return expireDtDisplay;
     }
 }

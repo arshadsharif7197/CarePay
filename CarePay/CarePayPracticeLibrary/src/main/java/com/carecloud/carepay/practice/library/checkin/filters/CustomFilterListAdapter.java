@@ -4,8 +4,7 @@ package com.carecloud.carepay.practice.library.checkin.filters;
  * Created by sudhir_pingale on 10/19/2016.
  */
 
-import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,6 @@ import java.util.List;
  */
 public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private Context context;
     private FilterModel filterModel;
     private List<FilterDataDTO> filterableDataDTOList;
     private static final int ROW_SECTION_HEADER = 0;
@@ -135,9 +134,9 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         ViewHolderFilterableDataItem(View view) {
             super(view);
-            checkBox = (CheckBox) view.findViewById(R.id.patientItemCheckBox);
+            checkBox = view.findViewById(R.id.patientItemCheckBox);
             checkBox.setOnCheckedChangeListener(onCheckedChangeListener);
-            selectedItemImageView = (ImageView) view.findViewById(R.id.selectedItemImageView);
+            selectedItemImageView = view.findViewById(R.id.selectedItemImageView);
         }
 
         CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
@@ -166,7 +165,7 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
                 if (filterDataDTO.isChecked()) {
                     selectedItemImageView.setVisibility(View.VISIBLE);
                 } else {
-                    selectedItemImageView.setVisibility(View.GONE);
+                    selectedItemImageView.setVisibility(View.INVISIBLE);
                 }
                 if (!skipCallback) {
                     callback.onFilterChanged(filterDataDTO);
@@ -177,14 +176,14 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         void setFilterDataDTO(FilterDataDTO filterDataDTO) {
             this.filterDataDTO = filterDataDTO;
-            checkBox.setText(filterDataDTO.getDisplayText());
+            checkBox.setText(StringUtil.capitalize(filterDataDTO.getDisplayText()));
             skipCallback = (!checkBox.isChecked() && filterDataDTO.isChecked())
                     || (checkBox.isChecked() && !filterDataDTO.isChecked());//non user interaction check changes
             checkBox.setChecked(filterDataDTO.isChecked());
             if (filterDataDTO.isChecked()) {
                 selectedItemImageView.setVisibility(View.VISIBLE);
             } else {
-                selectedItemImageView.setVisibility(View.GONE);
+                selectedItemImageView.setVisibility(View.INVISIBLE);
             }
         }
     }
@@ -198,7 +197,7 @@ public class CustomFilterListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         ViewHolderFilterableSectionHeader(View view) {
             super(view);
-            headerItemTextView = (TextView) view.findViewById(R.id.headerItemTextView);
+            headerItemTextView = view.findViewById(R.id.headerItemTextView);
         }
 
         TextView getTextView() {

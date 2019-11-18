@@ -447,4 +447,14 @@
             breeze:textKey="demographics_insurance_retake_back_photo" />
     </LinearLayout>
 
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+        android:id="@+id/noInsuranceButton"
+        style="@style/DemographicsDocsButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textAllCaps="true"
+        app:customAssetFont="gotham_rounded_medium"
+        breeze:textKey="demographics_i_dont_have_health_insurance_label" />
+
 </LinearLayout>

@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:contentDescription="@string/content_description_payment_plan_dashboard_screen"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="horizontal">
@@ -65,6 +66,7 @@
                 android:layout_height="@dimen/commonButtonHeight"
                 android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:background="@drawable/bg_yellow_overlay"
+                android:contentDescription="@string/content_description_create_payment_plan_button"
                 android:gravity="center"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
@@ -82,7 +84,7 @@
             android:layout_above="@id/footer"
             android:background="@color/light_gray" />
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/divider"
@@ -96,9 +98,10 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/currentPaymentPlansRecycler"
                     android:layout_width="match_parent"
+                    android:contentDescription="@string/content_description_payments_list"
                     android:layout_height="wrap_content" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -115,7 +118,7 @@
                     breeze:textKey="payment.paymentPlanDashboard.section.title.completed"
                     tools:text="Completed" />
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/completedPaymentPlansRecycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -134,7 +137,7 @@
                     breeze:textKey="payment.paymentPlanDashboard.section.title.canceled"
                     tools:text="Canceled" />
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/canceledPaymentPlansRecycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -142,7 +145,7 @@
 
             </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
 
         <LinearLayout
             android:id="@+id/empty_plans_layout"
@@ -193,8 +196,8 @@
                 android:layout_margin="@dimen/dimen_60dp"
                 android:background="@drawable/bg_yellow_overlay"
                 android:gravity="center"
-                android:paddingEnd="@dimen/dimen_60dp"
                 android:paddingStart="@dimen/dimen_60dp"
+                android:paddingEnd="@dimen/dimen_60dp"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/respons_button_text_size"

@@ -45,6 +45,14 @@ public class DemographicTransitionsDTO {
     @Expose
     private TransitionDTO changePassword = new TransitionDTO();
 
+    @SerializedName("delegate_action")
+    @Expose
+    private TransitionDTO delegateAction;
+
+    @SerializedName("update_permissions")
+    @Expose
+    private TransitionDTO updatePermissions;
+
     /**
      *
      * @return
@@ -132,5 +140,21 @@ public class DemographicTransitionsDTO {
 
     public void setChangePassword(TransitionDTO changePassword) {
         this.changePassword = changePassword;
+    }
+
+    public TransitionDTO getAction() {
+        return delegateAction;
+    }
+
+    public void setAction(TransitionDTO delegateAction) {
+        this.delegateAction = delegateAction;
+    }
+
+    public TransitionDTO getUpdatePermissions() {
+        return updatePermissions;
+    }
+
+    public void setUpdatePermissions(TransitionDTO updatePermissions) {
+        this.updatePermissions = updatePermissions;
     }
 }

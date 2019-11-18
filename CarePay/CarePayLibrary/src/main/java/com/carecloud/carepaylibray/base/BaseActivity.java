@@ -9,17 +9,18 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -31,6 +32,7 @@ import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
+import com.carecloud.carepaylibray.session.SessionService;
 import com.carecloud.carepaylibray.utils.CustomPopupNotification;
 import com.carecloud.carepaylibray.utils.ProgressDialogUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -68,7 +70,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         super.onPause();
         isVisible = false;
         isForeground = false;
-        handler.postDelayed(logoutUserSession, LOGOUT_SESSION_TIMEOUT);
+        handler.postDelayed(backgroundLogoutSessionRunnable, LOGOUT_SESSION_TIMEOUT);
     }
 
     @Override
@@ -79,17 +81,14 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         isForeground = true;
         final View rootView = findViewById(android.R.id.content);
         rootView.setSoundEffectsEnabled(false);
-        rootView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SystemUtil.hideSoftKeyboard(BaseActivity.this);
-                view.requestFocus();
-                onProgressDialogCancel();
-            }
+        rootView.setOnClickListener(view -> {
+            SystemUtil.hideSoftKeyboard(BaseActivity.this);
+            view.requestFocus();
+            onProgressDialogCancel();
         });
         setLastInteraction(System.currentTimeMillis());
         handler.removeCallbacksAndMessages(null);
-        expectingResult=false;
+        expectingResult = false;
     }
 
     public boolean isVisible() {
@@ -209,14 +208,11 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
      * @return the cancel reason appointment dialog listener
      */
     public CustomPopupNotification.CustomPopupNotificationListener errorNotificationSwipeListener() {
-        return new CustomPopupNotification.CustomPopupNotificationListener() {
-            @Override
-            public void onSwipe(String swipeDirection) {
-                hideErrorNotification();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    getWindow().setStatusBarColor(ContextCompat.getColor(getContext(),
-                            R.color.colorPrimaryDark));
-                }
+        return swipeDirection -> {
+            hideErrorNotification();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setStatusBarColor(ContextCompat.getColor(getContext(),
+                        R.color.colorPrimaryDark));
             }
         };
     }
@@ -230,8 +226,8 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
     }
 
     @Override
-    public void startActivityForResult(Intent intent, int requestCode){
-        expectingResult=true;
+    public void startActivityForResult(Intent intent, int requestCode) {
+        expectingResult = true;
         super.startActivityForResult(intent, requestCode);
     }
 
@@ -296,12 +292,7 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         if (toolbar != null) {
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onBackPressed();
-                }
-            });
+            toolbar.setNavigationOnClickListener(view -> onBackPressed());
         }
     }
 
@@ -402,49 +393,36 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         }
     }
 
-    private Runnable logoutUserSession = new Runnable() {
-        @Override
-        public void run() {
-            long now = System.currentTimeMillis();
-            if (now - getLastInteraction() > LOGOUT_SESSION_TIMEOUT && !isForeground && !expectingResult && !isFinishing()) {
-                getApplicationMode().clearUserPracticeDTO();
-                AppAuthorizationHelper authHelper = getAppAuthorizationHelper();
-                authHelper.setUser(null);
-                authHelper.setAccessToken(null);
-                authHelper.setIdToken(null);
-                authHelper.setRefreshToken(null);
-                restartApp(null, false);
-            }
+    private Runnable backgroundLogoutSessionRunnable = () -> {
+        long now = System.currentTimeMillis();
+        if (now - getLastInteraction() > LOGOUT_SESSION_TIMEOUT && !isForeground && !expectingResult && !isFinishing()) {
+            getApplicationMode().clearUserPracticeDTO();
+            AppAuthorizationHelper authHelper = getAppAuthorizationHelper();
+            authHelper.setUser(null);
+            authHelper.setAccessToken(null);
+            authHelper.setIdToken(null);
+            authHelper.setRefreshToken(null);
+            restartApp(null, false);
         }
     };
 
-    private DialogInterface.OnCancelListener progressCancelListener = new DialogInterface.OnCancelListener() {
-        @Override
-        public void onCancel(DialogInterface dialog) {
-            onProgressDialogCancel();
-        }
-    };
+    private DialogInterface.OnCancelListener progressCancelListener = dialog -> onProgressDialogCancel();
 
     protected void onProgressDialogCancel() {
 
     }
 
     protected void setUncaughtExceptionHandler() {
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread thread, Throwable throwable) {
-                restartApp(throwable, true);
-            }
-        });
+        Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> restartApp(throwable, true));
 
     }
 
     protected void restartApp(Throwable throwable, boolean crash) {
         onAtomicRestart();
-        if (throwable!=null){
+        if (throwable != null) {
             Log.e("CareCloud", "" + throwable.getMessage(), throwable);
         }
-        if(crash) {
+        if (crash) {
             Intent intent = new Intent();
             intent.setAction("com.carecloud.carepay.restart");
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -458,8 +436,11 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
                 mgr.set(AlarmManager.RTC, System.currentTimeMillis(), pendingIntent);
             }
         }
+        stopSessionService();
         finishAffinity();
         System.exit(crash ? 2 : 0);
     }
+
+    protected abstract void stopSessionService();
 
 }

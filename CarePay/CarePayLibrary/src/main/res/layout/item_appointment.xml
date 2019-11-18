@@ -145,6 +145,7 @@
                 android:paddingEnd="@dimen/default_title_indicator_title_padding"
                 android:paddingStart="0dp"
                 android:textColor="@color/cadet_gray"
+                android:textAllCaps="true"
                 android:textSize="@dimen/apt_list_upcoming_month_txt_size"
                 app:customAssetFont="proxima_nova_regular"/>
 
@@ -217,7 +218,7 @@
                 breeze:textKey="appointment_video_visit_indicator"
                 tools:text="Video Visit"/>
 
-            <android.support.v7.widget.AppCompatImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="@dimen/dimen_24dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/icn_video_visit"/>

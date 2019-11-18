@@ -6,14 +6,6 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -28,6 +20,14 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
@@ -57,6 +57,7 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.android.material.textfield.TextInputLayout;
 import com.marcok.stepprogressbar.StepProgressBar;
 
 import java.util.ArrayList;
@@ -93,6 +94,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     private View otherProviderLayout;
     private ScrollView scrollView;
     private EditText planEditText;
+    private Button noInsuranceButton;
 
     private boolean hadInsurance;
     private boolean isPatientMode;
@@ -203,7 +205,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             hasBackImage = savedInstanceState.getBoolean(KEY_HAS_BACK, false);
         }
 
-        setRetainInstance(true);
+//        setRetainInstance(true);
     }
 
     @Override
@@ -237,11 +239,11 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
         View view = inflater.inflate(R.layout.fragment_review_demographic_base, container, false);
 
-        StepProgressBar stepProgressBar = (StepProgressBar) view.findViewById(R.id.stepProgressBarCheckin);
+        StepProgressBar stepProgressBar = view.findViewById(R.id.stepProgressBarCheckin);
         stepProgressBar.setNumDots(5);
         stepProgressBar.setCurrentProgressDot(4);
 
-        ViewGroup contentLayout = (ViewGroup) view.findViewById(R.id.checkinDemographicsContentLayout);
+        ViewGroup contentLayout = view.findViewById(R.id.checkinDemographicsContentLayout);
         inflater.inflate(R.layout.add_edit_insurance_view, contentLayout, true);
         float padding = getResources().getDimension(R.dimen.demographics_add_padding);
         contentLayout.setPadding((int) padding, 0, 0, 0);
@@ -257,7 +259,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         hideKeyboardOnViewTouch(view.findViewById(R.id.dialog_content_layout));
         hideKeyboardOnViewTouch(view.findViewById(R.id.container_main));
 
-        if(callback instanceof CheckinFlowCallback){
+        if (callback instanceof CheckinFlowCallback) {
             CheckinFlowCallback checkinFlowCallback = (CheckinFlowCallback) callback;
             checkinFlowCallback.setCheckinFlow(CheckinFlowState.DEMOGRAPHICS, checkinFlowCallback.getTotalSteps(), CheckinFlowCallback.INSURANCE);
             checkinFlowCallback.setCurrentStep(CheckinFlowCallback.INSURANCE);
@@ -267,7 +269,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     }
 
     private void inflateToolbarViews(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         if (toolbar == null) {
             return;
         }
@@ -293,7 +295,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);
         }
 
-        TextView textView = (TextView) view.findViewById(R.id.toolbar_title);
+        TextView textView = view.findViewById(R.id.toolbar_title);
         textView.setText(StringUtil.capitalize(Label.getLabel("demographics_add_insurance_link")));
     }
 
@@ -318,6 +320,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         otherProviderEditText = view.findViewById(R.id.otherProviderEditText);
         otherProviderLayout = view.findViewById(R.id.otherProviderLayout);
         scrollView = view.findViewById(R.id.demographicsScrollView);
+        if (!isPatientMode) {
+            noInsuranceButton = view.findViewById(R.id.noInsuranceButton);
+        }
 
         if (getDialog() != null || (hadInsurance && !isPatientMode) || !isCheckin) {
             saveInsuranceButton = (Button) findViewById(R.id.save_insurance_changes);
@@ -350,12 +355,19 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
             isDataHolderSelf = true;
             initInsuranceData(view, new DemographicInsurancePayloadDTO());
+            if (!isPatientMode) {
+                noInsuranceButton.setVisibility(isCheckin ? View.VISIBLE : View.GONE);
+                noInsuranceButton.setOnClickListener(noInsurance);
+            }
         } else {
             DemographicInsurancePayloadDTO demographicInsurancePayload = demographicDTO.getPayload()
                     .getDemographics().getPayload().getInsurances().get(editedIndex);
             initInsuranceData(view, demographicInsurancePayload);
 
             findViewById(R.id.remove_insurance_entry).setOnClickListener(removeButtonListener);
+            if (!isPatientMode) {
+                noInsuranceButton.setVisibility(View.GONE);
+            }
         }
 
 
@@ -642,7 +654,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                     .getPayload().getInsurances().get(editedIndex);
             if (insurance.getInsuranceType().toLowerCase().equals("primary")) {
                 DialogInterface.OnCancelListener cancelListener = null;
-                if(getDialog() != null){
+                if (getDialog() != null) {
                     cancelListener = new DialogInterface.OnCancelListener() {
                         @Override
                         public void onCancel(DialogInterface dialog) {
@@ -747,10 +759,10 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         if (frontInsurancePhotoDTO != null || backInsurancePhotoDTO != null) {
             //Log new Insurance Doc
             CheckinFlowCallback checkinFlowCallback = null;
-            if(callback instanceof CheckinFlowCallback){
+            if (callback instanceof CheckinFlowCallback) {
                 checkinFlowCallback = (CheckinFlowCallback) callback;
             }
-            if(checkinFlowCallback != null) {
+            if (checkinFlowCallback != null) {
                 String[] params = {getString(R.string.param_is_checkin),
                         getString(R.string.param_practice_id),
                         getString(R.string.param_provider_id),
@@ -1115,6 +1127,20 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                 requiredViewId, demographicsOption, optionDialogTitle, null, disableField);
     }
 
+    private void setUpDemographicField(View view, String keyName, DemographicsField demographicsField,
+                                       Integer containerLayout, int inputLayoutId, int editTextId, Integer requiredViewId,
+                                       DemographicsOption demographicsOption, String optionDialogTitle) {
+        if (demographicsField == null) {
+            demographicsField = new DemographicsField();
+        }
+        TextInputLayout inputLayout = view.findViewById(inputLayoutId);
+        EditText editText = view.findViewById(editTextId);
+        setUpDemographicField(view, keyName, demographicsField.isDisplayed(),
+                demographicsField.getOptions(), containerLayout, inputLayout, editText,
+                requiredViewId, demographicsOption, optionDialogTitle, null, false);
+
+    }
+
     /**
      * First time setup of the individual field
      * @param view View
@@ -1165,7 +1191,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     protected void initSelectableInput(TextView textView, DemographicsOption storeOption,
                                        String storedName, List<DemographicsOption> options) {
         String key = storeOption.getName();
-        if (StringUtil.isNullOrEmpty(key)){
+        if (StringUtil.isNullOrEmpty(key)) {
             key = storedName;
         }
         storeOption = getOptionByKey(options, key, storeOption);
@@ -1296,5 +1322,12 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         }
 
     }
+
+    private View.OnClickListener noInsurance = new View.OnClickListener() {
+        @Override
+        public void onClick(View saveChanges) {
+            closeDialog();
+        }
+    };
 
 }

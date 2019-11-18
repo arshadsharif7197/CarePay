@@ -3,20 +3,21 @@ package com.carecloud.carepay.practice.library.customdialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v4.util.ArraySet;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.filters.CustomFilterListAdapter;
@@ -24,8 +25,9 @@ import com.carecloud.carepay.practice.library.checkin.filters.CustomSearchAdapte
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseActivity;
-import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.Set;
 
@@ -43,36 +45,31 @@ public class FilterDialog extends PopupWindow
     private CustomSearchAdapter patientAdapter;
     private FilterModel filterModel;
 
-    private String practicePaymentsFilter;
-    private String practicePaymentsFilterFindPatientByName;
-    private String practicePaymentsFilterClearFilters;
-
     private FilterDialogListener callBack;
+    private ImageView closeFilterWindowImageView;
+    private boolean isOnPatientFilter;
+
+    public void refresh() {
+        doctorsLocationsAdapter.notifyDataSetChanged();
+    }
 
     public interface FilterDialogListener {
         void applyFilter();
 
         void refreshData();
+
+        void showFilterFlag(boolean areThereActiveFilters);
     }
 
     /**
-     * @param context                                 the context to inflate custom popup layout
-     * @param parentView                              a parent view to get the {@link View#getWindowToken()} token from
-     * @param practicePaymentsFilter                  label on top of filter dialog
-     * @param practicePaymentsFilterFindPatientByName label for patient search text view
-     * @param practicePaymentsFilterClearFilters      label for clear filters button
+     * @param context    the context to inflate custom popup layout
+     * @param parentView a parent view to get the {@link View#getWindowToken()} token from
      */
     public FilterDialog(Context context,
                         View parentView,
-                        FilterModel filterModel,
-                        String practicePaymentsFilter,
-                        String practicePaymentsFilterFindPatientByName,
-                        String practicePaymentsFilterClearFilters) {
+                        FilterModel filterModel) {
 
         super(context);
-        this.practicePaymentsFilter = practicePaymentsFilter;
-        this.practicePaymentsFilterFindPatientByName = practicePaymentsFilterFindPatientByName;
-        this.practicePaymentsFilterClearFilters = practicePaymentsFilterClearFilters;
         callBack = (FilterDialogListener) context;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.custom_filter_popup_window_layout, null);
@@ -89,6 +86,7 @@ public class FilterDialog extends PopupWindow
         initialiseViews();
 
         displayRecyclerView();
+        enableFilterButton();
     }
 
     private void displayRecyclerView() {
@@ -104,39 +102,64 @@ public class FilterDialog extends PopupWindow
     }
 
     private void initialiseViews() {
-        View popupWindowLayout = this.getContentView();
+        final View popupWindowLayout = this.getContentView();
+        filterableDataRecyclerView = popupWindowLayout.findViewById(R.id.filterableDataRecyclerView);
 
-        filterableDataRecyclerView = (RecyclerView) popupWindowLayout.findViewById(R.id.filterableDataRecyclerView);
-
-        CarePayTextView titleTextView = (CarePayTextView) popupWindowLayout.findViewById(R.id.titleTextView);
-        titleTextView.setText(practicePaymentsFilter);
-
-        ImageView closeFilterWindowImageView = (ImageView) popupWindowLayout.findViewById(R.id.closeFilterWindowImageView);
-        closeFilterWindowImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        closeFilterWindowImageView = popupWindowLayout.findViewById(R.id.closeFilterWindowImageView);
+        closeFilterWindowImageView.setOnClickListener(view -> {
+            SystemUtil.hideSoftKeyboard(context, getContentView());
+            if (searchPatientEditText.hasFocus()) {
+                searchPatientEditText.clearFocus();
+            } else {
                 dismiss();
             }
         });
 
-        clearSearchImageView = (ImageView) popupWindowLayout.findViewById(R.id.clearSearchImageView);
-        clearSearchImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearPatientSearch();
-                applyFilter();
-            }
+        setUpSearchEditText(popupWindowLayout);
 
-            private void clearPatientSearch() {
-                searchPatientEditText.setText("");
-                searchPatientEditText.clearFocus();
-                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getContentView().getWindowToken(), 0);
+        clearFiltersButton = popupWindowLayout.findViewById(R.id.clearFiltersButton);
+        clearFiltersButton.setOnClickListener(view -> {
+            if (isOnPatientFilter) {
+//                    filterModel.setPatients(new ArrayList<FilterDataDTO>());
+                filterModel.clearPatients();
+                patientAdapter.resetData();
+                doctorsLocationsAdapter = new CustomFilterListAdapter(filterModel, FilterDialog.this);
+                filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
+                callBack.applyFilter();
+            } else {
+                final Set<String> lastLocationFilter = filterModel.getFilteredLocationsIds();
+                filterModel.clearAll();
+                saveFilter();
+                doctorsLocationsAdapter = new CustomFilterListAdapter(filterModel, FilterDialog.this);
+                filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
+                callBack.showFilterFlag(false);
+                if (lastLocationFilter.isEmpty()) {
+                    callBack.applyFilter();
+                } else {
+                    callBack.refreshData();
+                }
             }
+            enableFilterButton();
+            clearPatientSearch();
         });
 
-        searchPatientEditText = (EditText) popupWindowLayout.findViewById(R.id.searchPatientEditText);
-        searchPatientEditText.setHint(practicePaymentsFilterFindPatientByName);
+        View blankSpace = popupWindowLayout.findViewById(R.id.blankSpace);
+        blankSpace.setOnClickListener(v -> dismiss());
+    }
+
+    private void clearPatientSearch() {
+        searchPatientEditText.setText("");
+        searchPatientEditText.clearFocus();
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getContentView().getWindowToken(), 0);
+    }
+
+    private void setUpSearchEditText(View popupWindowLayout) {
+        clearSearchImageView = popupWindowLayout.findViewById(R.id.clearSearchImageView);
+        clearSearchImageView.setOnClickListener(view -> searchPatientEditText.setText(""));
+
+        searchPatientEditText = popupWindowLayout.findViewById(R.id.searchPatientEditText);
+        searchPatientEditText.setHint(Label.getLabel("practice_checkin_filter_find_patient_by_name"));
         searchPatientEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence string, int start, int count, int after) {
@@ -159,47 +182,34 @@ public class FilterDialog extends PopupWindow
 
             @Override
             public void afterTextChanged(Editable string) {
-            }
-        });
-
-        searchPatientEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus) {
+                if (string.length() > 0) {
                     clearSearchImageView.setVisibility(View.VISIBLE);
-                    filterableDataRecyclerView.setAdapter(patientAdapter);
                 } else {
                     clearSearchImageView.setVisibility(View.GONE);
-                    filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
                 }
             }
         });
 
-        clearFiltersButton = (Button) popupWindowLayout.findViewById(R.id.clearFiltersButton);
-        clearFiltersButton.setText(practicePaymentsFilterClearFilters);
-        clearFiltersButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Set<String> lastLocationFilter = getFilteredLocationsIds();
-                clearSearchImageView.performClick();
-                filterModel.clear();
-                saveFilter();
-                doctorsLocationsAdapter = new CustomFilterListAdapter(filterModel, FilterDialog.this);
+        searchPatientEditText.setOnFocusChangeListener((view, hasFocus) -> {
+            if (hasFocus) {
+                filterableDataRecyclerView.setAdapter(patientAdapter);
+                closeFilterWindowImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.icn_nav_back_white));
+                isOnPatientFilter = true;
+                clearFiltersButton.setText(Label.getLabel("practice.filter.clearFilters.button.clearPatients"));
+            } else {
                 filterableDataRecyclerView.setAdapter(doctorsLocationsAdapter);
-                if (lastLocationFilter.isEmpty()) {
-                    callBack.applyFilter();
-                } else {
-                    callBack.refreshData();
-                }
+                closeFilterWindowImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.icn_close));
+                isOnPatientFilter = false;
+                clearFiltersButton.setText(Label.getLabel("practice.filter.clearFilters.button.clearAll"));
             }
         });
 
-        View blankSpace = popupWindowLayout.findViewById(R.id.blankSpace);
-        blankSpace.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
+        searchPatientEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                SystemUtil.hideSoftKeyboard(context, getContentView());
+                return true;
             }
+            return false;
         });
     }
 
@@ -225,41 +235,31 @@ public class FilterDialog extends PopupWindow
     }
 
     private void applyFilter() {
-        clearFiltersButton.setVisibility(View.VISIBLE);
+        boolean areThereActiveFilters = enableFilterButton();
+        callBack.showFilterFlag(areThereActiveFilters);
         callBack.applyFilter();
         saveFilter();
     }
 
     private void applyFilterAndRefresh() {
-        clearFiltersButton.setVisibility(View.VISIBLE);
+        boolean areThereActiveFilters = enableFilterButton();
+        callBack.showFilterFlag(areThereActiveFilters);
         saveFilter();
         callBack.refreshData();
+    }
+
+    private boolean enableFilterButton() {
+        boolean areThereActiveFilters = filterModel.areThereActiveFilters();
+        clearFiltersButton.setEnabled(areThereActiveFilters);
+        return areThereActiveFilters;
     }
 
     private void saveFilter() {
         String practiceId = ((BaseActivity) context).getApplicationMode().getUserPracticeDTO().getPracticeId();
         String userId = ((BaseActivity) context).getApplicationMode().getUserPracticeDTO().getUserId();
-        ApplicationPreferences.getInstance().setSelectedProvidersId(practiceId, userId, getFilteredDoctorsIds());
-        ApplicationPreferences.getInstance().setSelectedLocationsId(practiceId, userId, getFilteredLocationsIds());
-    }
-
-    private Set<String> getFilteredDoctorsIds() {
-        Set<String> doctorsIds = new ArraySet<>();
-        for (FilterDataDTO doctor : filterModel.getDoctors()) {
-            if (doctor.isChecked()) {
-                doctorsIds.add(doctor.getId());
-            }
-        }
-        return doctorsIds;
-    }
-
-    private Set<String> getFilteredLocationsIds() {
-        Set<String> locationsIds = new ArraySet<>();
-        for (FilterDataDTO location : filterModel.getLocations()) {
-            if (location.isChecked()) {
-                locationsIds.add(location.getId());
-            }
-        }
-        return locationsIds;
+        ApplicationPreferences.getInstance().setSelectedProvidersId(practiceId, userId,
+                filterModel.getFilteredDoctorsIds());
+        ApplicationPreferences.getInstance().setSelectedLocationsId(practiceId, userId,
+                filterModel.getFilteredLocationsIds());
     }
 }

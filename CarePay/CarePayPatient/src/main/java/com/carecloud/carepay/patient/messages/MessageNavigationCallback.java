@@ -1,6 +1,7 @@
 package com.carecloud.carepay.patient.messages;
 
 import com.carecloud.carepay.patient.messages.models.Messages;
+import com.carecloud.carepay.patient.messages.models.MessagingModel;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 
 /**
@@ -12,4 +13,6 @@ public interface MessageNavigationCallback extends FragmentActivityInterface {
     void displayThreadMessages(Messages.Reply thread, boolean dismissDialogs);
 
     void displayToolbar(boolean display, String title);
+
+    boolean canSendProvidersMessages();
 }
