@@ -2,14 +2,16 @@ package com.carecloud.carepay.patient.messages.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.MessageNavigationCallback;
@@ -19,7 +21,6 @@ import com.carecloud.carepay.patient.messages.models.ProviderContact;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,7 +32,6 @@ public class MessagesProvidersFragment extends BaseFragment implements MessagesP
     private RecyclerView providersRecycler;
     private View noProvidersMessage;
 
-    private List<ProviderContact> providers = new ArrayList<>();
     private MessageNavigationCallback callback;
     private MessagingModel messagingModel;
 
@@ -61,7 +61,7 @@ public class MessagesProvidersFragment extends BaseFragment implements MessagesP
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle) {
+    public void onViewCreated(@NonNull View view, Bundle icicle) {
         initToolbar(view);
 
         providersRecycler = view.findViewById(R.id.providers_recycler);
@@ -83,32 +83,16 @@ public class MessagesProvidersFragment extends BaseFragment implements MessagesP
         title.setText(Label.getLabel("messaging_providers_title"));
 
         toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
 
     }
 
     private void setAdapter() {
-        providers = messagingModel.getPayload().getProviderContacts();
+        List<ProviderContact> providers = messagingModel.getPayload().getProviderContacts();
         MessagesProvidersAdapter adapter = new MessagesProvidersAdapter(getContext(), providers, this);
         providersRecycler.setAdapter(adapter);
         providersRecycler.setVisibility(providers.isEmpty() ? View.GONE : View.VISIBLE);
         noProvidersMessage.setVisibility(providers.isEmpty() ? View.VISIBLE : View.GONE);
-    }
-
-
-    /**
-     * Set or update the list of providers
-     *
-     * @param providers providers list
-     */
-    public void updateProvidersList(List<ProviderContact> providers) {
-        this.providers = providers;
-        setAdapter();
     }
 
     @Override

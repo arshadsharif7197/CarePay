@@ -101,7 +101,7 @@ public class MediaCameraFragment extends BaseDialogFragment implements CarePayCa
         super.onViewCreated(view, savedInstanceState);
 
         // Set content
-        carePayCameraView = new CarePayCameraView(this, getContext(), cameraType);
+        carePayCameraView = new CarePayCameraView(this, getContext(), cameraType, getApplicationMode().getApplicationType());
         ((FrameLayout) view.findViewById(R.id.camera_preview)).addView(carePayCameraView);
     }
 
