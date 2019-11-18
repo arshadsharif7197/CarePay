@@ -173,6 +173,7 @@ public class CarePaySearchView extends SearchView {
         }
 
         TextView searchText = (TextView) findViewById(R.id.search_src_text);
+        searchText.setContentDescription(getContext().getString(R.string.content_description_search_input_box));
         Typeface tf = Typeface.createFromAsset(getContext().getAssets(), assetFontName);
         searchText.setTypeface(tf);
     }

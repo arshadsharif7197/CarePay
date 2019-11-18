@@ -195,4 +195,9 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
         }
         return null;
     }
+
+    @Override
+    public boolean manageSession() {
+        return true;
+    }
 }

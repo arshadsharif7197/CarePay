@@ -3,6 +3,7 @@
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:contentDescription="@string/content_description_credit_cards_screen"
     android:orientation="vertical">
 
     <include
@@ -20,6 +21,7 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/nextButton"
             android:choiceMode="singleChoice"
+            android:contentDescription="@string/content_description_credit_cards_list"
             android:visibility="visible" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
@@ -44,6 +46,7 @@
             android:layout_above="@id/addNewCardButton"
             android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
             android:background="@drawable/button_selector_green"
+            android:contentDescription="@string/content_description_pay_button"
             android:textAllCaps="true"
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="demographics_pay_button_text" />

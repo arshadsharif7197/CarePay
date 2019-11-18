@@ -9,6 +9,8 @@ import androidx.annotation.Nullable;
 import com.carecloud.carepay.practice.clover.models.CloverQueuePaymentRecord;
 import com.carecloud.carepay.service.library.ServiceGenerator;
 import com.carecloud.carepay.service.library.WorkflowService;
+import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -57,7 +59,7 @@ public class CloverQueueUploadService extends IntentService {
                 jsonBody = queueRecord.getPaymentModelJson();
             }
 
-            boolean isSubmitted = executeWebCall(transitionDTO, jsonBody, queryMap, queueRecord.getUsername());
+            boolean isSubmitted = executeWebCall(transitionDTO, jsonBody, queryMap, queueRecord.getUsername(), queueRecord.getPatientUsername());
             if (isSubmitted) {
                 dataBase.getCloverPaymentDao().delete(queueRecord);
             }
@@ -72,7 +74,7 @@ public class CloverQueueUploadService extends IntentService {
 
     }
 
-    private boolean executeWebCall(TransitionDTO transitionDTO, String jsonBody, Map<String, String> queryMap, String username) {
+    private boolean executeWebCall(TransitionDTO transitionDTO, String jsonBody, Map<String, String> queryMap, String username, String patientUsername) {
         if (StringUtil.isNullOrEmpty(jsonBody)) {
             return false;
         }
@@ -80,6 +82,9 @@ public class CloverQueueUploadService extends IntentService {
         Map<String, String> header = new HashMap<>();
         header.put("x-api-key", HttpConstants.getApiStartKey());
         header.put("username", username);
+        if (!StringUtil.isNullOrEmpty(patientUsername)) {
+            header.put("username_patient", patientUsername);
+        }
 
         WorkflowService workflowService = ServiceGenerator.getInstance().createService(WorkflowService.class, header);
         Call<WorkflowDTO> call = workflowService.executePost(transitionDTO.getUrl(), jsonBody, queryMap);

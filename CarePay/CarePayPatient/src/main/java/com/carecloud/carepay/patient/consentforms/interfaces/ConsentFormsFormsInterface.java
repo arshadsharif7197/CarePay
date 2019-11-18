@@ -10,4 +10,6 @@ public interface ConsentFormsFormsInterface {
     void onPendingFormSelected(PracticeForm form, boolean isChecked);
 
     void onFilledFormSelected(PracticeForm form);
+
+    boolean canReviewForms();
 }

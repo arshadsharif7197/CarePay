@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
@@ -39,6 +40,7 @@ import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.gson.Gson;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.MemoryPolicy;
@@ -97,22 +99,24 @@ public class EditProfileFragment extends BaseFragment implements MediaViewInterf
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
-        TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
+        Toolbar toolbar = view.findViewById(R.id.settings_toolbar);
+        TextView title = toolbar.findViewById(R.id.settings_toolbar_title);
         title.setText(Label.getLabel("profile_heading"));
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
         callback.setToolbar(toolbar);
 
-        profileImageView = (ImageView) view.findViewById(R.id.providerPicImageView);
-        patientNameValue = (TextView) view.findViewById(R.id.patientNameTextView);
+        profileImageView = view.findViewById(R.id.providerPicImageView);
+        patientNameValue = view.findViewById(R.id.patientNameTextView);
         patientEmailValue = (CarePayTextView) view.findViewById(R.id.patientEmailTextView);
 
         getPersonalDetails();
 
         setClickListeners(view);
 
-        mediaScannerPresenter = new MediaScannerPresenter(getContext(), this, profileImageView,
-                CarePayCameraPreview.CameraType.CAPTURE_PHOTO);
+        if (demographicsSettingsDTO.getPayload().getDelegate() != null) {
+            view.findViewById(R.id.editAccountCredentialsContainer).setVisibility(View.GONE);
+        }
+        setUpBottomSheet(view);
     }
 
     private void getPersonalDetails() {
@@ -128,57 +132,27 @@ public class EditProfileFragment extends BaseFragment implements MediaViewInterf
     }
 
     private void setClickListeners(View view) {
-        Button changeProfilePictureButton = (Button) view.findViewById(R.id.changeCurrentPhotoButton);
-        changeProfilePictureButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mediaScannerPresenter.selectImage(true);
-            }
-
+        Button saveChangesButton = view.findViewById(R.id.buttonAddDemographicInfo);
+        saveChangesButton.setOnClickListener(view1 -> {
+            setupImageBase64();
+            TransitionDTO demographicsSettingsUpdateDemographicsDTO = demographicsSettingsDTO
+                    .getMetadata().getTransitions().getUpdateDemographics();
+            DemographicPayloadDTO demographicPayload = demographicsSettingsDTO.getPayload()
+                    .getDemographics().getPayload();
+            Gson gson = new Gson();
+            String jsonInString = gson.toJson(demographicPayload);
+            getWorkflowServiceHelper().execute(demographicsSettingsUpdateDemographicsDTO,
+                    updateProfileCallback, jsonInString, null);
         });
 
-        Button saveChangesButton = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
-        saveChangesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setupImageBase64();
-                TransitionDTO demographicsSettingsUpdateDemographicsDTO = demographicsSettingsDTO
-                        .getMetadata().getTransitions().getUpdateDemographics();
-                DemographicPayloadDTO demographicPayload = demographicsSettingsDTO.getPayload()
-                        .getDemographics().getPayload();
-                Gson gson = new Gson();
-                String jsonInString = gson.toJson(demographicPayload);
-                getWorkflowServiceHelper().execute(demographicsSettingsUpdateDemographicsDTO,
-                        updateProfileCallback, jsonInString, null);
-            }
-        });
+        TextView patientNameLabel = view.findViewById(R.id.patientChangeNameTextView);
+        patientNameLabel.setOnClickListener(view12 -> callback.displayUpdateNameFragment());
 
-        TextView patientNameLabel = (TextView) view.findViewById(R.id.patientChangeNameTextView);
-        patientNameLabel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.displayUpdateNameFragment();
-            }
+        TextView patientEmailLabel = view.findViewById(R.id.patientChangeEmailTextView);
+        patientEmailLabel.setOnClickListener(view13 -> callback.displayUpdateEmailFragment());
 
-        });
-
-        TextView patientEmailLabel = (TextView) view.findViewById(R.id.patientChangeEmailTextView);
-        patientEmailLabel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.displayUpdateEmailFragment();
-            }
-
-        });
-
-        TextView patientPasswordLabel = (TextView) view.findViewById(R.id.patientChangePasswordTextView);
-        patientPasswordLabel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.displayUpdatePasswordFragment();
-            }
-
-        });
+        TextView patientPasswordLabel = view.findViewById(R.id.patientChangePasswordTextView);
+        patientPasswordLabel.setOnClickListener(view14 -> callback.displayUpdatePasswordFragment());
     }
 
     WorkflowServiceCallback updateProfileCallback = new WorkflowServiceCallback() {
@@ -325,4 +299,56 @@ public class EditProfileFragment extends BaseFragment implements MediaViewInterf
             }
         }
     }
+
+    private void setUpBottomSheet(View view) {
+
+        final View shadow = view.findViewById(R.id.shadow);
+        LinearLayout llBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
+        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
+        bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    shadow.setClickable(false);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                shadow.setAlpha(slideOffset);
+            }
+        });
+
+        View.OnClickListener bottomSheetClickListener = v -> {
+            bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_EXPANDED);
+            shadow.setClickable(true);
+        };
+        Button changeProfilePictureButton = view.findViewById(R.id.changeCurrentPhotoButton);
+        changeProfilePictureButton.setOnClickListener(bottomSheetClickListener);
+
+        Button cancelButton = view.findViewById(R.id.cancelButton);
+        cancelButton.setOnClickListener(v -> bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN));
+        shadow.setOnClickListener(view1 -> bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN));
+        shadow.setClickable(false);
+
+        mediaScannerPresenter = new MediaScannerPresenter(getContext(), this, profileImageView,
+                CarePayCameraPreview.CameraType.CAPTURE_PHOTO);
+        View takePhotoContainer = view.findViewById(R.id.takePhotoContainer);
+        takePhotoContainer.setOnClickListener(view12 -> {
+            mediaScannerPresenter.handlePictureAction();
+            bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
+        });
+
+        View chooseFileContainer = view.findViewById(R.id.chooseFileContainer);
+        chooseFileContainer.setOnClickListener(view13 -> {
+            mediaScannerPresenter.selectFile();
+            bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
+        });
+    }
+
+    private void bottomMenuAction(BottomSheetBehavior bottomSheetBehavior, int stateHidden) {
+        bottomSheetBehavior.setState(stateHidden);
+    }
+
 }

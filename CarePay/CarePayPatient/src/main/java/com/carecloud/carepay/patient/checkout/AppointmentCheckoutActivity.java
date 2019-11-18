@@ -2,14 +2,15 @@ package com.carecloud.carepay.patient.checkout;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.createappointment.AvailabilityHourFragment;
@@ -71,6 +72,7 @@ import com.google.android.gms.wallet.MaskedWallet;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AppointmentCheckoutActivity extends BasePatientActivity implements CheckOutInterface,
@@ -137,7 +139,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.exitFlow) {
             ConfirmDialogFragment fragment = ConfirmDialogFragment
-                    .newInstance(Label.getLabel("checkin_confirm_exit_title"),
+                    .newInstance(Label.getLabel("checkout_confirm_exit_title"),
                             Label.getLabel("checkin_confirm_exit_message"),
                             Label.getLabel("button_no"),
                             Label.getLabel("button_yes"));
@@ -182,6 +184,10 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
             showNextAppointmentFragment(appointmentId);
         } else if (NavigationStateConstants.PATIENT_PAY_CHECKOUT.equals(workflowDTO.getState())) {
             paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+            Bundle bundle = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
+            if (selectedAppointment == null) {
+                selectedAppointment = DtoHelper.getConvertedDTO(AppointmentDTO.class, bundle);
+            }
             showResponsibilityFragment();
         } else if (NavigationStateConstants.PATIENT_FORM_CHECKOUT.equals(workflowDTO.getState())) {
             appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
@@ -381,7 +387,8 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     @Override
     public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
-        String patientId = getAppointment().getMetadata().getPatientId();
+        AppointmentDTO appointment = getAppointment();
+        String patientId = appointment.getMetadata().getPatientId();
         for (UserPracticeDTO userPracticeDTO : paymentsModel.getPaymentPayload().getUserPractices()) {
             if (userPracticeDTO.getPatientId() != null && userPracticeDTO.getPatientId().equals(patientId)) {
                 return userPracticeDTO;
@@ -389,8 +396,8 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         }
 
         UserPracticeDTO userPracticeDTO = new UserPracticeDTO();
-        userPracticeDTO.setPracticeId(getAppointment().getMetadata().getPracticeId());
-        userPracticeDTO.setPracticeMgmt(getAppointment().getMetadata().getPracticeMgmt());
+        userPracticeDTO.setPracticeId(appointment.getMetadata().getPracticeId());
+        userPracticeDTO.setPracticeMgmt(appointment.getMetadata().getPracticeMgmt());
         userPracticeDTO.setPatientId(patientId);
         return userPracticeDTO;
     }
@@ -650,7 +657,13 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     };
 
     private PaymentsPayloadSettingsDTO getPaymentSettings(String practiceId) {
-        for (PaymentsPayloadSettingsDTO settingsDTO : appointmentsResultModel.getPayload().getPaymentSettings()) {
+        List<PaymentsPayloadSettingsDTO> paymentSettings;
+        if (appointmentsResultModel != null) {
+            paymentSettings = appointmentsResultModel.getPayload().getPaymentSettings();
+        } else {
+            paymentSettings = paymentsModel.getPaymentPayload().getPaymentSettings();
+        }
+        for (PaymentsPayloadSettingsDTO settingsDTO : paymentSettings) {
             if (settingsDTO.getMetadata().getPracticeId().equals(practiceId)) {
                 return settingsDTO;
             }

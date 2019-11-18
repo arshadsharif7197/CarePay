@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
+    android:contentDescription="@string/content_description_payment_plan_confirmation_screen"
     android:orientation="vertical">
 
     <LinearLayout
@@ -337,6 +338,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/button_blue_rounded_bottom"
+            android:contentDescription="@string/content_description_ok_button"
             app:customAssetFont="proxima_nova_semi_bold"
             breeze:textKey="payment_ok" />
 

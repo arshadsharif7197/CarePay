@@ -36,12 +36,14 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentMe
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -366,10 +368,10 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
                 MixPanelUtil.incrementPeopleProperty(getString(R.string.total_payments_amount), amountToMakePayment);
             }
 
-            showConfirmation(workflowDTO);
             if (getDialog() != null) {
                 dismiss();
             }
+            showConfirmation(workflowDTO);
 
         }
 
@@ -400,7 +402,9 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     @Override
     public void onCreditCardItemSelected(PaymentCreditCardsPayloadDTO creditCard) {
         selectedCreditCard = creditCard;
-        nextButton.setEnabled(true);
+        Date expDate = DateUtil.getInstance().setDateRaw(creditCard.getExpireDt()).getDate();
+        expDate = DateUtil.getLastDayOfMonth(expDate);
+        nextButton.setEnabled(!expDate.before(new Date()));
     }
 
     protected void showConfirmation(WorkflowDTO workflowDTO) {
