@@ -13,13 +13,15 @@ public interface FragmentActivityInterface extends DTOInterface {
 
     void replaceFragment(Fragment fragment, boolean addToBackStack);
 
-    void showErrorToast(String exceptionMessage);
+    void displayDialogFragment(DialogFragment fragment, boolean addToBackStack);
 
     void setToolbar(Toolbar toolbar);
 
-    void showSuccessToast(String successMessage);
-
     void setActionBarTitle(String title);
 
-    void displayDialogFragment(DialogFragment fragment, boolean addToBackStack);
+    @Deprecated
+    void showSuccessToast(String successMessage);
+
+    @Deprecated
+    void showErrorToast(String exceptionMessage);
 }

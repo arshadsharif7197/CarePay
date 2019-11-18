@@ -23,7 +23,6 @@ import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -47,12 +46,7 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
 
     private void resumeOnCreate() {
         List<ProviderContact> providerContacts = messagingModel.getPayload().getProviderContacts();
-        Collections.sort(providerContacts, new Comparator<ProviderContact>() {
-            @Override
-            public int compare(ProviderContact o1, ProviderContact o2) {
-                return o1.getName().compareTo(o2.getName());
-            }
-        });
+        Collections.sort(providerContacts, (o1, o2) -> o1.getName().compareTo(o2.getName()));
         replaceFragment(new MessagesListFragment(), false);
     }
 
