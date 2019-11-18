@@ -185,6 +185,8 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
         final View shadow = view.findViewById(R.id.shadow);
         LinearLayout llBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
         final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
+        TextView headerLabel = (TextView) findViewById(R.id.totalPatientResponsibilityLabel);
+        headerLabel.setText(Label.getLabel("messaging.create.attachment.actions.title"));
         bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
