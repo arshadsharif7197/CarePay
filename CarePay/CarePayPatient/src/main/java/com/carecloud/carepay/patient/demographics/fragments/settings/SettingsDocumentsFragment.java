@@ -293,19 +293,24 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
     }
 
     private boolean checkIfInsuranceDataMatches(List<DemographicInsurancePayloadDTO> modifiedList) {
-        if (modifiedList.size() > 0) {
-            DemographicInsurancePayloadDTO firstInsurance = modifiedList.get(modifiedList.size() - 1);
-            for (DemographicInsurancePayloadDTO insurance : modifiedList.subList(0, modifiedList.size() - 1)) {
-                boolean match = checkEqualValues(insurance.getInsuranceProvider(), firstInsurance.getInsuranceProvider()) &&
-                        checkEqualValues(insurance.getInsurancePlan(), firstInsurance.getInsurancePlan()) &&
-                        checkEqualValues(insurance.getInsuranceMemberId(), firstInsurance.getInsuranceMemberId());
-                if (match) {
-                    insuranceDataRepeated = showAlert = true;
-                    return true;
+        if (modifiedList.size() > 1) {
+            for (DemographicInsurancePayloadDTO insurance : modifiedList) {
+                if (!insurance.isDeleted()) {
+                    for (DemographicInsurancePayloadDTO insuranceVerify : modifiedList) {
+                        if (!insuranceVerify.isDeleted() && !insurance.equals(insuranceVerify)) {
+                            boolean match = checkEqualValues(insurance.getInsuranceProvider(), insuranceVerify.getInsuranceProvider()) &&
+                                    checkEqualValues(insurance.getInsurancePlan(), insuranceVerify.getInsurancePlan()) &&
+                                    checkEqualValues(insurance.getInsuranceMemberId(), insuranceVerify.getInsuranceMemberId());
+                            if (match) {
+                                insuranceDataRepeated = showAlert = true;
+                                return true;
+                            }
+                        }
+                    }
                 }
             }
         }
-        insuranceDataRepeated = showAlert = false;
+        insuranceDataRepeated = false;
         return false;
     }
 
