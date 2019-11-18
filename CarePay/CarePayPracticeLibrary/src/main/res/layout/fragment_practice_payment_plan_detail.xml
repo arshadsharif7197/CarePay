@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/dialog_height"
+    android:contentDescription="@string/content_description_payment_plan_detail_screen"
     android:orientation="horizontal">
 
     <RelativeLayout
@@ -66,6 +67,7 @@
                 android:layout_marginEnd="@dimen/distributionButtonContainersPadding"
                 android:layout_weight="1"
                 android:background="@drawable/blue_border_rounded_button_selector"
+                android:contentDescription="@string/content_description_payment_plan_edit_button"
                 android:paddingStart="@dimen/dimen_15dp"
                 android:paddingEnd="@dimen/dimen_15dp"
                 android:textColor="@color/colorPrimary"
@@ -208,7 +210,7 @@
 
         </RelativeLayout>
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/footer"
@@ -542,14 +544,14 @@
                     android:layout_height="@dimen/dimen_1dp"
                     android:background="@color/light_gray" />
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/existingChargesRecycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
             </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
 
     </RelativeLayout>
 

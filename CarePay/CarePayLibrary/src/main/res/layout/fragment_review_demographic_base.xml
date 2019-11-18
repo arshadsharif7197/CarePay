@@ -87,7 +87,8 @@
             android:layout_height="@dimen/dimen_48dp"
             android:background="@drawable/button_selector_always_click"
             android:enabled="true"
-            breeze:textKey="demographics_review_next_button" />
+            breeze:textKey="demographics_review_next_button"
+            android:contentDescription="@string/content_description_next_button"/>
 
     </LinearLayout>
 

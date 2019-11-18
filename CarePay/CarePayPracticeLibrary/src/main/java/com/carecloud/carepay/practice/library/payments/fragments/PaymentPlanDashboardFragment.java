@@ -2,26 +2,31 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.adapter.PaymentPlanDashboardAdapter;
-import com.carecloud.carepay.practice.library.payments.interfaces.PaymentPlanDashboardInterface;
+import com.carecloud.carepay.practice.library.payments.dialogs.PracticePaymentPlanDetailsDialogFragment;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -35,7 +40,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
         implements PaymentPlanDashboardAdapter.PaymentPlanDashboardItemInterface {
 
     private PaymentsModel paymentsModel;
-    private PaymentPlanDashboardInterface callback;
+    private PaymentPlanCreateInterface callback;
     private boolean hasBalanceForPaymentPlan;
 
     private RecyclerView currentPaymentPlansRecycler;
@@ -54,7 +59,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (PaymentPlanDashboardInterface) context;
+            callback = (PaymentPlanCreateInterface) context;
         } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement PracticePaymentNavigationCallback");
         }
@@ -106,13 +111,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
         }
 
         View closeButton = view.findViewById(R.id.closeViewLayout);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-                callback.onDismissPaymentPlan(paymentsModel);
-            }
-        });
+        closeButton.setOnClickListener(v -> cancel());
 
     }
 
@@ -172,19 +171,34 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
         Button createPaymentPlanButton = view.findViewById(R.id.createPaymentPlanButton);
         Button createNewPlanButton = view.findViewById(R.id.createNewPlanButton);
 
-        View.OnClickListener createListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callback.onPaymentPlanAction(paymentsModel);
-                dismiss();
-            }
-        };
+        View.OnClickListener createListener = v -> showPaymentPlanCreationScreen();
 
         createPaymentPlanButton.setOnClickListener(createListener);
         createPaymentPlanButton.setEnabled(userHasPermissionsToCreatePaymentPlan() && hasBalanceForPaymentPlan);
         createNewPlanButton.setOnClickListener(createListener);
         createNewPlanButton.setEnabled(userHasPermissionsToCreatePaymentPlan() && hasBalanceForPaymentPlan);
 
+    }
+
+    private void showPaymentPlanCreationScreen() {
+        PendingBalanceDTO selectedBalance = paymentsModel.getPaymentPayload()
+                .getPatientBalances().get(0).getBalances().get(0);
+        PracticeModePaymentPlanFragment fragment = PracticeModePaymentPlanFragment
+                .newInstance(paymentsModel, selectedBalance);
+        fragment.setOnCancelListener(dialog -> showDialog());
+        callback.displayDialogFragment(fragment, false);
+        logMixPanelPaymentPlanStartedEvent(selectedBalance);
+        hideDialog();
+    }
+
+    private void logMixPanelPaymentPlanStartedEvent(PendingBalanceDTO selectedBalance) {
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_balance_amount),
+                getString(R.string.param_is_add_existing)};
+        Object[] values = {selectedBalance.getMetadata().getPracticeId(),
+                selectedBalance.getPayload().get(0).getAmount()
+                        - selectedBalance.getPayload().get(0).getPaymentPlansAmount(), false};
+        MixPanelUtil.logEvent(getString(R.string.event_paymentplan_started), params, values);
     }
 
     private boolean hasBalanceForPaymentPlan() {
@@ -211,14 +225,35 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
 
     @Override
     public void onAddBalanceClicked(PaymentPlanDTO paymentPlan) {
-        callback.onAddBalanceToExistingPlan(paymentsModel, paymentPlan);
-        dismiss();
+        PracticeModeAddToExistingPaymentPlanFragment fragment = PracticeModeAddToExistingPaymentPlanFragment
+                .newInstance(paymentsModel, paymentPlan);
+        fragment.setOnCancelListener(dialog -> showDialog());
+        callback.displayDialogFragment(fragment, true);
+        hideDialog();
+
+        logMixPanelAddToBalanceEvent();
+    }
+
+    private void logMixPanelAddToBalanceEvent() {
+        PendingBalanceDTO selectedBalance = paymentsModel.getPaymentPayload()
+                .getPatientBalances().get(0).getBalances().get(0);
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_balance_amount),
+                getString(R.string.param_is_add_existing)};
+        Object[] values = {selectedBalance.getMetadata().getPracticeId(),
+                selectedBalance.getPayload().get(0).getAmount() - selectedBalance.getPayload().get(0).getPaymentPlansAmount(),
+                true};
+
+        MixPanelUtil.logEvent(getString(R.string.event_paymentplan_started), params, values);
     }
 
     @Override
     public void onDetailClicked(PaymentPlanDTO paymentPlan, boolean completed) {
-        callback.showPaymentPlanDetail(paymentsModel, paymentPlan, completed);
-        dismiss();
+        PracticePaymentPlanDetailsDialogFragment fragment = PracticePaymentPlanDetailsDialogFragment
+                .newInstance(paymentsModel, paymentPlan, completed);
+        fragment.setOnCancelListener(dialog -> showDialog());
+        callback.displayDialogFragment(fragment, true);
+        hideDialog();
     }
 
     @Override
@@ -228,7 +263,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.clear();
     }

@@ -1,19 +1,21 @@
 package com.carecloud.carepay.patient.payment.androidpay;
 
-import android.arch.persistence.db.SupportSQLiteDatabase;
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.Room;
-import android.arch.persistence.room.RoomDatabase;
-import android.arch.persistence.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
+import androidx.room.Database;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
+
 import android.content.Context;
 
+import com.carecloud.carepay.patient.db.AndroidPayQueuePaymentRecordDao;
 import com.carecloud.carepay.patient.payment.androidpay.models.AndroidPayQueuePaymentRecord;
 
 
 /**
  * @author pjohnson on 2/27/19.
  */
-@Database(entities = {AndroidPayQueuePaymentRecord.class}, version = 1)
+@Database(entities = {AndroidPayQueuePaymentRecord.class}, version = 1, exportSchema = false)
 public abstract class BreezeDataBase extends RoomDatabase {
 
     private static volatile BreezeDataBase INSTANCE;

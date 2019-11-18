@@ -32,7 +32,7 @@
 
     </LinearLayout>
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
@@ -141,7 +141,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="9dp">
 
-                    <android.support.design.widget.TextInputLayout
+                    <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/demogrDetailsDobInputText"
                         style="@style/SigninSignupTextInputStyle"
                         android:layout_marginStart="0dp"
@@ -155,7 +155,7 @@
                             android:inputType="date"
                             android:digits="@string/restrict_digits_slash"
                             android:maxLength="10"/>
-                    </android.support.design.widget.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
 
                     <TextView
                         android:id="@+id/demogrDetailsDobHint"
@@ -165,7 +165,7 @@
 
             </LinearLayout>
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <Button
         android:id="@+id/demographicsDetailsNextButton"

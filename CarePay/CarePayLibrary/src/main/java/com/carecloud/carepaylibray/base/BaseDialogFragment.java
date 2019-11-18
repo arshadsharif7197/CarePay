@@ -4,7 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,9 +37,11 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
 
     private DialogInterface.OnDismissListener onDismissListener;
     protected DialogInterface.OnCancelListener onCancelListener;
+    protected OnBackPressedInterface onBackPressedInterface;
 
     private long lastFullScreenSet;
-    private BlurDialogEngine mBlurEngine = null;
+    private BlurDialogEngine mBlurEngine;
+    private boolean blurDismissed;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -106,6 +108,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         }
         if (mBlurEngine != null) {
             mBlurEngine.onDismiss();
+            blurDismissed = true;
         }
     }
 
@@ -113,6 +116,9 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     public void onDestroy() {
         super.onDestroy();
         if (mBlurEngine != null) {
+            if (!blurDismissed) {
+                mBlurEngine.onDismiss();
+            }
             mBlurEngine.onDetach();
         }
     }
@@ -291,12 +297,28 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         }
     }
 
+    public void showDialog(boolean showBlur) {
+        if (getDialog() != null) {
+            getDialog().show();
+            if (showBlur && mBlurEngine != null) {
+                mBlurEngine.onResume(getRetainInstance());
+            }
+        }
+    }
+
     /**
      * hide dialog fragment without dismissing
      */
     public void hideDialog() {
+        hideDialog(false);
+    }
+
+    public void hideDialog(boolean hideBlur) {
         if (getDialog() != null) {
             getDialog().hide();
+            if (hideBlur && mBlurEngine != null) {
+                mBlurEngine.onDismiss();
+            }
         }
     }
 
@@ -310,5 +332,27 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
                     | FULLSCREEN_VALUE;
             decorView.setSystemUiVisibility(uiOptions);
         }
+    }
+
+    protected DialogInterface.OnCancelListener onDialogCancelListener = new DialogInterface.OnCancelListener() {
+        @Override
+        public void onCancel(DialogInterface dialogInterface) {
+            showDialog();
+        }
+    };
+
+    public void onBackPressed() {
+        getActivity().onBackPressed();
+        if (onBackPressedInterface != null) {
+            onBackPressedInterface.onBackPressed();
+        }
+    }
+
+    public void setOnBackPressedListener(OnBackPressedInterface onBackPressedInterface) {
+        this.onBackPressedInterface = onBackPressedInterface;
+    }
+
+    public interface OnBackPressedInterface {
+        void onBackPressed();
     }
 }

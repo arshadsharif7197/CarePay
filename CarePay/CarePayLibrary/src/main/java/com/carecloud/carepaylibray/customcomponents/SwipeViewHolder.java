@@ -1,6 +1,6 @@
 package com.carecloud.carepaylibray.customcomponents;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 /**

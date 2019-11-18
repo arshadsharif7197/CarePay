@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/dialog_height"
+    android:contentDescription="@string/content_description_payment_plan_screen"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -36,8 +37,8 @@
     <RelativeLayout
         android:layout_width="@dimen/payment_distribution_dialog_width"
         android:layout_height="@dimen/payment_distibution_dialog_height"
-        android:layout_marginEnd="@dimen/dimen_26dp"
         android:layout_marginStart="@dimen/dimen_26dp"
+        android:layout_marginEnd="@dimen/dimen_26dp"
         android:orientation="vertical">
 
         <FrameLayout
@@ -68,6 +69,7 @@
                 android:layout_height="@dimen/commonButtonHeight"
                 android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:background="@drawable/green_rounded_button_selector_always_click"
+                android:contentDescription="@string/content_description_create_payment_plan_button"
                 android:gravity="center"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
@@ -101,10 +103,10 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/dimen_8dp"
                 android:background="@drawable/bg_green_border_trans"
-                android:paddingBottom="@dimen/roundedValueVerticalPadding"
-                android:paddingEnd="@dimen/roundedValueHorizontalPadding"
                 android:paddingStart="@dimen/roundedValueHorizontalPadding"
                 android:paddingTop="@dimen/roundedValueVerticalPadding"
+                android:paddingEnd="@dimen/roundedValueHorizontalPadding"
+                android:paddingBottom="@dimen/roundedValueVerticalPadding"
                 android:textColor="@color/emerald"
                 android:textSize="@dimen/amountLabelTextSize"
                 app:customAssetFont="proxima_nova_semi_bold"
@@ -139,8 +141,8 @@
                 android:layout_width="@dimen/dimen_1dp"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/dimen_8dp"
                 android:layout_marginStart="@dimen/dimen_8dp"
+                android:layout_marginEnd="@dimen/dimen_8dp"
                 android:layout_toStartOf="@id/paymentLabel"
                 android:background="@color/Feldgrau" />
 
@@ -149,8 +151,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/dimen_8dp"
                 android:layout_marginStart="@dimen/dimen_8dp"
+                android:layout_marginEnd="@dimen/dimen_8dp"
                 android:layout_toStartOf="@id/paymentValueSeparator"
                 android:textColor="@color/light_gray_dialog"
                 android:textSize="@dimen/amountLabelTextSize"
@@ -186,8 +188,8 @@
                 android:layout_width="@dimen/dimen_1dp"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/dimen_8dp"
                 android:layout_marginStart="@dimen/dimen_8dp"
+                android:layout_marginEnd="@dimen/dimen_8dp"
                 android:layout_toStartOf="@id/balanceLabel"
                 android:background="@color/Feldgrau" />
 
@@ -196,8 +198,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/dimen_8dp"
                 android:layout_marginStart="@dimen/dimen_8dp"
+                android:layout_marginEnd="@dimen/dimen_8dp"
                 android:layout_toStartOf="@id/balanceLabelSeparator"
                 android:textColor="@color/light_gray_dialog"
                 android:textSize="@dimen/amountLabelTextSize"
@@ -230,11 +232,12 @@
 
         </RelativeLayout>
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/divider"
-            android:layout_below="@id/amountsContainer">
+            android:layout_below="@id/amountsContainer"
+            android:contentDescription="@string/content_description_payment_plan_scroll">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -242,10 +245,11 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/itemRecycler"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/content_description_payment_plan_item_list" />
 
                 <LinearLayout
                     android:id="@+id/existingChargesLayout"
@@ -258,9 +262,9 @@
                         android:id="@+id/existingChargesLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/itemDashboardFieldMargin"
                         android:layout_marginStart="@dimen/dashboardLabelStartMargin"
                         android:layout_marginTop="@dimen/dashboardLabelTopMargin"
+                        android:layout_marginBottom="@dimen/itemDashboardFieldMargin"
                         android:textAllCaps="true"
                         android:textColor="@color/textview_default_textcolor"
                         android:textSize="@dimen/dashboardLabelTextSize"
@@ -273,7 +277,7 @@
                         android:layout_height="@dimen/dimen_1dp"
                         android:background="@color/light_gray" />
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/existingChargesRecycler"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
@@ -284,9 +288,9 @@
                     android:id="@+id/settingsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/itemDashboardFieldMargin"
                     android:layout_marginStart="@dimen/dashboardLabelStartMargin"
                     android:layout_marginTop="@dimen/dashboardLabelTopMargin"
+                    android:layout_marginBottom="@dimen/itemDashboardFieldMargin"
                     android:textAllCaps="true"
                     android:textColor="@color/textview_default_textcolor"
                     android:textSize="@dimen/dashboardLabelTextSize"
@@ -297,8 +301,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/dashboardLabelStartMargin"
                     android:layout_marginStart="@dimen/dashboardLabelStartMargin"
+                    android:layout_marginEnd="@dimen/dashboardLabelStartMargin"
                     android:orientation="vertical">
 
                     <FrameLayout
@@ -316,6 +320,7 @@
                             <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                                 android:id="@+id/paymentPlanName"
                                 style="@style/DemographicsReviewEditTextStyle"
+                                android:contentDescription="@string/content_description_payment_plan_name"
                                 android:imeOptions="actionNext"
                                 app:customAssetFont="proxima_nova_regular"
                                 app:hintTextAppearance="@style/FloatingLabelStyle"
@@ -432,6 +437,7 @@
                                 <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                                     android:id="@+id/paymentMonthCount"
                                     style="@style/DemographicsReviewEditTextStyle"
+                                    android:contentDescription="@string/content_description_number_of_months"
                                     android:imeOptions="actionNext"
                                     android:inputType="number"
                                     android:textColor="@color/primary_color_enabled_selector"
@@ -487,8 +493,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:paddingEnd="@dimen/dimen_10dp"
                         android:paddingStart="@dimen/dimen_10dp"
+                        android:paddingEnd="@dimen/dimen_10dp"
                         android:textColor="@color/optional_gray"
                         android:textSize="@dimen/addNewCardButtonTextSize"
                         android:visibility="invisible"
@@ -501,9 +507,9 @@
                     android:id="@+id/creditCardLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/itemDashboardFieldMargin"
                     android:layout_marginStart="@dimen/dashboardLabelStartMargin"
                     android:layout_marginTop="@dimen/dashboardLabelTopMargin"
+                    android:layout_marginBottom="@dimen/itemDashboardFieldMargin"
                     android:textAllCaps="true"
                     android:textColor="@color/textview_default_textcolor"
                     android:textSize="@dimen/dashboardLabelTextSize"
@@ -511,7 +517,7 @@
                     breeze:textKey="payment.createPaymentPlan.section.title.creditCard"
                     tools:text="Credit Card" />
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/creditCardRecycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -524,11 +530,11 @@
                     android:layout_height="@dimen/commonButtonHeight"
                     android:layout_gravity="end"
                     android:layout_marginTop="@dimen/dimen_10dp"
-                    android:layout_marginBottom="@dimen/dimen_10dp"
                     android:layout_marginEnd="@dimen/dimen_15dp"
+                    android:layout_marginBottom="@dimen/dimen_10dp"
                     android:background="@drawable/blue_border_rounded_button_selector"
-                    android:paddingEnd="@dimen/dimen_20dp"
                     android:paddingStart="@dimen/dimen_20dp"
+                    android:paddingEnd="@dimen/dimen_20dp"
                     android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/respons_button_text_size"
                     app:customAssetFont="gotham_rounded_medium"
@@ -536,7 +542,7 @@
 
             </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
 
     </RelativeLayout>
 

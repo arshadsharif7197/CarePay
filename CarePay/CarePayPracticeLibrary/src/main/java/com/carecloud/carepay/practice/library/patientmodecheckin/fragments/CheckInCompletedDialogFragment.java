@@ -2,10 +2,10 @@ package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.adhocforms.AdHocRecyclerViewNameAdapter;
+import com.carecloud.carepay.practice.library.adhocforms.adapters.AdHocRecyclerViewNameAdapter;
 import com.carecloud.carepay.practice.library.patientmodecheckin.interfaces.CheckCompleteInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.Defs;

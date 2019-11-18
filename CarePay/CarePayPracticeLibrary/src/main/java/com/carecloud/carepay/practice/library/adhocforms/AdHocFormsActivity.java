@@ -1,35 +1,32 @@
 package com.carecloud.carepay.practice.library.adhocforms;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.adhocforms.adapters.AdHocRecyclerViewAdapter;
+import com.carecloud.carepay.practice.library.adhocforms.fragments.AdHocFormFragment;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
-import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
 import com.carecloud.carepay.practice.library.customdialog.ConfirmationPinDialog;
-import com.carecloud.carepay.practice.library.patientmodecheckin.activities.CompleteCheckActivity;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.adhoc.AdhocFormsPatientModeInfo;
 import com.carecloud.carepaylibray.adhoc.SelectedAdHocForms;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
-import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
 import com.carecloud.carepaylibray.consentforms.models.datamodels.practiceforms.PracticeForm;
 import com.carecloud.carepaylibray.interfaces.DTO;
-import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 
@@ -88,12 +85,7 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
         header.setText(Label.getLabel(forms.size() > 1 ?
                 "adhoc_form_left_message" : "adhoc_form_left_message_singular"));
 
-        View.OnClickListener goBackClicListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showPinDialog();
-            }
-        };
+        View.OnClickListener goBackClicListener = view -> showPinDialog();
         findViewById(R.id.goBackImageView).setOnClickListener(goBackClicListener);
 
         TextView backTextView = findViewById(R.id.goBackTextView);
@@ -106,27 +98,14 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
         final Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
         headers.put("username_patient", getApplicationPreferences().getPatientId());
         final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), true,
-                adhocFormsModel.getPayload().getLanguages(), new LanguageAdapter.LanguageInterface() {
-            @Override
-            public void onLanguageSelected(OptionDTO language) {
-                changeLanguage(adhocFormsModel.getMetadata().getLinks().getLanguage(),
-                        language.getCode().toLowerCase(), headers, new SimpleCallback() {
-                            @Override
-                            public void callback() {
-                                refreshSelfDto();
-                            }
-                        });
-
-            }
-        });
+                adhocFormsModel.getPayload().getLanguages(), language -> changeLanguage(adhocFormsModel
+                        .getMetadata().getLinks().getLanguage(),
+                language.getCode().toLowerCase(), headers, () -> refreshSelfDto()));
         final TextView languageSwitch = findViewById(R.id.languageSpinner);
-        languageSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int offsetX = view.getWidth() / 2 - popupPickerLanguage.getWidth() / 2;
-                int offsetY = -view.getHeight() - popupPickerLanguage.getHeight();
-                popupPickerLanguage.showAsDropDown(view, offsetX, offsetY);
-            }
+        languageSwitch.setOnClickListener(view -> {
+            int offsetX = view.getWidth() / 2 - popupPickerLanguage.getWidth() / 2;
+            int offsetY = -view.getHeight() - popupPickerLanguage.getHeight();
+            popupPickerLanguage.showAsDropDown(view, offsetX, offsetY);
         });
         languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
     }
@@ -168,6 +147,9 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
 
     @Override
     public DTO getDto() {
+        if (adhocFormsModel == null) {
+            adhocFormsModel = getConvertedDTO(AdHocFormsModel.class);
+        }
         return adhocFormsModel;
     }
 
@@ -192,23 +174,9 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
     }
 
     @Override
-    public void showAllDone(WorkflowDTO workflowDTO) {
-        WorkFlowRecord workFlowRecord = new WorkFlowRecord(workflowDTO);
-        workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
-        Bundle bundle = new Bundle();
-        bundle.putLong(CarePayConstants.EXTRA_WORKFLOW, workFlowRecord.save(getContext()));
-        bundle.putBoolean(CarePayConstants.ADHOC_FORMS, true);
-        Intent intent = new Intent(this, CompleteCheckActivity.class);
-        intent.putExtra(CarePayConstants.EXTRA_BUNDLE, bundle);
-        startActivity(intent);
-
-        String[] params = {getString(R.string.param_practice_id),
-                getString(R.string.param_patient_id),
-                getString(R.string.param_forms_count)};
-        Object[] values = {getApplicationMode().getUserPracticeDTO().getPracticeId(),
-                adhocFormsModel.getPayload().getAdhocFormsPatientModeInfo().getMetadata().getPatientId(),
-                forms.size()};
-        MixPanelUtil.logEvent(getString(R.string.event_adhoc_forms_completed), params, values);
+    public void showAllDone(AdHocFormCompletedDialogFragment fragment) {
+        findViewById(R.id.allDoneContainer).setVisibility(View.VISIBLE);
+        addFragment(R.id.allDoneContainer, fragment, true);
     }
 
     @Override
@@ -266,5 +234,15 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
                 adhocFormsModel.getPayload().getAdhocFormsPatientModeInfo().getMetadata().getPatientId()};
         MixPanelUtil.logEvent(getString(R.string.event_adhoc_forms_started), params, values);
 
+    }
+
+    @Override
+    public boolean manageSession() {
+        return true;
+    }
+
+    @Override
+    public TransitionDTO getLogoutTransition() {
+        return adhocFormsModel.getMetadata().getTransitions().getLogout();
     }
 }

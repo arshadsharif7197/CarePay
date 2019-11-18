@@ -1,16 +1,16 @@
 package com.carecloud.carepay.practice.library.retail;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
-import com.carecloud.carepay.practice.library.payments.fragments.PracticeAddNewCreditCardFragment;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodDialogFragment;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
@@ -18,7 +18,6 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
-import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentMethodDialogInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
@@ -154,9 +153,10 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
 
     @Override
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
-        PracticeAddNewCreditCardFragment fragment = PracticeAddNewCreditCardFragment
-                .newInstance(paymentsModel, amount);
-        displayDialogFragment(fragment, true);
+        //TODO: Delete this when refactor. This code is not used anymore
+//        PracticeAddNewCreditCardFragment fragment = PracticeAddNewCreditCardFragment
+//                .newInstance(paymentsModel, amount);
+//        displayDialogFragment(fragment, true);
     }
 
     @Override
@@ -190,21 +190,21 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
     }
 
     @Override
-    public void onPaymentPlanAction(PaymentsModel paymentsModel) {
+    public void onPaymentCashFinished() {
 
     }
 
     @Override
     public void onPaymentMethodAction(PaymentsMethodsDTO selectedPaymentMethod, double amount,
                                       PaymentsModel paymentsModel) {
-        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
-                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
-            ChooseCreditCardFragment fragment = ChooseCreditCardFragment.newInstance(paymentsModel,
-                    selectedPaymentMethod.getLabel(), amount);
-            displayDialogFragment(fragment, true);
-        } else {
-            showAddCard(amount, paymentsModel);
-        }
+//        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
+//                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+//            ChooseCreditCardFragment fragment = ChooseCreditCardFragment.newInstance(paymentsModel,
+//                    selectedPaymentMethod.getLabel(), amount);
+//            displayDialogFragment(fragment, true);
+//        } else {
+//            showAddCard(amount, paymentsModel);
+//        }
     }
 
     @Nullable
@@ -238,13 +238,6 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
     }
 
     @Override
-    public void onDismissPaymentMethodDialog(PaymentsModel paymentsModel) {
-        //when dismissing the payment method dialog the nav bar was showing up
-        setSystemUiVisibility();
-        setNavigationBarVisibility();
-    }
-
-    @Override
     public void onCashSelected(PaymentsModel paymentsModel) {
         //Not implemented
     }
@@ -256,5 +249,15 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
             MixPanelUtil.endTimer(getString(R.string.timer_shopping));
         }
         super.onStop();
+    }
+
+    @Override
+    public boolean manageSession() {
+        return true;
+    }
+
+    @Override
+    public TransitionDTO getLogoutTransition() {
+        return retailModel.getMetadata().getTransitions().getLogout();
     }
 }

@@ -1,7 +1,9 @@
 package com.carecloud.carepay.practice.library.payments.dialogs;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,7 +64,7 @@ public class FormsResponsibilityFragmentDialog extends ResponsibilityFragmentDia
 
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         View addAppt = view.findViewById(R.id.payment_pay_button);
