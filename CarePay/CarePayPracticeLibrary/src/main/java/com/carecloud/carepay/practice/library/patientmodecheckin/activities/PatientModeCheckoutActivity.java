@@ -146,8 +146,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     private void initViews() {
-        View logout = findViewById(R.id.logoutTextview);
-        logout.setOnClickListener(homeClick);
         View home = findViewById(R.id.btnHome);
         home.setOnClickListener(homeClick);
     }

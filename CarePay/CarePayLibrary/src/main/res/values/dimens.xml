@@ -3,7 +3,7 @@
 
     <!--Common-->
     <dimen name="errorTextSize">10sp</dimen>
-    <dimen name="hint_floating_size">10sp</dimen>
+    <dimen name="hint_floating_size">14sp</dimen>
     <dimen name="textview_default_textsize">17sp</dimen>
     <dimen name="dialog_profile_pic_size">88dp</dimen>
 
@@ -471,7 +471,7 @@
     <dimen name="paymentDetailLabelTextSize">16sp</dimen>
     <dimen name="paymentDetailAmountTextSize">15sp</dimen>
     <dimen name="paymentDetailDateTextSize">12sp</dimen>
-    <dimen name="nextAppointmentProviderImageSize">80dp</dimen>
+    <dimen name="nextAppointmentProviderImageSize">100dp</dimen>
     <dimen name="availableHourItemTextSize">14sp</dimen>
     <dimen name="reasonForVisitHorizontalMargin">14dp</dimen>
     <dimen name="visitTypeContainerVerticalPadding">15dp</dimen>
