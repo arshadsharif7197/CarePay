@@ -21,6 +21,7 @@ import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.adapters.InsuranceLineItemsListAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.InsuranceModelProperties;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
 import com.carecloud.carepaylibray.demographics.misc.CheckinFlowCallback;
@@ -119,11 +120,12 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
         super.onViewCreated(view, savedInstanceState);
         RecyclerView recyclerView = ((RecyclerView) findViewById(R.id.available_health_insurance_list));
         if (recyclerView != null) {
-            if (adapter == null) {
-                List<DemographicInsurancePayloadDTO> insuranceList = getInsurances(demographicDTO);
-                adapter = new InsuranceLineItemsListAdapter(getContext(), insuranceList, this,
-                        getApplicationMode().getApplicationType());
-            }
+            final InsuranceModelProperties insuranceModelProperties = demographicDTO.getMetadata()
+                    .getNewDataModel().getDemographic().getInsurances().getProperties().getItems()
+                    .getInsuranceModel().getInsuranceModelProperties();
+            List<DemographicInsurancePayloadDTO> insuranceList = getInsurances(demographicDTO);
+            adapter = new InsuranceLineItemsListAdapter(getContext(), insuranceList, this,
+                    getApplicationMode().getApplicationType(), insuranceModelProperties);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.setAdapter(adapter);
         }

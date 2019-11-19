@@ -12,6 +12,8 @@ import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
+import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.InsuranceModelProperties;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
@@ -27,6 +29,7 @@ public class InsuranceLineItemsListAdapter extends
     private ApplicationMode.ApplicationType applicationType;
     private OnInsuranceEditClickListener listener;
     private List<DemographicInsurancePayloadDTO> insuranceList = new ArrayList<>();
+    private InsuranceModelProperties insuranceModelProperties;
 
     /**
      * @param context         context
@@ -42,6 +45,25 @@ public class InsuranceLineItemsListAdapter extends
         this.listener = listener;
         this.applicationType = applicationType;
         this.insuranceList = insuranceList;
+    }
+
+    /**
+     * @param context         context
+     * @param insuranceList   list of insurances
+     * @param listener        the listener
+     * @param applicationType the application type
+     * @param insuranceModelProperties insurance model properties
+     */
+    public InsuranceLineItemsListAdapter(Context context, List<DemographicInsurancePayloadDTO> insuranceList,
+                                         OnInsuranceEditClickListener listener,
+                                         ApplicationMode.ApplicationType applicationType,
+                                         InsuranceModelProperties insuranceModelProperties) {
+
+        this.context = context;
+        this.listener = listener;
+        this.applicationType = applicationType;
+        this.insuranceList = insuranceList;
+        this.insuranceModelProperties = insuranceModelProperties;
     }
 
     @Override
@@ -103,7 +125,7 @@ public class InsuranceLineItemsListAdapter extends
                 holder.name.setTextColor(context.getResources().getColor(R.color.textview_default_textcolor));
                 holder.edit.setText(Label.getLabel("practice_checin_edit_clickable_label"));
             }
-            holder.type.setText(StringUtil.capitalize(lineItem.getInsuranceType()));
+            holder.type.setText(StringUtil.capitalize(getInsuranceTypeLabel(lineItem.getInsuranceType())));
         }
 
         holder.edit.setOnClickListener(new View.OnClickListener() {
@@ -150,6 +172,16 @@ public class InsuranceLineItemsListAdapter extends
 
     private boolean checkEqualValues(String value1, String value2) {
         return StringUtils.equalsIgnoreCase(value1, value2) || StringUtils.isEmpty(value1) && StringUtils.isEmpty(value2);
+    }
+
+    private String getInsuranceTypeLabel(String insuranceType) {
+        List<DemographicsOption> options = insuranceModelProperties.getInsuranceType().getOptions();
+        for (DemographicsOption option : options) {
+            if (option.getName().equals(insuranceType)) {
+                return option.getLabel();
+            }
+        }
+        return insuranceType;
     }
 
 

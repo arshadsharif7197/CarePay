@@ -490,7 +490,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
 
                     }
                 }, false);
-
         if (editedIndex != NEW_INSURANCE) {
             String policyHolderRelation = selectedRelationshipOption.getName().toLowerCase();
             isDataHolderSelf = policyHolderRelation.equals(KEY_POLICY_HOLDER_SELF) || policyHolderRelation.equals(KEY_POLICY_HOLDER_SELF_ES);
@@ -1152,8 +1151,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         if (demographicsOption != null) {
             editText.setOnClickListener(getEditTextClickListener(options, inputLayout, editText,
                     demographicsOption, optionDialogTitle, requiredListener));
-            demographicsOption.setName(editText.getText().toString());
-            demographicsOption.setLabel(editText.getText().toString());
+            DemographicsOption option = getOptionByKey((List<DemographicsOption>) options, keyName, demographicsOption);
+            demographicsOption.setName(keyName != null ? option.getName() : editText.getText().toString());
+            demographicsOption.setLabel(keyName != null ? option.getLabel() : editText.getText().toString());
         }
         if (requiredViewId != null) {
             View requiredView = view.findViewById(requiredViewId);
