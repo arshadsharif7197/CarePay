@@ -1,20 +1,23 @@
 package com.carecloud.carepay.patient.myhealth.fragments;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
+
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.myhealth.MyHealthViewModel;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthProviderDto;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
@@ -33,6 +36,7 @@ public class CareTeamDetailFragment extends BaseFragment {
 
     private MyHealthInterface callback;
     private MyHealthProviderDto provider;
+    private MyHealthDto myHealthDto;
 
     public CareTeamDetailFragment() {
 
@@ -69,11 +73,12 @@ public class CareTeamDetailFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+        MyHealthViewModel model = ViewModelProviders.of(getActivity()).get(MyHealthViewModel.class);
+        myHealthDto = model.getMyHealthDto().getValue();
         provider = getProvider(getArguments().getInt("providerId"));
     }
 
     private MyHealthProviderDto getProvider(int providerId) {
-        MyHealthDto myHealthDto = (MyHealthDto) callback.getDto();
         for (MyHealthProviderDto provider : myHealthDto.getPayload().getMyHealthData().getProviders().getProviders()) {
             if (providerId == provider.getId()) {
                 return provider;
@@ -84,17 +89,17 @@ public class CareTeamDetailFragment extends BaseFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_care_team_detail, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUpToolbar(view);
         setUpUI(view);
-
     }
 
     private void setUpUI(View view) {
@@ -133,31 +138,15 @@ public class CareTeamDetailFragment extends BaseFragment {
         cityValueTextView.setText(provider.getAddress().getAddress().getCity());
         TextView phoneValueTextView = view.findViewById(R.id.phoneValueTextView);
         phoneValueTextView.setText(provider.getPhone());
-        phoneValueTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialPhoneNumber(provider.getPhone());
-            }
-        });
-        view.findViewById(R.id.medicalRecordButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage(Label.getLabel("my_health_download_confirm_message"))
-                        .setPositiveButton(Label.getLabel("my_health_confirm_download_button_label"),
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        callback.onSeeAllFullMedicalRecordClicked(provider);
-                                    }
-                                })
-                        .setNegativeButton(Label.getLabel("my_health_cancel"),
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                builder.create().show();
-            }
+        phoneValueTextView.setOnClickListener(view1 -> dialPhoneNumber(provider.getPhone()));
+        view.findViewById(R.id.medicalRecordButton).setOnClickListener(view12 -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(Label.getLabel("my_health_download_confirm_message"))
+                    .setPositiveButton(Label.getLabel("my_health_confirm_download_button_label"),
+                            (dialog, id) -> callback.onSeeAllFullMedicalRecordClicked(provider))
+                    .setNegativeButton(Label.getLabel("my_health_cancel"),
+                            (dialog, id) -> dialog.dismiss());
+            builder.create().show();
         });
     }
 
@@ -173,12 +162,7 @@ public class CareTeamDetailFragment extends BaseFragment {
         callback.displayToolbar(false, null);
         Toolbar toolbar = view.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
         TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(Label.getLabel("my_health_care_team_detail_title"));
     }
