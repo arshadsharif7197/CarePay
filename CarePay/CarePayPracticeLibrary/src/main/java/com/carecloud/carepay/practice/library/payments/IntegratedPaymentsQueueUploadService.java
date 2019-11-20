@@ -4,7 +4,7 @@ import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.carecloud.carepay.practice.library.base.BreezeDataBase;
 import com.carecloud.carepay.practice.library.payments.models.IntegratedPaymentQueueRecord;

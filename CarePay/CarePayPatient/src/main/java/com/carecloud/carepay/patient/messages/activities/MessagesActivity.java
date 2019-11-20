@@ -1,12 +1,12 @@
 package com.carecloud.carepay.patient.messages.activities;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.MenuItem;
+
+import androidx.fragment.app.Fragment;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.base.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
+import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.messages.MessageNavigationCallback;
 import com.carecloud.carepay.patient.messages.fragments.MessagesConversationFragment;
 import com.carecloud.carepay.patient.messages.fragments.MessagesListFragment;
@@ -15,11 +15,14 @@ import com.carecloud.carepay.patient.messages.models.MessagingModel;
 import com.carecloud.carepay.patient.messages.models.ProviderContact;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.profile.Profile;
+import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -43,12 +46,7 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
 
     private void resumeOnCreate() {
         List<ProviderContact> providerContacts = messagingModel.getPayload().getProviderContacts();
-        Collections.sort(providerContacts, new Comparator<ProviderContact>() {
-            @Override
-            public int compare(ProviderContact o1, ProviderContact o2) {
-                return o1.getName().compareTo(o2.getName());
-            }
-        });
+        Collections.sort(providerContacts, (o1, o2) -> o1.getName().compareTo(o2.getName()));
         replaceFragment(new MessagesListFragment(), false);
     }
 
@@ -83,9 +81,8 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
     }
 
     private void setupToolbar() {
-        MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_messages);
-        menuItem.setChecked(true);
-        displayToolbar(true, menuItem.getTitle().toString());
+        selectMenuItem(R.id.messagesMenuItem);
+        displayToolbar(true, getScreenTitle(Label.getLabel("navigation_link_messages")));
     }
 
     @Override
@@ -128,4 +125,26 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
         }
         super.onBackPressed();
     }
+
+    @Override
+    protected void onProfileChanged(ProfileDto profile) {
+        displayToolbar(true, getScreenTitle(Label.getLabel("navigation_link_messages")));
+        callMessagingService(true);
+    }
+
+    @Override
+    protected Profile getCurrentProfile() {
+        return messagingModel.getPayload().getDelegate();
+    }
+
+    @Override
+    public boolean canSendProvidersMessages() {
+        for (UserPracticeDTO practiceDTO : messagingModel.getPayload().getUserPractices()) {
+            if (messagingModel.getPayload().canMessageProviders(practiceDTO.getPracticeId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

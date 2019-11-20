@@ -27,8 +27,8 @@
     <RelativeLayout
         android:layout_width="@dimen/dialog_width"
         android:layout_height="@dimen/dialog_height"
-        android:layout_marginEnd="@dimen/dimen_26dp"
-        android:layout_marginStart="@dimen/dimen_26dp">
+        android:layout_marginStart="@dimen/dimen_26dp"
+        android:layout_marginEnd="@dimen/dimen_26dp">
 
         <FrameLayout
             android:id="@+id/insurance_toolbar"
@@ -84,10 +84,10 @@
                     android:drawableEnd="@drawable/icon_drop_down_primary"
                     android:drawablePadding="@dimen/dimen_10dp"
                     android:focusable="false"
-                    android:paddingBottom="@dimen/dimen_10dp"
-                    android:paddingEnd="20dp"
                     android:paddingStart="@dimen/dimen_20dp"
                     android:paddingTop="@dimen/dimen_10dp"
+                    android:paddingEnd="20dp"
+                    android:paddingBottom="@dimen/dimen_10dp"
                     android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/text_size_18sp"
                     app:customAssetFont="proxima_nova_regular"
@@ -113,7 +113,7 @@
 
             </FrameLayout>
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/physicianRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

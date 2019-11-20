@@ -27,6 +27,7 @@
                 android:layout_width="@dimen/home_settings_icon_width"
                 android:layout_height="@dimen/home_settings_icon_height"
                 android:layout_gravity="start"
+                android:contentDescription="@string/content_description_change_mode"
                 android:background="@drawable/icn_gear_vd" />
 
             <ImageView
@@ -193,7 +194,7 @@
                 android:layout_above="@id/homePaymentsLabel"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="@dimen/dimen_20dp"
-                android:contentDescription="Payments"
+                android:contentDescription="@string/content_description_payments"
                 android:src="@drawable/icn_payments_selector" />
 
             <View
@@ -229,7 +230,7 @@
                 android:layout_above="@id/homeAppointmentsLabel"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="@dimen/dimen_20dp"
-                android:contentDescription="Appointments"
+                android:contentDescription="@string/content_description_appointments"
                 android:src="@drawable/icn_appointements_selector" />
         </RelativeLayout>
 
@@ -335,7 +336,7 @@
         breeze:textKey="officenews_button"
         tools:text="Office News" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/office_news_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

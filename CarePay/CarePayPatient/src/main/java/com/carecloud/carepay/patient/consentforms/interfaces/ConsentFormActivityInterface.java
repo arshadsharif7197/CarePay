@@ -5,7 +5,7 @@ import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 /**
  * @author pjohnson on 6/04/18.
  */
-public interface ConsentFormActivityInterface extends FragmentActivityInterface, ConsentFormsProviderInterface,
+public interface ConsentFormActivityInterface extends FragmentActivityInterface,
         ConsentFormPracticeFormInterface, ConsentFormInterface {
 
 }

@@ -4,12 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -122,7 +122,7 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle) {
+    public void onViewCreated(@NonNull View view, Bundle icicle) {
         initToolbar(view);
 
         TextInputLayout subjectLayout = view.findViewById(R.id.subjectInputLayout);
@@ -136,24 +136,17 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
         messageInput.addTextChangedListener(getEmptyTextWatcher(messageLayout));
 
         buttonCreate = view.findViewById(R.id.new_message_button);
-        buttonCreate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                postNewMessage(provider, subjectInput.getText().toString(), messageInput.getText().toString());
-            }
-        });
+        buttonCreate.setOnClickListener(view1 -> postNewMessage(provider, subjectInput.getText().toString(),
+                messageInput.getText().toString()));
 
         attachmentInput = view.findViewById(R.id.attachmentEditText);
 
         clearAttachmentButton = view.findViewById(R.id.clearBtn);
-        clearAttachmentButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attachmentFile = null;
-                attachmentInput.setText(null);
-                attachmentPostModel = null;
-                view.setVisibility(View.INVISIBLE);
-            }
+        clearAttachmentButton.setOnClickListener(view12 -> {
+            attachmentFile = null;
+            attachmentInput.setText(null);
+            attachmentPostModel = null;
+            view12.setVisibility(View.INVISIBLE);
         });
         setUpBottomSheet(view);
         validateForm();
@@ -165,12 +158,7 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
         title.setText(Label.getLabel("messaging_subject_title"));
 
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
     }
 
     private void validateForm() {
@@ -185,6 +173,8 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
         final View shadow = view.findViewById(R.id.shadow);
         LinearLayout llBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
         final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
+        TextView headerLabel = (TextView) findViewById(R.id.totalPatientResponsibilityLabel);
+        headerLabel.setText(Label.getLabel("messaging.create.attachment.actions.title"));
         bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
@@ -200,49 +190,30 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
             }
         });
 
-        View.OnClickListener bottomSheetClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_EXPANDED);
-                shadow.setClickable(true);
-            }
+        View.OnClickListener bottomSheetClickListener = v -> {
+            bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_EXPANDED);
+            shadow.setClickable(true);
         };
         view.findViewById(R.id.upload_button).setOnClickListener(bottomSheetClickListener);
         attachmentInput.setOnClickListener(bottomSheetClickListener);
 
         Button cancelButton = view.findViewById(R.id.cancelButton);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
-            }
-        });
-        shadow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
-            }
-        });
+        cancelButton.setOnClickListener(v -> bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN));
+        shadow.setOnClickListener(view1 -> bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN));
         shadow.setClickable(false);
 
         mediaScannerPresenter = new MediaScannerPresenter(getContext(),
                 this, CarePayCameraPreview.CameraType.SCAN_DOC);
         View takePhotoContainer = view.findViewById(R.id.takePhotoContainer);
-        takePhotoContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mediaScannerPresenter.handlePictureAction();
-                bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
-            }
+        takePhotoContainer.setOnClickListener(view12 -> {
+            mediaScannerPresenter.handlePictureAction();
+            bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
         });
 
         View chooseFileContainer = view.findViewById(R.id.chooseFileContainer);
-        chooseFileContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mediaScannerPresenter.selectFile();
-                bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
-            }
+        chooseFileContainer.setOnClickListener(view13 -> {
+            mediaScannerPresenter.selectFile();
+            bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
         });
     }
 
@@ -296,12 +267,13 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
             attachmentPostModel.setPatientId(providerContact.getPatientId());
             attachmentPostModel.setPracticeId(providerContact.getBusinessEntityId());
 
-            postModel.setAttachments(new ArrayList<AttachmentPostModel>());
+            postModel.setAttachments(new ArrayList<>());
             postModel.getAttachments().add(attachmentPostModel);
         }
 
         TransitionDTO newMessage = messagingModel.getMetadata().getLinks().getNewMessage();
-        getWorkflowServiceHelper().execute(newMessage, postNewMessageCallback(providerContact), DtoHelper.getStringDTO(postModel));
+        getWorkflowServiceHelper().execute(newMessage, postNewMessageCallback(providerContact),
+                DtoHelper.getStringDTO(postModel));
 
     }
 
@@ -315,7 +287,8 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
-                MessagingThreadDTO messagingThreadDTO = DtoHelper.getConvertedDTO(MessagingThreadDTO.class, workflowDTO);
+                MessagingThreadDTO messagingThreadDTO = DtoHelper
+                        .getConvertedDTO(MessagingThreadDTO.class, workflowDTO);
                 String[] params = {getString(R.string.param_provider_id), getString(R.string.param_provider_name)};
                 Object[] values = {provider.getId(), provider.getName()};
                 MixPanelUtil.logEvent(getString(R.string.event_message_new), params, values);
@@ -338,14 +311,15 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
         if (baseUrl != null && path != null) {
             baseUrl = baseUrl.substring(0, baseUrl.length() - path.length());
         }
-        RestCallServiceHelper restCallServiceHelper = new RestCallServiceHelper(getAppAuthorizationHelper(), getApplicationMode());
+        RestCallServiceHelper restCallServiceHelper = new RestCallServiceHelper(getAppAuthorizationHelper(),
+                getApplicationMode());
         restCallServiceHelper.executeRequest(RestDef.POST,
                 baseUrl,
                 getUploadCallback(file),
                 true,
                 false,
                 null,
-                new HashMap<String, String>(),
+                new HashMap<>(),
                 null,
                 file,
                 path.replace("/", ""));
@@ -363,13 +337,14 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
                 hideProgressDialog();
                 Log.d(MessagesNewThreadFragment.class.getName(), jsonElement != null ? jsonElement.toString() : "no data");
                 if (jsonElement != null && jsonElement.isJsonObject()) {
-                    AttachmentUploadModel uploadModel = DtoHelper.getConvertedDTO(AttachmentUploadModel.class, jsonElement.getAsJsonObject());
-                    String extension = MimeTypeMap.getFileExtensionFromUrl(URLEncoder.encode(file.getAbsolutePath()).replace("+", "%20"));
+                    AttachmentUploadModel uploadModel = DtoHelper.getConvertedDTO(AttachmentUploadModel.class,
+                            jsonElement.getAsJsonObject());
+                    String extension = MimeTypeMap.getFileExtensionFromUrl(URLEncoder
+                            .encode(file.getAbsolutePath()).replace("+", "%20"));
                     attachmentPostModel = new AttachmentPostModel();
                     attachmentPostModel.setNodeId(uploadModel.getNodeId());
                     attachmentPostModel.setDescription(file.getName());
-                    attachmentPostModel.setFormat(MimeTypeMap.getSingleton()
-                            .getMimeTypeFromExtension(extension));
+                    attachmentPostModel.setFormat(extension);
                     if (attachmentPostModel.getFormat() == null && "json".equals(extension)) {
                         attachmentPostModel.setFormat("application/json");
                     }

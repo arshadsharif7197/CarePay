@@ -4,23 +4,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -46,6 +49,7 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -68,6 +72,8 @@ public class MedicationsFragment extends BaseCheckinFragment implements
     private MediaScannerPresenter mediaScannerPresenter;
     private DocumentScannerAdapter documentScannerAdapter;
     private String photoPath;
+    private View newPhotoButton;
+    private View changePhotoButton;
 
     protected DemographicsPresenter callback;
 
@@ -128,23 +134,17 @@ public class MedicationsFragment extends BaseCheckinFragment implements
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_medications, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle) {
+    public void onViewCreated(@NonNull View view, Bundle icicle) {
         inflateToolbarViews(view);
         initViews(view);
         setAdapters();
         final NestedScrollView scrollView = view.findViewById(R.id.scroll_medications_allergy);
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                scrollView.scrollTo(0, 0);
-
-            }
-        }, 30);
+        handler.postDelayed(() -> scrollView.scrollTo(0, 0), 30);
         View container = view.findViewById(R.id.container_main);
         hideKeyboardOnViewTouch(container);
     }
@@ -173,18 +173,16 @@ public class MedicationsFragment extends BaseCheckinFragment implements
         continueButton.setSelected(false);
         continueButton.setClickable(false);
 
-        RecyclerView.LayoutManager medicationManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
+        RecyclerView.LayoutManager medicationManager = new LinearLayoutManager(getContext(),
+                RecyclerView.VERTICAL, true);
         medicationRecycler = view.findViewById(R.id.medication_recycler);
         medicationRecycler.setLayoutManager(medicationManager);
 
         photoLayout = view.findViewById(R.id.medication_photo_layout);
         medicationPhoto = view.findViewById(R.id.medications_image);
 
-        View newPhotoButton = view.findViewById(R.id.medication_list_photo_button);
-        newPhotoButton.setOnClickListener(takePhotoListener);
-
-        View changePhotoButton = view.findViewById(R.id.medication_list_photo_change);
-        changePhotoButton.setOnClickListener(takePhotoListener);
+        newPhotoButton = view.findViewById(R.id.medication_list_photo_button);
+        changePhotoButton = view.findViewById(R.id.medication_list_photo_change);
 
         View removePhotoButton = view.findViewById(R.id.medication_list_photo_remove);
         removePhotoButton.setOnClickListener(removePhotoListener);
@@ -212,7 +210,12 @@ public class MedicationsFragment extends BaseCheckinFragment implements
             documentScannerAdapter.setImageView(url, medicationPhoto, false, 0, 0,
                     R.drawable.icn_placeholder_document, this);
         }
-
+        if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT) {
+            setUpBottomSheet(view);
+        } else {
+            newPhotoButton.setOnClickListener(view1 -> mediaScannerPresenter.handlePictureAction());
+            changePhotoButton.setOnClickListener(view12 -> mediaScannerPresenter.handlePictureAction());
+        }
     }
 
     private void setAdapters() {
@@ -379,12 +382,9 @@ public class MedicationsFragment extends BaseCheckinFragment implements
         }
     };
 
-    private View.OnClickListener navigationClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            SystemUtil.hideSoftKeyboard(getActivity());
-            getActivity().onBackPressed();
-        }
+    private View.OnClickListener navigationClickListener = view -> {
+        SystemUtil.hideSoftKeyboard(getActivity());
+        getActivity().onBackPressed();
     };
 
 
@@ -419,7 +419,7 @@ public class MedicationsFragment extends BaseCheckinFragment implements
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             showErrorNotification(exceptionMessage);
-            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+            Log.e("Server Error", exceptionMessage);
         }
     };
 
@@ -494,6 +494,57 @@ public class MedicationsFragment extends BaseCheckinFragment implements
     @Override
     public DTO getDto() {
         return medicationsAllergiesDTO;
+    }
+
+    private void setUpBottomSheet(View view) {
+        final View shadow = view.findViewById(R.id.shadow);
+        LinearLayout llBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
+        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
+        bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    shadow.setClickable(false);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                shadow.setAlpha(slideOffset);
+            }
+        });
+
+        View.OnClickListener bottomSheetClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_EXPANDED);
+                shadow.setClickable(true);
+            }
+        };
+        newPhotoButton.setOnClickListener(bottomSheetClickListener);
+        changePhotoButton.setOnClickListener(bottomSheetClickListener);
+
+        Button cancelButton = view.findViewById(R.id.cancelButton);
+        cancelButton.setOnClickListener(v -> bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN));
+        shadow.setOnClickListener(view1 -> bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN));
+        shadow.setClickable(false);
+
+        View takePhotoContainer = view.findViewById(R.id.takePhotoContainer);
+        takePhotoContainer.setOnClickListener(view12 -> {
+            mediaScannerPresenter.handlePictureAction();
+            bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
+        });
+
+        View chooseFileContainer = view.findViewById(R.id.chooseFileContainer);
+        chooseFileContainer.setOnClickListener(view13 -> {
+            mediaScannerPresenter.selectFile();
+            bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
+        });
+    }
+
+    private void bottomMenuAction(BottomSheetBehavior bottomSheetBehavior, int stateHidden) {
+        bottomSheetBehavior.setState(stateHidden);
     }
 }
 

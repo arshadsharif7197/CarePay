@@ -3,7 +3,7 @@
 
     <!--Common-->
     <dimen name="errorTextSize">10sp</dimen>
-    <dimen name="hint_floating_size">10sp</dimen>
+    <dimen name="hint_floating_size">14sp</dimen>
     <dimen name="textview_default_textsize">17sp</dimen>
     <dimen name="dialog_profile_pic_size">88dp</dimen>
 
@@ -471,7 +471,7 @@
     <dimen name="paymentDetailLabelTextSize">16sp</dimen>
     <dimen name="paymentDetailAmountTextSize">15sp</dimen>
     <dimen name="paymentDetailDateTextSize">12sp</dimen>
-    <dimen name="nextAppointmentProviderImageSize">80dp</dimen>
+    <dimen name="nextAppointmentProviderImageSize">100dp</dimen>
     <dimen name="availableHourItemTextSize">14sp</dimen>
     <dimen name="reasonForVisitHorizontalMargin">14dp</dimen>
     <dimen name="visitTypeContainerVerticalPadding">15dp</dimen>
@@ -532,7 +532,29 @@
     <dimen name="completeCheckInItemMargin">14dp</dimen>
     <dimen name="completeCheckInItemTextSize">22sp</dimen>
     <dimen name="completeCheckInItemValueTextSize">16sp</dimen>
+
     <dimen name="largeAlertMessageTextSize">13sp</dimen>
+    <dimen name="exitImageSize">48dp</dimen>
+    <dimen name="exitImagePadding">15dp</dimen>
+    <dimen name="patient_bottom_round_dimen">5dp</dimen>
+    <dimen name="appointmentDialStartMargin">5dp</dimen>
+    <dimen name="appoinmentDialogButtonsTopMargin">10dp</dimen>
+
+    <dimen name="paymentDetailDialogMargin">10dp</dimen>
+
+    <!--Delegate-->
+    <dimen name="menuIconSize">36dp</dimen>
+    <dimen name="menuItemPadding">6dp</dimen>
+    <dimen name="menuIconPadding">5dp</dimen>
+    <dimen name="menuIconLabelStartMargin">15dp</dimen>
+    <dimen name="menuIconLabelTextSize">16sp</dimen>
+    <dimen name="menuIconStartMargin">5dp</dimen>
+    <dimen name="menuItemBadgeSize">25dp</dimen>
+    <dimen name="menuItemBadeTextSize">13sp</dimen>
+    <dimen name="badgeCounterEndMargin">10dp</dimen>
+    <dimen name="profileListTriggerIconSize">20dp</dimen>
+    <dimen name="profileListTriggerHorizontalMargin">5dp</dimen>
+    <dimen name="profileListTriggerIconPadding">5dp</dimen>
 
     <dimen name="inputLayoutRequiredLabelTopMargin">25dp</dimen>
 

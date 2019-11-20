@@ -14,8 +14,8 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AlertDialog;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.appcompat.app.AlertDialog;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -33,6 +33,7 @@ import android.widget.TextView;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.CustomAlertAdapter;
 import com.carecloud.carepaylibray.base.BaseActivity;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 
 import java.io.ByteArrayOutputStream;
@@ -187,6 +188,14 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler {
             public void onFocusChange(View view, boolean hasFocus) {
                 TextView textView = (TextView) view;
                 String[] tags = (String[]) view.getTag();
+                CarePayTextInputLayout carePayTextInputLayout = null;
+                int floatingFontAttribute = 0, fontAttribute = 0;
+                if (textInputLayout instanceof CarePayTextInputLayout) {
+                    carePayTextInputLayout = (CarePayTextInputLayout) textInputLayout;
+                    floatingFontAttribute = carePayTextInputLayout.getFloatingFontAttribute();
+                    fontAttribute = carePayTextInputLayout.getFontAttribute();
+                }
+
                 if (tags == null && textInputLayout.getHint() != null) {
                     tags = new String[]{textInputLayout.getHint().toString().toUpperCase(),
                             textInputLayout.getHint().toString()};
@@ -196,8 +205,14 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler {
                 if (tags != null) {
                     if (hasFocus || !StringUtil.isNullOrEmpty(textView.getText().toString()) || textInputLayout.isErrorEnabled()) {
                         textInputLayout.setHint(tags[0]);
+                        if (floatingFontAttribute != 0 && fontAttribute != 0) {
+                            carePayTextInputLayout.changeFont(carePayTextInputLayout.getFloatingFontAttribute());
+                        }
                     } else {
                         textInputLayout.setHint(tags[1]);
+                        if (floatingFontAttribute != 0 && fontAttribute != 0) {
+                            carePayTextInputLayout.changeFont(carePayTextInputLayout.getFontAttribute());
+                        }
                     }
                 }
 
@@ -210,6 +225,27 @@ public class SystemUtil implements Thread.UncaughtExceptionHandler {
 
     public static boolean isNotEmptyString(String string) {
         return string != null && !string.isEmpty() && !string.equals("null");
+    }
+
+    public static Bitmap getScaledBitmap(Bitmap original, int maxPixels){
+        int width = original.getWidth();
+        int height = original.getHeight();
+
+        if(width < maxPixels && height < maxPixels){
+            return original;
+        }
+
+        float aspectRatio = (float) width / (float) height;
+        if(aspectRatio > 1){
+            //landscape image
+            width = maxPixels;
+            height = (int) (maxPixels/aspectRatio);
+        }else{
+            //portrait image
+            height = maxPixels;
+            width = (int) (maxPixels/aspectRatio);
+        }
+        return Bitmap.createScaledBitmap(original, width, height, true);
     }
 
     /**

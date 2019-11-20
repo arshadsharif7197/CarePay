@@ -87,13 +87,14 @@
             app:customAssetFont="proxima_nova_semi_bold"
             tools:text="Required Prepayment: $49.00" />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/availableHoursRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/footer"
             android:layout_below="@id/prepaymentMessage"
-            android:background="@color/white" />
+            android:background="@color/white"
+            android:contentDescription="@string/content_description_available_hours_list"/>
 
         <include
             android:id="@+id/no_appointment_layout"
