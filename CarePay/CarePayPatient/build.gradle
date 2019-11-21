@@ -9,8 +9,8 @@ android {
         applicationId "com.carecloud.carepay.patient"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 140
-        versionName "1.1.32.1"
+        versionCode 142
+        versionName "1.1.33"
         multiDexEnabled true
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         renderscriptTargetApi 22
