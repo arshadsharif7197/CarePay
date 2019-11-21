@@ -4,10 +4,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.practice.tablet.pageObjects.patientMode.checkin.*
 import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.PracticeMainScreen
 import com.carecloud.carepay.practice.tablet.tests.BaseTest
-import com.carecloud.carepaylibray.androidTest.graphql.changePaymentSetting
-import com.carecloud.carepaylibray.androidTest.graphql.createAppointment
-import com.carecloud.carepaylibray.androidTest.graphql.getBreezeToken
-import com.carecloud.carepaylibray.androidTest.providers.makeRequest
+import com.carecloud.carepaylibray.androidTest.graphqlrequests.*
+import com.carecloud.carepaylibray.androidTest.providers.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,14 +16,16 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class PMCheckInAppointmentWithPayment : BaseTest() {
 
+    lateinit var appointmentTime : String
+
     @Before
     override
     fun setup() {
-        val response = makeRequest(getBreezeToken(appMode = "practice"))
-        val tokens = response.data?.getBreezeSessionToken
-        makeRequest(createAppointment(), authHeader = tokens?.xavier_token.toString())
-        makeRequest(changePaymentSetting("neither"),
-                tokens?.cognito_token?.authenticationToken.toString())
+        initXavierProvider()
+        val apptResponse = createAppointment()
+        appointmentTime = formatAppointmentTime(apptResponse.data?.createAppointment?.start_time.toString())
+        changePaymentSetting("checkin")
+        createSimpleCharge()
         super.setup()
     }
 
@@ -33,7 +33,7 @@ class PMCheckInAppointmentWithPayment : BaseTest() {
     fun pmCheckInAppointmentWithPayment() {
         PracticeMainScreen()
                 .pressAppointmentsButton()
-                .checkInFirstAppointmentOnList()
+                .checkInAppointmentAtTime(appointmentTime)
                 .personalInfoNextStep(CheckInAddress())
                 .addressNextStep(CheckInDemographics())
                 .demographicsNextStep(CheckInMedications())

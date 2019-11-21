@@ -4,10 +4,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.practice.tablet.pageObjects.patientMode.checkin.*
 import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.PracticeMainScreen
 import com.carecloud.carepay.practice.tablet.tests.BaseTest
-import com.carecloud.carepaylibray.androidTest.graphql.changePaymentSetting
-import com.carecloud.carepaylibray.androidTest.graphql.createAppointment
-import com.carecloud.carepaylibray.androidTest.graphql.getBreezeToken
-import com.carecloud.carepaylibray.androidTest.providers.makeRequest
+import com.carecloud.carepaylibray.androidTest.graphqlrequests.*
+import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,11 +19,10 @@ class PMCheckInAppointment : BaseTest() {
     @Before
     override
     fun setup() {
-        val response = makeRequest(getBreezeToken(appMode = "practice"))
-        val tokens = response.data?.getBreezeSessionToken
-        makeRequest(createAppointment(), authHeader = tokens?.xavier_token.toString())
-        makeRequest(changePaymentSetting("neither"),
-                tokens?.cognito_token?.authenticationToken.toString())
+        initXavierProvider()
+        val apptResponse = createAppointment()
+        println("///////"+apptResponse.data?.createAppointment?.start_time)
+        changePaymentSetting("neither")
         super.setup()
     }
 

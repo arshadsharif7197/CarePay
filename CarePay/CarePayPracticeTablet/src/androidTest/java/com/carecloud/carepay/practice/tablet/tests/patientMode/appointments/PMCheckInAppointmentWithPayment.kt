@@ -4,10 +4,11 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.practice.tablet.pageObjects.patientMode.checkin.*
 import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.PracticeMainScreen
 import com.carecloud.carepay.practice.tablet.tests.BaseTest
-import com.carecloud.carepaylibray.androidTest.graphql.changePaymentSetting
-import com.carecloud.carepaylibray.androidTest.graphql.createAppointment
-import com.carecloud.carepaylibray.androidTest.graphql.createSimpleCharge
-import com.carecloud.carepaylibray.androidTest.graphql.getBreezeToken
+import com.carecloud.carepaylibray.androidTest.graphqlrequests.changePaymentSetting
+import com.carecloud.carepaylibray.androidTest.graphqlrequests.createAppointment
+import com.carecloud.carepaylibray.androidTest.graphqlrequests.createSimpleCharge
+import com.carecloud.carepaylibray.androidTest.graphqlrequests.getBreezeToken
+import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
 import com.carecloud.carepaylibray.androidTest.providers.makeRequest
 import org.junit.Before
 import org.junit.Test
@@ -22,12 +23,10 @@ class PMCheckInAppointmentWithPayment: BaseTest() {
     @Before
     override
     fun setup() {
-        val response = makeRequest(getBreezeToken(appMode = "practice"))
-        val tokens = response.data?.getBreezeSessionToken
-        makeRequest(createAppointment(), authHeader = tokens?.xavier_token.toString())
-        makeRequest(changePaymentSetting("checkin"),
-                tokens?.cognito_token?.authenticationToken.toString())
-        makeRequest(createSimpleCharge(), tokens?.xavier_token.toString())
+        initXavierProvider()
+        createAppointment()
+        changePaymentSetting("checkin")
+        createSimpleCharge()
         super.setup()
     }
 

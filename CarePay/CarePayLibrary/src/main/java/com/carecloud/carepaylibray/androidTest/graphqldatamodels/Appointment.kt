@@ -5,4 +5,5 @@ package com.carecloud.carepaylibray.androidTest.graphqldatamodels
  */
 class Appointment {
     var id: Int? = null
+    var start_time: String? = null
 }

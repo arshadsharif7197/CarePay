@@ -4,9 +4,11 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.practice.tablet.pageObjects.patientMode.checkin.*
 import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.PracticeMainScreen
 import com.carecloud.carepay.practice.tablet.tests.BaseTest
-import com.carecloud.carepaylibray.androidTest.graphql.changePaymentSetting
-import com.carecloud.carepaylibray.androidTest.graphql.createAppointment
-import com.carecloud.carepaylibray.androidTest.graphql.getBreezeToken
+import com.carecloud.carepaylibray.androidTest.graphqlrequests.changePaymentSetting
+import com.carecloud.carepaylibray.androidTest.graphqlrequests.createAppointment
+import com.carecloud.carepaylibray.androidTest.graphqlrequests.getBreezeToken
+import com.carecloud.carepaylibray.androidTest.providers.formatAppointmentTime
+import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
 import com.carecloud.carepaylibray.androidTest.providers.makeRequest
 import org.junit.Before
 import org.junit.Test
@@ -18,14 +20,15 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class PMCheckInAppointment : BaseTest() {
 
+    lateinit var appointmentTime : String
+
     @Before
     override
     fun setup() {
-        val response = makeRequest(getBreezeToken(appMode = "practice"))
-        val tokens = response.data?.getBreezeSessionToken
-        makeRequest(createAppointment(), authHeader = tokens?.xavier_token.toString())
-        makeRequest(changePaymentSetting("neither"),
-                tokens?.cognito_token?.authenticationToken.toString())
+        initXavierProvider()
+        val apptResponse = createAppointment()
+        appointmentTime = formatAppointmentTime(apptResponse.data?.createAppointment?.start_time.toString())
+        changePaymentSetting("neither")
         super.setup()
     }
 
@@ -33,7 +36,7 @@ class PMCheckInAppointment : BaseTest() {
     fun pmCheckInAppointment() {
         PracticeMainScreen()
                 .pressAppointmentsButton()
-                .checkInFirstAppointmentOnList()
+                .checkInAppointmentAtTime(appointmentTime)
                 .personalInfoNextStep(CheckInAddress())
                 .addressNextStep(CheckInDemographics())
                 .demographicsNextStep(CheckInMedications())
