@@ -4,14 +4,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.fragment.app.Fragment;
-import android.util.Log;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
-import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
+import com.carecloud.carepay.patient.menu.MenuPatientActivity;
+import com.carecloud.carepay.patient.notifications.NotificationViewModel;
 import com.carecloud.carepay.patient.notifications.fragments.NotificationFragment;
 import com.carecloud.carepay.patient.notifications.models.NotificationItem;
 import com.carecloud.carepay.patient.notifications.models.NotificationStatus;
@@ -36,8 +38,6 @@ import com.carecloud.carepaylibray.profile.Profile;
 import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
-import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,50 +48,50 @@ import java.util.Map;
 public class NotificationActivity extends MenuPatientActivity
         implements NotificationFragment.NotificationCallback, AppointmentViewHandler {
 
-    private PatientAppointmentPresenter appointmentPresenter;
-    private NotificationsDTO notificationsDTO;
     private static final int SURVEY_FLOW = 100;
+
+    private PatientAppointmentPresenter appointmentPresenter;
+    private NotificationViewModel viewModel;
 
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        notificationsDTO = getConvertedDTO(NotificationsDTO.class);
+        NotificationsDTO notificationsDTO = getConvertedDTO(NotificationsDTO.class);
+        setUpViewModel();
         if (notificationsDTO == null) {
-            callNotificationService(icicle);
+            viewModel.callNotificationService(getTransitionNotifications()).observe(this,
+                    t -> showNotificationFragment());
         } else {
-            resumeOnCreate(icicle);
+            viewModel.setDto(notificationsDTO).observe(this,
+                    t -> showNotificationFragment());
         }
     }
 
-    private void callNotificationService(final Bundle icicle) {
-        Map<String, String> queryMap = new HashMap<>();
-        getWorkflowServiceHelper().execute(getTransitionNotifications(), new WorkflowServiceCallback() {
-            @Override
-            public void onPreExecute() {
+    private void showNotificationFragment() {
+        replaceFragment(NotificationFragment.newInstance(), false);
+        initPresenter(null);
+    }
+
+    protected void setUpViewModel() {
+        viewModel = ViewModelProviders.of(this).get(NotificationViewModel.class);
+        setBasicObservers(viewModel);
+        viewModel.getSkeleton().observe(this, showSkeleton -> {
+            if (showSkeleton) {
                 replaceFragment(ShimmerFragment.newInstance(R.layout.shimmer_default_item), false);
             }
-
-            @Override
-            public void onPostExecute(WorkflowDTO workflowDTO) {
-                hideProgressDialog();
-                notificationsDTO = DtoHelper.getConvertedDTO(NotificationsDTO.class, workflowDTO);
-                resumeOnCreate(icicle);
-            }
-
-            @Override
-            public void onFailure(String exceptionMessage) {
-                hideProgressDialog();
-                showErrorNotification(exceptionMessage);
-            }
-        }, queryMap);
-    }
-
-    protected void resumeOnCreate(Bundle icicle) {
-        if (icicle == null) {
-            NotificationFragment notificationFragment = NotificationFragment.newInstance(notificationsDTO);
-            this.replaceFragment(notificationFragment, false);
-        }
-        initPresenter(null);
+        });
+        viewModel.getSurveyObservable().observe(this, notificationVM -> {
+            Bundle bundle = new Bundle();
+            bundle.putString(CarePayConstants.PATIENT_ID, notificationVM.getNotification().getMetadata().getPatientId());
+            bundle.putBoolean(CarePayConstants.NOTIFICATIONS_FLOW, true);
+            PatientNavigationHelper.navigateToWorkflow(getContext(), notificationVM.getWorkflowDTO(), true,
+                    SURVEY_FLOW, bundle);
+        });
+        viewModel.getConsentFormsObservable().observe(this, notificationVM -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("practiceId", notificationVM.getNotification().getMetadata().getPracticeId());
+            navigateToWorkflow(notificationVM.getWorkflowDTO(), bundle);
+        });
     }
 
     @Override
@@ -105,12 +105,9 @@ public class NotificationActivity extends MenuPatientActivity
             case SURVEY_FLOW:
                 if (resultCode == Activity.RESULT_OK
                         && data.getBooleanExtra(CarePayConstants.SHOW_SURVEY, false)) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (ApplicationPreferences.getInstance().shouldShowRateDialog()) {
-                                displayDialogFragment(RateDialog.newInstance(), true);
-                            }
+                    new Handler().postDelayed(() -> {
+                        if (ApplicationPreferences.getInstance().shouldShowRateDialog()) {
+                            displayDialogFragment(RateDialog.newInstance(), true);
                         }
                     }, 100);
                 }
@@ -133,29 +130,23 @@ public class NotificationActivity extends MenuPatientActivity
 
     @Override
     public void displayNotification(NotificationItem notificationItem) {
+        if (notificationItem.getPayload().getReadStatus() == NotificationStatus.unread) {
+            viewModel.markNotificationRead(notificationItem);
+        }
         switch (notificationItem.getMetadata().getNotificationType()) {
             case appointment:
                 AppointmentDTO appointment = notificationItem.getPayload().getAppointment();
                 if (appointmentPresenter != null) {
                     appointmentPresenter.displayAppointmentDetails(appointment);
-                    if (notificationItem.getPayload().getReadStatus() == NotificationStatus.unread) {
-                        markNotificationRead(notificationItem);
-                    }
                 } else {
                     initPresenter(appointment);
                 }
                 break;
             case pending_forms:
-                if (notificationItem.getPayload().getReadStatus() == NotificationStatus.unread) {
-                    markNotificationRead(notificationItem);
-                }
-                callConsentFormsScreen(notificationItem);
+                viewModel.callConsentFormsScreen(getTransitionForms(), notificationItem);
                 break;
             case pending_survey:
-                if (notificationItem.getPayload().getReadStatus() == NotificationStatus.unread) {
-                    markNotificationRead(notificationItem);
-                }
-                callSurveyService(notificationItem);
+                viewModel.callSurveyService(notificationItem);
                 break;
             case payments:
                 if ("patient_statement".equals(notificationItem.getMetadata().getNotificationSubtype())) {
@@ -165,10 +156,7 @@ public class NotificationActivity extends MenuPatientActivity
                 }
                 break;
             case secure_message:
-                if (notificationItem.getPayload().getReadStatus() == NotificationStatus.unread) {
-                    markNotificationRead(notificationItem);
-                }
-                callMessagesScreen(notificationItem);
+                callMessagesScreen();
                 break;
             default:
                 //todo handle other notification types
@@ -176,63 +164,7 @@ public class NotificationActivity extends MenuPatientActivity
         }
     }
 
-    private void callSurveyService(final NotificationItem notificationItem) {
-        Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("practice_mgmt", notificationItem.getMetadata().getPracticeMgmt());
-        queryMap.put("practice_id", notificationItem.getMetadata().getPracticeId());
-        queryMap.put("appointment_id", notificationItem.getPayload().getPendingSurvey().getMetadata().getAppointmentId());
-        queryMap.put("patient_id", notificationItem.getMetadata().getPatientId());
-        getWorkflowServiceHelper().execute(notificationsDTO.getMetadata().getLinks().getPendingSurvey(),
-                new WorkflowServiceCallback() {
-                    @Override
-                    public void onPreExecute() {
-                        showProgressDialog();
-                    }
-
-                    @Override
-                    public void onPostExecute(WorkflowDTO workflowDTO) {
-                        hideProgressDialog();
-                        Bundle bundle = new Bundle();
-                        bundle.putString(CarePayConstants.PATIENT_ID, notificationItem.getMetadata().getPatientId());
-                        bundle.putBoolean(CarePayConstants.NOTIFICATIONS_FLOW, true);
-                        PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, true,
-                                SURVEY_FLOW, bundle);
-                    }
-
-                    @Override
-                    public void onFailure(String exceptionMessage) {
-                        hideProgressDialog();
-                        showErrorNotification(exceptionMessage);
-                        Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
-                    }
-                }, queryMap);
-    }
-
-    private void callConsentFormsScreen(final NotificationItem notificationItem) {
-        getWorkflowServiceHelper().execute(getTransitionForms(), new WorkflowServiceCallback() {
-            @Override
-            public void onPreExecute() {
-                showProgressDialog();
-            }
-
-            @Override
-            public void onPostExecute(WorkflowDTO workflowDTO) {
-                hideProgressDialog();
-                Bundle bundle = new Bundle();
-                bundle.putString("practiceId", notificationItem.getMetadata().getPracticeId());
-                navigateToWorkflow(workflowDTO, bundle);
-            }
-
-            @Override
-            public void onFailure(String exceptionMessage) {
-                hideProgressDialog();
-                showErrorNotification(exceptionMessage);
-                Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
-            }
-        });
-    }
-
-    private void callMessagesScreen(NotificationItem notificationItem) {
+    private void callMessagesScreen() {
         displayMessagesScreen();
     }
 
@@ -331,35 +263,6 @@ public class NotificationActivity extends MenuPatientActivity
         });
     }
 
-
-    private void markNotificationRead(NotificationItem notificationItem) {
-        TransitionDTO readNotifications = notificationsDTO.getMetadata().getTransitions().getReadNotifications();
-
-        Map<String, String> properties = new HashMap<>();
-        properties.put("notification_id", notificationItem.getPayload().getNotificationId());
-        JSONObject payload = new JSONObject(properties);
-
-        getWorkflowServiceHelper().execute(readNotifications, readNotificationsCallback, payload.toString(), properties);
-
-    }
-
-    private WorkflowServiceCallback readNotificationsCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            Log.d(NotificationActivity.class.getName(), "Notification marked as read");
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            Log.d(NotificationActivity.class.getName(), "Notification NOT marked as read");
-        }
-    };
-
     @Override
     public DTO getDto() {
         return null;
@@ -368,11 +271,11 @@ public class NotificationActivity extends MenuPatientActivity
     @Override
     protected void onProfileChanged(ProfileDto profile) {
         displayToolbar(true, getScreenTitle(Label.getLabel("notifications_heading")));
-        callNotificationService(null);
+        viewModel.callNotificationService(getTransitionNotifications());
     }
 
     @Override
     protected Profile getCurrentProfile() {
-        return notificationsDTO.getPayload().getDelegate();
+        return viewModel.getDelegate();
     }
 }

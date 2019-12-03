@@ -341,7 +341,7 @@ public class MessagesViewModel extends BaseViewModel {
             public void onFailure(String errorMessage) {
                 setLoading(false);
                 setErrorMessage(errorMessage);
-                Log.e(MessagesNewThreadFragment.class.getName(), errorMessage);
+                Log.e("Server Error", errorMessage);
             }
         };
     }
