@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.tests
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.patient.BaseTest
 import com.carecloud.carepay.patient.pageObjects.appointments.AppointmentScreen
+import com.carecloud.carepay.patient.pageObjects.payments.PaymentsScreen
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.createSimpleCharge
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.getBreezeToken
 import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
@@ -33,6 +34,7 @@ class PAMakeFullPaymentTest: BaseTest() {
                 .makePaymentFor(0)
                 .selectPaymentOptions()
                 .makeFullPayment()
-                .payUseCreditCardOnFile()
+                .payUseCreditCardOnFile(PaymentsScreen())
+                .discardReviewPopup()
     }
 }

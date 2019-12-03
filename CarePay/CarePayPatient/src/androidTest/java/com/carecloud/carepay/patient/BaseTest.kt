@@ -6,6 +6,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.carecloud.carepay.patient.patientsplash.SplashActivity
 import androidx.test.rule.ActivityTestRule
 import com.carecloud.carepay.patient.pageObjects.LoginScreen
+import com.carecloud.carepay.patient.pageObjects.TutorialScreen
 
 import com.carecloud.carepay.service.library.EspressoIdlingResource
 
@@ -32,14 +33,15 @@ open class BaseTest {
         IdlingRegistry.getInstance().register(EspressoIdlingResource.getIdlingResource())
         appContext = InstrumentationRegistry.getInstrumentation().targetContext
 
-        LoginScreen()
+        TutorialScreen()
+                .skipTutorial()
                 .typeUser("dev_emails+qa.androidbreeze2@carecloud.com")
                 .typePassword("Test123!")
                 .pressLoginButton()
     }
 
     @After
-    fun tearDown() {
+    open fun tearDown() {
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.getIdlingResource())
     }
 }

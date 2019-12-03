@@ -6,8 +6,10 @@ import com.carecloud.carepay.patient.pageObjects.appointments.AppointmentScreen
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.checkinAppointment
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.createAppointment
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.getBreezeToken
+import com.carecloud.carepaylibray.androidTest.providers.formatAppointmentTime
 import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
 import com.carecloud.carepaylibray.androidTest.providers.makeRequest
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,11 +20,14 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class PACheckOutAppointment : BaseTest() {
 
+    private lateinit var apptTime: String
+
     @Before
     override
     fun setup() {
         initXavierProvider()
         val appointmentResponse  = createAppointment()
+        apptTime = formatAppointmentTime(appointmentResponse.data?.createAppointment?.start_time.toString())
         checkinAppointment(appointmentResponse.data?.createAppointment?.id)
         super.setup()
     }
@@ -30,7 +35,14 @@ class PACheckOutAppointment : BaseTest() {
     @Test
     fun paCheckOutAppointment() {
         AppointmentScreen()
-                .checkOutFirstAppointmentOnList(1)
+                .checkOutAppointmentOnListAtTime(apptTime)
                 .scheduleAppointmentLater()
+    }
+
+    @After
+    override
+    fun tearDown() {
+        // TODO: clean up appointment
+        super.tearDown()
     }
 }

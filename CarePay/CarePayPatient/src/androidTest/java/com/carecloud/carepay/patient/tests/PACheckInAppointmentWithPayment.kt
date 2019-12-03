@@ -12,8 +12,10 @@ import com.carecloud.carepaylibray.androidTest.graphqlrequests.changePaymentSett
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.createAppointment
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.createSimpleCharge
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.getBreezeToken
+import com.carecloud.carepaylibray.androidTest.providers.formatAppointmentTime
 import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
 import com.carecloud.carepaylibray.androidTest.providers.makeRequest
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -23,11 +25,15 @@ import org.junit.runner.RunWith
  */
 @RunWith(AndroidJUnit4::class)
 class PACheckInAppointmentWithPayment: BaseTest() {
+
+    private lateinit var apptTime: String
+
     @Before
     override
     fun setup() {
         initXavierProvider()
-        createAppointment()
+        val appointment = createAppointment()
+        apptTime = formatAppointmentTime(appointment.data?.createAppointment?.start_time.toString())
         changePaymentSetting("checkin")
         createSimpleCharge()
         super.setup()
@@ -36,7 +42,7 @@ class PACheckInAppointmentWithPayment: BaseTest() {
     @Test
     fun paCheckInAppointmentWithPayment() {
         AppointmentScreen()
-                .checkInFirstAppointmentOnList(1)
+                .checkInAppointmentOnListAtTime(apptTime)
                 .personalInfoNextStep(CheckInDemogAddressScreen())
                 .addressNextStep(CheckInDemogDemographicsScreen())
                 .demographicsNextStep(CheckInMedicationsScreen())
@@ -44,6 +50,14 @@ class PACheckInAppointmentWithPayment: BaseTest() {
                 .allergiesNextstep(PaymentLineItemsDetails())
                 .selectPaymentOptions()
                 .makeFullPayment()
-                .payUseCreditCardOnFile()
+                .payUseCreditCardOnFile(AppointmentScreen())
+                .discardReviewPopup()
+    }
+
+    @After
+    override
+    fun tearDown() {
+        // TODO: clean up appointment
+        super.tearDown()
     }
 }

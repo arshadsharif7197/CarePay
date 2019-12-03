@@ -482,4 +482,5 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="content_description_schedule_appointment_button">Schedule Appointment button</string>
     <string name="content_description_appointment_status_text_view">Appointment status text view</string>
     <string name="content_description_payment_options_button">Payment Options button</string>
+    <string name="content_description_appointment_detail_card">Appointment Detail Card</string>
 </resources>

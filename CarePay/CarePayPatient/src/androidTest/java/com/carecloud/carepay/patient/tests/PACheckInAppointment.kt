@@ -10,8 +10,10 @@ import com.carecloud.carepay.patient.pageObjects.checkin.demographics.CheckInDem
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.changePaymentSetting
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.createAppointment
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.getBreezeToken
+import com.carecloud.carepaylibray.androidTest.providers.formatAppointmentTime
 import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
 import com.carecloud.carepaylibray.androidTest.providers.makeRequest
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -22,11 +24,14 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class PACheckInAppointment : BaseTest() {
 
+    private lateinit var apptTime: String
+
     @Before
     override
     fun setup() {
         initXavierProvider()
-        createAppointment()
+        val appointment = createAppointment()
+        apptTime = formatAppointmentTime(appointment.data?.createAppointment?.start_time.toString())
         changePaymentSetting("neither")
         super.setup()
     }
@@ -34,11 +39,20 @@ class PACheckInAppointment : BaseTest() {
     @Test
     fun paCheckInAppointment() {
         AppointmentScreen()
-                .checkInFirstAppointmentOnList(1)
+                .checkInAppointmentOnListAtTime(apptTime)
                 .personalInfoNextStep(CheckInDemogAddressScreen())
                 .addressNextStep(CheckInDemogDemographicsScreen())
                 .demographicsNextStep(CheckInMedicationsScreen())
                 .medicationsNextstep(CheckInAllergiesScreen())
                 .allergiesNextstep(AppointmentScreen())
+                .discardReviewPopup()
     }
+
+    @After
+    override
+    fun tearDown() {
+        // TODO: clean up appointment
+        super.tearDown()
+    }
+
 }

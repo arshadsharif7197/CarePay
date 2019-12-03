@@ -2,7 +2,11 @@ package com.carecloud.carepay.patient.tests
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.patient.BaseTest
-import com.carecloud.carepay.patient.pageObjects.AppointmentScreen
+import com.carecloud.carepay.patient.pageObjects.appointments.AppointmentScreen
+import com.carecloud.carepaylibray.androidTest.graphqlrequests.changePaymentPlanSetting
+import com.carecloud.carepaylibray.androidTest.graphqlrequests.createSimpleCharge
+import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
+import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -13,10 +17,20 @@ import org.junit.runners.MethodSorters
  */
 @RunWith(AndroidJUnit4::class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-class PaymentPlanTest : BaseTest() {
+class PAPaymentPlanTest : BaseTest() {
 
     private val paymentPlanName = "Automated test"
     private val paymentPlanAmount = "100"
+
+    @Before
+    override
+    fun setup() {
+        initXavierProvider()
+        createSimpleCharge()
+        changePaymentPlanSetting(true)
+        // TODO: change setting for cancel payment plan, add to xavier
+        super.setup()
+    }
 
     @Test
     fun a_createPaymentPlanTest() {

@@ -16,3 +16,13 @@ fun changePaymentSetting(location: String): Response {
         }
     """), cognitoToken)
 }
+
+fun changePaymentPlanSetting(state: Boolean): Response {
+    return makeRequest(formatRequest("""
+        mutation {
+          changePaymentSettings(input: { enablePaymentPlans: $state }
+            practiceId: "54a08c18-a22f-44e1-9864-25f79995d71c"
+          )
+        }
+    """), cognitoToken)
+}

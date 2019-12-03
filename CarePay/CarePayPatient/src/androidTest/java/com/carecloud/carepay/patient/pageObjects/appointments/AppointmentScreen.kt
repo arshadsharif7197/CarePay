@@ -32,6 +32,12 @@ class AppointmentScreen : CustomViewActions() {
         return CheckInDemogPersonalInfoScreen()
     }
 
+    fun checkInAppointmentOnListAtTime(textMatch: String): CheckInDemogPersonalInfoScreen {
+        clickOnRecyclerViewItem(appContext.getString(R.string.content_description_appointments_list), textMatch)
+        click(appContext.getString(R.string.content_description_checkin_appointment_button))
+        return CheckInDemogPersonalInfoScreen()
+    }
+
     fun discardReviewPopup(): AppointmentScreen {
         click(appContext.getString(R.string.content_description_not_now_button))
         return this
@@ -39,6 +45,12 @@ class AppointmentScreen : CustomViewActions() {
 
     fun checkOutFirstAppointmentOnList(position: Int): CheckOutNextAppointmentScreen {
         clickOnRecyclerViewItem(appContext.getString(R.string.content_description_appointments_list), position)
+        click(appContext.getString(R.string.content_description_checkout_appointment_button))
+        return CheckOutNextAppointmentScreen()
+    }
+
+    fun checkOutAppointmentOnListAtTime(textMatch: String): CheckOutNextAppointmentScreen {
+        clickOnRecyclerViewItem(appContext.getString(R.string.content_description_appointments_list), textMatch)
         click(appContext.getString(R.string.content_description_checkout_appointment_button))
         return CheckOutNextAppointmentScreen()
     }
