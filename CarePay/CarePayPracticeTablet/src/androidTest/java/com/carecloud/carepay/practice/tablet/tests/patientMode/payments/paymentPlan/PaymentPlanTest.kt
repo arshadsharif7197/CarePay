@@ -17,7 +17,7 @@ class PaymentPlanTest :BaseTest(){
                 .pressLetsStartButton()
                 .pressPaymentButton()
                 .pressLoginButton()
-                .typeUsername("dev_emails+dev.rsanchez@carecloud.com")
+                .typeUsername("dev_emails+qa.androidbreeze2@carecloud.com")
                 .typePassword("Test123!")
                 .pressLoginButton()
                 .selectFirstPayment()

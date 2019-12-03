@@ -18,7 +18,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/appointment_card_header_height">
+            android:layout_height="@dimen/appointment_card_header_height"
+            android:id="@+id/appointmentCard">
 
             <LinearLayout
                 android:id="@+id/appointment_card_header"

@@ -22,7 +22,7 @@ class PaymentPlanTest : BaseTest() {
     fun a_createPaymentPlanTest() {
         PracticeMainScreen()
                 .pressPaymentButton()
-                .searchForPatient("shop")
+                .searchForPatient("first breeze")
                 .openPaymentPlansDashboard()
                 .pressCreateNewPaymentPlanButton()
                 .chooseItem()
@@ -36,7 +36,7 @@ class PaymentPlanTest : BaseTest() {
     fun b_editPaymentPlanTest() {
         PracticeMainScreen()
                 .pressPaymentButton()
-                .searchForPatient("shop")
+                .searchForPatient("first breeze")
                 .openPaymentPlansDashboard()
                 .choosePaymentPlan(paymentPlanName)
                 .editPaymentPlan()
@@ -49,7 +49,7 @@ class PaymentPlanTest : BaseTest() {
     fun c_deletePaymentPlanTest() {
         PracticeMainScreen()
                 .pressPaymentButton()
-                .searchForPatient("shop")
+                .searchForPatient("first breeze")
                 .openPaymentPlansDashboard()
                 .choosePaymentPlan(paymentPlanName)
                 .editPaymentPlan()

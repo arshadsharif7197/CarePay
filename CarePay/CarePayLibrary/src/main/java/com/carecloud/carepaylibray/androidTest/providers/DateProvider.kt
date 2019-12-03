@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun formatAppointmentTime(startTime: String): String {
-    val appointmentTimeFormat = DateTimeFormatter.ofPattern("hh:mm a")
+    val appointmentTimeFormat = DateTimeFormatter.ofPattern("h:mm a")
     var date = ZonedDateTime.parse(startTime)
     return date.format(appointmentTimeFormat)
 }

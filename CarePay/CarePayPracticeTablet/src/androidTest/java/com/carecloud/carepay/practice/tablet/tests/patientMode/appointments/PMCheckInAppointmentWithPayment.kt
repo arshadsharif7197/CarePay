@@ -8,6 +8,7 @@ import com.carecloud.carepaylibray.androidTest.graphqlrequests.changePaymentSett
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.createAppointment
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.createSimpleCharge
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.getBreezeToken
+import com.carecloud.carepaylibray.androidTest.providers.formatAppointmentTime
 import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
 import com.carecloud.carepaylibray.androidTest.providers.makeRequest
 import org.junit.Before
@@ -20,11 +21,14 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class PMCheckInAppointmentWithPayment: BaseTest() {
 
+    lateinit var appointmentTime : String
+
     @Before
     override
     fun setup() {
         initXavierProvider()
-        createAppointment()
+        val apptResponse = createAppointment()
+        appointmentTime = formatAppointmentTime(apptResponse.data?.createAppointment?.start_time.toString())
         changePaymentSetting("checkin")
         createSimpleCharge()
         super.setup()
@@ -41,7 +45,7 @@ class PMCheckInAppointmentWithPayment: BaseTest() {
                 .typeUsername("dev_emails+qa.androidbreeze2@carecloud.com")
                 .typePassword("Test123!")
                 .pressLoginButton()
-                .checkInAppointment(CheckInPersonalInfo())
+                .checkInAppointment(CheckInPersonalInfo(), appointmentTime)
                 .personalInfoNextStep(CheckInAddress())
                 .addressNextStep(CheckInDemographics())
                 .demographicsNextStep(CheckInMedications())

@@ -51,4 +51,10 @@ class AppointmentsScreen : CustomViewActions() {
         clickOnSpecificText("Check-out")
         return CheckOutNextAppointmentScreen()
     }
+
+    fun checkOutAppointmentAtTime(appointmentTime: String): CheckOutNextAppointmentScreen {
+        clickOnRecyclerViewItem(appContext.getString(R.string.content_description_appointments_list), appointmentTime)
+        clickOnSpecificText("Check-out")
+        return CheckOutNextAppointmentScreen()
+    }
 }
