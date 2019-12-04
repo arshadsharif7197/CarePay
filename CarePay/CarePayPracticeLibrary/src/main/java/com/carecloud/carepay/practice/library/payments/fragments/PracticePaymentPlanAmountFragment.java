@@ -34,11 +34,12 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
 
     private double minimumPaymentAmount = 0D;
     private double maximumPaymentAmount = 0D;
+    private boolean showModalResult;
 
     /**
      * @param paymentsModel   the payment model
      * @param selectedBalance selected balance
-     * @param showModalResult
+     * @param showModalResult show Modal Result
      * @return an instance of PracticePaymentPlanAmountFragment
      */
     public static PracticePaymentPlanAmountFragment newInstance(PaymentsModel paymentsModel,
@@ -73,6 +74,7 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
         this.practiceId = selectedBalance.getMetadata().getPracticeId();
         fullAmount = calculateFullAmount();
         determineParameters();
+        showModalResult = getArguments().getBoolean("showModalResult", false);
     }
 
     @Override
@@ -143,7 +145,7 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
             addExisting = true;
         } else {
             BaseDialogFragment fragment;
-            if (getArguments().getBoolean("showModalResult", false)) {
+            if (showModalResult) {
                 fragment = PatientModePaymentPlanFragment
                         .newInstance(paymentsModel, selectedBalance, amount);
                 fragment.setOnCancelListener(onDialogCancelListener);
@@ -172,7 +174,7 @@ public class PracticePaymentPlanAmountFragment extends PracticePartialPaymentDia
                                             PendingBalanceDTO selectedBalance,
                                             double amount) {
         PracticeValidPlansFragment fragment = PracticeValidPlansFragment
-                .newInstance(paymentsModel, selectedBalance, amount, false);
+                .newInstance(paymentsModel, selectedBalance, amount, showModalResult);
         fragment.setOnCancelListener(onDialogCancelListener);
         callback.displayDialogFragment(fragment, true);
         hideDialog();

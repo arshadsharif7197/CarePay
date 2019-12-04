@@ -90,7 +90,8 @@
             android:layout_margin="0dp"
             android:background="@drawable/bg_green_selector"
             app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="payment_options_button" />
+            breeze:textKey="payment_options_button"
+            android:contentDescription="@string/content_description_payment_options_button"/>
 
         <FrameLayout
             android:layout_width="match_parent"

@@ -17,7 +17,7 @@ public class ScannerActivity extends BaseActivity implements ZXingScannerView.Re
     public void onCreate(Bundle state) {
         super.onCreate(state);
         setContentView(R.layout.activity_scanner);
-        ViewGroup contentFrame = (ViewGroup) findViewById(R.id.content_frame);
+        ViewGroup contentFrame = findViewById(R.id.content_frame);
         zxingcannerView = new ZXingScannerView(this);
         contentFrame.addView(zxingcannerView);
     }
@@ -52,5 +52,10 @@ public class ScannerActivity extends BaseActivity implements ZXingScannerView.Re
         intent.putExtra("SCAN_RESULT",rawResult.getText());
         ScannerActivity.this.setResult(RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    protected void stopSessionService() {
+        //NA
     }
 }

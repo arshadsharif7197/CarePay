@@ -2,9 +2,6 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import com.google.android.material.textfield.TextInputLayout;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -13,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -22,15 +18,17 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialog;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialogFragment;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
-import com.carecloud.carepaylibray.payeeze.CallPayeezy;
+import com.carecloud.carepaylibray.payeeze.PayeezyCall;
 import com.carecloud.carepaylibray.payeeze.model.CreditCard;
-import com.carecloud.carepaylibray.payeeze.model.TokenizeResponse;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterface;
 import com.carecloud.carepaylibray.payments.models.CreditCardBillingInformationDTO;
 import com.carecloud.carepaylibray.payments.models.MerchantServiceMetadataDTO;
@@ -44,6 +42,7 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.smartystreets.api.us_zipcode.City;
 
@@ -273,21 +272,11 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
             toolbar.setTitle("");
             if (getDialog() == null) {
                 toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-                toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        getActivity().onBackPressed();
-                    }
-                });
+                toolbar.setNavigationOnClickListener(view12 -> getActivity().onBackPressed());
             } else {
                 View close = view.findViewById(R.id.closeViewLayout);
                 if (close != null) {
-                    close.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            cancel();
-                        }
-                    });
+                    close.setOnClickListener(view1 -> cancel());
                 }
                 ViewGroup.LayoutParams layoutParams = title.getLayoutParams();
                 layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -364,12 +353,8 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
                 AddressUtil.states);
         stateAutoCompleteTextView.setThreshold(1);
         stateAutoCompleteTextView.setAdapter(adapter);
-        stateAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                stateAbbr = adapter.getItem(position);
-            }
-        });
+        stateAutoCompleteTextView.setOnItemClickListener((parent, view1, position, id)
+                -> stateAbbr = adapter.getItem(position));
 
         nextButton = view.findViewById(R.id.nextButton);
         nextButton.setOnClickListener(nextButtonListener);
@@ -413,6 +398,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         creditCardsPayloadDTO.setCardNumber(getLastFour());
         creditCardsPayloadDTO.setNameOnCard(nameOnCardEditText.getText().toString().trim());
         creditCardsPayloadDTO.setCvv(verificationCodeEditText.getText().toString().trim());
+        creditCardsPayloadDTO.setExpireDtDisplay(expirationDateEditText.getText().toString().trim());
         String expiryDate = expirationDateEditText.getText().toString();
         expiryDate = expiryDate.substring(0, 2) + expiryDate.substring(expiryDate.length() - 2);
         creditCardsPayloadDTO.setExpireDt(expiryDate);
@@ -448,8 +434,10 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         creditCard.setExpDate(expiryDate);
         creditCard.setType(cardType);
 
-        CallPayeezy callPayeezy = new CallPayeezy();
-        callPayeezy.doCall(creditCard, merchantServiceDTO, tokenizeResponse -> {
+        showProgressDialog();
+        PayeezyCall payeezyCall = new PayeezyCall();
+        payeezyCall.doCall(creditCard, merchantServiceDTO, tokenizeResponse -> {
+            hideProgressDialog();
             if (tokenizeResponse != null) {
                 if (tokenizeResponse.getToken() != null) {
                     creditCardsPayloadDTO.setToken(tokenizeResponse.getToken().getValue());
@@ -512,12 +500,9 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         address2EditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(address2TextInput, null));
         zipCodeEditText.setOnFocusChangeListener(SystemUtil
-                .getHintFocusChangeListener(zipCodeTextInput, new View.OnFocusChangeListener() {
-                    @Override
-                    public void onFocusChange(View view, boolean hasFocus) {
-                        if (!hasFocus) { // for SmartyStreets
-                            getCityAndState(zipCodeEditText.getText().toString());
-                        }
+                .getHintFocusChangeListener(zipCodeTextInput, (view, hasFocus) -> {
+                    if (!hasFocus) { // for SmartyStreets
+                        getCityAndState(zipCodeEditText.getText().toString());
                     }
                 }));
         cityEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(cityTextInput, null));
@@ -526,37 +511,28 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     }
 
     private void setActionListeners() {
-        creditCardNoEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int action, KeyEvent keyEvent) {
-                if (action == EditorInfo.IME_ACTION_NEXT) {
-                    verificationCodeEditText.requestFocus();
-                    return true;
-                }
-                return false;
+        creditCardNoEditText.setOnEditorActionListener((textView, action, keyEvent) -> {
+            if (action == EditorInfo.IME_ACTION_NEXT) {
+                verificationCodeEditText.requestFocus();
+                return true;
             }
+            return false;
         });
-        nameOnCardEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int action, KeyEvent keyEvent) {
-                if (action == EditorInfo.IME_ACTION_NEXT) {
-                    creditCardNoEditText.requestFocus();
-                    return true;
-                }
-                return false;
+        nameOnCardEditText.setOnEditorActionListener((textView, action, keyEvent) -> {
+            if (action == EditorInfo.IME_ACTION_NEXT) {
+                creditCardNoEditText.requestFocus();
+                return true;
             }
+            return false;
         });
-        verificationCodeEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int action, KeyEvent keyEvent) {
-                if (action == EditorInfo.IME_ACTION_DONE) {
-                    verificationCodeEditText.clearFocus();
-                    expirationDateEditText.requestFocus();
-                    SystemUtil.hideSoftKeyboard(getActivity());
-                    return true;
-                }
-                return false;
+        verificationCodeEditText.setOnEditorActionListener((textView, action, keyEvent) -> {
+            if (action == EditorInfo.IME_ACTION_DONE) {
+                verificationCodeEditText.clearFocus();
+                expirationDateEditText.requestFocus();
+                SystemUtil.hideSoftKeyboard(getActivity());
+                return true;
             }
+            return false;
         });
     }
 
@@ -594,12 +570,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         stateTextInput.setEnabled(isEnabled);
     }
 
-    private View.OnClickListener pickDateListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            displaySimpleDatePickerDialogFragment();
-        }
-    };
+    private View.OnClickListener pickDateListener = view -> displaySimpleDatePickerDialogFragment();
 
     @Override
     public void onDateSet(int year, int monthOfYear) {

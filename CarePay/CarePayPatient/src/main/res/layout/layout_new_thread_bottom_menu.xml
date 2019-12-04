@@ -26,7 +26,7 @@
         android:textColor="@color/textview_default_textcolor"
         android:textSize="@dimen/text_size_15"
         app:customAssetFont="proxima_nova_regular"
-        breeze:textKey="messaging.create.attachment.actions.title"
+        breeze:textKey="attachments.options.photo.title.uploadImage"
         tools:text="What do you want to send?" />
 
     <RelativeLayout

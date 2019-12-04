@@ -252,7 +252,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
 
     private void setCommonValues() {
         DateUtil dateUtil = DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime());
-        appointmentDateTextView.setText(dateUtil.getDateAsDayShortMonthDayOrdinal());
+        appointmentDateTextView.setText(dateUtil.getDateAsWeekdayMonthDayYear());
         appointmentTimeTextView.setText(dateUtil.getTime12Hour());
         appointmentVisitTypeTextView.setText(StringUtil.
                 capitalize(appointmentDTO.getPayload().getVisitType().getName()));
@@ -347,6 +347,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                             rightButton.setVisibility(View.VISIBLE);
                             if (appointmentDTO.getPayload().canCheckInNow(callback.getPracticeSettings())) {
                                 rightButton.setText(Label.getLabel("appointments_check_in_now"));
+                                rightButton.setContentDescription(getContext().getString(R.string.content_description_checkin_appointment_button));
                             } else {
                                 rightButton.setText(Label.getLabel("appointments_check_in_early"));
                             }
@@ -469,6 +470,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
             actionsLayout.setVisibility(View.VISIBLE);
             leftButton.setVisibility(View.VISIBLE);
             leftButton.setText(Label.getLabel("appointment_request_checkout_now"));
+            leftButton.setContentDescription(getString(R.string.content_description_checkout_appointment_button));
             leftButton.setOnClickListener(checkOutClick);
         }
     }

@@ -3,8 +3,6 @@ package com.carecloud.carepay.patient.notifications.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.view.LayoutInflater;
@@ -12,6 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.notifications.models.CustomNotificationItem;
@@ -100,8 +102,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         return 0;
     }
 
+    @NonNull
     @Override
-    public NotificationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public NotificationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view;
         switch (viewType) {
@@ -126,7 +129,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     }
 
     @Override
-    public void onBindViewHolder(final NotificationViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final NotificationViewHolder holder, int position) {
         if (position >= notificationItems.size()) {
             return;
         }
@@ -172,19 +175,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             holder.displayUndoOption();
         }
 
-        holder.undoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.undoDeleteNotification(holder);
-            }
-        });
+        holder.undoButton.setOnClickListener(view -> callback.undoDeleteNotification(holder));
 
-        holder.getSwipeableView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.notificationSelected(notificationItem);
-            }
-        });
+        holder.getSwipeableView().setOnClickListener(view -> callback.notificationSelected(notificationItem));
 
     }
 
@@ -215,17 +208,14 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 holder.header.setText(Label.getLabel("notifications.custom.header.appUpdateRequired"));
                 holder.header.setTextColor(ContextCompat.getColor(context, R.color.remove_red));
                 holder.message.setText(Label.getLabel("notifications.custom.message.appUpdateRequired"));
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        String appPackageName = context.getPackageName();
-                        try {
-                            context.startActivity(new Intent(Intent.ACTION_VIEW,
-                                    Uri.parse("market://details?id=" + appPackageName)));
-                        } catch (android.content.ActivityNotFoundException anfe) {
-                            context.startActivity(new Intent(Intent.ACTION_VIEW,
-                                    Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-                        }
+                holder.itemView.setOnClickListener(view -> {
+                    String appPackageName = context.getPackageName();
+                    try {
+                        context.startActivity(new Intent(Intent.ACTION_VIEW,
+                                Uri.parse("market://details?id=" + appPackageName)));
+                    } catch (android.content.ActivityNotFoundException anfe) {
+                        context.startActivity(new Intent(Intent.ACTION_VIEW,
+                                Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
                     }
                 });
                 break;
@@ -365,9 +355,19 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.cellAvatar.setVisibility(View.VISIBLE);
         holder.header.setText(Label.getLabel("notifications.notificationList.statement.newStatementTitle"));
         holder.header.setTextColor(ContextCompat.getColor(context, R.color.emerald));
-        String practiceName = notificationItem.getPayload().getPracticeName();
-        holder.message.setText(String.format(Label
-                .getLabel("notifications.notificationList.statement.newStatementMessage"), practiceName));
+
+        String practiceName = callback.getUserPracticeById(notificationItem.getMetadata().getPracticeId())
+                .getPracticeName();
+        String messageText = Label
+                .getLabel("notifications.notificationList.statement.newStatementMessage");
+        holder.message.setTextColor(ContextCompat.getColor(context, R.color.charcoal));
+        SpannableStringBuilder stringBuilder = new SpannableStringBuilder(String
+                .format(messageText, practiceName));
+        stringBuilder.setSpan(new CarePayCustomSpan(context, CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD),
+                stringBuilder.length() - practiceName.length(), stringBuilder.length(),
+                Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        holder.message.setText(stringBuilder);
+
         holder.initials.setBackgroundResource(R.drawable.round_list_tv_green);
         holder.initials.setText(" ");
         holder.imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icn_new_statement));

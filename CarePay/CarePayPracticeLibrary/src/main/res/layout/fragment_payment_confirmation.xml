@@ -224,7 +224,8 @@
             android:background="@drawable/green_rounded_button_selector"
             android:textSize="@dimen/respons_button_text_size"
             app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="payment_ok" />
+            breeze:textKey="payment_ok"
+            android:contentDescription="@string/content_description_ok_button"/>
 
 
     </FrameLayout>

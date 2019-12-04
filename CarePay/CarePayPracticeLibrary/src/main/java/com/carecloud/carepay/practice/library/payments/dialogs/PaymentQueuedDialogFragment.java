@@ -50,7 +50,7 @@ public class PaymentQueuedDialogFragment extends BaseDialogFragment {
         TextView message = (TextView) view.findViewById(R.id.success_message);
         if(getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE){
             if(isRefund){
-                message.setText(Label.getLabel("refund_queued_practice"));
+                message.setText(Label.getLabel("payment_refund_queued_practice"));
             }else {
                 message.setText(Label.getLabel("payment_queued_practice"));
             }

@@ -3,7 +3,6 @@ package com.carecloud.carepay.patient.patientsplash;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -52,8 +51,7 @@ public class SplashActivity extends BasePatientActivity {
         String newRelicId = BuildConfig.NEW_RELIC_ID;
         NewRelic.withApplicationToken(newRelicId).start(this.getApplication());
 
-        Intent intent = new Intent(this, RegistrationIntentService.class);
-        startService(intent);
+        RegistrationIntentService.enqueueWork(getContext(), new Intent());
 
         Intent queueIntent = new Intent(getContext(), AndroidPayQueueUploadService.class);
         startService(queueIntent);//send any pending android pay payments
@@ -101,6 +99,10 @@ public class SplashActivity extends BasePatientActivity {
 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
+            if (getIntent().getData() != null) {
+                String inviteId = getIntent().getData().getQueryParameter("i");
+                getIntent().putExtra("inviteId", inviteId);
+            }
             navigateToWorkflow(workflowDTO, getIntent().getExtras());
             // end-splash activity and transition
             SplashActivity.this.finish();
@@ -155,5 +157,10 @@ public class SplashActivity extends BasePatientActivity {
                 Log.d(getClass().getName(), exceptionMessage);
             }
         };
+    }
+
+    @Override
+    public boolean manageSession() {
+        return false;
     }
 }

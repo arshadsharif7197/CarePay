@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="hint_floating_size">10sp</dimen>
+    <dimen name="hint_floating_size">14sp</dimen>
     <dimen name="errorTextSize">10sp</dimen>
     <dimen name="textview_default_textsize">18sp</dimen>
     <dimen name="closeIconSize">19dp</dimen>
@@ -42,5 +42,7 @@
     <dimen name="profileListTriggerIconPadding">5dp</dimen>
 
     <dimen name="largeAlertMessageTextSize">13sp</dimen>
+
+    <dimen name="inputLayoutRequiredLabelTopMargin">30dp</dimen>
     <dimen name="patient_bottom_round_dimen">5dp</dimen>
 </resources>
