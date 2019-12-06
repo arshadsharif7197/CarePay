@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.carecloud.carepay.patient.myhealth.dtos.MedicationDto;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.CarePayApplication;
@@ -55,9 +56,9 @@ public class MyHealthViewModel extends BaseViewModel {
                     }
 
                     @Override
-                    public void onFailure(String exceptionMessage) {
+                    public void onFailure(ServerErrorDTO serverErrorDto) {
                         setLoading(false);
-                        setErrorMessage(exceptionMessage);
+                        setErrorMessage(serverErrorDto.getMessage().getBody().getError().getMessage());
                     }
                 }, queryMap);
     }
@@ -86,9 +87,9 @@ public class MyHealthViewModel extends BaseViewModel {
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 setLoading(false);
-                setErrorMessage(exceptionMessage);
+                setErrorMessage(serverErrorDto.getMessage().getBody().getError().getMessage());
             }
         }, queryMap);
     }

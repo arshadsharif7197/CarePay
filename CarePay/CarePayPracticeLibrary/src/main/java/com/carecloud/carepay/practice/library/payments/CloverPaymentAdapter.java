@@ -17,6 +17,7 @@ import com.carecloud.carepay.service.library.RestDef;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -257,9 +258,9 @@ public class CloverPaymentAdapter {
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             activity.hideProgressDialog();
-            activity.showErrorNotification(exceptionMessage);
+            activity.showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 
@@ -402,7 +403,7 @@ public class CloverPaymentAdapter {
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 activity.hideProgressDialog();
 
                 queuePayment(paymentRequestId, true);

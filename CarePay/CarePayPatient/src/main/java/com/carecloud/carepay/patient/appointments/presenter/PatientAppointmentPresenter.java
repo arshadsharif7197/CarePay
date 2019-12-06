@@ -28,7 +28,7 @@ import com.carecloud.carepay.patient.rate.RateDialog;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.appointment.DataDTO;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -146,15 +146,12 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         queries.put("patient_id", appointmentDTO.getMetadata().getPatientId());
         queries.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
 
-        DataDTO data = appointmentsResultModel.getMetadata().getTransitions().getCancel().getData();
         JsonObject postBodyObj = new JsonObject();
         if (!StringUtil.isNullOrEmpty(cancellationReasonComment)) {
-            postBodyObj.addProperty(data.getCancellationComments().getName() != null ?
-                    data.getCancellationComments().getName() : "cancellation_comments", cancellationReasonComment);
+            postBodyObj.addProperty("cancellation_comments", cancellationReasonComment);
         }
         if (cancellationReason != -1) {
-            postBodyObj.addProperty(data.getCancellationReasonId().getName() != null ?
-                    data.getCancellationReasonId().getName() : "cancellation_reason_id", cancellationReason);
+            postBodyObj.addProperty("cancellation_reason_id", cancellationReason);
         }
 
         String body = postBodyObj.toString();
@@ -214,10 +211,10 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 viewHandler.hideProgressDialog();
-                viewHandler.showErrorNotification(exceptionMessage);
-                Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
+                viewHandler.showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+                Log.e(getContext().getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
             }
         }, queries, header);
     }
@@ -385,10 +382,10 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             viewHandler.hideProgressDialog();
-            viewHandler.showErrorNotification(exceptionMessage);
-            Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
+            viewHandler.showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(getContext().getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 
@@ -408,10 +405,10 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 viewHandler.hideProgressDialog();
-                viewHandler.showErrorNotification(exceptionMessage);
-                Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
+                viewHandler.showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+                Log.e(getContext().getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
             }
         };
     }
@@ -836,9 +833,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             viewHandler.hideProgressDialog();
-            viewHandler.showErrorNotification(exceptionMessage);
+            viewHandler.showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 }

@@ -4,6 +4,8 @@ package com.carecloud.carepaylibray.checkout;
 import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.google.android.material.textfield.TextInputLayout;
 import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
@@ -395,10 +397,10 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 hideProgressDialog();
-                showErrorNotification(exceptionMessage);
-                Log.e("Server Error", exceptionMessage);
+                showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+                Log.e("Server Error", serverErrorDto.getMessage().getBody().getError().getMessage());
             }
         };
     }

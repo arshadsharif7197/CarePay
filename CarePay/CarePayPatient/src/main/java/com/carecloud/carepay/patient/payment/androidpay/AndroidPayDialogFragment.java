@@ -19,6 +19,7 @@ import com.carecloud.carepay.patient.payment.androidpay.models.PayeezyAndroidPay
 import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -289,9 +290,9 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
-            showErrorNotification(exceptionMessage);
+            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
             dismiss();
         }
     };
@@ -410,10 +411,10 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 hideProgressDialog();
-                System.out.print(exceptionMessage);
-                logPaymentFail("Failed to reach make payments endpoint", true, rawResponse, exceptionMessage);
+                System.out.print(serverErrorDto.getMessage().getBody().getError().getMessage());
+                logPaymentFail("Failed to reach make payments endpoint", true, rawResponse, serverErrorDto.getMessage().getBody().getError().getMessage());
 
             }
         };

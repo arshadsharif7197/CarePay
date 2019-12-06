@@ -35,6 +35,8 @@ import com.carecloud.carepay.patient.visitsummary.dto.VisitSummaryDTO;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ErrorBodyDTO;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -560,7 +562,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             queueLayout.setVisibility(View.GONE);
         }
     };
@@ -730,8 +732,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
-                Log.e("okHttp", exceptionMessage);
+            public void onFailure(ServerErrorDTO serverErrorDto) {
+                Log.e("okHttp", serverErrorDto.getMessage().getBody().getError().getMessage());
                 hideProgressDialog();
                 showErrorNotification(Label.getLabel("visitSummary.createVisitSummary.error.label.downloadError"));
 
@@ -753,7 +755,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                         try {
                             visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
                         } catch (Exception ex) {
-                            onFailure("");
+                            onFailure(new ServerErrorDTO());
                         }
                         String status = visitSummaryDTO.getPayload().getVisitSummary().getStatus();
                         if (retryIntent > VisitSummaryDialogFragment.MAX_NUMBER_RETRIES) {
@@ -771,9 +773,9 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     }
 
                     @Override
-                    public void onFailure(String exceptionMessage) {
-                        Log.e("OkHttp", exceptionMessage);
-                        if (exceptionMessage.contains("JSON")) {
+                    public void onFailure(ServerErrorDTO serverErrorDto) {
+                        Log.e("OkHttp", serverErrorDto.getMessage().getBody().getError().getMessage());
+                        if (serverErrorDto.getMessage().getBody().getError().getMessage().contains("JSON")) {
                             String title = String.format("%s - %s",
                                     appointmentDTO.getPayload().getProvider().getFullName(),
                                     DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime())

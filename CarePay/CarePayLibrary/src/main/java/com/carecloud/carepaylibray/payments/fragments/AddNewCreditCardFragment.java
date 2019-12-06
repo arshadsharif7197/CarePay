@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -124,11 +125,11 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
             nextButton.setEnabled(true);
-            SystemUtil.showErrorToast(getContext(), exceptionMessage);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            SystemUtil.showErrorToast(getContext(), serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 
@@ -169,11 +170,11 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
             nextButton.setEnabled(true);
-            SystemUtil.showErrorToast(getContext(), exceptionMessage);
-            Log.e("Server Error", exceptionMessage);
+            SystemUtil.showErrorToast(getContext(), serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e("Server Error", serverErrorDto.getMessage().getBody().getError().getMessage());
 
             String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
             Object[] values = {amountToMakePayment, getString(R.string.payment_new_card)};

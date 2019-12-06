@@ -13,6 +13,7 @@ import com.carecloud.carepay.patient.patientsplash.dtos.SelectLanguageDTO;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayQueueUploadService;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.WorkflowSessionHandler;
@@ -86,9 +87,9 @@ public class SplashActivity extends BasePatientActivity {
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
-            showErrorNotification(exceptionMessage);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        public void onFailure(ServerErrorDTO serverErrorDto) {
+            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 
@@ -109,9 +110,9 @@ public class SplashActivity extends BasePatientActivity {
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
-            showErrorNotification(exceptionMessage);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+        public void onFailure(ServerErrorDTO serverErrorDto) {
+            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
 
         }
     };
@@ -153,8 +154,8 @@ public class SplashActivity extends BasePatientActivity {
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
-                Log.d(getClass().getName(), exceptionMessage);
+            public void onFailure(ServerErrorDTO serverErrorDto) {
+                Log.d(getClass().getName(), serverErrorDto.getMessage().getBody().getError().getMessage());
             }
         };
     }

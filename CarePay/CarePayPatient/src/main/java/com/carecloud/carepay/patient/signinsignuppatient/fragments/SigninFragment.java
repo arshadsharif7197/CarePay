@@ -32,6 +32,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -267,7 +268,7 @@ public class SigninFragment extends BaseFragment {
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 hideProgressDialog();
                 setSignInButtonClickable(true);
                 if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE
@@ -275,7 +276,7 @@ public class SigninFragment extends BaseFragment {
                     getWorkflowServiceHelper().setAppAuthorizationHelper(null);
                 }
                 callback.showErrorToast(CarePayConstants.INVALID_LOGIN_ERROR_MESSAGE);
-                Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+                Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
             }
         };
     }
@@ -301,8 +302,8 @@ public class SigninFragment extends BaseFragment {
                     }
 
                     @Override
-                    public void onFailure(String exceptionMessage) {
-                        Log.e("Breeze", exceptionMessage);
+                    public void onFailure(ServerErrorDTO serverErrorDto) {
+                        Log.e("Breeze", serverErrorDto.getMessage().getBody().getError().getMessage());
                     }
                 }, query, headers);
     }

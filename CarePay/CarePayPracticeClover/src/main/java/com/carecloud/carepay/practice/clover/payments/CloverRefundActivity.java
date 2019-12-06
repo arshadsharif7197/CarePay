@@ -14,12 +14,12 @@ import com.carecloud.carepay.practice.clover.CloverQueueUploadService;
 import com.carecloud.carepay.practice.clover.R;
 import com.carecloud.carepay.practice.clover.models.CloverPaymentDTO;
 import com.carecloud.carepay.practice.clover.models.CloverQueuePaymentRecord;
-import com.carecloud.carepay.practice.library.splash.SplashActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.RestCallService;
 import com.carecloud.carepay.service.library.RestCallServiceHelper;
 import com.carecloud.carepay.service.library.ServiceGenerator;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -360,15 +360,15 @@ public class CloverRefundActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 hideProgressDialog();
-                showErrorNotification(exceptionMessage);
+                showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
 
                 setResult(RESULT_CANCELED);
 
                 printReceipt(response);
 
-                logRefundFail("Failed to reach make payment endpoint", true, response.getJSONObject(), exceptionMessage);
+                logRefundFail("Failed to reach make payment endpoint", true, response.getJSONObject(), serverErrorDto.getMessage().getBody().getError().getMessage());
             }
         };
     }

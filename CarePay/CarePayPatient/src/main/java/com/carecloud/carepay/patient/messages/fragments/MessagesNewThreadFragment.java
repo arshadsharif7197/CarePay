@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.textfield.TextInputLayout;
 import androidx.fragment.app.Fragment;
@@ -296,9 +298,9 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 hideProgressDialog();
-                showErrorNotification(exceptionMessage);
+                showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
             }
         };
     }

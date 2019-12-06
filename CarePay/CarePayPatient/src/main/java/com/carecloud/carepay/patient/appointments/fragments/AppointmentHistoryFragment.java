@@ -3,6 +3,8 @@ package com.carecloud.carepay.patient.appointments.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -251,7 +253,7 @@ public class AppointmentHistoryFragment extends BaseFragment
                     }
 
                     @Override
-                    public void onFailure(String exceptionMessage) {
+                    public void onFailure(ServerErrorDTO serverErrorDto) {
                         if (isVisible()) {
                             getView().findViewById(R.id.fakeView).setVisibility(View.GONE);
                         }
@@ -260,7 +262,7 @@ public class AppointmentHistoryFragment extends BaseFragment
                         if (showShimmerLayout && (getActivity() != null) && ((BaseActivity) getActivity()).isVisible()) {
                             hideShimmerEffect();
                         }
-                        showErrorNotification(exceptionMessage);
+                        showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
                     }
                 }, queryMap);
     }

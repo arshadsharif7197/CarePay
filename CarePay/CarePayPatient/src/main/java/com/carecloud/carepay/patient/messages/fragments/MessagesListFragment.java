@@ -20,6 +20,7 @@ import com.carecloud.carepay.patient.messages.adapters.MessagesListAdapter;
 import com.carecloud.carepay.patient.messages.models.Messages;
 import com.carecloud.carepay.patient.messages.models.MessagingModel;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -296,9 +297,9 @@ public class MessagesListFragment extends BaseFragment
         }
 
         @Override
-        public void onFailure(String errorMessage) {
+        public void onFailure(ServerErrorDTO errorMessage) {
             hideProgressDialog();
-            showErrorNotification(errorMessage);
+            showErrorNotification(errorMessage.getMessage().getBody().getError().getMessage());
         }
     };
 

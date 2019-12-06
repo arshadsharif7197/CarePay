@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentManager;
 import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -277,10 +278,10 @@ public class CreditCardDetailsFragment extends BaseFragment {
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
-            showErrorNotification(exceptionMessage);
-            Log.e(TAG, "Credit Card onFailure" + exceptionMessage);
+            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(TAG, "Credit Card onFailure" + serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 

@@ -3,6 +3,8 @@ package com.carecloud.carepaylibray.signinsignup.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.google.android.material.textfield.TextInputLayout;
 import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
@@ -193,8 +195,8 @@ public class ResetPasswordFragment extends BaseFragment {
         }
 
         @Override
-        public void onFailure(String exceptionMessage)  {
-            listener.showErrorToast(exceptionMessage);
+        public void onFailure(ServerErrorDTO serverErrorDto)  {
+            listener.showErrorToast(serverErrorDto.getMessage().getBody().getError().getMessage());
             hideProgressDialog();
         }
     };

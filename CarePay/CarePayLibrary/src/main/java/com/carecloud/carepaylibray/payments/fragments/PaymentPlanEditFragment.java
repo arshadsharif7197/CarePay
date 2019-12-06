@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -215,9 +216,9 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 hideProgressDialog();
-                SystemUtil.showErrorToast(getContext(), exceptionMessage);
+                SystemUtil.showErrorToast(getContext(), serverErrorDto.getMessage().getBody().getError().getMessage());
 
             }
         }, queryMap);
@@ -338,9 +339,9 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 hideProgressDialog();
-                SystemUtil.showErrorToast(getContext(), exceptionMessage);
+                SystemUtil.showErrorToast(getContext(), serverErrorDto.getMessage().getBody().getError().getMessage());
 
             }
         }, new Gson().toJson(postModel), queryMap);
@@ -448,10 +449,10 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
-            SystemUtil.showErrorToast(getContext(), exceptionMessage);
-            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+            SystemUtil.showErrorToast(getContext(), serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 

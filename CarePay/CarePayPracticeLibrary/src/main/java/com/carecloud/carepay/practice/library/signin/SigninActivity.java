@@ -5,7 +5,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import com.google.android.material.textfield.TextInputLayout;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -26,22 +25,20 @@ import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionUserPractice;
-import com.carecloud.carepay.practice.library.signin.fragments.ChoosePracticeLocationFragment;
 import com.carecloud.carepay.practice.library.signin.fragments.ChoosePracticeFragment;
+import com.carecloud.carepay.practice.library.signin.fragments.ChoosePracticeLocationFragment;
 import com.carecloud.carepay.practice.library.signin.interfaces.SelectPracticeCallback;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
-import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInDTO;
-import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInResponse;
-import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
@@ -51,11 +48,15 @@ import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.signinsignup.fragments.ResetPasswordFragment;
+import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInDTO;
+import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInResponse;
+import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.newrelic.agent.android.NewRelic;
 
@@ -360,7 +361,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
             setSignInButtonClickable(true);
             if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE
@@ -368,7 +369,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
                 getWorkflowServiceHelper().setAppAuthorizationHelper(null);
             }
             showErrorToast(CarePayConstants.INVALID_LOGIN_ERROR_MESSAGE);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 
@@ -539,7 +540,9 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
                     .getUserPracticesList();
 
             if (practiceList.isEmpty()) {
-                onFailure("No Practice associated to this user");
+                ServerErrorDTO serverErrorDTO = new ServerErrorDTO();
+                serverErrorDTO.getMessage().getBody().getError().setMessage("No Practice associated to this user");
+                onFailure(serverErrorDTO);
                 return;
             }
 
@@ -560,12 +563,12 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
             getWorkflowServiceHelper().setAppAuthorizationHelper(null);
             setSignInButtonClickable(true);
-            showErrorNotification(exceptionMessage);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 
@@ -585,11 +588,11 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
             setSignInButtonClickable(true);
-            showErrorNotification(exceptionMessage);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 

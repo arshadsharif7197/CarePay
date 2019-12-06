@@ -21,9 +21,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserDetails;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserPool;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserSession;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationContinuation;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationDetails;
@@ -32,7 +30,6 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.Mult
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.amazonaws.regions.Regions;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
-import com.carecloud.carepay.service.library.dtos.CognitoDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
 
@@ -163,7 +160,6 @@ public class AppAuthorizationHelper {
     private Map<String, String> signUpFieldsO2C;
 
     private ApplicationMode applicationMode;
-    private CognitoUserPool userPool;
 
     private CognitoDevice newDevice;
     private int itemCount;
@@ -203,17 +199,6 @@ public class AppAuthorizationHelper {
     public AppAuthorizationHelper(Context context, ApplicationMode applicationMode) {
         this.applicationMode = applicationMode;
         setData();
-
-        // Create a user pool with default ClientConfiguration
-        CognitoDTO cognitoDTO = applicationMode.getCognitoDTO();
-        if (cognitoDTO != null) {
-            userPool = new CognitoUserPool(context,
-                    cognitoDTO.getUserPoolId(),
-                    cognitoDTO.getClientId(),
-                    clientSecret,
-                    cognitoRegion);
-        }
-
         phoneVerified = false;
         phoneAvailable = false;
         emailVerified = false;
@@ -221,10 +206,6 @@ public class AppAuthorizationHelper {
 
         currUserAttributes = new HashSet<>();
         newDevice = null;
-    }
-
-    public CognitoUserPool getPool() {
-        return userPool;
     }
 
     public Map<String, String> getSignUpFieldsC2O() {
@@ -331,45 +312,6 @@ public class AppAuthorizationHelper {
                 phoneAvailable = true;
             }
         }
-    }
-
-    /**
-     * Sign in utility
-     *
-     * @param username        The user name
-     * @param password        The password
-     * @param successCallback callback to be execruted on completion
-     */
-    public void signIn(String username,
-                       final String password,
-                       final CognitoActionCallback successCallback) {
-        AuthenticationHandler authenticationHandler = executeUserAuthentication(password, successCallback);
-        // set the username
-        setUser(username);
-        // perform the authentication
-        getPool().getUser(username).getSessionInBackground(authenticationHandler);
-        retryCount = 0;
-    }
-
-    /**
-     * @param successAction The action to be executed on user found
-     * @return Whether the current user has is signed in
-     */
-    public boolean refreshToken(final CognitoActionCallback successAction) {
-        if (retryCount > MAX_RETRIES) {
-            return false;
-        }
-        retryCount++;
-        AuthenticationHandler authenticationHandler = executeUserAuthentication("", successAction);
-        CognitoUser user = getPool().getCurrentUser();
-        String userName = user.getUserId();
-        if (null == userName) {
-            return false;
-        }
-        setUser(userName);
-        user.getSessionInBackground(authenticationHandler);
-
-        return true;
     }
 
     private AuthenticationHandler executeUserAuthentication(final String password, final CognitoActionCallback successCallback) {

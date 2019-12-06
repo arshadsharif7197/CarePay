@@ -8,6 +8,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.patientmodecheckin.models.PatientModeCheckinDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.ISession;
@@ -137,9 +138,9 @@ public class PatientModeDemographicsPresenter extends DemographicsPresenterImpl 
                 }
 
                 @Override
-                public void onFailure(String exceptionMessage) {
+                public void onFailure(ServerErrorDTO serverErrorDto) {
                     session.hideProgressDialog();
-                    session.showErrorNotification(exceptionMessage);
+                    session.showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
                 }
             });
         }
