@@ -10,9 +10,9 @@ var tokens: SessionTokens? = null
 var cognitoToken: String? = null
 var xavierToken: String? = null
 
-fun initXavierProvider() {
+fun initXavierProvider(appMode: String = "practice") {
     if (tokens === null) {
-        val response = makeRequest(getBreezeToken(appMode = "practice"))
+        val response = makeRequest(getBreezeToken(appMode = appMode))
         cognitoToken = response.data?.getBreezeSessionToken?.cognito_token?.authenticationToken
         xavierToken = response.data?.getBreezeSessionToken?.xavier_token
     }

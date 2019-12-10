@@ -2,6 +2,8 @@ package com.carecloud.carepay.patient.tests
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.patient.BaseTest
+import com.carecloud.carepay.patient.pageObjects.LoginScreen
+import com.carecloud.carepay.patient.pageObjects.TutorialScreen
 import com.carecloud.carepay.patient.pageObjects.appointments.AppointmentScreen
 import com.carecloud.carepay.patient.pageObjects.payments.PaymentsScreen
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.createSimpleCharge
@@ -28,7 +30,10 @@ class PAMakePartialPaymentTest : BaseTest() {
 
     @Test
     fun paMakePartialPaymentTest() {
-        AppointmentScreen()
+        LoginScreen()
+                .typeUser("dev_emails+qa.androidbreeze2@carecloud.com")
+                .typePassword("Test123!")
+                .pressLoginButton()
                 .openNavigationDrawer()
                 .goToPayments()
                 .makePaymentFor(0)

@@ -5,7 +5,9 @@ import com.carecloud.carepaylibray.androidTest.providers.formatRequest
 /**
  * Created by drodriguez on 2019-10-15.
  */
-fun getBreezeToken(username: String = "automation+breezetest@carecloud.com", password: String = "Test123!", appMode: String): String {
+fun getBreezeToken(appMode: String): String {
+    val username = if (appMode === "patient") "dev_emails+qa.androidbreeze2@carecloud.com" else "automation+breezetest@carecloud.com"
+    val password = "Test123!"
     return formatRequest("""
         { getBreezeSessionToken(
             username: "$username",

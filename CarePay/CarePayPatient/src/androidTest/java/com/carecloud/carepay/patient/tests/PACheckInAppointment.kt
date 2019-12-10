@@ -2,6 +2,8 @@ package com.carecloud.carepay.patient.tests
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.patient.BaseTest
+import com.carecloud.carepay.patient.pageObjects.LoginScreen
+import com.carecloud.carepay.patient.pageObjects.TutorialScreen
 import com.carecloud.carepay.patient.pageObjects.appointments.AppointmentScreen
 import com.carecloud.carepay.patient.pageObjects.checkin.CheckInAllergiesScreen
 import com.carecloud.carepay.patient.pageObjects.checkin.CheckInMedicationsScreen
@@ -9,6 +11,7 @@ import com.carecloud.carepay.patient.pageObjects.checkin.demographics.CheckInDem
 import com.carecloud.carepay.patient.pageObjects.checkin.demographics.CheckInDemogDemographicsScreen
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.changePaymentSetting
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.createAppointment
+import com.carecloud.carepaylibray.androidTest.graphqlrequests.deleteAppointment
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.getBreezeToken
 import com.carecloud.carepaylibray.androidTest.providers.formatAppointmentTime
 import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
@@ -25,6 +28,7 @@ import org.junit.runner.RunWith
 class PACheckInAppointment : BaseTest() {
 
     private lateinit var apptTime: String
+    private var apptId: Int? = null
 
     @Before
     override
@@ -32,14 +36,18 @@ class PACheckInAppointment : BaseTest() {
         initXavierProvider()
         val appointment = createAppointment()
         apptTime = formatAppointmentTime(appointment.data?.createAppointment?.start_time.toString())
+        apptId = appointment.data?.createAppointment?.id
         changePaymentSetting("neither")
         super.setup()
     }
 
     @Test
     fun paCheckInAppointment() {
-        AppointmentScreen()
-                .checkInAppointmentOnListAtTime(apptTime)
+        LoginScreen()
+                .typeUser("dev_emails+qa.androidbreeze2@carecloud.com")
+                .typePassword("Test123!")
+                .pressLoginButton()
+                .checkInFirstAppointmentOnList(1)
                 .personalInfoNextStep(CheckInDemogAddressScreen())
                 .addressNextStep(CheckInDemogDemographicsScreen())
                 .demographicsNextStep(CheckInMedicationsScreen())
@@ -51,7 +59,7 @@ class PACheckInAppointment : BaseTest() {
     @After
     override
     fun tearDown() {
-        // TODO: clean up appointment
+        deleteAppointment(apptId)
         super.tearDown()
     }
 

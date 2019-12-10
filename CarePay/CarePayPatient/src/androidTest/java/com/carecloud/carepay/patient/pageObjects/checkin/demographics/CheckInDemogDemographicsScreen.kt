@@ -10,7 +10,7 @@ import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
  */
 class CheckInDemogDemographicsScreen: CustomViewActions() {
     fun <T> demographicsNextStep(next: T): T {
-        click(appContext.getString(R.string.content_description_next_button))
+        clickOnSpecificText("NEXT STEP")
         return next
     }
 }

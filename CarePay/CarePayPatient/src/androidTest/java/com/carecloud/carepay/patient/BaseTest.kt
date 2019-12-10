@@ -35,9 +35,6 @@ open class BaseTest {
 
         TutorialScreen()
                 .skipTutorial()
-                .typeUser("dev_emails+qa.androidbreeze2@carecloud.com")
-                .typePassword("Test123!")
-                .pressLoginButton()
     }
 
     @After

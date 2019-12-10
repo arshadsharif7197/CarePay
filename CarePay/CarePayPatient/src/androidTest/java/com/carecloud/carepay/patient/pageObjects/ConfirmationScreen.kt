@@ -2,6 +2,7 @@ package com.carecloud.carepay.patient.pageObjects
 
 import com.carecloud.carepay.patient.R
 import com.carecloud.carepay.patient.appContext
+import com.carecloud.carepay.patient.pageObjects.payments.PaymentsScreen
 import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 
 /**
@@ -9,8 +10,9 @@ import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
  */
 class ConfirmationScreen : CustomViewActions() {
 
-    fun confirm() {
-        click(appContext.getString(R.string.content_description_confirm))
+    fun confirm(): PaymentsScreen {
+        clickOnSpecificText("YES")
+        return PaymentsScreen()
     }
 
 }
