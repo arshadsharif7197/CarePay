@@ -74,6 +74,17 @@ public class MessagesListFragment extends BaseFragment
         viewModel = ViewModelProviders.of(getActivity()).get(MessagesViewModel.class);
         messagingDto = viewModel.getMessagesDto().getValue();
         viewModel.getThreadsObservable().observe(this, this::updateDisplayDataModel);
+        viewModel.getDeleteMessageObservable().observe(MessagesListFragment.this,
+                messagingModelDto -> {
+                    MessagesListAdapter messagesListAdapter = (MessagesListAdapter) recyclerView.getAdapter();
+                    Paging paging = messagingDto.getPayload().getMessages().getPaging();
+                    if (messagesListAdapter.getItemCount() == 0) {
+                        setAdapters();
+                    } else if (paging.getResultsPerPage() % messagesListAdapter.getItemCount() < BOTTOM_ROW_OFFSET
+                            && hasMorePages()) {
+                        viewModel.getThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage());
+                    }
+                });
     }
 
 
@@ -250,19 +261,8 @@ public class MessagesListFragment extends BaseFragment
             if (deleteThread != null) {
                 MessagesListAdapter messagesListAdapter = (MessagesListAdapter) recyclerView.getAdapter();
                 messagesListAdapter.finalizeMessageRemoval(deleteThread);
-                viewModel.deleteMessageThread(deleteThread).observe(MessagesListFragment.this,
-                        messagingModelDto -> {
-                            //reset delete thread
-                            deleteThread = null;
-                            Paging paging = messagingDto.getPayload().getMessages().getPaging();
-                            if (messagesListAdapter.getItemCount() == 0) {
-                                setAdapters();
-                            } else if (paging.getResultsPerPage() % messagesListAdapter.getItemCount() < BOTTOM_ROW_OFFSET
-                                    && hasMorePages()) {
-                                viewModel.getThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage());
-                            }
-                        });
-
+                viewModel.deleteMessageThread(deleteThread.getId());
+                deleteThread = null;
             }
         }
     }
