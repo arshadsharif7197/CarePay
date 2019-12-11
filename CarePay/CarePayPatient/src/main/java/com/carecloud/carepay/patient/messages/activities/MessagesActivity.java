@@ -131,12 +131,7 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
 
     @Override
     public boolean canSendProvidersMessages() {
-        for (UserPracticeDTO practiceDTO : messagingDto.getPayload().getUserPractices()) {
-            if (messagingDto.getPayload().canMessageProviders(practiceDTO.getPracticeId())) {
-                return true;
-            }
-        }
-        return false;
+        return messagingDto.getPayload().canMessageProviders(messagingDto.getPayload().getPracticePatientIds().get(0).getPracticeId());
     }
 
 
