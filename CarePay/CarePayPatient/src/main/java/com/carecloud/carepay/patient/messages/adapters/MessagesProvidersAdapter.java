@@ -1,19 +1,20 @@
 package com.carecloud.carepay.patient.messages.adapters;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.models.ProviderContact;
 import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +28,7 @@ public class MessagesProvidersAdapter extends RecyclerView.Adapter<MessagesProvi
     }
 
     private Context context;
-    private List<ProviderContact> providers = new ArrayList<>();
+    private List<ProviderContact> providers;
     private SelectProviderCallback callback;
 
     /**
@@ -43,8 +44,9 @@ public class MessagesProvidersAdapter extends RecyclerView.Adapter<MessagesProvi
         this.callback = callback;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_messages_providers, parent, false);
         return new ViewHolder(view);
     }
@@ -60,14 +62,9 @@ public class MessagesProvidersAdapter extends RecyclerView.Adapter<MessagesProvi
         holder.providerInitials.setVisibility(View.VISIBLE);
 
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.onProviderSelected(provider);
-            }
-        });
+        holder.itemView.setOnClickListener(view -> callback.onProviderSelected(provider));
 
-        if(!StringUtil.isNullOrEmpty(provider.getPhoto())){
+        if (!StringUtil.isNullOrEmpty(provider.getPhoto())) {
             PicassoHelper.get().loadImage(context, holder.providerImage, holder.providerInitials, provider.getPhoto());
         }
     }

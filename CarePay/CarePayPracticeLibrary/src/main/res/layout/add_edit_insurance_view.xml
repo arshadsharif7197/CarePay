@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/dimen_20dp"
     android:layout_marginTop="@dimen/dimen_20dp"
+    android:layout_marginBottom="@dimen/dimen_20dp"
     android:orientation="vertical">
 
     <FrameLayout
@@ -40,7 +40,8 @@
 
         <include
             android:id="@+id/healthInsuranceTypeRequired"
-            layout="@layout/layout_required_text_view" />
+            layout="@layout/layout_required_text_view"
+            android:visibility="visible" />
 
     </FrameLayout>
 
@@ -75,7 +76,8 @@
 
         <include
             android:id="@+id/healthInsuranceProviderRequired"
-            layout="@layout/layout_required_text_view" />
+            layout="@layout/layout_required_text_view"
+            android:visibility="visible" />
 
     </FrameLayout>
 
@@ -433,8 +435,8 @@
                 android:layout_marginTop="@dimen/dimen_13dp"
                 android:background="@drawable/round_border_button_bg"
                 android:gravity="center"
-                android:paddingBottom="@dimen/dimen_10dp"
                 android:paddingTop="@dimen/dimen_10dp"
+                android:paddingBottom="@dimen/dimen_10dp"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/demographicInsurancePhotoButtonTextSize"
                 app:customAssetFont="gotham_rounded_medium"
@@ -464,8 +466,8 @@
                 android:layout_marginTop="@dimen/dimen_13dp"
                 android:background="@drawable/round_border_button_bg"
                 android:gravity="center"
-                android:paddingBottom="@dimen/dimen_10dp"
                 android:paddingTop="@dimen/dimen_10dp"
+                android:paddingBottom="@dimen/dimen_10dp"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/demographicInsurancePhotoButtonTextSize"
                 app:customAssetFont="gotham_rounded_medium"
