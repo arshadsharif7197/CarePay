@@ -1,7 +1,6 @@
 package com.carecloud.carepay.patient.messages;
 
 import com.carecloud.carepay.patient.messages.models.Messages;
-import com.carecloud.carepay.patient.messages.models.MessagingModel;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 
 /**

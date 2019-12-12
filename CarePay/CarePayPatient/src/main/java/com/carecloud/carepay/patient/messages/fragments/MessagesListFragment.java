@@ -3,36 +3,32 @@ package com.carecloud.carepay.patient.messages.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-
-import androidx.annotation.NonNull;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.MessageNavigationCallback;
+import com.carecloud.carepay.patient.messages.MessagesViewModel;
 import com.carecloud.carepay.patient.messages.adapters.MessagesListAdapter;
 import com.carecloud.carepay.patient.messages.models.Messages;
-import com.carecloud.carepay.patient.messages.models.MessagingModel;
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.patient.messages.models.MessagingModelDto;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.models.Paging;
 import com.carecloud.carepaylibray.customcomponents.SwipeViewHolder;
 import com.carecloud.carepaylibray.profile.Profile;
-import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SwipeHelper;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by lmenendez on 6/30/17
@@ -53,12 +49,13 @@ public class MessagesListFragment extends BaseFragment
     private TextView noMessagesTitle;
 
     private MessageNavigationCallback callback;
-    private MessagingModel messagingModel;
+    private MessagingModelDto messagingDto;
 
     private boolean refreshing = true;
     private boolean isPaging = false;
 
     private Handler handler;
+    private MessagesViewModel viewModel;
 
     @Override
     public void onAttach(Context context) {
@@ -74,7 +71,20 @@ public class MessagesListFragment extends BaseFragment
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         handler = new Handler();
-        messagingModel = (MessagingModel) callback.getDto();
+        viewModel = ViewModelProviders.of(getActivity()).get(MessagesViewModel.class);
+        messagingDto = viewModel.getMessagesDto().getValue();
+        viewModel.getThreadsObservable().observe(this, this::updateDisplayDataModel);
+        viewModel.getDeleteMessageObservable().observe(MessagesListFragment.this,
+                messagingModelDto -> {
+                    MessagesListAdapter messagesListAdapter = (MessagesListAdapter) recyclerView.getAdapter();
+                    Paging paging = messagingDto.getPayload().getMessages().getPaging();
+                    if (messagesListAdapter.getItemCount() == 0) {
+                        setAdapters();
+                    } else if (paging.getResultsPerPage() % messagesListAdapter.getItemCount() < BOTTOM_ROW_OFFSET
+                            && hasMorePages()) {
+                        viewModel.getThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage());
+                    }
+                });
     }
 
 
@@ -90,7 +100,7 @@ public class MessagesListFragment extends BaseFragment
 
         noMessagesLayout = view.findViewById(R.id.no_messages_layout);
         actionButton = view.findViewById(R.id.fab);
-        actionButton.setOnClickListener(newMessageAction);
+        actionButton.setOnClickListener(v -> showProvidersFragment());
         noMessagesDescription = view.findViewById(R.id.no_messages_description);
         noMessagesTitle = view.findViewById(R.id.no_messages_title);
 
@@ -103,40 +113,38 @@ public class MessagesListFragment extends BaseFragment
         notificationsTouchHelper.attachToRecyclerView(recyclerView);
 
         butonNewMessage = view.findViewById(R.id.new_message_button);
-        butonNewMessage.setOnClickListener(newMessageAction);
+        butonNewMessage.setOnClickListener(v -> showProvidersFragment());
 
         refreshing = true;
-        updateDisplayDataModel(messagingModel);
+        updateDisplayDataModel(messagingDto);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        refreshListMessages();
+    private void showProvidersFragment() {
+        callback.addFragment(MessagesProvidersFragment.newInstance(), true);
     }
 
     public void refreshListMessages() {
         refreshing = true;
-        getThreads(0, 0);
+        viewModel.getThreads(0, 0);
     }
 
     private void setAdapters() {
-        List<Messages.Reply> threads = messagingModel.getPayload().getMessages().getData();
+        List<Messages.Reply> threads = messagingDto.getPayload().getMessages().getData();
         MessagesListAdapter adapter = (MessagesListAdapter) recyclerView.getAdapter();
         if (adapter != null) {
             adapter.setThreads(threads);
         } else {
             adapter = new MessagesListAdapter(getContext(), threads, this,
-                    messagingModel.getPayload().getInbox().getUserId());
+                    messagingDto.getPayload().getInbox().getUserId());
             recyclerView.setAdapter(adapter);
         }
-        Profile delegateUser = messagingModel.getPayload().getDelegate();
+        Profile delegateUser = messagingDto.getPayload().getDelegate();
         if (!threads.isEmpty()) {
             noMessagesLayout.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
             actionButton.setVisibility(View.VISIBLE);
             refreshLayoutView.setEnabled(true);
-        } else if (delegateUser != null && !callback.canSendProvidersMessages()){
+        } else if (delegateUser != null && !callback.canSendProvidersMessages()) {
             noMessagesLayout.setVisibility(View.VISIBLE);
             noMessagesDescription.setVisibility(View.GONE);
             noMessagesTitle.setText(Label.getLabel("patient.delegation.delegates.permissions.label.noPermission"));
@@ -157,13 +165,13 @@ public class MessagesListFragment extends BaseFragment
      *
      * @param messagingDataModel updated model
      */
-    private void updateDisplayDataModel(MessagingModel messagingDataModel) {
-        if (this.messagingModel == null || refreshing) {
-            this.messagingModel = messagingDataModel;
+    private void updateDisplayDataModel(MessagingModelDto messagingDataModel) {
+        if (this.messagingDto == null || refreshing) {
+            this.messagingDto = messagingDataModel;
         } else {
-            this.messagingModel.getPayload().getMessages().setPaging(messagingDataModel
+            this.messagingDto.getPayload().getMessages().setPaging(messagingDataModel
                     .getPayload().getMessages().getPaging());
-            this.messagingModel.getPayload().getMessages().getData().addAll(messagingDataModel
+            this.messagingDto.getPayload().getMessages().getData().addAll(messagingDataModel
                     .getPayload().getMessages().getData());
         }
 
@@ -174,7 +182,7 @@ public class MessagesListFragment extends BaseFragment
     }
 
     private boolean hasMorePages() {
-        Paging paging = messagingModel.getPayload().getMessages().getPaging();
+        Paging paging = messagingDto.getPayload().getMessages().getPaging();
         return paging.getCurrentPage() != paging.getTotalPages();
     }
 
@@ -212,7 +220,7 @@ public class MessagesListFragment extends BaseFragment
         public void onRefresh() {
             refreshing = true;
             refreshLayoutView.setRefreshing(refreshing);
-            getThreads(0, 0);
+            viewModel.getThreads(0, 0);
         }
     };
 
@@ -229,19 +237,12 @@ public class MessagesListFragment extends BaseFragment
             if (hasMorePages()) {
                 int last = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
                 if (last > recyclerView.getAdapter().getItemCount() - BOTTOM_ROW_OFFSET && !isPaging) {
-                    Paging paging = messagingModel.getPayload().getMessages().getPaging();
-                    getThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage());
+                    Paging paging = messagingDto.getPayload().getMessages().getPaging();
+                    viewModel.getThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage());
                     isPaging = true;
                 }
             }
 
-        }
-    };
-
-    private View.OnClickListener newMessageAction = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            callback.addFragment(MessagesProvidersFragment.newInstance(), true);
         }
     };
 
@@ -260,53 +261,9 @@ public class MessagesListFragment extends BaseFragment
             if (deleteThread != null) {
                 MessagesListAdapter messagesListAdapter = (MessagesListAdapter) recyclerView.getAdapter();
                 messagesListAdapter.finalizeMessageRemoval(deleteThread);
-                deleteMessageThread(deleteThread);
-                //reset delete thread
+                viewModel.deleteMessageThread(deleteThread.getId());
                 deleteThread = null;
-                Paging paging = messagingModel.getPayload().getMessages().getPaging();
-                if (messagesListAdapter.getItemCount() == 0) {
-                    setAdapters();
-                } else if (paging.getResultsPerPage() % messagesListAdapter.getItemCount() < BOTTOM_ROW_OFFSET &&
-                        hasMorePages()) {
-                    getThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage());
-                }
             }
         }
-    }
-
-    private void getThreads(long page, long size) {
-        Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("page", String.valueOf(page < 1 ? 1 : page));//first page is 1
-        queryMap.put("limit", String.valueOf(size < 15 ? 15 : size));//default size if 15, should not be less than that
-
-        TransitionDTO inbox = messagingModel.getMetadata().getLinks().getInbox();
-        getWorkflowServiceHelper().execute(inbox, getMessageThreadsCallback, queryMap);
-    }
-
-    private WorkflowServiceCallback getMessageThreadsCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            MessagingModel messagingModel = DtoHelper.getConvertedDTO(MessagingModel.class, workflowDTO);
-            updateDisplayDataModel(messagingModel);
-        }
-
-        @Override
-        public void onFailure(String errorMessage) {
-            hideProgressDialog();
-            showErrorNotification(errorMessage);
-        }
-    };
-
-    private void deleteMessageThread(Messages.Reply deleteThread) {
-        Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("message_id", deleteThread.getId());
-
-        TransitionDTO deleteMessage = messagingModel.getMetadata().getLinks().getDeleteMessage();
-        getWorkflowServiceHelper().execute(deleteMessage, getMessageThreadsCallback, queryMap);
     }
 }
