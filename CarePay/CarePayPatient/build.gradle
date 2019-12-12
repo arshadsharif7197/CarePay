@@ -172,6 +172,7 @@ dependencies {
         implementation 'com.marcok.stepprogressbar:stepprogressbar:1.0.1'
     }
 
+    implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"
 
     androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation 'androidx.test:runner:1.2.0'

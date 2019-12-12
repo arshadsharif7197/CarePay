@@ -125,7 +125,9 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name="com.carecloud.carepaylibray.fcm.RegistrationIntentService" />
+        <service
+            android:name="com.carecloud.carepaylibray.fcm.RegistrationIntentService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <receiver
             android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"

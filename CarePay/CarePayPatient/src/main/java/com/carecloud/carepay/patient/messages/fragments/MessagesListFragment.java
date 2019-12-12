@@ -3,6 +3,8 @@ package com.carecloud.carepay.patient.messages.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidx.annotation.NonNull;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,7 +38,8 @@ import java.util.Map;
  * Created by lmenendez on 6/30/17
  */
 
-public class MessagesListFragment extends BaseFragment implements MessagesListAdapter.SelectMessageThreadCallback, SwipeHelper.SwipeHelperListener {
+public class MessagesListFragment extends BaseFragment
+        implements MessagesListAdapter.SelectMessageThreadCallback, SwipeHelper.SwipeHelperListener {
 
     private static final int BOTTOM_ROW_OFFSET = 2;
     private static final long MESSAGE_DELETE_DELAY = 1000 * 5;
@@ -92,7 +95,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         noMessagesTitle = view.findViewById(R.id.no_messages_title);
 
         recyclerView = view.findViewById(R.id.messages_recycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addOnScrollListener(scrollListener);
 
         SwipeHelper swipeHelper = new SwipeHelper(this);
@@ -154,7 +157,7 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
      *
      * @param messagingDataModel updated model
      */
-    public void updateDisplayDataModel(MessagingModel messagingDataModel) {
+    private void updateDisplayDataModel(MessagingModel messagingDataModel) {
         if (this.messagingModel == null || refreshing) {
             this.messagingModel = messagingDataModel;
         } else {
@@ -186,7 +189,6 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
         handler.removeCallbacks(deleteMessageRunnable);
         MessagesListAdapter messagesListAdapter = (MessagesListAdapter) recyclerView.getAdapter();
         messagesListAdapter.clearMessageRemoval(thread);
-
     }
 
     @Override
@@ -216,13 +218,13 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
 
     private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
         @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);
             deleteMessageRunnable.run();
         }
 
         @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
             if (hasMorePages()) {
                 int last = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
@@ -266,7 +268,6 @@ public class MessagesListFragment extends BaseFragment implements MessagesListAd
                     setAdapters();
                 } else if (paging.getResultsPerPage() % messagesListAdapter.getItemCount() < BOTTOM_ROW_OFFSET &&
                         hasMorePages()) {
-//                    callback.getMessageThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage());
                     getThreads(paging.getCurrentPage() + 1, paging.getResultsPerPage());
                 }
             }
