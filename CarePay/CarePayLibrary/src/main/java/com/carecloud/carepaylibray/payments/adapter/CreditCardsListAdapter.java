@@ -77,7 +77,6 @@ public class CreditCardsListAdapter extends RecyclerView.Adapter<CreditCardsList
         if (expDate.before(new Date())) {
             holder.paymentMethodImage.setImageResource(R.drawable.icn_payment_credit_card_expiring);
             holder.paymentMethodCheck.setVisibility(View.GONE);
-            holder.expiredTextView.setVisibility(View.VISIBLE);
         }
         if (creditCardInfo.isDefault()) {
             holder.defaultCardText.setVisibility(View.VISIBLE);
@@ -137,7 +136,6 @@ public class CreditCardsListAdapter extends RecyclerView.Adapter<CreditCardsList
         ImageView paymentMethodImage;
         View paymentMethodCheck;
         TextView defaultCardText;
-        TextView expiredTextView;
         CarePayTextView creditCardText;
         View divider;
 
@@ -147,7 +145,6 @@ public class CreditCardsListAdapter extends RecyclerView.Adapter<CreditCardsList
             paymentMethodCheck = itemView.findViewById(R.id.credit_card_check);
             defaultCardText = itemView.findViewById(R.id.credit_card_default);
             creditCardText = itemView.findViewById(R.id.credit_card_text);
-            expiredTextView = itemView.findViewById(R.id.expiredTextView);
             divider = itemView.findViewById(R.id.divider);
             if (showSeparator) {
                 divider.setVisibility(View.VISIBLE);

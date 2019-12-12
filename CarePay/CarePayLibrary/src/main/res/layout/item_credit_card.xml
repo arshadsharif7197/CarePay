@@ -53,22 +53,6 @@
             android:textSize="@dimen/text_size_13"
             app:customAssetFont="proxima_nova_regular" />
 
-        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/expiredTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_rounded_soft_red_background"
-            android:paddingStart="@dimen/dimen_8dp"
-            android:paddingTop="@dimen/dimen_3dp"
-            android:paddingEnd="@dimen/dimen_8dp"
-            android:paddingBottom="@dimen/dimen_3dp"
-            android:text="Expired"
-            android:textColor="@color/redAlert"
-            android:textSize="@dimen/text_size_13"
-            android:textStyle="italic"
-            android:visibility="gone"
-            app:customAssetFont="proxima_nova_regular" />
-
         <ImageView
             android:id="@+id/credit_card_check"
             android:layout_width="wrap_content"
