@@ -512,4 +512,24 @@ public class StringUtil {
                 return "";
         }
     }
+
+    public static boolean checkEqualValues(String value1, String value2) {
+        return equalsIgnoreCase(value1, value2) || isEmpty(value1) && isEmpty(value2);
+    }
+
+    public static boolean equalsIgnoreCase(final String str1, final String str2) {
+        if (str1 == null || str2 == null) {
+            return str1 == str2;
+        } else if (str1 == str2) {
+            return true;
+        } else if (str1.length() != str2.length()) {
+            return false;
+        } else {
+            return str1.regionMatches(true, 0, str2, 0, str1.length());
+        }
+    }
+
+    public static boolean isEmpty(final CharSequence cs) {
+        return cs == null || cs.length() == 0;
+    }
 }
