@@ -2,15 +2,16 @@ package com.carecloud.carepay.practice.library.payments.dialogs;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.adapter.ExistingChargesItemAdapter;
@@ -20,7 +21,7 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
-import com.carecloud.carepaylibray.common.ConfirmationCallback;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanEditInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDetailsDTO;
@@ -99,19 +100,14 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
 
     @Override
     protected void setupToolbar(View view, String titleString) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.payment_toolbar);
+        Toolbar toolbar = view.findViewById(R.id.payment_toolbar);
         if (toolbar != null) {
-            TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+            TextView title = toolbar.findViewById(R.id.toolbar_title);
             title.setText(Label.getLabel("payment_plan_edit_heading"));
         }
 
         View closeButton = view.findViewById(R.id.closeViewLayout);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancel();
-            }
-        });
+        closeButton.setOnClickListener(v -> cancel());
     }
 
     @Override
@@ -120,14 +116,14 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
 
     @Override
     protected void setUpAmounts(View view) {
-        TextView paymentPlanNameTextView = (TextView) view.findViewById(R.id.paymentPlanNameTextView);
+        TextView paymentPlanNameTextView = view.findViewById(R.id.paymentPlanNameTextView);
         paymentPlanNameTextView.setText(paymentPlanDTO.getPayload().getDescription());
 
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
-        TextView paymentPlanValueTextView = (TextView) view.findViewById(R.id.paymentPlanValueTextView);
+        TextView paymentPlanValueTextView = view.findViewById(R.id.paymentPlanValueTextView);
         paymentPlanValueTextView.setText(currencyFormatter.format(paymentPlanAmount));
 
-        TextView paymentAmountTextView = (TextView) view.findViewById(R.id.paymentAmountTextView);
+        TextView paymentAmountTextView = view.findViewById(R.id.paymentAmountTextView);
         String paymentAmount = currencyFormatter.format(paymentPlanDTO.getPayload()
                 .getPaymentPlanDetails().getAmount()) +
                 paymentPlanDTO.getPayload().getPaymentPlanDetails().getFrequencyString();
@@ -160,51 +156,47 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
 
     @Override
     protected void setupButtons(final View view) {
-        editPaymentPlanButton = (Button) view.findViewById(R.id.editPaymentPlanButton);
-        editPaymentPlanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (validateFields(true)) {
-                    SystemUtil.hideSoftKeyboard(getContext(), view);
-                    if (selectedCreditCard != null && selectedCreditCard.getCreditCardsId() == null) {
-                        authorizeCreditCard();
-                    } else {
-                        mainButtonAction();
-                    }
+        editPaymentPlanButton = view.findViewById(R.id.editPaymentPlanButton);
+        editPaymentPlanButton.setOnClickListener(v -> {
+            if (validateFields(true)) {
+                SystemUtil.hideSoftKeyboard(getContext(), view);
+                if (selectedCreditCard != null && selectedCreditCard.getCreditCardsId() == null) {
+                    authorizeCreditCard();
+                } else {
+                    mainButtonAction();
                 }
             }
         });
-        Button cancelPaymentPlanButton = (Button) view.findViewById(R.id.cancelPaymentPlanButton);
+        Button cancelPaymentPlanButton = view.findViewById(R.id.cancelPaymentPlanButton);
         boolean deletePaymentPlan = false;
         if (paymentPlanDTO.getPayload().getPaymentPlanDetails().getPaymentPlanHistoryList().isEmpty()) {
             deletePaymentPlan = true;
             cancelPaymentPlanButton.setText(Label.getLabel("payment.editPaymentPlan.delete.button.label"));
         }
         final boolean finalDeletePaymentPlan = deletePaymentPlan;
-        cancelPaymentPlanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((PaymentPlanEditInterface) callback).showCancelPaymentPlanConfirmDialog(new ConfirmationCallback() {
-                    @Override
-                    public void onConfirm() {
-                        cancelPaymentPlan(finalDeletePaymentPlan);
-                    }
-                }, finalDeletePaymentPlan);
-            }
-        });
+        cancelPaymentPlanButton.setOnClickListener(v -> showCancelPaymentPlanConfirmDialog(finalDeletePaymentPlan));
 
-        Button addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
-        addNewCardButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callback.onAddPaymentPlanCard(paymentsModel, null, true);
-            }
-        });
+        Button addNewCardButton = view.findViewById(R.id.addNewCardButton);
+        addNewCardButton.setOnClickListener(v -> onAddPaymentPlanCard(paymentsModel, null, true));
+    }
+
+    private void showCancelPaymentPlanConfirmDialog(final boolean deletePaymentPlan) {
+        String title = Label.getLabel("payment.cancelPaymentPlan.confirmation.popup.title");
+        String message = Label.getLabel("payment.cancelPaymentPlan.confirmation.popup.message");
+        if (deletePaymentPlan) {
+            title = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.title");
+            message = Label.getLabel("payment.deletePaymentPlan.confirmation.popup.message");
+        }
+        ConfirmDialogFragment fragment = ConfirmDialogFragment.newInstance(title, message);
+        fragment.setOnCancelListener(onDialogCancelListener);
+        fragment.setCallback(() -> cancelPaymentPlan(deletePaymentPlan));
+        callback.displayDialogFragment(fragment, true);
+        hideDialog();
     }
 
     @Override
     protected void setUpItems(View view, List<BalanceItemDTO> items) {
-        RecyclerView itemsRecycler = (RecyclerView) view.findViewById(R.id.itemRecycler);
+        RecyclerView itemsRecycler = view.findViewById(R.id.itemRecycler);
         itemsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         ExistingChargesItemAdapter adapter = new ExistingChargesItemAdapter(paymentPlanDTO.getPayload().getLineItems());
         itemsRecycler.setAdapter(adapter);

@@ -5,8 +5,8 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.SearchView;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.widget.SearchView;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -128,8 +128,8 @@ public class CarePaySearchView extends SearchView {
             int textColor = typedArray.getResourceId(0, R.color.text_color);
             typedArray.recycle();
 
-            ImageView closeIcon = (ImageView) findViewById(android.support.v7.appcompat.R.id.search_close_btn);
-            ImageView searchIcon = (ImageView) findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
+            ImageView closeIcon = (ImageView) findViewById(R.id.search_close_btn);
+            ImageView searchIcon = (ImageView) findViewById(R.id.search_mag_icon);
 
             searchIcon.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(context, textColor)));
             closeIcon.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(context, textColor)));
@@ -172,7 +172,8 @@ public class CarePaySearchView extends SearchView {
                 assetFontName = FONT_PROXIMA_NOVA_REGULAR;
         }
 
-        TextView searchText = (TextView) findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        TextView searchText = (TextView) findViewById(R.id.search_src_text);
+        searchText.setContentDescription(getContext().getString(R.string.content_description_search_input_box));
         Typeface tf = Typeface.createFromAsset(getContext().getAssets(), assetFontName);
         searchText.setTypeface(tf);
     }

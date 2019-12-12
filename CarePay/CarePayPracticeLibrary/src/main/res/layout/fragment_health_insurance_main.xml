@@ -26,7 +26,7 @@
         app:customAssetFont="proxima_nova_regular"
         tools:text="Your %s plan health insurance is still missing their card photos. How about taking them now?" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/available_health_insurance_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

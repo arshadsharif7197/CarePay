@@ -45,7 +45,7 @@
         app:customAssetFont="proxima_nova_regular"
         tools:text="Checkbox Missing" />
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll_medications_allergy"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -159,7 +159,7 @@
                         android:layout_height="@dimen/dimen_1dp"
                         android:background="@color/light_gray" />
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/alergy_recycler"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -271,7 +271,7 @@
                         android:layout_height="@dimen/dimen_1dp"
                         android:background="@color/light_gray" />
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/medication_recycler"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -434,7 +434,7 @@
                 android:layout_weight=".20" />
 
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <View
         android:layout_width="match_parent"

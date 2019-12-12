@@ -3,6 +3,7 @@
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:layout_width="match_parent"
     android:layout_height="@dimen/commonPracticeDialogHeight"
+    android:contentDescription="@string/content_description_credit_cards_screen"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -50,7 +51,7 @@
         </FrameLayout>
 
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="@dimen/chooseCreditCardContentHeight"
             android:background="@color/white">
@@ -60,13 +61,14 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/list_credit_cards"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:choiceMode="singleChoice"
                     android:padding="@dimen/payment_method_parent_layout_padding"
-                    android:visibility="visible" />
+                    android:visibility="visible"
+                    android:contentDescription="@string/content_description_credit_cards_list"/>
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayButton
                     android:id="@+id/addNewCardButton"
@@ -86,7 +88,7 @@
                     breeze:textKey="payment_add_new_credit_card_button" />
 
             </LinearLayout>
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
 
         <View
             android:layout_width="match_parent"
@@ -124,7 +126,8 @@
                 android:background="@drawable/green_rounded_button_selector"
                 android:textSize="@dimen/respons_button_text_size"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="demographics_pay_button_text" />
+                breeze:textKey="demographics_pay_button_text"
+                android:contentDescription="@string/content_description_pay_button"/>
 
 
         </LinearLayout>

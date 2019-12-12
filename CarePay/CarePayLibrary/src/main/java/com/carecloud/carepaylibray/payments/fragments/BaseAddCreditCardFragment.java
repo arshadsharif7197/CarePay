@@ -2,19 +2,14 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -23,12 +18,17 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialog;
 import com.carecloud.carepaylibray.customdialogs.SimpleDatePickerDialogFragment;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicAddressPayloadDTO;
+import com.carecloud.carepaylibray.payeeze.PayeezyCall;
+import com.carecloud.carepaylibray.payeeze.model.CreditCard;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterface;
 import com.carecloud.carepaylibray.payments.models.CreditCardBillingInformationDTO;
 import com.carecloud.carepaylibray.payments.models.MerchantServiceMetadataDTO;
@@ -40,22 +40,19 @@ import com.carecloud.carepaylibray.payments.utils.CreditCardUtil;
 import com.carecloud.carepaylibray.utils.AddressUtil;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.PayeezyRequestTask;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
-import com.payeezy.sdk.payeezytokenised.TransactionDataProvider;
 import com.smartystreets.api.us_zipcode.City;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragment
-        implements PayeezyRequestTask.AuthorizeCreditCardCallback, SimpleDatePickerDialog.OnDateSetListener {
+        implements SimpleDatePickerDialog.OnDateSetListener {
 
     public interface IAuthoriseCreditCardResponse {
         void onAuthorizeCreditCardSuccess();
@@ -83,6 +80,11 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     protected CheckBox saveCardOnFileCheckBox;
     protected CheckBox setAsDefaultCheckBox;
     protected CheckBox useProfileAddressCheckBox;
+
+    protected TextView nameOnCardRequiredTextView;
+    protected TextView creditCardNoRequiredTextView;
+    protected TextView verificationCodeRequiredTextView;
+    protected TextView expirationDateRequiredTextView;
 
     protected EditText address1EditText;
     protected EditText address2EditText;
@@ -198,8 +200,10 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
                 if (!StringUtil.isNullOrEmpty(getCardNumber()) && type != null) {
                     cardTypeTextView.setVisibility(View.VISIBLE);
                     cardTypeTextView.setText(type);
+                    creditCardNoRequiredTextView.setVisibility(View.GONE);
                 } else {
                     cardTypeTextView.setVisibility(View.GONE);
+                    creditCardNoRequiredTextView.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -243,6 +247,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         @Override
         public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
             validateCreditCardDetails();
+            checkRequiredFields(charSequence);
         }
 
         @Override
@@ -267,24 +272,11 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
             toolbar.setTitle("");
             if (getDialog() == null) {
                 toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-                toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        getActivity().onBackPressed();
-                    }
-                });
+                toolbar.setNavigationOnClickListener(view12 -> getActivity().onBackPressed());
             } else {
                 View close = view.findViewById(R.id.closeViewLayout);
                 if (close != null) {
-                    close.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            cancel();
-                            if (callback != null) {
-                                callback.onPayButtonClicked(amountToMakePayment, paymentsModel);
-                            }
-                        }
-                    });
+                    close.setOnClickListener(view1 -> cancel());
                 }
                 ViewGroup.LayoutParams layoutParams = title.getLayoutParams();
                 layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -299,17 +291,21 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     private void initializeViews(View view) {
         creditCardNoTextInput = view.findViewById(R.id.creditCardNoTextInputLayout);
         creditCardNoEditText = view.findViewById(R.id.creditCardNoEditText);
+        creditCardNoRequiredTextView = view.findViewById(R.id.creditCardNoRequiredTextView);
 
         cardTypeTextView = view.findViewById(R.id.cardTypeTextView);
 
         nameOnCardTextInputLayout = view.findViewById(R.id.nameOnCardTextInputLayout);
         nameOnCardEditText = view.findViewById(R.id.nameOnCardEditText);
+        nameOnCardRequiredTextView = view.findViewById(R.id.nameOnCardRequiredTextView);
 
         verificationCodeTextInput = view.findViewById(R.id.verificationCodeTextInputLayout);
         verificationCodeEditText = view.findViewById(R.id.verificationCodeEditText);
+        verificationCodeRequiredTextView = view.findViewById(R.id.verificationCodeRequiredTextView);
 
         expirationDateTextInput = view.findViewById(R.id.expirationDateInputLayout);
         expirationDateEditText = view.findViewById(R.id.expirationDateEditText);
+        expirationDateRequiredTextView = view.findViewById(R.id.expirationDateRequiredTextView);
         expirationDateEditText.setOnClickListener(pickDateListener);
 
         saveCardOnFileCheckBox = view.findViewById(R.id.saveCardOnFileCheckBox);
@@ -357,12 +353,8 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
                 AddressUtil.states);
         stateAutoCompleteTextView.setThreshold(1);
         stateAutoCompleteTextView.setAdapter(adapter);
-        stateAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                stateAbbr = adapter.getItem(position);
-            }
-        });
+        stateAutoCompleteTextView.setOnItemClickListener((parent, view1, position, id)
+                -> stateAbbr = adapter.getItem(position));
 
         nextButton = view.findViewById(R.id.nextButton);
         nextButton.setOnClickListener(nextButtonListener);
@@ -406,6 +398,7 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         creditCardsPayloadDTO.setCardNumber(getLastFour());
         creditCardsPayloadDTO.setNameOnCard(nameOnCardEditText.getText().toString().trim());
         creditCardsPayloadDTO.setCvv(verificationCodeEditText.getText().toString().trim());
+        creditCardsPayloadDTO.setExpireDtDisplay(expirationDateEditText.getText().toString().trim());
         String expiryDate = expirationDateEditText.getText().toString();
         expiryDate = expiryDate.substring(0, 2) + expiryDate.substring(expiryDate.length() - 2);
         creditCardsPayloadDTO.setExpireDt(expiryDate);
@@ -420,46 +413,46 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     }
 
     protected void authorizeCreditCard() {
-        String currency = "USD";
         String cvv = creditCardsPayloadDTO.getCvv();
         String expiryDate = creditCardsPayloadDTO.getExpireDt();
         String name = creditCardsPayloadDTO.getNameOnCard();
         String cardType = creditCardsPayloadDTO.getCardType();
         String number = getCardNumber();
 
-        try {
-            MerchantServiceMetadataDTO merchantServiceDTO = null;
-            for (MerchantServicesDTO merchantService : merchantServicesList) {
-                if (merchantService.getName().toLowerCase().contains("payeezy")) {
-                    merchantServiceDTO = merchantService.getMetadata();
-                    break;
-                }
+        MerchantServiceMetadataDTO merchantServiceDTO = null;
+        for (MerchantServicesDTO merchantService : merchantServicesList) {
+            if (merchantService.getName().toLowerCase().contains("payeezy")) {
+                merchantServiceDTO = merchantService.getMetadata();
+                break;
             }
-
-            String tokenUrl = merchantServiceDTO.getBaseUrl() + merchantServiceDTO.getUrlPath();
-            if (!tokenUrl.endsWith("?")) {
-                tokenUrl += "?";
-            }
-
-            TransactionDataProvider.tokenUrl = tokenUrl;
-            TransactionDataProvider.appIdCert = merchantServiceDTO.getApiKey();
-            TransactionDataProvider.secureIdCert = merchantServiceDTO.getApiSecret();
-            TransactionDataProvider.tokenCert = merchantServiceDTO.getMasterMerchantToken();
-            TransactionDataProvider.trTokenInt = merchantServiceDTO.getMasterTaToken();
-            TransactionDataProvider.jsSecurityKey = merchantServiceDTO.getMasterJsSecurityKey();
-            TransactionDataProvider.taToken = merchantServiceDTO.getMasterTaToken();
-
-            String tokenType = merchantServiceDTO.getTokenType();
-            String tokenAuth = merchantServiceDTO.getTokenizationAuth();
-            PayeezyRequestTask requestTask = new PayeezyRequestTask(getContext(), this);
-            requestTask.execute("gettokenvisa", tokenAuth, "", currency, tokenType, cardType, name,
-                    number, expiryDate, cvv);
-            System.out.println("first authorize call end");
-        } catch (Exception e) {
-            Log.e("BreezeError", e.getLocalizedMessage());
-            System.out.println(e.getMessage());
         }
-        System.out.println("authorize call end");
+
+        CreditCard creditCard = new CreditCard();
+        creditCard.setCardHolderName(name);
+        creditCard.setCardNumber(number);
+        creditCard.setCvv(cvv);
+        creditCard.setExpDate(expiryDate);
+        creditCard.setType(cardType);
+
+        showProgressDialog();
+        PayeezyCall payeezyCall = new PayeezyCall();
+        payeezyCall.doCall(creditCard, merchantServiceDTO, tokenizeResponse -> {
+            hideProgressDialog();
+            if (tokenizeResponse != null) {
+                if (tokenizeResponse.getToken() != null) {
+                    creditCardsPayloadDTO.setToken(tokenizeResponse.getToken().getValue());
+                    authoriseCreditCardResponseCallback.onAuthorizeCreditCardSuccess();
+                } else {
+                    nextButton.setEnabled(true);
+                    authoriseCreditCardResponseCallback.onAuthorizeCreditCardFailed();
+
+                }
+            } else {
+                nextButton.setEnabled(true);
+                authoriseCreditCardResponseCallback.onAuthorizeCreditCardFailed();
+            }
+        });
+
     }
 
     private void setDefaultBillingAddressTexts() {
@@ -507,12 +500,9 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         address2EditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(address2TextInput, null));
         zipCodeEditText.setOnFocusChangeListener(SystemUtil
-                .getHintFocusChangeListener(zipCodeTextInput, new View.OnFocusChangeListener() {
-                    @Override
-                    public void onFocusChange(View view, boolean hasFocus) {
-                        if (!hasFocus) { // for SmartyStreets
-                            getCityAndState(zipCodeEditText.getText().toString());
-                        }
+                .getHintFocusChangeListener(zipCodeTextInput, (view, hasFocus) -> {
+                    if (!hasFocus) { // for SmartyStreets
+                        getCityAndState(zipCodeEditText.getText().toString());
                     }
                 }));
         cityEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(cityTextInput, null));
@@ -521,37 +511,28 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
     }
 
     private void setActionListeners() {
-        creditCardNoEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int action, KeyEvent keyEvent) {
-                if (action == EditorInfo.IME_ACTION_NEXT) {
-                    verificationCodeEditText.requestFocus();
-                    return true;
-                }
-                return false;
+        creditCardNoEditText.setOnEditorActionListener((textView, action, keyEvent) -> {
+            if (action == EditorInfo.IME_ACTION_NEXT) {
+                verificationCodeEditText.requestFocus();
+                return true;
             }
+            return false;
         });
-        nameOnCardEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int action, KeyEvent keyEvent) {
-                if (action == EditorInfo.IME_ACTION_NEXT) {
-                    creditCardNoEditText.requestFocus();
-                    return true;
-                }
-                return false;
+        nameOnCardEditText.setOnEditorActionListener((textView, action, keyEvent) -> {
+            if (action == EditorInfo.IME_ACTION_NEXT) {
+                creditCardNoEditText.requestFocus();
+                return true;
             }
+            return false;
         });
-        verificationCodeEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int action, KeyEvent keyEvent) {
-                if (action == EditorInfo.IME_ACTION_DONE) {
-                    verificationCodeEditText.clearFocus();
-                    expirationDateEditText.requestFocus();
-                    SystemUtil.hideSoftKeyboard(getActivity());
-                    return true;
-                }
-                return false;
+        verificationCodeEditText.setOnEditorActionListener((textView, action, keyEvent) -> {
+            if (action == EditorInfo.IME_ACTION_DONE) {
+                verificationCodeEditText.clearFocus();
+                expirationDateEditText.requestFocus();
+                SystemUtil.hideSoftKeyboard(getActivity());
+                return true;
             }
+            return false;
         });
     }
 
@@ -589,18 +570,14 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         stateTextInput.setEnabled(isEnabled);
     }
 
-    private View.OnClickListener pickDateListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            displaySimpleDatePickerDialogFragment();
-        }
-    };
+    private View.OnClickListener pickDateListener = view -> displaySimpleDatePickerDialogFragment();
 
     @Override
     public void onDateSet(int year, int monthOfYear) {
         expirationDateEditText.setText(DateUtil.getInstance().formatMonthYear(year, monthOfYear));
         expirationDateEditText.getOnFocusChangeListener().onFocusChange(expirationDateEditText,
                 !StringUtil.isNullOrEmpty(expirationDateEditText.getText().toString().trim()));
+        expirationDateRequiredTextView.setVisibility(View.GONE);
         validateCreditCardDetails();
     }
 
@@ -660,6 +637,14 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
         }
     }
 
+    private void checkRequiredFields(CharSequence charSequence) {
+        if (nameOnCardEditText.getText().hashCode() == charSequence.hashCode()) {
+            nameOnCardRequiredTextView.setVisibility(!(nameOnCardEditText.getText().toString().trim().length() > 0) ? View.VISIBLE : View.GONE);
+        } else if (verificationCodeEditText.getText().hashCode() == charSequence.hashCode()) {
+            verificationCodeRequiredTextView.setVisibility(!(verificationCodeEditText.getText().toString().length() > 2) ? View.VISIBLE : View.GONE);
+        }
+    }
+
     /**
      * Background task to call smarty streets zip code lookup.
      * The response is a com.smartystreets.api.us_zipcode.City object,
@@ -688,35 +673,5 @@ public abstract class BaseAddCreditCardFragment extends BasePaymentDialogFragmen
             }
         }.execute(zipcode);
     }
-
-    @Override
-    public void onAuthorizeCreditCard(String resString) {
-        String valueString = "value";
-        if (resString != null && resString.contains(valueString)) {
-
-            String group1 = "(\\\"value\\\":\")";
-            String group2 = "(\\d+)";
-            String regex = group1 + group2;
-            String tokenValue = null;
-            Matcher matcher = Pattern.compile(regex).matcher(resString);
-            if (matcher.find()) {
-                tokenValue = matcher.group().replaceAll(group1, "");
-            }
-
-            if (tokenValue != null && tokenValue.matches(group2)) {
-                creditCardsPayloadDTO.setToken(tokenValue);
-                authoriseCreditCardResponseCallback.onAuthorizeCreditCardSuccess();
-            } else {
-                nextButton.setEnabled(true);
-                authoriseCreditCardResponseCallback.onAuthorizeCreditCardFailed();
-
-            }
-
-        } else {
-            nextButton.setEnabled(true);
-            authoriseCreditCardResponseCallback.onAuthorizeCreditCardFailed();
-        }
-    }
-
 
 }

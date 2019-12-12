@@ -61,6 +61,7 @@
         android:visibility="gone"
         app:customAssetFont="gotham_rounded_medium"
         breeze:textKey="add_appointment_label"
-        tools:text="Add Appointment" />
+        tools:text="Add Appointment"
+        android:contentDescription="@string/content_description_add_appointment_button"/>
 
 </LinearLayout>

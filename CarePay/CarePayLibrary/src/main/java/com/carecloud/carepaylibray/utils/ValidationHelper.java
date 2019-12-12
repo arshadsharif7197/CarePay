@@ -1,7 +1,7 @@
 package com.carecloud.carepaylibray.utils;
 
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
+import androidx.annotation.Nullable;
+import com.google.android.material.textfield.TextInputLayout;
 import android.widget.EditText;
 
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodels.general.MetadataEntityDTO;

@@ -1,8 +1,7 @@
 package com.carecloud.carepay.practice.library.customdialog;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,9 +9,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.patientmode.dtos.PatientModeSwitchPinResponseDTO;
+import com.carecloud.carepay.practice.library.session.PracticeSessionService;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -30,7 +35,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.HashMap;
 import java.util.Map;
-
 
 /**
  * Created by prem_mourya on 10/20/2016.
@@ -51,10 +55,9 @@ public class ConfirmationPinDialog extends BaseDialogFragment implements View.On
 
     /**
      * Constructor calling from  Patient screen for Switching to Practice Mode.
-     *
      */
     public static ConfirmationPinDialog newInstance(TransitionDTO transitionDTOPinLink,
-                                 boolean isDynamicLabels, TransitionDTO languageTransition) {
+                                                    boolean isDynamicLabels, TransitionDTO languageTransition) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, transitionDTOPinLink);
         args.putBoolean("isDymanicLabels", isDynamicLabels);
@@ -66,12 +69,12 @@ public class ConfirmationPinDialog extends BaseDialogFragment implements View.On
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.dialog_confirmation_pin, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         onInitialization();
         onSettingStyle();
@@ -142,8 +145,6 @@ public class ConfirmationPinDialog extends BaseDialogFragment implements View.On
         (findViewById(R.id.pin_key_blank)).setOnClickListener(this);
         (findViewById(R.id.pin_key_clear)).setOnClickListener(this);
         (findViewById(R.id.dialogCancelTextView)).setOnClickListener(this);
-
-
     }
 
     /**
@@ -225,29 +226,29 @@ public class ConfirmationPinDialog extends BaseDialogFragment implements View.On
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             Gson gson = new Gson();
-            PatientModeSwitchPinResponseDTO patientModeSwitchPinResponseDTO = gson.fromJson(workflowDTO.toString(), PatientModeSwitchPinResponseDTO.class);
+            PatientModeSwitchPinResponseDTO patientModeSwitchPinResponseDTO = gson
+                    .fromJson(workflowDTO.toString(), PatientModeSwitchPinResponseDTO.class);
             if (patientModeSwitchPinResponseDTO.getPayload().getPinpad().getPayload()) {
                 BasePracticeActivity practiceActivity = (BasePracticeActivity) getContext();
-                if(practiceActivity.getApplicationMode().getUserPracticeDTO() != null) {
+                if (practiceActivity.getApplicationMode().getUserPracticeDTO() != null) {
                     String patientLanguage = practiceActivity.getApplicationPreferences().getUserLanguage();
-                    if(!patientLanguage.equals(CarePayConstants.DEFAULT_LANGUAGE)) {
+                    if (!patientLanguage.equals(CarePayConstants.DEFAULT_LANGUAGE)) {
                         final Map<String, String> headers = practiceActivity.getWorkflowServiceHelper().getApplicationStartHeaders();
                         headers.put("username", practiceActivity.getApplicationPreferences().getUserName());
-                        practiceActivity.getApplicationPreferences().setUserLanguage(CarePayConstants.DEFAULT_LANGUAGE);
-                        practiceActivity.changeLanguage(languageTransition, CarePayConstants.DEFAULT_LANGUAGE, headers, new BasePracticeActivity.SimpleCallback() {
-                            @Override
-                            public void callback() {
-                                //do nothing more
-                            }
-                        });
+                        practiceActivity.changeLanguage(languageTransition,
+                                ApplicationPreferences.getInstance().getUserLanguage(), headers, () -> {
+                                    //do nothing more
+                                });
                     }
                     practiceActivity.getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
-                    practiceActivity.getAppAuthorizationHelper().setUser(practiceActivity.getApplicationMode().getUserPracticeDTO().getUserName());
+                    practiceActivity.getAppAuthorizationHelper().setUser(practiceActivity.getApplicationMode()
+                            .getUserPracticeDTO().getUserName());
                     practiceActivity.onPinConfirmationCheck(true, pinEditText.getText().toString());
                     dismiss();
                     identifyPracticeUser(patientModeSwitchPinResponseDTO.getPayload().getUserPracticesList().get(0).getUserId());
 
                 }
+                getActivity().stopService(new Intent(getActivity(), PracticeSessionService.class));
             }
         }
 
@@ -284,7 +285,7 @@ public class ConfirmationPinDialog extends BaseDialogFragment implements View.On
         }
     }
 
-    private void identifyPracticeUser(String userId){
+    private void identifyPracticeUser(String userId) {
         MixPanelUtil.setUser(getContext(), userId, null);
         MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_is_practice_user), true);
     }

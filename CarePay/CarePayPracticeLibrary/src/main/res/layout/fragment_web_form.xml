@@ -77,7 +77,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/commonButtonHeight"
         android:layout_margin="@dimen/webFormButtonMargin"
-        android:background="@drawable/green_rounded_button_selector"
+        android:background="@drawable/green_rounded_button_selector_always_click"
         android:gravity="center"
         android:textColor="@color/white"
         android:textSize="@dimen/respons_button_text_size"

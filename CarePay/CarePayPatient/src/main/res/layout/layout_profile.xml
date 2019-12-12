@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="0dp"
+    android:layout_height="@dimen/dimen_150dp"
+    android:layout_marginStart="@dimen/dimen_5dp"
+    android:layout_marginEnd="@dimen/dimen_5dp"
+    android:layout_marginBottom="@dimen/dimen_10dp"
+    android:layout_weight="1"
+    android:contentDescription="@string/content_description_choose_profile_screen"
+    android:background="@drawable/round_fifteen_white_background">
+
+    <View
+        android:id="@+id/profileHeaderView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/profileHeaderHeight"
+        android:background="@drawable/top_round_munsell_background" />
+
+    <ImageView
+        android:id="@+id/profileImageView"
+        android:layout_width="@dimen/profileImageViewSize"
+        android:layout_height="@dimen/profileImageViewSize"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dimen_20dp" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/profileShortNameTextView"
+        android:layout_width="@dimen/profileImageViewSize"
+        android:layout_height="@dimen/profileImageViewSize"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:background="@drawable/round_list_tv_dark_gray"
+        android:textColor="@color/white"
+        android:textSize="19sp"
+        app:customAssetFont="gotham_rounded_medium"
+        tools:text="PJ" />
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/profileNameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/dimen_15dp"
+        android:ellipsize="end"
+        android:lines="2"
+        android:maxLines="2"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/text_size_20sp"
+        app:customAssetFont="proxima_nova_semi_bold"
+        tools:text="Tyler \n Conan" />
+
+</RelativeLayout>

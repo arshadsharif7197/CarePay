@@ -1,22 +1,24 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'newrelic'
 android {
-    compileSdkVersion 26
+    compileSdkVersion 28
 
     defaultConfig {
         applicationId "com.carecloud.carepay.practice.tablet"
         minSdkVersion 17
-        targetSdkVersion 26
-        versionCode 129
-        versionName "1.2.27"
+        targetSdkVersion 28
+        versionCode 146
+        versionName "1.2.32"
         multiDexEnabled true
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         renderscriptTargetApi 22
         renderscriptSupportModeEnabled true
     }
     dexOptions {
         maxProcessCount 4
-        javaMaxHeapSize "12g"
+        javaMaxHeapSize "4g"
     }
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
@@ -133,10 +135,30 @@ android {
     lintOptions {
         abortOnError false
     }
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':CarePayPracticeLibrary')
     implementation 'com.newrelic.agent.android:android-agent:5.22.0'
+
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.ext:truth:1.2.0'
+    implementation 'androidx.test.espresso:espresso-idling-resource:3.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.2.0'
+    api 'com.google.guava:guava:28.0-android'
+    implementation "androidx.core:core-ktx:1.0.2"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    api 'com.google.auto.value:auto-value-annotations:1.6.2'
+}
+repositories {
+    mavenCentral()
 }

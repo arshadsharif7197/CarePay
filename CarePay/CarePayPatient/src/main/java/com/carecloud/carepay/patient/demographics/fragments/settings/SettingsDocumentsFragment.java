@@ -3,18 +3,19 @@ package com.carecloud.carepay.patient.demographics.fragments.settings;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
@@ -25,6 +26,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
+import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.demographics.adapters.InsuranceLineItemsListAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
@@ -32,6 +34,7 @@ import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPay
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicIdDocPhotoDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePhotoDTO;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter;
 import com.carecloud.carepaylibray.media.MediaScannerPresenter;
 import com.carecloud.carepaylibray.media.MediaViewInterface;
@@ -39,7 +42,10 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.gson.Gson;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,9 +78,16 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
     private boolean showAlert = false;
     private boolean noPrimaryInsuranceFound = false;
     private boolean insuranceTypeRepeated = false;
+    private boolean insuranceDataRepeated = false;
     private String insuranceTypeRepeatedErrorMessage;
     private View nextButton;
+    private boolean insuranceChanged;
+    private boolean photoAdded;
 
+    private Button scanFrontButton;
+    private Button scanBackButton;
+
+    List<DemographicInsurancePayloadDTO> originalInsuranceList;
 
     public static SettingsDocumentsFragment newInstance() {
         return new SettingsDocumentsFragment();
@@ -96,6 +109,9 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         super.onCreate(savedInstanceState);
         demographicsSettingsDTO = (DemographicDTO) callback.getDto();
         demographicDTO = DtoHelper.getConvertedDTO(DemographicDTO.class, DtoHelper.getStringDTO(demographicsSettingsDTO));
+        insuranceChanged = false;
+        photoAdded = false;
+        originalInsuranceList = demographicDTO.getPayload().getDemographics().getPayload().getInsurances();
     }
 
     @Override
@@ -109,21 +125,38 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         TextView title = toolbar.findViewById(R.id.settings_toolbar_title);
         title.setText(Label.getLabel("demographics_documents_section"));
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
-        callback.setToolbar(toolbar);
-
-        nextButton = findViewById(R.id.buttonAddDemographicInfo);
-        nextButton.setOnClickListener(new View.OnClickListener() {
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateDemographics();
+                checkForUnsavedChanges();
             }
         });
+
+        nextButton = findViewById(R.id.buttonAddDemographicInfo);
+        nextButton.setOnClickListener(view1 -> updateDemographics());
 
         initDocumentViews(view);
 
         initHealthInsuranceList(view);
+        setUpBottomSheet(view);
     }
 
+    private void checkForUnsavedChanges() {
+        if (insuranceChanged || photoAdded) {
+            ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment
+                    .newInstance(Label.getLabel("demographics_insurance_unsaved_alert_title"),
+                            Label.getLabel("demographics_insurance_unsaved_alert_message"));
+            confirmDialogFragment.setCallback(new ConfirmationCallback() {
+                @Override
+                public void onConfirm() {
+                    getFragmentManager().popBackStack();
+                }
+            });
+            confirmDialogFragment.show(getFragmentManager(), confirmDialogFragment.getClass().getName());
+        } else {
+            getFragmentManager().popBackStack();
+        }
+    }
 
     private void initDocumentViews(View view) {
         mediaScannerPresenter = new MediaScannerPresenter(getContext(), this, CarePayCameraPreview.CameraType.SCAN_DOC);
@@ -131,6 +164,9 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
                 getApplicationMode().getApplicationType());
         documentScannerAdapter.setIdDocumentsFromData(demographicDTO.getPayload().getDemographics()
                 .getPayload().getIdDocument());
+
+        scanFrontButton = view.findViewById(com.carecloud.carepaylibrary.R.id.demogrDocsFrontScanButton);
+        scanBackButton = view.findViewById(com.carecloud.carepaylibrary.R.id.demogrDocsBackScanButton);
     }
 
 
@@ -146,19 +182,15 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
             showAlert();
             showAlert = false;
             noPrimaryInsuranceFound = false;
-            insuranceTypeRepeated = false;
+            insuranceTypeRepeated =  false;
+            insuranceDataRepeated = false;
         }
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
         Button addAnotherButton = view.findViewById(R.id.health_insurance_add_another);
-        addAnotherButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View addAnotherButton) {
-                editInsurance(-1);
-            }
-        });
+        addAnotherButton.setOnClickListener(addAnotherButton1 -> editInsurance(-1));
 
         View noInsurance = view.findViewById(R.id.no_insurance_view);
 
@@ -202,14 +234,30 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
                 && !isThereAnyPrimaryInsurance) {
             noPrimaryInsuranceFound = true;
             showAlert = true;
-        } else {
-            nextButton.setEnabled(!checkIfHasDuplicateInsuranceType(insurancesTypeMap));
         }
-
+        if (insuranceChanged) {
+            insuranceChanged = checkIfInsuranceListChanged(insuranceList) && !checkIfInsuranceDataMatches(insuranceList);
+        }
+        nextButton.setEnabled(insuranceChanged &&
+                !checkIfHasDuplicateInsuranceType(insurancesTypeMap));
 
         MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_has_identity_doc), hasOnePhoto);
 
         return insuranceList;
+    }
+
+    private boolean checkIfInsuranceListChanged(List<DemographicInsurancePayloadDTO> modifiedList) {
+        if (originalInsuranceList.size() != modifiedList.size()) {
+            return true;
+        } else {
+            for (int i = 0; i < originalInsuranceList.size(); i++) {
+                boolean match = originalInsuranceList.get(i).checkChanges(modifiedList.get(i));
+                if (!match) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private boolean checkIfHasDuplicateInsuranceType(Map<String, Integer> insurancesTypeMap) {
@@ -242,14 +290,43 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         return insuranceTypeRepeated;
     }
 
+    private boolean checkIfInsuranceDataMatches(List<DemographicInsurancePayloadDTO> modifiedList) {
+        if (modifiedList.size() > 1) {
+            for (DemographicInsurancePayloadDTO insurance : modifiedList) {
+                if (!insurance.isDeleted()) {
+                    for (DemographicInsurancePayloadDTO insuranceVerify : modifiedList) {
+                        if (!insuranceVerify.isDeleted() && !insurance.equals(insuranceVerify)) {
+                            boolean match = checkEqualValues(insurance.getInsuranceProvider(), insuranceVerify.getInsuranceProvider()) &&
+                                    checkEqualValues(insurance.getInsurancePlan(), insuranceVerify.getInsurancePlan()) &&
+                                    checkEqualValues(insurance.getInsuranceMemberId(), insuranceVerify.getInsuranceMemberId());
+                            if (match) {
+                                insuranceDataRepeated = showAlert = true;
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        insuranceDataRepeated = false;
+        return false;
+    }
+
+    private boolean checkEqualValues(String value1, String value2) {
+        return StringUtils.equalsIgnoreCase(value1, value2) || StringUtils.isEmpty(value1) && StringUtils.isEmpty(value2);
+    }
+
     private void showAlert() {
         String alertMessage = Label.getLabel("demographics_insurance_no_photo_alert");
         int notificationType = CustomMessageToast.NOTIFICATION_TYPE_WARNING;
-        if (noPrimaryInsuranceFound) {
-            alertMessage = Label.getLabel("demographics_insurance_no_primary_alert");
-        } else if (insuranceTypeRepeated) {
+        if (insuranceTypeRepeated) {
             alertMessage = insuranceTypeRepeatedErrorMessage;
             notificationType = CustomMessageToast.NOTIFICATION_TYPE_ERROR;
+        } else if (insuranceDataRepeated) {
+            alertMessage = Label.getLabel("demographics_insurance_duplicate_insurance");
+            notificationType = CustomMessageToast.NOTIFICATION_TYPE_ERROR;
+        } else if (noPrimaryInsuranceFound) {
+            alertMessage = Label.getLabel("demographics_insurance_no_primary_alert");
         }
         new CustomMessageToast(getActivity(), alertMessage, notificationType).show();
 
@@ -314,9 +391,8 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
             DemographicDTO updatedModel = DtoHelper.getConvertedDTO(DemographicDTO.class, workflowDTO);
             demographicsSettingsDTO.getPayload().getDemographics().getPayload().setIdDocument(updatedModel.getPayload().getDemographics().getPayload().getIdDocument());
             demographicsSettingsDTO.getPayload().getDemographics().getPayload().setInsurances(updatedModel.getPayload().getDemographics().getPayload().getInsurances());
-
-            getActivity().onBackPressed();
             SystemUtil.showSuccessToast(getContext(), Label.getLabel("settings_saved_success_message"));
+            getActivity().onBackPressed();
         }
 
         @Override
@@ -345,6 +421,7 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
      * @param demographicDTO updated demographic dto payload
      */
     public void updateInsuranceList(DemographicDTO demographicDTO) {
+        insuranceChanged = true;
         this.demographicDTO = demographicDTO;
         if (getView() != null && isAdded()) {
             initHealthInsuranceList(getView());
@@ -387,6 +464,8 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
                 page = BACK_PIC;
                 hasBackImage = true;
             }
+            nextButton.setEnabled(true);
+            photoAdded = true;
 
             DemographicIdDocPayloadDTO docPayloadDTO = demographicDTO.getPayload().getDemographics().getPayload().getIdDocument();
             for (DemographicIdDocPhotoDTO docPhotoDTO : docPayloadDTO.getIdDocPhothos()) {
@@ -425,7 +504,6 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
                 filePath = docPhotoDTO.getIdDocPhoto();
                 base64FrontImage = DocumentScannerAdapter.getBase64(getContext(), filePath);
             }
-
             if (docPhotoDTO.getPage() == BACK_PIC && hasBackImage) {
                 filePath = docPhotoDTO.getIdDocPhoto();
                 base64BackImage = DocumentScannerAdapter.getBase64(getContext(), filePath);
@@ -443,5 +521,55 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         }
     }
 
+    private void setUpBottomSheet(View view) {
+        final View shadow = view.findViewById(R.id.shadow);
+        LinearLayout llBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
+        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
+        bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    shadow.setClickable(false);
+                }
+            }
 
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                shadow.setAlpha(slideOffset);
+            }
+        });
+
+        scanFrontButton.setOnClickListener(view15 -> {
+            documentScannerAdapter.setFrontCaptureImage();
+            bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_EXPANDED);
+            shadow.setClickable(true);
+        });
+        scanBackButton.setOnClickListener(view14 -> {
+            documentScannerAdapter.setBackCaptureImage();
+            bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_EXPANDED);
+            shadow.setClickable(true);
+        });
+
+        Button cancelButton = view.findViewById(R.id.cancelButton);
+        cancelButton.setOnClickListener(v -> bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN));
+        shadow.setOnClickListener(view1 -> bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN));
+        shadow.setClickable(false);
+
+        View takePhotoContainer = view.findViewById(R.id.takePhotoContainer);
+        takePhotoContainer.setOnClickListener(view12 -> {
+            mediaScannerPresenter.handlePictureAction();
+            bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
+        });
+
+        View chooseFileContainer = view.findViewById(R.id.chooseFileContainer);
+        chooseFileContainer.setOnClickListener(view13 -> {
+            mediaScannerPresenter.selectFile();
+            bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
+        });
+    }
+
+    private void bottomMenuAction(BottomSheetBehavior bottomSheetBehavior, int stateHidden) {
+        bottomSheetBehavior.setState(stateHidden);
+    }
 }
