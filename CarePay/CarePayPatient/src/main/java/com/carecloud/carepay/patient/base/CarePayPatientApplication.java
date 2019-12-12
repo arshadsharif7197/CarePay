@@ -15,6 +15,9 @@ import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
 import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.session.SessionedActivityInterface;
+import com.microsoft.appcenter.AppCenter;
+import com.microsoft.appcenter.analytics.Analytics;
+import com.microsoft.appcenter.crashes.Crashes;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.newrelic.agent.android.NewRelic;
 
@@ -39,6 +42,8 @@ public class CarePayPatientApplication extends CarePayApplication {
                     .penaltyLog()
                     .build());
         }
+        AppCenter.start(this, "a450a247-935b-4110-a19e-047ac2562830",
+                Analytics.class, Crashes.class);
     }
 
     /**

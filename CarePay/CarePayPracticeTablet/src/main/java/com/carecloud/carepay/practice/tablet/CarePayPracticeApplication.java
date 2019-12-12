@@ -17,6 +17,9 @@ import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.session.SessionedActivityInterface;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.shamrocksdk.ShamrockSdk;
+import com.microsoft.appcenter.AppCenter;
+import com.microsoft.appcenter.analytics.Analytics;
+import com.microsoft.appcenter.crashes.Crashes;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.newrelic.agent.android.NewRelic;
 
@@ -34,6 +37,8 @@ public class CarePayPracticeApplication extends CarePayApplication {
         super.onCreate();
         start();
         this.onTerminate();
+        AppCenter.start(this, "bae2f03a-0b4e-4565-9ddd-720141369b1c",
+                Analytics.class, Crashes.class);
     }
 
     @Override
