@@ -3,7 +3,7 @@ package com.carecloud.carepay.patient.messages.models;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.google.gson.annotations.SerializedName;
 
-public class MessagingModel implements DTO {
+public class MessagingModelDto implements DTO {
 
     @SerializedName("metadata")
     private MessagingMetadataDTO metadata = new MessagingMetadataDTO();

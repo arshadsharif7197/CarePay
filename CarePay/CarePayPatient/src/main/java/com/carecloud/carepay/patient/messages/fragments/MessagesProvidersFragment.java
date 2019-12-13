@@ -10,13 +10,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.MessageNavigationCallback;
+import com.carecloud.carepay.patient.messages.MessagesViewModel;
 import com.carecloud.carepay.patient.messages.adapters.MessagesProvidersAdapter;
-import com.carecloud.carepay.patient.messages.models.MessagingModel;
+import com.carecloud.carepay.patient.messages.models.MessagingModelDto;
 import com.carecloud.carepay.patient.messages.models.ProviderContact;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
@@ -33,7 +35,7 @@ public class MessagesProvidersFragment extends BaseFragment implements MessagesP
     private View noProvidersMessage;
 
     private MessageNavigationCallback callback;
-    private MessagingModel messagingModel;
+    private MessagingModelDto messagingDto;
 
     public static Fragment newInstance() {
         return new MessagesProvidersFragment();
@@ -52,7 +54,8 @@ public class MessagesProvidersFragment extends BaseFragment implements MessagesP
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        messagingModel = (MessagingModel) callback.getDto();
+        messagingDto = ViewModelProviders.of(getActivity()).get(MessagesViewModel.class)
+                .getMessagesDto().getValue();
     }
 
     @Override
@@ -63,11 +66,9 @@ public class MessagesProvidersFragment extends BaseFragment implements MessagesP
     @Override
     public void onViewCreated(@NonNull View view, Bundle icicle) {
         initToolbar(view);
-
         providersRecycler = view.findViewById(R.id.providers_recycler);
-        providersRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        providersRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         noProvidersMessage = view.findViewById(R.id.noProvidersMessage);
-
         setAdapter();
     }
 
@@ -81,14 +82,12 @@ public class MessagesProvidersFragment extends BaseFragment implements MessagesP
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(Label.getLabel("messaging_providers_title"));
-
         toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);
         toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
-
     }
 
     private void setAdapter() {
-        List<ProviderContact> providers = messagingModel.getPayload().getProviderContacts();
+        List<ProviderContact> providers = messagingDto.getPayload().getProviderContacts();
         MessagesProvidersAdapter adapter = new MessagesProvidersAdapter(getContext(), providers, this);
         providersRecycler.setAdapter(adapter);
         providersRecycler.setVisibility(providers.isEmpty() ? View.GONE : View.VISIBLE);

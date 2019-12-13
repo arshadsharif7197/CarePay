@@ -61,7 +61,7 @@ android {
 
             buildConfigField 'String', 'ENVIRONMENT', '"Development"'
 
-            manifestPlaceholders = [hostName:"web.development.gobreeze.com"]
+            manifestPlaceholders = [hostName: "web.development.gobreeze.com"]
 
         }
         qa {
@@ -79,7 +79,7 @@ android {
 
             buildConfigField 'String', 'ENVIRONMENT', '"QA"'
 
-            manifestPlaceholders = [hostName:"web.qa.gobreeze.com"]
+            manifestPlaceholders = [hostName: "web.qa.gobreeze.com"]
 
         }
         staging {
@@ -97,7 +97,7 @@ android {
 
             buildConfigField 'String', 'ENVIRONMENT', '"Staging"'
 
-            manifestPlaceholders = [hostName:"web.staging.gobreeze.com"]
+            manifestPlaceholders = [hostName: "web.staging.gobreeze.com"]
 
         }
         demo {
@@ -115,7 +115,7 @@ android {
 
             buildConfigField 'String', 'ENVIRONMENT', '"Demo"'
 
-            manifestPlaceholders = [hostName:"web.gobreeze.com"]
+            manifestPlaceholders = [hostName: "web.gobreeze.com"]
 
         }
         production {
@@ -133,7 +133,7 @@ android {
 
             buildConfigField 'String', 'ENVIRONMENT', '"Production"'
 
-            manifestPlaceholders = [hostName:"web.gobreeze.com"]
+            manifestPlaceholders = [hostName: "web.gobreeze.com"]
 
         }
     }

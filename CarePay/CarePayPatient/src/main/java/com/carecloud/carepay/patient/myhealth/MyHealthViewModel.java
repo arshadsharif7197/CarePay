@@ -45,18 +45,18 @@ public class MyHealthViewModel extends BaseViewModel {
                 new WorkflowServiceCallback() {
                     @Override
                     public void onPreExecute() {
-                        setLoading(true);
+                        setSkeleton(true);
                     }
 
                     @Override
                     public void onPostExecute(WorkflowDTO workflowDTO) {
-                        setLoading(false);
+                        setSkeleton(false);
                         myHealthDto.setValue(DtoHelper.getConvertedDTO(MyHealthDto.class, workflowDTO));
                     }
 
                     @Override
                     public void onFailure(String exceptionMessage) {
-                        setLoading(false);
+                        setSkeleton(false);
                         setErrorMessage(exceptionMessage);
                     }
                 }, queryMap);

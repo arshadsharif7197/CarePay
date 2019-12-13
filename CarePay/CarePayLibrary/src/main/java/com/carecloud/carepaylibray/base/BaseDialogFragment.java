@@ -8,7 +8,6 @@ import androidx.fragment.app.DialogFragment;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
@@ -81,15 +80,12 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
             View decorView = dialog.getWindow().getDecorView();
             hideKeyboardOnViewTouch(decorView);
             if (isPracticeAppPatientMode) {
-                decorView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        long now = System.currentTimeMillis();
-                        if (now - lastFullScreenSet > 1000) {
-                            Log.d("Base", "Hide Nav Bar");
-                            setNavigationBarVisibility();
-                            lastFullScreenSet = now;
-                        }
+                decorView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+                    long now = System.currentTimeMillis();
+                    if (now - lastFullScreenSet > 1000) {
+                        Log.d("Base", "Hide Nav Bar");
+                        setNavigationBarVisibility();
+                        lastFullScreenSet = now;
                     }
                 });
             }
@@ -198,14 +194,11 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
             view.setSoundEffectsEnabled(false);
             view.setFocusable(true);
             view.setFocusableInTouchMode(true);
-            view.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent event) {
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        SystemUtil.hideSoftKeyboard(getContext(), view);
-                    }
-                    return false;
+            view.setOnTouchListener((view1, event) -> {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    SystemUtil.hideSoftKeyboard(getContext(), view1);
                 }
+                return false;
             });
         }
 
@@ -334,12 +327,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         }
     }
 
-    protected DialogInterface.OnCancelListener onDialogCancelListener = new DialogInterface.OnCancelListener() {
-        @Override
-        public void onCancel(DialogInterface dialogInterface) {
-            showDialog();
-        }
-    };
+    protected DialogInterface.OnCancelListener onDialogCancelListener = dialogInterface -> showDialog();
 
     public void onBackPressed() {
         getActivity().onBackPressed();
