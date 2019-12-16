@@ -736,9 +736,9 @@ public class AppointmentsPayloadDTO {
         String statusCode = getAppointmentStatus().getCode();
         switch (statusCode) {
             case CarePayConstants.CHECKED_IN:
-                Date startTime = DateUtil.getInstance().setDateRaw(getStartTime()).getDate();
-                Date now = new Date();
-                return startTime.before(now);
+//                Date startTime = DateUtil.getInstance().setDateRaw(getStartTime()).getDate();
+//                Date now = new Date();
+//                return startTime.before(now);
             case CarePayConstants.IN_PROGRESS_IN_ROOM:
             case CarePayConstants.IN_PROGRESS_OUT_ROOM:
                 return true;
