@@ -243,7 +243,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
 
         boolean showPaymentButtons = getArguments().getBoolean("showPaymentButtons", false);
         view.findViewById(R.id.consolidatedPaymentButton).setVisibility((showPaymentButtons && canMakePayments)
-                ? View.VISIBLE : View.GONE);
+                ? View.VISIBLE : View.INVISIBLE);
 
 
         Button consolidatedPaymentButton = view.findViewById(R.id.consolidatedPaymentButton);
