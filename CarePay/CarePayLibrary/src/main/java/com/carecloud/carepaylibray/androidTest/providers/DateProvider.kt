@@ -2,6 +2,8 @@ package com.carecloud.carepaylibray.androidTest.providers
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -10,8 +12,10 @@ import java.time.format.DateTimeFormatter
  */
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun formatAppointmentTime(startTime: String): String {
-    val appointmentTimeFormat = DateTimeFormatter.ofPattern("h:mm a")
-    var date = ZonedDateTime.parse(startTime)
+fun formatAppointmentTime(startTime: String, addLeadingZero: Boolean = false): String {
+    val appointmentTimeFormat = DateTimeFormatter.ofPattern(if (addLeadingZero) "hh:mm a" else "h:mm a")
+    val date = ZonedDateTime.parse(startTime).withZoneSameInstant(ZoneId.systemDefault())
     return date.format(appointmentTimeFormat)
 }
+
+//fun verifyTimeAgainstTimeZone

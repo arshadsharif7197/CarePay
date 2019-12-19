@@ -3,6 +3,8 @@ package com.carecloud.carepay.practice.tablet.tests.practiceMode.payments.paymen
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.PracticeMainScreen
 import com.carecloud.carepay.practice.tablet.tests.BaseTest
+import com.carecloud.carepaylibray.androidTest.graphqlrequests.createSimpleCharge
+import com.carecloud.carepaylibray.androidTest.graphqlrequests.makePayment
 import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,9 +22,10 @@ class PaymentPlanTest : BaseTest() {
 
     @Test
     fun a_createPaymentPlanTest() {
+        createSimpleCharge(100, 47336319)
         PracticeMainScreen()
                 .pressPaymentButton()
-                .searchForPatient("first breeze")
+                .searchForPatient("first android")
                 .openPaymentPlansDashboard()
                 .pressCreateNewPaymentPlanButton()
                 .chooseItem()
@@ -36,7 +39,7 @@ class PaymentPlanTest : BaseTest() {
     fun b_editPaymentPlanTest() {
         PracticeMainScreen()
                 .pressPaymentButton()
-                .searchForPatient("first breeze")
+                .searchForPatient("first android")
                 .openPaymentPlansDashboard()
                 .choosePaymentPlan(paymentPlanName)
                 .editPaymentPlan()
@@ -49,7 +52,7 @@ class PaymentPlanTest : BaseTest() {
     fun c_deletePaymentPlanTest() {
         PracticeMainScreen()
                 .pressPaymentButton()
-                .searchForPatient("first breeze")
+                .searchForPatient("first android")
                 .openPaymentPlansDashboard()
                 .choosePaymentPlan(paymentPlanName)
                 .editPaymentPlan()

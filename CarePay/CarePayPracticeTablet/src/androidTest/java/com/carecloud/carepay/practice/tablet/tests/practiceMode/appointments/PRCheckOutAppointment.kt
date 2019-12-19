@@ -24,7 +24,8 @@ class PRCheckOutAppointment : BaseTest() {
     fun setup() {
         initXavierProvider()
         val appointmentResponse  = createAppointment()
-        appointmentTime = formatAppointmentTime(appointmentResponse.data?.createAppointment?.start_time.toString())
+        appointmentTime = formatAppointmentTime(
+                appointmentResponse.data?.createAppointment?.start_time.toString(), true)
         checkinAppointment(appointmentResponse.data?.createAppointment?.id)
         super.setup()
     }

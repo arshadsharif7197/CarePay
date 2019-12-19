@@ -9,10 +9,6 @@ import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
  */
 class PaymentPlanDashboardScreen : CustomViewActions() {
 
-    init {
-        verifyViewVisible(appContext.getString(R.string.content_description_payment_plan_dashboard_screen))
-    }
-
     fun pressCreateNewPaymentPlanButton(): PaymentPlanScreen<PaymentPlanConfirmationScreen> {
         click(appContext.getString(R.string.content_description_create_payment_plan_button))
         return PaymentPlanScreen(PaymentPlanConfirmationScreen())

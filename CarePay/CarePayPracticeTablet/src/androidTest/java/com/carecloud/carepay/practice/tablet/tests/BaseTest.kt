@@ -45,7 +45,7 @@ open class BaseTest {
     }
 
     @After
-    fun tearDown() {
+    open fun tearDown() {
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.getIdlingResource())
     }
 }

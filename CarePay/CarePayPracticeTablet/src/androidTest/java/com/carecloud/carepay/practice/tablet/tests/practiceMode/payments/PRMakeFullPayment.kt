@@ -22,7 +22,8 @@ class PRMakeFullPayment: BaseTest() {
     override
     fun setup() {
         initXavierProvider()
-        createSimpleCharge(20)
+        //TODO: find patient id and add to simple charge
+        createSimpleCharge(100, 47336319)
         super.setup()
     }
     @Test
@@ -30,7 +31,7 @@ class PRMakeFullPayment: BaseTest() {
 
         PracticeMainScreen()
                 .pressPaymentButton()
-                .searchForPatient("first breeze\n")
+                .searchForPatient("first android")
                 .changeTotalBeingPaid()
                 .enterAmount("20")
                 .selectProviderForItemOnList(0)

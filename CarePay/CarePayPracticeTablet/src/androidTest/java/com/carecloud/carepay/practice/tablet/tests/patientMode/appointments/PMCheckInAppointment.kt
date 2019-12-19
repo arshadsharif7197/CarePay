@@ -7,6 +7,7 @@ import com.carecloud.carepay.practice.tablet.tests.BaseTest
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.*
 import com.carecloud.carepaylibray.androidTest.providers.formatAppointmentTime
 import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,6 +19,7 @@ import org.junit.runner.RunWith
 class PMCheckInAppointment : BaseTest() {
 
     private lateinit var apptTime: String
+    private var appointmentId: Int? = null
 
     @Before
     override
@@ -25,6 +27,7 @@ class PMCheckInAppointment : BaseTest() {
         initXavierProvider()
         val apptResponse = createAppointment()
         apptTime = formatAppointmentTime(apptResponse.data?.createAppointment?.start_time.toString())
+        appointmentId = apptResponse.data?.createAppointment?.id
         changePaymentSetting("neither")
         super.setup()
     }
@@ -48,5 +51,12 @@ class PMCheckInAppointment : BaseTest() {
                 .allergiesNextStep(CheckInOutConfirmation())
                 .verifyAppointmentStatus("Just Checked In")
                 .goHome()
+    }
+
+    @After
+    override
+    fun tearDown() {
+        deleteAppointment(appointmentId)
+        super.tearDown()
     }
 }

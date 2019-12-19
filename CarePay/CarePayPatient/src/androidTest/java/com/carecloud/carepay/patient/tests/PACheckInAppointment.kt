@@ -47,7 +47,7 @@ class PACheckInAppointment : BaseTest() {
                 .typeUser("dev_emails+qa.androidbreeze2@carecloud.com")
                 .typePassword("Test123!")
                 .pressLoginButton()
-                .checkInFirstAppointmentOnList(1)
+                .checkInAppointmentOnListAtTime(apptTime)
                 .personalInfoNextStep(CheckInDemogAddressScreen())
                 .addressNextStep(CheckInDemogDemographicsScreen())
                 .demographicsNextStep(CheckInMedicationsScreen())

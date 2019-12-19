@@ -6,6 +6,7 @@ import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.PracticeMa
 import com.carecloud.carepay.practice.tablet.tests.BaseTest
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.*
 import com.carecloud.carepaylibray.androidTest.providers.*
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -14,23 +15,25 @@ import org.junit.runner.RunWith
  * Created by drodriguez on 2019-10-01.
  */
 @RunWith(AndroidJUnit4::class)
-class PMCheckInAppointmentWithPayment : BaseTest() {
+class PRCheckInAppointmentWithPayment : BaseTest() {
 
     lateinit var appointmentTime : String
+    private var appointmentId: Int? = null
 
     @Before
     override
     fun setup() {
         initXavierProvider()
         val apptResponse = createAppointment()
-        appointmentTime = formatAppointmentTime(apptResponse.data?.createAppointment?.start_time.toString())
+        appointmentTime = formatAppointmentTime(apptResponse.data?.createAppointment?.start_time.toString(), true)
+        appointmentId = apptResponse.data?.createAppointment?.id
         changePaymentSetting("checkin")
         createSimpleCharge()
         super.setup()
     }
 
     @Test
-    fun pmCheckInAppointmentWithPayment() {
+    fun prCheckInAppointmentWithPayment() {
         PracticeMainScreen()
                 .pressAppointmentsButton()
                 .checkInAppointmentAtTime(appointmentTime)
@@ -44,5 +47,12 @@ class PMCheckInAppointmentWithPayment : BaseTest() {
                 .payUseCreditCardOnFile(CheckInOutConfirmation())
                 .verifyAppointmentStatus("Just Checked In")
                 .goHome()
+    }
+
+    @After
+    override
+    fun tearDown() {
+        deleteAppointment(appointmentId)
+        super.tearDown()
     }
 }
