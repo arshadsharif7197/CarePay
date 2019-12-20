@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.androidTest.graphql
+package com.carecloud.test_module.graphql
 
 /**
  * Created by drodriguez on 2019-10-15.

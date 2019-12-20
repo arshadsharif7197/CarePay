@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.androidTest.graphql
+package com.carecloud.test_module.graphql
 
 import android.os.Build
 import androidx.annotation.RequiresApi

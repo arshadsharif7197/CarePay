@@ -3,8 +3,8 @@ package com.carecloud.carepay.practice.tablet.pageObjects.shared.appointments
 import com.carecloud.carepay.practice.tablet.R
 import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.appointments.AppointmentsScreen
 import com.carecloud.carepay.practice.tablet.tests.appContext
-import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
-import com.carecloud.carepaylibray.androidTest.actions.stringHolder
+import com.carecloud.test_module.actions.CustomViewActions
+import com.carecloud.test_module.actions.stringHolder
 
 /**
  * Created by drodriguez on 2019-08-28.

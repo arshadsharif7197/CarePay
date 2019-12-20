@@ -3,10 +3,10 @@ package com.carecloud.carepay.patient.tests
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.patient.BaseTest
 import com.carecloud.carepay.patient.pageObjects.appointments.AppointmentScreen
-import com.carecloud.carepaylibray.androidTest.graphql.checkinAppointment
-import com.carecloud.carepaylibray.androidTest.graphql.createAppointment
-import com.carecloud.carepaylibray.androidTest.graphql.getBreezeToken
-import com.carecloud.carepaylibray.androidTest.providers.makeRequest
+import com.carecloud.test_module.graphql.checkinAppointment
+import com.carecloud.test_module.graphql.createAppointment
+import com.carecloud.test_module.graphql.getBreezeToken
+import com.carecloud.test_module.providers.makeRequest
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

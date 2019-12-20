@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.androidTest.actions
+package com.carecloud.test_module.actions
 
 import android.view.View
 import android.widget.TextView

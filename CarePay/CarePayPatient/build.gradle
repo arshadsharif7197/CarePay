@@ -154,16 +154,17 @@ configurations.all {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':CarePayLibrary')
-    implementation 'com.newrelic.agent.android:android-agent:5.22.0'
     // Android Pay
     implementation 'com.google.android.gms:play-services-auth:16.0.0'
     implementation 'com.google.android.gms:play-services-wallet:16.0.0'
     implementation 'com.facebook.shimmer:shimmer:0.3.0'
 
+    implementation "androidx.lifecycle:lifecycle-extensions:2.1.0"
+    annotationProcessor 'androidx.room:room-compiler:2.2.2'
 
-    // for testing
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.annotation:annotation:1.1.0'
+    androidTestImplementation "androidx.core:core-ktx:1.1.0"
+    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation('androidx.test.espresso:espresso-contrib:3.1.0') {
         exclude module: 'support-annotations'
         exclude group: 'com.android.support', module: 'appcompat'
@@ -171,18 +172,8 @@ dependencies {
         exclude module: 'recyclerview-v7'
         implementation 'com.marcok.stepprogressbar:stepprogressbar:1.0.1'
     }
-
-    implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"
-
     androidTestImplementation 'androidx.test:rules:1.2.0'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    implementation "androidx.core:core-ktx:1.0.2"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.test.espresso:espresso-web:3.1.0'
-
-    implementation 'androidx.room:room-runtime:2.1.0'
-    annotationProcessor 'androidx.room:room-compiler:2.1.0'
+    androidTestImplementation project(':test-module')
 }
 
 apply plugin: 'com.google.gms.google-services'

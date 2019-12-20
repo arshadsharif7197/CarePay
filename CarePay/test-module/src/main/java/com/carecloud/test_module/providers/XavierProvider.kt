@@ -1,8 +1,8 @@
-package com.carecloud.carepaylibray.androidTest.providers
+package com.carecloud.test_module.providers
 import com.google.gson.Gson
 import okhttp3.*
 import java.lang.Exception
-import com.carecloud.carepaylibray.androidTest.graphqldatamodels.Response
+import com.carecloud.test_module.graphqldatamodels.Response
 
 
 fun makeRequest(body: String, authHeader: String = ""): Response {
