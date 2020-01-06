@@ -610,6 +610,7 @@
     <dimen name="nextAppointmentFieldTopMargin">5dp</dimen>
     <dimen name="nextAppointmentFieldTextSize">16sp</dimen>
     <dimen name="webFormButtonMargin">20dp</dimen>
+    <dimen name="nextAppointmentHeaderTextSize">18sp</dimen>
 
     <!--Personal Demographics-->
     <dimen name="demographicPictureContainerPadding">10dp</dimen>

@@ -83,6 +83,10 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         homeScreenMode = HomeScreenMode.valueOf(homeScreenDTO.getState().toUpperCase());
         if (homeScreenMode.equals(HomeScreenMode.PRACTICE_HOME)) {
             setContentView(R.layout.activity_main_practice_mode);
+            PracticeHomeScreenTransitionsDTO transitions = DtoHelper.getConvertedDTO(PracticeHomeScreenTransitionsDTO.class,
+                    homeScreenDTO.getMetadata().getTransitions());
+            ApplicationPreferences.getInstance().setPatientModeTransition(transitions.getPatientMode());
+
         } else {
             setContentView(R.layout.activity_main_patient_mode);
         }
@@ -265,7 +269,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     private void setAppointmentCounts(boolean shouldUpdateNow) {
-        HomeScreenAppointmentCountsDTO appointmentCounts = (HomeScreenAppointmentCountsDTO) getApplicationPreferences().getAppointmentCounts(HomeScreenAppointmentCountsDTO.class);
+        HomeScreenAppointmentCountsDTO appointmentCounts = (HomeScreenAppointmentCountsDTO) getApplicationPreferences()
+                .getAppointmentCounts(HomeScreenAppointmentCountsDTO.class);
         if (appointmentCounts != null) {
             int checkinCounter = appointmentCounts.getCheckingInCount();
             TextView counter = findViewById(R.id.checkedInCounterTextview);
@@ -397,7 +402,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
     private void disableUnavailableItems() {
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-            setViewsDisabled((ViewGroup) findViewById(R.id.homeCheckoutClickable));
+            setViewsDisabled(findViewById(R.id.homeCheckoutClickable));
         }
     }
 
@@ -484,9 +489,10 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
         Gson gson = new Gson();
-        TransitionDTO transitionDTO = null;
+        TransitionDTO transitionDTO;
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-            PracticeHomeScreenTransitionsDTO transitionsDTO = DtoHelper.getConvertedDTO(PracticeHomeScreenTransitionsDTO.class, transitionsAsJsonObject);
+            PracticeHomeScreenTransitionsDTO transitionsDTO = DtoHelper
+                    .getConvertedDTO(PracticeHomeScreenTransitionsDTO.class, transitionsAsJsonObject);
             transitionDTO = transitionsDTO.getPracticeAppointments();
 
             String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();

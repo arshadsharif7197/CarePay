@@ -40,7 +40,8 @@
 
         <include
             android:id="@+id/healthInsuranceTypeRequired"
-            layout="@layout/layout_required_text_view" />
+            layout="@layout/layout_required_text_view"
+            android:visibility="visible"/>
 
     </FrameLayout>
 
@@ -75,7 +76,8 @@
 
         <include
             android:id="@+id/healthInsuranceProviderRequired"
-            layout="@layout/layout_required_text_view" />
+            layout="@layout/layout_required_text_view"
+            android:visibility="visible"/>
 
     </FrameLayout>
 
