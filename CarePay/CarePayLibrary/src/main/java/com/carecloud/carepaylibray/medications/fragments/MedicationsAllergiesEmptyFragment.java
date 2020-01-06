@@ -2,8 +2,8 @@ package com.carecloud.carepaylibray.medications.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -98,6 +98,7 @@ public class MedicationsAllergiesEmptyFragment extends BaseCheckinFragment {
                 Label.getLabel("medication_allergies_check_medications"));
 
         View yesButton = view.findViewById(R.id.button_yes);
+        yesButton.setContentDescription(getString(R.string.content_description_yes_button));
         yesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,12 +116,8 @@ public class MedicationsAllergiesEmptyFragment extends BaseCheckinFragment {
         });
 
         View noButton = view.findViewById(R.id.button_no);
-        noButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                continueToNextStep();
-            }
-        });
+        noButton.setContentDescription(getString(R.string.content_description_no_button));
+        noButton.setOnClickListener(view1 -> continueToNextStep());
     }
 
     private void inflateToolbarViews(View view) {
@@ -131,12 +128,7 @@ public class MedicationsAllergiesEmptyFragment extends BaseCheckinFragment {
         toolbar.setTitle("");
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.icn_nav_back));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         if (title != null) {
             title.setText(Label.getLabel(selectedMode == ALLERGY_MODE ?

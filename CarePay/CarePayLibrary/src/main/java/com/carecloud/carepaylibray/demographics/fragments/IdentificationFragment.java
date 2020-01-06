@@ -1,13 +1,16 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
@@ -41,6 +44,9 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
     boolean hasBackImage = false;
     private String base64FrontImage;
     private String base64BackImage;
+
+    private Button scanFrontButton;
+    private Button scanBackButton;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -162,6 +168,18 @@ public class IdentificationFragment extends CheckInDemographicsBaseFragment impl
                 CarePayCameraPreview.CameraType.SCAN_DOC);
         documentScannerAdapter = new DocumentScannerAdapter(getContext(), view, mediaScannerPresenter, getApplicationMode().getApplicationType());
         documentScannerAdapter.setIdDocumentsFromData(demographicDTO.getPayload().getDemographics().getPayload().getIdDocument());
+
+        scanFrontButton = view.findViewById(com.carecloud.carepaylibrary.R.id.demogrDocsFrontScanButton);
+        scanBackButton = view.findViewById(com.carecloud.carepaylibrary.R.id.demogrDocsBackScanButton);
+
+        scanFrontButton.setOnClickListener(view1 -> {
+            documentScannerAdapter.setFrontCaptureImage();
+            mediaScannerPresenter.handlePictureAction();
+        });
+        scanBackButton.setOnClickListener(view12 -> {
+            documentScannerAdapter.setBackCaptureImage();
+            mediaScannerPresenter.handlePictureAction();
+        });
 
         View lastCaptureView = view.findViewById(MediaScannerPresenter.captureViewId);
         if (lastCaptureView != null) {

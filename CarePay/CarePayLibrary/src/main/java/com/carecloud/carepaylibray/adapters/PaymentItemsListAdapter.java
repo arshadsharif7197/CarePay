@@ -1,7 +1,7 @@
 package com.carecloud.carepaylibray.adapters;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +37,7 @@ public class PaymentItemsListAdapter extends RecyclerView.Adapter<PaymentItemsLi
         holder.paymentDetailLabel.setText(paymentDetailsItem.getDescription());
         holder.paymentDetailAmount.setText(StringUtil.getFormattedBalanceAmount(paymentDetailsItem.getAmount()));
         holder.paymentEffectiveDate.setText(DateUtil.getInstance()
-                .setDateRaw(paymentDetailsItem.getEffectiveDate()).getDateAsMonthDayYear());
+                .setDateRaw(paymentDetailsItem.getEffectiveDate()).getDateAsMonthDayYearString());
     }
 
     @Override
@@ -54,9 +54,9 @@ public class PaymentItemsListAdapter extends RecyclerView.Adapter<PaymentItemsLi
         PaymentDetailsListViewHolder(View itemView) {
             super(itemView);
 
-            paymentDetailLabel = (CarePayTextView) itemView.findViewById(R.id.payment_details_label);
-            paymentDetailAmount = (CarePayTextView) itemView.findViewById(R.id.payment_details_value);
-            paymentEffectiveDate = (CarePayTextView) itemView.findViewById(R.id.paymentEffectiveDate);
+            paymentDetailLabel = itemView.findViewById(R.id.payment_details_label);
+            paymentDetailAmount = itemView.findViewById(R.id.payment_details_value);
+            paymentEffectiveDate = itemView.findViewById(R.id.paymentEffectiveDate);
         }
     }
 }

@@ -5,8 +5,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +15,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -25,9 +26,9 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
+import com.carecloud.carepaylibray.retail.interfaces.RetailInterface;
 import com.carecloud.carepaylibray.retail.models.RetailModel;
 import com.carecloud.carepaylibray.retail.models.RetailPracticeDTO;
-import com.carecloud.carepaylibray.retail.interfaces.RetailInterface;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 
@@ -39,23 +40,23 @@ import java.util.Map;
  */
 public class RetailFragment extends BaseFragment {
 
-    protected static final String KEY_SHOW_TOOLBAR = "show_toolbar";
-    protected static final String BASE_URL = "/shop-sso.html";
-    protected static final String QUERY_ORDER = "transaction_id";
-    protected static final String QUERY_STORE = "store_id";
-    protected static final String QUERY_AMOUNT = "amount";
-    protected static final String PATH_PAYMENTS_REDIRECT = "/payment";
+    private static final String KEY_SHOW_TOOLBAR = "show_toolbar";
+    private static final String BASE_URL = "/shop-sso.html";
+    private static final String QUERY_ORDER = "transaction_id";
+    private static final String QUERY_STORE = "store_id";
+    private static final String QUERY_AMOUNT = "amount";
+    private static final String PATH_PAYMENTS_REDIRECT = "/payment";
 
-    protected RetailModel retailModel;
-    protected RetailPracticeDTO retailPractice;
+    private RetailModel retailModel;
+    private RetailPracticeDTO retailPractice;
     protected UserPracticeDTO userPracticeDTO;
-    protected WebView shoppingWebView;
-    protected String lastUrl;
-    protected String returnUrl = null;
+    private WebView shoppingWebView;
+    private String lastUrl;
+    private String returnUrl = null;
     protected RetailInterface callback;
-    protected SwipeRefreshLayout refreshLayout;
+    private SwipeRefreshLayout refreshLayout;
     protected Toolbar toolbar;
-    protected boolean showToolbar = true;
+    private boolean showToolbar = true;
 
     private boolean launchedPayments = false;
 
@@ -115,14 +116,11 @@ public class RetailFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         if (retailPractice != null) {
-            refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
-            shoppingWebView = (WebView) view.findViewById(R.id.shoppingWebView);
-            refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    //reloading causes us to loose sso
-                    reloadSSO(lastUrl, false);
-                }
+            refreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+            shoppingWebView = view.findViewById(R.id.shoppingWebView);
+            refreshLayout.setOnRefreshListener(() -> {
+                //reloading causes us to loose sso
+                reloadSSO(lastUrl, false);
             });
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 WebView.setWebContentsDebuggingEnabled(true);
@@ -181,19 +179,14 @@ public class RetailFragment extends BaseFragment {
     }
 
     private void initToolbar(View view) {
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
-        TextView toolbarTitle = ((TextView) view.findViewById(R.id.toolbar_title));
+        toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
+        TextView toolbarTitle = view.findViewById(R.id.toolbar_title);
         if (toolbarTitle != null) {
             toolbarTitle.setText(userPracticeDTO.getPracticeName());
         } else {
-            TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+            TextView title = toolbar.findViewById(R.id.toolbar_title);
             title.setText(userPracticeDTO.getPracticeName());
         }
         if (showToolbar) {
@@ -234,6 +227,7 @@ public class RetailFragment extends BaseFragment {
 
         @Override
         public void onPageFinished(WebView webView, String url) {
+            boolean orderConfirmed = false;
             if (lastUrl == null || launchUrl == null) {
                 launchUrl = url;
             } else if (lastUrl.equals(url) && launchUrl.equals(url)) {
@@ -257,11 +251,14 @@ public class RetailFragment extends BaseFragment {
                     launchUrl = null;//reset launch url at this point
                 }
             }
+            if (url.contains("#!/~/orderConfirmation")) {
+                orderConfirmed = true;
+            }
             if (url.equals(returnUrl)) {
                 Log.d("Retail WebView", returnUrl);
                 loadedReturnUrl = true;
             }
-            if (!showToolbar && !shoppingWebView.canGoBack()) {//check if this is the last in the stack
+            if (!showToolbar && !shoppingWebView.canGoBack() || orderConfirmed) {//check if this is the last in the stack
                 toolbar.setVisibility(View.GONE);
                 callback.displayToolbar(true);
             }

@@ -4,11 +4,10 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
@@ -37,9 +36,11 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
 
     private DialogInterface.OnDismissListener onDismissListener;
     protected DialogInterface.OnCancelListener onCancelListener;
+    protected OnBackPressedInterface onBackPressedInterface;
 
     private long lastFullScreenSet;
-    private BlurDialogEngine mBlurEngine = null;
+    private BlurDialogEngine mBlurEngine;
+    private boolean blurDismissed;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -79,15 +80,12 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
             View decorView = dialog.getWindow().getDecorView();
             hideKeyboardOnViewTouch(decorView);
             if (isPracticeAppPatientMode) {
-                decorView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        long now = System.currentTimeMillis();
-                        if (now - lastFullScreenSet > 1000) {
-                            Log.d("Base", "Hide Nav Bar");
-                            setNavigationBarVisibility();
-                            lastFullScreenSet = now;
-                        }
+                decorView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+                    long now = System.currentTimeMillis();
+                    if (now - lastFullScreenSet > 1000) {
+                        Log.d("Base", "Hide Nav Bar");
+                        setNavigationBarVisibility();
+                        lastFullScreenSet = now;
                     }
                 });
             }
@@ -106,6 +104,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         }
         if (mBlurEngine != null) {
             mBlurEngine.onDismiss();
+            blurDismissed = true;
         }
     }
 
@@ -113,6 +112,9 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     public void onDestroy() {
         super.onDestroy();
         if (mBlurEngine != null) {
+            if (!blurDismissed) {
+                mBlurEngine.onDismiss();
+            }
             mBlurEngine.onDetach();
         }
     }
@@ -192,14 +194,11 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
             view.setSoundEffectsEnabled(false);
             view.setFocusable(true);
             view.setFocusableInTouchMode(true);
-            view.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent event) {
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        SystemUtil.hideSoftKeyboard(getContext(), view);
-                    }
-                    return false;
+            view.setOnTouchListener((view1, event) -> {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    SystemUtil.hideSoftKeyboard(getContext(), view1);
                 }
+                return false;
             });
         }
 
@@ -291,12 +290,28 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         }
     }
 
+    public void showDialog(boolean showBlur) {
+        if (getDialog() != null) {
+            getDialog().show();
+            if (showBlur && mBlurEngine != null) {
+                mBlurEngine.onResume(getRetainInstance());
+            }
+        }
+    }
+
     /**
      * hide dialog fragment without dismissing
      */
     public void hideDialog() {
+        hideDialog(false);
+    }
+
+    public void hideDialog(boolean hideBlur) {
         if (getDialog() != null) {
             getDialog().hide();
+            if (hideBlur && mBlurEngine != null) {
+                mBlurEngine.onDismiss();
+            }
         }
     }
 
@@ -310,5 +325,22 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
                     | FULLSCREEN_VALUE;
             decorView.setSystemUiVisibility(uiOptions);
         }
+    }
+
+    protected DialogInterface.OnCancelListener onDialogCancelListener = dialogInterface -> showDialog();
+
+    public void onBackPressed() {
+        getActivity().onBackPressed();
+        if (onBackPressedInterface != null) {
+            onBackPressedInterface.onBackPressed();
+        }
+    }
+
+    public void setOnBackPressedListener(OnBackPressedInterface onBackPressedInterface) {
+        this.onBackPressedInterface = onBackPressedInterface;
+    }
+
+    public interface OnBackPressedInterface {
+        void onBackPressed();
     }
 }

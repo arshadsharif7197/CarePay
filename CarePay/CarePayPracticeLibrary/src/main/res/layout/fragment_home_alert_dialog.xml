@@ -30,8 +30,8 @@
     <LinearLayout
         android:layout_width="@dimen/confirmDialogWidth"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/confirmDialogHorizontalMargin"
         android:layout_marginStart="@dimen/confirmDialogHorizontalMargin"
+        android:layout_marginEnd="@dimen/confirmDialogHorizontalMargin"
         android:orientation="vertical">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -78,8 +78,8 @@
                 android:id="@+id/button_left_action"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/commonButtonHeight"
-                android:layout_marginEnd="@dimen/confirmDialogButtonsHorizontalMargin"
                 android:layout_marginStart="@dimen/confirmDialogButtonsHorizontalMargin"
+                android:layout_marginEnd="@dimen/confirmDialogButtonsHorizontalMargin"
                 android:layout_weight="2"
                 android:background="@drawable/bg_primary_overlay"
                 android:padding="@dimen/confirmDialogButtonsPadding"
@@ -94,10 +94,11 @@
                 android:id="@+id/button_right_action"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/commonButtonHeight"
-                android:layout_marginEnd="@dimen/confirmDialogButtonsHorizontalMargin"
                 android:layout_marginStart="@dimen/confirmDialogButtonsHorizontalMargin"
+                android:layout_marginEnd="@dimen/confirmDialogButtonsHorizontalMargin"
                 android:layout_weight="1"
                 android:background="@drawable/bg_yellow_overlay"
+                android:contentDescription="@string/content_description_confirm"
                 android:padding="@dimen/confirmDialogButtonsPadding"
                 android:textAllCaps="false"
                 android:textColor="@color/white"

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Browser;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Spanned;
@@ -21,6 +20,9 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.models.MessageAttachment;
@@ -51,12 +53,14 @@ import java.util.Map;
  * Created by lmenendez on 7/5/17
  */
 
-public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesConversationAdapter.ViewHolder> implements LinkMovementCallbackMethod.OnClickCallback {
+public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesConversationAdapter.ViewHolder>
+        implements LinkMovementCallbackMethod.OnClickCallback {
 
     private static final int TYPE_SENT = 111;
     private static final int TYPE_RECEIVED = 222;
 
-    public static final String[] FORMAT_IMAGE = {"png", "image/png", "jpg", "image/jpg", "jpeg", "image/jpeg", "gif", "image/gif", "tif", "image/tif", "tiff", "image/tiff", "bmp", "image/bmp"};
+    private static final String[] FORMAT_IMAGE = {"png", "image/png", "jpg", "image/jpg", "jpeg", "image/jpeg",
+            "gif", "image/gif", "tif", "image/tif", "tiff", "image/tiff", "bmp", "image/bmp"};
 
     private static final String USER_TYPE_PROVIDER = "provider";
     private static final String USER_TYPE_STAFF = "user";
@@ -87,8 +91,9 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
         this.iSession = (ISession) context;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view;
         if (viewType == TYPE_SENT) {
@@ -107,7 +112,7 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         Messages.Reply message = messages.get(position);
         Messages.Reply lastMessage = null;
         if (position > 0) {
@@ -168,7 +173,7 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
             if (attachmentFormat != null && attachmentFormat.contains("/")) {
                 attachmentFormat = MimeTypeMap.getSingleton().getExtensionFromMimeType(attachmentFormat);
             }
-            if(attachmentFormat == null){
+            if (attachmentFormat == null) {
                 attachmentFormat = MimeTypeMap.getFileExtensionFromUrl(attachment.getDocument().getName());
             }
 
@@ -221,47 +226,39 @@ public class MessagesConversationAdapter extends RecyclerView.Adapter<MessagesCo
     }
 
     private View.OnClickListener getImageClickListener(final MessageAttachment attachment) {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.openImageDetailView(attachment);
-            }
-        };
+        return view -> callback.openImageDetailView(attachment);
     }
 
-    private View.OnLongClickListener getDownloadListener(final MessageAttachment attachment, final String attachmentFormat){
-        return new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                view.startActionMode(new ActionMode.Callback() {
-                    @Override
-                    public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-                        actionMode.setTitle(attachment.getDocument().getName());
-                        actionMode.getMenuInflater().inflate(R.menu.messages_action_menu, menu);
-                        return true;
-                    }
+    private View.OnLongClickListener getDownloadListener(final MessageAttachment attachment, final String attachmentFormat) {
+        return view -> {
+            view.startActionMode(new ActionMode.Callback() {
+                @Override
+                public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+                    actionMode.setTitle(attachment.getDocument().getName());
+                    actionMode.getMenuInflater().inflate(R.menu.messages_action_menu, menu);
+                    return true;
+                }
 
-                    @Override
-                    public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-                        return true;
-                    }
+                @Override
+                public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+                    return true;
+                }
 
-                    @Override
-                    public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-                        if(menuItem.getItemId()== R.id.menu_download){
-                            callback.downloadAttachment(attachment, attachmentFormat);
-                        }
-                        actionMode.finish();
-                        return true;
+                @Override
+                public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+                    if (menuItem.getItemId() == R.id.menu_download) {
+                        callback.downloadAttachment(attachment, attachmentFormat);
                     }
+                    actionMode.finish();
+                    return true;
+                }
 
-                    @Override
-                    public void onDestroyActionMode(ActionMode actionMode) {
+                @Override
+                public void onDestroyActionMode(ActionMode actionMode) {
 
-                    }
-                });
-                return true;
-            }
+                }
+            });
+            return true;
         };
     }
 

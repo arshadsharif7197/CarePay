@@ -495,7 +495,7 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/cancel_button"
             android:layout_width="0dp"
-            android:layout_height="@dimen/checkinPlanFooterButtonHeight"
+            android:layout_height="@dimen/commonButtonHeight"
             android:layout_margin="@dimen/checkinPlanFooterButtonMargin"
             android:layout_weight="1"
             android:background="@drawable/round_border_button_bg"

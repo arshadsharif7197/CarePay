@@ -3,7 +3,7 @@ package com.carecloud.carepaylibray.common;
 import android.app.Dialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,12 +104,7 @@ public class DocumentDetailFragment extends BaseDialogFragment {
                     });
         }
         if (view.findViewById(R.id.exitImageView) != null) {
-            view.findViewById(R.id.exitImageView).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dismiss();
-                }
-            });
+            view.findViewById(R.id.exitImageView).setOnClickListener(v -> dismiss());
         }
     }
 

@@ -2,10 +2,10 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,12 +36,14 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentMe
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -138,9 +140,9 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     }
 
     private void setupTitleViews(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         if (toolbar != null) {
-            TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
+            TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
             title.setText(titleLabel);
             toolbar.setTitle("");
             if (getDialog() == null) {
@@ -158,9 +160,6 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
                         @Override
                         public void onClick(View view) {
                             cancel();
-                            if (onCancelListener == null) {
-                                callback.onPayButtonClicked(amountToMakePayment, paymentsModel);
-                            }
                         }
                     });
                 }
@@ -173,17 +172,17 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     }
 
     private void initializeViews(View view) {
-        nextButton = (Button) view.findViewById(R.id.nextButton);
+        nextButton = view.findViewById(R.id.nextButton);
         nextButton.setOnClickListener(nextButtonListener);
         nextButton.setEnabled(false);
         if (onlySelectMode) {
             nextButton.setText(Label.getLabel("common.button.continue"));
         }
 
-        Button addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
+        Button addNewCardButton = view.findViewById(R.id.addNewCardButton);
         addNewCardButton.setOnClickListener(addNewCardButtonListener);
 
-        creditCardsRecyclerView = (RecyclerView) view.findViewById(R.id.list_credit_cards);
+        creditCardsRecyclerView = view.findViewById(R.id.list_credit_cards);
         creditCardsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         final CreditCardsListAdapter creditCardsListAdapter = new CreditCardsListAdapter(getContext(),
                 creditCardList, this, false);
@@ -369,10 +368,10 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
                 MixPanelUtil.incrementPeopleProperty(getString(R.string.total_payments_amount), amountToMakePayment);
             }
 
-            showConfirmation(workflowDTO);
             if (getDialog() != null) {
                 dismiss();
             }
+            showConfirmation(workflowDTO);
 
         }
 
@@ -392,17 +391,20 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     private View.OnClickListener addNewCardButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (getDialog() != null) {
-                dismiss();
-            }
-            callback.showAddCard(amountToMakePayment, paymentsModel);
+            showAddCard(amountToMakePayment, paymentsModel);
         }
     };
+
+    protected void showAddCard(double amountToMakePayment, PaymentsModel paymentsModel) {
+        callback.showAddCard(amountToMakePayment, paymentsModel);
+    }
 
     @Override
     public void onCreditCardItemSelected(PaymentCreditCardsPayloadDTO creditCard) {
         selectedCreditCard = creditCard;
-        nextButton.setEnabled(true);
+        Date expDate = DateUtil.getInstance().setDateRaw(creditCard.getExpireDt()).getDate();
+        expDate = DateUtil.getLastDayOfMonth(expDate);
+        nextButton.setEnabled(!expDate.before(new Date()));
     }
 
     protected void showConfirmation(WorkflowDTO workflowDTO) {

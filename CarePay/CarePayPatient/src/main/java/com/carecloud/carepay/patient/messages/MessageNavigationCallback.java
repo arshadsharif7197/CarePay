@@ -12,4 +12,6 @@ public interface MessageNavigationCallback extends FragmentActivityInterface {
     void displayThreadMessages(Messages.Reply thread, boolean dismissDialogs);
 
     void displayToolbar(boolean display, String title);
+
+    boolean canSendProvidersMessages();
 }

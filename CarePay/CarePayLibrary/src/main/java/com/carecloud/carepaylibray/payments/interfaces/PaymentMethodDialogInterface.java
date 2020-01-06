@@ -7,11 +7,6 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
  */
 
 public interface PaymentMethodDialogInterface extends PaymentMethodInterface {
-    /**
-     * Callback to do cleanup when dismissing PaymentMethod Dialog
-     * @param paymentsModel payment model
-     */
-    void onDismissPaymentMethodDialog(PaymentsModel paymentsModel);
 
     void onCashSelected(PaymentsModel paymentsModel);
 

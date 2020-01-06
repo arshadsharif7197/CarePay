@@ -1,14 +1,16 @@
 package com.carecloud.carepay.patient.notifications.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.os.Handler;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
-import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
-import com.carecloud.carepay.patient.base.MenuPatientActivity;
+import com.carecloud.carepay.patient.menu.MenuPatientActivity;
+import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.patient.notifications.fragments.NotificationFragment;
 import com.carecloud.carepay.patient.notifications.models.NotificationItem;
@@ -17,16 +19,21 @@ import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
+import com.carecloud.carepay.patient.rate.RateDialog;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.profile.Profile;
+import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import org.json.JSONObject;
@@ -43,6 +50,7 @@ public class NotificationActivity extends MenuPatientActivity
 
     private PatientAppointmentPresenter appointmentPresenter;
     private NotificationsDTO notificationsDTO;
+    private static final int SURVEY_FLOW = 100;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -53,8 +61,6 @@ public class NotificationActivity extends MenuPatientActivity
         } else {
             resumeOnCreate(icicle);
         }
-
-
     }
 
     private void callNotificationService(final Bundle icicle) {
@@ -96,6 +102,19 @@ public class NotificationActivity extends MenuPatientActivity
             case PaymentConstants.REQUEST_CODE_FULL_WALLET:
                 appointmentPresenter.forwardAndroidPayResult(requestCode, resultCode, data);
                 break;
+            case SURVEY_FLOW:
+                if (resultCode == Activity.RESULT_OK
+                        && data.getBooleanExtra(CarePayConstants.SHOW_SURVEY, false)) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (ApplicationPreferences.getInstance().shouldShowRateDialog()) {
+                                displayDialogFragment(RateDialog.newInstance(), true);
+                            }
+                        }
+                    }, 100);
+                }
+                break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
                 break;
@@ -106,10 +125,9 @@ public class NotificationActivity extends MenuPatientActivity
     @Override
     protected void onResume() {
         super.onResume();
-        MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_notification);
-        menuItem.setChecked(true);
+        selectMenuItem(R.id.notificationsMenuItem);
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-            displayToolbar(true, menuItem.getTitle().toString());
+            displayToolbar(true, getScreenTitle(Label.getLabel("notifications_heading")));
         }
     }
 
@@ -177,7 +195,8 @@ public class NotificationActivity extends MenuPatientActivity
                         Bundle bundle = new Bundle();
                         bundle.putString(CarePayConstants.PATIENT_ID, notificationItem.getMetadata().getPatientId());
                         bundle.putBoolean(CarePayConstants.NOTIFICATIONS_FLOW, true);
-                        navigateToWorkflow(workflowDTO, bundle);
+                        PatientNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, true,
+                                SURVEY_FLOW, bundle);
                     }
 
                     @Override
@@ -344,5 +363,16 @@ public class NotificationActivity extends MenuPatientActivity
     @Override
     public DTO getDto() {
         return null;
+    }
+
+    @Override
+    protected void onProfileChanged(ProfileDto profile) {
+        displayToolbar(true, getScreenTitle(Label.getLabel("notifications_heading")));
+        callNotificationService(null);
+    }
+
+    @Override
+    protected Profile getCurrentProfile() {
+        return notificationsDTO.getPayload().getDelegate();
     }
 }

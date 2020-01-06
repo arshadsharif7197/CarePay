@@ -34,8 +34,8 @@
         android:id="@+id/container_main"
         android:layout_width="@dimen/payment_distribution_dialog_width"
         android:layout_height="@dimen/payment_distibution_dialog_height"
-        android:layout_marginEnd="@dimen/dimen_26dp"
         android:layout_marginStart="@dimen/dimen_26dp"
+        android:layout_marginEnd="@dimen/dimen_26dp"
         android:orientation="vertical">
 
         <FrameLayout
@@ -103,10 +103,11 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="@dimen/dimen_8dp"
                     android:background="@drawable/bg_green_border_trans"
-                    android:paddingBottom="@dimen/roundedValueVerticalPadding"
-                    android:paddingEnd="@dimen/roundedValueHorizontalPadding"
+                    android:contentDescription="@string/content_description_total_amount_being_paid"
                     android:paddingStart="@dimen/roundedValueHorizontalPadding"
                     android:paddingTop="@dimen/roundedValueVerticalPadding"
+                    android:paddingEnd="@dimen/roundedValueHorizontalPadding"
+                    android:paddingBottom="@dimen/roundedValueVerticalPadding"
                     android:textColor="@color/emerald"
                     android:textSize="@dimen/amountLabelTextSize"
                     app:customAssetFont="proxima_nova_semi_bold"
@@ -156,8 +157,8 @@
                 <View
                     android:layout_width="@dimen/dimen_1dp"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="@dimen/dimen_8dp"
                     android:layout_marginStart="@dimen/dimen_8dp"
+                    android:layout_marginEnd="@dimen/dimen_8dp"
                     android:background="@color/Feldgrau" />
 
             </LinearLayout>
@@ -203,8 +204,8 @@
                 <View
                     android:layout_width="@dimen/dimen_1dp"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="@dimen/dimen_8dp"
                     android:layout_marginStart="@dimen/dimen_8dp"
+                    android:layout_marginEnd="@dimen/dimen_8dp"
                     android:background="@color/Feldgrau" />
 
             </LinearLayout>
@@ -221,7 +222,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <android.support.v4.widget.NestedScrollView
+                <androidx.core.widget.NestedScrollView
                     android:id="@+id/nested_scroller"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
@@ -233,11 +234,12 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical">
 
-                        <android.support.v7.widget.RecyclerView
+                        <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/balances_recycler"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/dimen_20dp" />
+                            android:layout_marginBottom="@dimen/dimen_20dp"
+                            android:contentDescription="@string/content_description_patient_balances_list" />
 
 
                         <LinearLayout
@@ -250,9 +252,9 @@
                             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="@dimen/dimen_10dp"
                                 android:layout_marginStart="@dimen/dimen_24dp"
                                 android:layout_marginTop="@dimen/dimen_20dp"
+                                android:layout_marginBottom="@dimen/dimen_10dp"
                                 android:textAllCaps="true"
                                 android:textColor="@color/textview_default_textcolor"
                                 android:textSize="@dimen/text_size_18sp"
@@ -264,7 +266,7 @@
                                 android:layout_height="@dimen/dimen_1dp"
                                 android:background="@color/light_gray" />
 
-                            <android.support.v7.widget.RecyclerView
+                            <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/new_charges_recycler"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
@@ -281,9 +283,9 @@
                             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="@dimen/dimen_10dp"
                                 android:layout_marginStart="@dimen/dimen_24dp"
                                 android:layout_marginTop="@dimen/dimen_20dp"
+                                android:layout_marginBottom="@dimen/dimen_10dp"
                                 android:textAllCaps="true"
                                 android:textColor="@color/textview_default_textcolor"
                                 android:textSize="@dimen/text_size_18sp"
@@ -295,7 +297,7 @@
                                 android:layout_height="@dimen/dimen_1dp"
                                 android:background="@color/light_gray" />
 
-                            <android.support.v7.widget.RecyclerView
+                            <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/retail_charges_recycler"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
@@ -316,8 +318,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="end"
                                 android:background="@drawable/blue_border_rounded_button_selector"
-                                android:paddingEnd="@dimen/dimen_20dp"
                                 android:paddingStart="@dimen/dimen_20dp"
+                                android:paddingEnd="@dimen/dimen_20dp"
                                 android:textColor="@color/primary_color_enabled_selector"
                                 android:textSize="@dimen/text_size_14"
                                 app:customAssetFont="gotham_rounded_medium"
@@ -327,7 +329,7 @@
                         </FrameLayout>
 
                     </LinearLayout>
-                </android.support.v4.widget.NestedScrollView>
+                </androidx.core.widget.NestedScrollView>
 
                 <View
                     android:layout_width="match_parent"
@@ -349,6 +351,7 @@
                         android:layout_margin="@dimen/distributionButtonContainersPadding"
                         android:layout_weight="2"
                         android:background="@drawable/blue_border_rounded_button_selector"
+                        android:contentDescription="@string/content_description_payment_plan_dashboard_button"
                         android:textColor="@color/primary_color_enabled_selector"
                         app:customAssetFont="gotham_rounded_medium"
                         breeze:textKey="payment.distributionScreen.button.label.paymentPlanButton"
@@ -362,6 +365,7 @@
                         android:layout_margin="@dimen/distributionButtonContainersPadding"
                         android:layout_weight="3"
                         android:background="@drawable/green_rounded_button_selector"
+                        android:contentDescription="@string/content_description_pay_button"
                         app:customAssetFont="gotham_rounded_medium"
                         breeze:textKey="practice_payments_detail_dialog_pay"
                         tools:text="Pay" />
@@ -382,13 +386,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:paddingTop="@dimen/dimen_40dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/dimen_40dp">
 
-                    <include layout="@layout/patient_balance_empty"
-                        android:layout_height="0dp"
+                    <include
+                        layout="@layout/patient_balance_empty"
                         android:layout_width="match_parent"
-                        android:layout_weight="1"/>
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayButton
                         android:id="@+id/payment_plans_empty_button"
@@ -398,8 +403,8 @@
                         android:layout_gravity="center"
                         android:layout_marginBottom="@dimen/dimen_40dp"
                         android:background="@drawable/blue_border_rounded_button_selector"
-                        android:paddingEnd="@dimen/dimen_150dp"
                         android:paddingStart="@dimen/dimen_150dp"
+                        android:paddingEnd="@dimen/dimen_150dp"
                         android:textColor="@color/primary_color_enabled_selector"
                         android:textSize="@dimen/text_size_22"
                         android:visibility="gone"
