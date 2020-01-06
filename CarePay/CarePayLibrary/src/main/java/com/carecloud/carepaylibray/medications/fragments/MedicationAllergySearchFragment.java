@@ -2,11 +2,6 @@ package com.carecloud.carepaylibray.medications.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -14,6 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -46,7 +47,8 @@ import java.util.Map;
  * Created by lmenendez on 2/15/17
  */
 
-public class MedicationAllergySearchFragment extends BaseDialogFragment implements MedicationAllergySearchAdapter.SearchItemSelectedCallback {
+public class MedicationAllergySearchFragment extends BaseDialogFragment
+        implements MedicationAllergySearchAdapter.SearchItemSelectedCallback {
     public static final int ALLERGY_ITEM = 100;
     public static final int MEDICATION_ITEM = 101;
 
@@ -122,12 +124,9 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
         toolbar.setTitle("");
         if (getDialog() == null) {
             toolbar.setNavigationIcon(ContextCompat.getDrawable(getContext(), R.drawable.icn_nav_back));
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SystemUtil.hideSoftKeyboard(getActivity());
-                    getActivity().onBackPressed();
-                }
+            toolbar.setNavigationOnClickListener(v -> {
+                SystemUtil.hideSoftKeyboard(getActivity());
+                getActivity().onBackPressed();
             });
         }
         searchView = view.findViewById(R.id.search_entry_view);
@@ -181,18 +180,15 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
         searchRecycler.setLayoutManager(layoutManager);
         View closeButton = view.findViewById(R.id.closeViewLayout);
         if (closeButton != null) {
-            closeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    SystemUtil.hideSoftKeyboard(getContext(), view);
-                    dismiss();
-                }
+            closeButton.setOnClickListener(view1 -> {
+                SystemUtil.hideSoftKeyboard(getContext(), view1);
+                dismiss();
             });
         }
 
         noResultsContainer = view.findViewById(R.id.noResultsContainer);
 
-        if (getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PATIENT)){
+        if (getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PATIENT)) {
             initialScreenContainer = view.findViewById(R.id.initialScreenContainer);
             TextView initialScreenTitleTextView = view.findViewById(R.id.initialScreenTitleTextView);
             initialScreenTitleTextView.setText(searchMode == ALLERGY_ITEM ?
@@ -207,7 +203,7 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
 
     private void setAdapters() {
         MedicationAllergySearchAdapter adapter = new MedicationAllergySearchAdapter(getContext(),
-                new ArrayList<MedicationsAllergiesObject>(), this, searchMode);
+                new ArrayList<>(), this, searchMode);
         searchRecycler.setAdapter(adapter);
     }
 
@@ -276,6 +272,7 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
     private void showHideInitialScreen(boolean show) {
         if (initialScreenContainer != null) {
             initialScreenContainer.setVisibility(show ? View.VISIBLE : View.GONE);
+            noResultsContainer.setVisibility(!show ? View.VISIBLE : View.GONE);
             searchRecycler.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
