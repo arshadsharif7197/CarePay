@@ -71,12 +71,9 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
             toolbar.setElevation(0);
         }
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back_white));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SystemUtil.hideSoftKeyboard(getActivity());
-                getActivity().onBackPressed();
-            }
+        toolbar.setNavigationOnClickListener(view1 -> {
+            SystemUtil.hideSoftKeyboard(getActivity());
+            getActivity().onBackPressed();
         });
         toolbar.setTitle("");
 
@@ -84,42 +81,36 @@ public class ResponsibilityCheckInFragment extends ResponsibilityBaseFragment {
         TextView totalResponsibility = view.findViewById(R.id.respons_total_label);
 
         Button paymentOptionsButton = view.findViewById(R.id.paymentOptionsButton);
-        paymentOptionsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PaymentOptionsFragmentDialog fragment = PaymentOptionsFragmentDialog.newInstance(paymentDTO);
-                fragment.setCallback(new PaymentOptionsFragmentDialog.PaymentOptionsInterface() {
-                    @Override
-                    public void onOptionSelected(int option) {
-                        switch (option) {
-                            case PaymentOptionsFragmentDialog.PAYMENT_OPTION_TOTAL_AMOUNT:
-                                doPayment();
-                                break;
-                            case PaymentOptionsFragmentDialog.PAYMENT_OPTION_PARTIAL_AMOUNT:
-                                final PendingBalanceDTO selectedBalance = paymentDTO.getPaymentPayload()
-                                        .getPatientBalances().get(0).getBalances().get(0);
-                                actionCallback.onPartialPaymentClicked(total, selectedBalance);
-                                break;
-                            case PaymentOptionsFragmentDialog.PAYMENT_OPTION_PAYMENT_PLAN:
-                                //this should be a safe assumption for checkin
-                                PendingBalanceDTO selectedBalancesItem = paymentDTO.getPaymentPayload()
-                                        .getPatientBalances().get(0).getBalances().get(0);
-                                PendingBalanceDTO reducedBalancesItem = paymentDTO.getPaymentPayload()
-                                        .reduceBalanceItems(selectedBalancesItem, false);
-                                PracticePaymentPlanAmountFragment fragment = PracticePaymentPlanAmountFragment
-                                        .newInstance(paymentDTO, reducedBalancesItem, false);
-                                actionCallback.displayDialogFragment(fragment, false);
-                                break;
-                            case PaymentOptionsFragmentDialog.PAYMENT_OPTION_PAY_LATER:
-                                //Not Supported
-                                break;
-                        }
-                    }
-                });
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction transaction = fm.beginTransaction();
-                fragment.show(transaction, fragment.getClass().getCanonicalName());
-            }
+        paymentOptionsButton.setOnClickListener(v -> {
+            PaymentOptionsFragmentDialog fragment = PaymentOptionsFragmentDialog.newInstance(paymentDTO);
+            fragment.setCallback(option -> {
+                switch (option) {
+                    case PaymentOptionsFragmentDialog.PAYMENT_OPTION_TOTAL_AMOUNT:
+                        doPayment();
+                        break;
+                    case PaymentOptionsFragmentDialog.PAYMENT_OPTION_PARTIAL_AMOUNT:
+                        final PendingBalanceDTO selectedBalance = paymentDTO.getPaymentPayload()
+                                .getPatientBalances().get(0).getBalances().get(0);
+                        actionCallback.onPartialPaymentClicked(total, selectedBalance);
+                        break;
+                    case PaymentOptionsFragmentDialog.PAYMENT_OPTION_PAYMENT_PLAN:
+                        //this should be a safe assumption for checkin
+                        PendingBalanceDTO selectedBalancesItem = paymentDTO.getPaymentPayload()
+                                .getPatientBalances().get(0).getBalances().get(0);
+                        PendingBalanceDTO reducedBalancesItem = paymentDTO.getPaymentPayload()
+                                .reduceBalanceItems(selectedBalancesItem, false);
+                        PracticePaymentPlanAmountFragment fragment1 = PracticePaymentPlanAmountFragment
+                                .newInstance(paymentDTO, reducedBalancesItem, false);
+                        actionCallback.displayDialogFragment(fragment1, false);
+                        break;
+                    case PaymentOptionsFragmentDialog.PAYMENT_OPTION_PAY_LATER:
+                        //Not Supported
+                        break;
+                }
+            });
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction transaction = fm.beginTransaction();
+            fragment.show(transaction, fragment.getClass().getCanonicalName());
         });
 
         getPaymentInformation();

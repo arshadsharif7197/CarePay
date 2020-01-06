@@ -10,7 +10,6 @@
       <module fileurl="file://$PROJECT_DIR$/CarePayPracticeLibrary/CarePayPracticeLibrary.iml" filepath="$PROJECT_DIR$/CarePayPracticeLibrary/CarePayPracticeLibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/CarePayPracticeTablet/CarePayPracticeTablet.iml" filepath="$PROJECT_DIR$/CarePayPracticeTablet/CarePayPracticeTablet.iml" />
       <module fileurl="file://$PROJECT_DIR$/CarePayServiceLibrary/CarePayServiceLibrary.iml" filepath="$PROJECT_DIR$/CarePayServiceLibrary/CarePayServiceLibrary.iml" />
-      <module fileurl="file://$PROJECT_DIR$/shamrock_android-CarePay.iml" filepath="$PROJECT_DIR$/shamrock_android-CarePay.iml" />
     </modules>
   </component>
 </project>
