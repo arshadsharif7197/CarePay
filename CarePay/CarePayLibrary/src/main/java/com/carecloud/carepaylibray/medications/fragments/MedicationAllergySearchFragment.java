@@ -258,12 +258,15 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment
         @Override
         public boolean onQueryTextChange(String newText) {
             if (newText != null && newText.length() > 0) {
-                getWorkflowServiceHelper().interrupt();
+//                getWorkflowServiceHelper().interrupt();
                 submitSearch(newText, searchMode);
                 showHideInitialScreen(false);
             } else {
                 showHideInitialScreen(true);
                 noResultsContainer.setVisibility(View.GONE);
+                MedicationAllergySearchAdapter adapter = (MedicationAllergySearchAdapter) searchRecycler.getAdapter();
+                adapter.setItems(new ArrayList<>());
+                adapter.notifyDataSetChanged();
             }
             unlisted.setEnabled(!StringUtil.isNullOrEmpty(newText));
             return false;
@@ -301,7 +304,11 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment
             adapter.setItems(resultsList);
             adapter.notifyDataSetChanged();
 
-            noResultsContainer.setVisibility(resultsList.isEmpty() ? View.VISIBLE : View.GONE);
+            if (!StringUtil.isNullOrEmpty(searchView.getQuery().toString()) && resultsList.isEmpty()) {
+                noResultsContainer.setVisibility(View.VISIBLE);
+            } else if (!resultsList.isEmpty()) {
+                noResultsContainer.setVisibility(View.GONE);
+            }
         }
 
         @Override
