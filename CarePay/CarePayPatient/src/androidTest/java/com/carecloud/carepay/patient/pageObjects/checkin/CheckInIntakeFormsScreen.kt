@@ -12,8 +12,8 @@ class CheckInIntakeFormsScreen: CustomViewActions() {
         return this
     }
 
-    fun goToNextStep(): CheckInIntakeFormsScreen {
+    fun <T> goToNextStep(next: T): T {
         clickOnSpecificText("NEXT STEP")
-        return this
+        return next
     }
 }

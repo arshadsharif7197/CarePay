@@ -26,3 +26,15 @@ fun changePaymentPlanSetting(state: Boolean): Response {
         }
     """), cognitoToken)
 }
+
+fun changePatientFormSettings(enabled: Boolean): Response {
+    return makeRequest(formatRequest("""
+        mutation {
+          changePatientFormSettings(
+            practiceId: "54a08c18-a22f-44e1-9864-25f79995d71c"
+            enableForms: $enabled
+            formNames: ["Automation Form"]
+          )
+        }
+    """), cognitoToken)
+}
