@@ -51,7 +51,7 @@
                     android:textSize="@dimen/appointmentCardStartDayTextSize"
                     android:textStyle="bold"
                     app:customAssetFont="proxima_nova_extra_bold"
-                    tools:text="Today, Apr 17th" />
+                    tools:text="Wednesday, Dec 25, 2019" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/appointment_start_time"

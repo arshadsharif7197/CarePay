@@ -747,7 +747,7 @@
     <dimen name="scheduleAppointmentButtonHorizontalPadding">80dp</dimen>
     <dimen name="appointmentCardHeaderTopPadding">10dp</dimen>
     <dimen name="appointmentCardVisitTypeTextSize">18sp</dimen>
-    <dimen name="appointmentCardStartDayTextSize">30sp</dimen>
+    <dimen name="appointmentCardStartDayTextSize">28sp</dimen>
     <dimen name="appointmentCardStartHourTextSize">18sp</dimen>
     <dimen name="appointmentCardDoctorNameTopMargin">30dp</dimen>
     <dimen name="appointmentCardDoctorNameTextSize">24sp</dimen>
