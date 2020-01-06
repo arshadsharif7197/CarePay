@@ -3,9 +3,9 @@ package com.carecloud.carepay.practice.tablet.tests.practiceMode.payments.paymen
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.PracticeMainScreen
 import com.carecloud.carepay.practice.tablet.tests.BaseTest
-import com.carecloud.carepaylibray.androidTest.data.PatientData
-import com.carecloud.carepaylibray.androidTest.graphqlrequests.createSimpleCharge
-import com.carecloud.carepaylibray.androidTest.graphqlrequests.makePayment
+import com.carecloud.test_module.data.PatientData
+import com.carecloud.test_module.graphqlrequests.createSimpleCharge
+import com.carecloud.test_module.graphqlrequests.makePayment
 import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith

@@ -10,11 +10,11 @@ import com.carecloud.carepay.patient.pageObjects.checkin.CheckInIntakeFormsScree
 import com.carecloud.carepay.patient.pageObjects.checkin.CheckInMedicationsScreen
 import com.carecloud.carepay.patient.pageObjects.checkin.demographics.CheckInDemogAddressScreen
 import com.carecloud.carepay.patient.pageObjects.checkin.demographics.CheckInDemogDemographicsScreen
-import com.carecloud.carepaylibray.androidTest.data.PatientData
-import com.carecloud.carepaylibray.androidTest.graphqlrequests.*
-import com.carecloud.carepaylibray.androidTest.providers.formatAppointmentTime
-import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
-import com.carecloud.carepaylibray.androidTest.providers.makeRequest
+import com.carecloud.test_module.data.PatientData
+import com.carecloud.test_module.graphqlrequests.*
+import com.carecloud.test_module.providers.formatAppointmentTime
+import com.carecloud.test_module.providers.initXavierProvider
+import com.carecloud.test_module.providers.makeRequest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test

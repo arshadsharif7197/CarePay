@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.androidTest.data
+package com.carecloud.test_module.data
 
 /**
  * Created by drodriguez on 2020-01-04.

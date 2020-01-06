@@ -5,10 +5,10 @@ import com.carecloud.carepay.patient.BaseTest
 import com.carecloud.carepay.patient.pageObjects.LoginScreen
 import com.carecloud.carepay.patient.pageObjects.TutorialScreen
 import com.carecloud.carepay.patient.pageObjects.appointments.AppointmentScreen
-import com.carecloud.carepaylibray.androidTest.graphqlrequests.changePaymentPlanSetting
-import com.carecloud.carepaylibray.androidTest.graphqlrequests.createSimpleCharge
-import com.carecloud.carepaylibray.androidTest.graphqlrequests.makePayment
-import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
+import com.carecloud.test_module.graphqlrequests.changePaymentPlanSetting
+import com.carecloud.test_module.graphqlrequests.createSimpleCharge
+import com.carecloud.test_module.graphqlrequests.makePayment
+import com.carecloud.test_module.providers.initXavierProvider
 import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Test

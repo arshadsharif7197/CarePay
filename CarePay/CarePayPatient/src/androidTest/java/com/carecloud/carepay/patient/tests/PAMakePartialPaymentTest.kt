@@ -6,8 +6,8 @@ import com.carecloud.carepay.patient.pageObjects.LoginScreen
 import com.carecloud.carepay.patient.pageObjects.TutorialScreen
 import com.carecloud.carepay.patient.pageObjects.appointments.AppointmentScreen
 import com.carecloud.carepay.patient.pageObjects.payments.PaymentsScreen
-import com.carecloud.carepaylibray.androidTest.graphqlrequests.createSimpleCharge
-import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
+import com.carecloud.test_module.graphqlrequests.createSimpleCharge
+import com.carecloud.test_module.providers.initXavierProvider
 import org.junit.Before
 
 import org.junit.Test

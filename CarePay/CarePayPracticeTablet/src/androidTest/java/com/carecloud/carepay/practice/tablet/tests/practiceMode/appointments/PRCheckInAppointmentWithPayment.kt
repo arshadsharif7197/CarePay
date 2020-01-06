@@ -4,8 +4,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.practice.tablet.pageObjects.patientMode.checkin.*
 import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.PracticeMainScreen
 import com.carecloud.carepay.practice.tablet.tests.BaseTest
-import com.carecloud.carepaylibray.androidTest.graphqlrequests.*
-import com.carecloud.carepaylibray.androidTest.providers.*
+import com.carecloud.test_module.graphqlrequests.*
+import com.carecloud.test_module.providers.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
