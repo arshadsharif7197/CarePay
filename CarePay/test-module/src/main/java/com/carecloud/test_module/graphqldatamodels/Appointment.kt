@@ -5,4 +5,5 @@ package com.carecloud.test_module.graphqldatamodels
  */
 class Appointment {
     var id: Int? = null
+    var start_time: String? = null
 }
