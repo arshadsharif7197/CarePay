@@ -15,7 +15,7 @@ class CreditCardScreen<T>(private val screenAfterChoosingCard: T) : CustomViewAc
 
     fun chooseCreditCard(): T {
         clickOnRecyclerViewItem(appContext.getString(R.string.content_description_credit_cards_list), 0)
-        click(appContext.getString(R.string.content_description_pay_button))
+        click(appContext.getString(R.string.content_description_pay_button), true)
         return screenAfterChoosingCard
     }
 
