@@ -176,7 +176,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         RecyclerView creditCardsRecyclerView = view.findViewById(R.id.list_credit_cards);
         creditCardsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         final CreditCardsListAdapter creditCardsListAdapter = new CreditCardsListAdapter(getContext(),
-                creditCardList, this, false);
+                creditCardList, this, true);
         creditCardsRecyclerView.setAdapter(creditCardsListAdapter);
         for (PaymentsPatientsCreditCardsPayloadListDTO creditCard : creditCardList) {
             if (creditCard.getPayload().isDefault()) {
