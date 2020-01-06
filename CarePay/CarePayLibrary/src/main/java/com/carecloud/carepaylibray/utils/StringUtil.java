@@ -393,7 +393,7 @@ public class StringUtil {
             return "";
         }
         StringBuffer capBuffer = new StringBuffer();
-        Matcher capMatcher = Pattern.compile("([a-z-éá])([a-z-éá]*)", Pattern.CASE_INSENSITIVE).matcher(capString);
+        Matcher capMatcher = Pattern.compile("([a-z-éáñ])([a-z-éáñ]*)", Pattern.CASE_INSENSITIVE).matcher(capString);
         while (capMatcher.find()) {
             capMatcher.appendReplacement(capBuffer, capMatcher.group(1).toUpperCase()
                     + capMatcher.group(2).toLowerCase());
