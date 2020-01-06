@@ -10,10 +10,6 @@ import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
  */
 class PaymentPlanConfirmationScreen : CustomViewActions() {
 
-    init {
-        verifyViewVisible(appContext.getString(R.string.content_description_payment_plan_confirmation_screen))
-    }
-
     fun clickOkButton() : PaymentsScreen{
         click(appContext.getString(R.string.content_description_ok_button))
         return PaymentsScreen()

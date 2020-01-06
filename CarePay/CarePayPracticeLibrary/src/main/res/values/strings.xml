@@ -73,5 +73,6 @@
     <string name="content_description_key_five">five</string>
     <string name="content_description_key_zero">zero</string>
     <string name="content_description_check_out">Check-Out</string>
+    <string name="content_description_apply_amount">Apply Amount</string>
 
 </resources>

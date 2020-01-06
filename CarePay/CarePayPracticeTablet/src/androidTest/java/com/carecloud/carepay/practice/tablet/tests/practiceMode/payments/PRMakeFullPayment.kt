@@ -3,10 +3,8 @@ package com.carecloud.carepay.practice.tablet.tests.practiceMode.payments
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.PracticeMainScreen
 import com.carecloud.carepay.practice.tablet.tests.BaseTest
-import com.carecloud.carepaylibray.androidTest.graphqlrequests.changePaymentSetting
-import com.carecloud.carepaylibray.androidTest.graphqlrequests.createAppointment
+import com.carecloud.carepaylibray.androidTest.data.PatientData
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.createSimpleCharge
-import com.carecloud.carepaylibray.androidTest.providers.formatAppointmentTime
 import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
 import org.junit.Before
 import org.junit.Test
@@ -18,12 +16,14 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class PRMakeFullPayment: BaseTest() {
 
+    private val amount = 100
+    private val patient = PatientData.patient2
+
     @Before
     override
     fun setup() {
         initXavierProvider()
-        //TODO: find patient id and add to simple charge
-        createSimpleCharge(100, 47336319)
+        createSimpleCharge(amount, patient.id)
         super.setup()
     }
     @Test
@@ -31,13 +31,13 @@ class PRMakeFullPayment: BaseTest() {
 
         PracticeMainScreen()
                 .pressPaymentButton()
-                .searchForPatient("first android")
+                .searchForPatient(patient.name)
                 .changeTotalBeingPaid()
-                .enterAmount("20")
-                .selectProviderForItemOnList(0)
-                .selectLocationForItemOnList(0)
+                .enterAmount(amount)
+//                .selectProviderForItemOnList(0)
+//                .selectLocationForItemOnList(0)
                 .pressPayButton()
-                .selectCreditCardPayment(1)
+                .selectCreditCardPayment(0)
                 .pressPayButton()
     }
 }

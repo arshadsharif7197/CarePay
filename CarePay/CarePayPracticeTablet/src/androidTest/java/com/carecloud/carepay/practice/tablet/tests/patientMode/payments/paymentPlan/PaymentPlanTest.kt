@@ -2,12 +2,27 @@ package com.carecloud.carepay.practice.tablet.tests.patientMode.payments.payment
 
 import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.PracticeMainScreen
 import com.carecloud.carepay.practice.tablet.tests.BaseTest
+import com.carecloud.carepaylibray.androidTest.data.PatientData
+import com.carecloud.carepaylibray.androidTest.graphqlrequests.createSimpleCharge
+import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
+import org.junit.Before
 import org.junit.Test
 
 /**
  * @author pjohnson on 2019-09-13.
  */
 class PaymentPlanTest :BaseTest(){
+
+    private val patient = PatientData.patient8
+    private val amount = 100
+
+    @Before
+    override
+    fun setup() {
+        initXavierProvider()
+        createSimpleCharge(amount, patient.id)
+        super.setup()
+    }
 
     @Test
     fun a_createPaymentPlanTest() {
@@ -17,12 +32,12 @@ class PaymentPlanTest :BaseTest(){
                 .pressLetsStartButton()
                 .pressPaymentButton()
                 .pressLoginButton()
-                .typeUsername("dev_emails+qa.androidbreeze2@carecloud.com")
+                .typeUsername(patient.email)
                 .typePassword("Test123!")
                 .pressLoginButton()
                 .selectFirstPayment()
                 .clickCreateButton()
-                .typeAmount("150")
+                .typeAmount(amount.toString())
                 .clickCreateButton()
                 .typePlanName("Automated Plan")
                 .typeNumberOfMonths("5")

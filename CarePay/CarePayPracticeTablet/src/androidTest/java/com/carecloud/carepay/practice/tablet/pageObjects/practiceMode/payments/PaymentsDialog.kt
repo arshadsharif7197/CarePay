@@ -19,7 +19,7 @@ class PaymentsDialog : CustomViewActions() {
     fun selectProviderForItemOnList(position: Int): PaymentsDialog {
         clickOnRecyclerViewItemChildren(appContext.getString(R.string.content_description_patient_balances_list),
                 position, "Choose Provider")
-        clickInPopupWindow("Pamela Banes")
+        clickInPopupWindow("Zane Brown")
         return this
     }
 

@@ -10,10 +10,6 @@ import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
  */
 class PaymentPlanScreen : CustomViewActions() {
 
-    init {
-        verifyViewVisible(appContext.getString(R.string.content_description_payment_plan_screen))
-    }
-
     fun typePlanName(name: String): PaymentPlanScreen {
         type(appContext.getString(R.string.content_description_payment_plan_name), name, true)
         return this
