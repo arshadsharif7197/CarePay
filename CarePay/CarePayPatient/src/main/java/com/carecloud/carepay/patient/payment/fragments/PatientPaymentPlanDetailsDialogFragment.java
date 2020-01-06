@@ -36,12 +36,7 @@ public class PatientPaymentPlanDetailsDialogFragment extends PaymentPlanDetailsD
     protected void onEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
         hideDialog(true);
         PaymentPlanEditFragment fragment = PatientPaymentPlanEditFragment.newInstance(paymentsModel, paymentPlanDTO);
-        fragment.setOnBackPressedListener(new OnBackPressedInterface() {
-            @Override
-            public void onBackPressed() {
-                showDialog(true);
-            }
-        });
+        fragment.setOnBackPressedListener(() -> showDialog(true));
         callback.replaceFragment(fragment, true);
         ((ToolbarInterface) callback).displayToolbar(false, null);
     }

@@ -21,10 +21,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/dimen_20dp"
-            android:paddingEnd="@dimen/dimen_17dp"
             android:paddingStart="@dimen/dimen_17dp"
-            android:paddingTop="@dimen/dimen_20dp">
+            android:paddingTop="@dimen/dimen_20dp"
+            android:paddingEnd="@dimen/dimen_17dp"
+            android:paddingBottom="@dimen/dimen_20dp">
 
             <LinearLayout
                 android:id="@+id/demographicsLayout"
@@ -144,7 +144,8 @@
                 android:layout_height="@dimen/signup_clickable_textview_height"
                 android:layout_marginTop="@dimen/dimen_8dp"
                 android:background="@drawable/grey_bottom_border"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="@dimen/dimen_42dp"
@@ -162,8 +163,8 @@
                     android:textSize="@dimen/textview_default_textsize"
                     android:textStyle="bold"
                     app:customAssetFont="proxima_nova_regular"
-                    tools:text="Manage Delegates"
-                    breeze:textKey="patient.delegate.delegateList.title.label" />
+                    breeze:textKey="patient.delegate.delegateList.title.label"
+                    tools:text="Manage Delegates" />
 
             </LinearLayout>
 

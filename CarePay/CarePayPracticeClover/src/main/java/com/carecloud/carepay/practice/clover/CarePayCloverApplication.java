@@ -19,6 +19,9 @@ import com.carecloud.carepaylibray.session.SessionedActivityInterface;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.shamrocksdk.ShamrockSdk;
 import com.clover.sdk.util.Platform;
+import com.microsoft.appcenter.AppCenter;
+import com.microsoft.appcenter.analytics.Analytics;
+import com.microsoft.appcenter.crashes.Crashes;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.newrelic.agent.android.NewRelic;
 
@@ -39,8 +42,9 @@ public class CarePayCloverApplication extends CarePayApplication
 
         mixpanelAPI = MixpanelAPI.getInstance(this.getApplicationContext(), BuildConfig.MIX_PANEL_TOKEN);
         setHttpConstants();
-        registerActivityLifecycleCallbacks(this);
         ShamrockSdk.init(HttpConstants.getPaymentsApiKey(), HttpConstants.getDeepStreamUrl(), HttpConstants.getPaymentsUrl());
+        AppCenter.start(this, "132d415e-d431-4a5e-a17f-158e9fabf624",
+                Analytics.class, Crashes.class);
     }
 
     private void setHttpConstants() {

@@ -20,7 +20,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
-            android:padding="@dimen/padding_xlarge"/>
+            android:padding="@dimen/padding_xlarge"
+            android:contentDescription="@string/content_description_medications_and_allergies_list"/>
 
         <FrameLayout
             android:id="@+id/emptyStateScreen"

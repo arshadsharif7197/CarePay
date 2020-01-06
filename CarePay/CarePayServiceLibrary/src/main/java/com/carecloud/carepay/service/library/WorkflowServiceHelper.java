@@ -302,7 +302,7 @@ public class WorkflowServiceHelper {
                                  final Map<String, String> headers,
                                  final int attemptCount,
                                  final Call<WorkflowDTO> call) {
-
+        EspressoIdlingResource.increment();
         call.enqueue(new Callback<WorkflowDTO>() {
             boolean shouldRetryRequest = false;
             final String retryErrorCodes = "403|408|409";
@@ -312,6 +312,9 @@ public class WorkflowServiceHelper {
                 callStack.remove(call);
                 try {
                     shouldRetryRequest = retryErrorCodes.contains(String.valueOf(response.code())) || response.code() > 422;
+                    if (!shouldRetryRequest) {
+                        EspressoIdlingResource.decrement();
+                    }
                     switch (response.code()) {
                         case STATUS_CODE_OK:
                             onResponseOk(response);

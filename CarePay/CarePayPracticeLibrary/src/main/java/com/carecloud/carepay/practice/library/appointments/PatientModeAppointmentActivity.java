@@ -131,6 +131,7 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
 
     private void setUpLocationStep() {
         View locationContainer = findViewById(R.id.locationStepContainer);
+        locationContainer.setContentDescription(getString(R.string.content_description_choose_location));
         TextView locationStepTitleTextView = locationContainer.findViewById(R.id.stepTitleTextView);
         locationStepTitleTextView.setText(Label.getLabel("add_appointment_location"));
         locationStepNoDataTextView = locationContainer.findViewById(R.id.stepNoDataTextView);
@@ -144,6 +145,7 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
 
     private void setUpVisitTypeStep() {
         View visitTypeContainer = findViewById(R.id.visitTypeStepContainer);
+        visitTypeContainer.setContentDescription(getString(R.string.content_description_choose_visit_type));
         TextView visitTypeStepTitleTextView = visitTypeContainer.findViewById(R.id.stepTitleTextView);
         visitTypeStepTitleTextView.setText(Label.getLabel("add_appointment_visit_type"));
         visitTypeStepNoDataTextView = visitTypeContainer.findViewById(R.id.stepNoDataTextView);
@@ -158,6 +160,7 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
 
     private void setUpProviderStep() {
         View providerContainer = findViewById(R.id.providerStepContainer);
+        providerContainer.setContentDescription(getString(R.string.content_description_choose_provider));
         TextView providerStepTitleTextView = providerContainer.findViewById(R.id.stepTitleTextView);
         providerStepTitleTextView.setText(Label.getLabel("add_appointment_provider"));
         providerStepNoDataTextView = providerContainer.findViewById(R.id.stepNoDataTextView);

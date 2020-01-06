@@ -69,7 +69,7 @@ public class ShimmerFragment extends Fragment {
         int rowLayoutId = getArguments().getInt("rowLayoutId");
         boolean loop = getArguments().getBoolean("loop");
 
-        LinearLayoutCompat container = (LinearLayoutCompat) view.findViewById(R.id.container);
+        LinearLayoutCompat container = view.findViewById(R.id.container);
         LayoutInflater inflater = LayoutInflater.from(getContext());
 
         if (isTabbed) {
@@ -94,7 +94,7 @@ public class ShimmerFragment extends Fragment {
 
     protected void manageTabLayout(View view) {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setElevation(0);
-        TabLayout tabs = (TabLayout) view.findViewById(R.id.tabLayout);
+        TabLayout tabs = view.findViewById(R.id.tabLayout);
         tabs.setVisibility(View.VISIBLE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             tabs.setElevation(getResources().getDimension(R.dimen.respons_toolbar_elevation));

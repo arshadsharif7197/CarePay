@@ -810,7 +810,9 @@
         <item name="android:fontFamily">ProximaNova-Regular</item>
     </style>
 
-
+    <style name="PaymentMethodCheckBoxStyle" parent="PaymentMethodLabelStyle">
+        <item name="android:textColor">@color/grey_color_checked_selector</item>
+    </style>
 
     <style name="PaymentEditTextHint" parent="TextAppearance.AppCompat">
         <item name="colorAccent">@android:color/white</item>
@@ -833,6 +835,10 @@
         <item name="android:fontFamily">proximanova_regular</item>
         <item name="android:singleLine">true</item>
         <item name="android:background">@null</item>
+    </style>
+
+    <style name="PaymentAddCreditCardCheckBoxStyle" parent="PaymentAddCreditCardInputStyle">
+        <item name="android:textColor">@color/grey_color_checked_selector</item>
     </style>
 
     <style name="PaymentPickDateLabelStyle" parent="android:Widget.TextView.SpinnerItem">

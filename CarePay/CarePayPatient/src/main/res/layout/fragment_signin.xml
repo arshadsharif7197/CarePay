@@ -6,6 +6,7 @@
     android:id="@+id/signin_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:contentDescription="@string/content_description_signin"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
@@ -49,9 +50,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingEnd="@dimen/signin_layout_padding"
             android:paddingStart="@dimen/signin_layout_padding"
-            android:paddingTop="@dimen/signin_layout_padding">
+            android:paddingTop="@dimen/signin_layout_padding"
+            android:paddingEnd="@dimen/signin_layout_padding">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout
                 android:id="@+id/signInEmailTextInputLayout"
@@ -62,6 +63,7 @@
                 <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                     android:id="@+id/signinEmailEditText"
                     style="@style/EditTextStyle"
+                    android:contentDescription="@string/content_description_signin_user"
                     android:inputType="textEmailAddress"
                     app:customAssetFont="proxima_nova_semi_bold"
                     breeze:hintKey="signup_email"
@@ -83,6 +85,7 @@
                     <com.carecloud.carepaylibray.customcomponents.CarePayEditText
                         android:id="@+id/passwordEditText"
                         style="@style/EditTextStyle"
+                        android:contentDescription="@string/content_description_signin_password"
                         android:imeOptions="actionDone"
                         android:inputType="textPassword"
                         android:paddingEnd="@dimen/dimen_30dp"
@@ -115,6 +118,7 @@
                     style="@style/SigninSignupButtonStyle"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:contentDescription="@string/content_description_signin_button"
                     android:text="@string/submit_button"
                     app:customAssetFont="gotham_rounded_medium"
                     breeze:textKey="signin_button" />
@@ -125,8 +129,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="@dimen/dimen_10dp"
                     android:background="@drawable/button_selector"
-                    android:paddingEnd="@dimen/dimen_10dp"
                     android:paddingStart="@dimen/dimen_10dp"
+                    android:paddingEnd="@dimen/dimen_10dp"
                     android:src="@drawable/ic_touch_id"
                     android:visibility="gone" />
 
@@ -137,13 +141,13 @@
                 android:id="@+id/get_started"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/dimen_10dp"
                 android:layout_gravity="center"
-                android:textSize="@dimen/text_size_15"
+                android:padding="@dimen/dimen_10dp"
                 android:textColor="@color/colorPrimary"
-                tools:text="Don't have a Breeze account yet?"
+                android:textSize="@dimen/text_size_15"
                 app:customAssetFont="proxima_nova_semi_bold"
-                breeze:textKey="login_dont_have_a_breeze_account"/>
+                breeze:textKey="login_dont_have_a_breeze_account"
+                tools:text="Don't have a Breeze account yet?" />
 
             <View
                 android:layout_width="match_parent"

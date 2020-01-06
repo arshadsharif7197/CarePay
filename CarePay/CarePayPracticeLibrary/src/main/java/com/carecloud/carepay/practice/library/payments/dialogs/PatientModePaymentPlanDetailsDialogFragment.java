@@ -48,12 +48,7 @@ public class PatientModePaymentPlanDetailsDialogFragment extends PaymentPlanDeta
         super.onViewCreated(view, savedInstanceState);
         View closeButton = view.findViewById(R.id.closeButton);
         if (closeButton != null) {
-            closeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dismiss();
-                }
-            });
+            closeButton.setOnClickListener(view1 -> dismiss());
         }
         if (((BasePracticeActivity) getActivity()).getApplicationMode().getApplicationType()
                 == ApplicationMode.ApplicationType.PRACTICE) {
