@@ -15,6 +15,10 @@ android {
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         renderscriptTargetApi 22
         renderscriptSupportModeEnabled true
+        testInstrumentationRunnerArguments clearPackageData: 'true'
+    }
+    testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
     dexOptions {
         maxProcessCount 4
@@ -165,7 +169,7 @@ dependencies {
     androidTestImplementation "androidx.core:core-ktx:1.1.0"
     androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation('androidx.test.espresso:espresso-contrib:3.1.0') {
+    androidTestImplementation('androidx.test.espresso:espresso-contrib:3.2.0') {
         exclude module: 'support-annotations'
         exclude group: 'com.android.support', module: 'appcompat'
         exclude group: 'com.android.support', module: 'support-v4'

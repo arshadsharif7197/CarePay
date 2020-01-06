@@ -8,8 +8,8 @@ import com.carecloud.test_module.actions.CustomViewActions
  * Created by drodriguez on 2019-10-01.
  */
 class CheckInDemographics: CustomViewActions() {
-    fun demographicsNextStep(): CheckInMedications {
+    fun <T>demographicsNextStep(next: T): T {
         click(appContext.getString(R.string.content_description_next_button))
-        return CheckInMedications()
+        return next
     }
 }

@@ -14,7 +14,7 @@ class ChoosePaymentMethodDialog : CustomViewActions() {
     }
 
     fun pressPayButton() {
-        click(appContext.getString(R.string.content_description_pay_button))
+        click(appContext.getString(R.string.content_description_pay_button), true)
         click(appContext.getString(R.string.content_description_ok_button))
     }
 }

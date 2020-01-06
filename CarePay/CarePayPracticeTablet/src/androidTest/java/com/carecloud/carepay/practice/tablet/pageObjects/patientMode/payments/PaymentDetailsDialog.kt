@@ -22,7 +22,7 @@ class PaymentDetailsDialog : CustomViewActions() {
     }
 
     fun clickCreateButton(): PaymentPlanAmountScreen {
-        click(appContext.getString(R.string.content_description_make_partial_payment_button))
+        click(appContext.getString(R.string.content_description_create_payment_plan_button))
         return PaymentPlanAmountScreen()
     }
 }

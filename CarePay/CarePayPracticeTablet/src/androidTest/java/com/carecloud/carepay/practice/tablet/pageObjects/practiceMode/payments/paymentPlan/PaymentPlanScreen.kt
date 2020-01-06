@@ -9,13 +9,13 @@ import com.carecloud.test_module.actions.CustomViewActions
  */
 class PaymentPlanScreen <T>(private val screenAfterChoosingCard: T) : CustomViewActions(){
 
-    init {
-        verifyViewVisible(appContext.getString(R.string.content_description_payment_plan_screen))
-    }
-
     fun chooseItem(): PaymentPlanScreen<T> {
         clickOnRecyclerViewItemChildrenWithId(appContext.getString(R.string.content_description_payment_plan_item_list),
                 0, R.id.itemCheckBox)
+        clickOnSpecificText("1")
+        clickOnSpecificText("0")
+        clickOnSpecificText("0")
+        click(appContext.getString(R.string.content_description_apply_amount))
         return this
     }
 

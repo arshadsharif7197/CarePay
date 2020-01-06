@@ -2,7 +2,14 @@ package com.carecloud.carepay.patient.tests
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.patient.BaseTest
-import com.carecloud.carepay.patient.pageObjects.AppointmentScreen
+import com.carecloud.carepay.patient.pageObjects.LoginScreen
+import com.carecloud.carepay.patient.pageObjects.TutorialScreen
+import com.carecloud.carepay.patient.pageObjects.appointments.AppointmentScreen
+import com.carecloud.carepaylibray.androidTest.graphqlrequests.changePaymentPlanSetting
+import com.carecloud.carepaylibray.androidTest.graphqlrequests.createSimpleCharge
+import com.carecloud.carepaylibray.androidTest.graphqlrequests.makePayment
+import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
+import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -13,14 +20,21 @@ import org.junit.runners.MethodSorters
  */
 @RunWith(AndroidJUnit4::class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-class PaymentPlanTest : BaseTest() {
+class PAPaymentPlanTest : BaseTest() {
 
     private val paymentPlanName = "Automated test"
     private val paymentPlanAmount = "100"
 
     @Test
     fun a_createPaymentPlanTest() {
-        AppointmentScreen()
+        initXavierProvider()
+        createSimpleCharge()
+        changePaymentPlanSetting(true)
+
+        LoginScreen()
+                .typeUser("dev_emails+qa.androidbreeze2@carecloud.com")
+                .typePassword("Test123!")
+                .pressLoginButton()
                 .openNavigationDrawer()
                 .goToPayments()
                 .chooseBalance(0)
@@ -34,13 +48,15 @@ class PaymentPlanTest : BaseTest() {
                 .chooseCreditCard()
                 .acceptTermsAndConditions()
                 .clickOk()
-//                .verifyPaymentPlanIsOnList(paymentPlanName)
-//                .verifyPaymentPlanIsOnList(paymentPlanAmount)
+                .discardReviewPopup()
     }
 
     @Test
     fun b_editPaymentPlanTest() {
-        AppointmentScreen()
+        LoginScreen()
+                .typeUser("dev_emails+qa.androidbreeze2@carecloud.com")
+                .typePassword("Test123!")
+                .pressLoginButton()
                 .openNavigationDrawer()
                 .goToPayments()
                 .choosePaymentPlan(paymentPlanName)
@@ -48,11 +64,15 @@ class PaymentPlanTest : BaseTest() {
                 .editNumberOfMonths("3")
                 .saveChanges()
                 .clickOk()
+                .discardReviewPopup()
     }
 
     @Test
     fun c_deletePaymentPlanTest() {
-        AppointmentScreen()
+        LoginScreen()
+                .typeUser("dev_emails+qa.androidbreeze2@carecloud.com")
+                .typePassword("Test123!")
+                .pressLoginButton()
                 .openNavigationDrawer()
                 .goToPayments()
                 .choosePaymentPlan(paymentPlanName)
@@ -60,5 +80,7 @@ class PaymentPlanTest : BaseTest() {
                 .deletePaymentPlan()
                 .confirm()
 
+        initXavierProvider("patient")
+        makePayment()
     }
 }

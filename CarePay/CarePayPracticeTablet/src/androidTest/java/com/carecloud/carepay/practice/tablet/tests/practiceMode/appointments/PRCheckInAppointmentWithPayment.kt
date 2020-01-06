@@ -4,11 +4,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.practice.tablet.pageObjects.patientMode.checkin.*
 import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.PracticeMainScreen
 import com.carecloud.carepay.practice.tablet.tests.BaseTest
-import com.carecloud.test_module.graphqlrequests.changePaymentSetting
-import com.carecloud.test_module.graphqlrequests.createAppointment
-import com.carecloud.test_module.graphqlrequests.deleteAppointment
-import com.carecloud.test_module.providers.formatAppointmentTime
-import com.carecloud.test_module.providers.initXavierProvider
+import com.carecloud.carepaylibray.androidTest.graphqlrequests.*
+import com.carecloud.carepaylibray.androidTest.providers.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -18,9 +15,9 @@ import org.junit.runner.RunWith
  * Created by drodriguez on 2019-10-01.
  */
 @RunWith(AndroidJUnit4::class)
-class PRCheckInAppointment : BaseTest() {
+class PRCheckInAppointmentWithPayment : BaseTest() {
 
-    lateinit var appointmentTime: String
+    lateinit var appointmentTime : String
     private var appointmentId: Int? = null
 
     @Before
@@ -28,15 +25,15 @@ class PRCheckInAppointment : BaseTest() {
     fun setup() {
         initXavierProvider()
         val apptResponse = createAppointment()
-        appointmentTime = formatAppointmentTime(
-                apptResponse.data?.createAppointment?.start_time.toString(), true)
+        appointmentTime = formatAppointmentTime(apptResponse.data?.createAppointment?.start_time.toString(), true)
         appointmentId = apptResponse.data?.createAppointment?.id
-        changePaymentSetting("neither")
+        changePaymentSetting("checkin")
+        createSimpleCharge()
         super.setup()
     }
 
     @Test
-    fun prCheckInAppointment() {
+    fun prCheckInAppointmentWithPayment() {
         PracticeMainScreen()
                 .pressAppointmentsButton()
                 .checkInAppointmentAtTime(appointmentTime)
@@ -44,7 +41,10 @@ class PRCheckInAppointment : BaseTest() {
                 .addressNextStep(CheckInDemographics())
                 .demographicsNextStep(CheckInMedications())
                 .medicationsNextStep(CheckInAllergies())
-                .allergiesNextStep(CheckInOutConfirmation())
+                .allergiesNextStep(CheckInPaymentDetails())
+                .selectPaymentOptions()
+                .makeFullPayment()
+                .payUseCreditCardOnFile(CheckInOutConfirmation())
                 .verifyAppointmentStatus("Just Checked In")
                 .goHome()
     }

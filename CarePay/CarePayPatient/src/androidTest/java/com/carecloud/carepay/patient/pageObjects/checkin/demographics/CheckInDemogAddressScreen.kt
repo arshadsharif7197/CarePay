@@ -8,8 +8,8 @@ import com.carecloud.test_module.actions.CustomViewActions
  * Created by drodriguez on 2019-09-19.
  */
 class CheckInDemogAddressScreen: CustomViewActions() {
-    fun addressNextStep(): CheckInDemogDemographicsScreen {
-        click(appContext.getString(R.string.content_description_next_button))
-        return CheckInDemogDemographicsScreen()
+    fun <T> addressNextStep(nextScreen: T): T {
+        clickOnSpecificText("NEXT STEP")
+        return nextScreen
     }
 }

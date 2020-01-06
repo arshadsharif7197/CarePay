@@ -18,7 +18,7 @@ class ChoosePaymentType : CustomViewActions() {
         return PaymentMethod()
     }
 
-    fun makeFullPaymemt(): PaymentMethod {
+    fun makeFullPayment(): PaymentMethod {
         wait(milliseconds = 1000)
         click(appContext.getString(R.string.content_description_pay_total_amount_button))
         return PaymentMethod()

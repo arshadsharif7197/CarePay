@@ -2,6 +2,7 @@ package com.carecloud.test_module.graphqlrequests
 
 import com.carecloud.test_module.providers.formatRequest
 
+
 /**
  * Created by drodriguez on 2019-10-15.
  */

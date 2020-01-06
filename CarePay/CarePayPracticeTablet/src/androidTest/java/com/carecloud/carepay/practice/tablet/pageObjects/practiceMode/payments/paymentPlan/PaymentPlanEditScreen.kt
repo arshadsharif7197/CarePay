@@ -21,6 +21,7 @@ class PaymentPlanEditScreen : CustomViewActions() {
 
     fun editNumberOfMonths(numberOfMonths: String): PaymentPlanEditScreen {
         scrollDown(appContext.getString(R.string.content_description_payment_plan_scroll))
+
         wait(milliseconds = 1000)
         type(appContext.getString(R.string.content_description_number_of_months), numberOfMonths, true)
         return PaymentPlanEditScreen()

@@ -1,11 +1,11 @@
-package com.carecloud.test_module.graphqlrequests
+package com.carecloud.carepaylibray.androidTest.graphqlrequests
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.carecloud.test_module.graphqldatamodels.Response
-import com.carecloud.test_module.providers.formatRequest
-import com.carecloud.test_module.providers.makeRequest
-import com.carecloud.test_module.providers.xavierToken
+import com.carecloud.carepaylibray.androidTest.graphqldatamodels.Response
+import com.carecloud.carepaylibray.androidTest.providers.formatRequest
+import com.carecloud.carepaylibray.androidTest.providers.makeRequest
+import com.carecloud.carepaylibray.androidTest.providers.xavierToken
 import java.time.LocalDateTime
 import java.time.ZoneId
 

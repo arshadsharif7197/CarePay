@@ -9,8 +9,8 @@ import com.carecloud.test_module.actions.CustomViewActions
  * Created by drodriguez on 2019-09-19.
  */
 class CheckInDemogDemographicsScreen: CustomViewActions() {
-    fun demographicsNextStep(): CheckInMedicationsScreen {
-        click(appContext.getString(R.string.content_description_next_button))
-        return CheckInMedicationsScreen()
+    fun <T> demographicsNextStep(next: T): T {
+        clickOnSpecificText("NEXT STEP")
+        return next
     }
 }

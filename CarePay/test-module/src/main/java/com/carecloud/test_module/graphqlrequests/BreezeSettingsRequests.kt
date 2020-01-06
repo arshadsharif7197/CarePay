@@ -1,7 +1,7 @@
-package com.carecloud.test_module.graphqlrequests
+package com.carecloud.carepaylibray.androidTest.graphqlrequests
 
-import com.carecloud.test_module.graphqldatamodels.Response
-import com.carecloud.test_module.providers.*
+import com.carecloud.carepaylibray.androidTest.graphqldatamodels.Response
+import com.carecloud.carepaylibray.androidTest.providers.*
 
 /**
  * Created by drodriguez on 2019-10-24.

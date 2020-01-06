@@ -9,21 +9,15 @@ import com.carecloud.test_module.actions.CustomViewActions
  * Created by drodriguez on 2019-09-10.
  */
 class PaymentsScreen : CustomViewActions() {
-
-    init {
-        verifyViewVisible(R.id.payments_pager_layout)
-    }
-
     fun chooseBalance(position: Int): ChoosePaymentType {
         clickOnRecyclerViewItem(appContext.getString(R.string.content_description_payments_list), position)
         click(appContext.getString(R.string.content_description_payment_options_button))
         return ChoosePaymentType()
     }
 
-    fun makePaymentFor(position: Int): ChoosePaymentType {
+    fun makePaymentFor(position: Int): PaymentLineItemsDetails {
         clickOnRecyclerViewItem(appContext.getString(R.string.content_description_payments_list), position)
-        click(appContext.getString(R.string.content_description_payment_options_button))
-        return ChoosePaymentType()
+        return PaymentLineItemsDetails()
     }
 
     fun verifyPaymentPlanIsOnList(textMatch: String): PaymentsScreen {
@@ -34,5 +28,10 @@ class PaymentsScreen : CustomViewActions() {
     fun choosePaymentPlan(paymentPlanName: String) : PaymentPlanDetailScreen {
         clickOnRecyclerViewItem(appContext.getString(R.string.content_description_payments_list), textMatch = paymentPlanName)
         return PaymentPlanDetailScreen()
+    }
+
+    fun discardReviewPopup(): PaymentsScreen {
+        click(appContext.getString(R.string.content_description_not_now_button))
+        return this
     }
 }

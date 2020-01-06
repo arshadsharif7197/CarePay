@@ -22,8 +22,8 @@ class CheckInAllergiesScreen: CustomViewActions() {
         return CheckInIntakeFormsScreen()
     }
 
-    fun allergiesNextstep(): AppointmentScreen {
+    fun <T> allergiesNextstep(next: T): T {
         clickOnSpecificText("NEXT STEP")
-        return AppointmentScreen()
+        return next
     }
 }

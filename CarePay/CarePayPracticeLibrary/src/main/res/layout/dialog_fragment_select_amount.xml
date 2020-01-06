@@ -384,7 +384,8 @@
                 android:textSize="@dimen/respons_button_text_size"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="payment.selectAmount.button.label.enterAmount"
-                tools:text="Pay" />
+                tools:text="Pay"
+                android:contentDescription="@string/content_description_apply_amount"/>
 
         </LinearLayout>
     </LinearLayout>

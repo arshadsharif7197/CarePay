@@ -15,7 +15,7 @@ var appointmentTime = ""
 class AddAppointmentFlow<T>(private val screenAfterAppointment: T) : CustomViewActions() {
     fun selectLocation() : AddAppointmentFlow<T> {
         click(appContext.getString(R.string.content_description_choose_location), screenAfterAppointment is AppointmentsScreen)
-        clickOnRecyclerViewItem(appContext.getString(R.string.content_description_location_list), 1)
+        clickOnRecyclerViewItem(appContext.getString(R.string.content_description_location_list), 0)
         return this
     }
     fun selectProvider(): AddAppointmentFlow<T> {
