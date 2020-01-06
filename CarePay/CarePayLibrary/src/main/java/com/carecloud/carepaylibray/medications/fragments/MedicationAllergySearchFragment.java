@@ -263,6 +263,7 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment
                 showHideInitialScreen(false);
             } else {
                 showHideInitialScreen(true);
+                noResultsContainer.setVisibility(View.GONE);
             }
             unlisted.setEnabled(!StringUtil.isNullOrEmpty(newText));
             return false;
@@ -272,7 +273,6 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment
     private void showHideInitialScreen(boolean show) {
         if (initialScreenContainer != null) {
             initialScreenContainer.setVisibility(show ? View.VISIBLE : View.GONE);
-            noResultsContainer.setVisibility(!show ? View.VISIBLE : View.GONE);
             searchRecycler.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
