@@ -31,5 +31,5 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     api project(':CarePayLibrary')
 
-    annotationProcessor 'androidx.room:room-compiler:2.2.2'
+    annotationProcessor 'androidx.room:room-compiler:2.2.3'
 }

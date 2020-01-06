@@ -145,5 +145,5 @@ dependencies {
     implementation 'com.clover.sdk:clover-android-sdk:latest.release'
     implementation 'com.clover.sdk:clover-android-connector-sdk:168'
 
-    annotationProcessor 'androidx.room:room-compiler:2.2.2'
+    annotationProcessor 'androidx.room:room-compiler:2.2.3'
 }

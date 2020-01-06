@@ -74,7 +74,7 @@ dependencies {
     api "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
 
     api 'com.newrelic.agent.android:android-agent:5.22.1'
-    api 'androidx.room:room-runtime:2.2.2'
+    api 'androidx.room:room-runtime:2.2.3'
 }
 repositories {
     mavenCentral()
