@@ -64,6 +64,7 @@ class PMCheckInAppointmentWithPayment: BaseTest() {
     override
     fun tearDown() {
         deleteAppointment(appointmentId)
+        changePaymentSetting("neither")
         super.tearDown()
     }
 }

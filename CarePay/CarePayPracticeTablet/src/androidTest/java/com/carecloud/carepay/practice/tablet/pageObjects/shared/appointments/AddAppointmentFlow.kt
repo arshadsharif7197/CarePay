@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.tablet.pageObjects.shared.appointments
 
 import com.carecloud.carepay.practice.tablet.R
+import com.carecloud.carepay.practice.tablet.pageObjects.patientMode.PatientModeMainScreen
 import com.carecloud.carepay.practice.tablet.tests.appContext
 import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
 import com.carecloud.carepaylibray.androidTest.actions.stringHolder
@@ -13,7 +14,10 @@ var appointmentTime = ""
 
 class AddAppointmentFlow<T>(private val screenAfterAppointment: T) : CustomViewActions() {
     fun selectLocation() : AddAppointmentFlow<T> {
-        scrollToAndClick(appContext.getString(R.string.content_description_choose_location))
+        if (screenAfterAppointment is PatientModeMainScreen)
+            click(appContext.getString(R.string.content_description_choose_location))
+        else
+            scrollToAndClick(appContext.getString(R.string.content_description_choose_location))
         clickOnRecyclerViewItem(appContext.getString(R.string.content_description_location_list), 0)
         return this
     }

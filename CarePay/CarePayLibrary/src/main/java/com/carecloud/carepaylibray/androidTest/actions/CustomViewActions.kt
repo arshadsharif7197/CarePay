@@ -43,9 +43,8 @@ open class CustomViewActions {
     }
 
     /**
-     * Default click action based on content description of the view
+     * Scroll to view and click action based on content description of the view
      * @param contentDescription Content description of the view
-     * @param customClick If view is not visible more than 90% use custom click
      */
     protected fun scrollToAndClick(contentDescription: String) {
         onView(withContentDescription(contentDescription)).perform(scroll(), click())
