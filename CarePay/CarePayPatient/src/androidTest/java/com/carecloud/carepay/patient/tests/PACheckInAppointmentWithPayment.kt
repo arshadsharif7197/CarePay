@@ -10,6 +10,8 @@ import com.carecloud.carepay.patient.pageObjects.checkin.CheckInMedicationsScree
 import com.carecloud.carepay.patient.pageObjects.checkin.demographics.CheckInDemogAddressScreen
 import com.carecloud.carepay.patient.pageObjects.checkin.demographics.CheckInDemogDemographicsScreen
 import com.carecloud.carepay.patient.pageObjects.payments.PaymentLineItemsDetails
+import com.carecloud.carepay.patient.patientPassword
+import com.carecloud.carepaylibray.androidTest.data.PatientData
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.*
 import com.carecloud.carepaylibray.androidTest.providers.formatAppointmentTime
 import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
@@ -27,24 +29,25 @@ class PACheckInAppointmentWithPayment: BaseTest() {
 
     private lateinit var apptTime: String
     private var apptId: Int? = null
+    private val patient = PatientData.patient16
 
     @Before
     override
     fun setup() {
         initXavierProvider()
-        val appointment = createAppointment()
+        val appointment = createAppointment(patient.id)
         apptTime = formatAppointmentTime(appointment.data?.createAppointment?.start_time.toString())
         apptId = appointment.data?.createAppointment?.id
         changePaymentSetting("checkin")
-        createSimpleCharge()
+        createSimpleCharge(100, patient.id)
         super.setup()
     }
 
     @Test
     fun paCheckInAppointmentWithPayment() {
         LoginScreen()
-                .typeUser("dev_emails+qa.androidbreeze2@carecloud.com")
-                .typePassword("Test123!")
+                .typeUser(patient.email)
+                .typePassword(patientPassword)
                 .pressLoginButton()
                 .checkInAppointmentOnListAtTime(apptTime)
                 .personalInfoNextStep(CheckInDemogAddressScreen())

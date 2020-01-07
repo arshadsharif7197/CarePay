@@ -10,6 +10,7 @@ import com.carecloud.carepay.patient.pageObjects.checkin.CheckInIntakeFormsScree
 import com.carecloud.carepay.patient.pageObjects.checkin.CheckInMedicationsScreen
 import com.carecloud.carepay.patient.pageObjects.checkin.demographics.CheckInDemogAddressScreen
 import com.carecloud.carepay.patient.pageObjects.checkin.demographics.CheckInDemogDemographicsScreen
+import com.carecloud.carepay.patient.patientPassword
 import com.carecloud.carepaylibray.androidTest.data.PatientData
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.*
 import com.carecloud.carepaylibray.androidTest.providers.formatAppointmentTime
@@ -46,7 +47,7 @@ class PACheckInAppointmentWithForm : BaseTest() {
     fun paCheckInAppointmentWithForm() {
         LoginScreen()
                 .typeUser(patient.email)
-                .typePassword("Test123!")
+                .typePassword(patientPassword)
                 .pressLoginButton()
                 .checkInAppointmentOnListAtTime(apptTime)
                 .personalInfoNextStep(CheckInDemogAddressScreen())

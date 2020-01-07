@@ -6,6 +6,8 @@ import com.carecloud.carepay.patient.pageObjects.LoginScreen
 import com.carecloud.carepay.patient.pageObjects.TutorialScreen
 import com.carecloud.carepay.patient.pageObjects.appointments.AppointmentScreen
 import com.carecloud.carepay.patient.pageObjects.payments.PaymentsScreen
+import com.carecloud.carepay.patient.patientPassword
+import com.carecloud.carepaylibray.androidTest.data.PatientData
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.createSimpleCharge
 import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
 import org.junit.Before
@@ -20,19 +22,21 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class PAMakePartialPaymentTest : BaseTest() {
 
+    private val patient = PatientData.patient14
+
     @Before
     override
     fun setup() {
         initXavierProvider()
-        createSimpleCharge(20)
+        createSimpleCharge(20, patient.id)
         super.setup()
     }
 
     @Test
     fun paMakePartialPaymentTest() {
         LoginScreen()
-                .typeUser("dev_emails+qa.androidbreeze2@carecloud.com")
-                .typePassword("Test123!")
+                .typeUser(patient.email)
+                .typePassword(patientPassword)
                 .pressLoginButton()
                 .openNavigationDrawer()
                 .goToPayments()

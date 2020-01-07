@@ -5,10 +5,10 @@ import com.carecloud.carepay.patient.BaseTest
 import com.carecloud.carepay.patient.pageObjects.LoginScreen
 import com.carecloud.carepay.patient.pageObjects.appointments.AppointmentScreen
 import com.carecloud.carepay.patient.pageObjects.payments.PaymentsScreen
+import com.carecloud.carepay.patient.patientPassword
+import com.carecloud.carepaylibray.androidTest.data.PatientData
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.createSimpleCharge
-import com.carecloud.carepaylibray.androidTest.graphqlrequests.getBreezeToken
 import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
-import com.carecloud.carepaylibray.androidTest.providers.makeRequest
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -19,19 +19,21 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class PAMakeFullPaymentTest: BaseTest() {
 
+    private val patient = PatientData.patient15
+
     @Before
     override
     fun setup() {
         initXavierProvider()
-        createSimpleCharge()
+        createSimpleCharge(100, patient.id)
         super.setup()
     }
 
     @Test
     fun paMakeFullPaymentTest() {
         LoginScreen()
-                .typeUser("dev_emails+qa.androidbreeze2@carecloud.com")
-                .typePassword("Test123!")
+                .typeUser(patient.email)
+                .typePassword(patientPassword)
                 .pressLoginButton()
                 .openNavigationDrawer()
                 .goToPayments()

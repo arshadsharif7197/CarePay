@@ -6,6 +6,7 @@ import com.carecloud.carepay.patient.pageObjects.LoginScreen
 import com.carecloud.carepay.patient.pageObjects.TutorialScreen
 import com.carecloud.carepay.patient.pageObjects.appointments.AppointmentScreen
 import com.carecloud.carepay.patient.pageObjects.appointments.appointmentTime
+import com.carecloud.carepay.patient.patientPassword
 import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,7 +22,7 @@ class PACreateAppointmentTest : BaseTest() {
     fun paCreateAppointmentTest() {
         LoginScreen()
                 .typeUser("dev_emails+automationbreeze3@carecloud.com")
-                .typePassword("Test123!")
+                .typePassword(patientPassword)
                 .pressLoginButton()
                 .addNewAppointment()
                 .selectProvider(provider)

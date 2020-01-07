@@ -9,13 +9,12 @@ import com.carecloud.carepay.patient.pageObjects.checkin.CheckInAllergiesScreen
 import com.carecloud.carepay.patient.pageObjects.checkin.CheckInMedicationsScreen
 import com.carecloud.carepay.patient.pageObjects.checkin.demographics.CheckInDemogAddressScreen
 import com.carecloud.carepay.patient.pageObjects.checkin.demographics.CheckInDemogDemographicsScreen
+import com.carecloud.carepay.patient.patientPassword
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.changePaymentSetting
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.createAppointment
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.deleteAppointment
-import com.carecloud.carepaylibray.androidTest.graphqlrequests.getBreezeToken
 import com.carecloud.carepaylibray.androidTest.providers.formatAppointmentTime
 import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
-import com.carecloud.carepaylibray.androidTest.providers.makeRequest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -45,7 +44,7 @@ class PACheckInAppointment : BaseTest() {
     fun paCheckInAppointment() {
         LoginScreen()
                 .typeUser("dev_emails+qa.androidbreeze2@carecloud.com")
-                .typePassword("Test123!")
+                .typePassword(patientPassword)
                 .pressLoginButton()
                 .checkInAppointmentOnListAtTime(apptTime)
                 .personalInfoNextStep(CheckInDemogAddressScreen())

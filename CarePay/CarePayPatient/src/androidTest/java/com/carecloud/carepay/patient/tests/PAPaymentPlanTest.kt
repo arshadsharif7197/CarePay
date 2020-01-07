@@ -5,6 +5,7 @@ import com.carecloud.carepay.patient.BaseTest
 import com.carecloud.carepay.patient.pageObjects.LoginScreen
 import com.carecloud.carepay.patient.pageObjects.TutorialScreen
 import com.carecloud.carepay.patient.pageObjects.appointments.AppointmentScreen
+import com.carecloud.carepay.patient.patientPassword
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.changePaymentPlanSetting
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.createSimpleCharge
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.makePayment
@@ -33,7 +34,7 @@ class PAPaymentPlanTest : BaseTest() {
 
         LoginScreen()
                 .typeUser("dev_emails+qa.androidbreeze2@carecloud.com")
-                .typePassword("Test123!")
+                .typePassword(patientPassword)
                 .pressLoginButton()
                 .openNavigationDrawer()
                 .goToPayments()

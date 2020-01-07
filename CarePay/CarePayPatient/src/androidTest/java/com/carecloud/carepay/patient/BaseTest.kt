@@ -20,6 +20,7 @@ import org.junit.Rule
 
 // Used to access the context of the app, global
 lateinit var appContext: Context
+const val patientPassword = "Test123!"
 
 open class BaseTest {
 
