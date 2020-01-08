@@ -4,6 +4,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.practice.tablet.pageObjects.patientMode.checkin.*
 import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.PracticeMainScreen
 import com.carecloud.carepay.practice.tablet.tests.BaseTest
+import com.carecloud.carepay.practice.tablet.tests.patientPassword
+import com.carecloud.carepaylibray.androidTest.data.PatientData
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.*
 import com.carecloud.carepaylibray.androidTest.providers.formatAppointmentTime
 import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
@@ -20,15 +22,17 @@ class PMCheckInAppointment : BaseTest() {
 
     private lateinit var apptTime: String
     private var appointmentId: Int? = null
+    private val patient = PatientData.patient18
 
     @Before
     override
     fun setup() {
         initXavierProvider()
-        val apptResponse = createAppointment()
+        val apptResponse = createAppointment(patient.id)
         apptTime = formatAppointmentTime(apptResponse.data?.createAppointment?.start_time.toString())
         appointmentId = apptResponse.data?.createAppointment?.id
         changePaymentSetting("neither")
+        changePatientFormSettings(false)
         super.setup()
     }
 
@@ -40,8 +44,8 @@ class PMCheckInAppointment : BaseTest() {
                 .pressLetsStartButton()
                 .pressCheckInButton()
                 .pressLoginButton()
-                .typeUsername("dev_emails+qa.androidbreeze2@carecloud.com")
-                .typePassword("Test123!")
+                .typeUsername(patient.email)
+                .typePassword(patientPassword)
                 .pressLoginButton()
                 .checkInAppointment(CheckInPersonalInfo(), apptTime)
                 .personalInfoNextStep(CheckInAddress())

@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.tablet.tests.patientMode.appointments
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.PracticeMainScreen
 import com.carecloud.carepay.practice.tablet.tests.BaseTest
+import com.carecloud.carepay.practice.tablet.tests.patientPassword
 import com.carecloud.carepaylibray.androidTest.data.PatientData
 import com.carecloud.carepaylibray.androidTest.graphqlrequests.*
 import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
@@ -40,7 +41,7 @@ class PMCheckOutAppointment: BaseTest() {
                 .pressCheckOutButton()
                 .pressLoginButton()
                 .typeUsername(patient.email)
-                .typePassword("Test123!")
+                .typePassword(patientPassword)
                 .pressLoginButton()
                 .scheduleLater()
                 .verifyAppointmentStatus("Just Checked Out")
