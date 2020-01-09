@@ -55,7 +55,7 @@ public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
         super.onViewCreated(view, icicle);
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE) ||
                 HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_2_DEVICE);
-        Button swipeCardButton = (Button) view.findViewById(R.id.swipeCreditCarNowButton);
+        Button swipeCardButton = view.findViewById(R.id.swipeCreditCarNowButton);
         if (isCloverDevice && swipeCardButton != null && !paymentsModel.getPaymentPayload().isPrepayment()) {
             swipeCardButton.setVisibility(View.VISIBLE);
             swipeCardButton.setOnClickListener(swipeCreditCarNowButtonClickListener);
@@ -78,5 +78,14 @@ public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
             }
         }
     };
+
+    @Override
+    protected void showAddCard(double amountToMakePayment, PaymentsModel paymentsModel) {
+        PracticeAddNewCreditCardFragment fragment = PracticeAddNewCreditCardFragment
+                .newInstance(paymentsModel, amountToMakePayment);
+        fragment.setOnCancelListener(onDialogCancelListener);
+        callback.displayDialogFragment(fragment, true);
+        hideDialog();
+    }
 
 }

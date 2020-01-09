@@ -1,18 +1,25 @@
 package com.carecloud.carepay.practice.tablet;
 
 import android.app.Activity;
-import android.app.Application;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 
 import com.carecloud.carepay.practice.library.homescreen.AppointmentCountUpdateService;
+import com.carecloud.carepay.practice.library.session.PracticeSessionService;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.DeviceIdentifierDTO;
 import com.carecloud.carepaylibray.CarePayApplication;
+import com.carecloud.carepaylibray.session.SessionedActivityInterface;
+import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.shamrocksdk.ShamrockSdk;
+import com.microsoft.appcenter.AppCenter;
+import com.microsoft.appcenter.analytics.Analytics;
+import com.microsoft.appcenter.crashes.Crashes;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.newrelic.agent.android.NewRelic;
 
@@ -20,8 +27,7 @@ import com.newrelic.agent.android.NewRelic;
  * Created by Jahirul Bhuiyan on 10/24/2016
  */
 
-public class CarePayPracticeApplication extends CarePayApplication
-        implements Application.ActivityLifecycleCallbacks {
+public class CarePayPracticeApplication extends CarePayApplication {
 
     private ApplicationMode applicationMode;
     private MixpanelAPI mixpanelAPI;
@@ -29,11 +35,14 @@ public class CarePayPracticeApplication extends CarePayApplication
     @Override
     public void onCreate() {
         super.onCreate();
-        start();this.onTerminate();
+        start();
+        this.onTerminate();
+        AppCenter.start(this, "bae2f03a-0b4e-4565-9ddd-720141369b1c",
+                Analytics.class, Crashes.class);
     }
 
     @Override
-    public void onTerminate(){
+    public void onTerminate() {
         AppointmentCountUpdateService.cancelScheduledServiceRun(this);
         super.onTerminate();
     }
@@ -42,9 +51,8 @@ public class CarePayPracticeApplication extends CarePayApplication
      * init app
      */
     public void start() {
-        mixpanelAPI = MixpanelAPI.getInstance(this.getApplicationContext(), BuildConfig.MIX_PANEL_TOKEN);
+        mixpanelAPI = MixpanelAPI.getInstance(getApplicationContext(), BuildConfig.MIX_PANEL_TOKEN);
         setHttpConstants();
-        registerActivityLifecycleCallbacks(this);
         ShamrockSdk.init(HttpConstants.getPaymentsApiKey(), HttpConstants.getDeepStreamUrl(), HttpConstants.getPaymentsUrl());
     }
 
@@ -70,40 +78,6 @@ public class CarePayPracticeApplication extends CarePayApplication
     }
 
     @Override
-    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-    }
-
-    @Override
-    public void onActivityStarted(Activity activity) {
-
-    }
-
-    @Override
-    public void onActivityResumed(Activity activity) {
-
-    }
-
-    @Override
-    public void onActivityPaused(Activity activity) {
-
-    }
-
-    @Override
-    public void onActivityStopped(Activity activity) {
-
-    }
-
-    @Override
-    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
-    }
-
-    @Override
-    public void onActivityDestroyed(Activity activity) {
-
-    }
-
-    @Override
     public void onAtomicRestart() {
         super.onAtomicRestart();
         applicationMode.clearUserPracticeDTO();
@@ -122,5 +96,24 @@ public class CarePayPracticeApplication extends CarePayApplication
             applicationMode.setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
         }
         return applicationMode;
+    }
+
+    @Override
+    public void onActivityResumed(Activity activity) {
+        super.onActivityResumed(activity);
+        if (activity instanceof SessionedActivityInterface
+                && ((SessionedActivityInterface) activity).manageSession()) {
+            restartSession(activity);
+        }
+    }
+
+    @Override
+    public void restartSession(Activity activity) {
+        Log.e("Session", "manageSession");
+        Bundle bundle = new Bundle();
+        DtoHelper.bundleDto(bundle, ((SessionedActivityInterface) activity).getLogoutTransition());
+        Intent intent = new Intent(this, PracticeSessionService.class);
+        intent.putExtras(bundle);
+        startService(intent);
     }
 }

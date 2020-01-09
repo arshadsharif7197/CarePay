@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.payments.adapter;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ public class PaymentPlanDashboardAdapter extends RecyclerView.Adapter<PaymentPla
         this.paymentsModel = paymentsModel;
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext())
@@ -75,19 +77,9 @@ public class PaymentPlanDashboardAdapter extends RecyclerView.Adapter<PaymentPla
             ScheduledPaymentModel scheduledPayment = paymentsModel.getPaymentPayload().findScheduledPayment(paymentPlan);
             holder.scheduledPaymentIndicator.setVisibility(scheduledPayment != null ? View.VISIBLE : View.GONE);
         }
-        holder.detailsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callback.onDetailClicked(paymentPlan, completed);
-            }
-        });
+        holder.detailsButton.setOnClickListener(v -> callback.onDetailClicked(paymentPlan, completed));
         holder.addBalanceButton.setEnabled(hasBalanceForPaymentPlan);
-        holder.addBalanceButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callback.onAddBalanceClicked(paymentPlan);
-            }
-        });
+        holder.addBalanceButton.setOnClickListener(v -> callback.onAddBalanceClicked(paymentPlan));
     }
 
     private String getLastPaymentDate(PaymentPlanDTO paymentPlan) {
@@ -122,10 +114,10 @@ public class PaymentPlanDashboardAdapter extends RecyclerView.Adapter<PaymentPla
 
         public ViewHolder(View itemView) {
             super(itemView);
-            paymentPlanProgressBar = (ProgressBar) itemView.findViewById(R.id.paymentPlanProgressBar);
-            paymentPlanAmountTextView = (TextView) itemView.findViewById(R.id.totalAmountTextView);
-            paymentPlanNameTextView = (TextView) itemView.findViewById(R.id.nameTextView);
-            paymentPlanPeriodicPaymentTextView = (TextView) itemView.findViewById(R.id.periodicAmountTextView);
+            paymentPlanProgressBar = itemView.findViewById(R.id.paymentPlanProgressBar);
+            paymentPlanAmountTextView = itemView.findViewById(R.id.totalAmountTextView);
+            paymentPlanNameTextView = itemView.findViewById(R.id.nameTextView);
+            paymentPlanPeriodicPaymentTextView = itemView.findViewById(R.id.periodicAmountTextView);
             detailsButton = itemView.findViewById(R.id.detailsButton);
             addBalanceButton = itemView.findViewById(R.id.addBalanceButton);
             scheduledPaymentIndicator = itemView.findViewById(R.id.scheduledPaymentIndicator);

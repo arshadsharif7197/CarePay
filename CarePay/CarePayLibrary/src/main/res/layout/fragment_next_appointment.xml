@@ -25,7 +25,8 @@
         android:textColor="@color/colorPrimary"
         app:customAssetFont="gotham_rounded_bold"
         breeze:textKey="schedule_appointment_later_button_label"
-        tools:text="Schedule Later" />
+        tools:text="Schedule Later"
+        android:contentDescription="@string/content_description_schedule_later_button"/>
 
     <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:id="@+id/scheduleAppointmentButton"
@@ -40,7 +41,8 @@
         android:textColor="@color/white"
         app:customAssetFont="gotham_rounded_bold"
         breeze:textKey="schedule_appointment_button_label"
-        tools:text="Schedule Appointment" />
+        tools:text="Schedule Appointment"
+        android:contentDescription="@string/content_description_schedule_appointment_button"/>
 
     <ScrollView
         android:id="@+id/scrollContainer"
@@ -261,7 +263,8 @@
                         android:focusableInTouchMode="false"
                         android:imeOptions="actionNext"
                         app:customAssetFont="proxima_nova_semi_bold"
-                        breeze:hintKey="next_appointment_choose_visit_type_hint" />
+                        breeze:hintKey="next_appointment_choose_visit_type_hint"
+                        android:contentDescription="@string/content_description_visit_type_edit_text"/>
 
                 </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 
@@ -317,7 +320,8 @@
                         android:focusableInTouchMode="false"
                         android:imeOptions="actionDone"
                         app:customAssetFont="proxima_nova_semi_bold"
-                        breeze:hintKey="next_appointment_choose_when_hint" />
+                        breeze:hintKey="next_appointment_choose_when_hint"
+                        android:contentDescription="@string/content_description_visit_time_edit_text"/>
 
                 </com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout>
 

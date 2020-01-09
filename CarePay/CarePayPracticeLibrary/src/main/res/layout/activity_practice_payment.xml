@@ -13,7 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?practiceActionBarColor"
-        android:padding="4dp">
+        android:padding="4dp"
+        android:paddingStart="@dimen/paymentContainerHorizontalMargin"
+        android:paddingEnd="@dimen/paymentContainerHorizontalMargin">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/goBackTextview"
@@ -26,12 +28,10 @@
             android:drawablePadding="@dimen/dimen_10dp"
             android:gravity="center_vertical"
             android:includeFontPadding="false"
-            android:paddingStart="@dimen/dimen_10dp"
-            android:paddingEnd="10dp"
             android:textColor="@color/white"
             android:textSize="@dimen/goBackTextSize"
             app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="go_back" />
+            breeze:textKey="practice_checkin_back_label" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/practice_payment_title"
@@ -53,8 +53,6 @@
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingStart="0dp"
-            android:paddingEnd="10dp"
             tools:ignore="RelativeOverlap">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
@@ -66,10 +64,11 @@
                 android:drawablePadding="@dimen/dimen_10dp"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:textColor="@color/white"
+                android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/filterLabelTextSize"
                 app:customAssetFont="proxima_nova_regular"
-                breeze:textKey="practice_payments_findPatient_label" />
+                breeze:textKey="practice_payments_findPatient_label"
+                android:contentDescription="@string/content_description_find_a_patient"/>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/filterTextView"
@@ -79,13 +78,14 @@
                 android:drawablePadding="@dimen/dimen_10dp"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:textColor="@color/white"
+                android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/filterLabelTextSize"
+                android:visibility="gone"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="practice_checkin_filter" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/practice_payment_filter_on"
+                android:id="@+id/filterTextViewOn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_green_overlay"
@@ -95,10 +95,11 @@
                 android:paddingTop="@dimen/dimen_6dp"
                 android:paddingEnd="@dimen/dimen_15dp"
                 android:paddingBottom="@dimen/dimen_6dp"
-                android:textColor="@color/filter_on"
+                android:textColor="@color/white"
                 android:textSize="@dimen/text_size_18sp"
                 android:visibility="gone"
-                app:customAssetFont="proxima_nova_regular" />
+                app:customAssetFont="proxima_nova_regular"
+                breeze:textKey="practice_checkin_filter_On" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -115,6 +116,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/practiceCounterStartMargin"
             android:textColor="@color/white"
             android:textSize="@dimen/checkinColumnTitleTextSize"
             app:customAssetFont="gotham_rounded_medium"

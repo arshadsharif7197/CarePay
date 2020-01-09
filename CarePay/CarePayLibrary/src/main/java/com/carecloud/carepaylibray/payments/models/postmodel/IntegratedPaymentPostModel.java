@@ -1,6 +1,6 @@
 package com.carecloud.carepaylibray.payments.models.postmodel;
 
-import android.support.annotation.StringDef;
+import androidx.annotation.StringDef;
 
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;

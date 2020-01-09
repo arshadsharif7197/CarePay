@@ -13,24 +13,12 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar_messaging" />
 
-    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-        android:id="@+id/threadProviderTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
-        android:gravity="center"
-        android:padding="@dimen/dimen_10dp"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_size_15"
-        app:customAssetFont="proxima_nova_semi_bold"
-        tools:text="Required Prepayment: $49.00" />
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/messages_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -46,6 +34,7 @@
         android:background="@color/light_gray" />
 
     <LinearLayout
+        android:id="@+id/messageInputContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

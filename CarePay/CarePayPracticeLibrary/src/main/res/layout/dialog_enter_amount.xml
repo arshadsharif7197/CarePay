@@ -363,7 +363,8 @@
                 android:background="@drawable/bg_yellow_overlay"
                 android:textColor="@color/white"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="payment_apply_amount" />
+                breeze:textKey="payment_apply_amount"
+                android:contentDescription="@string/content_description_apply_amount_button"/>
 
         </FrameLayout>
     </LinearLayout>
