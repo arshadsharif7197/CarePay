@@ -554,8 +554,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
             }
         });
 
-        Intent intent = new Intent(getContext(), AndroidPayQueueUploadService.class);
-        getContext().startService(intent);
+        AndroidPayQueueUploadService.enqueueWork(getContext(), new Intent());
     }
 
     private String findPatientId(String practiceId) {

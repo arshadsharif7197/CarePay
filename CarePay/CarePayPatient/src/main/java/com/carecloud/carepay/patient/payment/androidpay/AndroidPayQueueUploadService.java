@@ -1,10 +1,10 @@
 package com.carecloud.carepay.patient.payment.androidpay;
 
-import android.app.AlarmManager;
-import android.app.IntentService;
-import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
-import androidx.annotation.Nullable;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.JobIntentService;
 
 import com.carecloud.carepay.patient.db.BreezeDataBase;
 import com.carecloud.carepay.patient.payment.androidpay.models.AndroidPayQueuePaymentRecord;
@@ -28,18 +28,15 @@ import retrofit2.Response;
  * Created by lmenendez on 4/19/17
  */
 
-public class AndroidPayQueueUploadService extends IntentService {
-    public static final int INTERVAL = 1000 * 60 * 3;
+public class AndroidPayQueueUploadService extends JobIntentService {
+    public static final int JOB_ID = 100;
 
-    /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
-     */
-    public AndroidPayQueueUploadService() {
-        super(AndroidPayQueueUploadService.class.getName());
+    public static void enqueueWork(Context context, Intent work) {
+        enqueueWork(context, AndroidPayQueueUploadService.class, JOB_ID, work);
     }
 
     @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
+    protected void onHandleWork(@NonNull Intent intent) {
         Gson gson = new Gson();
         BreezeDataBase database = BreezeDataBase.getDatabase(getApplicationContext());
         List<AndroidPayQueuePaymentRecord> queueRecords = database.getAndroidPayDao().getAllRecords();
@@ -64,14 +61,6 @@ public class AndroidPayQueueUploadService extends IntentService {
             if (isSubmitted) {
                 database.getAndroidPayDao().delete(queueRecord);
             }
-        }
-
-        queueRecords = database.getAndroidPayDao().getAllRecords();
-        if (!queueRecords.isEmpty()) {//only reschedule the service if required
-            Intent scheduledService = new Intent(getBaseContext(), AndroidPayQueueUploadService.class);
-            PendingIntent pendingIntent = PendingIntent.getService(getBaseContext(), 0x222, scheduledService, PendingIntent.FLAG_UPDATE_CURRENT);
-            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + INTERVAL, pendingIntent);
         }
     }
 

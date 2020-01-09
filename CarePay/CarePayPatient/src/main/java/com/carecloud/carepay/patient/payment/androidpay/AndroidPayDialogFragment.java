@@ -547,8 +547,7 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
             }
         });
 
-        Intent intent = new Intent(getContext(), AndroidPayQueueUploadService.class);
-        getContext().startService(intent);
+        AndroidPayQueueUploadService.enqueueWork(getContext(), new Intent());
     }
 
 
