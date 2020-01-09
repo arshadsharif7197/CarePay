@@ -202,8 +202,8 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         queryMap.put("language", getApplicationPreferences().getUserLanguage());
         queryMap.put("first_name", firstNameEditText.getText().toString());
         queryMap.put("last_name", lastNameEditText.getText().toString());
-        queryMap.put("date_of_birth", DateUtil.getInstance().setDateRaw(dobEditText.getText().toString())
-                .toStringWithFormatYyyyDashMmDashDd());
+        queryMap.put("date_of_birth", DateUtil.getInstance().setDateRaw(dobEditText.getText().toString(),
+                true).toStringWithFormatYyyyDashMmDashDd());
         queryMap.put("phone", StringUtil.revertToRawFormat(phoneNumberEditText.getText().toString()));
         queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
         queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
