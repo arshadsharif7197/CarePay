@@ -140,7 +140,7 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
     private void initToolbar(View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
-        title.setText(Label.getLabel("messaging_providers_title"));
+        title.setText(Label.getLabel("messaging_subject_title"));
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
         toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
     }
