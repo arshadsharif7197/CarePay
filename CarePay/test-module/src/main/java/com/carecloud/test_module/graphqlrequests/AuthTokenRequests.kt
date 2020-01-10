@@ -1,10 +1,15 @@
-package com.carecloud.carepaylibray.androidTest.graphql
+package com.carecloud.test_module.graphqlrequests
+
+import com.carecloud.test_module.providers.formatRequest
+
 
 /**
  * Created by drodriguez on 2019-10-15.
  */
-fun getBreezeToken(username: String = "automation+breezetest@carecloud.com", password: String = "Test123!", appMode: String): String {
-    return createRequest("""
+fun getBreezeToken(appMode: String): String {
+    val username = if (appMode === "patient") "dev_emails+qa.androidbreeze2@carecloud.com" else "automation+breezetest@carecloud.com"
+    val password = "Test123!"
+    return formatRequest("""
         { getBreezeSessionToken(
             username: "$username",
             password: "$password",
@@ -17,7 +22,7 @@ fun getBreezeToken(username: String = "automation+breezetest@carecloud.com", pas
 }
 
 fun getUserToken(username: String = "automationp@carecloud.com", password: String = "@utomationT3am"): String {
-    return createRequest("""
+    return formatRequest("""
         { getUserToken(
             username: "$username",
             password: "$password") 
