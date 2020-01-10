@@ -1,14 +1,14 @@
 package com.carecloud.carepaylibray.payments.adapter;
 
 import android.content.Context;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
@@ -41,7 +41,11 @@ public class CreditCardsListAdapter extends RecyclerView.Adapter<CreditCardsList
      * @param context         Context
      * @param creditCardsList listof card info
      * @param callback        callback for selection
+     *                        <<<<<<< HEAD
+     * @param showSeparator   boolean to show separator
+     *                        =======
      * @param showSeparator   boolean to show or not the separator
+     *                        >>>>>>> QA
      */
     public CreditCardsListAdapter(Context context,
                                   List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardsList,
@@ -73,8 +77,10 @@ public class CreditCardsListAdapter extends RecyclerView.Adapter<CreditCardsList
 
         Date expDate = DateUtil.getInstance().setDateRaw(expiredDate).getDate();
         expDate = DateUtil.getLastDayOfMonth(expDate);
+        expDate = DateUtil.getLastHourOfDay(expDate);
         if (expDate.before(new Date())) {
             holder.paymentMethodImage.setImageResource(R.drawable.icn_payment_credit_card_expiring);
+            holder.paymentMethodCheck.setVisibility(View.GONE);
         }
         if (creditCardInfo.isDefault()) {
             holder.defaultCardText.setVisibility(View.VISIBLE);

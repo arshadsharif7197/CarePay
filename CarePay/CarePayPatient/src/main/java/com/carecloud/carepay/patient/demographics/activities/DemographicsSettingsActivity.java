@@ -196,7 +196,7 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
 
     @Override
     public void displayCreditCardListFragment() {
-        CreditCardListFragment creditCardListFragment = new CreditCardListFragment();
+        CreditCardListFragment creditCardListFragment = CreditCardListFragment.newInstance();
         replaceFragment(creditCardListFragment, true);
     }
 
