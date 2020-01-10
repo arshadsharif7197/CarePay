@@ -6,7 +6,7 @@ import com.carecloud.carepay.practice.tablet.pageObjects.patientMode.checkin.Che
 import com.carecloud.carepay.practice.tablet.pageObjects.patientMode.checkout.CheckOutNextAppointmentScreen
 import com.carecloud.carepay.practice.tablet.pageObjects.patientMode.payments.PaymentsScreen
 import com.carecloud.carepay.practice.tablet.tests.appContext
-import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
+import com.carecloud.test_module.actions.CustomViewActions
 
 /**
  * @author pjohnson on 2019-08-28.
