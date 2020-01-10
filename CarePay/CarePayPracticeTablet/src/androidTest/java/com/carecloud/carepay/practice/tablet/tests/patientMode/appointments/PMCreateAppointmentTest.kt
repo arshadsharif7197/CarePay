@@ -3,6 +3,8 @@ package com.carecloud.carepay.practice.tablet.tests.patientMode.appointments
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.PracticeMainScreen
 import com.carecloud.carepay.practice.tablet.tests.BaseTest
+import com.carecloud.carepay.practice.tablet.tests.patientPassword
+import com.carecloud.test_module.data.PatientData
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -21,8 +23,8 @@ class PMCreateAppointmentTest : BaseTest() {
                 .pressLetsStartButton()
                 .pressAppointmentButton()
                 .pressLoginButton()
-                .typeUsername("dev_emails+qa.androidbreeze2@carecloud.com")
-                .typePassword("Test123!")
+                .typeUsername(PatientData.patient6.email)
+                .typePassword(patientPassword)
                 .pressLoginButton()
                 .selectProvider()
                 .selectVisitType()

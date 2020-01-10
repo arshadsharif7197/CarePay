@@ -6,6 +6,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.carecloud.carepay.patient.patientsplash.SplashActivity
 import androidx.test.rule.ActivityTestRule
 import com.carecloud.carepay.patient.pageObjects.LoginScreen
+import com.carecloud.carepay.patient.pageObjects.TutorialScreen
 
 import com.carecloud.carepay.service.library.EspressoIdlingResource
 
@@ -19,6 +20,7 @@ import org.junit.Rule
 
 // Used to access the context of the app, global
 lateinit var appContext: Context
+const val patientPassword = "Test123!"
 
 open class BaseTest {
 
@@ -32,14 +34,12 @@ open class BaseTest {
         IdlingRegistry.getInstance().register(EspressoIdlingResource.getIdlingResource())
         appContext = InstrumentationRegistry.getInstrumentation().targetContext
 
-        LoginScreen()
-                .typeUser("dev_emails+qa.androidbreeze2@carecloud.com")
-                .typePassword("Test123!")
-                .pressLoginButton()
+        TutorialScreen()
+                .skipTutorial()
     }
 
     @After
-    fun tearDown() {
+    open fun tearDown() {
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.getIdlingResource())
     }
 }

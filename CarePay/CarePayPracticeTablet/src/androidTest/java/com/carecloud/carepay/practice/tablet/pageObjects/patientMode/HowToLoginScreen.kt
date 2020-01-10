@@ -3,7 +3,7 @@ package com.carecloud.carepay.practice.tablet.pageObjects.patientMode
 import com.carecloud.carepay.practice.tablet.R
 import com.carecloud.carepay.practice.tablet.pageObjects.shared.login.LoginScreen
 import com.carecloud.carepay.practice.tablet.tests.appContext
-import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
+import com.carecloud.test_module.actions.CustomViewActions
 
 /**
  * @author pjohnson on 2019-08-28.
