@@ -2,15 +2,15 @@ package com.carecloud.carepay.patient.pageObjects.checkin.demographics
 
 import com.carecloud.carepay.patient.R
 import com.carecloud.carepay.patient.appContext
-import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
+import com.carecloud.test_module.actions.CustomViewActions
 
 /**
  * Created by drodriguez on 2019-09-19.
  */
 class CheckInDemogPersonalInfoScreen: CustomViewActions() {
-    fun personalInfoNextStep(): CheckInDemogAddressScreen {
-        click(appContext.getString(R.string.content_description_next_button))
-        return CheckInDemogAddressScreen()
+    fun <T> personalInfoNextStep(next: T): T {
+        clickOnSpecificText("NEXT STEP")
+        return next
     }
 
 }
