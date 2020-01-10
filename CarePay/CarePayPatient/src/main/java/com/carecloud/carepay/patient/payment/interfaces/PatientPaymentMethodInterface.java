@@ -23,7 +23,7 @@ public interface PatientPaymentMethodInterface extends PaymentMethodInterface {
 
     void showPaymentConfirmation(WorkflowDTO workflowDTO);
 
-    void showPaymentPendingConfirmation(PaymentsModel paymentsModel);
+    void showPaymentPendingConfirmation(PaymentsModel paymentsModel, String practiceId);
 
     void setAndroidPayTargetFragment(Fragment fragment);
 
