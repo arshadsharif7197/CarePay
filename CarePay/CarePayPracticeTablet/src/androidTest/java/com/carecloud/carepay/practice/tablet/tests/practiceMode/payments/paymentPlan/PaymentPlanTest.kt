@@ -3,6 +3,9 @@ package com.carecloud.carepay.practice.tablet.tests.practiceMode.payments.paymen
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.PracticeMainScreen
 import com.carecloud.carepay.practice.tablet.tests.BaseTest
+import com.carecloud.test_module.data.PatientData
+import com.carecloud.test_module.graphqlrequests.createSimpleCharge
+import com.carecloud.test_module.graphqlrequests.makePayment
 import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,12 +20,13 @@ class PaymentPlanTest : BaseTest() {
 
     private val paymentPlanName = "Automated test"
     private val numberOfMonths = "5"
+    private val patient = PatientData.patient10
 
     @Test
-    fun a_createPaymentPlanTest() {
+    fun a_prCreatePaymentPlanTest() {
         PracticeMainScreen()
                 .pressPaymentButton()
-                .searchForPatient("shop")
+                .searchForPatient(patient.name)
                 .openPaymentPlansDashboard()
                 .pressCreateNewPaymentPlanButton()
                 .chooseItem()
@@ -33,10 +37,10 @@ class PaymentPlanTest : BaseTest() {
     }
 
     @Test
-    fun b_editPaymentPlanTest() {
+    fun b_prEditPaymentPlanTest() {
         PracticeMainScreen()
                 .pressPaymentButton()
-                .searchForPatient("shop")
+                .searchForPatient(patient.name)
                 .openPaymentPlansDashboard()
                 .choosePaymentPlan(paymentPlanName)
                 .editPaymentPlan()
@@ -46,10 +50,10 @@ class PaymentPlanTest : BaseTest() {
     }
 
     @Test
-    fun c_deletePaymentPlanTest() {
+    fun c_prDeletePaymentPlanTest() {
         PracticeMainScreen()
                 .pressPaymentButton()
-                .searchForPatient("shop")
+                .searchForPatient(patient.name)
                 .openPaymentPlansDashboard()
                 .choosePaymentPlan(paymentPlanName)
                 .editPaymentPlan()

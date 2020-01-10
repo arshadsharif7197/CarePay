@@ -9,7 +9,6 @@ import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.util.HashMap;
@@ -41,7 +40,7 @@ public class MyHealthViewModel extends BaseViewModel {
 
     private void loadDto(TransitionDTO myHealthTransition) {
         Map<String, String> queryMap = new HashMap<>();
-        ((CarePayApplication) getApplication()).getWorkflowServiceHelper().execute(myHealthTransition,
+        getWorkflowServiceHelper().execute(myHealthTransition,
                 new WorkflowServiceCallback() {
                     @Override
                     public void onPreExecute() {
@@ -73,7 +72,7 @@ public class MyHealthViewModel extends BaseViewModel {
         queryMap.put("term", medication.getDrugName());
         TransitionDTO transitionDTO = myHealthDto.getValue().getMetadata()
                 .getLinks().getEducationMaterial();
-        ((CarePayApplication) getApplication()).getWorkflowServiceHelper().execute(transitionDTO, new WorkflowServiceCallback() {
+        getWorkflowServiceHelper().execute(transitionDTO, new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
                 setLoading(true);
