@@ -2,12 +2,12 @@ package com.carecloud.carepay.service.library;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
-import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.FaultResponseDTO;
@@ -17,8 +17,8 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
+import com.carecloud.carepay.service.library.unifiedauth.RefreshTokenDto;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
-import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -81,15 +81,15 @@ public class WorkflowServiceHelper {
     private Map<String, String> getHeaders(Map<String, String> customHeaders) {
         Map<String, String> headers = getUserAuthenticationHeaders();
 
+        if ((applicationMode.getApplicationType() == ApplicationMode.ApplicationType.PATIENT)
+                && (ApplicationPreferences.getInstance().getProfileId() != null)
+                && (!ApplicationPreferences.getInstance().getProfileId().isEmpty())) {
+            headers.put("username_patient", ApplicationPreferences.getInstance().getProfileId());
+        }
+
         // Add auth headers to custom in case custom has old auth headers
         if (customHeaders != null) {
             customHeaders.remove("Authorization");
-            //this can cause a delegate issue in patient app as of 12.28.18
-            // TODO remove this once delegate is reimplemented
-            if (applicationMode.getApplicationType() != ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE &&
-                    customHeaders.containsKey("username_patient")) {
-                customHeaders.remove("username_patient");
-            }
 
             customHeaders.putAll(headers);
 
@@ -302,7 +302,7 @@ public class WorkflowServiceHelper {
                                  final Map<String, String> headers,
                                  final int attemptCount,
                                  final Call<WorkflowDTO> call) {
-
+        EspressoIdlingResource.increment();
         call.enqueue(new Callback<WorkflowDTO>() {
             boolean shouldRetryRequest = false;
             final String retryErrorCodes = "403|408|409";
@@ -312,6 +312,9 @@ public class WorkflowServiceHelper {
                 callStack.remove(call);
                 try {
                     shouldRetryRequest = retryErrorCodes.contains(String.valueOf(response.code())) || response.code() > 422;
+                    if (!shouldRetryRequest) {
+                        EspressoIdlingResource.decrement();
+                    }
                     switch (response.code()) {
                         case STATUS_CODE_OK:
                             onResponseOk(response);
@@ -449,30 +452,6 @@ public class WorkflowServiceHelper {
         callStack.push(call);
     }
 
-    private CognitoActionCallback getCognitoActionCallback(@NonNull final TransitionDTO transitionDTO,
-                                                           @NonNull final WorkflowServiceCallback callback,
-                                                           final String jsonBody,
-                                                           final Map<String, String> queryMap,
-                                                           final Map<String, String> headers) {
-        return new CognitoActionCallback() {
-            @Override
-            public void onBeforeLogin() {
-
-            }
-
-            @Override
-            public void onLoginSuccess() {
-                // Re-try failed request with new auth headers
-                execute(transitionDTO, callback, jsonBody, queryMap, headers);
-            }
-
-            @Override
-            public void onLoginFailure(String exceptionMessage) {
-                callback.onFailure(capitalizeMessage(exceptionMessage));
-            }
-        };
-    }
-
     private void executeRefreshTokenRequest(@NonNull final WorkflowServiceCallback callback) {
         if (appAuthorizationHelper == null) {
             atomicAppRestart();
@@ -500,9 +479,9 @@ public class WorkflowServiceHelper {
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 Gson gson = new Gson();
                 String signInResponseString = gson.toJson(workflowDTO);
-                UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString, UnifiedSignInResponse.class);
-                if (signInResponse != null) {
-                    UnifiedAuthenticationTokens authTokens = signInResponse.getPayload()
+                RefreshTokenDto refreshTokenDto = gson.fromJson(signInResponseString, RefreshTokenDto.class);
+                if (refreshTokenDto != null) {
+                    UnifiedAuthenticationTokens authTokens = refreshTokenDto.getPayload()
                             .getAuthorizationModel().getCognito().getAuthenticationTokens();
                     appAuthorizationHelper.setAuthorizationTokens(authTokens);
                 }

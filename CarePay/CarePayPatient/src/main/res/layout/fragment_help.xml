@@ -2,20 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:clickable="true"
     android:orientation="vertical">
 
     <include layout="@layout/toolbar_demographics_settings" />
 
     <LinearLayout
+        android:id="@+id/supportTextView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/signup_clickable_textview_height"
-        android:layout_marginEnd="@dimen/dimen_16dp"
         android:layout_marginStart="@dimen/dimen_16dp"
-        android:layout_marginTop="@dimen/dimen_36dp"
+        android:layout_marginTop="@dimen/dimen_16dp"
+        android:layout_marginEnd="@dimen/dimen_16dp"
         android:background="@drawable/grey_bottom_border"
+        android:foreground="?android:selectableItemBackground"
         android:orientation="horizontal">
 
         <ImageView
@@ -25,7 +29,6 @@
             android:src="@drawable/icn_settings_headphone" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/supportTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/dimen_10dp"
@@ -39,12 +42,14 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/faqTextView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/signup_clickable_textview_height"
-        android:layout_marginEnd="@dimen/dimen_16dp"
         android:layout_marginStart="@dimen/dimen_16dp"
         android:layout_marginTop="@dimen/dimen_36dp"
+        android:layout_marginEnd="@dimen/dimen_16dp"
         android:background="@drawable/grey_bottom_border"
+        android:foreground="?android:selectableItemBackground"
         android:orientation="horizontal">
 
         <ImageView
@@ -54,7 +59,6 @@
             android:src="@drawable/icn_settings_question" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/faqTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/dimen_10dp"
@@ -68,12 +72,14 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/tosTextView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/signup_clickable_textview_height"
-        android:layout_marginEnd="@dimen/dimen_16dp"
         android:layout_marginStart="@dimen/dimen_16dp"
         android:layout_marginTop="@dimen/dimen_8dp"
+        android:layout_marginEnd="@dimen/dimen_16dp"
         android:background="@drawable/grey_bottom_border"
+        android:foreground="?android:selectableItemBackground"
         android:orientation="horizontal">
 
         <ImageView
@@ -83,7 +89,6 @@
             android:src="@drawable/icn_settings_check" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/tosTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/dimen_10dp"
@@ -97,12 +102,14 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/privacyTextView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/signup_clickable_textview_height"
-        android:layout_marginEnd="@dimen/dimen_16dp"
         android:layout_marginStart="@dimen/dimen_16dp"
         android:layout_marginTop="@dimen/dimen_8dp"
+        android:layout_marginEnd="@dimen/dimen_16dp"
         android:background="@drawable/grey_bottom_border"
+        android:foreground="?android:selectableItemBackground"
         android:orientation="horizontal">
 
         <ImageView
@@ -112,7 +119,6 @@
             android:src="@drawable/icn_settings_key" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-            android:id="@+id/privacyTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/dimen_10dp"
@@ -128,9 +134,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/signup_clickable_textview_height"
-        android:layout_marginEnd="@dimen/dimen_16dp"
         android:layout_marginStart="@dimen/dimen_16dp"
         android:layout_marginTop="@dimen/dimen_36dp"
+        android:layout_marginEnd="@dimen/dimen_16dp"
         android:background="@drawable/grey_bottom_border"
         android:orientation="horizontal">
 
@@ -148,25 +154,26 @@
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/playAgainTextView"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/dimen_10dp"
-            android:layout_weight="1"
+            android:background="?android:selectableItemBackground"
             android:gravity="end|center_vertical"
+            android:padding="@dimen/dimen_10dp"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_15"
             android:textStyle="bold"
             app:customAssetFont="proxima_nova_regular"
-            breeze:textKey="play_again_label" />
+            breeze:textKey="play_again_label"
+            tools:text="See Again" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/signup_clickable_textview_height"
-        android:layout_marginEnd="@dimen/dimen_16dp"
         android:layout_marginStart="@dimen/dimen_16dp"
         android:layout_marginTop="@dimen/dimen_8dp"
+        android:layout_marginEnd="@dimen/dimen_16dp"
         android:background="@drawable/grey_bottom_border"
         android:orientation="horizontal"
         android:visibility="gone">
@@ -183,7 +190,7 @@
             app:customAssetFont="proxima_nova_regular"
             breeze:textKey="help_overlay_label" />
 
-        <android.support.v7.widget.SwitchCompat
+        <androidx.appcompat.widget.SwitchCompat
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
@@ -193,15 +200,15 @@
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/dimen_16dp"
         android:layout_marginStart="@dimen/dimen_16dp"
         android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_marginEnd="@dimen/dimen_16dp"
         android:gravity="center"
         android:textColor="@color/gray"
         android:textSize="@dimen/text_size_14"
         android:textStyle="bold"
+        android:visibility="gone"
         app:customAssetFont="proxima_nova_regular"
-        breeze:textKey="help_overlay_hint"
-        android:visibility="gone"/>
+        breeze:textKey="help_overlay_hint" />
 
 </LinearLayout>

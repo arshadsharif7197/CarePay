@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.CloverPaymentAdapter;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -51,11 +53,11 @@ public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle) {
+    public void onViewCreated(@NonNull View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE) ||
                 HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_2_DEVICE);
-        Button swipeCardButton = (Button) view.findViewById(R.id.swipeCreditCarNowButton);
+        Button swipeCardButton = view.findViewById(R.id.swipeCreditCarNowButton);
         if (isCloverDevice && swipeCardButton != null && !paymentsModel.getPaymentPayload().isPrepayment()) {
             swipeCardButton.setVisibility(View.VISIBLE);
             swipeCardButton.setOnClickListener(swipeCreditCarNowButtonClickListener);
@@ -78,5 +80,14 @@ public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
             }
         }
     };
+
+    @Override
+    protected void showAddCard(double amountToMakePayment, PaymentsModel paymentsModel) {
+        PracticeAddNewCreditCardFragment fragment = PracticeAddNewCreditCardFragment
+                .newInstance(paymentsModel, amountToMakePayment);
+        fragment.setOnCancelListener(onDialogCancelListener);
+        callback.displayDialogFragment(fragment, true);
+        hideDialog();
+    }
 
 }

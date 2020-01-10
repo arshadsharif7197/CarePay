@@ -39,11 +39,13 @@ public class DateUtil {
     private static final String FORMAT_MM_SLASH_DD_SLASH_YYYY_ES = "dd/MM/yyyy";
     private static final String FORMAT_MM_SLASH_DD_EN = "MM/dd";
     private static final String FORMAT_MM_SLASH_DD_ES = "dd/MM";
+    private static final String FORMAT_MM_SLASH_YY_EN = "MM/yy";
 
     private static final String FORMAT_HOURS_AM_PM = "h:mm a";
     private static final String FORMAT_MONTH_DAY_TIME12_EN = "MMM dd, h:mm a";
     private static final String FORMAT_MONTH_DAY_TIME12_ES = "dd MMM h:mm a";
     private static final String FORMAT_FULL_DATE_TIME12 = "MMM dd, yyyy, h:mm a";
+
     private static final int IS_A_FUTURE_DATE = 100;
     private static final int IS_A_TOO_OLD_DATE = -100;
     private static final int IS_A_BAD_FORMAT_DATE = -1;
@@ -52,6 +54,11 @@ public class DateUtil {
     private static final String FORMAT_ES_DATE_MONTH_LIT_YEAR = "%s de %s de %s";
     private static final String FORMAT_ES_DAY_LIT_DATE_MONTH_LIT = "%s %d de %s";
 
+    private static final String FORMAT_WD_MM_DD_YY = "%s, %s %s, %s";
+    private static final String FORMAT_WD_MM_DD_YY_ES = "%s, %s %s %s";
+
+    private static final String FORMAT_MM_DD_YY = "%s %s, %s";
+    private static final String FORMAT_MM_DD_YY_ES = "%s %s %s";
 
     private static DateUtil instance;
     //    private String[] mapFormats;
@@ -112,7 +119,8 @@ public class DateUtil {
                         FORMAT_ISO_8601_EN,
                         FORMAT_YYYY_DASH_MM_DASH_DD_EN,
                         FORMAT_MM_DASH_DD_DASH_YYYY_EN,
-                        FORMAT_MM_SLASH_DD_SLASH_YYYY_EN
+                        FORMAT_MM_SLASH_DD_SLASH_YYYY_EN,
+                        FORMAT_MM_SLASH_YY_EN
                 };
                 mapFormats.put(language, formatEn);
                 break;
@@ -223,7 +231,108 @@ public class DateUtil {
                     this.isToday() ? today : dayLiteral, monthLiteralAbbr, day, getOrdinalSuffix(day));
         } else {
             //"%s %d de %s"
-            return String.format(Locale.getDefault(), FORMAT_ES_DAY_LIT_DATE_MONTH_LIT, dayLiteral, day, monthLiteral);
+            return String.format(Locale.getDefault(), FORMAT_ES_DAY_LIT_DATE_MONTH_LIT, this.isToday() ? today : dayLiteral, day, monthLiteral);
+        }
+    }
+
+    /**
+     * Format the date as "EEEE, MMM d" (eg Monday, Oct 10th)
+     *
+     * @return A string containing the formatted date
+     */
+    public String getDateAsDayMonthDayOrdinalYear(String today, String tomorrow) {
+        String dayString = dayLiteral;
+        if (this.isToday()) {
+            dayString = today;
+        } else if (this.isTomorrow()) {
+            dayString = tomorrow;
+        }
+        if (getUserLanguage().equals("en")) {
+            //"%s, %s %d%s"
+            return String.format(Locale.getDefault(), Label.getLabel("date_day_month_day_ordinal_format"),
+                    dayString, monthLiteralAbbr, day, getOrdinalSuffix(day));
+        } else {
+            //"%s %d de %s"
+            return String.format(Locale.getDefault(), FORMAT_ES_DAY_LIT_DATE_MONTH_LIT, dayString, day, monthLiteral);
+        }
+    }
+
+    /**
+     * Format the date as: Monday, Oct 10th, 2019
+     * Used in Appointment detail dialog and request appointment dialog
+     *
+     * @return A string containing the formatted date
+     */
+    public String getDateAsWeekdayMonthDayYear() {
+        if (monthLiteral.contains("Sept")) monthLiteral = "Sept";
+        if (getUserLanguage().equals("en")) {
+            return String.format(Locale.getDefault(), FORMAT_WD_MM_DD_YY, dayLiteral,
+                    monthLiteral.length() > 4 ? monthLiteral.substring(0,3) : monthLiteral,
+                    day, year);
+        } else {
+            return String.format(Locale.getDefault(), FORMAT_WD_MM_DD_YY_ES, StringUtil.capitalize(dayLiteral), day,
+                    StringUtil.capitalize(monthLiteral.substring(0,3)), year);
+        }
+    }
+
+    /**
+     * Format the date as: Monday, Oct 10th, 2019, using Today and Tomorrow strings when needed
+     *
+     * @return A string containing the formatted date
+     */
+    public String getDateAsWeekdayMonthDayYear(String today, String tomorrow) {
+        String dayString = dayLiteral;
+        if (this.isToday()) {
+            dayString = today;
+        } else if (this.isTomorrow()) {
+            dayString = tomorrow;
+        }
+        if (monthLiteral.contains("Sept")) monthLiteral = "Sept";
+        if (getUserLanguage().equals("en")) {
+            return String.format(Locale.getDefault(), FORMAT_WD_MM_DD_YY, dayString,
+                    monthLiteral.length() > 4 ? monthLiteral.substring(0,3) : monthLiteral,
+                    day, year);
+        } else {
+            return String.format(Locale.getDefault(), FORMAT_WD_MM_DD_YY_ES, StringUtil.capitalize(dayString), day,
+                    StringUtil.capitalize(monthLiteral.substring(0,3)), year);
+        }
+    }
+
+    /**
+     * Format the date as: Monday, October 10th, 2019, using Today and Tomorrow strings when needed
+     *
+     * @return A string containing the formatted date
+     */
+    public String getDateAsWeekdayFullMonthDayYear(String today, String tomorrow) {
+        String dayString = dayLiteral;
+        if (this.isToday()) {
+            dayString = today;
+        } else if (this.isTomorrow()) {
+            dayString = tomorrow;
+        }
+        if (getUserLanguage().equals("en")) {
+            return String.format(Locale.getDefault(), FORMAT_WD_MM_DD_YY, dayString, monthLiteral,
+                    day, year);
+        } else {
+            return String.format(Locale.getDefault(), FORMAT_WD_MM_DD_YY_ES, StringUtil.capitalize(dayString), day,
+                    StringUtil.capitalize(monthLiteral), year);
+        }
+    }
+
+    /**
+     * Format the date as: Oct 10, 2019 or 10 Oct 2019
+     *
+     * @return A string containing the formatted date
+     */
+    public String getDateAsMonthDayYearString() {
+        if (monthLiteral.contains("Sept")) monthLiteral = "Sept";
+        if (getUserLanguage().equals("en")) {
+            return String.format(Locale.getDefault(), FORMAT_MM_DD_YY,
+                    monthLiteral.length() > 4 ? monthLiteral.substring(0,3) : monthLiteral,
+                    day, year);
+        } else {
+            return String.format(Locale.getDefault(), FORMAT_MM_DD_YY_ES, day,
+                    StringUtil.capitalize(monthLiteral.substring(0,3)), year);
         }
     }
 
@@ -696,6 +805,36 @@ public class DateUtil {
         checkCal.set(Calendar.DAY_OF_MONTH, calMaxDayMonth);
 
         return isSameDay(calendar, checkCal);
+    }
+
+    /**
+     * Returns the last day of the month for the provided Date
+     *
+     * @param date Current date set to
+     * @return true if day is last of the month
+     */
+    public static Date getLastDayOfMonth(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int calMaxDayMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        calendar.set(Calendar.DAY_OF_MONTH, calMaxDayMonth);
+
+        return calendar.getTime();
+    }
+
+    /**
+     * Returns the last hour of the day for the provided Date
+     *
+     * @param date Current date set to
+     * @return the date with the last possible hour of the day
+     */
+    public static Date getLastHourOfDay(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int calMaxHourDate = calendar.getActualMaximum(Calendar.HOUR_OF_DAY);
+        calendar.set(Calendar.HOUR_OF_DAY, calMaxHourDate);
+
+        return calendar.getTime();
     }
 
     /**
@@ -1310,8 +1449,29 @@ public class DateUtil {
     public String getServerFormat() {
         return toStringWithFormat(FORMAT_TIMEZONE_EN);
     }
-    
+
     public boolean isWithinHours(long hours) {
         return getHoursElapsed(getDate(), Calendar.getInstance().getTime()) <= hours;
+    }
+
+    public int getAge(Date dateOfBirth) {
+
+        Calendar today = Calendar.getInstance();
+        Calendar birthDate = Calendar.getInstance();
+        birthDate.setTime(dateOfBirth);
+        int age = today.get(Calendar.YEAR) - birthDate.get(Calendar.YEAR);
+
+        // If birth date is greater than todays date (after 2 days adjustment of leap year) then decrement age one year
+        if ((birthDate.get(Calendar.DAY_OF_YEAR) - today.get(Calendar.DAY_OF_YEAR) > 3) ||
+                (birthDate.get(Calendar.MONTH) > today.get(Calendar.MONTH))) {
+            age--;
+
+            // If birth date and todays date are of same month and birth day of month is greater than todays day of month then decrement age
+        } else if ((birthDate.get(Calendar.MONTH) == today.get(Calendar.MONTH)) &&
+                (birthDate.get(Calendar.DAY_OF_MONTH) > today.get(Calendar.DAY_OF_MONTH))) {
+            age--;
+        }
+
+        return age;
     }
 }

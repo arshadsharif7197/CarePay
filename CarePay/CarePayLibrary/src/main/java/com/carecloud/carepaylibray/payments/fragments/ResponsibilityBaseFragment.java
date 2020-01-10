@@ -2,10 +2,10 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
@@ -50,6 +50,7 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
 
 
     protected ResponsibilityPaymentInterface actionCallback;
+    protected boolean hasPermissionToViewBalanceDetails = true;
 
     @Override
     public void attachCallback(Context context) {
@@ -79,9 +80,10 @@ public abstract class ResponsibilityBaseFragment extends BaseCheckinFragment
     }
 
     protected void fillDetailAdapter(View view, List<PendingBalancePayloadDTO> pendingBalancePayloads) {
-        RecyclerView paymentDetailsListRecyclerView = ((RecyclerView) view.findViewById(R.id.responsibility_line_item_recycle_view));
+        RecyclerView paymentDetailsListRecyclerView = view.findViewById(R.id.responsibility_line_item_recycle_view);
         paymentDetailsListRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(), pendingBalancePayloads, this);
+        PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(),
+                pendingBalancePayloads, this, hasPermissionToViewBalanceDetails);
         paymentDetailsListRecyclerView.setAdapter(adapter);
     }
 

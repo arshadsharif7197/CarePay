@@ -20,7 +20,7 @@
         android:scaleType="fitCenter"
         android:src="@drawable/breeze_logo_dark" />
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/tutorial_view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -60,7 +60,8 @@
             android:textColor="@color/colorPrimary"
             android:textSize="18sp"
             app:customAssetFont="proxima_nova_regular"
-            breeze:textKey="tutorial_skip" />
+            breeze:textKey="tutorial_skip"
+            android:contentDescription="@string/content_description_skip_tutorial"/>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/tutorial_done_button"

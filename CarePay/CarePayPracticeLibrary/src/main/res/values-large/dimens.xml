@@ -139,7 +139,9 @@
     <dimen name="custom_appointment_dialog_checkbox_normal_size">12dp</dimen>
 
     <dimen name="profilePicMarginTop">10dp</dimen>
-    <dimen name="checkinPatientNameTextSize">20sp</dimen>
+    <dimen name="checkinPatientNameTextSize">32sp</dimen>
+    <dimen name="checkinPatientNameMinTextSize">12sp</dimen>
+    <dimen name="checkinPatientNameMarginSize">50dp</dimen>
     <dimen name="doctorNameTextSize">14sp</dimen>
     <dimen name="checkin_info_label_width">100dp</dimen>
     <dimen name="balanceTextPadding">12dp</dimen>
@@ -187,7 +189,7 @@
     <dimen name="findPatientButtonRightMargin">35dp</dimen>
     <dimen name="mainScreensTitleTextSize">17sp</dimen>
     <dimen name="paymentContainerBottomMargin">5dp</dimen>
-    <dimen name="paymentContainerHorizontalMargin">70dp</dimen>
+    <dimen name="paymentContainerHorizontalMargin">10dp</dimen>
     <dimen name="changeDateHorizontalPadding">10dp</dimen>
     <dimen name="changeDateVerticalPadding">5dp</dimen>
     <dimen name="listPatientsMarginTop">10dp</dimen>
@@ -210,9 +212,9 @@
     <dimen name="findPatientItemVerticalPadding">7dp</dimen>
 
     <!--Dots menu-->
-    <dimen name="dotSize">2dp</dimen>
-    <dimen name="dotHorizontalMargin">8dp</dimen>
-    <dimen name="dotSemiHorizontalMargin">4dp</dimen>
+    <dimen name="dotSize">2pt</dimen>
+    <dimen name="dotHorizontalMargin">8pt</dimen>
+    <dimen name="dotSemiHorizontalMargin">4pt</dimen>
 
     <!--Distribution Fragment-->
     <dimen name="payment_distribution_dialog_width">560dp</dimen>
@@ -350,6 +352,7 @@
     <dimen name="dateSeparatorContainerVerticalPadding">5dp</dimen>
     <dimen name="dateSeparatorContainerStartMargin">10dp</dimen>
     <dimen name="dateSeparatorContainerBottomMargin">5dp</dimen>
+    <dimen name="practiceCounterStartMargin">10dp</dimen>
 
     <!--Visit Type Dialog-->
     <dimen name="visityTypeDialogSubTitleTextSize">12sp</dimen>
@@ -438,6 +441,7 @@
     <dimen name="visitTypeContainerTopMargin">15dp</dimen>
     <dimen name="reasonTypeValueTextSize">14sp</dimen>
     <dimen name="reasonForVisitPadding">10dp</dimen>
+    <dimen name="appointmentRequestDialogTopPadding">20dp</dimen>
 
     <!--Check In Screen-->
     <dimen name="checkInShadowEndMargin">-40dp</dimen>
@@ -747,8 +751,8 @@
     <dimen name="scheduleAppointmentButtonTopMargin">40dp</dimen>
     <dimen name="scheduleAppointmentButtonHorizontalPadding">50dp</dimen>
     <dimen name="appointmentCardHeaderTopPadding">5dp</dimen>
-    <dimen name="appointmentCardVisitTypeTextSize">14sp</dimen>
-    <dimen name="appointmentCardStartDayTextSize">22sp</dimen>
+    <dimen name="appointmentCardVisitTypeTextSize">13sp</dimen>
+    <dimen name="appointmentCardStartDayTextSize">19sp</dimen>
     <dimen name="appointmentCardStartHourTextSize">14sp</dimen>
     <dimen name="appointmentCardDoctorNameTopMargin">20dp</dimen>
     <dimen name="appointmentCardDoctorNameTextSize">18sp</dimen>
@@ -759,11 +763,13 @@
     <dimen name="appointmentCardStartHourTopMargin">0dp</dimen>
     <dimen name="appointmentCardFakeCenterBottomMargin">10dp</dimen>
     <dimen name="appointmentCardStatusPadding">10dp</dimen>
-    <dimen name="appointmentCardAddressTextSize">11sp</dimen>
+    <dimen name="appointmentCardAddressTextSize">10sp</dimen>
     <dimen name="loginOptionHeight">60dp</dimen>
     <dimen name="checkInOptionWidth">300dp</dimen>
     <dimen name="signInShadowWidth">300dp</dimen>
     <dimen name="signInShadowTopMargin">-50dp</dimen>
+    <dimen name="appointmentPlaceTextSize">13sp</dimen>
+    <dimen name="appointmentStatusVerticalMargin">15dp</dimen>
 
     <dimen name="allergyMedicationHeaderTextSize">24sp</dimen>
     <dimen name="allergyMedicationImageSize">120dp</dimen>
@@ -796,5 +802,8 @@
     <dimen name="dobVerificationTitleTextSize">26sp</dimen>
     <dimen name="dobVerificationSubTitleTextSize">17sp</dimen>
     <dimen name="largeAlertMessageLabelPadding">3dp</dimen>
+
+    <dimen name="practiceClearButtonContainerPadding">8dp</dimen>
+    <dimen name="searchPatientEditTextHeight">35dp</dimen>
 
 </resources>

@@ -54,7 +54,7 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
         } else if (context instanceof ScheduleAppointmentInterface) {
             callback = (ScheduleAppointmentInterface) context;
         } else {
-            throw new ClassCastException("context must implement AppointmentViewHandler.");
+            throw new ClassCastException("context must implement ScheduleAppointmentInterface.");
         }
     }
 
@@ -179,6 +179,10 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
     }
 
     private String getPatientId(String practiceId) {
+        if (appointmentModelDto.getPayload().getDelegate() != null) {
+            return appointmentModelDto.getPayload().getDelegate().getProfileLink(practiceId).getPatientId();
+        }
+
         PracticePatientIdsDTO[] practicePatientIdArray = ApplicationPreferences.getInstance()
                 .getObjectFromSharedPreferences(CarePayConstants.KEY_PRACTICE_PATIENT_IDS,
                         PracticePatientIdsDTO[].class);

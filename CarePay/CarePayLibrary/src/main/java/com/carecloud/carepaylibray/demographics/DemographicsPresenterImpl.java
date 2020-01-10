@@ -3,10 +3,10 @@ package com.carecloud.carepaylibray.demographics;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.widget.Toolbar;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -606,11 +606,11 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     @Override
     public void showRemovePrimaryInsuranceDialog(ConfirmationCallback callback, DialogInterface.OnCancelListener cancelListener) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        String message = isPatientMode ? Label.getLabel("demographics_insurance_primary_alert_message_patient")
-                : Label.getLabel("demographics_insurance_primary_alert_message");
-        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment
-                .newInstance(Label.getLabel("demographics_insurance_primary_alert_title"), message);
-        confirmDialogFragment.setNegativeAction(true);
+        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(
+                        Label.getLabel("demographics_insurance_primary_alert_title"),
+                        Label.getLabel("demographics_insurance_primary_alert_message_patient"),
+                        Label.getLabel("cancel"),
+                        Label.getLabel("ok"));
         confirmDialogFragment.setCallback(callback);
         if (cancelListener != null) {
             confirmDialogFragment.setOnCancelListener(cancelListener);

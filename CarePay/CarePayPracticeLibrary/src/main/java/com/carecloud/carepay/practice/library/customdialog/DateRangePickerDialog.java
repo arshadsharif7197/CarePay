@@ -2,14 +2,16 @@ package com.carecloud.carepay.practice.library.customdialog;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
@@ -55,7 +57,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
      * @param endDate       current end date
      * @param minDate       minimum date to be picked
      * @param maxDate       maximum date to be picked
-     * @param selectionMode
+     * @param selectionMode selection mode
      * @return new instance of DateRangePickerDialog
      */
     public static DateRangePickerDialog newInstance(String dialogTitle,
@@ -86,7 +88,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
             if (null == callback) {
@@ -117,12 +119,11 @@ public class DateRangePickerDialog extends BaseDialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_date_range_picker, container, false);
-        return view;
+        return inflater.inflate(R.layout.dialog_date_range_picker, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         initializeApplyDateRangeButton(view);
@@ -130,20 +131,15 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         inflateToolbar(view);
         setCancelable(isCancelable);
         View closeView = view.findViewById(R.id.closeViewLayout);
-        if(closeView != null) {
-            closeView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onDialogCancel();
-                }
-            });
+        if (closeView != null) {
+            closeView.setOnClickListener(v -> onDialogCancel());
         }
         TextView closeText = view.findViewById(R.id.closeTextView);
-        if(closeText != null) {
+        if (closeText != null) {
             closeText.setText(cancelString);
         }
         ImageView cancelImage = view.findViewById(R.id.cancel_img);
-        if(cancelImage != null) {
+        if (cancelImage != null) {
             cancelImage.setImageResource(getCancelImageResource());
         }
     }
@@ -173,18 +169,14 @@ public class DateRangePickerDialog extends BaseDialogFragment {
      * @param view used as view component don't
      */
     private void inflateToolbar(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.dialog_date_range_picker_toolbar);
+        Toolbar toolbar = view.findViewById(R.id.dialog_date_range_picker_toolbar);
         toolbar.setTitle("");
 
-        TextView dialogTitleTextView = (TextView) view.findViewById(R.id.dialog_date_range_picker_dialog_title);
+        TextView dialogTitleTextView = view.findViewById(R.id.dialog_date_range_picker_dialog_title);
         dialogTitleTextView.setText(dialogTitle);
 
-        Date today = new Date();
-        Button todayButton = (Button) view.findViewById(R.id.dialog_date_range_picker_today_button);
+        Button todayButton = view.findViewById(R.id.dialog_date_range_picker_today_button);
         todayButton.setOnClickListener(todayButtonClickListener);
-        if (today.before(startDate)) {
-            todayButton.setVisibility(View.GONE);
-        }
     }
 
     /**
@@ -200,24 +192,20 @@ public class DateRangePickerDialog extends BaseDialogFragment {
     };
 
     private void initializeApplyDateRangeButton(View view) {
-        applyDateRangeButton = (Button)
-                view.findViewById(com.carecloud.carepaylibrary.R.id.applyDateRangeButton);
+        applyDateRangeButton = view.findViewById(com.carecloud.carepaylibrary.R.id.applyDateRangeButton);
         applyDateRangeButton.setEnabled(false);
-        applyDateRangeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (callback != null) {
-                    if (selectionMode == CalendarPickerView.SelectionMode.RANGE) {
-                        if (endDate == null) {
-                            endDate = startDate;
-                        }
-                        callback.onRangeSelected(startDate, endDate);
-                    } else {
-                        callback.onDateSelected(selectedDate);
+        applyDateRangeButton.setOnClickListener(view1 -> {
+            if (callback != null) {
+                if (selectionMode == CalendarPickerView.SelectionMode.RANGE) {
+                    if (endDate == null) {
+                        endDate = startDate;
                     }
+                    callback.onRangeSelected(startDate, endDate);
+                } else {
+                    callback.onDateSelected(selectedDate);
                 }
-                dismiss();
             }
+            dismiss();
         });
     }
 
@@ -233,7 +221,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         selectedDates.add(endDate);
 
 
-        calendarPickerView = (CalendarPickerView) view.findViewById(com.carecloud.carepaylibrary.R.id.calendarView);
+        calendarPickerView = view.findViewById(com.carecloud.carepaylibrary.R.id.calendarView);
         calendarPickerView.setOnInvalidDateSelectedListener(null);
         if (selectionMode == CalendarPickerView.SelectionMode.RANGE) {
             calendarPickerView.init(minDate, maxDate)

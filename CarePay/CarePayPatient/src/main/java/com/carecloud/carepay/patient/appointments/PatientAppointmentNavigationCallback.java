@@ -5,12 +5,14 @@ import com.carecloud.carepaylibray.appointments.interfaces.AppointmentNavigation
 import com.carecloud.carepaylibray.appointments.interfaces.AppointmentPrepaymentCallback;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 
 /**
  * Created by lmenendez on 5/9/17.
  */
 
-public interface PatientAppointmentNavigationCallback extends AppointmentNavigationCallback, AppointmentPrepaymentCallback {
+public interface PatientAppointmentNavigationCallback extends AppointmentNavigationCallback,
+        AppointmentPrepaymentCallback, FragmentActivityInterface {
     void displayAppointmentDetails(AppointmentDTO appointmentDTO);
 
     void onCancelAppointment(AppointmentDTO appointmentDTO);
@@ -25,7 +27,7 @@ public interface PatientAppointmentNavigationCallback extends AppointmentNavigat
 
     void getQueueStatus(AppointmentDTO appointmentDTO, WorkflowServiceCallback callback);
 
-    AppointmentsSettingDTO getPracticeSettings();
+    AppointmentsSettingDTO getAppointmentSettings(String practiceId);
 
     void callVisitSummaryService(AppointmentDTO appointment, WorkflowServiceCallback callback);
 

@@ -2,8 +2,9 @@ package com.carecloud.carepay.practice.library.patientmodecheckin.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
+
+import androidx.appcompat.widget.Toolbar;
 
 import com.carecloud.carepaylibray.checkout.CheckOutInterface;
 
@@ -19,7 +20,7 @@ public class ResponsibilityCheckOutFragment extends ResponsibilityCheckInFragmen
     public void attachCallback(Context context) {
         super.attachCallback(context);
         try {
-                callback = (CheckOutInterface) context;
+            callback = (CheckOutInterface) context;
 
         } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement CheckOutInterface");
@@ -27,11 +28,11 @@ public class ResponsibilityCheckOutFragment extends ResponsibilityCheckInFragmen
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
-        Toolbar toolbar = (Toolbar) view.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(com.carecloud.carepaylibrary.R.id.toolbar_layout);
 
-        if(toolbar != null && !callback.shouldAllowNavigateBack()){
+        if (toolbar != null && !callback.shouldAllowNavigateBack()) {
             toolbar.setNavigationIcon(null);
             toolbar.setNavigationOnClickListener(null);
         }

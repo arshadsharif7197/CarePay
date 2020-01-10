@@ -1,7 +1,7 @@
 package com.carecloud.carepaylibray.utils;
 
 import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.fasterxml.jackson.core.util.ByteArrayBuilder;

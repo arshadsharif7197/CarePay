@@ -2,8 +2,8 @@ package com.carecloud.carepay.patient.payment.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +14,8 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanAddCreditCardFragment;
+import com.carecloud.carepaylibray.payments.fragments.PaymentPlanChooseCreditCardFragment;
 import com.carecloud.carepaylibray.payments.interfaces.OneTimePaymentInterface;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentPlanCreateInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
@@ -129,13 +131,13 @@ public class PaymentPlanPaymentMethodFragment extends PatientPaymentMethodFragme
             DateUtil.getInstance().setDateRaw(dateString);
             paymentDate = DateUtil.getInstance().getDate();
         }
-        if(paymentsModel.getPaymentPayload().getPaymentPostModel() != null) {
+        if (paymentsModel.getPaymentPayload().getPaymentPostModel() != null) {
             amountToMakePayment = paymentsModel.getPaymentPayload().getPaymentPostModel().getAmount();
         }
         shouldInitAndroidPay = callback instanceof OneTimePaymentInterface &&
                 paymentPlanDTO != null && paymentPlanDTO.getMetadata().getPaymentPlanId() != null &&
                 (paymentDate == null || DateUtil.isToday(paymentDate)
-                && amountToMakePayment > 0D);
+                        && amountToMakePayment > 0D);
     }
 
     @Override
@@ -146,13 +148,13 @@ public class PaymentPlanPaymentMethodFragment extends PatientPaymentMethodFragme
     @Override
     protected void setupTitleViews(View view) {
         super.setupTitleViews(view);
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         if (toolbar != null) {
             toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    getActivity().onBackPressed();
+                    onBackPressed();
                 }
             });
         }
@@ -166,15 +168,77 @@ public class PaymentPlanPaymentMethodFragment extends PatientPaymentMethodFragme
                 break;
             case CarePayConstants.TYPE_CREDIT_CARD:
                 if (paymentPlanPostModel != null) {
-                    callback.onSelectPaymentPlanMethod(paymentMethod, paymentsModel, paymentPlanPostModel, onlySelectMode);
+                    onSelectPaymentPlanMethod(paymentMethod, paymentsModel, paymentPlanPostModel, onlySelectMode);
                 }
                 if (paymentPlanDTO != null && callback instanceof OneTimePaymentInterface) {
-                    ((OneTimePaymentInterface) callback).onSelectPaymentPlanMethod(paymentMethod, paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
+                    onSelectPaymentPlanMethod(paymentMethod, paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
                 }
                 logPaymentMethodSelection(getString(R.string.payment_credit_card));
                 break;
             default:
         }
+    }
+
+    private void onSelectPaymentPlanMethod(PaymentsMethodsDTO paymentMethod,
+                                           PaymentsModel paymentsModel,
+                                           PaymentPlanPostModel paymentPlanPostModel,
+                                           boolean onlySelectMode) {
+        if ((paymentsModel.getPaymentPayload().getPatientCreditCards() != null)
+                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            PaymentPlanChooseCreditCardFragment fragment = PaymentPlanChooseCreditCardFragment
+                    .newInstance(paymentsModel, paymentMethod.getLabel(), paymentPlanPostModel, onlySelectMode);
+            callback.replaceFragment(fragment, true);
+        } else {
+            onAddPaymentPlanCard(paymentsModel, paymentPlanPostModel, onlySelectMode);
+        }
+    }
+
+    private void onAddPaymentPlanCard(PaymentsModel paymentsModel,
+                                      PaymentPlanPostModel paymentPlanPostModel,
+                                      boolean onlySelectMode) {
+
+        PaymentPlanAddCreditCardFragment fragment = PaymentPlanAddCreditCardFragment
+                .newInstance(paymentsModel, paymentPlanPostModel, onlySelectMode);
+        callback.replaceFragment(fragment, true);
+    }
+
+    private void onSelectPaymentPlanMethod(PaymentsMethodsDTO paymentMethod, PaymentsModel paymentsModel,
+                                           PaymentPlanDTO paymentPlanDTO,
+                                           boolean onlySelectMode,
+                                           Date paymentDate) {
+        if ((paymentsModel.getPaymentPayload().getPatientCreditCards() != null)
+                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            PaymentPlanChooseCreditCardFragment fragment = PaymentPlanChooseCreditCardFragment
+                    .newInstance(paymentsModel, paymentMethod.getLabel(), paymentPlanDTO,
+                            onlySelectMode, paymentDate);
+            callback.replaceFragment(fragment, true);
+        } else {
+            onAddPaymentPlanCard(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
+        }
+    }
+
+    private void onAddPaymentPlanCard(PaymentsModel paymentsModel,
+                                      PaymentPlanDTO paymentPlanDTO,
+                                      boolean onlySelectMode,
+                                      Date paymentDate) {
+        PaymentPlanAddCreditCardFragment fragment = PaymentPlanAddCreditCardFragment
+                .newInstance(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
+//        fragment.setChangePaymentMethodListener(new LargeAlertDialogFragment.LargeAlertInterface() {
+//            @Override
+//            public void onActionButton() {
+//                PaymentPlanPaymentMethodFragment fragment = PaymentPlanPaymentMethodFragment
+//                        .newInstance(paymentsModel, paymentPlan, false, paymentDate);
+//                fragment.setOnCancelListener(new Dialog.OnCancelListener() {
+//                    @Override
+//                    public void onCancel(DialogInterface dialog) {
+//                        onMakeOneTimePayment(paymentsModel, paymentPlanDTO);
+//                    }
+//                });
+//                replaceFragment(fragment, true);
+//                displayToolbar(false, toolBarTitle);
+//            }
+//        });
+        callback.replaceFragment(fragment, true);
     }
 
     @Override

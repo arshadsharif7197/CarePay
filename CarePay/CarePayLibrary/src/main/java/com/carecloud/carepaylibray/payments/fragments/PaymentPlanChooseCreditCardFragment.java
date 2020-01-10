@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -66,7 +68,7 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
      * @param paymentsDTO                the payment model
      * @param selectedPaymentMethodLabel the selected payment method label
      * @param paymentPlanDTO             payment plan details
-     * @param onlySelectMode            select mode
+     * @param onlySelectMode             select mode
      * @return an instance of PaymentPlanChooseCreditCardFragment
      */
     public static PaymentPlanChooseCreditCardFragment newInstance(PaymentsModel paymentsDTO,
@@ -80,8 +82,8 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
      * @param paymentsDTO                the payment model
      * @param selectedPaymentMethodLabel the selected payment method label
      * @param paymentPlanDTO             payment plan details
-     * @param onlySelectMode            select mode
-     * @param paymentDate               payment Date
+     * @param onlySelectMode             select mode
+     * @param paymentDate                payment Date
      * @return an instance of PaymentPlanChooseCreditCardFragment
      */
     public static PaymentPlanChooseCreditCardFragment newInstance(PaymentsModel paymentsDTO,
@@ -94,7 +96,7 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
         DtoHelper.bundleDto(args, paymentPlanDTO);
         args.putString(CarePayConstants.PAYMENT_METHOD_BUNDLE, selectedPaymentMethodLabel);
         args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
-        if(paymentDate != null) {
+        if (paymentDate != null) {
             DateUtil.getInstance().setDate(paymentDate);
             args.putString(KEY_DATE, DateUtil.getInstance().toStringWithFormatYyyyDashMmDashDd());
         }
@@ -128,17 +130,17 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
         onlySelectMode = args.getBoolean(CarePayConstants.ONLY_SELECT_MODE);
 
         String dateString = args.getString(KEY_DATE);
-        if(dateString != null){
+        if (dateString != null) {
             DateUtil.getInstance().setDateRaw(dateString);
             paymentDate = DateUtil.getInstance().getDate();
         }
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle) {
+    public void onViewCreated(@NonNull View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
 
-        Button addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
+        Button addNewCardButton = view.findViewById(R.id.addNewCardButton);
         addNewCardButton.setOnClickListener(addNewCardButtonListener);
 
         nextButton.setOnClickListener(nextButtonListener);
@@ -151,16 +153,33 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
         @Override
         public void onClick(View view) {
             if (paymentPlanPostModel != null) {
-                callback.onAddPaymentPlanCard(paymentsModel, paymentPlanPostModel, onlySelectMode);
+                onAddPaymentPlanCard(paymentsModel, paymentPlanPostModel, onlySelectMode);
             }
             if (paymentPlanDTO != null && callback instanceof OneTimePaymentInterface) {
-                ((OneTimePaymentInterface) callback).onAddPaymentPlanCard(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
+                onAddPaymentPlanCard(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
             }
             if (getDialog() != null) {
                 dismiss();
             }
         }
     };
+
+    private void onAddPaymentPlanCard(PaymentsModel paymentsModel,
+                                      PaymentPlanDTO paymentPlanDTO,
+                                      boolean onlySelectMode,
+                                      Date paymentDate) {
+        PaymentPlanAddCreditCardFragment fragment = PaymentPlanAddCreditCardFragment
+                .newInstance(paymentsModel, paymentPlanDTO, onlySelectMode, paymentDate);
+        callback.replaceFragment(fragment, true);
+    }
+
+    private void onAddPaymentPlanCard(PaymentsModel paymentsModel,
+                                      PaymentPlanPostModel paymentPlanPostModel,
+                                      boolean onlySelectMode) {
+        PaymentPlanAddCreditCardFragment fragment = PaymentPlanAddCreditCardFragment
+                .newInstance(paymentsModel, paymentPlanPostModel, onlySelectMode);
+        callback.replaceFragment(fragment, true);
+    }
 
     private View.OnClickListener nextButtonListener = new View.OnClickListener() {
         @Override
@@ -181,7 +200,7 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
                         paymentPlanPostModel.setPapiPaymentMethod(papiPaymentMethod);
                         paymentPlanPostModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
 
-                        callback.onDisplayPaymentPlanTerms(paymentsModel, paymentPlanPostModel);
+                        onDisplayPaymentPlanTerms(paymentsModel, paymentPlanPostModel);
                     }
 
                     if (paymentPlanDTO != null) {
@@ -189,7 +208,7 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
                         postModel.setPapiPaymentMethod(papiPaymentMethod);
                         postModel.setExecution(IntegratedPaymentPostModel.EXECUTION_PAYEEZY);
 
-                        if(paymentDate != null){
+                        if (paymentDate != null) {
                             DateUtil.getInstance().setDate(paymentDate);
                             postModel.setPaymentDate(DateUtil.getInstance().toStringWithFormatYyyyDashMmDashDd());
                         }
@@ -199,6 +218,11 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
             }
         }
     };
+
+    private void onDisplayPaymentPlanTerms(PaymentsModel paymentsModel, PaymentPlanPostModel paymentPlanPostModel) {
+        PaymentPlanTermsFragment fragment = PaymentPlanTermsFragment.newInstance(paymentsModel, paymentPlanPostModel);
+        callback.replaceFragment(fragment, true);
+    }
 
     private void makePlanPayment() {
         Map<String, String> queries = new HashMap<>();
@@ -214,9 +238,9 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
         String paymentModelJson = gson.toJson(paymentsModel.getPaymentPayload().getPaymentPostModel());
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePlanPayment();
 
-        if(paymentDate != null){
+        if (paymentDate != null) {
             getWorkflowServiceHelper().execute(transitionDTO, schedulePaymentCallback, paymentModelJson, queries, header);
-        }else {
+        } else {
             getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, paymentModelJson, queries, header);
         }
     }
@@ -231,7 +255,7 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
-            ((OneTimePaymentInterface)callback).showScheduledPaymentConfirmation(workflowDTO);
+            ((OneTimePaymentInterface) callback).showScheduledPaymentConfirmation(workflowDTO);
             if (getDialog() != null) {
                 dismiss();
             }
@@ -245,8 +269,8 @@ public class PaymentPlanChooseCreditCardFragment extends ChooseCreditCardFragmen
     };
 
     @Override
-    protected void showConfirmation(WorkflowDTO workflowDTO){
-        ((OneTimePaymentInterface)callback).showPaymentConfirmation(workflowDTO, false);
+    protected void showConfirmation(WorkflowDTO workflowDTO) {
+        ((OneTimePaymentInterface) callback).showPaymentConfirmation(workflowDTO, false);
     }
 
 }

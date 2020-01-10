@@ -1,17 +1,21 @@
 package com.carecloud.carepay.patient.payment.adapters;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class CreditCardListAdapter extends RecyclerView.Adapter<CreditCardListAdapter.SettingsCreditCardListViewHolder> {
@@ -21,7 +25,7 @@ public class CreditCardListAdapter extends RecyclerView.Adapter<CreditCardListAd
     }
 
     private Context context;
-    private List<DemographicsSettingsCreditCardsPayloadDTO> creditCardList = new ArrayList<>();
+    private List<DemographicsSettingsCreditCardsPayloadDTO> creditCardList;
     private OnCreditCardDetailClickListener onCreditCardDetailClickListener;
 
     /**
@@ -39,7 +43,7 @@ public class CreditCardListAdapter extends RecyclerView.Adapter<CreditCardListAd
     }
 
     @Override
-    public SettingsCreditCardListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SettingsCreditCardListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View paymentDetailsListItemView = LayoutInflater.from(context).inflate(
                 R.layout.settings_creditcard_list_item, parent, false);
         return new SettingsCreditCardListViewHolder(paymentDetailsListItemView);
@@ -52,18 +56,21 @@ public class CreditCardListAdapter extends RecyclerView.Adapter<CreditCardListAd
                 creditCardsPayloadDTO.getPayload().getCardType(),
                 creditCardsPayloadDTO.getPayload().getCardNumber()));
 
+        Date expDate = DateUtil.getInstance().setDateRaw(creditCardsPayloadDTO.getPayload().getExpireDt()).getDate();
+        expDate = DateUtil.getLastDayOfMonth(expDate);
+        expDate = DateUtil.getLastHourOfDay(expDate);
+        Date now = new Date();
+        if (expDate.before(now)) {
+            holder.cardIcon.setImageResource(R.drawable.icn_payment_credit_card_expiring);
+        }
+
         if (creditCardsPayloadDTO.getPayload().isDefault()) {
             holder.defaultTextView.setVisibility(View.VISIBLE);
         } else {
             holder.defaultTextView.setVisibility(View.GONE);
         }
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onCreditCardDetailClickListener.onCreditCardDetail(creditCardsPayloadDTO);
-            }
-        });
+        holder.itemView.setOnClickListener(view -> onCreditCardDetailClickListener.onCreditCardDetail(creditCardsPayloadDTO));
     }
 
     @Override
@@ -75,14 +82,13 @@ public class CreditCardListAdapter extends RecyclerView.Adapter<CreditCardListAd
 
         private CarePayTextView creditCardTextView;
         private CarePayTextView defaultTextView;
-        private CarePayTextView detailsTextView;
+        private ImageView cardIcon;
 
         SettingsCreditCardListViewHolder(View itemView) {
             super(itemView);
-
-            creditCardTextView = (CarePayTextView) itemView.findViewById(R.id.credit_card_text);
-            defaultTextView = (CarePayTextView) itemView.findViewById(R.id.credit_card_default);
-            detailsTextView = (CarePayTextView) itemView.findViewById(R.id.detailsTextView);
+            creditCardTextView = itemView.findViewById(R.id.credit_card_text);
+            defaultTextView = itemView.findViewById(R.id.credit_card_default);
+            cardIcon = itemView.findViewById(R.id.credit_card_image);
         }
     }
 }
