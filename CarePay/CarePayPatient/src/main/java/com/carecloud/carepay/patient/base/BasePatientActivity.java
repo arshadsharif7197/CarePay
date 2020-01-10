@@ -47,7 +47,7 @@ public abstract class BasePatientActivity extends BaseActivity implements Sessio
             }
         });
         viewModel.getErrorMessage().observe(this, this::showErrorNotification);
-        viewModel.getSuccessMessage().observe(this, this::showErrorNotification);
+        viewModel.getSuccessMessage().observe(this, this::showSuccessToast);
     }
 
     @Override

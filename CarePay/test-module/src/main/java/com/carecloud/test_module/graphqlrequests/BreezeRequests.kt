@@ -1,9 +1,9 @@
-package com.carecloud.carepaylibray.androidTest.graphqlrequests
+package com.carecloud.test_module.graphqlrequests
 
-import com.carecloud.carepaylibray.androidTest.graphqldatamodels.Response
-import com.carecloud.carepaylibray.androidTest.providers.cognitoToken
-import com.carecloud.carepaylibray.androidTest.providers.formatRequest
-import com.carecloud.carepaylibray.androidTest.providers.makeRequest
+import com.carecloud.test_module.graphqldatamodels.Response
+import com.carecloud.test_module.providers.formatRequest
+import com.carecloud.test_module.providers.makeRequest
+import com.carecloud.test_module.providers.cognitoToken
 
 /**
  * Created by drodriguez on 2019-12-11.

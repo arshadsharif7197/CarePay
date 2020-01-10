@@ -3,7 +3,6 @@ package com.carecloud.carepay.patient.tests
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.patient.BaseTest
 import com.carecloud.carepay.patient.pageObjects.LoginScreen
-import com.carecloud.carepay.patient.pageObjects.TutorialScreen
 import com.carecloud.carepay.patient.pageObjects.appointments.AppointmentScreen
 import com.carecloud.carepay.patient.pageObjects.checkin.CheckInAllergiesScreen
 import com.carecloud.carepay.patient.pageObjects.checkin.CheckInMedicationsScreen
@@ -11,11 +10,13 @@ import com.carecloud.carepay.patient.pageObjects.checkin.demographics.CheckInDem
 import com.carecloud.carepay.patient.pageObjects.checkin.demographics.CheckInDemogDemographicsScreen
 import com.carecloud.carepay.patient.pageObjects.payments.PaymentLineItemsDetails
 import com.carecloud.carepay.patient.patientPassword
-import com.carecloud.carepaylibray.androidTest.data.PatientData
-import com.carecloud.carepaylibray.androidTest.graphqlrequests.*
-import com.carecloud.carepaylibray.androidTest.providers.formatAppointmentTime
-import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
-import com.carecloud.carepaylibray.androidTest.providers.makeRequest
+import com.carecloud.test_module.data.PatientData
+import com.carecloud.test_module.graphqlrequests.changePaymentSetting
+import com.carecloud.test_module.graphqlrequests.createAppointment
+import com.carecloud.test_module.graphqlrequests.createSimpleCharge
+import com.carecloud.test_module.graphqlrequests.deleteAppointment
+import com.carecloud.test_module.providers.formatAppointmentTime
+import com.carecloud.test_module.providers.initXavierProvider
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -25,7 +26,7 @@ import org.junit.runner.RunWith
  * Created by drodriguez on 2019-10-24.
  */
 @RunWith(AndroidJUnit4::class)
-class PACheckInAppointmentWithPayment: BaseTest() {
+class PACheckInAppointmentWithPayment : BaseTest() {
 
     private lateinit var apptTime: String
     private var apptId: Int? = null

@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
@@ -16,7 +17,6 @@ import com.carecloud.carepay.patient.tutorial.tutorial.TutorialActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
-import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
@@ -28,7 +28,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
  * Activity supporting Signin and Sign-up
  */
 public class SigninSignupActivity extends BasePatientActivity implements FragmentActivityInterface,
-        FingerPrintInterface, ConfirmationCallback {
+        FingerPrintInterface {
 
     private SignInDTO signInSignUpDTO;
 
@@ -36,6 +36,8 @@ public class SigninSignupActivity extends BasePatientActivity implements Fragmen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin_signup);
         signInSignUpDTO = getConvertedDTO(SignInDTO.class);
+        setUpViewModel();
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
             boolean shouldOpenNotifications = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO)
@@ -56,10 +58,15 @@ public class SigninSignupActivity extends BasePatientActivity implements Fragmen
         }
     }
 
+    private void setUpViewModel() {
+        SignInViewModel viewModel = ViewModelProviders.of(this).get(SignInViewModel.class);
+        setBasicObservers(viewModel);
+        viewModel.setSignInDto(signInSignUpDTO);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
-
         if (getApplicationPreferences().mustForceUpdate()) {
             ConfirmDialogFragment fragment = ConfirmDialogFragment
                     .newInstance(Label.getLabel("notifications.custom.forceUpdate.title"),
@@ -67,7 +74,15 @@ public class SigninSignupActivity extends BasePatientActivity implements Fragmen
                             Label.getLabel("notifications.custom.forceUpdate.action"),
                             false,
                             R.layout.fragment_alert_dialog_single_action);
-            fragment.setCallback(this);
+            fragment.setCallback(() -> {
+                String appPackageName = getPackageName();
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri
+                            .parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                }
+            });
             displayDialogFragment(fragment, false);
         }
     }
@@ -102,16 +117,6 @@ public class SigninSignupActivity extends BasePatientActivity implements Fragmen
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.layoutSigninSignup);
         if (fragment instanceof SigninFragment) {
             ((SigninFragment) fragment).signIn(user, pwd);
-        }
-    }
-
-    @Override
-    public void onConfirm() {
-        String appPackageName = getPackageName();
-        try {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-        } catch (android.content.ActivityNotFoundException anfe) {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
         }
     }
 

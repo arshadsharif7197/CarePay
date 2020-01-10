@@ -1,4 +1,4 @@
-package com.carecloud.carepaylibray.androidTest.providers
+package com.carecloud.test_module.providers
 
 import android.os.Build
 import androidx.annotation.RequiresApi

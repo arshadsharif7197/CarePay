@@ -5,10 +5,13 @@ import com.carecloud.carepay.practice.tablet.pageObjects.patientMode.checkin.*
 import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.PracticeMainScreen
 import com.carecloud.carepay.practice.tablet.tests.BaseTest
 import com.carecloud.carepay.practice.tablet.tests.patientPassword
-import com.carecloud.carepaylibray.androidTest.data.PatientData
-import com.carecloud.carepaylibray.androidTest.graphqlrequests.*
-import com.carecloud.carepaylibray.androidTest.providers.formatAppointmentTime
-import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
+import com.carecloud.test_module.data.PatientData
+import com.carecloud.test_module.graphqlrequests.changePatientFormSettings
+import com.carecloud.test_module.graphqlrequests.changePaymentSetting
+import com.carecloud.test_module.graphqlrequests.createAppointment
+import com.carecloud.test_module.graphqlrequests.deleteAppointment
+import com.carecloud.test_module.providers.formatAppointmentTime
+import com.carecloud.test_module.providers.initXavierProvider
 import org.junit.After
 import org.junit.Before
 import org.junit.Test

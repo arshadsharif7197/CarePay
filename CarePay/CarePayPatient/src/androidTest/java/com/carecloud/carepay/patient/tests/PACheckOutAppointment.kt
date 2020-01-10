@@ -4,9 +4,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.patient.BaseTest
 import com.carecloud.carepay.patient.pageObjects.LoginScreen
 import com.carecloud.carepay.patient.patientPassword
-import com.carecloud.carepaylibray.androidTest.graphqlrequests.checkinAppointment
-import com.carecloud.carepaylibray.androidTest.graphqlrequests.createAppointment
-import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
+import com.carecloud.test_module.graphqlrequests.checkinAppointment
+import com.carecloud.test_module.graphqlrequests.createAppointment
+import com.carecloud.test_module.providers.initXavierProvider
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,7 +21,7 @@ class PACheckOutAppointment : BaseTest() {
     override
     fun setup() {
         initXavierProvider()
-        val appointmentResponse  = createAppointment(47335868)
+        val appointmentResponse = createAppointment(47335868)
         checkinAppointment(appointmentResponse.data?.createAppointment?.id)
         super.setup()
     }

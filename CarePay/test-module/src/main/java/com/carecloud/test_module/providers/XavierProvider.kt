@@ -1,10 +1,10 @@
-package com.carecloud.carepaylibray.androidTest.providers
+package com.carecloud.test_module.providers
 import com.google.gson.Gson
 import okhttp3.*
 import java.lang.Exception
-import com.carecloud.carepaylibray.androidTest.graphqldatamodels.Response
-import com.carecloud.carepaylibray.androidTest.graphqldatamodels.SessionTokens
-import com.carecloud.carepaylibray.androidTest.graphqlrequests.getBreezeToken
+import com.carecloud.test_module.graphqldatamodels.Response
+import com.carecloud.test_module.graphqldatamodels.SessionTokens
+import com.carecloud.test_module.graphqlrequests.getBreezeToken
 
 var tokens: SessionTokens? = null
 var cognitoToken: String? = null

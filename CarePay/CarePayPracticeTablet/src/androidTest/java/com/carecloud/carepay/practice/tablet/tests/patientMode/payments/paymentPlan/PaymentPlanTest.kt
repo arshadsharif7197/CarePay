@@ -2,9 +2,9 @@ package com.carecloud.carepay.practice.tablet.tests.patientMode.payments.payment
 
 import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.PracticeMainScreen
 import com.carecloud.carepay.practice.tablet.tests.BaseTest
-import com.carecloud.carepaylibray.androidTest.data.PatientData
-import com.carecloud.carepaylibray.androidTest.graphqlrequests.createSimpleCharge
-import com.carecloud.carepaylibray.androidTest.providers.initXavierProvider
+import com.carecloud.test_module.data.PatientData
+import com.carecloud.test_module.graphqlrequests.createSimpleCharge
+import com.carecloud.test_module.providers.initXavierProvider
 import org.junit.Before
 import org.junit.Test
 
