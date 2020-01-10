@@ -2,8 +2,13 @@ package com.carecloud.carepay.patient.tests
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.patient.BaseTest
-import com.carecloud.carepay.patient.pageObjects.appointments.AppointmentScreen
-
+import com.carecloud.carepay.patient.pageObjects.LoginScreen
+import com.carecloud.carepay.patient.pageObjects.payments.PaymentsScreen
+import com.carecloud.carepay.patient.patientPassword
+import com.carecloud.test_module.data.PatientData
+import com.carecloud.test_module.graphqlrequests.createSimpleCharge
+import com.carecloud.test_module.providers.initXavierProvider
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -14,14 +19,29 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class PAMakePartialPaymentTest : BaseTest() {
 
+    private val patient = PatientData.patient14
+
+    @Before
+    override
+    fun setup() {
+        initXavierProvider()
+        createSimpleCharge(20, patient.id)
+        super.setup()
+    }
+
     @Test
     fun paMakePartialPaymentTest() {
-        AppointmentScreen()
+        LoginScreen()
+                .typeUser(patient.email)
+                .typePassword(patientPassword)
+                .pressLoginButton()
                 .openNavigationDrawer()
                 .goToPayments()
                 .makePaymentFor(0)
+                .selectPaymentOptions()
                 .makePartialPayment(20)
-                .payUseCreditCardOnFile()
+                .payUseCreditCardOnFile(PaymentsScreen())
+                .discardReviewPopup()
     }
 
 }

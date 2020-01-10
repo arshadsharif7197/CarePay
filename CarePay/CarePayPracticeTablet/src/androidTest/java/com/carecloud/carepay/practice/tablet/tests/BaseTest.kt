@@ -20,6 +20,7 @@ import org.junit.Rule
 
 // Used to access the context of the app, global
 lateinit var appContext: Context
+val patientPassword = "Test123!"
 
 open class BaseTest {
 
@@ -45,7 +46,7 @@ open class BaseTest {
     }
 
     @After
-    fun tearDown() {
+    open fun tearDown() {
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.getIdlingResource())
     }
 }

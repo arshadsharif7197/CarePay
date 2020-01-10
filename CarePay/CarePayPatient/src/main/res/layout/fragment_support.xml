@@ -15,8 +15,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/email_us_button"
         android:layout_below="@+id/settings_toolbar"
-        android:layout_marginEnd="@dimen/dimen_24dp"
         android:layout_marginStart="@dimen/dimen_24dp"
+        android:layout_marginEnd="@dimen/dimen_24dp"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -56,8 +56,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/call_us_button"
-        android:layout_marginEnd="@dimen/dimen_16dp"
         android:layout_marginStart="@dimen/dimen_16dp"
+        android:layout_marginEnd="@dimen/dimen_16dp"
         app:customAssetFont="gotham_rounded_medium"
         breeze:textKey="email_us_label" />
 
@@ -67,10 +67,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/dimen_16dp"
-        android:layout_marginEnd="@dimen/dimen_16dp"
         android:layout_marginStart="@dimen/dimen_16dp"
         android:layout_marginTop="@dimen/dimen_16dp"
+        android:layout_marginEnd="@dimen/dimen_16dp"
+        android:layout_marginBottom="@dimen/dimen_16dp"
+        android:background="?selectableItemBackground"
         app:customAssetFont="gotham_rounded_medium"
         breeze:textKey="call_us_label" />
 

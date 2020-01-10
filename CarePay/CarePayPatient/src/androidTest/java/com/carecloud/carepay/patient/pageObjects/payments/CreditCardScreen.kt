@@ -2,7 +2,7 @@ package com.carecloud.carepay.patient.pageObjects.payments
 
 import com.carecloud.carepay.patient.R
 import com.carecloud.carepay.patient.appContext
-import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
+import com.carecloud.test_module.actions.CustomViewActions
 
 /**
  * @author pjohnson on 2019-09-12.
