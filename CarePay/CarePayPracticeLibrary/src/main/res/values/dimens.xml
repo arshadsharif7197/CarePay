@@ -855,7 +855,7 @@
     <dimen name="scheduleAppointmentButtonHorizontalPadding">80dp</dimen>
     <dimen name="appointmentCardHeaderTopPadding">10dp</dimen>
     <dimen name="appointmentCardVisitTypeTextSize">18sp</dimen>
-    <dimen name="appointmentCardStartDayTextSize">30sp</dimen>
+    <dimen name="appointmentCardStartDayTextSize">28sp</dimen>
     <dimen name="appointmentCardStartHourTextSize">18sp</dimen>
     <dimen name="appointmentCardDoctorNameTopMargin">30dp</dimen>
     <dimen name="appointmentCardDoctorNameTextSize">24sp</dimen>
@@ -877,6 +877,8 @@
     <dimen name="allergyMedicationEmptyMessageTextSize">40sp</dimen>
     <dimen name="medicationAllergyPadding">16dp</dimen>
     <dimen name="medicationAllergySearchPadding">20dp</dimen>
+    <dimen name="appointmentPlaceTextSize">16sp</dimen>
+    <dimen name="appointmentStatusVerticalMargin">22dp</dimen>
 
     <!--Complete Screen-->
     <dimen name="completeScreenCheckImageSize">120dp</dimen>
