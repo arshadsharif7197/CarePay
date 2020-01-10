@@ -3,9 +3,9 @@ package com.carecloud.carepay.practice.tablet.tests.patientMode.payments
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.PracticeMainScreen
 import com.carecloud.carepay.practice.tablet.tests.BaseTest
-import com.carecloud.carepaylibray.androidTest.graphql.createSimpleCharge
-import com.carecloud.carepaylibray.androidTest.graphql.getBreezeToken
-import com.carecloud.carepaylibray.androidTest.providers.makeRequest
+import com.carecloud.test_module.data.PatientData
+import com.carecloud.test_module.graphqlrequests.createSimpleCharge
+import com.carecloud.test_module.providers.initXavierProvider
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -14,13 +14,15 @@ import org.junit.runner.RunWith
  * Created by drodriguez on 2019-09-12.
  */
 @RunWith(AndroidJUnit4::class)
-class PMFullMakePayment: BaseTest() {
+class PMFullMakePayment : BaseTest() {
+
+    private val patient = PatientData.patient7
 
     @Before
     override
     fun setup() {
-        val response = makeRequest(getBreezeToken(appMode = "practice"))
-        makeRequest(createSimpleCharge(), authHeader = response.data?.getBreezeSessionToken?.xavier_token.toString())
+        initXavierProvider()
+        createSimpleCharge(100, patient.id)
         super.setup()
     }
 
@@ -32,11 +34,11 @@ class PMFullMakePayment: BaseTest() {
                 .pressLetsStartButton()
                 .pressPaymentButton()
                 .pressLoginButton()
-                .typeUsername("dev_emails+dev.rsanchez@carecloud.com")
+                .typeUsername(patient.email)
                 .typePassword("Test123!")
                 .pressLoginButton()
                 .selectFirstPayment()
                 .makeFullPayment()
-                .payUseCreditCardOnFile()
+                .payUseCreditCardOnFile(null)
     }
 }
