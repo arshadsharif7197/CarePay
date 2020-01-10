@@ -31,13 +31,13 @@ import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.carecloud.carepaylibray.utils.StringUtil.checkEqualValues;
 
 public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment implements
         InsuranceLineItemsListAdapter.OnInsuranceEditClickListener {
@@ -228,9 +228,7 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
         return false;
     }
 
-    private boolean checkEqualValues(String value1, String value2) {
-        return StringUtils.equalsIgnoreCase(value1, value2) || StringUtils.isEmpty(value1) && StringUtils.isEmpty(value2);
-    }
+
 
     private void initializeViews() {
         if (demographicDTO != null) {

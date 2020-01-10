@@ -57,7 +57,6 @@ import java.util.Map;
 public class ChooseCreditCardFragment extends BasePaymentDialogFragment implements CreditCardsListAdapter.CreditCardSelectionListener {
 
     protected Button nextButton;
-    private RecyclerView creditCardsRecyclerView;
 
     protected PaymentCreditCardsPayloadDTO selectedCreditCard;
     protected PaymentsModel paymentsModel;
@@ -67,7 +66,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     protected String titleLabel;
     protected ChooseCreditCardInterface callback;
 
-    protected List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = new ArrayList<>();
+    private List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = new ArrayList<>();
     protected boolean onlySelectMode;
 
 
@@ -174,10 +173,10 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         Button addNewCardButton = view.findViewById(R.id.addNewCardButton);
         addNewCardButton.setOnClickListener(addNewCardButtonListener);
 
-        creditCardsRecyclerView = view.findViewById(R.id.list_credit_cards);
+        RecyclerView creditCardsRecyclerView = view.findViewById(R.id.list_credit_cards);
         creditCardsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         final CreditCardsListAdapter creditCardsListAdapter = new CreditCardsListAdapter(getContext(),
-                creditCardList, this, false);
+                creditCardList, this, true);
         creditCardsRecyclerView.setAdapter(creditCardsListAdapter);
         for (PaymentsPatientsCreditCardsPayloadListDTO creditCard : creditCardList) {
             if (creditCard.getPayload().isDefault()) {

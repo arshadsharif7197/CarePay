@@ -22,7 +22,6 @@ import com.carecloud.carepay.patient.demographics.fragments.settings.Demographic
 import com.carecloud.carepay.patient.demographics.fragments.settings.EditProfileFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.HelpFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.SettingsDocumentsFragment;
-import com.carecloud.carepay.patient.demographics.fragments.settings.SupportFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.UpdateEmailFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.UpdateNameFragment;
 import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
@@ -150,12 +149,6 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     }
 
     @Override
-    public void displayEditProfileFragment() {
-        EditProfileFragment editProfileFragment = EditProfileFragment.newInstance();
-        replaceFragment(editProfileFragment, true);
-    }
-
-    @Override
     public void displayUpdateEmailFragment() {
         UpdateEmailFragment updateEmailFragment = UpdateEmailFragment.newInstance();
         replaceFragment(updateEmailFragment, true);
@@ -225,11 +218,6 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     public void displayHelpFragment() {
         replaceFragment(new HelpFragment(), true);
         MixPanelUtil.logEvent(getString(R.string.event_help_clicked));
-    }
-
-    @Override
-    public void showSupportFragment() {
-        replaceFragment(new SupportFragment(), true);
     }
 
     @Override

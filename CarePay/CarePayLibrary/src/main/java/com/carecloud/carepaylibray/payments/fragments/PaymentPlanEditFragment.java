@@ -255,7 +255,7 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
         if (paymentMethodMessage == null) {
             paymentMethodMessage = creditCard.getCardType();
         }
-        paymentMethodEditText.setText(String.format("%s *** %s", paymentMethodMessage, creditCard.getCardNumber()));
+        paymentMethodEditText.setText(String.format("%s ****%s", paymentMethodMessage, creditCard.getCardNumber()));
         paymentMethodEditText.getOnFocusChangeListener().onFocusChange(paymentMethodEditText, true);
 
     }
@@ -364,7 +364,6 @@ public abstract class PaymentPlanEditFragment extends PaymentPlanFragment
     }
 
     protected void authorizeCreditCard() {
-        String currency = "USD";
         String cvv = creditCard.getCvv();
         String expiryDate = creditCard.getExpireDt();
         String name = creditCard.getNameOnCard();

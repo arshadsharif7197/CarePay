@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.appointments.createappointment.availabilityhour;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ public class AvailabilityHourAdapter extends RecyclerView.Adapter<RecyclerView.V
         this.listener = listener;
     }
 
+    @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder viewHolder;
@@ -59,12 +61,7 @@ public class AvailabilityHourAdapter extends RecyclerView.Adapter<RecyclerView.V
             String time12Hour = DateUtil.getInstance().getTime12Hour();
             vhTimeSlot.textViewTimeSlot.setText(time12Hour);
             holder.itemView.setContentDescription(time12Hour);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onTimeSlotListItemClickListener(appointmentSlotItem);
-                }
-            });
+            holder.itemView.setOnClickListener(view -> listener.onTimeSlotListItemClickListener(appointmentSlotItem));
         }
     }
 
@@ -89,7 +86,7 @@ public class AvailabilityHourAdapter extends RecyclerView.Adapter<RecyclerView.V
     public class ViewHolderSectionHeader extends RecyclerView.ViewHolder {
         private final TextView textViewSectionHeader;
 
-        public ViewHolderSectionHeader(View view) {
+        ViewHolderSectionHeader(View view) {
             super(view);
             textViewSectionHeader = view.findViewById(R.id.textview_section_header);
         }
@@ -98,7 +95,7 @@ public class AvailabilityHourAdapter extends RecyclerView.Adapter<RecyclerView.V
     public class ViewHolderTimeSlot extends RecyclerView.ViewHolder {
         private final TextView textViewTimeSlot;
 
-        public ViewHolderTimeSlot(View view) {
+        ViewHolderTimeSlot(View view) {
             super(view);
             textViewTimeSlot = view.findViewById(R.id.textview_timeslot);
         }

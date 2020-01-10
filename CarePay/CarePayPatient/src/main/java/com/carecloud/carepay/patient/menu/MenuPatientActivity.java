@@ -502,6 +502,8 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
             hideProgressDialog();
             getAppAuthorizationHelper().setAccessToken(null);
             ApplicationPreferences.getInstance().setProfileId(null);
+            ApplicationPreferences.getInstance().setUserName(null);
+            ApplicationPreferences.getInstance().setUserPassword(null);
             finishSessionService();
             navigateToWorkflow(workflowDTO);
         }

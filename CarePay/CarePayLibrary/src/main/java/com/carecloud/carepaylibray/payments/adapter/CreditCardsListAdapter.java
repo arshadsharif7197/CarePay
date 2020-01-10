@@ -41,7 +41,11 @@ public class CreditCardsListAdapter extends RecyclerView.Adapter<CreditCardsList
      * @param context         Context
      * @param creditCardsList listof card info
      * @param callback        callback for selection
+     *                        <<<<<<< HEAD
      * @param showSeparator   boolean to show separator
+     *                        =======
+     * @param showSeparator   boolean to show or not the separator
+     *                        >>>>>>> QA
      */
     public CreditCardsListAdapter(Context context,
                                   List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardsList,
@@ -65,7 +69,7 @@ public class CreditCardsListAdapter extends RecyclerView.Adapter<CreditCardsList
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final PaymentCreditCardsPayloadDTO creditCardInfo = creditCardsList.get(position).getPayload();
 
-        holder.creditCardText.setText(String.format("%s %s", creditCardInfo.getCardType(),
+        holder.creditCardText.setText(String.format("%s ****%s", creditCardInfo.getCardType(),
                 creditCardInfo.getCardNumber()));
 
         String expiredDate = !StringUtil.isNullOrEmpty(creditCardInfo.getExpireDtDisplay()) ?
