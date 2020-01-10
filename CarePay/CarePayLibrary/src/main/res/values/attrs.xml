@@ -11,6 +11,16 @@
             <enum name="proxima_nova_semi_bold" value="6"/>
             <enum name="gotham_rounded_light" value="7"/>
         </attr>
+        <attr name="customFloatingFont" format="enum">
+            <enum name="gotham_rounded_bold" value="0"/>
+            <enum name="gotham_rounded_book" value="1"/>
+            <enum name="gotham_rounded_medium" value="2"/>
+            <enum name="proxima_nova_extra_bold" value="3"/>
+            <enum name="proxima_nova_light" value="4"/>
+            <enum name="proxima_nova_regular" value="5"/>
+            <enum name="proxima_nova_semi_bold" value="6"/>
+            <enum name="gotham_rounded_light" value="7"/>
+        </attr>
     </declare-styleable>
     <declare-styleable name="BarcodeScannerView">
         <attr name="shouldScaleToFill" format="boolean" />
