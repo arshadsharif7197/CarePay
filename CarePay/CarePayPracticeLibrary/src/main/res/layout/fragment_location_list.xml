@@ -49,12 +49,13 @@
 
         </FrameLayout>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/locationRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/toolbarLayout"
-            android:background="@drawable/patient_mode_dialog_body_bg" />
+            android:background="@drawable/patient_mode_dialog_body_bg"
+            android:contentDescription="@string/content_description_location_list"/>
 
         <RelativeLayout
             android:id="@+id/emptyStateScreen"

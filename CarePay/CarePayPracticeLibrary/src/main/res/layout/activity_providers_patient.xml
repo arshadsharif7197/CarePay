@@ -116,7 +116,8 @@
                 android:textColor="@color/white_text_selector"
                 android:textSize="@dimen/appointmentCreationAvailabilityButtonTextSize"
                 app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="patientMode.appointmentCreation.availabilityButton.label.available" />
+                breeze:textKey="patientMode.appointmentCreation.availabilityButton.label.available"
+                android:contentDescription="@string/content_description_check_available_times_button"/>
 
         </LinearLayout>
 

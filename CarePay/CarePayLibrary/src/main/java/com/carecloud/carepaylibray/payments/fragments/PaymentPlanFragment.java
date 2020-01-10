@@ -2,11 +2,6 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -17,11 +12,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
-import com.carecloud.carepaylibray.common.options.OnOptionSelectedListener;
 import com.carecloud.carepaylibray.common.options.SelectOptionFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
@@ -43,6 +40,7 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -52,8 +50,9 @@ import java.util.Locale;
 
 import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
 
-public class PaymentPlanFragment extends BasePaymentDialogFragment
-        implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
+
+public class PaymentPlanFragment extends BasePaymentDialogFragment {
+//        implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
 
     protected static final String KEY_PLAN_AMOUNT = "plan_amount";
     protected PaymentsModel paymentsModel;
@@ -158,7 +157,6 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         setupHeader(view);
         setupFields(view);
         setupButtons(view);
-        setAdapter(view);
     }
 
     @Override
@@ -170,25 +168,20 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
     }
 
     protected void setupToolBar(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.onDismissPaymentPlan(paymentsModel);
-            }
-        });
+        toolbar.setNavigationOnClickListener(view1 -> onBackPressed());
         toolbar.setTitle("");
-        TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
+        TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(Label.getLabel("payment_plan_heading"));
 
     }
 
     protected void setupHeader(View view) {
-        TextView totalTextView = (TextView) view.findViewById(R.id.payment_plan_total);
+        TextView totalTextView = view.findViewById(R.id.payment_plan_total);
         totalTextView.setText(currencyFormatter.format(paymentPlanAmount));
 
-        parametersTextView = (TextView) view.findViewById(R.id.paymentPlanParametersTextView);
+        parametersTextView = view.findViewById(R.id.paymentPlanParametersTextView);
         if (parametersTextView != null) {
             parametersTextView.setVisibility(View.VISIBLE);
         }
@@ -210,118 +203,96 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
     }
 
     protected void setupFields(View view) {
-        planNameEditText = (EditText) view.findViewById(R.id.paymentPlanName);
-        TextInputLayout planNameInputLayout = (TextInputLayout) view.findViewById(R.id.paymentPlanNameInputLayout);
+        planNameEditText = view.findViewById(R.id.paymentPlanName);
+        TextInputLayout planNameInputLayout = view.findViewById(R.id.paymentPlanNameInputLayout);
         planNameEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(planNameInputLayout, null));
         View planNameOptional = view.findViewById(R.id.paymentPlanNameOptional);
         planNameOptional.setVisibility(View.VISIBLE);
         planNameEditText.addTextChangedListener(getOptionalViewTextWatcher(planNameOptional));
 
-        paymentDateEditText = (EditText) view.findViewById(R.id.paymentDrawDay);
-        paymentDayInputLayout = (TextInputLayout) view.findViewById(R.id.paymentDrawDayInputLayout);
+        paymentDateEditText = view.findViewById(R.id.paymentDrawDay);
+        paymentDayInputLayout = view.findViewById(R.id.paymentDrawDayInputLayout);
         paymentDateEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(paymentDayInputLayout, null));
         paymentDateEditText.setText(paymentDateOption.getLabel());
         paymentDateEditText.getOnFocusChangeListener().onFocusChange(paymentDateEditText, true);
 
-        paymentDateEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SelectOptionFragment fragment = SelectOptionFragment.newInstance(dialogTitle);
-                fragment.setOptions(selectedDateOptions);
-                fragment.setCallback(new OnOptionSelectedListener() {
-                    @Override
-                    public void onOptionSelected(DemographicsOption option, int position) {
-                        paymentDateOption = option;
-                        paymentDateEditText.setText(option.getLabel());
-                        enableCreatePlanButton();
-                    }
-                });
-                fragment.show(getActivity().getSupportFragmentManager(), fragment.getClass().getName());
-            }
+        SelectOptionFragment fragment = SelectOptionFragment.newInstance(dialogTitle);
+        fragment.setOptions(selectedDateOptions);
+        fragment.setCallback((option, position) -> {
+            paymentDateOption = option;
+            paymentDateEditText.setText(option.getLabel());
         });
+        fragment.show(getActivity().getSupportFragmentManager(), fragment.getClass().getName());
 
-        frequencyCodeEditText = (EditText) view.findViewById(R.id.frequencyCodeEditText);
-        TextInputLayout frequencyCodeInputLayout = (TextInputLayout) view.findViewById(R.id.frequencyCodeInputLayout);
+        frequencyCodeEditText = view.findViewById(R.id.frequencyCodeEditText);
+        TextInputLayout frequencyCodeInputLayout = view.findViewById(R.id.frequencyCodeInputLayout);
         frequencyCodeEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(frequencyCodeInputLayout, null));
         frequencyCodeEditText.setText(frequencyOption.getLabel());
         frequencyCodeEditText.getOnFocusChangeListener().onFocusChange(frequencyCodeEditText, true);
         if (frequencyOptions.size() > 1) {
-            frequencyCodeEditText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SelectOptionFragment fragment = SelectOptionFragment.newInstance(
-                            Label.getLabel("payment.paymentPlan.frequency.dialog.title"));
-                    fragment.setOptions(frequencyOptions);
-                    fragment.setCallback(new OnOptionSelectedListener() {
-                        @Override
-                        public void onOptionSelected(DemographicsOption option, int position) {
-                            if (!frequencyOption.getName().equals(option.getName())) {
-                                manageFrequencyChange((DemographicsToggleOption) option, true);
-                                enableCreatePlanButton();
-                            }
-                        }
-                    });
-                    fragment.show(getActivity().getSupportFragmentManager(), fragment.getClass().getName());
-                }
+            frequencyCodeEditText.setOnClickListener(v -> {
+                SelectOptionFragment fragment1 = SelectOptionFragment.newInstance(
+                        Label.getLabel("payment.paymentPlan.frequency.dialog.title"));
+                fragment1.setOptions(frequencyOptions);
+                fragment1.setCallback((option, position) -> {
+                    if (!frequencyOption.getName().equals(option.getName())) {
+                        manageFrequencyChange((DemographicsToggleOption) option, true);
+                    }
+                });
+                fragment1.show(getActivity().getSupportFragmentManager(), fragment1.getClass().getName());
             });
         } else {
             frequencyCodeEditText.setCompoundDrawables(null, null, null, null);
         }
         frequencyCodeEditText.setEnabled(frequencyOptions.size() > 1);
 
-        installmentsEditText = (EditText) view.findViewById(R.id.paymentMonthCount);
-        installmentsInputLayout = (CarePayTextInputLayout) view
+        installmentsEditText = view.findViewById(R.id.paymentMonthCount);
+        installmentsInputLayout = view
                 .findViewById(R.id.paymentMonthCountInputLayout);
         installmentsInputLayout.setRequestFocusWhenError(false);
         installmentsEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(installmentsInputLayout, null));
-        installmentsEditText.addTextChangedListener(getRequiredTextWatcher(installmentsInputLayout, new ValueInputCallback() {
-            @Override
-            public void onValueInput(String input) {
-                if (!input.startsWith("0")) {
-                    refreshNumberOfPayments(input);
-                }
+        installmentsEditText.addTextChangedListener(getRequiredTextWatcher(installmentsInputLayout, input -> {
+            if (!input.startsWith("0")) {
+                refreshNumberOfPayments(input);
             }
         }));
 
-        amountPaymentEditText = (EditText) view.findViewById(R.id.paymentAmount);
-        amountPaymentInputLayout = (CarePayTextInputLayout) view
+        amountPaymentEditText = view.findViewById(R.id.paymentAmount);
+        amountPaymentInputLayout = view
                 .findViewById(R.id.paymentAmountInputLayout);
         amountPaymentInputLayout.setRequestFocusWhenError(false);
         amountPaymentEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(amountPaymentInputLayout, currencyFocusChangeListener));
         amountPaymentEditText.addTextChangedListener(getRequiredTextWatcher(amountPaymentInputLayout,
-                new ValueInputCallback() {
-                    @Override
-                    public void onValueInput(String input) {
-                        if (isCalculatingAmount) {
-                            isCalculatingAmount = false;
-                            return;
-                        }
-                        isCalculatingTime = true;
-                        try {
-                            amounthPayment = Double.parseDouble(input);
-                            //make sure we don't consider extra decimals here.. these will get formatted out
-                            amounthPayment = Math.round(amounthPayment * 100) / 100D;
-                            installments = calculatePaymentCount(amounthPayment);
-                            if (installments > 0) {
-                                if (installmentsEditText.getOnFocusChangeListener() != null) {
-                                    installmentsEditText.getOnFocusChangeListener()
-                                            .onFocusChange(installmentsEditText, true);
-                                }
-                                installmentsEditText.setText(String.valueOf(installments));
-                                setLastPaymentMessage(amounthPayment);
+                input -> {
+                    if (isCalculatingAmount) {
+                        isCalculatingAmount = false;
+                        return;
+                    }
+                    isCalculatingTime = true;
+                    try {
+                        amounthPayment = Double.parseDouble(input);
+                        //make sure we don't consider extra decimals here.. these will get formatted out
+                        amounthPayment = Math.round(amounthPayment * 100) / 100D;
+                        installments = calculatePaymentCount(amounthPayment);
+                        if (installments > 0) {
+                            if (installmentsEditText.getOnFocusChangeListener() != null) {
+                                installmentsEditText.getOnFocusChangeListener()
+                                        .onFocusChange(installmentsEditText, true);
                             }
-                        } catch (NumberFormatException nfe) {
-                            nfe.printStackTrace();
-                            isCalculatingTime = false;
+                            installmentsEditText.setText(String.valueOf(installments));
+                            setLastPaymentMessage(amounthPayment);
                         }
+                    } catch (NumberFormatException nfe) {
+                        nfe.printStackTrace();
+                        isCalculatingTime = false;
                     }
                 }));
-        lastPaymentMessage = (TextView) view.findViewById(R.id.lastPaymentMessage);
+        lastPaymentMessage = view.findViewById(R.id.lastPaymentMessage);
         lastPaymentMessage.setVisibility(View.INVISIBLE);
 
         if (frequencyOption.getName().equals(PaymentPlanModel.FREQUENCY_MONTHLY)) {
@@ -441,45 +412,23 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
                 addToExisting.setVisibility(View.GONE);
             }
 
-            addToExisting.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addBalanceToExisting();
-                }
-            });
+            addToExisting.setOnClickListener(v -> onAddBalanceToExistingPlan());
         }
-        createPlanButton = (Button) view.findViewById(R.id.create_payment_plan_button);
-        createPlanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createPaymentPlanPostModel(true);
-                SystemUtil.hideSoftKeyboard(getContext(), view);
-            }
+        createPlanButton = view.findViewById(R.id.create_payment_plan_button);
+        createPlanButton.setOnClickListener(view1 -> {
+            createPaymentPlanPostModel(true);
+            SystemUtil.hideSoftKeyboard(getContext(), view1);
         });
-        createPlanButton.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View buttonView, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN && !buttonView.isSelected()) {
-                    createPaymentPlanPostModel(true);
-                    SystemUtil.hideSoftKeyboard(getContext(), buttonView);
-                    return true;
-                }
-                return false;
+        createPlanButton.setOnTouchListener((buttonView, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN && !buttonView.isSelected()) {
+                createPaymentPlanPostModel(true);
+                SystemUtil.hideSoftKeyboard(getContext(), buttonView);
+                return true;
             }
+            return false;
         });
 
         enableCreatePlanButton();
-    }
-
-    private void setAdapter(View view) {
-        RecyclerView balanceRecycler = (RecyclerView) view.findViewById(R.id.balance_recycler);
-        if (balanceRecycler != null && selectedBalance != null) {
-            balanceRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-            PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(this.getContext(),
-                    selectedBalance.getPayload(), this);
-            balanceRecycler.setAdapter(adapter);
-        }
     }
 
     protected void enableCreatePlanButton() {
@@ -703,8 +652,13 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
         return true;
     }
 
-    protected void addBalanceToExisting() {
-        callback.onAddBalanceToExistingPlan(paymentsModel, selectedBalance, paymentPlanAmount);
+    protected void onAddBalanceToExistingPlan() {
+        ValidPlansFragment fragment = ValidPlansFragment.newInstance(paymentsModel, selectedBalance, paymentPlanAmount);
+        callback.replaceFragment(fragment, true);
+        logPaymentPlanStartedMixPanelEvent();
+    }
+
+    protected void logPaymentPlanStartedMixPanelEvent() {
         String[] params = {getString(R.string.param_practice_id),
                 getString(R.string.param_balance_amount),
                 getString(R.string.param_is_add_existing)};
@@ -784,12 +738,13 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
 
     protected void setError(int id, String error, boolean requestFocus) {
         if (getView() != null) {
-            TextInputLayout inputLayout = (TextInputLayout) getView().findViewById(id);
+            TextInputLayout inputLayout = getView().findViewById(id);
             setError(inputLayout, error, requestFocus);
         }
     }
 
     protected void setError(TextInputLayout inputLayout, String errorMessage, boolean requestFocus) {
+        clearError(inputLayout);
         inputLayout.setErrorEnabled(true);
         inputLayout.setError(errorMessage);
         if (requestFocus) {
@@ -800,7 +755,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
 
     protected void clearError(int id) {
         if (getView() != null) {
-            TextInputLayout inputLayout = (TextInputLayout) getView().findViewById(id);
+            TextInputLayout inputLayout = getView().findViewById(id);
             clearError(inputLayout);
         }
     }
@@ -833,11 +788,6 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment
     protected boolean enableAddToExisting() {
         return hasExistingPlans() && canAddToExisting()
                 && !paymentsModel.getPaymentPayload().getValidPlans(practiceId, paymentPlanAmount).isEmpty();
-    }
-
-    @Override
-    public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
-        callback.displayBalanceDetails(paymentsModel, paymentLineItem, selectedBalance);
     }
 
     private TextWatcher getOptionalViewTextWatcher(final View optionalView) {

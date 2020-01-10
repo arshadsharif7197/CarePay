@@ -1,22 +1,28 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'newrelic'
 android {
-    compileSdkVersion 26
+    compileSdkVersion 28
 
     defaultConfig {
         applicationId "com.carecloud.carepay.practice.tablet"
         minSdkVersion 17
-        targetSdkVersion 26
-        versionCode 129
-        versionName "1.2.27"
+        targetSdkVersion 28
+        versionCode 148
+        versionName "1.2.33"
         multiDexEnabled true
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         renderscriptTargetApi 22
         renderscriptSupportModeEnabled true
+        testInstrumentationRunnerArguments clearPackageData: 'true'
+    }
+    testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
     dexOptions {
         maxProcessCount 4
-        javaMaxHeapSize "12g"
+        javaMaxHeapSize "4g"
     }
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
@@ -133,10 +139,28 @@ android {
     lintOptions {
         abortOnError false
     }
-}
 
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+}
+configurations.all {
+    resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
+}
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':CarePayPracticeLibrary')
-    implementation 'com.newrelic.agent.android:android-agent:5.22.0'
+
+    androidTestImplementation "androidx.core:core-ktx:1.1.0"
+    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation ('androidx.test.espresso:espresso-core:3.2.0'){
+        exclude group: 'com.google.code.findbugs'
+    }
+    androidTestImplementation project(':test-module')
+}
+repositories {
+    mavenCentral()
 }

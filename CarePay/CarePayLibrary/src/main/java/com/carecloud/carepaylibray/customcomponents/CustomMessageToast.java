@@ -7,7 +7,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -47,7 +47,7 @@ public class CustomMessageToast extends Toast {
         int orientation = DisplayUtils.getScreenOrientation(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout = inflater.inflate(R.layout.success_message_toast, null);
-        TextView successTextView = (TextView) layout.findViewById(R.id.success_message_toast_textview);
+        TextView successTextView = layout.findViewById(R.id.success_message_toast_textview);
         if (!StringUtil.isNullOrEmpty(successMessage)) {
             if (Build.VERSION.SDK_INT >= 24) {
                 successTextView.setText(Html.fromHtml(successMessage, Html.FROM_HTML_MODE_LEGACY));
@@ -63,8 +63,8 @@ public class CustomMessageToast extends Toast {
         }
 
         View container = layout.findViewById(R.id.success_message_toast_layout);
-        ImageView icon = (ImageView) layout.findViewById(R.id.success_icon);
-        int statusBarColor = R.color.colorPrimaryDark;
+        ImageView icon = layout.findViewById(R.id.success_icon);
+        int statusBarColor;
         switch (notificationType) {
             case NOTIFICATION_TYPE_ERROR:
                 icon.setImageResource(R.drawable.icn_notification_error);
@@ -74,7 +74,7 @@ public class CustomMessageToast extends Toast {
                 break;
             case NOTIFICATION_TYPE_WARNING:
                 icon.setImageResource(R.drawable.icn_notification_error);
-                container.setBackgroundColor(context.getResources().getColor(R.color.lightning_yellow));
+                container.setBackgroundResource(R.drawable.warning_notification_background);
                 successTextView.setTextColor(Color.WHITE);
                 setDuration(Toast.LENGTH_LONG);
                 statusBarColor = R.color.lightning_yellow;
@@ -108,12 +108,12 @@ public class CustomMessageToast extends Toast {
     }
 
     @Override
-    public void cancel(){
+    public void cancel() {
         super.cancel();
         clearStatusBar();
     }
 
-    private void clearStatusBar(){
+    private void clearStatusBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ((BaseActivity) context).getWindow().setStatusBarColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
         }

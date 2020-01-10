@@ -1,11 +1,12 @@
 package com.carecloud.carepay.patient.myhealth.adapters;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthProviderDto;
@@ -13,10 +14,8 @@ import com.carecloud.carepay.patient.myhealth.fragments.MyHealthMainFragment;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthDataInterface;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
-import com.carecloud.carepaylibray.utils.CircleImageTransform;
+import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -59,21 +58,8 @@ public class CareTeamRecyclerViewAdapter extends RecyclerView.Adapter<CareTeamRe
             holder.providerSpecialityTextView.setText(String.format("%s, %s",
                     provider.getSpecialityName(), provider.getPractice()));
             holder.initials.setText(StringUtil.getShortName(provider.getFullName()));
-            Picasso.with(holder.providerImageView.getContext()).load(provider.getPhoto())
-                    .transform(new CircleImageTransform())
-                    .into(holder.providerImageView, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            holder.providerImageView.setVisibility(View.VISIBLE);
-                            holder.initials.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onError() {
-                            holder.providerImageView.setVisibility(View.GONE);
-                            holder.initials.setVisibility(View.VISIBLE);
-                        }
-                    });
+            PicassoHelper.get().loadImage(holder.providerImageView.getContext(),
+                    holder.providerImageView, holder.initials, provider.getPhoto());
             holder.row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -95,8 +81,6 @@ public class CareTeamRecyclerViewAdapter extends RecyclerView.Adapter<CareTeamRe
     public int getItemCount() {
         return maxItems == MyHealthMainFragment.MAX_ITEMS_TO_SHOW ?
                 Math.min(providers.size(), maxItems) : providers.size();
-//        return maxItems == MyHealthMainFragment.MAX_ITEMS_TO_SHOW ?
-//                Math.min(providers.size() + 1, maxItems + 1) : providers.size();
     }
 
     @Override
@@ -117,12 +101,12 @@ public class CareTeamRecyclerViewAdapter extends RecyclerView.Adapter<CareTeamRe
 
         public ViewHolder(View itemView) {
             super(itemView);
-            providerImageView = (ImageView) itemView.findViewById(R.id.providerImageView);
-            providerNameTextView = (TextView) itemView.findViewById(R.id.providerNameTextView);
-            providerSpecialityTextView = (TextView) itemView.findViewById(R.id.providerSpecialityTextView);
-            myHealthActionButton = (TextView) itemView.findViewById(R.id.myHealthActionButton);
-            initials = (TextView) itemView.findViewById(R.id.avatarTextView);
-            row = (ViewGroup) itemView.findViewById(R.id.row);
+            providerImageView = itemView.findViewById(R.id.providerImageView);
+            providerNameTextView = itemView.findViewById(R.id.providerNameTextView);
+            providerSpecialityTextView = itemView.findViewById(R.id.providerSpecialityTextView);
+            myHealthActionButton = itemView.findViewById(R.id.myHealthActionButton);
+            initials = itemView.findViewById(R.id.avatarTextView);
+            row = itemView.findViewById(R.id.row);
         }
     }
 }

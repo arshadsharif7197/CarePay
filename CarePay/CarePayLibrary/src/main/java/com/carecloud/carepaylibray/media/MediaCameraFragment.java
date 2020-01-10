@@ -6,7 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,7 +101,7 @@ public class MediaCameraFragment extends BaseDialogFragment implements CarePayCa
         super.onViewCreated(view, savedInstanceState);
 
         // Set content
-        carePayCameraView = new CarePayCameraView(this, getContext(), cameraType);
+        carePayCameraView = new CarePayCameraView(this, getContext(), cameraType, getApplicationMode().getApplicationType());
         ((FrameLayout) view.findViewById(R.id.camera_preview)).addView(carePayCameraView);
     }
 

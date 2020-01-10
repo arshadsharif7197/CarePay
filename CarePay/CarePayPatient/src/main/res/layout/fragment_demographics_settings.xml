@@ -21,78 +21,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/dimen_20dp"
-            android:paddingEnd="@dimen/dimen_17dp"
             android:paddingStart="@dimen/dimen_17dp"
-            android:paddingTop="@dimen/dimen_20dp">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/providerPicImageView"
-                    android:layout_width="@dimen/imageview_profile_ht_wdh"
-                    android:layout_height="@dimen/imageview_profile_ht_wdh"
-                    android:layout_marginEnd="@dimen/textview_margin"
-                    android:src="@drawable/icn_placeholder_user_profile" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toEndOf="@id/providerPicImageView"
-                    android:layout_toStartOf="@+id/editTextView"
-                    android:orientation="vertical">
-
-                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                        android:id="@+id/patient_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/textview_default_textsize"
-                        android:textStyle="bold"
-                        app:customAssetFont="proxima_nova_semi_bold" />
-
-                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                        android:id="@+id/patient_id"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="start"
-                        android:textColor="@color/lightSlateGray"
-                        android:textSize="@dimen/textview_textsize"
-                        app:customAssetFont="proxima_nova_regular" />
-
-                </LinearLayout>
-
-
-                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                    android:id="@+id/editTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:background="?android:selectableItemBackground"
-                    android:padding="@dimen/dimen_10dp"
-                    android:textColor="@color/emerald"
-                    android:textSize="@dimen/button_textsize_medium"
-                    app:customAssetFont="gotham_rounded_bold"
-                    breeze:textKey="edit_button_label" />
-
-            </RelativeLayout>
-
-            <View
-                android:id="@+id/main_item_divider"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="@dimen/dimen_20dp"
-                android:background="@color/gray" />
+            android:paddingTop="@dimen/dimen_20dp"
+            android:paddingEnd="@dimen/dimen_17dp"
+            android:paddingBottom="@dimen/dimen_20dp">
 
             <LinearLayout
                 android:id="@+id/demographicsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/signup_clickable_textview_height"
-                android:layout_marginTop="@dimen/dimen_36dp"
                 android:background="@drawable/grey_bottom_border"
                 android:orientation="horizontal">
 
@@ -201,62 +138,100 @@
 
             </LinearLayout>
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            <LinearLayout
+                android:id="@+id/manageDelegateContainer"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/signup_clickable_textview_height"
+                android:layout_marginTop="@dimen/dimen_8dp"
+                android:background="@drawable/grey_bottom_border"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_42dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:src="@drawable/icn_manage_profiles" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/manageDelegateTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:gravity="start|center_vertical"
+                    android:textColor="@color/textview_default_textcolor"
+                    android:textSize="@dimen/textview_default_textsize"
+                    android:textStyle="bold"
+                    app:customAssetFont="proxima_nova_regular"
+                    breeze:textKey="patient.delegate.delegateList.title.label"
+                    tools:text="Manage Delegates" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/notificationsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_36dp"
-                android:gravity="start|center_vertical"
-                android:textColor="@color/textview_default_textcolor"
-                android:textSize="@dimen/text_size_19sp"
-                android:textStyle="bold"
-                app:customAssetFont="proxima_nova_regular"
-                breeze:textKey="notifications_heading" />
+                android:orientation="vertical">
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
-                android:id="@+id/pushNotificationCheckBox"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/signup_clickable_textview_height"
-                android:background="@drawable/grey_bottom_border"
-                android:button="@null"
-                android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
-                android:gravity="center_vertical"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/textview_default_textsize"
-                android:theme="@style/MyCheckBox"
-                app:customAssetFont="proxima_nova_regular"
-                breeze:textKey="push_notifications_checkbox_label"
-                tools:text="Push Notifications" />
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_36dp"
+                    android:gravity="start|center_vertical"
+                    android:textColor="@color/textview_default_textcolor"
+                    android:textSize="@dimen/text_size_19sp"
+                    android:textStyle="bold"
+                    app:customAssetFont="proxima_nova_regular"
+                    breeze:textKey="notifications_heading" />
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
-                android:id="@+id/emailNotificationCheckBox"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/signup_clickable_textview_height"
-                android:background="@drawable/grey_bottom_border"
-                android:button="@null"
-                android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
-                android:gravity="center_vertical"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/textview_default_textsize"
-                android:theme="@style/MyCheckBox"
-                app:customAssetFont="proxima_nova_regular"
-                breeze:textKey="email_notifications_checkbox_label"
-                tools:text="Email Notifications" />
+                <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
+                    android:id="@+id/pushNotificationCheckBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/signup_clickable_textview_height"
+                    android:background="@drawable/grey_bottom_border"
+                    android:button="@null"
+                    android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/textview_default_textsize"
+                    android:theme="@style/MyCheckBox"
+                    app:customAssetFont="proxima_nova_regular"
+                    breeze:textKey="push_notifications_checkbox_label"
+                    tools:text="Push Notifications" />
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
-                android:id="@+id/smsNotificationCheckBox"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/signup_clickable_textview_height"
-                android:background="@drawable/grey_bottom_border"
-                android:button="@null"
-                android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
-                android:gravity="center_vertical"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/textview_default_textsize"
-                android:theme="@style/MyCheckBox"
-                app:customAssetFont="proxima_nova_regular"
-                breeze:textKey="settings.demographics.checkbox.label.smsNotification"
-                tools:text="SMS Notifications" />
+                <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
+                    android:id="@+id/emailNotificationCheckBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/signup_clickable_textview_height"
+                    android:background="@drawable/grey_bottom_border"
+                    android:button="@null"
+                    android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/textview_default_textsize"
+                    android:theme="@style/MyCheckBox"
+                    app:customAssetFont="proxima_nova_regular"
+                    breeze:textKey="email_notifications_checkbox_label"
+                    tools:text="Email Notifications" />
 
+                <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
+                    android:id="@+id/smsNotificationCheckBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/signup_clickable_textview_height"
+                    android:background="@drawable/grey_bottom_border"
+                    android:button="@null"
+                    android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/textview_default_textsize"
+                    android:theme="@style/MyCheckBox"
+                    app:customAssetFont="proxima_nova_regular"
+                    breeze:textKey="settings.demographics.checkbox.label.smsNotification"
+                    tools:text="SMS Notifications" />
+
+
+            </LinearLayout>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/signOutButton"

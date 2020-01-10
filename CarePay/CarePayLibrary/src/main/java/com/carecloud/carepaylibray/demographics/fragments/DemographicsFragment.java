@@ -3,7 +3,7 @@ package com.carecloud.carepaylibray.demographics.fragments;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
+import com.google.android.material.textfield.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -332,9 +332,8 @@ public class DemographicsFragment extends CheckInDemographicsBaseFragment
         editText.getOnFocusChangeListener().onFocusChange(editText,
                 !StringUtil.isNullOrEmpty(editText.getText().toString().trim()));
         final View requiredView = view.findViewById(requiredViewId);
-        if (requiredView != null) {
-            requiredView.setVisibility(demographicsField.isRequired()
-                    && StringUtil.isNullOrEmpty(keyName) ? View.VISIBLE : View.GONE);
+        if (requiredView != null && demographicsField.isRequired()) {
+            requiredView.setVisibility(StringUtil.isNullOrEmpty(keyName) ? View.VISIBLE : View.GONE);
             editText.addTextChangedListener(getRequiredViewTextWatcher(requiredView));
         }
         if (demographicsOption != null) {

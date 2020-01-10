@@ -1,22 +1,22 @@
 package com.carecloud.carepay.practice.library.appointments;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
 import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.adhocforms.AdHocFormsListFragment;
+import com.carecloud.carepay.practice.library.adhocforms.fragments.AdHocFormsListFragment;
 import com.carecloud.carepay.practice.library.appointments.createappointment.AvailabilityHourFragment;
 import com.carecloud.carepay.practice.library.appointments.createappointment.CreateAppointmentFragment;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeAppointmentDialog;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PracticeModeRequestAppointmentDialog;
-import com.carecloud.carepay.practice.library.appointments.dtos.PracticeAppointmentDTO;
 import com.carecloud.carepay.practice.library.appointments.interfaces.PracticeAppointmentDialogListener;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInPayloadDTO;
@@ -28,7 +28,6 @@ import com.carecloud.carepay.practice.library.models.FilterModel;
 import com.carecloud.carepay.practice.library.models.ResponsibilityHeaderModel;
 import com.carecloud.carepay.practice.library.payments.dialogs.FindPatientDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.FormsResponsibilityFragmentDialog;
-import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.ResponsibilityFragmentDialog;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -54,10 +53,8 @@ import com.carecloud.carepaylibray.payments.interfaces.PaymentDetailInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
-import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 import com.squareup.timessquare.CalendarPickerView;
@@ -81,15 +78,17 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         PaymentDetailInterface,
         VideoAppointmentCallback {
 
-    private FilterModel filter;
+    private FilterModel filterModel;
 
     private CheckInDTO checkInDTO;
 
     private TwoColumnPatientListView patientListView;
     private boolean needsToConfirmAppointmentCreation;
     private boolean wasCalledFromThisClass;
-    private String confirmationMessageText;
-    private boolean updateOnSuccess;
+    private View filterTextView;
+    private View filterTextViewOn;
+    private TextView patientCountLabelTextView;
+    private FilterDialog filterDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,18 +96,18 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
         setContentView(R.layout.activity_practice_appointments);
 
-        filter = new FilterModel();
+        filterModel = new FilterModel();
         initializeCheckinDto();
         initializeViews();
+        setUpFilter();
     }
 
     private void initializeCheckinDto() {
         checkInDTO = getConvertedDTO(CheckInDTO.class);
-        if (null != checkInDTO) {
-            populateLists();
-            initializePatientListView();
-            initializePatientCounter();
-        }
+        populateLists();
+        initializePatientListView();
+        initializePatientCounter();
+
     }
 
     private void initializePatientCounter() {
@@ -118,9 +117,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         count = String.format(Locale.getDefault(), "%1s", patientListView.getSizeFilteredPendingPatients());
         setTextViewById(R.id.practice_pending_count, count);
 
-        count = String.format(Locale.getDefault(), "%d %s", patientListView.getSizeFilteredPendingPatients(),
-                Label.getLabel("pending_appointments_label"));
-        setTextViewById(R.id.activity_practice_appointments_show_pending_appointments_label, count);
+        patientCountLabelTextView = findViewById(R.id.patientCountLabelTextView);
 
         if (null != startDate && null != endDate) {
             String practiceCountLabel = DateUtil.getFormattedDate(
@@ -131,19 +128,14 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                     Label.getLabel("this_month_label"),
                     Label.getLabel("next_days_label"),
                     true).toUpperCase(Locale.getDefault());
-            setTextViewById(R.id.practice_patient_count_label, practiceCountLabel);
+            patientCountLabelTextView.setText(practiceCountLabel);
         }
     }
 
     private void initializePatientListView() {
         patientListView = findViewById(R.id.list_patients);
         patientListView.setCheckInDTO(checkInDTO);
-        patientListView.setCallback(new TwoColumnPatientListView.TwoColumnPatientListViewListener() {
-            @Override
-            public void onPatientTapped(Object dto) {
-                showPracticeAppointmentDialog((AppointmentDTO) dto);
-            }
-        });
+        patientListView.setCallback(dto -> showPracticeAppointmentDialog((AppointmentDTO) dto));
         applyFilter();
     }
 
@@ -155,63 +147,38 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         addAppointmentTextView.setOnClickListener(getFindPatientListener(false));
         addAppointmentTextView.setEnabled(checkInDTO.getPayload().getUserAuthModel().getUserAuthPermissions().canScheduleAppointment);
 
-        findViewById(R.id.practice_go_back).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
+        findViewById(R.id.practice_go_back).setOnClickListener(view -> onBackPressed());
 
-        findViewById(R.id.practice_filter_label).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FilterDialog filterDialog = new FilterDialog(getContext(),
-                        findViewById(R.id.activity_practice_appointments), filter,
-                        Label.getLabel("practice_checkin_filter"),
-                        Label.getLabel("practice_checkin_filter_find_patient_by_name"),
-                        Label.getLabel("practice_checkin_filter_clear_filters"));
-
-                filterDialog.showPopWindow();
+        final TextView showPendingAppointmentTextView = findViewById(R.id.showPendingAppointmentTextView);
+        showPendingAppointmentTextView.setOnClickListener(v -> {
+            showPendingAppointmentTextView.setSelected(!showPendingAppointmentTextView.isSelected());
+            if (showPendingAppointmentTextView.isSelected()) {
+                showViewById(R.id.practice_pending_count);
+                disappearViewById(R.id.practice_patient_count);
+                filterModel.setFilteringByPending(true);
+                patientCountLabelTextView.setText(Label.getLabel("pending_label"));
+            } else {
+                showViewById(R.id.practice_patient_count);
+                disappearViewById(R.id.practice_pending_count);
+                filterModel.setFilteringByPending(false);
+                patientCountLabelTextView.setText(Label.getLabel("today_label"));
             }
+            applyFilter();
         });
 
         initializePracticeSelectDateRange();
-        initializeShowAllAppointments();
-        initializeShowPendingAppointments();
     }
 
-    private void initializeShowAllAppointments() {
-        findViewById(R.id.activity_practice_appointments_show_all_appointments_label)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showViewById(R.id.activity_practice_appointments_show_pending_appointments_label);
-                        showViewById(R.id.practice_patient_count);
-                        showViewById(R.id.practice_patient_count_label);
-                        hideViewById(R.id.activity_practice_appointments_show_all_appointments_label);
-                        disappearViewById(R.id.practice_pending_count);
-                        disappearViewById(R.id.practice_pending_count_label);
-                        filter.setFilteringByPending(false);
-                        applyFilter();
-                    }
-                });
-    }
-
-    private void initializeShowPendingAppointments() {
-        findViewById(R.id.activity_practice_appointments_show_pending_appointments_label)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showViewById(R.id.activity_practice_appointments_show_all_appointments_label);
-                        showViewById(R.id.practice_pending_count);
-                        showViewById(R.id.practice_pending_count_label);
-                        hideViewById(R.id.activity_practice_appointments_show_pending_appointments_label);
-                        disappearViewById(R.id.practice_patient_count);
-                        disappearViewById(R.id.practice_patient_count_label);
-                        filter.setFilteringByPending(true);
-                        applyFilter();
-                    }
-                });
+    private void setUpFilter() {
+        filterTextView = findViewById(R.id.filterTextView);
+        filterTextView.setOnClickListener(onFilterIconClick());
+        filterTextViewOn = findViewById(R.id.filterTextViewOn);
+        filterTextViewOn.setOnClickListener(onFilterIconClick());
+        if (filterModel.areThereActiveFilters()) {
+            filterTextViewOn.setVisibility(View.VISIBLE);
+        } else {
+            filterTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     private void populateLists() {
@@ -237,9 +204,22 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             addPatientOnFilterList(patients, appointmentPayloadDTO, photoMap);
         }
 
-        filter.setDoctors(getFilterProviders(providersSavedFilteredIds));
-        filter.setLocations(getFilterLocations(locationsSavedFilteredIds));
-        filter.setPatients(patients);
+        filterModel.setDoctors(getFilterProviders(providersSavedFilteredIds));
+        filterModel.setLocations(getFilterLocations(locationsSavedFilteredIds));
+        filterModel.setPatients(patients);
+        if (filterDialog != null && filterDialog.isShowing()) {
+            filterDialog.refresh();
+        }
+    }
+
+    @NonNull
+    private View.OnClickListener onFilterIconClick() {
+        return view -> {
+            filterDialog = new FilterDialog(getContext(),
+                    findViewById(R.id.activity_practice_appointments), filterModel);
+
+            filterDialog.showPopWindow();
+        };
     }
 
     private ArrayList<FilterDataDTO> getFilterLocations(Set<String> selectedLocationsIds) {
@@ -290,7 +270,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
 
     @Override
     public void applyFilter() {
-        patientListView.applyFilter(filter);
+        patientListView.applyFilter(filterModel);
         initializePatientCounter();
     }
 
@@ -299,26 +279,29 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         onAppointmentRequestSuccess();
     }
 
+    @Override
+    public void showFilterFlag(boolean areThereActiveFilters) {
+        filterTextView.setVisibility(areThereActiveFilters ? View.GONE : View.VISIBLE);
+        filterTextViewOn.setVisibility(areThereActiveFilters ? View.VISIBLE : View.GONE);
+    }
+
     private void initializePracticeSelectDateRange() {
         findViewById(R.id.activity_practice_appointments_change_date_range_label)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+                .setOnClickListener(view -> {
 
-                        DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(
-                                Label.getLabel("date_range_picker_dialog_title"),
-                                Label.getLabel("date_range_picker_dialog_close"),
-                                true,
-                                startDate,
-                                endDate,
-                                DateRangePickerDialog.getPreviousSixMonthCalendar(),
-                                DateRangePickerDialog.getNextSixMonthCalendar(),
-                                PracticeModePracticeAppointmentsActivity.this,
-                                CalendarPickerView.SelectionMode.RANGE.name());
-                        displayDialogFragment(dialog, false);
+                    DateRangePickerDialog dialog = DateRangePickerDialog.newInstance(
+                            Label.getLabel("date_range_picker_dialog_title"),
+                            Label.getLabel("date_range_picker_dialog_close"),
+                            true,
+                            startDate,
+                            endDate,
+                            DateRangePickerDialog.getPreviousSixMonthCalendar(),
+                            DateRangePickerDialog.getNextSixMonthCalendar(),
+                            PracticeModePracticeAppointmentsActivity.this,
+                            CalendarPickerView.SelectionMode.RANGE.name());
+                    displayDialogFragment(dialog, false);
 
-                        wasCalledFromThisClass = true;
-                    }
+                    wasCalledFromThisClass = true;
                 });
     }
 
@@ -351,28 +334,21 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     }
 
     private View.OnClickListener getFindPatientListener(final boolean needsConfirmation) {
-        return new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                needsToConfirmAppointmentCreation = needsConfirmation;
-                TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getFindPatient();
-                FindPatientDialog findPatientDialog = FindPatientDialog.newInstance(transitionDTO,
-                        Label.getLabel(needsConfirmation ? "practice_checkin_filter_find_patient_by_name"
-                                : "practice_filter_find_patient_first"));
-                findPatientDialog.setClickedListener(getFindPatientDialogListener());
-                displayDialogFragment(findPatientDialog, false);
-            }
+        return view -> {
+            needsToConfirmAppointmentCreation = needsConfirmation;
+            TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getFindPatient();
+            FindPatientDialog findPatientDialog = FindPatientDialog.newInstance(transitionDTO,
+                    Label.getLabel(needsConfirmation ? "practice_checkin_filter_find_patient_by_name"
+                            : "practice_filter_find_patient_first"));
+            findPatientDialog.setListener(getFindPatientDialogListener());
+            displayDialogFragment(findPatientDialog, false);
         };
     }
 
     private FindPatientDialog.OnItemClickedListener getFindPatientDialogListener() {
-        return new FindPatientDialog.OnItemClickedListener() {
-            @Override
-            public void onItemClicked(PatientModel patient) {
-                setPatient(patient);
-                getPatientBalances(patient, needsToConfirmAppointmentCreation);
-            }
+        return patient -> {
+            setPatient(patient);
+            getPatientBalances(patient, needsToConfirmAppointmentCreation);
         };
     }
 
@@ -469,94 +445,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         setPatient(appointmentDTO.getPayload().getPatient());
     }
 
-    private void transitionAppointment(TransitionDTO transitionDTO,
-                                       AppointmentDTO appointmentDTO,
-                                       boolean updateOnSuccess,
-                                       String event,
-                                       boolean shouldRefresh) {
-        this.updateOnSuccess = updateOnSuccess;
-
-        Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("appointment_id", appointmentDTO.getPayload().getId());
-
-        getWorkflowServiceHelper().execute(transitionDTO, getAppointmentsServiceCallback(event, appointmentDTO, shouldRefresh), queryMap);
-    }
-
-    WorkflowServiceCallback getAppointmentsServiceCallback(final String event, final AppointmentDTO appointmentDTO, final boolean shouldRefresh) {
-        return new WorkflowServiceCallback() {
-            @Override
-            public void onPreExecute() {
-                showProgressDialog();
-            }
-
-            @Override
-            public void onPostExecute(WorkflowDTO workflowDTO) {
-                hideProgressDialog();
-                updateAppointment(workflowDTO);
-                showSuccessToast(Label.getLabel(confirmationMessageText));
-                DtoHelper.putExtra(getIntent(), checkInDTO);
-                initializeCheckinDto();
-                applyFilter();
-                if (shouldRefresh) {
-                    refreshData();
-                }
-
-                updateOnSuccess = false;
-
-                String[] params = {getString(R.string.param_appointment_type),
-                        getString(R.string.param_practice_id),
-                        getString(R.string.param_practice_name),
-                        getString(R.string.param_patient_id),
-                        getString(R.string.param_provider_id),
-                        getString(R.string.param_location_id)};
-                String[] values = {appointmentDTO.getPayload().getVisitType().getName(),
-                        getApplicationMode().getUserPracticeDTO().getPracticeId(),
-                        getApplicationMode().getUserPracticeDTO().getPracticeName(),
-                        appointmentDTO.getMetadata().getPatientId(),
-                        appointmentDTO.getPayload().getProvider().getGuid(),
-                        appointmentDTO.getPayload().getLocation().getGuid()};
-                MixPanelUtil.logEvent(event, params, values);
-            }
-
-            @Override
-            public void onFailure(String exceptionMessage) {
-                hideProgressDialog();
-                showErrorNotification(exceptionMessage);
-                Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-
-                updateOnSuccess = false;
-            }
-
-        };
-    }
-
-    private void updateAppointment(WorkflowDTO workflowDTO) {
-        CheckInPayloadDTO payload = checkInDTO.getPayload();
-        if (null == payload) {
-            return;
-        }
-
-        PracticeAppointmentDTO practiceAppointmentDTO = DtoHelper
-                .getConvertedDTO(PracticeAppointmentDTO.class, workflowDTO);
-        AppointmentDTO newAppointmentDTO = practiceAppointmentDTO.getPayload().getPracticeAppointments();
-
-        List<AppointmentDTO> appointments = payload.getAppointments();
-        for (int i = 0; i < appointments.size(); i++) {
-            AppointmentDTO oldAppointmentDTO = appointments.get(i);
-            if (oldAppointmentDTO.getPayload().getId()
-                    .equalsIgnoreCase(newAppointmentDTO.getPayload().getId())) {
-
-                appointments.remove(i);
-
-                if (updateOnSuccess) {
-                    appointments.add(newAppointmentDTO);
-                }
-
-                break;
-            }
-        }
-    }
-
     private void showResponsibilityFragment(PaymentsModel paymentsModel) {
         String tag = ResponsibilityFragmentDialog.class.getName();
         ResponsibilityHeaderModel headerModel = ResponsibilityHeaderModel.newPatientHeader(paymentsModel);
@@ -645,14 +533,11 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                         .fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
                 AdHocFormsListFragment fragment = AdHocFormsListFragment.newInstance(appointmentsResultModel, patientId);
                 displayDialogFragment(fragment, false);
-                fragment.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        if (!isVisible()) {
-                            return;
-                        }
-                        showResponsibilityFragment(paymentsModel);
+                fragment.setOnDismissListener(dialog -> {
+                    if (!isVisible()) {
+                        return;
                     }
+                    showResponsibilityFragment(paymentsModel);
                 });
             }
 
@@ -663,23 +548,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
                 Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
             }
         };
-    }
-
-    @Override
-    public void onDetailItemClick(PaymentsModel paymentsModel, PendingBalancePayloadDTO paymentLineItem) {
-        PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-                .newInstance(paymentsModel, paymentLineItem, false);
-        displayDialogFragment(dialog, false);
-    }
-
-    @Override
-    public void onDetailCancelClicked(PaymentsModel paymentsModel) {
-        showResponsibilityFragment(paymentsModel);
-    }
-
-    @Override
-    public void onPaymentPlanAmount(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, double amount) {
-
     }
 
     @Override
@@ -695,13 +563,6 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     @Override
     public void onPartialPaymentClicked(double owedAmount, PendingBalanceDTO selectedBalance) {
 
-    }
-
-    @Override
-    public void displayBalanceDetails(PaymentsModel paymentsModel,
-                                      PendingBalancePayloadDTO paymentLineItem,
-                                      PendingBalanceDTO selectedBalance) {
-        onDetailItemClick(paymentsModel, paymentLineItem);
     }
 
     @Override
@@ -763,13 +624,18 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
     public void showAppointmentConfirmationFragment(AppointmentDTO appointmentDTO,
                                                     final BaseAvailabilityHourFragment baseAvailabilityHourFragment) {
         PracticeModeRequestAppointmentDialog fragment = PracticeModeRequestAppointmentDialog.newInstance(appointmentDTO, getPatient());
-        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialogInterface) {
-                baseAvailabilityHourFragment.showDialog();
-            }
-        });
+        fragment.setOnCancelListener(dialogInterface -> baseAvailabilityHourFragment.showDialog());
         showFragment(fragment);
+    }
+
+    @Override
+    public void onPaymentCashFinished() {
+        //NA
+    }
+
+    @Override
+    public void navigateToFragment(Fragment fragment, boolean addToBackStack) {
+        //NA
     }
 
     private WorkflowServiceCallback startVideoVisitCallback = new WorkflowServiceCallback() {
@@ -788,7 +654,7 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
             intent.setAction(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(url));
 
-            if(intent.resolveActivity(getContext().getPackageManager()) != null){
+            if (intent.resolveActivity(getContext().getPackageManager()) != null) {
                 startActivityForResult(intent, 555);
             }
         }

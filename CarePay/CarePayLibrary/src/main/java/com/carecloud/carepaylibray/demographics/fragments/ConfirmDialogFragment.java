@@ -2,8 +2,8 @@ package com.carecloud.carepaylibray.demographics.fragments;
 
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,30 +90,22 @@ public class ConfirmDialogFragment extends BaseDialogFragment {
         if (!StringUtil.isNullOrEmpty(message)) {
             ((TextView) view.findViewById(R.id.dialogMessageTextView)).setText(message);
         }
-        Button yesButton = (Button) view.findViewById(R.id.button_right_action);
+        Button yesButton = view.findViewById(R.id.button_right_action);
         String positiveButtonLabel = getArguments().getString("positiveButtonLabel");
         if (positiveButtonLabel != null) {
             yesButton.setText(positiveButtonLabel);
         }
-        yesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-                callback.onConfirm();
-            }
+        yesButton.setOnClickListener(view1 -> {
+            dismiss();
+            callback.onConfirm();
         });
-        Button noButton = (Button) view.findViewById(R.id.button_left_action);
+        Button noButton = view.findViewById(R.id.button_left_action);
         String negativeButtonLabel = getArguments().getString("negativeButtonLabel");
         if (negativeButtonLabel != null) {
             noButton.setText(negativeButtonLabel);
         }
         if (noButton != null) {
-            noButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    cancel();
-                }
-            });
+            noButton.setOnClickListener(view12 -> cancel());
             if (isNegativeAction) {
                 noButton.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_blue_border));
                 noButton.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
@@ -121,12 +113,7 @@ public class ConfirmDialogFragment extends BaseDialogFragment {
         }
         View closeView = view.findViewById(R.id.closeViewLayout);
         if (closeView != null) {
-            closeView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    cancel();
-                }
-            });
+            closeView.setOnClickListener(view13 -> cancel());
         }
 
         if (isNegativeAction) {

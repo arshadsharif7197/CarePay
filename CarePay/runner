@@ -129,24 +129,18 @@ fi
 ##########  EXAMPLE "PRACTICEAPP" OR "PATIENTAPP" AND COMPILES THAT PROJECT  ########
 #####################################################################################
 if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [[ "$COMMIT_MESSAGES" =~ clover.*app ]]; then
-    echo "${yellow}*** Skipping APK Build ***${reset}"
     echo "${green}*** Clover App Compile Check ***${reset}"
     ./gradlew :CarePayPracticeClover:compileProductionReleaseSources --profile --configure-on-demand
     echo "${green}*** Patient App Compile Check ***${reset}"
     ./gradlew :CarePayPatient:compileProductionReleaseSources --profile --configure-on-demand
     echo "${green}*** Practice App Compile Check ***${reset}"
     ./gradlew :CarePayPracticeTablet:compileProductionReleaseSources --profile --configure-on-demand
-elif [ "$TRAVIS_PULL_REQUEST" != "false" ] && [[ "$COMMIT_MESSAGES" =~ carepay ]]; then
-    echo "${yellow}*** Skipping APK Build ***${reset}"
-    echo "${yellow}*** Skipping Compile Check ***${reset}"
 elif [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
-    echo "${yellow}*** Skipping APK Build ***${reset}"
     echo "${green}*** Practice App Compile Check ***${reset}"
     ./gradlew :CarePayPracticeTablet:compileProductionReleaseSources --profile --configure-on-demand
     echo "${green}*** Patient App Compile Check ***${reset}"
     ./gradlew :CarePayPatient:compileProductionReleaseSources --profile --configure-on-demand
 fi
-
 
 ########### TEST FAIRY DEPLOY ###########
 if [[ $DEPLOY_SCRIPT == "testfairy" ]]; then

@@ -3,8 +3,9 @@ package com.carecloud.carepay.practice.library.payments.dialogs;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -133,10 +134,10 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
     public void onViewCreated(View view, Bundle icicle) {
         initToolbar(view);
 
-        deviceRecycler = (RecyclerView) view.findViewById(R.id.processing_devices_recycler);
+        deviceRecycler = view.findViewById(R.id.processing_devices_recycler);
         deviceRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-        selectedLocationText = (TextView) view.findViewById(R.id.selected_location);
+        selectedLocationText = view.findViewById(R.id.selected_location);
         selectedLocationText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -173,12 +174,11 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dismiss();
-                callback.dismissChooseDeviceList(paymentAmount, paymentsModel);
+                cancel();
             }
         });
 
-        TextView title = (TextView) view.findViewById(R.id.respons_toolbar_title);
+        TextView title = view.findViewById(R.id.respons_toolbar_title);
         ViewGroup.LayoutParams layoutParams = title.getLayoutParams();
         layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
         title.setLayoutParams(layoutParams);
@@ -374,46 +374,6 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
             new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
         }
     };
-//
-//    private void showChooseDialog(Context context, List<DemographicsOption> options) {
-//
-//        final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-//        // add cancel button
-//        dialog.setNegativeButton(Label.getLabel("demographics_cancel_label"), new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int pos) {
-//                dialogInterface.dismiss();
-//            }
-//        });
-//
-//        // create dialog layout
-//        View customView = LayoutInflater.from(context).inflate(R.layout.alert_list_layout, null, false);
-//        dialog.setView(customView);
-//        TextView titleTextView = (TextView) customView.findViewById(R.id.title_view);
-//        titleTextView.setText(Label.getLabel("payment_choose_location"));
-//        titleTextView.setVisibility(View.VISIBLE);
-//
-//
-//        // create the adapter
-//        ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
-//        CustomOptionsAdapter customOptionsAdapter = new CustomOptionsAdapter(context, options);
-//        listView.setAdapter(customOptionsAdapter);
-//
-//
-//        final AlertDialog alert = dialog.create();
-//        alert.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        alert.show();
-//
-//        // set item click listener
-//        AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long row) {
-//
-//                alert.dismiss();
-//            }
-//        };
-//        listView.setOnItemClickListener(clickListener);
-//    }
 
     private void getDeviceGroups() {
         String endpoint = String.format(getString(R.string.carepay_device_groups), paymentsModel.getPaymentPayload().getOrganizationId());
@@ -504,7 +464,9 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
                     groupMap.put(deviceGroup.getGroupName(), deviceGroup);
                 }
             }
-            updateSelectedLocation();
+            if (isVisible()) {
+                updateSelectedLocation();
+            }
         }
 
         @Override

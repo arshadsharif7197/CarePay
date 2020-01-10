@@ -13,11 +13,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.PermissionChecker;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -29,6 +24,11 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.PermissionChecker;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
@@ -45,10 +45,8 @@ import com.carecloud.carepaylibray.appointments.models.PortalSettingDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.common.DatePickerFragment;
-import com.carecloud.carepaylibray.common.options.OnOptionSelectedListener;
 import com.carecloud.carepaylibray.common.options.SelectOptionFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayProgressButton;
-import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -56,6 +54,7 @@ import com.carecloud.carepaylibray.utils.FileDownloadUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -70,8 +69,6 @@ import java.util.Map;
  */
 public class VisitSummaryDialogFragment extends BaseDialogFragment {
 
-    private static final int FROM_DATE = 100;
-    private static final int TO_DATE = 101;
     public static final long RETRY_TIME = 10000;
     private static final int MY_PERMISSIONS_VS_WRITE_EXTERNAL_STORAGE = 10;
     public static final int MAX_NUMBER_RETRIES = 6;
@@ -80,8 +77,8 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
     private UserPracticeDTO selectedPractice;
     private Date fromDate;
     private Date toDate;
-    private TextView dateToTextView;
     private TextView dateFromTextView;
+    private TextView dateToTextView;
     private CheckBox encryptedCheckBox;
     private EditText emailEditText;
     private RadioButton pdfOption;
@@ -116,19 +113,19 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater,
+    public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_visit_summary, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUpUI(view);
     }
 
-    BroadcastReceiver receiver = new BroadcastReceiver() {
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(final Context context, Intent intent) {
             String action = intent.getAction();
@@ -146,28 +143,20 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
 //                        exportButton.setProgressEnabled(false);
                         if (format.equals("pdf")) {
                             exportButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.openFile"));
-                            exportButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    String downloadLocalUri = cursor
-                                            .getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
-                                    if (downloadLocalUri != null) {
-                                        String downloadMimeType = cursor.getString(cursor
-                                                .getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE));
-                                        FileDownloadUtil
-                                                .openDownloadedAttachment(context, Uri.parse(downloadLocalUri), downloadMimeType);
-                                    }
+                            exportButton.setOnClickListener(v -> {
+                                String downloadLocalUri = cursor
+                                        .getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+                                if (downloadLocalUri != null) {
+                                    String downloadMimeType = cursor.getString(cursor
+                                            .getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE));
+                                    FileDownloadUtil
+                                            .openDownloadedAttachment(context, Uri.parse(downloadLocalUri), downloadMimeType);
                                 }
                             });
                         } else {
                             exportButton.setText(Label
                                     .getLabel("visitSummary.createVisitSummary.button.label.openDirectory"));
-                            exportButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    FileDownloadUtil.openDownloadDirectory(getContext());
-                                }
-                            });
+                            exportButton.setOnClickListener(v -> FileDownloadUtil.openDownloadDirectory(getContext()));
                         }
                         enqueueId = -1;
                     } else if (DownloadManager.STATUS_PAUSED == cursor.getInt(columnIndex)) {
@@ -202,12 +191,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
     private void setUpUI(View view) {
         View closeView = view.findViewById(R.id.dialog_close_header);
         if (closeView != null) {
-            view.findViewById(R.id.dialog_close_header).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dismiss();
-                }
-            });
+            view.findViewById(R.id.dialog_close_header).setOnClickListener(view1 -> dismiss());
         }
 
         final TextView practiceTextView = view.findViewById(R.id.practiceTextView);
@@ -220,45 +204,33 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
             practiceTextView.setText(selectedPractice.getPracticeName());
             practiceTextView.getOnFocusChangeListener().onFocusChange(practiceTextView, true);
         } else {
-            practiceTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SelectOptionFragment fragment = SelectOptionFragment.newInstance(
-                            Label.getLabel("visitSummary.createVisitSummary.choosePracticeDialog.title.choose"));
-                    fragment.setOptions(practices);
-                    fragment.setCallback(new OnOptionSelectedListener() {
-                        @Override
-                        public void onOptionSelected(DemographicsOption option, int position) {
-                            selectedPractice = practices.get(position);
-                            practiceTextView.setText(selectedPractice.getPracticeName());
-                            practiceTextView.getOnFocusChangeListener().onFocusChange(practiceTextView, true);
-                            enableExportButton();
-                        }
-                    });
-                    fragment.show(getActivity().getSupportFragmentManager(), fragment.getClass().getName());
-                }
+            practiceTextView.setOnClickListener(v -> {
+                SelectOptionFragment fragment = SelectOptionFragment.newInstance(
+                        Label.getLabel("visitSummary.createVisitSummary.choosePracticeDialog.title.choose"));
+                fragment.setOptions(practices);
+                fragment.setCallback((option, position) -> {
+                    selectedPractice = practices.get(position);
+                    practiceTextView.setText(selectedPractice.getPracticeName());
+                    practiceTextView.getOnFocusChangeListener().onFocusChange(practiceTextView, true);
+                    enableExportButton();
+                });
+                fragment.show(getActivity().getSupportFragmentManager(), fragment.getClass().getName());
             });
         }
 
         TextInputLayout dateFromTextInputLayout = view.findViewById(R.id.dateFromTextInputLayout);
         dateFromTextView = view.findViewById(R.id.dateFromTextView);
-        dateFromTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showCalendar(FROM_DATE);
-            }
-        });
-        dateFromTextView.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(dateFromTextInputLayout, null));
+        dateFromTextView.setOnClickListener(v -> showCalendar(DatePickerFragment.FROM_DATE_FLAG,
+                dateFromTextView.getText().toString()));
+        dateFromTextView.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(dateFromTextInputLayout,
+                null));
 
         TextInputLayout dateToTextInputLayout = view.findViewById(R.id.dateToTextInputLayout);
         dateToTextView = view.findViewById(R.id.dateToTextView);
-        dateToTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showCalendar(TO_DATE);
-            }
-        });
-        dateToTextView.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(dateToTextInputLayout, null));
+        dateToTextView.setOnClickListener(v -> showCalendar(DatePickerFragment.TO_DATE_FLAG,
+                dateToTextView.getText().toString()));
+        dateToTextView.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(dateToTextInputLayout,
+                null));
 
         TextInputLayout emailTextInputLayout = view.findViewById(R.id.emailTextInputLayout);
         emailEditText = view.findViewById(R.id.emailEditText);
@@ -280,12 +252,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         });
         emailEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(emailTextInputLayout, null));
 
-        CompoundButton.OnCheckedChangeListener optionListener = new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                enableExportButton();
-            }
-        };
+        CompoundButton.OnCheckedChangeListener optionListener = (compoundButton, b) -> enableExportButton();
         pdfOption = view.findViewById(R.id.pdfOption);
         xmlOption = view.findViewById(R.id.xmlOption);
         pdfOption.setOnCheckedChangeListener(optionListener);
@@ -305,7 +272,8 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                     if (userPracticeDTO.getPracticeId().equals(portalSettingDTO.getMetadata().getPracticeId())) {
                         for (PortalSetting portalSetting : portalSettingDTO.getPayload()) {
                             if (portalSetting.getName().toLowerCase().equals("visit summary")
-                                    && portalSetting.getStatus().toLowerCase().equals("a")) {
+                                    && portalSetting.getStatus().toLowerCase().equals("a")
+                                    && myHealthDto.getPayload().canViewAndCreateVisitSummaries(userPracticeDTO.getPracticeId())) {
                                 filteredPractices.add(userPracticeDTO);
                                 break;
                             }
@@ -347,44 +315,52 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         exportButton.setOnClickListener(exportSummaryListener);
     }
 
-    private void showCalendar(int flag) {
-        Calendar calendar = Calendar.getInstance();
-        if (flag == TO_DATE) {
-            calendar.setTimeInMillis(fromDate.getTime());
+    private void showCalendar(int flag, String showDate) {
+        Calendar fromCalendar = Calendar.getInstance();
+        Calendar toCalendar = Calendar.getInstance();
+        Calendar showCalendar = Calendar.getInstance();
+        if (flag == DatePickerFragment.FROM_DATE_FLAG) {
+            fromCalendar.set(2000, 0, 1);
+            if (toDate != null) {
+                toCalendar.setTimeInMillis(toDate.getTime());
+                toCalendar.set(Calendar.HOUR_OF_DAY, 23);
+            }
         } else {
-            calendar.set(1900, 1, 1);
+            toCalendar.add(Calendar.DATE, 1);
+            if (fromDate != null) {
+                fromCalendar.setTimeInMillis(fromDate.getTime());
+                fromCalendar.add(Calendar.DATE, 1);
+                showCalendar = fromCalendar;
+            }
         }
-        Calendar dueCal = Calendar.getInstance();
-        dueCal.add(Calendar.DATE, 1);
+        Date selectedDate = null;
+        if (!StringUtil.isNullOrEmpty(showDate)) {
+            selectedDate = DateUtil.getInstance().setDateRaw(showDate).getDate();
+        }
         DatePickerFragment fragment = DatePickerFragment
-                .newInstance(Label.getLabel("payment.oneTimePayment.input.label.date"),
-                        calendar.getTime(),
-                        dueCal.getTime(),
-                        dueCal.getTime(),
-                        new DatePickerFragment.DateRangePickerDialogListener() {
-                            @Override
-                            public void onDateSelected(Date selectedDate, int flag) {
-                                if (flag == FROM_DATE) {
-                                    if (selectedDate != null) {
-                                        fromDate = selectedDate;
-                                        dateFromTextView.setText(DateUtil.getInstance().setDate(fromDate)
-                                                .toStringWithFormatMmSlashDdSlashYyyy());
-                                        dateFromTextView.getOnFocusChangeListener().onFocusChange(dateFromTextView, true);
-                                        dateToTextView.setText("");
-                                        dateToTextView.getOnFocusChangeListener().onFocusChange(dateToTextView, false);
-                                        toDate = null;
-                                        dateToTextView.setEnabled(true);
-                                    }
-                                } else {
-                                    if (selectedDate != null) {
-                                        toDate = selectedDate;
-                                        dateToTextView.setText(DateUtil.getInstance().setDate(toDate)
-                                                .toStringWithFormatMmSlashDdSlashYyyy());
-                                        dateToTextView.getOnFocusChangeListener().onFocusChange(dateToTextView, true);
-                                    }
+                .newInstance(Label.getLabel("pick_date_heading"),
+                        fromCalendar.getTime(),
+                        toCalendar.getTime(),
+                        selectedDate,
+                        showCalendar.getTime(),
+                        (selectedDate1, flag1) -> {
+                            if (flag1 == DatePickerFragment.FROM_DATE_FLAG) {
+                                if (selectedDate1 != null) {
+                                    fromDate = selectedDate1;
+                                    dateFromTextView.setText(DateUtil.getInstance().setDate(fromDate)
+                                            .toStringWithFormatMmSlashDdSlashYyyy());
+                                    dateFromTextView.getOnFocusChangeListener().onFocusChange(dateFromTextView, true);
+                                    dateToTextView.setEnabled(true);
                                 }
-                                enableExportButton();
+                            } else {
+                                if (selectedDate1 != null) {
+                                    toDate = selectedDate1;
+                                    dateToTextView.setText(DateUtil.getInstance().setDate(toDate)
+                                            .toStringWithFormatMmSlashDdSlashYyyy());
+                                    dateToTextView.getOnFocusChangeListener().onFocusChange(dateToTextView, true);
+                                }
                             }
+                            enableExportButton();
                         },
                         flag);
         callback.displayDialogFragment(fragment, true);
@@ -457,12 +433,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                 } else if (status.equals("queued") || status.equals("working")) {
                     retryIntent++;
                     handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            callForStatus(jobId, selectedPractice, format);
-                        }
-                    }, RETRY_TIME);
+                    handler.postDelayed(() -> callForStatus(jobId, selectedPractice, format), RETRY_TIME);
                 }
             }
 

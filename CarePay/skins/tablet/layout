@@ -1,0 +1,24 @@
+parts {
+    device {
+        display {
+            width   1920
+            height  1200
+            x       0
+            y       0
+        }
+    }
+    
+}
+layouts {
+    landscape {
+        width     1920
+        height    1200
+    }
+}
+keyboard {
+    charmap qwerty2
+}
+network {
+    speed  full
+    delay  none
+}

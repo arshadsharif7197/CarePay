@@ -3,10 +3,6 @@ package com.carecloud.carepay.patient.demographics.fragments.settings;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -16,6 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepaylibray.common.options.OnOptionSelectedListener;
@@ -47,6 +47,7 @@ import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.smartystreets.api.us_zipcode.City;
 
@@ -172,8 +173,8 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
     }
 
     private void setUpExtendedDemographicFields(View view, DemographicPayloadDTO demographicPayload,
-                                                DemographicDataModel.Demographic demogarphic) {
-        DemographicsPersonalSection personalInfoSection = demogarphic.getPersonalDetails();
+                                                DemographicDataModel.Demographic demographic) {
+        DemographicsPersonalSection personalInfoSection = demographic.getPersonalDetails();
 
         setUpDemographicField(view, StringUtil.captialize(demographicPayload.getPersonalDetails().getPreferredName()).trim(),
                 personalInfoSection.getProperties().getPreferredName(), R.id.preferredNameContainer,
@@ -188,7 +189,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         socialSecurityNumber.addTextChangedListener(ssnInputFormatter);
         if (!dataModel.getDemographic().getPersonalDetails().getProperties().getSocialSecurityNumber().isRequired()) {
             socialSecurityNumber.addTextChangedListener(
-                    clearValidationErrorsOnTextChange((TextInputLayout) view.findViewById(R.id.socialSecurityInputLayout)));
+                    clearValidationErrorsOnTextChange(view.findViewById(R.id.socialSecurityInputLayout)));
         }
 
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getEmailAddress(),
@@ -222,7 +223,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         secondaryPhoneEditText.addTextChangedListener(phoneInputFormatter);
         if (!dataModel.getDemographic().getPersonalDetails().getProperties().getSecondaryPhoneNumber().isRequired()) {
             secondaryPhoneEditText.addTextChangedListener(
-                    clearValidationErrorsOnTextChange((TextInputLayout) view.findViewById(R.id.secondaryPhoneInputLayout)));
+                    clearValidationErrorsOnTextChange(view.findViewById(R.id.secondaryPhoneInputLayout)));
         }
 
         setUpDemographicField(view, demographicPayload.getPersonalDetails().getSecondaryPhoneNumberType(),
@@ -246,8 +247,8 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         //hide referral source
         view.findViewById(R.id.referralSourceDemographicsLayout).setVisibility(View.GONE);
 
-        setUpPrimaryCarePhysician(view, demographicPayload.getPrimaryPhysician(), demogarphic.getPrimaryPhysician());
-        setUpReferringPhysician(view, demographicPayload.getReferringPhysician(), demogarphic.getReferringPhysician());
+        setUpPrimaryCarePhysician(view, demographicPayload.getPrimaryPhysician(), demographic.getPrimaryPhysician());
+        setUpReferringPhysician(view, demographicPayload.getReferringPhysician(), demographic.getReferringPhysician());
     }
 
     private void setUpPrimaryCarePhysician(View view, PhysicianDto primaryPhysician,
@@ -269,7 +270,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
     protected void setUpPhysicianField(View view, final PhysicianDto physician,
                                        DemographicPhysicianSection demographicsField,
                                        int containerLayout, int inputLayoutId, int editTextId,
-                                       int optionalViewId, final int physicianType) {
+                                       int requiredViewId, final int physicianType) {
         view.findViewById(containerLayout).setVisibility(demographicsField.isDisplay() ? View.VISIBLE : View.GONE);
         final TextInputLayout inputLayout = view.findViewById(inputLayoutId);
         final EditText editText = view.findViewById(editTextId);
@@ -279,14 +280,9 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         }
         editText.getOnFocusChangeListener().onFocusChange(editText,
                 !StringUtil.isNullOrEmpty(editText.getText().toString().trim()));
-        final View optionalView = view.findViewById(optionalViewId);
-        optionalView.setVisibility(!demographicsField.isRequired() && physician == null ? View.VISIBLE : View.GONE);
-        editText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.showSearchPhysicianFragmentDialog(physician, physicianType);
-            }
-        });
+        final View optionalView = view.findViewById(requiredViewId);
+        optionalView.setVisibility(demographicsField.isRequired() && physician == null ? View.VISIBLE : View.GONE);
+        editText.setOnClickListener(view1 -> callback.showSearchPhysicianFragmentDialog(physician, physicianType));
     }
 
     private void setUpEmergencyContact(View view, PatientModel emergencyContact) {
@@ -304,17 +300,10 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
         emergencyContactEditText.getOnFocusChangeListener().onFocusChange(emergencyContactEditText,
                 !StringUtil.isNullOrEmpty(emergencyContactEditText.getText().toString().trim()));
         view.findViewById(R.id.emergencyContactRequiredLabel)
-                .setVisibility(!emergencyContactSection.isRequired()
+                .setVisibility(emergencyContactSection.isRequired()
                         && StringUtil.isNullOrEmpty(emergencyContactEditText.getText().toString())
                         ? View.VISIBLE : View.GONE);
-        emergencyContactEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.showAddEditEmergencyContactDialog();
-            }
-        });
-
-
+        emergencyContactEditText.setOnClickListener(view1 -> callback.showAddEditEmergencyContactDialog());
     }
 
     private void setUpEmployer(final View view, DemographicPayloadDTO demographicPayload,
@@ -354,17 +343,14 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                     || employmentStatus.toLowerCase().equals("part time");
         }
 
-        if (!employmentInfoSection.getProperties().getEmploymentStatus().isRequired()
+        if (employmentInfoSection.getProperties().getEmploymentStatus().isRequired()
                 && StringUtil.isNullOrEmpty(employmentStatus)) {
             employmentStatusRequired.setVisibility(View.VISIBLE);
         }
-        if (!employmentInfoSection.isRequired()) {
-            view.findViewById(R.id.employmentInfoRequiredTextView).setVisibility(View.VISIBLE);
-//            view.findViewById(R.id.employmentInfoContainer).setVisibility(View.GONE);
-        }
+        view.findViewById(R.id.employmentInfoRequiredTextView).setVisibility(
+                employmentInfoSection.isRequired() ? View.VISIBLE : View.GONE);
 
         setEmployerInfoFields(view, demographicPayload, employmentInfoSection);
-
     }
 
     private void setEmployerInfoFields(View view, DemographicPayloadDTO demographicPayload,

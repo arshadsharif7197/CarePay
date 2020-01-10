@@ -1,6 +1,5 @@
 package com.carecloud.carepay.patient.demographics.fragments.settings;
 
-import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -15,6 +14,7 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.Demograp
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
 
@@ -227,7 +227,7 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
     }
 
     protected void setUpDemographicField(View view, String value, DemographicsField demographicsField,
-                                         int containerLayout, int inputLayoutId, int editTextId, int optionalViewId,
+                                         int containerLayout, int inputLayoutId, int editTextId, int requiredViewId,
                                          DemographicsOption demographicsOption, String optionDialogTitle) {
         view.findViewById(containerLayout).setVisibility(demographicsField.isDisplayed() ? View.VISIBLE : View.GONE);
         final TextInputLayout inputLayout = view.findViewById(inputLayoutId);
@@ -236,19 +236,17 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
         editText.setText(value);
         editText.getOnFocusChangeListener().onFocusChange(editText,
                 !StringUtil.isNullOrEmpty(editText.getText().toString().trim()));
-        final View optionalView = view.findViewById(optionalViewId);
-        optionalView.setVisibility(!demographicsField.isRequired()
+        final View requiredLabel = view.findViewById(requiredViewId);
+        requiredLabel.setVisibility(demographicsField.isRequired()
                 && StringUtil.isNullOrEmpty(value) ? View.VISIBLE : View.GONE);
         if (demographicsOption != null) {
             editText.setOnClickListener(getEditTextClickListener(demographicsField.getOptions(),
-                    inputLayout, editText, optionalView,
+                    inputLayout, editText, requiredLabel,
                     demographicsOption, optionDialogTitle));
             demographicsOption.setName(editText.getText().toString());
             demographicsOption.setLabel(editText.getText().toString());
         } else if (demographicsField.isRequired()) {
-            editText.addTextChangedListener(getValidateEmptyTextWatcher(inputLayout));
-        } else {
-            editText.addTextChangedListener(getOptionalViewTextWatcher(optionalView));
+            editText.addTextChangedListener(getOptionalViewTextWatcher(requiredLabel));
         }
     }
 

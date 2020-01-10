@@ -1,17 +1,18 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.adapter.PaymentPlanItemAdapter;
@@ -20,6 +21,8 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
+import com.carecloud.carepaylibray.payeeze.PayeezyCall;
+import com.carecloud.carepaylibray.payeeze.model.CreditCard;
 import com.carecloud.carepaylibray.payments.adapter.CreditCardsListAdapter;
 import com.carecloud.carepaylibray.payments.fragments.BaseAddCreditCardFragment;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanFragment;
@@ -38,20 +41,18 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPo
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
+import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
-import com.carecloud.carepaylibray.utils.PayeezyRequestTask;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
-import com.payeezy.sdk.payeezytokenised.TransactionDataProvider;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by lmenendez on 4/17/18
@@ -59,7 +60,7 @@ import java.util.regex.Pattern;
 
 public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         implements CreditCardsListAdapter.CreditCardSelectionListener,
-        PaymentPlanItemAdapter.PaymentPlanItemInterface, PayeezyRequestTask.AuthorizeCreditCardCallback,
+        PaymentPlanItemAdapter.PaymentPlanItemInterface,
         BaseAddCreditCardFragment.IAuthoriseCreditCardResponse {
 
     protected PaymentCreditCardsPayloadDTO selectedCreditCard;
@@ -109,24 +110,19 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
     }
 
     protected void setupToolbar(View view, String titleString) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.payment_toolbar);
+        Toolbar toolbar = view.findViewById(R.id.payment_toolbar);
         if (toolbar != null) {
-            TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+            TextView title = toolbar.findViewById(R.id.toolbar_title);
             title.setText(titleString);
         }
 
         View closeButton = view.findViewById(R.id.closeViewLayout);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancel();
-            }
-        });
+        closeButton.setOnClickListener(v -> cancel());
     }
 
     protected void setUpAmounts(View view) {
         double unAppliedCredit = selectedBalance.getPayload().get(0).getUnappliedCredit() * -1;
-        TextView unAppliedValueTextView = (TextView) view.findViewById(R.id.unAppliedValueTextView);
+        TextView unAppliedValueTextView = view.findViewById(R.id.unAppliedValueTextView);
         unAppliedValueTextView.setText(currencyFormatter.format(unAppliedCredit));
         if (unAppliedCredit < 0.01) {
             unAppliedValueTextView.setVisibility(View.GONE);
@@ -135,16 +131,16 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
             view.findViewById(R.id.balanceLabelSeparator).setVisibility(View.GONE);
         }
 
-        TextView balanceValueTextView = (TextView) view.findViewById(R.id.balanceValueTextView);
+        TextView balanceValueTextView = view.findViewById(R.id.balanceValueTextView);
         totalBalance = getTotalBalance(selectedBalance);
         balanceValueTextView.setText(currencyFormatter.format(totalBalance));
 
-        paymentValueTextView = (TextView) view.findViewById(R.id.paymentValueTextView);
+        paymentValueTextView = view.findViewById(R.id.paymentValueTextView);
         paymentValueTextView.setText(currencyFormatter.format(paymentPlanAmount));
     }
 
     protected void setUpItems(View view, List<BalanceItemDTO> items) {
-        RecyclerView itemsRecycler = (RecyclerView) view.findViewById(R.id.itemRecycler);
+        RecyclerView itemsRecycler = view.findViewById(R.id.itemRecycler);
         itemsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new PaymentPlanItemAdapter(items);
         adapter.setCallback(this);
@@ -154,29 +150,31 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
     @Override
     protected void setupButtons(final View view) {
         super.setupButtons(view);
-        createPlanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (validateFields(true)) {
-                    SystemUtil.hideSoftKeyboard(getContext(), view);
-                    if (selectedCreditCard != null && selectedCreditCard.getCreditCardsId() == null) {
-                        authorizeCreditCard();
-                    } else {
-                        mainButtonAction();
-                    }
+        createPlanButton.setOnClickListener(v -> {
+            if (validateFields(true)) {
+                SystemUtil.hideSoftKeyboard(getContext(), view);
+                if (selectedCreditCard != null && selectedCreditCard.getCreditCardsId() == null) {
+                    authorizeCreditCard();
+                } else {
+                    mainButtonAction();
                 }
             }
         });
-        addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
-        addNewCardButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callback.onAddPaymentPlanCard(paymentsModel, null, true);
-            }
-        });
+        addNewCardButton = view.findViewById(R.id.addNewCardButton);
+        addNewCardButton.setOnClickListener(v -> onAddPaymentPlanCard(paymentsModel, null, true));
         if (paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
             addNewCardButton.setText(Label.getLabel("payment_new_credit_card"));
         }
+    }
+
+    protected void onAddPaymentPlanCard(PaymentsModel paymentsModel,
+                                        PaymentPlanDTO paymentPlanDTO,
+                                        boolean onlySelectMode) {
+        PracticePaymentPlanAddCreditCardFragment fragment = PracticePaymentPlanAddCreditCardFragment
+                .newInstance(paymentsModel, (PaymentPlanDTO) null, onlySelectMode);
+        fragment.setOnCancelListener(onDialogCancelListener);
+        callback.displayDialogFragment(fragment, false);
+        hideDialog();
     }
 
     protected void mainButtonAction() {
@@ -239,7 +237,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
     }
 
     protected void setUpCreditCards(View view) {
-        RecyclerView creditCardsRecyclerView = (RecyclerView) view.findViewById(R.id.creditCardRecycler);
+        RecyclerView creditCardsRecyclerView = view.findViewById(R.id.creditCardRecycler);
         creditCardsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = paymentsModel
                 .getPaymentPayload().getPatientCreditCards();
@@ -301,6 +299,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
                 return false;
             } else {
                 clearError(installmentsInputLayout);
+                return false;
             }
         } else if (installments < 2) {
             setError(installmentsInputLayout,
@@ -321,6 +320,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
                 return false;
             } else {
                 clearError(R.id.paymentAmountInputLayout);
+                return false;
             }
         } else {
             clearError(R.id.paymentAmountInputLayout);
@@ -330,7 +330,9 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
             return false;
         }
 
-        return true;
+        Date expDate = DateUtil.getInstance().setDateRaw(selectedCreditCard.getExpireDt()).getDate();
+        expDate = DateUtil.getLastDayOfMonth(expDate);
+        return !expDate.before(new Date());
     }
 
     @Override
@@ -397,18 +399,15 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         if (prev != null) {
             ft.remove(prev);
         }
-        fragment.setCallback(new SelectAmountFragment.SelectAmountInterface() {
-            @Override
-            public void onAmountSelected(double amount) {
-                paymentPlanAmount = SystemUtil.safeSubtract(paymentPlanAmount, itemDTO.getAmountSelected());
-                itemDTO.setAmountSelected(amount);
-                itemDTO.setSelected(true);
-                paymentPlanAmount = SystemUtil.safeAdd(paymentPlanAmount, itemDTO.getAmountSelected());
-                paymentValueTextView.setText(currencyFormatter.format(paymentPlanAmount));
-                adapter.notifyDataSetChanged();
-                refreshNumberOfPayments(String.valueOf(installments));
-                enableCreatePlanButton();
-            }
+        fragment.setCallback(amount -> {
+            paymentPlanAmount = SystemUtil.safeSubtract(paymentPlanAmount, itemDTO.getAmountSelected());
+            itemDTO.setAmountSelected(amount);
+            itemDTO.setSelected(true);
+            paymentPlanAmount = SystemUtil.safeAdd(paymentPlanAmount, itemDTO.getAmountSelected());
+            paymentValueTextView.setText(currencyFormatter.format(paymentPlanAmount));
+            adapter.notifyDataSetChanged();
+            refreshNumberOfPayments(String.valueOf(installments));
+            enableCreatePlanButton();
         });
         fragment.show(ft, tag);
     }
@@ -477,73 +476,42 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
     }
 
     protected void authorizeCreditCard() {
-        String currency = "USD";
         String cvv = selectedCreditCard.getCvv();
         String expiryDate = selectedCreditCard.getExpireDt();
         String name = selectedCreditCard.getNameOnCard();
         String cardType = selectedCreditCard.getCardType();
         String number = selectedCreditCard.getCompleteNumber();
 
-        try {
-            showProgressDialog();
-            MerchantServiceMetadataDTO merchantServiceDTO = null;
-            for (MerchantServicesDTO merchantService : paymentsModel.getPaymentPayload().getMerchantServices()) {
-                if (merchantService.getName().toLowerCase().contains("payeezy")) {
-                    merchantServiceDTO = merchantService.getMetadata();
-                    break;
-                }
+        MerchantServiceMetadataDTO merchantServiceDTO = null;
+        for (MerchantServicesDTO merchantService : paymentsModel.getPaymentPayload().getMerchantServices()) {
+            if (merchantService.getName().toLowerCase().contains("payeezy")) {
+                merchantServiceDTO = merchantService.getMetadata();
+                break;
             }
-
-            String tokenUrl = merchantServiceDTO.getBaseUrl() + merchantServiceDTO.getUrlPath();
-            if (!tokenUrl.endsWith("?")) {
-                tokenUrl += "?";
-            }
-
-            TransactionDataProvider.tokenUrl = tokenUrl;
-            TransactionDataProvider.appIdCert = merchantServiceDTO.getApiKey();
-            TransactionDataProvider.secureIdCert = merchantServiceDTO.getApiSecret();
-            TransactionDataProvider.tokenCert = merchantServiceDTO.getMasterMerchantToken();
-            TransactionDataProvider.trTokenInt = merchantServiceDTO.getMasterTaToken();
-            TransactionDataProvider.jsSecurityKey = merchantServiceDTO.getMasterJsSecurityKey();
-            TransactionDataProvider.taToken = merchantServiceDTO.getMasterTaToken();
-
-            String tokenType = merchantServiceDTO.getTokenType();
-            String tokenAuth = merchantServiceDTO.getTokenizationAuth();
-            PayeezyRequestTask requestTask = new PayeezyRequestTask(getContext(), this);
-            requestTask.execute("gettokenvisa", tokenAuth, "", currency, tokenType, cardType, name,
-                    number, expiryDate, cvv);
-            System.out.println("first authorize call end");
-        } catch (Exception e) {
-            hideDialog();
-            System.out.println(e.getMessage());
         }
-        System.out.println("authorize call end");
-    }
 
-    @Override
-    public void onAuthorizeCreditCard(String resString) {
-        String valueString = "value";
-        if (resString != null && resString.contains(valueString)) {
+        CreditCard creditCard = new CreditCard();
+        creditCard.setCardHolderName(name);
+        creditCard.setCardNumber(number);
+        creditCard.setCvv(cvv);
+        creditCard.setExpDate(expiryDate);
+        creditCard.setType(cardType);
 
-            String group1 = "(\\\"value\\\":\")";
-            String group2 = "(\\d+)";
-            String regex = group1 + group2;
-            String tokenValue = null;
-            Matcher matcher = Pattern.compile(regex).matcher(resString);
-            if (matcher.find()) {
-                tokenValue = matcher.group().replaceAll(group1, "");
-            }
-
-            if (tokenValue != null && tokenValue.matches(group2)) {
-                selectedCreditCard.setToken(tokenValue);
-                onAuthorizeCreditCardSuccess();
+        showProgressDialog();
+        PayeezyCall payeezyCall = new PayeezyCall();
+        payeezyCall.doCall(creditCard, merchantServiceDTO, tokenizeResponse -> {
+            hideProgressDialog();
+            if (tokenizeResponse != null) {
+                if (tokenizeResponse.getToken() != null) {
+                    selectedCreditCard.setToken(tokenizeResponse.getToken().getValue());
+                    onAuthorizeCreditCardSuccess();
+                } else {
+                    onAuthorizeCreditCardFailed();
+                }
             } else {
                 onAuthorizeCreditCardFailed();
             }
-
-        } else {
-            onAuthorizeCreditCardFailed();
-        }
+        });
     }
 
     @Override

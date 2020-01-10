@@ -18,9 +18,9 @@ package com.carecloud.carepay.patient.signinsignuppatient.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.core.hardware.fingerprint.FingerprintManagerCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,8 +44,8 @@ public class FingerprintAuthenticationDialogFragment extends DialogFragment
         implements FingerprintUiHelper.Callback {
 
 
-    static final long ERROR_TIMEOUT_MILLIS = 500;
-    static final long SUCCESS_DELAY_MILLIS = 1300;
+    private static final long ERROR_TIMEOUT_MILLIS = 500;
+    private static final long SUCCESS_DELAY_MILLIS = 1300;
 
     private Stage mStage = Stage.FINGERPRINT;
 
@@ -92,15 +92,10 @@ public class FingerprintAuthenticationDialogFragment extends DialogFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getDialog().setTitle(Label.getLabel("signin.fingerPrintDialog.title.label.dialogTitle"));
-        Button mCancelButton = (Button) view.findViewById(R.id.cancelButton);
-        mCancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
-        });
-        mIcon = (ImageView) view.findViewById(R.id.fingerPrintImageView);
-        statusTextView = (TextView) view.findViewById(R.id.fingerprint_status);
+        Button mCancelButton = view.findViewById(R.id.cancelButton);
+        mCancelButton.setOnClickListener(view1 -> dismiss());
+        mIcon = view.findViewById(R.id.fingerPrintImageView);
+        statusTextView = view.findViewById(R.id.fingerprint_status);
         FingerprintManagerCompat fingerPrintManager = FingerprintManagerCompat.from(getContext());
         mFingerprintUiHelper = new FingerprintUiHelper(fingerPrintManager, this);
     }
@@ -141,38 +136,28 @@ public class FingerprintAuthenticationDialogFragment extends DialogFragment
         statusTextView.removeCallbacks(mResetErrorTextRunnable);
         mIcon.setImageResource(R.drawable.ic_fingerprint_success);
         mIcon.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-//        mErrorTextView.setTextColor(
-//                mErrorTextView.getResources().getColor(R.color.success_color));
         statusTextView.setText(Label.getLabel("signin.fingerPrintDialog.title.label.fingerPrintRecognized"));
-        mIcon.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                String user = ApplicationPreferences.getInstance().getUserName();
-                String pwd = EncryptionUtil.decrypt(getContext(), ApplicationPreferences.getInstance().getUserPassword(), user);
-                callback.authenticate(user, pwd);
-                dismiss();
-            }
+        mIcon.postDelayed(() -> {
+            String user = ApplicationPreferences.getInstance().getUserName();
+            String pwd = EncryptionUtil.decrypt(getContext(), ApplicationPreferences.getInstance().getUserPassword(), user);
+            callback.authenticate(user, pwd);
+            dismiss();
         }, SUCCESS_DELAY_MILLIS);
     }
 
     @Override
     public void onError(final String error) {
-        mIcon.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mIcon.setImageResource(R.drawable.ic_fingerprint_error);
-                mIcon.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                statusTextView.setText(error);
-//                statusTextView.setTextColor(
-//                        statusTextView.getResources().getColor(R.color.warning_color));
-                statusTextView.removeCallbacks(mResetErrorTextRunnable);
-                statusTextView.postDelayed(mResetErrorTextRunnable, SUCCESS_DELAY_MILLIS);
-            }
+        mIcon.postDelayed(() -> {
+            mIcon.setImageResource(R.drawable.ic_fingerprint_error);
+            mIcon.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+            statusTextView.setText(error);
+            statusTextView.removeCallbacks(mResetErrorTextRunnable);
+            statusTextView.postDelayed(mResetErrorTextRunnable, SUCCESS_DELAY_MILLIS);
         }, ERROR_TIMEOUT_MILLIS);
 
     }
 
-    Runnable mResetErrorTextRunnable = new Runnable() {
+    private Runnable mResetErrorTextRunnable = new Runnable() {
         @Override
         public void run() {
             if (getActivity() != null) {

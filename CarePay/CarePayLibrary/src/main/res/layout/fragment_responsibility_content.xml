@@ -40,9 +40,10 @@
         android:layout_margin="@dimen/dimen_17dp"
         android:background="@drawable/bg_green_selector"
         app:customAssetFont="gotham_rounded_medium"
-        breeze:textKey="payment_options_button" />
+        breeze:textKey="payment_options_button"
+        android:contentDescription="@string/content_description_payment_options_button"/>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/responsibility_line_item_recycle_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -37,6 +37,9 @@ public class MerchantServiceMetadataDTO {
     @SerializedName("tokenization_auth")
     @Expose
     private String tokenizationAuth;
+    @SerializedName("tokenization_path_post")
+    @Expose
+    private String urlPostPath;
 
     /**
      * Gets api key.
@@ -194,5 +197,13 @@ public class MerchantServiceMetadataDTO {
 
     public void setTokenizationAuth(String tokenizationAuth) {
         this.tokenizationAuth = tokenizationAuth;
+    }
+
+    public String getUrlPostPath() {
+        return urlPostPath;
+    }
+
+    public void setUrlPostPath(String urlPostPath) {
+        this.urlPostPath = urlPostPath;
     }
 }

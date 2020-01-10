@@ -2,11 +2,6 @@ package com.carecloud.carepaylibray.medications.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,8 +10,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -45,7 +47,8 @@ import java.util.Map;
  * Created by lmenendez on 2/15/17
  */
 
-public class MedicationAllergySearchFragment extends BaseDialogFragment implements MedicationAllergySearchAdapter.SearchItemSelectedCallback {
+public class MedicationAllergySearchFragment extends BaseDialogFragment
+        implements MedicationAllergySearchAdapter.SearchItemSelectedCallback {
     public static final int ALLERGY_ITEM = 100;
     public static final int MEDICATION_ITEM = 101;
 
@@ -56,7 +59,8 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
     private RecyclerView searchRecycler;
     private SearchView searchView;
     private Button unlisted;
-    private View emptyList;
+    private View noResultsContainer;
+    private View initialScreenContainer;
 
     public static MedicationAllergySearchFragment newInstance(MedicationsAllergiesResultsModel medicationsAllergiesDTO,
                                                               int searchMode) {
@@ -116,24 +120,21 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
     }
 
     private void inflateToolbarViews(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.search_toolbar);
+        Toolbar toolbar = view.findViewById(R.id.search_toolbar);
         toolbar.setTitle("");
         if (getDialog() == null) {
             toolbar.setNavigationIcon(ContextCompat.getDrawable(getContext(), R.drawable.icn_nav_back));
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SystemUtil.hideSoftKeyboard(getActivity());
-                    getActivity().onBackPressed();
-                }
+            toolbar.setNavigationOnClickListener(v -> {
+                SystemUtil.hideSoftKeyboard(getActivity());
+                getActivity().onBackPressed();
             });
         }
-        searchView = (SearchView) view.findViewById(R.id.search_entry_view);
+        searchView = view.findViewById(R.id.search_entry_view);
         searchView.setOnQueryTextListener(searchQueryListener);
         searchView.requestFocus(View.FOCUS_DOWN);
         SystemUtil.showSoftKeyboard(getActivity());
 
-        TextView title = (TextView) view.findViewById(R.id.toolbar_title);
+        TextView title = view.findViewById(R.id.toolbar_title);
         if (title != null) {
             if (searchMode == ALLERGY_ITEM) {
                 title.setText(Label.getLabel("allergies_title"));
@@ -175,27 +176,34 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
         }
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        searchRecycler = (RecyclerView) view.findViewById(R.id.search_recycler);
+        searchRecycler = view.findViewById(R.id.search_recycler);
         searchRecycler.setLayoutManager(layoutManager);
         View closeButton = view.findViewById(R.id.closeViewLayout);
         if (closeButton != null) {
-            closeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    SystemUtil.hideSoftKeyboard(getContext(), view);
-                    dismiss();
-                }
+            closeButton.setOnClickListener(view1 -> {
+                SystemUtil.hideSoftKeyboard(getContext(), view1);
+                dismiss();
             });
         }
 
-        TextView emptyMessage = view.findViewById(R.id.no_results_message);
-        emptyMessage.setText(Label.getLabel("payment_retail_items_no_results"));
-        emptyList = view.findViewById(R.id.emptyStateScreen);
+        noResultsContainer = view.findViewById(R.id.noResultsContainer);
+
+        if (getApplicationMode().getApplicationType().equals(ApplicationMode.ApplicationType.PATIENT)) {
+            initialScreenContainer = view.findViewById(R.id.initialScreenContainer);
+            TextView initialScreenTitleTextView = view.findViewById(R.id.initialScreenTitleTextView);
+            initialScreenTitleTextView.setText(searchMode == ALLERGY_ITEM ?
+                    Label.getLabel("medications_allergies_search_allergy_title") :
+                    Label.getLabel("medications_allergies_search_medication_title"));
+            TextView initialScreenSubTitleTextView = view.findViewById(R.id.initialScreenSubTitleTextView);
+            initialScreenSubTitleTextView.setText(searchMode == ALLERGY_ITEM ?
+                    Label.getLabel("medications_allergies_search_subtitle") :
+                    Label.getLabel("medications_allergies_search_medication_subtitle"));
+        }
     }
 
     private void setAdapters() {
         MedicationAllergySearchAdapter adapter = new MedicationAllergySearchAdapter(getContext(),
-                new ArrayList<MedicationsAllergiesObject>(), this, searchMode);
+                new ArrayList<>(), this, searchMode);
         searchRecycler.setAdapter(adapter);
     }
 
@@ -250,13 +258,27 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
         @Override
         public boolean onQueryTextChange(String newText) {
             if (newText != null && newText.length() > 0) {
-                getWorkflowServiceHelper().interrupt();
+//                getWorkflowServiceHelper().interrupt();
                 submitSearch(newText, searchMode);
+                showHideInitialScreen(false);
+            } else {
+                showHideInitialScreen(true);
+                noResultsContainer.setVisibility(View.GONE);
+                MedicationAllergySearchAdapter adapter = (MedicationAllergySearchAdapter) searchRecycler.getAdapter();
+                adapter.setItems(new ArrayList<>());
+                adapter.notifyDataSetChanged();
             }
             unlisted.setEnabled(!StringUtil.isNullOrEmpty(newText));
             return false;
         }
     };
+
+    private void showHideInitialScreen(boolean show) {
+        if (initialScreenContainer != null) {
+            initialScreenContainer.setVisibility(show ? View.VISIBLE : View.GONE);
+            searchRecycler.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
+    }
 
     private WorkflowServiceCallback searchCallback = new WorkflowServiceCallback() {
         @Override
@@ -282,7 +304,11 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment implemen
             adapter.setItems(resultsList);
             adapter.notifyDataSetChanged();
 
-            emptyList.setVisibility(resultsList.isEmpty() ? View.VISIBLE : View.GONE);
+            if (!StringUtil.isNullOrEmpty(searchView.getQuery().toString()) && resultsList.isEmpty()) {
+                noResultsContainer.setVisibility(View.VISIBLE);
+            } else if (!resultsList.isEmpty()) {
+                noResultsContainer.setVisibility(View.GONE);
+            }
         }
 
         @Override

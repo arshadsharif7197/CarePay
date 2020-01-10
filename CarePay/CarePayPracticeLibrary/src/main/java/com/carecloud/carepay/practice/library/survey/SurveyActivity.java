@@ -1,9 +1,9 @@
 package com.carecloud.carepay.practice.library.survey;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -218,6 +218,11 @@ public class SurveyActivity extends BasePracticeActivity implements FragmentActi
         if (getString(R.string.event_survey_started).equals(event)) {
             MixPanelUtil.startTimer(getString(R.string.timer_survey));
         }
+    }
+
+    @Override
+    public boolean manageSession() {
+        return true;
     }
 
 }

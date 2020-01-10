@@ -2,7 +2,9 @@ package com.carecloud.carepaylibray.appointments.createappointment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -27,6 +29,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class BaseDateRangeDialogFragment extends BaseDialogFragment {
 
+    private static final long MAX_DATE_RANGE = 35;
     private Date previousStartDate;
     private Date previousEndDate;
     private Date newEndDate;
@@ -64,7 +67,7 @@ public class BaseDateRangeDialogFragment extends BaseDialogFragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initCalendarView(view);
     }
@@ -77,7 +80,7 @@ public class BaseDateRangeDialogFragment extends BaseDialogFragment {
             selectedDates.add(previousStartDate);
             selectedDates.add(previousEndDate);
 
-            calendarPickerView.init(new Date(), getNextSixMonthCalendar().getTime())
+            calendarPickerView.init(new Date(), getNextFifteenMonthCalendar().getTime())
                     .inMode(CalendarPickerView.SelectionMode.RANGE)
                     .withSelectedDates(selectedDates);
         } else {
@@ -88,33 +91,30 @@ public class BaseDateRangeDialogFragment extends BaseDialogFragment {
             rangeEnd.add(Calendar.DAY_OF_MONTH, 7);
 
             Date today = new Date();
-            calendarPickerView.init(today, getNextSixMonthCalendar().getTime())
+            calendarPickerView.init(today, getNextFifteenMonthCalendar().getTime())
                     .inMode(CalendarPickerView.SelectionMode.RANGE);
         }
 
         calendarPickerView.setOnDateSelectedListener(onDateSelectListener);
 
         applyDateRangeButton = view.findViewById(R.id.applyDateRangeButton);
-        applyDateRangeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (newEndDate == null) {
-                    newEndDate = newStartDate;
-                }
-                callback.setDateRange(newStartDate, newEndDate);
-                dismiss();
+        applyDateRangeButton.setOnClickListener(v -> {
+            if (newEndDate == null) {
+                newEndDate = newStartDate;
             }
+            callback.setDateRange(newStartDate, newEndDate);
+            dismiss();
         });
         applyDateRangeButton.setEnabled(false);
     }
 
-    private Calendar getNextSixMonthCalendar() {
+    private Calendar getNextFifteenMonthCalendar() {
         final Calendar nextSixMonths = Calendar.getInstance();
-        nextSixMonths.add(Calendar.MONTH, 5);
+        nextSixMonths.add(Calendar.MONTH, 15);
         return nextSixMonths;
     }
 
-    CalendarPickerView.OnDateSelectedListener onDateSelectListener =
+    private CalendarPickerView.OnDateSelectedListener onDateSelectListener =
             new CalendarPickerView.OnDateSelectedListener() {
                 @Override
                 public void onDateSelected(Date date) {
@@ -135,9 +135,10 @@ public class BaseDateRangeDialogFragment extends BaseDialogFragment {
                     if (newStartDate != null && newEndDate != null) {
                         long diff = newEndDate.getTime() - newStartDate.getTime();
                         long numOfDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-                        if (numOfDays >= 93) {
-                            Toast.makeText(getActivity(), Label
-                                            .getLabel("add_appointment_max_date_range_message"),
+                        if (numOfDays >= MAX_DATE_RANGE) {
+                            Toast.makeText(getActivity(),
+                                    String.format(Label.getLabel("appointment.availability.dateRange.maxDaysValidation.message")
+                                            , MAX_DATE_RANGE),
                                     Toast.LENGTH_LONG).show();
                             acceptableRange = false;
                         }
@@ -171,7 +172,7 @@ public class BaseDateRangeDialogFragment extends BaseDialogFragment {
         }
     };
 
-    protected void clearSelectedDate() {
+    private void clearSelectedDate() {
         /*removing previously selected dates*/
         newStartDate = null;
         newEndDate = null;

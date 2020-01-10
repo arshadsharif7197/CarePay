@@ -56,11 +56,12 @@
                 android:layout_margin="@dimen/dimen_10dp"
                 android:layout_weight="0.5"
                 android:background="@drawable/button_green_fill_background"
-                android:textAllCaps="true"
+                android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_13"
                 app:customAssetFont="gotham_rounded_medium"
-                tools:text="Request Appointment" />
+                tools:text="Request Appointment"
+                android:contentDescription="@string/content_description_request_appointment"/>
         </LinearLayout>
 
         <ScrollView
@@ -285,7 +286,7 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"/>
 
-                        <android.support.v7.widget.AppCompatImageView
+                        <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/visit_type_video"
                             android:layout_width="@dimen/dimen_24dp"
                             android:layout_height="wrap_content"
