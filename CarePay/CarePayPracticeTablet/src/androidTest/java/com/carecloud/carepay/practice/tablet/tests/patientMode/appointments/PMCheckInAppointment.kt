@@ -1,11 +1,18 @@
 package com.carecloud.carepay.practice.tablet.tests.patientMode.appointments
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.carecloud.carepay.practice.tablet.pageObjects.patientMode.checkin.*
 import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.PracticeMainScreen
 import com.carecloud.carepay.practice.tablet.tests.BaseTest
-import com.carecloud.carepaylibray.androidTest.graphql.createAppointment
-import com.carecloud.carepaylibray.androidTest.graphql.getBreezeToken
-import com.carecloud.carepaylibray.androidTest.providers.makeRequest
+import com.carecloud.carepay.practice.tablet.tests.patientPassword
+import com.carecloud.test_module.data.PatientData
+import com.carecloud.test_module.graphqlrequests.changePatientFormSettings
+import com.carecloud.test_module.graphqlrequests.changePaymentSetting
+import com.carecloud.test_module.graphqlrequests.createAppointment
+import com.carecloud.test_module.graphqlrequests.deleteAppointment
+import com.carecloud.test_module.providers.formatAppointmentTime
+import com.carecloud.test_module.providers.initXavierProvider
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -16,11 +23,19 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class PMCheckInAppointment : BaseTest() {
 
+    private lateinit var apptTime: String
+    private var appointmentId: Int? = null
+    private val patient = PatientData.patient18
+
     @Before
     override
     fun setup() {
-        val response = makeRequest(getBreezeToken(appMode = "practice"))
-        makeRequest(createAppointment(), authHeader = response.data?.getBreezeSessionToken?.xavier_token.toString())
+        initXavierProvider()
+        val apptResponse = createAppointment(patient.id)
+        apptTime = formatAppointmentTime(apptResponse.data?.createAppointment?.start_time.toString())
+        appointmentId = apptResponse.data?.createAppointment?.id
+        changePaymentSetting("neither")
+        changePatientFormSettings(false)
         super.setup()
     }
 
@@ -32,16 +47,23 @@ class PMCheckInAppointment : BaseTest() {
                 .pressLetsStartButton()
                 .pressCheckInButton()
                 .pressLoginButton()
-                .typeUsername("dev_emails+qa.androidbreeze2@carecloud.com")
-                .typePassword("Test123!")
+                .typeUsername(patient.email)
+                .typePassword(patientPassword)
                 .pressLoginButton()
-                .checkInAppointment()
-                .personalInfoNextStep()
-                .addressNextStep()
-                .demographicsNextStep()
-                .medicationsNextStep()
-                .allergiesNextStep()
+                .checkInAppointment(CheckInPersonalInfo(), apptTime)
+                .personalInfoNextStep(CheckInAddress())
+                .addressNextStep(CheckInDemographics())
+                .demographicsNextStep(CheckInMedications())
+                .medicationsNextStep(CheckInAllergies())
+                .allergiesNextStep(CheckInOutConfirmation())
                 .verifyAppointmentStatus("Just Checked In")
                 .goHome()
+    }
+
+    @After
+    override
+    fun tearDown() {
+        deleteAppointment(appointmentId)
+        super.tearDown()
     }
 }

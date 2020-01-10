@@ -203,9 +203,9 @@
     <dimen name="findPatientItemVerticalPadding">11dp</dimen>
 
     <!--Dots Menu-->
-    <dimen name="dotSize">3dp</dimen>
-    <dimen name="dotHorizontalMargin">12dp</dimen>
-    <dimen name="dotSemiHorizontalMargin">6dp</dimen>
+    <dimen name="dotSize">3pt</dimen>
+    <dimen name="dotHorizontalMargin">12pt</dimen>
+    <dimen name="dotSemiHorizontalMargin">6pt</dimen>
 
     <!--Distribution Fragment-->
     <dimen name="payment_distibution_dialog_height">600dp</dimen>
@@ -487,8 +487,9 @@
     <dimen name="nextAppointmentMainContainerHorizontalPadding">40dp</dimen>
     <dimen name="nextAppointmentFieldHorizontalPadding">10dp</dimen>
     <dimen name="nextAppointmentFieldTopMargin">5dp</dimen>
-    <dimen name="nextAppointmentFieldTextSize">16sp</dimen>
+    <dimen name="nextAppointmentFieldTextSize">24sp</dimen>
     <dimen name="webFormButtonMargin">20dp</dimen>
+    <dimen name="nextAppointmentHeaderTextSize">18sp</dimen>
 
     <!--Personal Demographics-->
     <dimen name="demographicPictureContainerPadding">10dp</dimen>

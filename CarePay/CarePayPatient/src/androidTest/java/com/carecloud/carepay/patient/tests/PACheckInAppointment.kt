@@ -2,10 +2,21 @@ package com.carecloud.carepay.patient.tests
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.patient.BaseTest
+import com.carecloud.carepay.patient.pageObjects.LoginScreen
 import com.carecloud.carepay.patient.pageObjects.appointments.AppointmentScreen
-import com.carecloud.carepaylibray.androidTest.graphql.createAppointment
-import com.carecloud.carepaylibray.androidTest.graphql.getBreezeToken
-import com.carecloud.carepaylibray.androidTest.providers.makeRequest
+import com.carecloud.carepay.patient.pageObjects.checkin.CheckInAllergiesScreen
+import com.carecloud.carepay.patient.pageObjects.checkin.CheckInMedicationsScreen
+import com.carecloud.carepay.patient.pageObjects.checkin.demographics.CheckInDemogAddressScreen
+import com.carecloud.carepay.patient.pageObjects.checkin.demographics.CheckInDemogDemographicsScreen
+import com.carecloud.carepay.patient.patientPassword
+import com.carecloud.test_module.data.PatientData
+import com.carecloud.test_module.graphqlrequests.changePatientFormSettings
+import com.carecloud.test_module.graphqlrequests.changePaymentSetting
+import com.carecloud.test_module.graphqlrequests.createAppointment
+import com.carecloud.test_module.graphqlrequests.deleteAppointment
+import com.carecloud.test_module.providers.formatAppointmentTime
+import com.carecloud.test_module.providers.initXavierProvider
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -16,22 +27,42 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class PACheckInAppointment : BaseTest() {
 
+    private lateinit var apptTime: String
+    private var apptId: Int? = null
+    private val patient = PatientData.patient17
+
     @Before
     override
     fun setup() {
-        val response = makeRequest(getBreezeToken(appMode = "practice"))
-        makeRequest(createAppointment(), authHeader = response.data?.getBreezeSessionToken?.xavier_token.toString())
+        initXavierProvider()
+        val appointment = createAppointment(patient.id)
+        apptTime = formatAppointmentTime(appointment.data?.createAppointment?.start_time.toString())
+        apptId = appointment.data?.createAppointment?.id
+        changePaymentSetting("neither")
+        changePatientFormSettings(false)
         super.setup()
     }
 
     @Test
     fun paCheckInAppointment() {
-        AppointmentScreen()
-                .checkInFirstAppointmentOnList(1)
-                .personalInfoNextStep()
-                .addressNextStep()
-                .demographicsNextStep()
-                .medicationsNextstep()
-                .allergiesNextstep()
+        LoginScreen()
+                .typeUser(patient.email)
+                .typePassword(patientPassword)
+                .pressLoginButton()
+                .checkInAppointmentOnListAtTime(apptTime)
+                .personalInfoNextStep(CheckInDemogAddressScreen())
+                .addressNextStep(CheckInDemogDemographicsScreen())
+                .demographicsNextStep(CheckInMedicationsScreen())
+                .medicationsNextstep(CheckInAllergiesScreen())
+                .allergiesNextstep(AppointmentScreen())
+                .discardReviewPopup()
     }
+
+    @After
+    override
+    fun tearDown() {
+        deleteAppointment(apptId)
+        super.tearDown()
+    }
+
 }

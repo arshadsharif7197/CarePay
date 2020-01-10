@@ -228,7 +228,8 @@
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="add_appointment_location_hint"
                 tools:text="Tap here to choose a location"
-                android:contentDescription="@string/content_description_choose_location"/>
+                android:contentDescription="@string/content_description_choose_location"
+                android:visibility="visible"/>
 
             <include
                 android:id="@+id/locationContainer"

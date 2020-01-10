@@ -51,8 +51,7 @@ public class SplashActivity extends BasePatientActivity {
         String newRelicId = BuildConfig.NEW_RELIC_ID;
         NewRelic.withApplicationToken(newRelicId).start(this.getApplication());
 
-        Intent intent = new Intent(this, RegistrationIntentService.class);
-        startService(intent);
+        RegistrationIntentService.enqueueWork(getContext(), new Intent());
 
         Intent queueIntent = new Intent(getContext(), AndroidPayQueueUploadService.class);
         startService(queueIntent);//send any pending android pay payments

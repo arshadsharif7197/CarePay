@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.carecloud.carepay.patient.myhealth.BaseViewModel;
 import com.carecloud.carepay.patient.session.PatientSessionService;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -35,6 +36,18 @@ public abstract class BasePatientActivity extends BaseActivity implements Sessio
      */
     public void navigateToWorkflow(WorkflowDTO workflowDTO, Bundle info) {
         PatientNavigationHelper.navigateToWorkflow(this, workflowDTO, info);
+    }
+
+    public void setBasicObservers(BaseViewModel viewModel) {
+        viewModel.getLoading().observe(this, isLoading -> {
+            if (isLoading) {
+                showProgressDialog();
+            } else {
+                hideProgressDialog();
+            }
+        });
+        viewModel.getErrorMessage().observe(this, this::showErrorNotification);
+        viewModel.getSuccessMessage().observe(this, this::showSuccessToast);
     }
 
     @Override

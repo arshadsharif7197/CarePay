@@ -310,7 +310,7 @@
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
                     android:id="@+id/saveCardOnFileCheckBox"
-                    style="@style/PaymentMethodLabelStyle"
+                    style="@style/PaymentMethodCheckBoxStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/creditCardOptionMargin"
@@ -319,7 +319,6 @@
                     android:drawableRight="@drawable/cell_checkbox"
                     android:padding="@dimen/creditCardFieldPadding"
                     android:textSize="@dimen/creditCardFieldTextSize"
-                    android:textColor="@color/colorPrimary"
                     app:customAssetFont="gotham_rounded_medium"
                     breeze:textKey="payment_save_card_on_file"
                     tools:text="Save Card on File" />
@@ -331,7 +330,7 @@
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
                     android:id="@+id/setAsDefaultCheckBox"
-                    style="@style/PaymentMethodLabelStyle"
+                    style="@style/PaymentMethodCheckBoxStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/creditCardOptionMargin"
@@ -339,7 +338,6 @@
                     android:button="@null"
                     android:drawableRight="@drawable/cell_checkbox"
                     android:padding="@dimen/creditCardFieldPadding"
-                    android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/addNewCreditCardTextFieldSize"
                     app:customAssetFont="gotham_rounded_medium"
                     breeze:textKey="payment_set_as_default_credit_card_label"

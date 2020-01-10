@@ -2,17 +2,20 @@ package com.carecloud.carepay.patient.myhealth.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.myhealth.MyHealthViewModel;
 import com.carecloud.carepay.patient.myhealth.adapters.AllergiesRecyclerViewAdapter;
 import com.carecloud.carepay.patient.myhealth.adapters.CareTeamRecyclerViewAdapter;
 import com.carecloud.carepay.patient.myhealth.adapters.ConditionsRecyclerViewAdapter;
@@ -27,6 +30,7 @@ import com.carecloud.carepay.patient.myhealth.dtos.MyHealthProviderDto;
 import com.carecloud.carepay.patient.myhealth.interfaces.MyHealthInterface;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -35,11 +39,11 @@ import java.util.List;
  */
 
 public class MyHealthListFragment extends BaseFragment {
-    public static final int LABS = 100;
-    public static final int MEDICATIONS = 101;
-    public static final int ALLERGIES = 102;
-    public static final int CONDITIONS = 103;
-    public static final int CARE_TEAM = 104;
+    static final int LABS = 100;
+    static final int MEDICATIONS = 101;
+    static final int ALLERGIES = 102;
+    static final int CONDITIONS = 103;
+    static final int CARE_TEAM = 104;
 
     private int type;
     private MyHealthInterface callback;
@@ -81,27 +85,21 @@ public class MyHealthListFragment extends BaseFragment {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         type = getArguments().getInt("type");
-        myHealthDto = (MyHealthDto) callback.getDto();
+        myHealthDto = ViewModelProviders.of(getActivity()).get(MyHealthViewModel.class).getMyHealthDto().getValue();
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_my_health_list, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
 
         FloatingActionButton fab = view.findViewById(R.id.actionButton);
         RecyclerView recyclerView = view.findViewById(R.id.myHealthRecyclerView);
@@ -132,13 +130,8 @@ public class MyHealthListFragment extends BaseFragment {
                         allergies, allergies.size());
                 allergiesAdapter.setCallback(callback);
                 recyclerView.setAdapter(allergiesAdapter);
-                fab.setVisibility(View.GONE);
-                fab.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        callback.addAllergy();
-                    }
-                });
+                fab.hide();
+                fab.setOnClickListener(view12 -> callback.addAllergy());
                 title.setText(Label.getLabel("my_health_list_allergy_title"));
                 break;
             case MEDICATIONS:
@@ -148,13 +141,8 @@ public class MyHealthListFragment extends BaseFragment {
                         medications, medications.size());
                 medicationsAdapter.setCallback(callback);
                 recyclerView.setAdapter(medicationsAdapter);
-                fab.setVisibility(View.GONE);
-                fab.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        callback.addMedication();
-                    }
-                });
+                fab.hide();
+                fab.setOnClickListener(view13 -> callback.addMedication());
                 title.setText(Label.getLabel("my_health_list_medication_title"));
                 break;
             case LABS:
