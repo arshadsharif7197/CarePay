@@ -60,7 +60,8 @@
             android:textColor="@color/colorPrimary"
             android:textSize="18sp"
             app:customAssetFont="proxima_nova_regular"
-            breeze:textKey="tutorial_skip" />
+            breeze:textKey="tutorial_skip"
+            android:contentDescription="@string/content_description_skip_tutorial"/>
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
             android:id="@+id/tutorial_done_button"

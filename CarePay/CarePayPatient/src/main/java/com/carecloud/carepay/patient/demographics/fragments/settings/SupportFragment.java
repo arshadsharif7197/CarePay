@@ -4,9 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.TextPaint;
@@ -19,11 +16,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 
 public class SupportFragment extends BaseFragment {
+
+    public static SupportFragment newInstance() {
+        return new SupportFragment();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
@@ -31,7 +37,7 @@ public class SupportFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle) {
+    public void onViewCreated(@NonNull View view, Bundle icicle) {
         initializeToolbar(view);
         initializeHelpContent(view);
         initializeEmailButton(view);
@@ -39,17 +45,17 @@ public class SupportFragment extends BaseFragment {
     }
 
     private void initializeToolbar(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
+        Toolbar toolbar = view.findViewById(R.id.settings_toolbar);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
-        TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
+        TextView title = toolbar.findViewById(R.id.settings_toolbar_title);
         title.setText(Label.getLabel("support_label"));
     }
 
     private void initializeHelpContent(View view) {
-        TextView textView = (TextView) view.findViewById(R.id.support_help_content);
-        TextView bottomTextView = (TextView) view.findViewById(R.id.support_help_content_bottom);
+        TextView textView = view.findViewById(R.id.support_help_content);
+        TextView bottomTextView = view.findViewById(R.id.support_help_content_bottom);
         String html = Label.getLabel("support_help_content_top");
         String bottomText = Label.getLabel("support_help_content_bottom");
 
@@ -73,23 +79,15 @@ public class SupportFragment extends BaseFragment {
     }
 
     private void initializeEmailButton(View view) {
-        Button button = (Button) view.findViewById(R.id.email_us_button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openEmailIntent();
-            }
-        });
+        Button button = view.findViewById(R.id.email_us_button);
+        button.setOnClickListener(view1 -> openEmailIntent());
     }
 
     private void initializePhoneButton(View view) {
-        Button button = (Button) view.findViewById(R.id.call_us_button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("tel:" + Label.getLabel("support_phone")));
-                startActivity(Intent.createChooser(intent, Label.getLabel("support_choose_client_label")));
-            }
+        Button button = view.findViewById(R.id.call_us_button);
+        button.setOnClickListener(view1 -> {
+            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + Label.getLabel("support_phone")));
+            startActivity(Intent.createChooser(intent, Label.getLabel("support_choose_client_label")));
         });
     }
 
@@ -98,12 +96,12 @@ public class SupportFragment extends BaseFragment {
         int end = strBuilder.getSpanEnd(span);
         int flags = strBuilder.getSpanFlags(span);
         ClickableSpan clickable = new ClickableSpan() {
-            public void onClick(View view) {
+            public void onClick(@NonNull View view) {
                 openEmailIntent();
             }
 
             @Override
-            public void updateDrawState(TextPaint ds) {
+            public void updateDrawState(@NonNull TextPaint ds) {
                 super.updateDrawState(ds);
                 ds.setUnderlineText(false);
             }
@@ -113,7 +111,8 @@ public class SupportFragment extends BaseFragment {
     }
 
     private void openEmailIntent() {
-        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", Label.getLabel("support_email_address"), null));
+        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto",
+                Label.getLabel("support_email_address"), null));
         intent.putExtra(Intent.EXTRA_SUBJECT, Label.getLabel("support_email_subject"));
         startActivity(Intent.createChooser(intent, Label.getLabel("support_choose_client_label")));
     }

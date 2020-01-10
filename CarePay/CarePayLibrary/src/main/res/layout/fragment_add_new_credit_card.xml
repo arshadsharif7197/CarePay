@@ -255,7 +255,7 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
                 android:id="@+id/saveCardOnFileCheckBox"
-                style="@style/PaymentAddCreditCardInputStyle"
+                style="@style/PaymentAddCreditCardCheckBoxStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/payment_method_layout_checkbox_margin"
@@ -273,7 +273,7 @@
 
             <com.carecloud.carepaylibray.customcomponents.CarePayCheckBox
                 android:id="@+id/setAsDefaultCheckBox"
-                style="@style/PaymentAddCreditCardInputStyle"
+                style="@style/PaymentAddCreditCardCheckBoxStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/payment_method_layout_checkbox_margin"

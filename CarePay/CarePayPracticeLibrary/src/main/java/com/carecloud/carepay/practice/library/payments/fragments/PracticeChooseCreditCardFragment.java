@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.CloverPaymentAdapter;
 import com.carecloud.carepay.service.library.CarePayConstants;
@@ -51,7 +53,7 @@ public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle) {
+    public void onViewCreated(@NonNull View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE) ||
                 HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_2_DEVICE);

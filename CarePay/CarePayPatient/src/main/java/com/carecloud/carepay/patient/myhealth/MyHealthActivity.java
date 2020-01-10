@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.myhealth.dtos.AllergyDto;
 import com.carecloud.carepay.patient.myhealth.dtos.LabDto;
@@ -50,19 +51,31 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
     private LabDto selectedLab;
 
     private MyHealthProviderDto selectedRecordProvider;
-    private MyHealthViewModel model;
+    private MyHealthViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        model = ViewModelProviders.of(this).get(MyHealthViewModel.class);
-        setBasicObservers(model);
+        setUpViewModel();
+
         myHealthDto = getConvertedDTO(MyHealthDto.class);
         if (myHealthDto == null) {
             callMyHealthService(icicle);
         } else {
             resumeOnCreate(icicle);
         }
+    }
+
+    private void setUpViewModel() {
+        viewModel = ViewModelProviders.of(this).get(MyHealthViewModel.class);
+        setBasicObservers(viewModel);
+        viewModel.getSkeleton().observe(this, showSkeleton -> {
+            if (showSkeleton) {
+                ShimmerFragment fragment = ShimmerFragment.newInstance(R.layout.shimmer_my_health_item);
+                fragment.setRowsNumber(3);
+                replaceFragment(fragment, false);
+            }
+        });
     }
 
     private void resumeOnCreate(Bundle icicle) {
@@ -72,7 +85,7 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
     }
 
     private void callMyHealthService(final Bundle icicle) {
-        model.getMyHealthDto(getTransitionMyHealth(), true).observe(this, dto -> {
+        viewModel.getMyHealthDto(getTransitionMyHealth(), true).observe(this, dto -> {
             myHealthDto = dto;
             resumeOnCreate(icicle);
         });
