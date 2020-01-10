@@ -5,14 +5,15 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.InsetDrawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.service.library.base.OptionNameInterface;
 import com.carecloud.carepaylibrary.R;
@@ -69,12 +70,7 @@ public class SelectOptionFragment extends BlurDialogFragment implements OnOption
         TextView dialogTitleTextView = view.findViewById(R.id.dialogTitleTextView);
         dialogTitleTextView.setText(StringUtil.capitalize(getArguments().getString("title")));
 
-        view.findViewById(R.id.closeImageView).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
-        });
+        view.findViewById(R.id.closeImageView).setOnClickListener(view1 -> dismiss());
     }
 
     public void setOptions(List<? extends OptionNameInterface> options) {

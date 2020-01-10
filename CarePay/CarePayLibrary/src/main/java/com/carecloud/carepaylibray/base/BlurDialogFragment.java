@@ -4,7 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v4.app.DialogFragment;
+
+import androidx.fragment.app.DialogFragment;
 
 import fr.tvbarthel.lib.blurdialogfragment.BlurDialogEngine;
 
@@ -59,6 +60,22 @@ public abstract class BlurDialogFragment extends DialogFragment {
 
         if (mBlurEngine != null) {
             mBlurEngine.onDetach();
+        }
+    }
+
+    public void showDialog(boolean showBlur) {
+        if (getDialog() != null) {
+            if (showBlur && mBlurEngine != null) {
+                mBlurEngine.onResume(getRetainInstance());
+            }
+        }
+    }
+
+    public void hideDialog(boolean hideBlur) {
+        if (getDialog() != null) {
+            if (hideBlur && mBlurEngine != null) {
+                mBlurEngine.onDismiss();
+            }
         }
     }
 }
