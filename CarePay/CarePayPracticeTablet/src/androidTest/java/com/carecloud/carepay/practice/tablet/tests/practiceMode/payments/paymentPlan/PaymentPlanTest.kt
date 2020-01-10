@@ -23,7 +23,7 @@ class PaymentPlanTest : BaseTest() {
     private val patient = PatientData.patient10
 
     @Test
-    fun a_createPaymentPlanTest() {
+    fun a_prCreatePaymentPlanTest() {
         PracticeMainScreen()
                 .pressPaymentButton()
                 .searchForPatient(patient.name)
@@ -37,7 +37,7 @@ class PaymentPlanTest : BaseTest() {
     }
 
     @Test
-    fun b_editPaymentPlanTest() {
+    fun b_prEditPaymentPlanTest() {
         PracticeMainScreen()
                 .pressPaymentButton()
                 .searchForPatient(patient.name)
@@ -50,7 +50,7 @@ class PaymentPlanTest : BaseTest() {
     }
 
     @Test
-    fun c_deletePaymentPlanTest() {
+    fun c_prDeletePaymentPlanTest() {
         PracticeMainScreen()
                 .pressPaymentButton()
                 .searchForPatient(patient.name)

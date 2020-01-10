@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.tests
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.patient.BaseTest
 import com.carecloud.carepay.patient.pageObjects.LoginScreen
+import com.carecloud.carepay.patient.patientPassword
 import com.carecloud.test_module.graphqlrequests.checkinAppointment
 import com.carecloud.test_module.graphqlrequests.createAppointment
 import com.carecloud.test_module.providers.initXavierProvider
@@ -29,7 +30,7 @@ class PACheckOutAppointment : BaseTest() {
     fun paCheckOutAppointment() {
         LoginScreen()
                 .typeUser("dev_emails+qa.automationbreeze4@carecloud.com")
-                .typePassword("Test123!")
+                .typePassword(patientPassword)
                 .pressLoginButton()
                 .checkOutFirstAppointmentOnList(1)
                 .scheduleAppointmentLater()

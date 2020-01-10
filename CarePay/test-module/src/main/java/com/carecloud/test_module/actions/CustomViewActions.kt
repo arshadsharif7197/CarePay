@@ -1,17 +1,17 @@
 package com.carecloud.test_module.actions
 
 import android.view.View
+import android.widget.HorizontalScrollView
+import android.widget.ScrollView
 import android.widget.TextView
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.PerformException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
-import androidx.test.espresso.action.GeneralLocation
-import androidx.test.espresso.action.GeneralSwipeAction
-import androidx.test.espresso.action.Press
-import androidx.test.espresso.action.Swipe
+import androidx.test.espresso.action.*
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
@@ -24,6 +24,7 @@ import androidx.test.espresso.web.sugar.Web.onWebView
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.*
 import java.util.concurrent.TimeoutException
+
 
 /**
  * Created by drodriguez on 08/12/19.
@@ -39,6 +40,14 @@ open class CustomViewActions {
     protected fun click(contentDescription: String, customClick: Boolean = false) {
         onView(allOf(withContentDescription(contentDescription), isDisplayed()))
                 .perform(if (customClick) customClickAction() else click())
+    }
+
+    /**
+     * Scroll to view and click action based on content description of the view
+     * @param contentDescription Content description of the view
+     */
+    protected fun scrollToAndClick(contentDescription: String) {
+        onView(withContentDescription(contentDescription)).perform(scroll(), click())
     }
 
     /**
@@ -352,6 +361,25 @@ open class CustomViewActions {
             }
         }
 
+    }
+
+
+    private fun scroll(): ViewAction {
+        stringHolder = mutableListOf()
+        return object : ViewAction {
+            override fun getConstraints(): Matcher<View> {
+                return allOf(withEffectiveVisibility(Visibility.VISIBLE), isDescendantOfA(anyOf(
+                        isAssignableFrom(ScrollView::class.java), isAssignableFrom(HorizontalScrollView::class.java), isAssignableFrom(NestedScrollView::class.java))))
+            }
+
+            override fun getDescription(): String {
+                return "Scrolling and clicking on a view"
+            }
+
+            override fun perform(uiController: UiController, view: View) {
+                ScrollToAction().perform(uiController, view)
+            }
+        }
     }
 
     /**

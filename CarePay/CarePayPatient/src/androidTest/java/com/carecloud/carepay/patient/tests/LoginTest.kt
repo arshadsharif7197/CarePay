@@ -4,6 +4,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.patient.BaseTest
 import com.carecloud.carepay.patient.pageObjects.LoginScreen
 import com.carecloud.carepay.patient.pageObjects.TutorialScreen
+import com.carecloud.carepay.patient.patientPassword
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -17,7 +18,7 @@ class LoginTest : BaseTest() {
     fun loginPatientTest() {
         LoginScreen()
                 .typeUser("dev_emails+qa.androidbreeze2@carecloud.com")
-                .typePassword("Test123!")
+                .typePassword(patientPassword)
                 .pressLoginButton()
     }
 }

@@ -10,7 +10,7 @@ import com.carecloud.test_module.actions.CustomViewActions
  */
 class CheckInOutConfirmation: CustomViewActions() {
     fun goHome(): PatientModeMainScreen {
-        click(appContext.getString(R.string.content_description_go_home_button))
+        click(appContext.getString(R.string.content_description_go_home_button), true)
         return PatientModeMainScreen()
     }
 

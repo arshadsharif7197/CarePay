@@ -8,6 +8,9 @@ import com.carecloud.carepay.patient.pageObjects.checkin.CheckInAllergiesScreen
 import com.carecloud.carepay.patient.pageObjects.checkin.CheckInMedicationsScreen
 import com.carecloud.carepay.patient.pageObjects.checkin.demographics.CheckInDemogAddressScreen
 import com.carecloud.carepay.patient.pageObjects.checkin.demographics.CheckInDemogDemographicsScreen
+import com.carecloud.carepay.patient.patientPassword
+import com.carecloud.test_module.data.PatientData
+import com.carecloud.test_module.graphqlrequests.changePatientFormSettings
 import com.carecloud.test_module.graphqlrequests.changePaymentSetting
 import com.carecloud.test_module.graphqlrequests.createAppointment
 import com.carecloud.test_module.graphqlrequests.deleteAppointment
@@ -26,23 +29,25 @@ class PACheckInAppointment : BaseTest() {
 
     private lateinit var apptTime: String
     private var apptId: Int? = null
+    private val patient = PatientData.patient17
 
     @Before
     override
     fun setup() {
         initXavierProvider()
-        val appointment = createAppointment()
+        val appointment = createAppointment(patient.id)
         apptTime = formatAppointmentTime(appointment.data?.createAppointment?.start_time.toString())
         apptId = appointment.data?.createAppointment?.id
         changePaymentSetting("neither")
+        changePatientFormSettings(false)
         super.setup()
     }
 
     @Test
     fun paCheckInAppointment() {
         LoginScreen()
-                .typeUser("dev_emails+qa.androidbreeze2@carecloud.com")
-                .typePassword("Test123!")
+                .typeUser(patient.email)
+                .typePassword(patientPassword)
                 .pressLoginButton()
                 .checkInAppointmentOnListAtTime(apptTime)
                 .personalInfoNextStep(CheckInDemogAddressScreen())

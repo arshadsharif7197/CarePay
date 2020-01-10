@@ -3,18 +3,20 @@ package com.carecloud.carepay.patient.tests
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.patient.BaseTest
 import com.carecloud.carepay.patient.pageObjects.LoginScreen
-import com.carecloud.carepay.patient.pageObjects.TutorialScreen
 import com.carecloud.carepay.patient.pageObjects.appointments.AppointmentScreen
 import com.carecloud.carepay.patient.pageObjects.checkin.CheckInAllergiesScreen
 import com.carecloud.carepay.patient.pageObjects.checkin.CheckInIntakeFormsScreen
 import com.carecloud.carepay.patient.pageObjects.checkin.CheckInMedicationsScreen
 import com.carecloud.carepay.patient.pageObjects.checkin.demographics.CheckInDemogAddressScreen
 import com.carecloud.carepay.patient.pageObjects.checkin.demographics.CheckInDemogDemographicsScreen
+import com.carecloud.carepay.patient.patientPassword
 import com.carecloud.test_module.data.PatientData
-import com.carecloud.test_module.graphqlrequests.*
+import com.carecloud.test_module.graphqlrequests.changePatientFormSettings
+import com.carecloud.test_module.graphqlrequests.changePaymentSetting
+import com.carecloud.test_module.graphqlrequests.createAppointment
+import com.carecloud.test_module.graphqlrequests.deleteAppointment
 import com.carecloud.test_module.providers.formatAppointmentTime
 import com.carecloud.test_module.providers.initXavierProvider
-import com.carecloud.test_module.providers.makeRequest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -46,7 +48,7 @@ class PACheckInAppointmentWithForm : BaseTest() {
     fun paCheckInAppointmentWithForm() {
         LoginScreen()
                 .typeUser(patient.email)
-                .typePassword("Test123!")
+                .typePassword(patientPassword)
                 .pressLoginButton()
                 .checkInAppointmentOnListAtTime(apptTime)
                 .personalInfoNextStep(CheckInDemogAddressScreen())
