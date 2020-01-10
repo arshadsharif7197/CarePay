@@ -6,17 +6,20 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -116,7 +119,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
                 dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isDisplayed(),
                 demographicPayload.getPersonalDetails().getMiddleName(),
                 dataModel.getDemographic().getPersonalDetails().getProperties().getMiddleName().isRequired(),
-                view.findViewById(R.id.middleNameRequired));
+                null);
 
         setUpField((TextInputLayout) view.findViewById(R.id.reviewdemogrLastNameTextInput),
                 (EditText) view.findViewById(R.id.reviewdemogrLastNameEdit),
@@ -170,29 +173,24 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
     private void initCameraViews(View view) {
         ImageView profileImage = view.findViewById(R.id.DetailsProfileImage);
         mediaScannerPresenter = new MediaScannerPresenter(getContext(), this, profileImage,
-                CarePayCameraPreview.CameraType.CAPTURE_PHOTO);
+                getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT ?
+                        CarePayCameraPreview.CameraType.CAPTURE_PHOTO : CarePayCameraPreview.CameraType.SCAN_DOC);
 
         buttonChangeCurrentPhoto = view.findViewById(R.id.changeCurrentPhotoButton);
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
         if (isCloverDevice) {
             buttonChangeCurrentPhoto.setVisibility(View.INVISIBLE);
+        } else if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT){
+            setUpBottomSheet(view);
         } else {
-            buttonChangeCurrentPhoto.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    boolean isPatientApp = getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT;
-                    mediaScannerPresenter.selectImage(isPatientApp);
-                }
-            });
+            buttonChangeCurrentPhoto.setOnClickListener(view1 -> mediaScannerPresenter.handlePictureAction());
         }
-
         if (demographicDTO != null) {
             String profilePicURL = demographicDTO.getPayload().getDemographics().getPayload().getPersonalDetails().getProfilePhoto();
             if (!StringUtil.isNullOrEmpty(profilePicURL)) {
                 displayProfileImage(profilePicURL, profileImage);
             }
         }
-
     }
 
     @Override
@@ -214,7 +212,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
                             .getLastName().isRequired(), lastNameValue, R.id.lastNameContainer,
                     R.id.reviewdemogrLastNameTextInput, isUserAction())) return false;
 
-            EditText dateOfBirth = (EditText) view.findViewById(R.id.revewidemogrDOBEdit);
+            EditText dateOfBirth = view.findViewById(R.id.revewidemogrDOBEdit);
             String dobValue = dateOfBirth.getText().toString();
             if (validateField(view, dataModel.getDemographic().getPersonalDetails().getProperties()
                             .getDateOfBirth().isRequired(), dobValue, R.id.dobContainer,
@@ -452,7 +450,9 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
             }
 
             if (bitmap != null) {
-                base64ProfileImage = SystemUtil.convertBitmapToString(bitmap, Bitmap.CompressFormat.JPEG, 90);
+                base64ProfileImage = SystemUtil.convertBitmapToString(
+                        SystemUtil.getScaledBitmap(bitmap, CarePayConstants.IMAGE_QUALITY_MAX_PX),
+                        Bitmap.CompressFormat.JPEG, 90);
                 hasNewImage = false;
             }
         }
@@ -469,5 +469,51 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         initSelectableInput(phoneNumberTypeEditText, selectedPhoneType,
                 selectedPhoneType.getName(), null,
                 dataModel.getDemographic().getAddress().getProperties().getPhoneType().getOptions());
+    }
+
+    private void setUpBottomSheet(View view) {
+
+        final View shadow = view.findViewById(R.id.shadow);
+        LinearLayout llBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
+        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
+        bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    shadow.setClickable(false);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                shadow.setAlpha(slideOffset);
+            }
+        });
+        buttonChangeCurrentPhoto.setOnClickListener(view15 -> {
+            bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_EXPANDED);
+            shadow.setClickable(true);
+        });
+
+        Button cancelButton = view.findViewById(R.id.cancelButton);
+        cancelButton.setOnClickListener(v -> bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN));
+        shadow.setOnClickListener(view1 -> bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN));
+        shadow.setClickable(false);
+
+        View takePhotoContainer = view.findViewById(R.id.takePhotoContainer);
+        takePhotoContainer.setOnClickListener(view12 -> {
+            mediaScannerPresenter.handlePictureAction();
+            bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
+        });
+
+        View chooseFileContainer = view.findViewById(R.id.chooseFileContainer);
+        chooseFileContainer.setOnClickListener(view13 -> {
+            mediaScannerPresenter.selectFile();
+            bottomMenuAction(bottomSheetBehavior, BottomSheetBehavior.STATE_HIDDEN);
+        });
+    }
+
+    private void bottomMenuAction(BottomSheetBehavior bottomSheetBehavior, int stateHidden) {
+        bottomSheetBehavior.setState(stateHidden);
     }
 }

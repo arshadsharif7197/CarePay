@@ -1,7 +1,9 @@
 package com.carecloud.carepay.patient.messages.adapters;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +13,9 @@ import android.widget.TextView;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.models.Messages;
 import com.carecloud.carepaylibray.customcomponents.SwipeViewHolder;
-import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
     }
 
     private Context context;
-    private List<Messages.Reply> threads = new ArrayList<>();
+    private List<Messages.Reply> threads;
     private SelectMessageThreadCallback callback;
     private String userId;
     private List<Messages.Reply> removeThreads = new ArrayList<>();
@@ -52,8 +52,9 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
         this.userId = userId;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_messages_list, parent, false);
         return new ViewHolder(view);
     }
@@ -82,21 +83,13 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
             holder.displayUndoOption();
         }
 
-        holder.swipeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                holder.unreadCount.setVisibility(View.GONE);
-                callback.onMessageSelected(thread);
-                thread.setRead(true);
-            }
+        holder.swipeLayout.setOnClickListener(view -> {
+            holder.unreadCount.setVisibility(View.GONE);
+            callback.onMessageSelected(thread);
+            thread.setRead(true);
         });
 
-        holder.undoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.undoDeleteMessage(thread);
-            }
-        });
+        holder.undoButton.setOnClickListener(view -> callback.undoDeleteMessage(thread));
 
         if (!thread.isRead()) {
             holder.unreadCount.setVisibility(View.VISIBLE);
@@ -105,7 +98,10 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
         }
 
         if (!StringUtil.isNullOrEmpty(provider.getPhoto())) {
-            loadImage(holder, provider.getPhoto());
+            PicassoHelper.get().loadImage(context, holder.providerImage, holder.providerInitials, provider.getPhoto());
+        } else {
+            holder.providerImage.setVisibility(View.INVISIBLE);
+            holder.providerInitials.setVisibility(View.VISIBLE);
         }
     }
 
@@ -134,16 +130,6 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
      */
     public void setThreads(List<Messages.Reply> threads) {
         this.threads = threads;
-        notifyDataSetChanged();
-    }
-
-    /**
-     * add threads to recycler
-     *
-     * @param threads add threads
-     */
-    public void appendThreads(List<Messages.Reply> threads) {
-        this.threads.addAll(threads);
         notifyDataSetChanged();
     }
 
@@ -199,27 +185,6 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
         }
 
         return null;
-    }
-
-    private void loadImage(final MessagesListAdapter.ViewHolder holder, String photoUrl) {
-        int size = context.getResources().getDimensionPixelSize(R.dimen.payment_details_dialog_icon_size);
-        Picasso.with(context).load(photoUrl)
-                .resize(size, size)
-                .centerCrop()
-                .transform(new CircleImageTransform())
-                .into(holder.providerImage, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        holder.providerImage.setVisibility(View.VISIBLE);
-                        holder.providerInitials.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onError() {
-                        holder.providerImage.setVisibility(View.GONE);
-                        holder.providerInitials.setVisibility(View.VISIBLE);
-                    }
-                });
     }
 
     class ViewHolder extends SwipeViewHolder {

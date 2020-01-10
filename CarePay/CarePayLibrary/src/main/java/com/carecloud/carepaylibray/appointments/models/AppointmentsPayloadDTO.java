@@ -569,6 +569,13 @@ public class AppointmentsPayloadDTO {
         this.displayStyle = displayStyle;
     }
 
+    public void setReasonForVisit(String reasonForVisit) {
+        this.reasonForVisit = reasonForVisit;
+    }
+
+    public String getReasonForVisit() {
+        return reasonForVisit;
+    }
 
     @Override
     public boolean equals(Object payloadObj) {
@@ -740,7 +747,6 @@ public class AppointmentsPayloadDTO {
         }
     }
 
-
     public boolean isRescheduleEnabled(String practiceId, List<PortalSettingDTO> portalSettings) {
         for (PortalSettingDTO portalSettingsDto : portalSettings) {
             if (portalSettingsDto.getMetadata().getPracticeId().equals(practiceId)) {
@@ -755,11 +761,16 @@ public class AppointmentsPayloadDTO {
         return false;
     }
 
-    public void setReasonForVisit(String reasonForVisit) {
-        this.reasonForVisit = reasonForVisit;
+    public boolean canStartVideoVisit() {
+        Date apptStartDate = DateUtil.getInstance().setDateRaw(getStartTime()).getDate();
+        Date currentDate = DateUtil.getInstance().setToCurrent().getDate();
+        return getVisitType().hasVideoOption() &&
+                isAppointmentToday() &&
+                ((!hasAppointmentStarted() &&
+                        DateUtil.getSecondsElapsed(apptStartDate, currentDate) <
+                                CarePayConstants.VIDEO_START_OFFSET_SECONDS) ||
+                        hasAppointmentStarted());
     }
 
-    public String getReasonForVisit() {
-        return reasonForVisit;
-    }
+
 }

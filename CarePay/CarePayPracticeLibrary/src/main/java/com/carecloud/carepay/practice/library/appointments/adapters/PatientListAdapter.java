@@ -1,24 +1,23 @@
 package com.carecloud.carepay.practice.library.appointments.adapters;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.checkin.filters.FilterDataDTO;
 import com.carecloud.carepay.practice.library.models.MapFilterModel;
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
-import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayUtil;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsPayloadDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.models.LocationIndexDTO;
@@ -27,11 +26,9 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.payments.models.ProviderIndexDTO;
-import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -146,32 +143,11 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         holder.bind(patient, tapListener);
         holder.setTimeView(patient);
         holder.itemView.setContentDescription(patient.name);
-        if (this.currentSection == Section.APPOINTMENTS) {
-            holder.setCellAvatar(patient);
-            holder.cellAvatar.setVisibility(View.VISIBLE);
-        } else {
-            holder.cellAvatar.setVisibility(View.INVISIBLE);
-        }
+        holder.videoVisitIndicator.setVisibility(patient.isVideoVisit ? View.VISIBLE : View.GONE);
+        if (this.currentSection == Section.APPOINTMENTS) { holder.setCellAvatar(patient); }
 
-        if (!TextUtils.isEmpty(patient.photoUrl)) {
-            Picasso.with(context).load(patient.photoUrl)
-                    .transform(new CircleImageTransform())
-                    .resize(60, 60)
-                    .into(holder.profilePicture, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            holder.profilePicture.setVisibility(View.VISIBLE);
-                        }
-
-                        @Override
-                        public void onError() {
-                            holder.initials.setText(patient.initials);
-                        }
-                    });
-
-        } else {
-            holder.profilePicture.setVisibility(View.INVISIBLE);
-        }
+        PicassoHelper.get().loadImage(context, holder.profilePicture, holder.initials,
+                this.currentSection == Section.APPOINTMENTS ? holder.cellAvatar : null, patient.photoUrl, 60);
     }
 
     @Override
@@ -205,32 +181,32 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         int countDifferentDates = 0;
         int countByDay = 0;
         CardViewPatient header = null;
-        for (CardViewPatient patient : allPatients) {
+        for (CardViewPatient cardViewPatient : allPatients) {
             // Check filter by patient
-            if (filterModel.isFilteringByPatients() && !patients.containsKey(patient.id)) {
+            if (filterModel.isFilteringByPatients() && !patients.containsKey(cardViewPatient.id)) {
                 continue;
             }
             // Check filter by provider
-            if (filterModel.isFilteringByDoctors() && !doctors.containsKey(patient.providerId)) {
+            if (filterModel.isFilteringByDoctors() && !doctors.containsKey(cardViewPatient.providerId)) {
                 continue;
             }
             // Check filter by location
-            if (filterModel.isFilteringByLocations() && !locations.containsKey(patient.locationId)) {
+            if (filterModel.isFilteringByLocations() && !locations.containsKey(cardViewPatient.locationId)) {
                 continue;
             }
 
             sizeFilteredPatients++;
 
             // Count pending and filter by pending
-            if (patient.isRequested) {
+            if (cardViewPatient.isRequested) {
                 sizeFilteredPendingPatients++;
             } else if (filterModel.isFilteringByPending()) {
                 continue;
             }
 
-            if (patient.appointmentStartTime != null
-                    && !DateUtil.isSameDay(dateTime, patient.appointmentStartTime)) {
-                dateTime = patient.appointmentStartTime;
+            if (cardViewPatient.appointmentStartTime != null
+                    && !DateUtil.isSameDay(dateTime, cardViewPatient.appointmentStartTime)) {
+                dateTime = cardViewPatient.appointmentStartTime;
                 if (countByDay % 2 == 1) {
                     filteredPatients.add(new CardViewPatient());
                 }
@@ -245,7 +221,7 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 header.headCount++;
             }
 
-            filteredPatients.add(patient);
+            filteredPatients.add(cardViewPatient);
             countByDay++;
         }
 
@@ -402,12 +378,13 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     class CardViewHolder extends RecyclerView.ViewHolder {
 
-        CarePayTextView initials;
-        CarePayTextView name;
-        CarePayTextView provider;
-        CarePayTextView balance;
-        CarePayTextView timeTextView;
+        TextView initials;
+        TextView name;
+        TextView provider;
+        TextView balance;
+        TextView timeTextView;
         ImageView profilePicture;
+        View videoVisitIndicator;
         ImageView cellAvatar;
 
         /**
@@ -417,13 +394,14 @@ public class PatientListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
          */
         CardViewHolder(View view) {
             super(view);
-            initials = (CarePayTextView) view.findViewById(R.id.patient_short_name);
-            name = (CarePayTextView) view.findViewById(R.id.patient_name_text_view);
-            provider = (CarePayTextView) view.findViewById(R.id.provider_name_text_view);
-            balance = (CarePayTextView) view.findViewById(R.id.amount_text_view);
-            timeTextView = (CarePayTextView) view.findViewById(R.id.timeTextView);
-            profilePicture = (ImageView) view.findViewById(R.id.patient_pic_image_view);
+            initials = view.findViewById(R.id.patient_short_name);
+            name = view.findViewById(R.id.patient_name_text_view);
+            provider = view.findViewById(R.id.provider_name_text_view);
+            balance = view.findViewById(R.id.amount_text_view);
+            timeTextView = view.findViewById(R.id.timeTextView);
+            profilePicture = view.findViewById(R.id.patient_pic_image_view);
             cellAvatar = view.findViewById(R.id.cellAvatarImageView);
+            videoVisitIndicator = view.findViewById(R.id.visit_type_video);
         }
 
         void bind(final CardViewPatient patient, final OnItemTappedListener tapListener) {

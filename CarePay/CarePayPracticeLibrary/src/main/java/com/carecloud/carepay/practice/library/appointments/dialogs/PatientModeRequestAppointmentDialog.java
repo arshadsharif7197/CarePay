@@ -1,11 +1,10 @@
 package com.carecloud.carepay.practice.library.appointments.dialogs;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -22,7 +21,6 @@ import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
-import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -51,7 +49,7 @@ public class PatientModeRequestAppointmentDialog extends BaseRequestAppointmentD
         super.onViewCreated(view, savedInstanceState);
         requestAppointmentButton = view.findViewById(R.id.requestAppointmentButton);
         ApplicationMode.ApplicationType applicationType = getApplicationMode().getApplicationType();
-        boolean autoScheduleAppointments = getAutomaticallyApproveRequests();
+        autoScheduleAppointments = getAutomaticallyApproveRequests();
 
         final EditText reasonForVisitEditText = view.findViewById(R.id.reasonForVisitEditText);
         requestAppointmentButton.setText(Label.getLabel(applicationType == ApplicationMode.ApplicationType.PRACTICE ||
@@ -70,7 +68,8 @@ public class PatientModeRequestAppointmentDialog extends BaseRequestAppointmentD
 //        setDialogTitle(dateUtil.getDateAsDayMonthDayOrdinalYear(Label.getLabel("appointments_web_today_heading")));
 
         TextView appointment_date = view.findViewById(R.id.content_view_header_title);
-        appointment_date.setText(dateUtil.getDateAsDayMonthDayOrdinalYear(Label.getLabel("appointments_web_today_heading")));
+        appointment_date.setText(dateUtil.getDateAsWeekdayFullMonthDayYear(
+                Label.getLabel("appointments_web_today_heading"), Label.getLabel("add_appointment_tomorrow")));
 
         TextView appointmentTimeTextView = view.findViewById(R.id.appointment_time);
         appointmentTimeTextView.setText(dateUtil.getTime12Hour());
@@ -96,7 +95,11 @@ public class PatientModeRequestAppointmentDialog extends BaseRequestAppointmentD
 
         VisitTypeDTO visitTypeDTO = appointmentDTO.getPayload().getVisitType();
         TextView visitTypeTextView = view.findViewById(R.id.reasonTextView);
-        visitTypeTextView.setText(visitTypeDTO.getName());
+        visitTypeTextView.setText(StringUtil.capitalize(visitTypeDTO.getName()));
+
+        View videoVisitIndicator = view.findViewById(R.id.visit_type_video);
+        videoVisitIndicator.setVisibility(appointmentDTO.getPayload().getVisitType()
+                .hasVideoOption() ? View.VISIBLE : View.GONE);
 
         View prepaidLayout = findViewById(R.id.prepaymentLayout);
         if (visitTypeDTO.getAmount() > 0) {
@@ -111,7 +114,7 @@ public class PatientModeRequestAppointmentDialog extends BaseRequestAppointmentD
         view.findViewById(R.id.closeViewLayout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
+                cancel();
             }
         });
 

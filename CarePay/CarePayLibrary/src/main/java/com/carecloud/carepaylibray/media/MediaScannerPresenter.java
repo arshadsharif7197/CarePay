@@ -8,7 +8,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -284,7 +284,7 @@ public class MediaScannerPresenter {
         this.pendingAction = action;
     }
 
-    private void handlePictureAction() {
+    public void handlePictureAction() {
         setPendingAction(ACTION_PICTURE);
         if (mediaViewInterface.getCallingFragment() != null) {
             if (!PermissionsUtil.checkPermissionCamera(mediaViewInterface.getCallingFragment())) {

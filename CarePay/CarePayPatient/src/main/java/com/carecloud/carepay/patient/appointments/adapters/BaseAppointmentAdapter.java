@@ -1,8 +1,8 @@
 package com.carecloud.carepay.patient.appointments.adapters;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +41,7 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
     protected List<AppointmentDTO> sortedAppointments = new ArrayList<>();
     protected List<UserPracticeDTO> userPracticeDTOs;
     protected Map<String, Set<String>> enabledPracticeLocations;
+    protected SelectAppointmentCallback callback;
 
 
     @Override
@@ -84,6 +85,7 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
         holder.cellAvatar.setVisibility(View.GONE);
         holder.initials.setVisibility(View.VISIBLE);
         holder.itemView.setOnClickListener(null);//need to remove this for header just in case
+        holder.videoVisitIndicator.setVisibility(View.GONE);
     }
 
     protected void bindView(final ViewHolder holder, AppointmentsPayloadDTO appointmentsPayload,
@@ -101,7 +103,15 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
 
         switch (style) {
             case CHECKED_IN: {
-                if (shouldShowCheckoutButton) {
+                if (appointmentsPayload.getVisitType().hasVideoOption() && !shouldShowCheckoutButton){
+                    if(appointmentsPayload.canStartVideoVisit()) {
+                        holder.videoVisitIndicator.setVisibility(View.VISIBLE);
+                    }else{
+                        holder.todayTimeTextView.setText(dateUtil.getTime12Hour());
+                        holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.emerald));
+                        holder.todayTimeLayout.setVisibility(View.VISIBLE);
+                    }
+                } else if (shouldShowCheckoutButton) {
                     holder.checkOutButton.setVisibility(View.VISIBLE);
                     holder.checkOutButton.setClickable(true);
                 }
@@ -112,8 +122,6 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
                 break;
             }
             case PENDING: {
-                holder.todayTimeMessage.setVisibility(View.VISIBLE);
-                holder.todayTimeMessage.setText(Label.getLabel("appointment_status_pending"));
                 holder.todayTimeLayout.setVisibility(View.VISIBLE);
                 holder.todayTimeTextView.setText(dateUtil.getTime12Hour());
                 holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.emerald));
@@ -124,6 +132,8 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
                 break;
             }
             case REQUESTED: {
+                holder.todayTimeMessage.setVisibility(View.VISIBLE);
+                holder.todayTimeMessage.setText(Label.getLabel("appointment_status_pending"));
                 holder.todayTimeLayout.setVisibility(View.VISIBLE);
                 holder.todayTimeTextView.setText(dateUtil.getTime12Hour());
                 holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.lightning_yellow));
@@ -264,7 +274,9 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
             }
         }
 
-        return isBreezePractice && isTheLocationWithBreezeEnabled && appointmentDTO.getPayload().canCheckOut();
+        return isBreezePractice && isTheLocationWithBreezeEnabled
+                && appointmentDTO.getPayload().canCheckOut()
+                && callback.canCheckOut(appointmentDTO);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -287,6 +299,7 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
 
         Button checkOutButton;
         TextView checkedOutLabel;
+        View videoVisitIndicator;
 
         View listItemDivider;
 
@@ -320,9 +333,20 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
             checkOutButton = itemView.findViewById(R.id.check_out_button);
             checkedOutLabel = itemView.findViewById(R.id.checked_out_label);
 
+            //Video Visit
+            videoVisitIndicator = itemView.findViewById(R.id.visit_type_video);
+
             listItemDivider = itemView.findViewById(R.id.appointment_list_item_divider);
 
         }
 
+    }
+
+    public interface SelectAppointmentCallback {
+        void onItemTapped(AppointmentDTO appointmentDTO);
+
+        void onCheckoutTapped(AppointmentDTO appointmentDTO);
+
+        boolean canCheckOut(AppointmentDTO appointmentDTO);
     }
 }

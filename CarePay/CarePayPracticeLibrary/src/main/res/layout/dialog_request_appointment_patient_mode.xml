@@ -38,13 +38,15 @@
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/content_view_header_title"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/contentViewHeaderTitleHeight"
+            android:layout_height="wrap_content"
             android:background="@drawable/patient_mode_dialog_header_bg"
-            android:gravity="center"
+            android:textAlignment="center"
+            android:paddingTop="@dimen/appointmentRequestDialogTopPadding"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="@dimen/contentViewHeaderTitleTextSize"
-            app:customAssetFont="gotham_rounded_medium" />
+            app:customAssetFont="gotham_rounded_medium"
+            tools:text="Tomorrow, August 2"/>
 
         <RelativeLayout
             android:id="@+id/header"
@@ -59,21 +61,9 @@
                 android:background="@color/colorPrimary">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                    android:id="@+id/appointment_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/appointmentDialogStartDateTextSize"
-                    android:visibility="gone"
-                    app:customAssetFont="proxima_nova_semi_bold"
-                    tools:text="Today, Aug 1st" />
-
-                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/appointment_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/appointment_date"
                     android:layout_centerHorizontal="true"
                     android:textColor="@color/white_opacity_60"
                     android:textSize="@dimen/appointmentDialogStartTimeTextSize"
@@ -191,6 +181,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     android:paddingTop="@dimen/dimen_20dp"
                     android:paddingBottom="@dimen/dimen_20dp">
 
@@ -205,13 +196,29 @@
                         breeze:textKey="visit_type_heading"
                         tools:text="Visit Type" />
 
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"/>
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/visit_type_video"
+                        android:layout_width="@dimen/dimen_24dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dimen_5dp"
+                        android:src="@drawable/icn_video_visit"
+                        android:tint="@color/textview_default_textcolor"
+                        android:visibility="gone"/>
+
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/reasonTextView"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|end"
-                        android:layout_weight="1"
+                        android:layout_marginStart="@dimen/dimen_5dp"
                         android:gravity="end"
+                        android:maxLines="2"
+                        android:ellipsize="end"
                         android:textColor="@color/cardview_header_bg"
                         android:textSize="@dimen/reasonTypeValueTextSize"
                         app:customAssetFont="gotham_rounded_medium"
@@ -321,7 +328,7 @@
                 android:background="@drawable/bg_green_overlay"
                 android:contentDescription="@string/content_description_request_appointment"
                 android:gravity="center"
-                android:textAllCaps="true"
+                android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/respons_button_text_size"
                 breeze:textKey="schedule_appointment_button_label" />

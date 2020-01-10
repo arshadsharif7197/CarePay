@@ -20,12 +20,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/cellAvatarImageView"
-        android:layout_width="@dimen/dimen_22dp"
-        android:layout_height="@dimen/dimen_22dp"
-        android:layout_alignParentTop="true"
-        android:elevation="@dimen/apt_lst_img_elevation"/>
+        <ImageView
+            android:id="@+id/cellAvatarImageView"
+            android:layout_width="@dimen/dimen_22dp"
+            android:layout_height="@dimen/dimen_22dp"
+            android:layout_alignParentTop="true"
+            android:elevation="@dimen/apt_lst_img_elevation"
+            android:visibility="gone" />
 
         <FrameLayout
             android:layout_width="wrap_content"
@@ -110,6 +111,16 @@
             android:visibility="gone"
             card_view:customAssetFont="proxima_nova_semi_bold"
             tools:text="05:35 PM" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/visit_type_video"
+            android:layout_width="@dimen/dimen_24dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/dimen_12dp"
+            android:src="@drawable/icn_video_visit"
+            android:visibility="gone" />
 
     </RelativeLayout>
 

@@ -2,8 +2,8 @@ package com.carecloud.carepaylibray.appointments.createappointment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -24,7 +24,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentResourcesItemD
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.PracticePatientIdsDTO;
-import com.carecloud.carepaylibray.appointments.models.ProvidersReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
@@ -169,12 +168,7 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         AppointmentAvailabilityPayloadDTO payload = new AppointmentAvailabilityPayloadDTO();
         payload.setLocation(selectedLocation);
         payload.setResource(selectedResource);
-        ProvidersReasonDTO reasonDTO = new ProvidersReasonDTO();
-        reasonDTO.setAmount(selectedVisitType.getAmount());
-        reasonDTO.setName(selectedVisitType.getName());
-        reasonDTO.setDescription(selectedVisitType.getDescription());
-        reasonDTO.setId(selectedVisitType.getId());
-        payload.setVisitReason(reasonDTO);
+        payload.setVisitReason(selectedVisitType);
         AppointmentAvailabilityDataDTO appointmentAvailabilityDataDTO = new AppointmentAvailabilityDataDTO();
         ArrayList<AppointmentAvailabilityPayloadDTO> payloadList = new ArrayList<>();
         payloadList.add(payload);
@@ -290,8 +284,13 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         ImageView picImageView = view.findViewById(R.id.picImageView);
         if (showImage) {
             shortNameTextView.setText(StringUtil.getShortName(title));
-            PicassoHelper.get().loadImage(getContext(), picImageView,
-                    shortNameTextView, imageUrl);
+            if (!StringUtil.isNullOrEmpty(imageUrl)) {
+                PicassoHelper.get().loadImage(getContext(), picImageView,
+                        shortNameTextView, imageUrl);
+            } else {
+                shortNameTextView.setVisibility(View.VISIBLE);
+                picImageView.setVisibility(View.INVISIBLE);
+            }
         } else {
             shortNameTextView.setVisibility(View.GONE);
             picImageView.setVisibility(View.GONE);

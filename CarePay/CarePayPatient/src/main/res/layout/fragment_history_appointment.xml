@@ -1,57 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/appointmentsList"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/practicesRecyclerView"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/date_range_header"
-        android:paddingStart="@dimen/dimen_10dp"
-        android:paddingTop="@dimen/dimen_15dp"
-        android:paddingEnd="@dimen/dimen_10dp"
-        android:paddingBottom="@dimen/dimen_15dp"
-        android:visibility="gone" />
+        android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/fakeView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/practicesRecyclerView"
-        android:layout_alignBottom="@id/practicesRecyclerView"
-        android:clickable="true"
-        android:visibility="gone" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/practicesRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/date_range_header"
+            android:paddingStart="@dimen/dimen_10dp"
+            android:paddingTop="@dimen/dimen_15dp"
+            android:paddingEnd="@dimen/dimen_10dp"
+            android:paddingBottom="@dimen/dimen_15dp"
+            android:visibility="gone" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/historicAppointmentsRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/practicesRecyclerView" />
+        <FrameLayout
+            android:id="@+id/fakeView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/practicesRecyclerView"
+            android:layout_alignBottom="@id/practicesRecyclerView"
+            android:clickable="true"
+            android:visibility="gone" />
 
-    <include
-        android:id="@+id/noAppointmentsLayout"
-        layout="@layout/no_appointment_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/practicesRecyclerView"
-        android:visibility="gone" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/historicAppointmentsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/practicesRecyclerView" />
 
-    <android.support.design.widget.FloatingActionButton
+        <include
+            android:id="@+id/noAppointmentsLayout"
+            layout="@layout/no_appointment_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/practicesRecyclerView"
+            android:visibility="gone" />
+
+        <FrameLayout
+            android:id="@+id/shimmerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/practicesRecyclerView" />
+
+    </RelativeLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/dimen_16dp"
         android:src="@drawable/ic_add_white"
-        app:backgroundTint="@color/overlay_green" />
+        app:backgroundTint="@color/overlay_green"
+        app:layout_anchor="@id/historicAppointmentsRecyclerView"
+        app:layout_anchorGravity="bottom|end"
+        app:layout_behavior="com.carecloud.carepay.patient.utils.FloatingActionButtonScrollBehavior"/>
 
-    <FrameLayout
-        android:id="@+id/shimmerLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/practicesRecyclerView" />
-
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

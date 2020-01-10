@@ -21,7 +21,7 @@ public class DemographicsOption implements OptionNameInterface {
 
     @SerializedName("label")
     @Expose
-    private String label;
+    protected String label;
 
     public DemographicsOption() {
     }

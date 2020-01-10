@@ -8,9 +8,7 @@
     android:layout_gravity="center"
     android:layout_marginTop="@dimen/dimen_30dp"
     android:layout_marginBottom="@dimen/dimen_30dp"
-    android:orientation="horizontal"
-    android:paddingTop="@dimen/dimen_30dp"
-    android:paddingBottom="@dimen/dimen_30dp">
+    android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/closeViewLayout"
@@ -114,7 +112,7 @@
             breeze:textKey="adhoc_screen_message"
             tools:text="You can either give this device for the patient to fill out \n the forms now or push them to the patient's device" />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/formsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

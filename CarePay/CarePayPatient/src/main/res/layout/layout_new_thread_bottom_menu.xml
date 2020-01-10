@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:padding="@dimen/dimen_15dp"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="0dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/totalPatientResponsibilityLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@color/textview_default_textcolor"
+        android:textSize="@dimen/text_size_15"
+        app:customAssetFont="proxima_nova_regular"
+        breeze:textKey="attachments.options.photo.title.uploadImage"
+        tools:text="What do you want to send?" />
+
+    <RelativeLayout
+        android:id="@+id/takePhotoContainer"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_60dp"
+        android:background="?android:selectableItemBackground">
+
+        <ImageView
+            android:id="@+id/takePhotoImageView"
+            android:layout_width="@dimen/dimen_40dp"
+            android:layout_height="@dimen/dimen_40dp"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/dimen_10dp"
+            android:padding="@dimen/dimen_3dp"
+            android:src="@drawable/ic_photo_camera" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/takePhotoTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginBottom="@dimen/dimen_30dp"
+            android:layout_toEndOf="@id/takePhotoImageView"
+            android:gravity="start"
+            android:textColor="@color/textview_default_textcolor"
+            android:textSize="@dimen/text_size_18sp"
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textKey="messaging.create.attachment.actions.takePhoto"
+            tools:text="Take Photo" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/divider_color" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/chooseFileContainer"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_60dp"
+        android:background="?android:selectableItemBackground">
+
+        <ImageView
+            android:id="@+id/chooseFileImageView"
+            android:layout_width="@dimen/dimen_40dp"
+            android:layout_height="@dimen/dimen_40dp"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/dimen_10dp"
+            android:padding="@dimen/dimen_3dp"
+            android:src="@drawable/ic_files_selection" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/chooseFileTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginBottom="@dimen/dimen_30dp"
+            android:layout_toEndOf="@id/chooseFileImageView"
+            android:gravity="start"
+            android:textColor="@color/textview_default_textcolor"
+            android:textSize="@dimen/text_size_18sp"
+            app:customAssetFont="proxima_nova_regular"
+            breeze:textKey="messaging.create.attachment.actions.chooseFile2"
+            tools:text="Choose File" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/divider_color" />
+
+    </RelativeLayout>
+
+    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+        android:id="@+id/cancelButton"
+        style="@style/SigninNewAccountButtonStyle"
+        customAssetFont="gotham_rounded_medium"
+        android:layout_height="@dimen/dimen_50dp"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_marginBottom="5dp"
+        android:foreground="?android:selectableItemBackground"
+        breeze:textKey="cancel"
+        tools:text="Cancel" />
+</LinearLayout>

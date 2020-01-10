@@ -21,4 +21,22 @@
     <string name="msg_field_type_value_provider">provider</string>
     <string name="msg_query_source">source</string>
     <string name="msg_query_source_value">desktop:patientPortal:messaging:sendMessage</string>
+
+    <string name="content_description_signin">signInScreen</string>
+    <string name="content_description_signin_user">signInScreenUser</string>
+    <string name="content_description_signin_password">signInScreenPassword</string>
+    <string name="content_description_signin_button">signInScreenButton</string>
+    <string name="content_description_choose_profile_screen">chooseProfileScreen</string>
+    <string name="content_description_appointment_screen">appointmentScreen</string>
+    <string name="content_description_appointments_screen_button">Appointments Screen button</string>
+    <string name="content_description_my_health_screen_button">My Health Screen button</string>
+    <string name="content_description_payments_screen_button">Payments Screen button</string>
+    <string name="content_description_messages_screen_button">Messages Screen button</string>
+    <string name="content_description_forms_screen_button">Forms Screen button</string>
+    <string name="content_description_shop_screen_button">Shop Screen button</string>
+    <string name="content_description_notifications_screen_button">Notifications Screen button</string>
+    <string name="content_description_payment_options_button">Payment Options button</string>
+    <string name="content_description_not_now_button">Not Now button</string>
+    <string name="content_description_ok_button">Ok button</string>
+    <string name="content_description_skip_tutorial">Skip tutorial</string>
 </resources>

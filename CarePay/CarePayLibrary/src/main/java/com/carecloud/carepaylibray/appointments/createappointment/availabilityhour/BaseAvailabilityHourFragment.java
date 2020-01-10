@@ -2,13 +2,15 @@ package com.carecloud.carepaylibray.appointments.createappointment.availabilityh
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -27,7 +29,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
-import com.carecloud.carepaylibray.appointments.models.ProvidersReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
@@ -38,7 +39,6 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -55,7 +55,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
 
     protected ScheduleAppointmentInterface callback;
     private AppointmentsResultModel appointmentModelDto;
-    private ProvidersReasonDTO selectedProviderReason;
+    private VisitTypeDTO selectedVisitReason;
     private AppointmentResourcesItemDTO selectedResource;
     private LocationDTO selectedLocation;
     private String today = Label.getLabel("today_label");
@@ -88,7 +88,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         appointmentModelDto = (AppointmentsResultModel) callback.getDto();
-        selectedProviderReason = appointmentModelDto.getPayload().getAppointmentAvailability()
+        selectedVisitReason = appointmentModelDto.getPayload().getAppointmentAvailability()
                 .getPayload().get(0).getVisitReason();
         selectedLocation = appointmentModelDto.getPayload().getAppointmentAvailability()
                 .getPayload().get(0).getLocation();
@@ -101,12 +101,12 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
     private void initDates() {
         startDate = new Date();
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, 5);
+        cal.add(Calendar.DATE, 4);
         endDate = cal.getTime();
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUpPrepaymentMessage(view);
     }
@@ -129,15 +129,12 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
             availableHoursRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             availableHoursRecyclerView.setAdapter(new AvailabilityHourAdapter(getAllAvailableTimeSlots(appointmentModelDto
                     .getPayload().getAppointmentAvailability().getPayload().get(0).getSlots()),
-                    new AvailabilityHourAdapter.OnTimeSlotListItemClickListener() {
-                        @Override
-                        public void onTimeSlotListItemClickListener(AppointmentsSlotsDTO slot) {
-                            if (mode == SCHEDULE_MODE) {
-                                showAppointmentConfirmationFragment(slot);
-                            } else {
-                                dismiss();
-                                callback.setAppointmentSlot(slot);
-                            }
+                    slot -> {
+                        if (mode == SCHEDULE_MODE) {
+                            showAppointmentConfirmationFragment(slot);
+                        } else {
+                            dismiss();
+                            callback.setAppointmentSlot(slot);
                         }
                     }));
         } else {
@@ -150,12 +147,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
             Button changeDatesButton = noAppointmentLayout.findViewById(R.id.newAppointmentClassicButton);
             changeDatesButton.setVisibility(getChangeDatesToolbarButtonVisibility() ? View.VISIBLE : View.GONE);
             changeDatesButton.setText(Label.getLabel("change_dates"));
-            changeDatesButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    selectDateRange();
-                }
-            });
+            changeDatesButton.setOnClickListener(v -> selectDateRange());
         }
     }
 
@@ -163,18 +155,14 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
         return false;
     }
 
-    private void showAppointmentConfirmationFragment(AppointmentsSlotsDTO slot) {
+    protected void showAppointmentConfirmationFragment(AppointmentsSlotsDTO slot) {
         AppointmentsPayloadDTO payloadDTO = new AppointmentsPayloadDTO();
         payloadDTO.setStartTime(slot.getStartTime());
         payloadDTO.setEndTime(slot.getEndTime());
         payloadDTO.setLocation(selectedLocation);
-        payloadDTO.setVisitReasonId(selectedProviderReason.getId());
+        payloadDTO.setVisitReasonId(selectedVisitReason.getId());
 
-        VisitTypeDTO visitTypeDTO = new VisitTypeDTO();
-        visitTypeDTO.setId(selectedProviderReason.getId());
-        visitTypeDTO.setName(selectedProviderReason.getName());
-        visitTypeDTO.setAmount(selectedProviderReason.getAmount());
-        payloadDTO.setVisitType(visitTypeDTO);
+        payloadDTO.setVisitType(selectedVisitReason);
 
         payloadDTO.setProvider(selectedResource.getProvider());
         payloadDTO.setProviderId(String.valueOf(selectedResource.getProvider().getId()));
@@ -183,7 +171,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
 
         AppointmentDTO appointmentDTO = new AppointmentDTO();
         appointmentDTO.setPayload(payloadDTO);
-        callback.showAppointmentConfirmationFragment(appointmentDTO);
+        callback.showAppointmentConfirmationFragment(appointmentDTO, this);
     }
 
     protected abstract void selectDateRange();
@@ -191,9 +179,9 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
     private void setUpPrepaymentMessage(View view) {
         TextView prepaymentMessage = view.findViewById(R.id.prepaymentMessage);
         if (prepaymentMessage != null) {
-            double visitTypeAmount = getVisitTypeAmount(selectedProviderReason.getId());
+            double visitTypeAmount = getVisitTypeAmount(selectedVisitReason.getId());
             if (visitTypeAmount > 0) {
-                selectedProviderReason.setAmount(visitTypeAmount);
+                selectedVisitReason.setAmount(visitTypeAmount);
                 String message = Label.getLabel("appointments_prepayment_message")
                         + NumberFormat.getCurrencyInstance(Locale.US).format(visitTypeAmount);
                 prepaymentMessage.setText(message);
@@ -221,17 +209,14 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
     }
 
     private List<AppointmentsSlotsDTO> getAllAvailableTimeSlots(List<AppointmentsSlotsDTO> slots) {
-        Collections.sort(slots, new Comparator<AppointmentsSlotsDTO>() {
-            @Override
-            public int compare(AppointmentsSlotsDTO lhs, AppointmentsSlotsDTO rhs) {
-                if (lhs != null && rhs != null) {
-                    Date d1 = DateUtil.getInstance().setDateRaw(lhs.getStartTime()).getDate();
-                    Date d2 = DateUtil.getInstance().setDateRaw(rhs.getStartTime()).getDate();
+        Collections.sort(slots, (lhs, rhs) -> {
+            if (lhs != null && rhs != null) {
+                Date d1 = DateUtil.getInstance().setDateRaw(lhs.getStartTime()).getDate();
+                Date d2 = DateUtil.getInstance().setDateRaw(rhs.getStartTime()).getDate();
 
-                    return d1.compareTo(d2);
-                }
-                return -1;
+                return d1.compareTo(d2);
             }
+            return -1;
         });
         return insertDayHeaders(slots);
     }
@@ -245,7 +230,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
             if (slotDate != null && !DateUtil.isSameDay(lastDate, slotDate)) {
                 headerTemplate = new AppointmentsSlotsDTO();
                 headerTemplate.setHeader(true);
-                headerTemplate.setStartTime(DateUtil.getFormattedDate(slotDate, today, tomorrow));
+                headerTemplate.setStartTime(DateUtil.getInstance().getDateAsWeekdayFullMonthDayYear(today, tomorrow));
                 slotsWithHeaders.add(headerTemplate);
                 lastDate = slotDate;
             }
@@ -305,7 +290,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
                     AppointmentAvailabilityPayloadDTO payload = new AppointmentAvailabilityPayloadDTO();
                     payload.setLocation(selectedLocation);
                     payload.setResource(selectedResource);
-                    payload.setVisitReason(selectedProviderReason);
+                    payload.setVisitReason(selectedVisitReason);
                     availabilityDto.getPayload().getAppointmentAvailability().getPayload().add(payload);
                 }
 
@@ -323,7 +308,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
             public void onFailure(String exceptionMessage) {
                 hideProgressDialog();
                 showErrorNotification(exceptionMessage);
-                Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+                Log.e("Server Error", exceptionMessage);
             }
         }, queryMap);
     }

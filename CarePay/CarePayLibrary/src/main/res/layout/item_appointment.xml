@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -15,12 +16,12 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/textview_margin"
         android:layout_marginTop="@dimen/textview_margin"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
         <RelativeLayout
             android:layout_width="@dimen/payment_details_dialog_icon_size"
             android:layout_height="@dimen/payment_details_dialog_icon_size"
-            android:layout_gravity="center_vertical"
             android:gravity="center">
 
             <ImageView
@@ -57,7 +58,6 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/textview_margin"
             android:layout_weight="1"
             android:gravity="center_vertical"
@@ -89,7 +89,6 @@
             android:id="@+id/todayTimeLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:gravity="center"
             android:orientation="vertical"
             android:paddingEnd="@dimen/default_title_indicator_title_padding"
@@ -120,7 +119,6 @@
             android:id="@+id/upcomingDateLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="gone">
@@ -147,6 +145,7 @@
                 android:paddingEnd="@dimen/default_title_indicator_title_padding"
                 android:paddingStart="0dp"
                 android:textColor="@color/cadet_gray"
+                android:textAllCaps="true"
                 android:textSize="@dimen/apt_list_upcoming_month_txt_size"
                 app:customAssetFont="proxima_nova_regular"/>
 
@@ -180,7 +179,6 @@
             android:id="@+id/check_out_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:background="@drawable/button_blue_border_selector"
             android:minHeight="@dimen/dimen_10dp"
             android:minWidth="@dimen/dimen_10dp"
@@ -195,7 +193,6 @@
             android:id="@+id/checked_out_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:textColor="@color/optional_gray"
             android:textSize="@dimen/text_size_13"
             android:textAllCaps="true"
@@ -203,6 +200,30 @@
             app:customAssetFont="gotham_rounded_medium"
             breeze:textKey="appointment_checked_out_label"/>
 
+        <LinearLayout
+            android:id="@+id/visit_type_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:gravity="end">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/optional_gray"
+                android:textSize="@dimen/text_size_11"
+                android:textAllCaps="false"
+                app:customAssetFont="proxima_nova_regular"
+                breeze:textKey="appointment_video_visit_indicator"
+                tools:text="Video Visit"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dimen_24dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icn_video_visit"/>
+
+        </LinearLayout>
     </LinearLayout>
 
     <View

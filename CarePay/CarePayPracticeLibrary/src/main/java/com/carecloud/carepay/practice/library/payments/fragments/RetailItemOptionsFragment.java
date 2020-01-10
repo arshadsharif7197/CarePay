@@ -1,9 +1,9 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,14 +68,13 @@ public class RetailItemOptionsFragment extends BaseDialogFragment implements Ret
             @Override
             public void onClick(View view) {
                 cancel();
-                callback.onDismissAddItemFragment();
             }
         });
 
-        quantityTextView = (TextView) view.findViewById(R.id.qty_text);
+        quantityTextView = view.findViewById(R.id.qty_text);
         quantityTextView.setText(String.valueOf(quantity));
 
-        priceTextView = (TextView) view.findViewById(R.id.price_text);
+        priceTextView = view.findViewById(R.id.price_text);
         loadDefaultOptions();
         calculateModifiedPrice();
         updatePrice();
@@ -94,7 +93,7 @@ public class RetailItemOptionsFragment extends BaseDialogFragment implements Ret
             }
         });
 
-        RecyclerView optonsRecycler = (RecyclerView) view.findViewById(R.id.options_recycler);
+        RecyclerView optonsRecycler = view.findViewById(R.id.options_recycler);
         optonsRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         setAdapter(optonsRecycler);
     }
@@ -116,8 +115,8 @@ public class RetailItemOptionsFragment extends BaseDialogFragment implements Ret
     }
 
     private void setupToolbar(View view){
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        TextView textView = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        TextView textView = toolbar.findViewById(R.id.toolbar_title);
         textView.setText(retailItemDto.getName());
     }
 

@@ -4,15 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="@dimen/list_apt_padding_right"
     android:layout_marginStart="@dimen/list_apt_padding_right"
+    android:layout_marginEnd="@dimen/list_apt_padding_right"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="15dp"
-        android:paddingTop="@dimen/dimen_15dp">
+        android:paddingTop="@dimen/dimen_15dp"
+        android:paddingBottom="15dp">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/payment_details_value"
@@ -30,8 +30,8 @@
             android:id="@+id/paymentEffectiveDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
             android:layout_below="@id/payment_details_value"
+            android:layout_alignParentEnd="true"
             android:layout_marginTop="@dimen/dimen_3dp"
             android:gravity="end"
             android:textColor="@color/lightSlateGray"
@@ -57,6 +57,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/divider_color" />
+        android:background="@color/light_gray_dialog" />
 
 </LinearLayout>

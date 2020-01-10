@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import androidx.appcompat.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -20,7 +21,6 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.ImageView;
 import android.widget.OverScroller;
 import android.widget.Scroller;
 
@@ -28,7 +28,7 @@ import android.widget.Scroller;
  * @author pjohnson on 24/01/18.
  */
 
-public class ZoomImageView extends ImageView {
+public class ZoomImageView extends AppCompatImageView {
 
     private static final String DEBUG = "DEBUG";
 
@@ -145,21 +145,21 @@ public class ZoomImageView extends ImageView {
     public void setImageResource(int resId) {
         super.setImageResource(resId);
         savePreviousImageValues();
-        fitImageToView();
+//        fitImageToView();
     }
 
     @Override
     public void setImageBitmap(Bitmap bm) {
         super.setImageBitmap(bm);
         savePreviousImageValues();
-        fitImageToView();
+//        fitImageToView();
     }
 
     @Override
     public void setImageDrawable(Drawable drawable) {
         super.setImageDrawable(drawable);
         savePreviousImageValues();
-        fitImageToView();
+//        fitImageToView();
     }
 
     @Override

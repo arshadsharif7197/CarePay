@@ -2,7 +2,7 @@ package com.carecloud.carepay.practice.library.appointments.adapters;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,6 +93,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
 
     class AppointmentsListViewHolder extends RecyclerView.ViewHolder {
 
+        private final View appointmentCard;
         private final View appointmentCardHeader;
         private final View appointmentLocationView;
         private final ImageView profileImage;
@@ -114,6 +115,7 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         AppointmentsListViewHolder(View view) {
             super(view);
             startCheckIn = view.findViewById(R.id.appointment_check_in);
+            appointmentCard = view.findViewById(R.id.appointmentCard);
             appointmentCardHeader = view.findViewById(R.id.appointment_card_header);
             appointmentLocationView = view.findViewById(R.id.appointment_location_view);
             shortName = view.findViewById(R.id.appointment_short_name);
@@ -251,9 +253,11 @@ public class AppointmentsListAdapter extends RecyclerView.Adapter<AppointmentsLi
         }
 
         private void setDateTime(DateUtil dateUtil) {
-            appointmentDate.setText(dateUtil.getDateAsDayMonthDayOrdinalYear(Label
-                    .getLabel("appointments_web_today_heading")));
+            appointmentDate.setText(dateUtil.getDateAsWeekdayMonthDayYear(Label
+                    .getLabel("appointments_web_today_heading"), Label.getLabel("add_appointment_tomorrow")));
             appointmentTime.setText(dateUtil.getTime12Hour());
+            String action = appointmentNavigationType == Defs.NAVIGATE_CHECKOUT ? "CHECK-OUT" : "CHECK-IN";
+            startCheckIn.setContentDescription("START " +  action + " AT " + dateUtil.getTime12Hour());
         }
 
         void setLocation(LocationDTO location) {

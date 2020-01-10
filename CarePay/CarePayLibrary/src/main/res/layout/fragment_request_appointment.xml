@@ -56,11 +56,12 @@
                 android:layout_margin="@dimen/dimen_10dp"
                 android:layout_weight="0.5"
                 android:background="@drawable/button_green_fill_background"
-                android:textAllCaps="true"
+                android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_13"
                 app:customAssetFont="gotham_rounded_medium"
-                tools:text="Request Appointment" />
+                tools:text="Request Appointment"
+                android:contentDescription="@string/content_description_request_appointment"/>
         </LinearLayout>
 
         <ScrollView
@@ -263,33 +264,50 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
+                        android:gravity="center_vertical"
                         android:paddingTop="@dimen/visitTypeContainerVerticalPadding"
-                        android:paddingBottom="@dimen/visitTypeContainerVerticalPadding">
+                        android:paddingBottom="@dimen/visitTypeContainerVerticalPadding"
+                        android:paddingStart="@dimen/dimen_14dp"
+                        android:paddingEnd="@dimen/dimen_14dp">
 
                         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                             android:id="@+id/reasonTypeTextView"
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/dimen_14dp"
-                            android:layout_weight="0.3"
-                            android:gravity="start|center_vertical"
+                            android:gravity="start"
                             android:textColor="@color/textview_default_textcolor"
                             android:textSize="@dimen/apt_available_hours_list_row_text"
                             app:customAssetFont="proxima_nova_regular"
                             breeze:textKey="visit_type_heading"
                             tools:text="Visit Type" />
 
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/visit_type_video"
+                            android:layout_width="@dimen/dimen_24dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dimen_5dp"
+                            android:src="@drawable/icn_video_visit"
+                            android:tint="@color/textview_default_textcolor"
+                            android:visibility="gone"/>
+
                         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                             android:id="@+id/reasonTextView"
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="@dimen/dimen_14dp"
-                            android:layout_weight="0.7"
-                            android:gravity="end|center_vertical"
+                            android:layout_marginStart="@dimen/dimen_5dp"
+                            android:gravity="end"
+                            android:maxLines="2"
+                            android:ellipsize="end"
                             android:textColor="@color/textview_default_textcolor"
                             android:textSize="@dimen/text_size_14"
                             app:customAssetFont="proxima_nova_semi_bold"
                             tools:text="Follow-Up" />
+
                     </LinearLayout>
 
                     <View

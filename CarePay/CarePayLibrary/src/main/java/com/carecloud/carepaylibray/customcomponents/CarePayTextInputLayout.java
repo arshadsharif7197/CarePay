@@ -3,7 +3,7 @@ package com.carecloud.carepaylibray.customcomponents;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
-import android.support.design.widget.TextInputLayout;
+import com.google.android.material.textfield.TextInputLayout;
 import android.util.AttributeSet;
 
 import com.carecloud.carepaylibrary.R;
@@ -32,6 +32,7 @@ import static com.carecloud.carepaylibray.constants.CustomAssetStyleable.PROXIMA
 public class CarePayTextInputLayout extends TextInputLayout {
     private Context context;
     private int fontAttribute;
+    private int floatingFontAttribute;
     private boolean requestFocusWhenError = true;
 
     /**
@@ -89,7 +90,7 @@ public class CarePayTextInputLayout extends TextInputLayout {
      */
     public void setFontAttribute(int fontAttribute) {
         this.fontAttribute = fontAttribute;
-        setFont();
+        setFont(fontAttribute);
         invalidate();
         requestLayout();
     }
@@ -102,16 +103,17 @@ public class CarePayTextInputLayout extends TextInputLayout {
                     R.styleable.CarePayCustomAttrs,
                     0, 0);
             fontAttribute = typedArray.getInteger(R.styleable.CarePayCustomAttrs_customAssetFont, 0);
+            floatingFontAttribute = typedArray.getInteger(R.styleable.CarePayCustomAttrs_customFloatingFont, 0);
             typedArray.recycle();
         } catch (Exception exception) {
             fontAttribute = PROXIMA_NOVA_REGULAR;
         }
-        setFont();
+        setFont(fontAttribute);
     }
 
-    private void setFont() {
+    private void setFont(int font) {
         String assetFontName = "";
-        switch (fontAttribute) {
+        switch (font) {
             case GOTHAM_ROUNDED_BOLD: {
                 assetFontName = FONT_GOTHAM_ROUNDED_BOLD;
                 break;
@@ -159,4 +161,15 @@ public class CarePayTextInputLayout extends TextInputLayout {
     public void setRequestFocusWhenError(boolean requestFocusWhenError) {
         this.requestFocusWhenError = requestFocusWhenError;
     }
+
+    public int getFloatingFontAttribute() {
+        return floatingFontAttribute;
+    }
+
+    public void changeFont(int font) {
+        setFont(font);
+        invalidate();
+        requestLayout();
+    }
+
 }

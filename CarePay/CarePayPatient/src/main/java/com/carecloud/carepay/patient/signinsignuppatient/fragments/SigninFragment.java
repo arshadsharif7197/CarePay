@@ -7,55 +7,41 @@ import android.os.Bundle;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyPermanentlyInvalidatedException;
 import android.security.keystore.KeyProperties;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.hardware.fingerprint.FingerprintManagerCompat;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
-import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
 import com.carecloud.carepay.patient.selectlanguage.fragments.SelectLanguageFragment;
+import com.carecloud.carepay.patient.signinsignuppatient.SignInViewModel;
 import com.carecloud.carepay.patient.utils.FingerprintUiHelper;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepay.service.library.platform.AndroidPlatform;
-import com.carecloud.carepay.service.library.platform.Platform;
-import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
-import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInDTO;
-import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInResponse;
-import com.carecloud.carepay.service.library.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.PlainWebViewFragment;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
-import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.signinsignup.fragments.ResetPasswordFragment;
-import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.EncryptionUtil;
-import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
-import com.google.gson.Gson;
-import com.newrelic.agent.android.NewRelic;
+import com.google.android.material.textfield.TextInputLayout;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -71,8 +57,6 @@ import java.security.Signature;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.spec.ECGenParameterSpec;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by harish_revuri on 9/7/2016.
@@ -81,17 +65,17 @@ import java.util.Map;
 public class SigninFragment extends BaseFragment {
 
     private static final String KEY_NAME = "carePayKey";
-    private SignInDTO signInDTO;
     private TextInputLayout signInEmailTextInputLayout;
     private TextInputLayout passwordTextInputLayout;
     private EditText emailEditText;
     private EditText passwordEditText;
     private Button signInButton;
     private Signature mSignature;
-    KeyStore mKeyStore;
+    private KeyStore mKeyStore;
 
     private FragmentActivityInterface callback;
     private KeyPairGenerator mKeyPairGenerator;
+    private SignInViewModel viewModel;
 
     /**
      * @param shouldOpenNotifications a boolean indicating if Notification screen should be opened
@@ -127,15 +111,30 @@ public class SigninFragment extends BaseFragment {
         try {
             mSignature = Signature.getInstance("SHA256withECDSA");
             mKeyStore = KeyStore.getInstance("AndroidKeyStore");
-            mKeyPairGenerator = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC, "AndroidKeyStore");
+            mKeyPairGenerator = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC,
+                    "AndroidKeyStore");
             createKeyPair();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (NoSuchProviderException e) {
+        } catch (NoSuchAlgorithmException | KeyStoreException | NoSuchProviderException e) {
             e.printStackTrace();
         }
+        setUpViewModel();
+    }
+
+    private void setUpViewModel() {
+        viewModel = ViewModelProviders.of(getActivity()).get(SignInViewModel.class);
+        viewModel.getSignInResultNavigatorObservable().observe(this, workflowDTO -> {
+            PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO, getActivity()
+                    .getIntent().getExtras());
+        });
+        viewModel.getSignInResultObservable().observe(this, response -> {
+            if (response.equals(SignInViewModel.SHOW_CHOOSE_PROFILE_SCREEN)) {
+                setSignInButtonClickable(true);
+                callback.addFragment(ChooseProfileFragment.newInstance(emailEditText.getText().toString(),
+                        passwordEditText.getText().toString()), true);
+            } else if (response.equals(SignInViewModel.SIGN_IN_ERROR)) {
+                setSignInButtonClickable(true);
+            }
+        });
     }
 
     @Nullable
@@ -146,9 +145,8 @@ public class SigninFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NotNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        signInDTO = (SignInDTO) callback.getDto();
         setEditTexts(view);
         setClickListeners(view);
         enableSignInButton(emailEditText.getText().toString(), passwordEditText.getText().toString());
@@ -156,256 +154,66 @@ public class SigninFragment extends BaseFragment {
 
     private void setClickListeners(View view) {
 
-        signInButton = (Button) view.findViewById(R.id.signin_button);
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signIn(emailEditText.getText().toString(), passwordEditText.getText().toString());
+        signInButton = view.findViewById(R.id.signin_button);
+        signInButton.setOnClickListener(view1 -> signIn(emailEditText.getText().toString(),
+                passwordEditText.getText().toString()));
+
+        view.findViewById(R.id.changeLanguageText).setOnClickListener(view13
+                -> callback.replaceFragment(SelectLanguageFragment.newInstance(), true));
+
+        view.findViewById(R.id.show_password_button).setOnClickListener(view14 -> {
+            if (passwordEditText.getInputType() != InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
+                setInputType(passwordEditText, InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            } else {
+                setInputType(passwordEditText, InputType.TYPE_CLASS_TEXT
+                        | InputType.TYPE_TEXT_VARIATION_PASSWORD);
             }
         });
 
-        view.findViewById(R.id.signup_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.replaceFragment(new SignupFragment(), true);
-                reset();
-            }
+        view.findViewById(R.id.forgotPasswordTextView).setOnClickListener(view15
+                -> callback.replaceFragment(ResetPasswordFragment.newInstance(), true));
+
+        setUpFingerPrint(view);
+
+        view.findViewById(R.id.get_started).setOnClickListener(view12 -> {
+            PlainWebViewFragment fragment = PlainWebViewFragment
+                    .newInstance(HttpConstants.getRetailUrl() + CarePayConstants.GET_STARTED_URL);
+            callback.replaceFragment(fragment, true);
         });
+    }
 
-
-        view.findViewById(R.id.changeLanguageText).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.replaceFragment(SelectLanguageFragment.newInstance(), true);
-            }
-        });
-
-        view.findViewById(R.id.show_password_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (passwordEditText.getInputType() != InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
-                    setInputType(passwordEditText, InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                } else {
-                    setInputType(passwordEditText, InputType.TYPE_CLASS_TEXT
-                            | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                }
-            }
-        });
-
-        view.findViewById(R.id.forgotPasswordTextView).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.replaceFragment(ResetPasswordFragment.newInstance(), true);
-            }
-        });
-
+    private void setUpFingerPrint(View view) {
         FingerprintManagerCompat fingerprintManagerCompat = FingerprintManagerCompat.from(getContext());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && FingerprintUiHelper.isFingerprintAuthAvailable(fingerprintManagerCompat)
-                && ApplicationPreferences.getInstance().getUserName() != null
+                && !StringUtil.isNullOrEmpty(ApplicationPreferences.getInstance().getUserName())
                 && !ApplicationPreferences.getInstance().getUserName().equals("-")) {
             view.findViewById(R.id.touchIdButton).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.touchIdButton).setOnClickListener(new View.OnClickListener() {
-                @TargetApi(Build.VERSION_CODES.M)
-                @Override
-                public void onClick(View v) {
-                    FingerprintAuthenticationDialogFragment fragment = FingerprintAuthenticationDialogFragment.newInstance();
-                    if (initSignature()) {
-                        // Show the fingerprint dialog. The user has the option to use the fingerprint with
-                        // crypto, or you can fall back to using a server-side verified password.
-                        fragment.setCryptoObject(new FingerprintManagerCompat.CryptoObject(mSignature));
-                        callback.displayDialogFragment(fragment, true);
-                    }
-
+            view.findViewById(R.id.touchIdButton).setOnClickListener(v -> {
+                FingerprintAuthenticationDialogFragment fragment = FingerprintAuthenticationDialogFragment
+                        .newInstance();
+                if (initSignature()) {
+                    // Show the fingerprint dialog. The user has the option to use the fingerprint with
+                    // crypto, or you can fall back to using a server-side verified password.
+                    fragment.setCryptoObject(new FingerprintManagerCompat.CryptoObject(mSignature));
+                    callback.displayDialogFragment(fragment, true);
                 }
+
             });
         }
-
-        view.findViewById(R.id.get_started).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PlainWebViewFragment fragment = PlainWebViewFragment
-                        .newInstance(HttpConstants.getRetailUrl()+CarePayConstants.GET_STARTED_URL);
-                callback.replaceFragment(fragment, true);
-            }
-        });
     }
 
     public void signIn(String email, String pwd) {
         if (areAllFieldsValid(email, pwd) && signInButton.isClickable()) {
             setSignInButtonClickable(false);
-            unifiedSignIn(email, pwd, signInDTO.getMetadata().getTransitions().getSignIn());
+            String inviteId = null;
+            if (getActivity().getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO) != null) {
+                inviteId = getActivity().getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO)
+                        .getString("inviteId");
+            }
+            boolean openNotificationScreen = getArguments().getBoolean(CarePayConstants.OPEN_NOTIFICATIONS);
+            viewModel.signInStep1(email, pwd, inviteId, openNotificationScreen);
         }
-    }
-
-    private void unifiedSignIn(String userName, String password, TransitionDTO signInTransition) {
-        UnifiedSignInUser user = new UnifiedSignInUser();
-        user.setEmail(userName);
-        user.setPassword(password);
-        user.setDeviceToken(((AndroidPlatform) Platform.get()).openDefaultSharedPreferences()
-                .getString(CarePayConstants.FCM_TOKEN, null));
-
-        UnifiedSignInDTO signInDTO = new UnifiedSignInDTO();
-        signInDTO.setUser(user);
-
-        Map<String, String> queryParams = new HashMap<>();
-        Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
-        if (signInDTO.isValidUser()) {
-            Gson gson = new Gson();
-            getWorkflowServiceHelper().execute(signInTransition, getUnifiedLoginCallback(userName, password), gson.toJson(signInDTO),
-                    queryParams, headers);
-            getAppAuthorizationHelper().setUser(userName);
-            getApplicationPreferences().setUserId(userName);
-            NewRelic.setUserId(userName);
-        }
-    }
-
-    private WorkflowServiceCallback getUnifiedLoginCallback(final String user, final String password) {
-        return new WorkflowServiceCallback() {
-
-            @Override
-            public void onPreExecute() {
-                showProgressDialog();
-            }
-
-            @Override
-            public void onPostExecute(WorkflowDTO workflowDTO) {
-                Gson gson = new Gson();
-                String signInResponseString = gson.toJson(workflowDTO);
-                UnifiedSignInResponse signInResponse = gson.fromJson(signInResponseString,
-                        UnifiedSignInResponse.class);
-                ApplicationPreferences.getInstance().setBadgeCounterTransition(signInResponse
-                        .getMetadata().getTransitions().getBadgeCounter());
-                ApplicationPreferences.getInstance()
-                        .setMessagesBadgeCounter(signInResponse.getPayload().getBadgeCounter().getMessages());
-                ApplicationPreferences.getInstance()
-                        .setFormsBadgeCounter(signInResponse.getPayload().getBadgeCounter().getPendingForms());
-                authenticate(signInResponse, signInDTO.getMetadata().getTransitions().getRefresh(),
-                        signInDTO.getMetadata().getTransitions().getAuthenticate(), user, password);
-            }
-
-            @Override
-            public void onFailure(String exceptionMessage) {
-                hideProgressDialog();
-                setSignInButtonClickable(true);
-                if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE
-                        || getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT) {
-                    getWorkflowServiceHelper().setAppAuthorizationHelper(null);
-                }
-                callback.showErrorToast(CarePayConstants.INVALID_LOGIN_ERROR_MESSAGE);
-                Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
-            }
-        };
-    }
-
-    private void authenticate(UnifiedSignInResponse signInResponse, TransitionDTO refreshTransition,
-                              TransitionDTO authenticateTransition, String user, String password) {
-        UnifiedAuthenticationTokens authTokens = signInResponse.getPayload().getAuthorizationModel()
-                .getCognito().getAuthenticationTokens();
-        getAppAuthorizationHelper().setAuthorizationTokens(authTokens);
-        getAppAuthorizationHelper().setRefreshTransition(refreshTransition);
-        getWorkflowServiceHelper().setAppAuthorizationHelper(getAppAuthorizationHelper());
-
-        Map<String, String> query = new HashMap<>();
-        Map<String, String> header = new HashMap<>();
-
-        String languageId = getApplicationPreferences().getUserLanguage();
-        header.put("Accept-Language", languageId);
-        getWorkflowServiceHelper().execute(authenticateTransition, getSignInCallback(user, password), query, header);
-    }
-
-    private WorkflowServiceCallback getSignInCallback(final String user, final String password) {
-        return new WorkflowServiceCallback() {
-
-            @Override
-            public void onPreExecute() {
-                showProgressDialog();
-            }
-
-            @Override
-            public void onPostExecute(WorkflowDTO workflowDTO) {
-                hideProgressDialog();
-                setSignInButtonClickable(true);
-                boolean shouldShowNotificationScreen = getArguments()
-                        .getBoolean(CarePayConstants.OPEN_NOTIFICATIONS);
-                getApplicationPreferences().setUserPhotoUrl(null);
-                getApplicationPreferences().writeObjectToSharedPreference(CarePayConstants
-                        .DEMOGRAPHICS_ADDRESS_BUNDLE, null);
-                getApplicationPreferences().setLandingScreen(true);
-                if (shouldShowNotificationScreen) {
-                    manageNotificationAsLandingScreen(workflowDTO.toString());
-                } else {
-                    PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO);
-                }
-                ApplicationPreferences.getInstance().setUserName(user);
-                String encryptedPassword = EncryptionUtil.encrypt(getContext(), password, user);
-                ApplicationPreferences.getInstance().setUserPassword(encryptedPassword);
-
-                MyHealthDto myHealthDto = DtoHelper.getConvertedDTO(MyHealthDto.class, workflowDTO);
-                String userId = myHealthDto.getPayload().getPracticePatientIds().get(0).getUserId();
-                MixPanelUtil.setUser(getContext(), userId, myHealthDto.getPayload().getDemographicDTO().getPayload());
-
-                MixPanelUtil.logEvent(getString(R.string.event_signin_loginSuccess),
-                        getString(R.string.param_login_type),
-                        getString(R.string.login_password));
-            }
-
-            @Override
-            public void onFailure(String exceptionMessage) {
-                hideProgressDialog();
-                setSignInButtonClickable(true);
-                showErrorNotification(exceptionMessage);
-                Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-            }
-        };
-    }
-
-    private void manageNotificationAsLandingScreen(String workflow) {
-        final Gson gson = new Gson();
-        final MyHealthDto landingDto = gson.fromJson(workflow, MyHealthDto.class);
-
-        showProgressDialog();
-        TransitionDTO transition = landingDto.getMetadata().getLinks().getNotifications();
-        getWorkflowServiceHelper().execute(transition, new WorkflowServiceCallback() {
-            @Override
-            public void onPreExecute() {
-            }
-
-            @Override
-            public void onPostExecute(WorkflowDTO workflowDTO) {
-                NotificationsDTO notificationsDTO = gson
-                        .fromJson(workflowDTO.toString(), NotificationsDTO.class);
-                notificationsDTO.getPayload().setPracticePatientIds(landingDto
-                        .getPayload().getPracticePatientIds());
-
-                notificationsDTO.getMetadata().getLinks().setPatientBalances(landingDto.getMetadata()
-                        .getLinks().getPatientBalances());
-                notificationsDTO.getMetadata().getTransitions().setLogout(landingDto.getMetadata()
-                        .getTransitions().getLogout());
-                notificationsDTO.getMetadata().getLinks().setProfileUpdate(landingDto.getMetadata()
-                        .getLinks().getProfileUpdate());
-                notificationsDTO.getMetadata().getLinks().setAppointments(landingDto.getMetadata()
-                        .getLinks().getAppointments());
-                notificationsDTO.getMetadata().getLinks().setNotifications(landingDto.getMetadata()
-                        .getLinks().getNotifications());
-                notificationsDTO.getMetadata().getLinks().setMyHealth(landingDto.getMetadata()
-                        .getLinks().getMyHealth());
-
-                WorkflowDTO notificationWorkFlow = gson.fromJson(gson.toJson(notificationsDTO),
-                        WorkflowDTO.class);
-                hideProgressDialog();
-                PatientNavigationHelper.setAccessPaymentsBalances(false);
-                Bundle args = new Bundle();
-                args.putBoolean(CarePayConstants.OPEN_NOTIFICATIONS, true);
-                PatientNavigationHelper.navigateToWorkflow(getContext(), notificationWorkFlow, args);
-            }
-
-            @Override
-            public void onFailure(String exceptionMessage) {
-                hideProgressDialog();
-                showErrorNotification(exceptionMessage);
-            }
-        });
     }
 
     private boolean areAllFieldsValid(String email, String password) {
@@ -423,11 +231,11 @@ public class SigninFragment extends BaseFragment {
     private boolean checkEmail(String email) {
         boolean isEmptyEmail = StringUtil.isNullOrEmpty(email);
         if (isEmptyEmail) {
-            setEmailError(getString(com.carecloud.carepaylibrary.R.string.signin_signup_error_empty_email));
+            setEmailError(getString(R.string.signin_signup_error_empty_email));
         }
         boolean isEmailValid = ValidationHelper.isValidEmail(email);
         if (!isEmailValid) {
-            setEmailError(getString(com.carecloud.carepaylibrary.R.string.signin_signup_error_invalid_email));
+            setEmailError(getString(R.string.signin_signup_error_invalid_email));
         }
         return !isEmptyEmail && isEmailValid;
     }
@@ -436,7 +244,7 @@ public class SigninFragment extends BaseFragment {
         boolean isEmptyPassword = StringUtil.isNullOrEmpty(password);
 
         if (isEmptyPassword) {
-            String error = getString(com.carecloud.carepaylibrary.R.string.signin_signup_error_empty_password);
+            String error = getString(R.string.signin_signup_error_empty_password);
             setPasswordError(error);
         }
         return !isEmptyPassword;
@@ -460,10 +268,10 @@ public class SigninFragment extends BaseFragment {
 
 
     private void setEditTexts(View view) {
-        signInEmailTextInputLayout = (TextInputLayout) view.findViewById(R.id.signInEmailTextInputLayout);
-        emailEditText = (EditText) view.findViewById(R.id.signinEmailEditText);
-        passwordEditText = (EditText) view.findViewById(R.id.passwordEditText);
-        passwordTextInputLayout = (TextInputLayout) view.findViewById(R.id.passwordTextInputLayout);
+        signInEmailTextInputLayout = view.findViewById(R.id.signInEmailTextInputLayout);
+        emailEditText = view.findViewById(R.id.signinEmailEditText);
+        passwordEditText = view.findViewById(R.id.passwordEditText);
+        passwordTextInputLayout = view.findViewById(R.id.passwordTextInputLayout);
         emailEditText.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(signInEmailTextInputLayout, null));
         passwordEditText.setOnFocusChangeListener(SystemUtil
@@ -521,23 +329,17 @@ public class SigninFragment extends BaseFragment {
     }
 
     private void setActionListeners() {
-        emailEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                    passwordEditText.requestFocus();
-                    return true;
-                }
-                return false;
-            }
-        });
-        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                SystemUtil.hideSoftKeyboard(getActivity());
-                signIn(emailEditText.getText().toString(), passwordEditText.getText().toString());
+        emailEditText.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                passwordEditText.requestFocus();
                 return true;
             }
+            return false;
+        });
+        passwordEditText.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+            SystemUtil.hideSoftKeyboard(getActivity());
+            signIn(emailEditText.getText().toString(), passwordEditText.getText().toString());
+            return true;
         });
     }
 
@@ -550,29 +352,29 @@ public class SigninFragment extends BaseFragment {
         passwordTextInputLayout.setError(null);
     }
 
-    public void requestPasswordFocus() {
+    private void requestPasswordFocus() {
         passwordEditText.requestFocus();
     }
 
-    public void requestEmailFocus() {
+    private void requestEmailFocus() {
         emailEditText.requestFocus();
     }
 
-    public void setPasswordError(String error) {
+    private void setPasswordError(String error) {
         passwordTextInputLayout.setErrorEnabled(true);
         passwordTextInputLayout.setError(error);
     }
 
-    public void setEmailError(String error) {
+    private void setEmailError(String error) {
         signInEmailTextInputLayout.setErrorEnabled(true);
         signInEmailTextInputLayout.setError(error);
     }
 
-    public void setSignInButtonClickable(boolean clickable) {
+    private void setSignInButtonClickable(boolean clickable) {
         signInButton.setClickable(clickable);
     }
 
-    public void setSignInButtonEnabled(boolean enable) {
+    private void setSignInButtonEnabled(boolean enable) {
         signInButton.setEnabled(enable);
     }
 
@@ -582,7 +384,7 @@ public class SigninFragment extends BaseFragment {
      * be authorized by the user authenticating with fingerprint. Public key use is unrestricted.
      */
     @TargetApi(Build.VERSION_CODES.M)
-    public void createKeyPair() {
+    private void createKeyPair() {
         // The enrolling flow for fingerprint. This is where you ask the user to set up fingerprint
         // for your flow. Use of keys is necessary if you need to know if the set of
         // enrolled fingerprints has changed.
@@ -626,5 +428,8 @@ public class SigninFragment extends BaseFragment {
         }
     }
 
-
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 }

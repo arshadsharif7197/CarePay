@@ -139,7 +139,9 @@
     <dimen name="custom_appointment_dialog_checkbox_normal_size">12dp</dimen>
 
     <dimen name="profilePicMarginTop">10dp</dimen>
-    <dimen name="checkinPatientNameTextSize">20sp</dimen>
+    <dimen name="checkinPatientNameTextSize">32sp</dimen>
+    <dimen name="checkinPatientNameMinTextSize">12sp</dimen>
+    <dimen name="checkinPatientNameMarginSize">50dp</dimen>
     <dimen name="doctorNameTextSize">14sp</dimen>
     <dimen name="checkin_info_label_width">100dp</dimen>
     <dimen name="balanceTextPadding">12dp</dimen>
@@ -187,7 +189,7 @@
     <dimen name="findPatientButtonRightMargin">35dp</dimen>
     <dimen name="mainScreensTitleTextSize">17sp</dimen>
     <dimen name="paymentContainerBottomMargin">5dp</dimen>
-    <dimen name="paymentContainerHorizontalMargin">70dp</dimen>
+    <dimen name="paymentContainerHorizontalMargin">10dp</dimen>
     <dimen name="changeDateHorizontalPadding">10dp</dimen>
     <dimen name="changeDateVerticalPadding">5dp</dimen>
     <dimen name="listPatientsMarginTop">10dp</dimen>
@@ -350,6 +352,7 @@
     <dimen name="dateSeparatorContainerVerticalPadding">5dp</dimen>
     <dimen name="dateSeparatorContainerStartMargin">10dp</dimen>
     <dimen name="dateSeparatorContainerBottomMargin">5dp</dimen>
+    <dimen name="practiceCounterStartMargin">10dp</dimen>
 
     <!--Visit Type Dialog-->
     <dimen name="visityTypeDialogSubTitleTextSize">12sp</dimen>
@@ -385,10 +388,10 @@
     <dimen name="appointmentDialogPhoneHorizontalMargin">70dp</dimen>
     <dimen name="appointmentDialogPhoneVerticalPadding">10dp</dimen>
     <dimen name="appointmentDialogPhoneTextSize">24sp</dimen>
-    <dimen name="visitTypeContainerHorizontalPadding">15dp</dimen>
+    <dimen name="visitTypeContainerHorizontalPadding">25dp</dimen>
     <dimen name="visitTypeContainerBottomPadding">30dp</dimen>
     <dimen name="visitTypeLabelTextSize">18sp</dimen>
-    <dimen name="visitTypeValueTextSize">16sp</dimen>
+    <dimen name="visitTypeValueTextSize">14sp</dimen>
     <dimen name="visitTypeLabelEndMargin">5dp</dimen>
     <dimen name="visitTypeValueHeight">20dp</dimen>
     <dimen name="appointmentSeparatorTopMargin">20dp</dimen>
@@ -438,6 +441,7 @@
     <dimen name="visitTypeContainerTopMargin">15dp</dimen>
     <dimen name="reasonTypeValueTextSize">14sp</dimen>
     <dimen name="reasonForVisitPadding">10dp</dimen>
+    <dimen name="appointmentRequestDialogTopPadding">20dp</dimen>
 
     <!--Check In Screen-->
     <dimen name="checkInShadowEndMargin">-40dp</dimen>
@@ -791,5 +795,13 @@
     <dimen name="completeCheckInItemValueTextSize">12sp</dimen>
     <dimen name="completeScreenSectionTitleTextSize">14sp</dimen>
     <dimen name="completeScreenSectionTitleVerticalMargin">10dp</dimen>
+
+    <!--DOB Verification-->
+    <dimen name="dobVerificationTitleTextSize">26sp</dimen>
+    <dimen name="dobVerificationSubTitleTextSize">17sp</dimen>
+    <dimen name="largeAlertMessageLabelPadding">3dp</dimen>
+
+    <dimen name="practiceClearButtonContainerPadding">8dp</dimen>
+    <dimen name="searchPatientEditTextHeight">35dp</dimen>
 
 </resources>

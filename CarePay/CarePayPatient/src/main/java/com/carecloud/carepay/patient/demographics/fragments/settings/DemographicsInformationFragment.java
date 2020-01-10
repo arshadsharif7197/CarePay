@@ -3,10 +3,10 @@ package com.carecloud.carepay.patient.demographics.fragments.settings;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.Nullable;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -396,6 +396,8 @@ public class DemographicsInformationFragment extends DemographicsBaseSettingsFra
                 !ValidationHelper.isValidString(zipCode.getText().toString().trim(), ValidationHelper.ZIP_CODE_PATTERN)) {
             setFieldError(zipLayout, Label.getLabel("demographics_zip_code_validation_msg"), isUserInteraction);
             return false;
+        } else {
+            unsetFieldError(zipLayout);
         }
 
         String cityValue = ((EditText) view.findViewById(R.id.cityId)).getText().toString();

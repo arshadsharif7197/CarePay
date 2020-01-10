@@ -1,11 +1,10 @@
 package com.carecloud.carepaylibray.appointments.createappointment.visittype;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.label.Label;
@@ -56,20 +55,13 @@ public class VisitTypeAdapter extends RecyclerView.Adapter<VisitTypeAdapter.View
             holder.prepaymentAmount.setText(amountText);
             holder.prepaymentAmount.setVisibility(View.VISIBLE);
             holder.alertImageView.setVisibility(View.VISIBLE);
-            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) holder
-                    .visitTypeNameTextView.getLayoutParams();
-            lp.addRule(RelativeLayout.START_OF, holder.prepaymentAmount.getId());
             visitTypeDTO.setAmount(amount);
         } else {
             holder.prepaymentAmount.setVisibility(View.GONE);
             holder.alertImageView.setVisibility(View.GONE);
         }
 
-        if (visitTypeDTO.isVideoOption()) {
-            holder.videoImageView.setVisibility(View.VISIBLE);
-        } else {
-            holder.videoImageView.setVisibility(View.GONE);
-        }
+        holder.videoType.setVisibility(visitTypeDTO.hasVideoOption() ? View.VISIBLE : View.GONE);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,14 +84,14 @@ public class VisitTypeAdapter extends RecyclerView.Adapter<VisitTypeAdapter.View
 
         TextView visitTypeNameTextView;
         TextView prepaymentAmount;
-        ImageView videoImageView;
+        View videoType;
         ImageView alertImageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             visitTypeNameTextView = itemView.findViewById(R.id.visitTypeNameTextView);
             prepaymentAmount = itemView.findViewById(R.id.prepaymentAmount);
-            videoImageView = itemView.findViewById(R.id.videoImageView);
+            videoType = itemView.findViewById(R.id.videoImageView);
             alertImageView = itemView.findViewById(R.id.alertImageView);
         }
     }

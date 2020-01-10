@@ -8,8 +8,6 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 
-import static com.carecloud.carepaylibray.utils.SystemUtil.isNotEmptyString;
-
 import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,6 +15,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.carecloud.carepaylibray.utils.SystemUtil.isNotEmptyString;
 
 public class StringUtil {
 
@@ -35,7 +35,7 @@ public class StringUtil {
     }
 
 
-    public static String getFormatedLabal(Context context, String label) {
+    public static String getFormatedLabel(Context context, String label) {
         return isNullOrEmpty(label) ? context.getString(R.string.not_defined) : label;
     }
 
@@ -55,13 +55,14 @@ public class StringUtil {
         String[] strArr = source.split(" ");
         for (String str : strArr) {
             char[] stringArray = str.trim().toCharArray();
-            stringArray[0] = Character.toUpperCase(stringArray[0]);
-            str = new String(stringArray);
-
-            res.append(str).append(" ");
+            if (stringArray.length > 0) {
+                stringArray[0] = Character.toUpperCase(stringArray[0]);
+                str = new String(stringArray);
+                res.append(str).append(" ");
+            }
         }
 
-        return res.toString();
+        return res.toString().trim();
     }
 
     /**
@@ -388,7 +389,7 @@ public class StringUtil {
      * @return modified String
      */
     public static String capitalize(String capString) {
-        if(isNullOrEmpty(capString)){
+        if (isNullOrEmpty(capString)) {
             return "";
         }
         StringBuffer capBuffer = new StringBuffer();
@@ -510,5 +511,25 @@ public class StringUtil {
             default:
                 return "";
         }
+    }
+
+    public static boolean checkEqualValues(String value1, String value2) {
+        return equalsIgnoreCase(value1, value2) || isEmpty(value1) && isEmpty(value2);
+    }
+
+    public static boolean equalsIgnoreCase(final String str1, final String str2) {
+        if (str1 == null || str2 == null) {
+            return str1 == str2;
+        } else if (str1 == str2) {
+            return true;
+        } else if (str1.length() != str2.length()) {
+            return false;
+        } else {
+            return str1.regionMatches(true, 0, str2, 0, str1.length());
+        }
+    }
+
+    public static boolean isEmpty(final CharSequence cs) {
+        return cs == null || cs.length() == 0;
     }
 }

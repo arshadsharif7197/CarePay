@@ -5,10 +5,10 @@ import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -27,6 +27,7 @@ import com.carecloud.carepay.practice.library.checkin.adapters.PagePickerAdapter
 import com.carecloud.carepay.practice.library.checkin.dtos.CheckInDTO;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentDetailsFragmentDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerWindow;
+import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistributionFragment;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -73,12 +74,6 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
 
     private static final String TAG = "AppointmentDetailDialog";
 
-    public interface AppointmentDialogCallback extends FragmentActivityInterface {
-        void showPaymentDistributionDialog(PaymentsModel paymentsModel);
-
-        void onFailure(String errorMessage);
-    }
-
     private CheckInDTO checkInDTO;
     private AppointmentsPayloadDTO appointmentPayloadDTO;
     private PendingBalanceDTO pendingBalanceDTO;
@@ -110,7 +105,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
 
     private ISession sessionHandler;
 
-    private AppointmentDialogCallback callback;
+    private FragmentActivityInterface callback;
     private PopupPickerWindow pickerWindow;
     private String pushUserId;
 
@@ -118,6 +113,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
 
     private Handler handler;
     private PaymentsModel paymentDetailsModel;
+    private View spacerView;
 
     /**
      * Constructor.
@@ -138,7 +134,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (AppointmentDialogCallback) context;
+            callback = (FragmentActivityInterface) context;
         } catch (ClassCastException cce) {
             throw new ClassCastException("Attached context must implement PatientAppointmentNavigationCallback");
         }
@@ -219,6 +215,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
         shortName = (TextView) findViewById(R.id.patientNameLabelShort);
 
         checkboxLayout = findViewById(R.id.checkbox_layout);
+        spacerView = findViewById(R.id.spacer);
         queueTextLayout = findViewById(R.id.queue_text_layout);
         queueText = (TextView) findViewById(R.id.queue_text);
         patientBalancesLayout = findViewById(R.id.patientBalancesContainer);
@@ -290,8 +287,8 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
         checkingInLabel.setText(title);
 
         balanceValueLabel.setText(StringUtil.getFormattedBalanceAmount(getPatientBalance()));
-        patientNameLabel.setText(StringUtil.getFormatedLabal(getContext(), appointmentPayloadDTO.getPatient().getFullName()));
-        doctorNameLabel.setText(StringUtil.getFormatedLabal(getContext(), appointmentPayloadDTO.getProvider().getName()));
+        patientNameLabel.setText(StringUtil.capitalize(StringUtil.getFormatedLabel(getContext(), appointmentPayloadDTO.getPatient().getFullName())));
+        doctorNameLabel.setText(StringUtil.getFormatedLabel(getContext(), appointmentPayloadDTO.getProvider().getName()));
 
 
         findViewById(R.id.checkin_close_button).setOnClickListener(new View.OnClickListener() {
@@ -459,13 +456,15 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
 
         @Override
         public void onFailure(String exceptionMessage) {
-            callback.onFailure(exceptionMessage);
-            Log.e(getActivity().getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            showErrorNotification(exceptionMessage);
+            if (getActivity() != null) {
+                Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+            }
         }
     };
 
 
-    private WorkflowServiceCallback getAppointmentStatusCallback(final boolean isCheckin) {
+    private WorkflowServiceCallback getAppointmentStatusCallback(final boolean isCheckIn) {
         return new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
@@ -475,7 +474,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 AppointmentDTO appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, workflowDTO);
-                if (isCheckin) {
+                if (isCheckIn) {
                     updateCheckinStatus(appointmentDTO.getPayload().getAppointmentStatus().getCheckinStatusDTO());
                 } else {
                     updateCheckoutStatus(appointmentDTO.getPayload().getAppointmentStatus().getCheckinStatusDTO());
@@ -511,9 +510,17 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
             switch (rank) {
                 case 1: {
                     //show single place in queue
-                    queueTextLayout.setVisibility(View.VISIBLE);
-                    checkboxLayout.setVisibility(View.GONE);
-                    queueText.setText(place);
+                    queueTextLayout.setVisibility(View.GONE);
+                    spacerView.setVisibility(View.GONE);
+                    checkboxLayout.setVisibility(View.VISIBLE);
+                    checkBoxes.get(1).setVisibility(View.GONE);
+                    checkBoxes.get(2).setVisibility(View.GONE);
+                    checkBoxes.get(3).setVisibility(View.GONE);
+                    checkBoxes.get(4).setVisibility(View.GONE);
+                    checkBoxes.get(0).setSelected(true);
+                    SpannableString spannableString = new SpannableString(place);
+                    spannableString.setSpan(new CarePayTypefaceSpan(bold), 0, place.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    checkBoxes.get(0).setText(spannableString);
                     break;
                 }
                 case 2: {
@@ -713,7 +720,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
         if (!pendingBalances.isEmpty()) {
             patientBalancesLayout.setVisibility(View.VISIBLE);
             PaymentLineItemsListAdapter adapter = new PaymentLineItemsListAdapter(getContext(),
-                    getAllPendingBalancePayloads(pendingBalances), this);
+                    getAllPendingBalancePayloads(pendingBalances), this, true);
             patientBalancesRecycler.setAdapter(adapter);
         }
     }
@@ -770,8 +777,8 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
         queryMap.put("patient_id", appointmentPayloadDTO.getPatient().getPatientId());
 
         TransitionDTO transitionDTO = checkInDTO.getMetadata().getLinks().getPatientBalances();
-        sessionHandler.getWorkflowServiceHelper().interrupt();
-        sessionHandler.getWorkflowServiceHelper().execute(transitionDTO, getPatientBalancesCallback(showInline), queryMap);
+        getWorkflowServiceHelper().interrupt();
+        getWorkflowServiceHelper().execute(transitionDTO, getPatientBalancesCallback(showInline), queryMap);
 
     }
 
@@ -798,7 +805,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
             @Override
             public void onPreExecute() {
                 if (!showInline) {
-                    sessionHandler.showProgressDialog();
+                    showProgressDialog();
                 }
             }
 
@@ -819,12 +826,12 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
                     if (patientBalanceDTO.getBalances().get(0).getPayload().isEmpty()) {
                         Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show();
                     } else {
+                        dismiss();
                         patientDetails.getPaymentPayload().setLocations(checkInDTO.getPayload().getLocations());
                         patientDetails.getPaymentPayload().setLocationIndex(checkInDTO.getPayload().getLocationIndex());
                         patientDetails.getPaymentPayload().setProviders(checkInDTO.getPayload().getProviders());
                         patientDetails.getPaymentPayload().setProviderIndex(checkInDTO.getPayload().getProviderIndex());
-                        callback.showPaymentDistributionDialog(patientDetails);
-                        cancel();
+                        showPaymentDistributionDialog(patientDetails);
                     }
                 } else {
                     Toast.makeText(getContext(), "Patient has no balance", Toast.LENGTH_LONG).show();
@@ -833,12 +840,18 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
 
             @Override
             public void onFailure(String exceptionMessage) {
-                sessionHandler.hideProgressDialog();
-                callback.onFailure(exceptionMessage);
+                hideProgressDialog();
+                showErrorNotification(exceptionMessage);
                 Log.e(TAG, exceptionMessage);
-
             }
         };
+    }
+
+    private void showPaymentDistributionDialog(PaymentsModel paymentsModel) {
+        PaymentDistributionFragment fragment = PaymentDistributionFragment.newInstance(paymentsModel);
+        fragment.setOnCancelListener(onDialogCancelListener);
+        callback.displayDialogFragment(fragment, true);
+        hideDialog();
     }
 
     @Override

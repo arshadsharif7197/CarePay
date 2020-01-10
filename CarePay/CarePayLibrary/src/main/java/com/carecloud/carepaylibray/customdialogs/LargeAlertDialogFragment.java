@@ -2,8 +2,8 @@ package com.carecloud.carepaylibray.customdialogs;
 
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +25,7 @@ public class LargeAlertDialogFragment extends BaseDialogFragment implements View
     private String message;
     private int headerBackGroundColor;
     private int headerIcon;
+    private int messageTextSize;
 
     //For callback
     public interface LargeAlertInterface {
@@ -33,13 +34,21 @@ public class LargeAlertDialogFragment extends BaseDialogFragment implements View
 
     public static LargeAlertDialogFragment newInstance(String message,
                                                        String actionText,
+                                                       int messageTextSize) {
+        return newInstance(message, actionText, -1, -1, messageTextSize);
+    }
+
+    public static LargeAlertDialogFragment newInstance(String message,
+                                                       String actionText,
                                                        int headerBackGroundColor,
-                                                       int headerIcon) {
+                                                       int headerIcon,
+                                                       int messageTextSize) {
         Bundle args = new Bundle();
         args.putString("message", message);
         args.putString("actionText", actionText);
         args.putInt("headerBackGroundColor", headerBackGroundColor);
         args.putInt("headerIcon", headerIcon);
+        args.putInt("messageTextSize", messageTextSize);
         LargeAlertDialogFragment fragment = new LargeAlertDialogFragment();
         fragment.setArguments(args);
         return fragment;
@@ -52,6 +61,7 @@ public class LargeAlertDialogFragment extends BaseDialogFragment implements View
         message = args.getString("message");
         actionText = args.getString("actionText");
         headerBackGroundColor = args.getInt("headerBackGroundColor");
+        messageTextSize = args.getInt("messageTextSize");
         headerIcon = args.getInt("headerIcon");
     }
 
@@ -73,7 +83,13 @@ public class LargeAlertDialogFragment extends BaseDialogFragment implements View
         largeMssageLabel.setTextColor(getContext().getResources().getColor(R.color.white));
         largeMssageLabel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         setBackgroundColor();
-        findViewById(R.id.headerIconImageView).setBackgroundResource(headerIcon);
+        if (headerIcon > -1) {
+            findViewById(R.id.headerIconImageView).setBackgroundResource(headerIcon);
+        } else {
+            findViewById(R.id.headerIconImageView).setVisibility(View.GONE);
+            largeMssageLabel.setTextSize(TypedValue.COMPLEX_UNIT_SP, messageTextSize);
+//            largeMssageLabel.setTextSize(getResources().getDimension(R.dimen.largeAlertMessageTextSize));
+        }
     }
 
     @Override
@@ -91,6 +107,9 @@ public class LargeAlertDialogFragment extends BaseDialogFragment implements View
 
     private void setBackgroundColor() {
         View header = findViewById(R.id.headerLayout);
+        if (headerBackGroundColor == -1) {
+            headerBackGroundColor = R.color.Feldgrau;
+        }
         try {
             GradientDrawable drawable = (GradientDrawable) header.getBackground();
             drawable.setColor(ContextCompat.getColor(getContext(), headerBackGroundColor));

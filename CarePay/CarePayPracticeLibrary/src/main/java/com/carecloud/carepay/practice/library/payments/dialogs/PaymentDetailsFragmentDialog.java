@@ -1,9 +1,9 @@
 package com.carecloud.carepay.practice.library.payments.dialogs;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,7 +105,7 @@ public class PaymentDetailsFragmentDialog extends BasePaymentDetailsFragmentDial
                         view.findViewById(R.id.avTextView).setVisibility(View.VISIBLE);
                     }
                 });
-        ((TextView) view.findViewById(R.id.patient_full_name)).setText(String.format("%s %s", name, lastName));
+        ((TextView) view.findViewById(R.id.patient_full_name)).setText(StringUtil.capitalize(String.format("%s %s", name, lastName)));
         ((TextView) view.findViewById(R.id.payment_details_total_paid))
                 .setText(String.format("%s: %s", amountBalanceLabel, totalAmount));
         ((TextView) view.findViewById(R.id.avTextView))

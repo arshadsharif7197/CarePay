@@ -5,7 +5,7 @@ import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.carecloud.carepay.practice.library.homescreen.dtos.AppointmentCountsModel;
 import com.carecloud.carepay.practice.library.homescreen.dtos.HomeScreenAppointmentCountsDTO;
@@ -52,16 +52,20 @@ public class AppointmentCountUpdateService extends IntentService {
             queryMap.put("practice_id", practiceId);
             queryMap.put("practice_mgmt", practiceMgmt);
 
-            Set<String> locationsSavedFilteredIds = applicationSession.getApplicationPreferences()
-                    .getSelectedLocationsIds(practiceId,
-                            applicationSession.getApplicationMode().getUserPracticeDTO().getUserId());
-            if (locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()) {
-                queryMap.put("location_ids", StringUtil.getListAsCommaDelimitedString(locationsSavedFilteredIds));
-            }
+            String username = null;
 
-            String username = applicationSession.getApplicationMode().getUserPracticeDTO().getUserName();
-            if(username == null){
-                username = applicationSession.getAppAuthorizationHelper().getCurrUser();
+            if (applicationSession.getApplicationMode().getUserPracticeDTO() != null) {
+                Set<String> locationsSavedFilteredIds = applicationSession.getApplicationPreferences()
+                        .getSelectedLocationsIds(practiceId,
+                                applicationSession.getApplicationMode().getUserPracticeDTO().getUserId());
+                if (locationsSavedFilteredIds != null && !locationsSavedFilteredIds.isEmpty()) {
+                    queryMap.put("location_ids", StringUtil.getListAsCommaDelimitedString(locationsSavedFilteredIds));
+                }
+
+                username = applicationSession.getApplicationMode().getUserPracticeDTO().getUserName();
+                if (username == null) {
+                    username = applicationSession.getAppAuthorizationHelper().getCurrUser();
+                }
             }
 
             Map<String, String> header = new HashMap<>();
@@ -95,7 +99,7 @@ public class AppointmentCountUpdateService extends IntentService {
 
     private static PendingIntent getPendingService(Context context, IntentParams params) {
         Intent scheduledService = new Intent(context, AppointmentCountUpdateService.class);
-        if(params != null) {
+        if (params != null) {
             scheduledService.putExtra(AppointmentCountUpdateService.KEY_TRANSITION, params.transition);
             scheduledService.putExtra(AppointmentCountUpdateService.KEY_PRACTICE_ID, params.practiceId);
             scheduledService.putExtra(AppointmentCountUpdateService.KEY_PRACTICE_MGMT, params.practiceMgmt);

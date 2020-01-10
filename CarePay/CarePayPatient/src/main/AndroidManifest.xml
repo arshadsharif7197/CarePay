@@ -7,11 +7,14 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:remove="android:maxSdkVersion" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.SET_DEBUG_APP" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
 
     <uses-feature android:name="android.hardware.camera" />
 
@@ -34,7 +37,6 @@
 
         <activity
             android:name=".patientsplash.SplashActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="sensorPortrait"
             android:theme="@style/Theme.AppCompat.Translucent">
             <intent-filter>
@@ -47,6 +49,13 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".patientsplash.SplashInviteActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/Theme.AppCompat.Translucent">
             <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -59,6 +68,7 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".demographics.activities.NewDemographicsActivity"
             android:screenOrientation="sensorPortrait"
@@ -110,12 +120,15 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".fcm.MyFirebaseMessagingService">
+        <service android:name=".fcm.MyFirebaseMessagingService"
+            android:stopWithTask="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name="com.carecloud.carepaylibray.fcm.RegistrationIntentService" />
+        <service
+            android:name="com.carecloud.carepaylibray.fcm.RegistrationIntentService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <receiver
             android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
@@ -145,13 +158,25 @@
         <activity
             android:name=".survey.SurveyActivity"
             android:screenOrientation="sensorPortrait" />
+        <activity
+            android:name=".session.PatientWarningSessionActivity"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/WarningTimeoutTheme" />
+        <activity
+            android:name=".delegate.ProfilesActivity"
+            android:screenOrientation="sensorPortrait" />
 
         <service
             android:name=".payment.androidpay.AndroidPayQueueUploadService"
             android:enabled="true" />
 
+        <service
+            android:name=".session.PatientSessionService"
+            android:enabled="true"
+            android:exported="false" />
+
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="com.carecloud.carepay.patient.provider"
             android:exported="false"
             android:grantUriPermissions="true">

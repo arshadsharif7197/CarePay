@@ -2,31 +2,28 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
+import androidx.annotation.Nullable;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.payments.interfaces.PaymentDetailInterface;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentSettingsBalanceRangeRule;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsPayloadSettingsDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-public class PaymentPlanAmountDialog extends PartialPaymentDialog {
+public abstract class PaymentPlanAmountDialog extends PartialPaymentDialog {
 
-    private PaymentsModel paymentsModel;
-    private PendingBalanceDTO selectedBalance;
-    private PaymentDetailInterface callback;
+    protected PaymentsModel paymentsModel;
+    protected PendingBalanceDTO selectedBalance;
+    protected FragmentActivityInterface callback;
 
     private String practiceId;
     private boolean canAddToExisting;
@@ -36,24 +33,13 @@ public class PaymentPlanAmountDialog extends PartialPaymentDialog {
     private double minimumPaymentAmount = 0D;
     private double maximumPaymentAmount = 0D;
 
-    public static PaymentPlanAmountDialog newInstance(PaymentsModel paymentsModel,
-                                   PendingBalanceDTO selectedBalance) {
-
-        Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
-        DtoHelper.bundleDto(args, selectedBalance);
-        PaymentPlanAmountDialog dialog = new PaymentPlanAmountDialog();
-        dialog.setArguments(args);
-        return dialog;
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            callback = (PaymentDetailInterface) context;
+            callback = (FragmentActivityInterface) context;
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached Context must implement PaymentDetailInterface");
+            throw new ClassCastException("Attached Context must implement FragmentActivityInterface");
         }
     }
 
@@ -143,16 +129,15 @@ public class PaymentPlanAmountDialog extends PartialPaymentDialog {
         }
     }
 
-    @Override
-    protected void onPaymentClick(EditText enterPartialAmountEditText) {
-        try {
-            double amount = Double.parseDouble(enterPartialAmountEditText.getText().toString());
-            callback.onPaymentPlanAmount(paymentsModel, selectedBalance, amount);
-            dismiss();
-        } catch (NumberFormatException nfe) {
-            nfe.printStackTrace();
-            Toast.makeText(getContext(), "Please enter valid amount!", Toast.LENGTH_LONG).show();
-        }
+    protected void logPaymentPlanStartedMixPanelEvent(boolean addExisting) {
+        String[] params = {getString(R.string.param_practice_id),
+                getString(R.string.param_balance_amount),
+                getString(R.string.param_is_add_existing)};
+        Object[] values = {selectedBalance.getMetadata().getPracticeId(),
+                selectedBalance.getPayload().get(0).getAmount(),
+                addExisting};
+
+        MixPanelUtil.logEvent(getString(R.string.event_paymentplan_started), params, values);
     }
 
     private boolean canAddToExisting(double amount) {

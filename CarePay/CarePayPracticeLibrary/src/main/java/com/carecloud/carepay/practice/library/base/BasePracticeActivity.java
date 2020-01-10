@@ -2,30 +2,32 @@ package com.carecloud.carepay.practice.library.base;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.customdialog.IConfirmPracticeAppPin;
+import com.carecloud.carepay.practice.library.session.PracticeSessionService;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
-
-import org.apache.commons.lang3.NotImplementedException;
+import com.carecloud.carepaylibray.session.SessionedActivityInterface;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class BasePracticeActivity extends BaseActivity implements IConfirmPracticeAppPin {
+public abstract class BasePracticeActivity extends BaseActivity implements IConfirmPracticeAppPin, SessionedActivityInterface {
 
     private long lastFullScreenSet;
+    protected static TransitionDTO logoutTransition;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,7 +36,11 @@ public abstract class BasePracticeActivity extends BaseActivity implements IConf
                 R.style.PracticeModeActivity : R.style.PatientModeActivity);
         setSystemUiVisibility();
         setNavigationBarVisibility();
-        Log.d("New Relic", getClass().getName());
+        if (manageSession()) {
+            getSupportFragmentManager().addOnBackStackChangedListener(() -> {
+                ((CarePayApplication) getApplicationContext()).restartSession(this);
+            });
+        }
     }
 
     @Override
@@ -42,15 +48,12 @@ public abstract class BasePracticeActivity extends BaseActivity implements IConf
         super.onResume();
         if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             final View rootView = findViewById(android.R.id.content);
-            rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    long now = System.currentTimeMillis();
-                    if (now - lastFullScreenSet > 1000) {
-                        Log.d("Base", "Display Full Screen");
-                        onProgressDialogCancel();
-                        lastFullScreenSet = now;
-                    }
+            rootView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+                long now = System.currentTimeMillis();
+                if (now - lastFullScreenSet > 1000) {
+                    Log.d("Base", "Display Full Screen");
+                    onProgressDialogCancel();
+                    lastFullScreenSet = now;
                 }
             });
         }
@@ -112,7 +115,7 @@ public abstract class BasePracticeActivity extends BaseActivity implements IConf
     }
 
     protected void processExternalPayment(PaymentExecution paymentExecution, Intent data) {
-        throw new NotImplementedException("Process external payment has not been implemented by " + getClass().getName());
+        throw new UnsupportedOperationException("Process external payment has not been implemented by " + getClass().getName());
     }
 
     protected void processExternalPaymentFailure(PaymentExecution paymentExecution, int resultCode) {
@@ -234,5 +237,20 @@ public abstract class BasePracticeActivity extends BaseActivity implements IConf
 
     public interface SimpleCallback {
         void callback();
+    }
+
+    @Override
+    public boolean manageSession() {
+        return false;
+    }
+
+    @Override
+    public TransitionDTO getLogoutTransition() {
+        return null;
+    }
+
+    @Override
+    protected void stopSessionService() {
+        stopService(new Intent(this, PracticeSessionService.class));
     }
 }

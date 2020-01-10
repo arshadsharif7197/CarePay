@@ -71,11 +71,12 @@
                 android:layout_margin="@dimen/dimen_10dp"
                 android:layout_weight="0.5"
                 android:background="@drawable/button_green_fill_background"
-                android:textAllCaps="true"
+                android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_13"
                 app:customAssetFont="gotham_rounded_medium"
-                tools:text="Request Appointment" />
+                tools:text="Request Appointment"
+                android:contentDescription="@string/content_description_request_appointment"/>
         </LinearLayout>
 
         <ScrollView
@@ -103,20 +104,37 @@
                     android:orientation="vertical"
                     android:paddingTop="@dimen/dimen_5dp">
 
-                    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                        android:id="@+id/appointmentVisitTypeTextView"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/dimen_5dp"
-                        android:ellipsize="end"
-                        android:gravity="center_horizontal"
-                        android:paddingStart="@dimen/dimen_5dp"
-                        android:paddingEnd="@dimen/dimen_5dp"
-                        android:singleLine="true"
-                        android:textColor="@color/slateGray"
-                        android:textSize="@dimen/apt_dl_textview_size"
-                        app:customAssetFont="gotham_rounded_medium"
-                        tools:text="Follow Up" />
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/visit_type_video"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:padding="@dimen/dimen_3dp"
+                            android:src="@drawable/icn_video_visit"
+                            android:tint="@color/white"
+                            android:visibility="gone" />
+
+                        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                            android:id="@+id/appointmentVisitTypeTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:gravity="center_horizontal"
+                            android:paddingStart="@dimen/dimen_5dp"
+                            android:paddingEnd="@dimen/dimen_5dp"
+                            android:singleLine="true"
+                            android:textColor="@color/slateGray"
+                            android:textSize="@dimen/apt_dl_textview_size"
+                            app:customAssetFont="gotham_rounded_medium"
+                            tools:text="Follow Up" />
+
+                    </LinearLayout>
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/appointDateTextView"
@@ -199,75 +217,87 @@
                         app:customAssetFont="proxima_nova_regular"
                         tools:text="Neurology" />
 
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/addressContainer"
+                        android:layout_marginTop="@dimen/appoinmentDialogButtonsTopMargin"
+                        android:layout_marginBottom="@dimen/appoinmentDialogButtonsTopMargin">
+
+                        <ImageView
+                            android:id="@+id/appointDailImageView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_marginStart="@dimen/appointmentDialStartMargin"
+                            android:layout_marginEnd="@dimen/appointmentDialStartMargin"
+                            android:src="@drawable/selector_phone_icon" />
+
+                        <ImageView
+                            android:id="@+id/appointLocationImageView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/apt_dialog_appoint_dail_margin"
+                            android:layout_toEndOf="@id/appointDailImageView"
+                            android:src="@drawable/icn_appointment_card_directions" />
+
+                        <ImageView
+                            android:id="@+id/scheduleAppointmentButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/apt_dialog_appoint_dail_margin"
+                            android:layout_marginTop="@dimen/apt_dialog_appoint_dail_margin"
+                            android:layout_marginEnd="@dimen/apt_dialog_appoint_dail_margin"
+                            android:layout_toStartOf="@id/appointDailImageView"
+                            android:src="@drawable/selector_calendar_icon" />
+
+                    </RelativeLayout>
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/apt_dl_boader_ht"
-                        android:layout_marginTop="@dimen/apt_dl_margin"
+                        android:layout_marginTop="@dimen/dimen_10dp"
                         android:background="@color/light_gray_dialog" />
 
                     <LinearLayout
+                        android:id="@+id/addressContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/apt_dl_view_margin"
                         android:layout_marginBottom="@dimen/apt_dl_view_margin"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
-                        <LinearLayout
-                            android:layout_width="@dimen/apt_dl_zero_ht_wdh"
+                        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                            android:id="@+id/appointAddressHeaderTextView"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.7"
-                            android:orientation="vertical">
+                            android:layout_gravity="start"
+                            android:ellipsize="end"
+                            android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
+                            android:maxLines="1"
+                            android:scrollHorizontally="false"
+                            android:text="Location Name"
+                            android:textColor="@color/payne_gray"
+                            android:textSize="@dimen/textview_textsize"
+                            android:textStyle="bold"
+                            app:customAssetFont="proxima_nova_extra_bold" />
 
-                            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                                android:id="@+id/appointAddressHeaderTextView"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="start"
-                                android:ellipsize="end"
-                                android:lineSpacingExtra="@dimen/apt_dialog_appoint_dail_margin"
-                                android:maxLines="1"
-                                android:scrollHorizontally="false"
-                                android:text="Location Name"
-                                android:textColor="@color/payne_gray"
-                                android:textSize="@dimen/textview_textsize"
-                                android:textStyle="bold"
-                                app:customAssetFont="proxima_nova_extra_bold" />
-
-                            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                                android:id="@+id/appointAddressTextView"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="start"
-                                android:ellipsize="none"
-                                android:gravity="start"
-                                android:lineSpacingExtra="-3dp"
-                                android:maxLines="3"
-                                android:textColor="@color/lightSlateGray"
-                                android:textSize="@dimen/textview_textsize"
-                                app:customAssetFont="proxima_nova_regular"
-                                tools:text="5200 Blue Lagoon Drive\nSuite 900\nMiami, FL 33126" />
-                        </LinearLayout>
-
-                        <ImageView
-                            android:id="@+id/appointLocationImageView"
-                            android:layout_width="@dimen/apt_dl_zero_ht_wdh"
+                        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                            android:id="@+id/appointAddressTextView"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/apt_dialog_appoint_dail_margin"
-                            android:layout_weight="0.15"
-                            android:src="@drawable/icn_appointment_card_directions" />
-
-                        <ImageView
-                            android:id="@+id/appointDailImageView"
-                            android:layout_width="@dimen/apt_dl_zero_ht_wdh"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/apt_dialog_appoint_dail_margin"
-                            android:layout_marginTop="@dimen/apt_dialog_appoint_dail_margin"
-                            android:layout_marginBottom="@dimen/apt_dialog_appoint_dail_margin"
-                            android:layout_weight="0.15"
-                            android:src="@drawable/selector_phone_icon" />
-
+                            android:layout_gravity="start"
+                            android:ellipsize="none"
+                            android:gravity="start"
+                            android:lineSpacingExtra="-3dp"
+                            android:maxLines="3"
+                            android:textColor="@color/lightSlateGray"
+                            android:textSize="@dimen/textview_textsize"
+                            app:customAssetFont="proxima_nova_regular"
+                            tools:text="5200 Blue Lagoon Drive\nSuite 900\nMiami, FL 33126" />
                     </LinearLayout>
+
 
                     <View
                         android:layout_width="match_parent"
@@ -366,7 +396,7 @@
                             layout="@layout/progress_loader"
                             android:layout_width="@dimen/dimen_30dp"
                             android:layout_height="@dimen/dimen_30dp"
-                            android:layout_centerInParent="true"/>
+                            android:layout_centerInParent="true" />
 
                     </RelativeLayout>
 

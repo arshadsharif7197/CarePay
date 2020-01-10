@@ -1,10 +1,11 @@
 
 package com.carecloud.carepaylibray.appointments.models;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.adhoc.AdhocFormsPatientModeInfo;
+import com.carecloud.carepaylibray.base.dtos.DelegatePermissionBasePayloadDto;
 import com.carecloud.carepaylibray.base.models.PagingDto;
 import com.carecloud.carepaylibray.demographics.dtos.payload.ConsentFormUserResponseDTO;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsDemographicsDTO;
@@ -23,7 +24,7 @@ import java.util.List;
 /**
  * Model for appointment payload.
  */
-public class AppointmentPayloadModel implements Serializable {
+public class AppointmentPayloadModel extends DelegatePermissionBasePayloadDto implements Serializable {
 
     @SerializedName("languages")
     @Expose
@@ -54,7 +55,7 @@ public class AppointmentPayloadModel implements Serializable {
     private List<ResourcesToScheduleDTO> resourcesToSchedule = new ArrayList<>();
     @SerializedName("appointments_settings")
     @Expose
-    private List<AppointmentsSettingDTO> appointmentsSettings = new ArrayList<AppointmentsSettingDTO>();
+    private List<AppointmentsSettingDTO> appointmentsSettings = new ArrayList<>();
     @SerializedName("demographics")
     @Expose
     private DemographicsSettingsDemographicsDTO demographicDTO = new DemographicsSettingsDemographicsDTO();
@@ -94,6 +95,9 @@ public class AppointmentPayloadModel implements Serializable {
     @SerializedName("appointment_page_details")
     @Expose
     private List<PagingDto> pagingInfo = new ArrayList<>();
+    @SerializedName("video_visit")
+    @Expose
+    private VideoVisitModel videoVisitModel = new VideoVisitModel();
 
     /**
      * @return languages
@@ -343,6 +347,14 @@ public class AppointmentPayloadModel implements Serializable {
         this.pagingInfo = pagingInfo;
     }
 
+    public VideoVisitModel getVideoVisitModel() {
+        return videoVisitModel;
+    }
+
+    public void setVideoVisitModel(VideoVisitModel videoVisitModel) {
+        this.videoVisitModel = videoVisitModel;
+    }
+
     public UserPracticeDTO getPractice(@NonNull String practiceId) {
         for (UserPracticeDTO practice : getUserPractices()) {
             if (practice.getPracticeId().equals(practiceId)) {
@@ -359,5 +371,25 @@ public class AppointmentPayloadModel implements Serializable {
             }
         }
         return null;
+    }
+
+    public boolean isRescheduleEnabled(String practiceId) {
+        boolean rescheduleEnabled = false;
+        for (PortalSettingDTO portalSettingsDto : portalSettings) {
+            if (portalSettingsDto.getMetadata().getPracticeId().equals(practiceId)) {
+                for (PortalSetting portalSetting : portalSettingsDto.getPayload()) {
+                    if ("scheduling".equals(portalSetting.getTypeName().toLowerCase())
+                            && "appointments".equals(portalSetting.getLabel().toLowerCase())) {
+                        rescheduleEnabled = "A".equals(portalSetting.getStatus());
+                    }
+                }
+            }
+        }
+
+        if (!rescheduleEnabled) {
+            return false;
+        }
+
+        return canScheduleAppointments(practiceId);
     }
 }

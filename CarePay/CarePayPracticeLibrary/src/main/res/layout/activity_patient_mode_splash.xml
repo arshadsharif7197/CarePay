@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/screen_background"
     android:orientation="vertical"
+    android:contentDescription="@string/content_description_patient_mode_splash"
     tools:context="com.carecloud.carepay.practice.library.patientmode.PatientModeSplashActivity">
 
     <FrameLayout
@@ -68,7 +69,8 @@
             android:layout_width="@dimen/patientSplashPracticeLogoSize"
             android:layout_height="@dimen/patientSplashPracticeLogoSize"
             android:scaleType="centerCrop"
-            android:src="@drawable/checkin_patient_pic_rounded_border" />
+            android:background="@drawable/checkin_patient_pic_rounded_border"
+            android:padding="@dimen/dimen_11dp"/>
     </LinearLayout>
 
     <FrameLayout
@@ -113,6 +115,7 @@
             android:layout_height="@dimen/patientSplashButtonHeight"
             android:background="@drawable/bg_blue_overlay"
             android:gravity="center"
+            android:contentDescription="@string/content_description_patient_mode_splash_continue"
             android:includeFontPadding="false"
             android:textColor="@color/white"
             android:textSize="@dimen/patientSplashButtonTextSize"

@@ -20,7 +20,7 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 
 public class PatientModeAddExistingPaymentPlanFullFragment extends AddExistingPaymentPlanFragment {
 
-    public static PatientModeAddExistingPaymentPlanFullFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO existingPlan, double amount){
+    public static PatientModeAddExistingPaymentPlanFullFragment newInstance(PaymentsModel paymentsModel, PendingBalanceDTO selectedBalance, PaymentPlanDTO existingPlan, double amount) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);
         DtoHelper.bundleDto(args, selectedBalance);
@@ -39,22 +39,22 @@ public class PatientModeAddExistingPaymentPlanFullFragment extends AddExistingPa
 
     @Override
     protected void setupToolBar(View view) {
-        Button cancelButton = (Button) view.findViewById(R.id.cancel_button);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callback.onDismissPaymentPlan(paymentsModel);
+        Button cancelButton = view.findViewById(R.id.cancel_button);
+        cancelButton.setOnClickListener(v -> {
+            if (onCancelListener != null) {
+                onCancelListener.onCancel(getDialog());
             }
+            getActivity().onBackPressed();
         });
     }
 
     @Override
     protected void setupHeader(View view) {
         super.setupHeader(view);
-        TextView headerPaymentAmount = (TextView) view.findViewById(R.id.headerPlanTotal);
+        TextView headerPaymentAmount = view.findViewById(R.id.headerPlanTotal);
         headerPaymentAmount.setText(currencyFormatter.format(paymentPlanAmount));
 
-        TextView patientBalance = (TextView) view.findViewById(R.id.patientBalance);
+        TextView patientBalance = view.findViewById(R.id.patientBalance);
         patientBalance.setText(currencyFormatter.format(paymentPlanAmount));
     }
 
