@@ -21,8 +21,6 @@ import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.session.SessionedActivityInterface;
 
-import org.apache.commons.lang3.NotImplementedException;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -117,7 +115,7 @@ public abstract class BasePracticeActivity extends BaseActivity implements IConf
     }
 
     protected void processExternalPayment(PaymentExecution paymentExecution, Intent data) {
-        throw new NotImplementedException("Process external payment has not been implemented by " + getClass().getName());
+        throw new UnsupportedOperationException("Process external payment has not been implemented by " + getClass().getName());
     }
 
     protected void processExternalPaymentFailure(PaymentExecution paymentExecution, int resultCode) {

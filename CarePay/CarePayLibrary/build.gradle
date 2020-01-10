@@ -49,45 +49,32 @@ configurations {
     compile.exclude group: "org.apache.httpcomponents", module: "httpclient"
 }
 dependencies {
-    // support library
-    api 'androidx.appcompat:appcompat:1.0.0'
+
+    api project(path: ':CarePayServiceLibrary')
+
+    api 'androidx.appcompat:appcompat:1.1.0'
     api 'androidx.legacy:legacy-support-v4:1.0.0'
     api 'androidx.cardview:cardview:1.0.0'
+    api 'androidx.multidex:multidex:2.0.1'
     api 'com.google.android.material:material:1.0.0'
-    api 'androidx.multidex:multidex:2.0.0'
-    // apache utils
-    api 'org.apache.commons:commons-lang3:3.5'
-    //datetime
-    api project(path: ':CarePayServiceLibrary')
-    // Using for image loading
     api 'com.squareup.picasso:picasso:2.5.2'
     api 'jp.wasabeef:picasso-transformations:2.1.2'
     api 'com.mcxiaoke.viewpagerindicator:library:2.4.1@aar'
-    api 'com.github.gcacace:signature-pad:1.2.0'
     api 'com.smartystreets.api:smartystreets-java-sdk:1.0.7'
     api 'com.squareup:android-times-square:1.6.5@aar'
     api 'com.google.zxing:core:3.2.1'
     api 'me.dm7.barcodescanner:zxing:1.9'
     api 'com.marcok.stepprogressbar:stepprogressbar:1.0.1'
-    api 'com.google.firebase:firebase-messaging:17.3.2'
+    api 'com.google.firebase:firebase-messaging:20.1.0'
     api 'fr.tvbarthel.blurdialogfragment:lib:2.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
-    androidTestImplementation 'androidx.test:runner:1.1.0'
-    androidTestImplementation 'androidx.test:rules:1.1.0'
-//    compile project(':shamrocksdk')
-    api 'com.github.Carecloud:shamrock_android_sdk:2.0.3'
-    implementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation 'androidx.test:runner:1.2.0'
-    implementation 'androidx.test:rules:1.2.0'
-    implementation 'androidx.test.ext:junit:1.1.1'
-    implementation 'androidx.test.ext:truth:1.2.0'
-    implementation 'androidx.test.espresso:espresso-idling-resource:3.2.0'
-    implementation 'androidx.test.espresso:espresso-contrib:3.2.0'
-    api 'com.google.guava:guava:28.0-android'
-    implementation "androidx.core:core-ktx:1.0.2"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    api 'com.google.auto.value:auto-value-annotations:1.6.2'
-    implementation 'androidx.test.espresso:espresso-web:3.1.0'
+    api 'com.github.Carecloud:shamrock_android_sdk:2.0.4'
+
+    def appCenterSdkVersion = '2.5.0'
+    api "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
+    api "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
+
+    api 'com.newrelic.agent.android:android-agent:5.22.1'
+    api 'androidx.room:room-runtime:2.2.3'
 }
 repositories {
     mavenCentral()

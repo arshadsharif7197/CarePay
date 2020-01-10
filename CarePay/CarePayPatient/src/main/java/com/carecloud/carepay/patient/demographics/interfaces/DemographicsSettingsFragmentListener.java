@@ -9,7 +9,6 @@ import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
  */
 
 public interface DemographicsSettingsFragmentListener extends FragmentActivityInterface {
-    void displayEditProfileFragment();
 
     void displayUpdateEmailFragment();
 
@@ -32,8 +31,6 @@ public interface DemographicsSettingsFragmentListener extends FragmentActivityIn
     void displayCreditCardDetailsFragment(DemographicsSettingsCreditCardsPayloadDTO creditCardsPayloadDTO);
 
     void displayHelpFragment();
-
-    void showSupportFragment();
 
     void onCreditCardOperation(DemographicDTO demographicsSettingsDTO);
 
