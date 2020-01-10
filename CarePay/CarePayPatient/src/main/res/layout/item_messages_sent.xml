@@ -1,90 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
         android:id="@+id/time_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/dimen_15dp"
-        android:textSize="@dimen/text_size_12sp"
         android:textColor="@color/lightSlateGray"
-        tools:text="Yesterday, 10:17 AM"
+        android:textSize="@dimen/text_size_12sp"
+        android:visibility="gone"
         app:customAssetFont="proxima_nova_semi_bold"
-        android:visibility="gone"/>
+        tools:text="Yesterday, 10:17 AM" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="@dimen/dimen_5dp"
-        android:paddingBottom="@dimen/dimen_5dp"
         android:paddingStart="@dimen/dimen_40dp"
-        android:paddingEnd="@dimen/dimen_5dp">
+        android:paddingTop="@dimen/dimen_5dp"
+        android:paddingEnd="@dimen/dimen_5dp"
+        android:paddingBottom="@dimen/dimen_5dp">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/time_stamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen_5dp"
-            android:textSize="@dimen/text_size_12sp"
-            android:textColor="@color/lightSlateGray"
             android:layout_gravity="end"
-            tools:text="10:17 AM"
-            app:customAssetFont="proxima_nova_regular"/>
-
+            android:layout_marginStart="@dimen/dimen_5dp"
+            android:layout_marginBottom="@dimen/dimen_5dp"
+            android:textColor="@color/lightSlateGray"
+            android:textSize="@dimen/text_size_12sp"
+            app:customAssetFont="proxima_nova_regular"
+            tools:text="10:17 AM" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/message_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/message_sent_background"
-            android:padding="@dimen/dimen_10dp"
             android:gravity="start"
+            android:padding="@dimen/dimen_10dp"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_16"
-            tools:text="Hey. I'm sorry ... I was in the shower. I have 20 minutes to be at the shooting of the film Suicide Squad"
-            app:customAssetFont="proxima_nova_regular"/>
+            app:customAssetFont="proxima_nova_regular"
+            tools:text="Hey. I'm sorry ... I was in the shower. I have 20 minutes to be at the shooting of the film Suicide Squad" />
 
         <LinearLayout
             android:id="@+id/attachmentFileLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginTop="@dimen/dimen_15dp"
             android:background="@drawable/message_sent_file_background"
+            android:orientation="horizontal"
             android:visibility="gone">
-            
+
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/attachmentExtension"
                 android:layout_width="@dimen/dimen_48dp"
                 android:layout_height="@dimen/dimen_48dp"
                 android:layout_margin="@dimen/dimen_8dp"
                 android:background="@drawable/round_white_background"
+                android:textAllCaps="true"
                 android:textColor="@color/emerald"
                 android:textSize="@dimen/text_size_12sp"
-                android:textAllCaps="true"
                 app:customAssetFont="gotham_rounded_medium"
-                tools:text="pdf"/>
+                tools:text="pdf" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                 android:id="@+id/attachmentName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimen_8dp"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_14"
-                android:textAllCaps="false"
+                android:ellipsize="middle"
                 android:gravity="start"
                 android:singleLine="true"
-                android:ellipsize="middle"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_14"
                 app:customAssetFont="proxima_nova_regular"
-                tools:text="FileName.pdf"/>
+                tools:text="FileName.pdf" />
 
         </LinearLayout>
 
@@ -98,19 +97,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_15dp"
-                android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
                 android:visibility="gone"
-                tools:src="@mipmap/ic_launcher"/>
+                tools:src="@mipmap/ic_launcher" />
 
             <ProgressBar
                 android:id="@+id/attachmentProgress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:indeterminateDrawable="@drawable/progress_indeterminate_custom"
                 android:indeterminate="true"
-                android:visibility="gone"/>
+                android:indeterminateDrawable="@drawable/progress_indeterminate_custom"
+                android:visibility="gone" />
 
         </FrameLayout>
 
