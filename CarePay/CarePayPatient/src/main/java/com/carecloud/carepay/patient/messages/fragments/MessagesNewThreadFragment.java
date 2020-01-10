@@ -88,6 +88,13 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
             provider = DtoHelper.getConvertedDTO(ProviderContact.class, args);
         }
         viewModel = ViewModelProviders.of(getActivity()).get(MessagesViewModel.class);
+        viewModel.getNewThreadObservable()
+                .observe(this, messagingThreadDTO -> {
+                    String[] params = {getString(R.string.param_provider_id), getString(R.string.param_provider_name)};
+                    Object[] values = {provider.getId(), provider.getName()};
+                    MixPanelUtil.logEvent(getString(R.string.event_message_new), params, values);
+                    callback.displayThreadMessages(messagingThreadDTO.getPayload(), true);
+                });
     }
 
     @Override
@@ -115,16 +122,8 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
         messageInput.addTextChangedListener(getEmptyTextWatcher(messageLayout));
 
         buttonCreate = view.findViewById(R.id.new_message_button);
-        buttonCreate.setOnClickListener(view1 -> {
-            viewModel.postNewMessage(provider, attachmentFile, null,
-                    subjectInput.getText().toString(), messageInput.getText().toString())
-                    .observe(this, messagingThreadDTO -> {
-                        String[] params = {getString(R.string.param_provider_id), getString(R.string.param_provider_name)};
-                        Object[] values = {provider.getId(), provider.getName()};
-                        MixPanelUtil.logEvent(getString(R.string.event_message_new), params, values);
-                        callback.displayThreadMessages(messagingThreadDTO.getPayload(), true);
-                    });
-        });
+        buttonCreate.setOnClickListener(view1 -> viewModel.postNewThread(provider, attachmentFile,
+                null, subjectInput.getText().toString(), messageInput.getText().toString()));
 
         attachmentInput = view.findViewById(R.id.attachmentEditText);
 

@@ -38,6 +38,7 @@ import java.util.Map;
 public class MessagesViewModel extends BaseViewModel {
 
     private MutableLiveData<MessagingModelDto> messagesDto;
+    private MutableLiveData<MessagingModelDto> deleteMessageObservable;
     private MutableLiveData<MessagingThreadDTO> createThreadObservable;
     private MutableLiveData<MessagingModelDto> threadsObservable;
     private MutableLiveData<MessagingThreadDTO> threadMessagesObservable;
@@ -57,6 +58,39 @@ public class MessagesViewModel extends BaseViewModel {
             loadDto(messagesTransition);
         }
         return messagesDto;
+    }
+
+    public MutableLiveData<MessagingModelDto> getThreadsObservable() {
+        if (threadsObservable == null) {
+            threadsObservable = new MutableLiveData<>();
+        }
+        return threadsObservable;
+    }
+
+    public MutableLiveData<MessagingThreadDTO> getThreadMessagesObservable(boolean refresh) {
+        if (threadMessagesObservable == null || refresh) {
+            threadMessagesObservable = new MutableLiveData<>();
+        }
+        return threadMessagesObservable;
+    }
+
+    public MutableLiveData<MessagingThreadDTO> getNewMessageInThreadObservable(boolean refresh) {
+        if (newMessageInThreadObservable == null || refresh) {
+            newMessageInThreadObservable = new MutableLiveData<>();
+        }
+        return newMessageInThreadObservable;
+    }
+
+    public MutableLiveData<MessagingModelDto> getDeleteMessageObservable() {
+        if (deleteMessageObservable == null) {
+            deleteMessageObservable = new MutableLiveData<>();
+        }
+        return deleteMessageObservable;
+    }
+
+    public MutableLiveData<MessagingThreadDTO> getNewThreadObservable() {
+        createThreadObservable = new MutableLiveData<>();
+        return createThreadObservable;
     }
 
     private void loadDto(TransitionDTO messagesTransition) {
@@ -80,27 +114,6 @@ public class MessagesViewModel extends BaseViewModel {
                         setErrorMessage(exceptionMessage);
                     }
                 }, queryMap);
-    }
-
-    public MutableLiveData<MessagingModelDto> getThreadsObservable() {
-        if (threadsObservable == null) {
-            threadsObservable = new MutableLiveData<>();
-        }
-        return threadsObservable;
-    }
-
-    public MutableLiveData<MessagingThreadDTO> getThreadMessagesObservable(boolean refresh) {
-        if (threadMessagesObservable == null || refresh) {
-            threadMessagesObservable = new MutableLiveData<>();
-        }
-        return threadMessagesObservable;
-    }
-
-    public MutableLiveData<MessagingThreadDTO> getNewMessageInThreadObservable(boolean refresh) {
-        if (newMessageInThreadObservable == null || refresh) {
-            newMessageInThreadObservable = new MutableLiveData<>();
-        }
-        return newMessageInThreadObservable;
     }
 
     public MutableLiveData<MessagingModelDto> getThreads(long page, long size) {
@@ -198,9 +211,9 @@ public class MessagesViewModel extends BaseViewModel {
 
     }
 
-    public MutableLiveData<MessagingModelDto> deleteMessageThread(Messages.Reply thread) {
+    public void deleteMessageThread(String threadId) {
         Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("message_id", thread.getId());
+        queryMap.put("message_id", threadId);
         TransitionDTO deleteMessage = messagesDto.getValue().getMetadata().getLinks().getDeleteMessage();
         getWorkflowServiceHelper()
                 .execute(deleteMessage, new WorkflowServiceCallback() {
@@ -211,7 +224,7 @@ public class MessagesViewModel extends BaseViewModel {
                     @Override
                     public void onPostExecute(WorkflowDTO workflowDTO) {
                         MessagingModelDto messagingModel = DtoHelper.getConvertedDTO(MessagingModelDto.class, workflowDTO);
-                        messagesDto.setValue(messagingModel);
+                        deleteMessageObservable.setValue(messagingModel);
                     }
 
                     @Override
@@ -219,21 +232,17 @@ public class MessagesViewModel extends BaseViewModel {
                         setErrorMessage(exceptionMessage);
                     }
                 }, queryMap);
-        return messagesDto;
     }
 
-    public MutableLiveData<MessagingThreadDTO> postNewMessage(ProviderContact provider,
-                                                              File attachmentFile,
-                                                              AttachmentPostModel attachmentPostModel,
-                                                              String subject,
-                                                              String message) {
-        if (createThreadObservable == null) {
-            createThreadObservable = new MutableLiveData<>();
-        }
+    public void postNewThread(ProviderContact provider,
+                              File attachmentFile,
+                              AttachmentPostModel attachmentPostModel,
+                              String subject,
+                              String message) {
         if (attachmentFile != null) {
             attachmentPostModel = new AttachmentPostModel();
             uploadFile(provider, attachmentFile, attachmentPostModel, subject, message);
-            return createThreadObservable;
+            return;
         }
 
         message = message.replace("\n", "<br/>");
@@ -256,7 +265,6 @@ public class MessagesViewModel extends BaseViewModel {
         TransitionDTO newMessage = messagesDto.getValue().getMetadata().getLinks().getNewMessage();
         getWorkflowServiceHelper().execute(newMessage,
                 postNewMessageCallback(), DtoHelper.getStringDTO(postModel));
-        return createThreadObservable;
 
     }
 
@@ -271,7 +279,7 @@ public class MessagesViewModel extends BaseViewModel {
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 setLoading(false);
                 MessagingThreadDTO messagingThreadDTO = DtoHelper.getConvertedDTO(MessagingThreadDTO.class, workflowDTO);
-                createThreadObservable.setValue(messagingThreadDTO);
+                createThreadObservable.postValue(messagingThreadDTO);
             }
 
             @Override
@@ -333,7 +341,7 @@ public class MessagesViewModel extends BaseViewModel {
                     if (attachmentPostModel.getFormat() == null && "json".equals(extension)) {
                         attachmentPostModel.setFormat("application/json");
                     }
-                    postNewMessage(provider, null, attachmentPostModel, subject, message);
+                    postNewThread(provider, null, attachmentPostModel, subject, message);
                 }
             }
 

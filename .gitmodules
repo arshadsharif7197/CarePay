@@ -1,6 +1,0 @@
-[submodule "CarePay/CarePayLibrary/src/main/assets/breeze-practice-forms"]
-	path = CarePay/CarePayLibrary/src/main/assets/breeze-practice-forms
-	url = git@github.com:CareCloud/breeze-practice-forms.git
-[submodule "CarePay/CarePayLibrary/src/main/assets/breeze-intake-forms"]
-	path = CarePay/CarePayLibrary/src/main/assets/breeze-intake-forms
-	url = git@github.com:CareCloud/breeze-intake-forms.git
