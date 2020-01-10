@@ -13,12 +13,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.notifications.NotificationViewModel;
 import com.carecloud.carepay.patient.notifications.adapters.NotificationsAdapter;
 import com.carecloud.carepay.patient.notifications.models.CustomNotificationItem;
 import com.carecloud.carepay.patient.notifications.models.NotificationItem;
@@ -68,23 +70,17 @@ public class NotificationFragment extends BaseFragment
     private Handler handler;
     private boolean isPaging;
     private Paging paging;
+    private NotificationViewModel viewModel;
 
     public interface NotificationCallback {
         void displayNotification(NotificationItem notificationItem);
     }
 
     /**
-     * Instantiate Notification Fragment with Notification data
-     *
-     * @param notificationsDTO notification data
      * @return NotificationFragment
      */
-    public static NotificationFragment newInstance(NotificationsDTO notificationsDTO) {
-        Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, notificationsDTO);
-        NotificationFragment fragment = new NotificationFragment();
-        fragment.setArguments(args);
-        return fragment;
+    public static NotificationFragment newInstance() {
+        return new NotificationFragment();
     }
 
     @Override
@@ -106,8 +102,14 @@ public class NotificationFragment extends BaseFragment
         supportedNotificationTypes.add(NotificationType.secure_message);
         supportedNotificationTypes.add(NotificationType.pending_survey);
 
-        Bundle args = getArguments();
-        notificationsDTO = DtoHelper.getConvertedDTO(NotificationsDTO.class, args);
+        viewModel = ViewModelProviders.of(getActivity()).get(NotificationViewModel.class);
+        viewModel.getDeleteNotificationObservable().observe(getActivity(), aVoid -> {
+            notificationItems = new ArrayList<>();
+            setAdapter();
+        });
+        notificationsDTO = viewModel.getDto();
+
+
         notificationItems = filterNotifications(notificationsDTO.getPayload().getNotifications(),
                 supportedNotificationTypes);
         paging = notificationsDTO.getPayload().getPaging();
@@ -191,36 +193,11 @@ public class NotificationFragment extends BaseFragment
                         Label.getLabel("notification.notificationList.button.label.deleteAllMessage"),
                         Label.getLabel("cancel"),
                         Label.getLabel("confirm"));
-        fragment.setCallback(this::deleteAllNotifications);
+        fragment.setCallback(() -> viewModel.deleteAllNotifications(notificationsDTO.getMetadata().getTransitions()
+                .getDeleteAllNotifications()));
         String tag = fragment.getClass().getName();
         fragment.show(getFragmentManager().beginTransaction(), tag);
     }
-
-    private void deleteAllNotifications() {
-        TransitionDTO transitionDTO = notificationsDTO.getMetadata().getTransitions()
-                .getDeleteAllNotifications();
-        Map<String, String> queryMap = new HashMap<>();
-        getWorkflowServiceHelper().execute(transitionDTO, deleteAllNotificationsCallback, queryMap);
-    }
-
-    private WorkflowServiceCallback deleteAllNotificationsCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            notificationItems = new ArrayList<>();
-            setAdapter();
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-        }
-    };
 
 
     private void setAdapter() {
@@ -282,7 +259,6 @@ public class NotificationFragment extends BaseFragment
         deleteNotificationRunnable.setNotificationItem(null);
         handler.removeCallbacks(deleteNotificationRunnable);
         notificationsAdapter.notifyItemChanged(holder.getAdapterPosition());
-
     }
 
     @Override
@@ -396,39 +372,14 @@ public class NotificationFragment extends BaseFragment
                 notificationsAdapter.clearRemovedNotification(notificationItem);
                 notificationItems.remove(notificationItem);
                 notificationsAdapter.notifyItemRemoved(index);
-                deleteNotification(notificationItem);
+                viewModel.deleteNotification(notificationsDTO.getMetadata().getTransitions()
+                        .getDeleteNotifications(), notificationItem);
                 notificationItem = null;
                 if (notificationItems.size() == 0) {
                     setAdapter();
                 }
             }
         }
-
-        private void deleteNotification(NotificationItem notificationItem) {
-            TransitionDTO transitionDTO = notificationsDTO.getMetadata().getTransitions()
-                    .getDeleteNotifications();
-            Map<String, String> queryMap = new HashMap<>();
-            queryMap.put("notification_id", notificationItem.getPayload().getNotificationId());
-
-            getWorkflowServiceHelper().execute(transitionDTO, deleteNotificationsCallback, queryMap);
-        }
-
-        private WorkflowServiceCallback deleteNotificationsCallback = new WorkflowServiceCallback() {
-            @Override
-            public void onPreExecute() {
-
-            }
-
-            @Override
-            public void onPostExecute(WorkflowDTO workflowDTO) {
-                Log.d(TAG, "Delete notificaton successful");
-            }
-
-            @Override
-            public void onFailure(String exceptionMessage) {
-                Log.d(TAG, "Delete notificaton FAILED");
-            }
-        };
     }
 
     private List<NotificationItem> filterNotifications(@NonNull List<NotificationItem> notificationItems,
