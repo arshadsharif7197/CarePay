@@ -1,6 +1,6 @@
 package com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.appointments
 
-import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
+import com.carecloud.test_module.actions.CustomViewActions
 import com.carecloud.carepay.practice.tablet.pageObjects.shared.appointments.AddAppointmentFlow
 import com.carecloud.carepay.practice.tablet.R
 import com.carecloud.carepay.practice.tablet.pageObjects.patientMode.checkin.CheckInPersonalInfo
@@ -38,8 +38,22 @@ class AppointmentsScreen : CustomViewActions() {
         return CheckInPersonalInfo()
     }
 
+    fun checkInAppointmentAtTime(appointmentTime: String): CheckInPersonalInfo {
+        clickOnRecyclerViewItem(appContext.getString(R.string.content_description_appointments_list), appointmentTime)
+        clickOnSpecificText("Check-in")
+        type(appContext.getString(R.string.content_description_email), "01011990", true)
+        click(appContext.getString(R.string.content_description_sign_in))
+        return CheckInPersonalInfo()
+    }
+
     fun checkOutFirstAppointmentOnList(): CheckOutNextAppointmentScreen {
         clickOnRecyclerViewItem(appContext.getString(R.string.content_description_appointments_list), 0)
+        clickOnSpecificText("Check-out")
+        return CheckOutNextAppointmentScreen()
+    }
+
+    fun checkOutAppointmentAtTime(appointmentTime: String): CheckOutNextAppointmentScreen {
+        clickOnRecyclerViewItem(appContext.getString(R.string.content_description_appointments_list), appointmentTime)
         clickOnSpecificText("Check-out")
         return CheckOutNextAppointmentScreen()
     }

@@ -104,12 +104,7 @@ public class DocumentDetailFragment extends BaseDialogFragment {
                     });
         }
         if (view.findViewById(R.id.exitImageView) != null) {
-            view.findViewById(R.id.exitImageView).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dismiss();
-                }
-            });
+            view.findViewById(R.id.exitImageView).setOnClickListener(v -> dismiss());
         }
     }
 

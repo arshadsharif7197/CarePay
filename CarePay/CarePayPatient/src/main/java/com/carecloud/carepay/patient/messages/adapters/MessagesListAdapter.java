@@ -1,6 +1,8 @@
 package com.carecloud.carepay.patient.messages.adapters;
 
 import android.content.Context;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,8 +52,9 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
         this.userId = userId;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_messages_list, parent, false);
         return new ViewHolder(view);
     }
@@ -80,21 +83,13 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
             holder.displayUndoOption();
         }
 
-        holder.swipeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                holder.unreadCount.setVisibility(View.GONE);
-                callback.onMessageSelected(thread);
-                thread.setRead(true);
-            }
+        holder.swipeLayout.setOnClickListener(view -> {
+            holder.unreadCount.setVisibility(View.GONE);
+            callback.onMessageSelected(thread);
+            thread.setRead(true);
         });
 
-        holder.undoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.undoDeleteMessage(thread);
-            }
-        });
+        holder.undoButton.setOnClickListener(view -> callback.undoDeleteMessage(thread));
 
         if (!thread.isRead()) {
             holder.unreadCount.setVisibility(View.VISIBLE);
@@ -135,16 +130,6 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
      */
     public void setThreads(List<Messages.Reply> threads) {
         this.threads = threads;
-        notifyDataSetChanged();
-    }
-
-    /**
-     * add threads to recycler
-     *
-     * @param threads add threads
-     */
-    public void appendThreads(List<Messages.Reply> threads) {
-        this.threads.addAll(threads);
         notifyDataSetChanged();
     }
 

@@ -2,20 +2,20 @@ package com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.payments.
 
 import com.carecloud.carepay.practice.tablet.R
 import com.carecloud.carepay.practice.tablet.tests.appContext
-import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
+import com.carecloud.test_module.actions.CustomViewActions
 
 /**
  * @author pjohnson on 2019-09-10.
  */
 class PaymentPlanScreen <T>(private val screenAfterChoosingCard: T) : CustomViewActions(){
 
-    init {
-        verifyViewVisible(appContext.getString(R.string.content_description_payment_plan_screen))
-    }
-
     fun chooseItem(): PaymentPlanScreen<T> {
         clickOnRecyclerViewItemChildrenWithId(appContext.getString(R.string.content_description_payment_plan_item_list),
                 0, R.id.itemCheckBox)
+        clickOnSpecificText("1")
+        clickOnSpecificText("0")
+        clickOnSpecificText("0")
+        click(appContext.getString(R.string.content_description_apply_amount))
         return this
     }
 
