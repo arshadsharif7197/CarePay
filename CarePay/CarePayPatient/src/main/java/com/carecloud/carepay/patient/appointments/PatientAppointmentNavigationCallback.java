@@ -35,5 +35,4 @@ public interface PatientAppointmentNavigationCallback extends AppointmentNavigat
 
     long downloadVisitSummaryFile(String jobId, String practiceMgmt, String title);
 
-    void newAppointment();
 }

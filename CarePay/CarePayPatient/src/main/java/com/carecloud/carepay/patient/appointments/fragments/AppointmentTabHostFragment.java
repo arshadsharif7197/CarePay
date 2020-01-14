@@ -1,37 +1,34 @@
 package com.carecloud.carepay.patient.appointments.fragments;
 
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import com.google.android.material.tabs.TabLayout;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.viewpager.widget.ViewPager;
+
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.activities.AppointmentsActivity;
-import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.payment.adapters.PaymentsSectionsPagerAdapter;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.google.android.material.tabs.TabLayout;
 
 /**
  * Created by jorge on 29/12/16
  */
 public class AppointmentTabHostFragment extends BaseFragment {
-    public static final int PAGE_CURRENT = 0;
-    public static final int PAGE_HISTORY = 1;
+    private static final int PAGE_CURRENT = 0;
     private static final String KEY_INDEX = "index";
 
-    int requestedPage;
-    private AppointmentViewHandler callback;
+    private int requestedPage;
 
     /**
      * @return a new instance of PaymentBalanceHistoryFragment
@@ -42,16 +39,6 @@ public class AppointmentTabHostFragment extends BaseFragment {
         args.putInt(KEY_INDEX, displayPage);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof AppointmentViewHandler) {
-            callback = (AppointmentViewHandler) context;
-        } else {
-            throw new ClassCastException("Activity must implement AppointmentViewHandler");
-        }
     }
 
     @Override
@@ -68,7 +55,7 @@ public class AppointmentTabHostFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupViewPager(view);
     }
@@ -85,8 +72,7 @@ public class AppointmentTabHostFragment extends BaseFragment {
 
         PaymentsSectionsPagerAdapter adapter = new PaymentsSectionsPagerAdapter(getChildFragmentManager());
         AppointmentsListFragment pendingPaymentsFragment = AppointmentsListFragment
-                .newInstance(((PatientAppointmentPresenter) callback.getAppointmentPresenter())
-                        .getMainAppointmentDto());
+                .newInstance();
         AppointmentHistoryFragment paymentHistoryFragment = AppointmentHistoryFragment.newInstance();
 
         String currentTabTitle = Label.getLabel("appointments.list.tab.title.current");
@@ -134,12 +120,6 @@ public class AppointmentTabHostFragment extends BaseFragment {
             }
 
         }
-    }
-
-    @Override
-    public void onDetach() {
-        callback = null;
-        super.onDetach();
     }
 
 }

@@ -289,11 +289,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     @Override
-    public void newAppointment() {
-        viewHandler.newAppointment();
-    }
-
-    @Override
     public void displayAppointmentDetails(AppointmentDTO appointmentDTO) {
         practiceId = appointmentDTO.getMetadata().getPracticeId();
         practiceMgmt = appointmentDTO.getMetadata().getPracticeMgmt();

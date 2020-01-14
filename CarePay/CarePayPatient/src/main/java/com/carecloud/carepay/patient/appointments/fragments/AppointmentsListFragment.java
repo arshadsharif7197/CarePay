@@ -1,6 +1,5 @@
 package com.carecloud.carepay.patient.appointments.fragments;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +19,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
 import com.carecloud.carepay.patient.appointments.adapters.AppointmentListAdapter;
+import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentFragment;
+import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -31,7 +32,6 @@ import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentFragmen
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
-import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
@@ -41,7 +41,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@SuppressLint("RestrictedApi")
 public class AppointmentsListFragment extends BaseAppointmentFragment
         implements AppointmentListAdapter.SelectAppointmentCallback {
 
@@ -55,16 +54,15 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
     private FloatingActionButton floatingActionButton;
     private boolean canScheduleAppointments;
 
-    public static AppointmentsListFragment newInstance(AppointmentsResultModel appointmentsResultModel) {
+    public static AppointmentsListFragment newInstance() {
         Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, appointmentsResultModel);
         AppointmentsListFragment fragment = new AppointmentsListFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         attachCallback(context);
     }
@@ -86,7 +84,7 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, getArguments());
+        appointmentsResultModel = ((PatientAppointmentPresenter) callback).getMainAppointmentDto();
     }
 
     @Nullable
@@ -129,11 +127,17 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
         floatingActionButton = view.findViewById(R.id.fab);
         canScheduleAppointments = canScheduleAppointments();
         if (canScheduleAppointments) {
-            floatingActionButton.setOnClickListener(view1 -> callback.newAppointment());
+            floatingActionButton.setOnClickListener(view1 -> {
+                CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
+                callback.addFragment(fragment, true);
+            });
             newAppointmentClassicButton.setVisibility(View.VISIBLE);
-            newAppointmentClassicButton.setOnClickListener(v -> callback.newAppointment());
+            newAppointmentClassicButton.setOnClickListener(v -> {
+                CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
+                callback.addFragment(fragment, true);
+            });
         } else {
-            floatingActionButton.setVisibility(View.GONE);
+            floatingActionButton.hide();
             noAppointmentMessage.setVisibility(View.GONE);
             newAppointmentClassicButton.setVisibility(View.GONE);
         }
@@ -154,7 +158,11 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
             if (appointmentsResultModel.getPayload().getAppointments().size() > 0) {
                 List<AppointmentDTO> appointmentsItems = appointmentsResultModel.getPayload().getAppointments();
                 noAppointmentView.setVisibility(View.GONE);
-                floatingActionButton.setVisibility(canScheduleAppointments ? View.VISIBLE : View.GONE);
+                if (canScheduleAppointments) {
+                    floatingActionButton.show();
+                } else {
+                    floatingActionButton.hide();
+                }
                 appointmentRecyclerView.setVisibility(View.VISIBLE);
                 setAdapter(appointmentsItems);
             } else {
@@ -167,7 +175,7 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
 
     private void showNoPermissionScreen() {
         appointmentRecyclerView.setVisibility(View.GONE);
-        floatingActionButton.setVisibility(View.GONE);
+        floatingActionButton.hide();
         noAppointmentView.setVisibility(View.VISIBLE);
         ((TextView) noAppointmentView.findViewById(R.id.no_apt_message_title))
                 .setText(Label.getLabel("patient.delegation.delegates.permissions.label.noPermission"));
@@ -221,7 +229,7 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
     private void showNoAppointmentScreen() {
         noAppointmentView.setVisibility(View.VISIBLE);
         appointmentRecyclerView.setVisibility(View.GONE);
-        floatingActionButton.setVisibility(View.GONE);
+        floatingActionButton.hide();
     }
 
     @Override

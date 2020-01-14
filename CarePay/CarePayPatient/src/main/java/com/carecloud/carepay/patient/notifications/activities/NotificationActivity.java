@@ -205,11 +205,6 @@ public class NotificationActivity extends MenuPatientActivity
         displayToolbar(true, null);
     }
 
-    @Override
-    public void newAppointment() {
-        //Not apply on this flow
-    }
-
     private void initPresenter(final AppointmentDTO appointmentDTO) {
         TransitionDTO appointmentTransition = getTransitionAppointments();
         getWorkflowServiceHelper().execute(appointmentTransition, new WorkflowServiceCallback() {

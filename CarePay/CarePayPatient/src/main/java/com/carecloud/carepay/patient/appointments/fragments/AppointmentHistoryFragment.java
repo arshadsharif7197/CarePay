@@ -2,18 +2,20 @@ package com.carecloud.carepay.patient.appointments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.adapters.AppointmentHistoricAdapter;
 import com.carecloud.carepay.patient.appointments.adapters.PracticesAdapter;
+import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentFragment;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
@@ -30,11 +32,11 @@ import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.models.Paging;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -63,7 +65,7 @@ public class AppointmentHistoryFragment extends BaseFragment
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof AppointmentViewHandler) {
             callback = (AppointmentViewHandler) context;
@@ -82,12 +84,8 @@ public class AppointmentHistoryFragment extends BaseFragment
             paging = new Paging();
         }
 
-        Collections.sort(appointmentDto.getPayload().getUserPractices(), new Comparator<UserPracticeDTO>() {
-            @Override
-            public int compare(final UserPracticeDTO object1, final UserPracticeDTO object2) {
-                return object1.getPracticeName().compareTo(object2.getPracticeName());
-            }
-        });
+        Collections.sort(appointmentDto.getPayload().getUserPractices(), (object1, object2)
+                -> object1.getPracticeName().compareTo(object2.getPracticeName()));
         excludedAppointmentStates = new ArrayList<>();
         excludedAppointmentStates.add(CarePayConstants.REQUESTED);
         excludedAppointmentStates.add(CarePayConstants.CHECKING_IN);
@@ -100,7 +98,7 @@ public class AppointmentHistoryFragment extends BaseFragment
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         historicAppointmentsRecyclerView = view.findViewById(R.id.historicAppointmentsRecyclerView);
 
@@ -120,18 +118,18 @@ public class AppointmentHistoryFragment extends BaseFragment
             }
         }
 
-        adapter = new AppointmentHistoricAdapter(getContext(), new ArrayList<AppointmentDTO>(),
+        adapter = new AppointmentHistoricAdapter(getContext(), new ArrayList<>(),
                 appointmentDto.getPayload().getUserPractices(), enabledPracticeLocations, this);
         historicAppointmentsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         historicAppointmentsRecyclerView.setAdapter(adapter);
         historicAppointmentsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
             }
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 int last = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
                 if (last > adapter.getItemCount() - BOTTOM_ROW_OFFSET && !isPaging) {
@@ -149,14 +147,12 @@ public class AppointmentHistoryFragment extends BaseFragment
 
         FloatingActionButton floatingActionButton = view.findViewById(com.carecloud.carepaylibrary.R.id.fab);
         if (canScheduleAppointments()) {
-            floatingActionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    callback.newAppointment();
-                }
+            floatingActionButton.setOnClickListener(view1 -> {
+                CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
+                callback.addFragment(fragment, true);
             });
         } else {
-            floatingActionButton.setVisibility(View.GONE);
+            floatingActionButton.hide();
         }
 
     }
@@ -176,12 +172,9 @@ public class AppointmentHistoryFragment extends BaseFragment
         practicesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false));
         PracticesAdapter adapter = new PracticesAdapter(appointmentDto.getPayload().getUserPractices());
-        adapter.setCallback(new PracticesAdapter.PracticeSelectInterface() {
-            @Override
-            public void onPracticeSelected(UserPracticeDTO userPracticeDTO) {
-                selectedPractice = userPracticeDTO;
-                callAppointmentService(userPracticeDTO, true, true);
-            }
+        adapter.setCallback(userPracticeDTO -> {
+            selectedPractice = userPracticeDTO;
+            callAppointmentService(userPracticeDTO, true, true);
         });
         practicesRecyclerView.setAdapter(adapter);
     }

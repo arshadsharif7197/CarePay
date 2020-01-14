@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.carecloud.carepay.patient.R;
-import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentFragment;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentTabHostFragment;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
@@ -201,12 +200,6 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     @Override
     public void refreshAppointments() {
         callAppointmentService();
-    }
-
-    @Override
-    public void newAppointment() {
-        CreateAppointmentFragment fragment = CreateAppointmentFragment.newInstance();
-        addFragment(fragment, true);
     }
 
     private void showAppointmentConfirmation(boolean isAutoScheduled) {
