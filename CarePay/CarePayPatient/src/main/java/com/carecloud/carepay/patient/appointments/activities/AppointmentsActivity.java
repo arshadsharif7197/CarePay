@@ -3,14 +3,15 @@ package com.carecloud.carepay.patient.appointments.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.appointments.AppointmentViewModel;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentTabHostFragment;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
@@ -19,8 +20,6 @@ import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.rate.RateDialog;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
@@ -31,11 +30,7 @@ import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.profile.Profile;
 import com.carecloud.carepaylibray.profile.ProfileDto;
-import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class AppointmentsActivity extends MenuPatientActivity implements AppointmentViewHandler,
         FragmentActivityInterface {
@@ -45,10 +40,12 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     private PatientAppointmentPresenter presenter;
 
     private boolean toolbarHidden = false;
+    private AppointmentViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setUpViewModel();
         Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
         boolean forceRefresh = false;
         boolean showSurvey = false;
@@ -56,11 +53,13 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             forceRefresh = extra.getBoolean(CarePayConstants.REFRESH, false);
             showSurvey = extra.getBoolean(CarePayConstants.SHOW_SURVEY, false);
         }
-        appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
         if (appointmentsResultModel == null || forceRefresh) {
-            callAppointmentService();
-        } else {
-            resumeOnCreate();
+            viewModel.getAppointmentsDtoObservable().observe(this, appointmentsResultModel -> {
+                this.appointmentsResultModel = appointmentsResultModel;
+                paymentsModel = viewModel.getPaymentsModel();
+                resumeOnCreate();
+            });
+            viewModel.getAppointments(getTransitionAppointments(), true);
         }
 
         if (showSurvey || forceRefresh) {
@@ -68,11 +67,11 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         }
     }
 
-    private void callAppointmentService() {
-        Map<String, String> queryMap = new HashMap<>();
-        getWorkflowServiceHelper().execute(getTransitionAppointments(), new WorkflowServiceCallback() {
-            @Override
-            public void onPreExecute() {
+    protected void setUpViewModel() {
+        viewModel = ViewModelProviders.of(this).get(AppointmentViewModel.class);
+        setBasicObservers(viewModel);
+        viewModel.getSkeleton().observe(this, showSkeleton -> {
+            if (showSkeleton) {
                 ShimmerFragment shimmerFragment = ShimmerFragment.newInstance(R.layout.shimmer_default_header,
                         R.layout.shimmer_default_item);
                 shimmerFragment.setTabbed(true,
@@ -80,22 +79,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                         Label.getLabel("appointments.list.tab.title.history"));
                 replaceFragment(shimmerFragment, false);
             }
-
-            @Override
-            public void onPostExecute(WorkflowDTO workflowDTO) {
-                hideProgressDialog();
-                appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
-                paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-                resumeOnCreate();
-            }
-
-            @Override
-            public void onFailure(String exceptionMessage) {
-                hideProgressDialog();
-                Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
-                showErrorNotification(exceptionMessage);
-            }
-        }, queryMap);
+        });
     }
 
     private void resumeOnCreate() {
@@ -199,7 +183,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
     @Override
     public void refreshAppointments() {
-        callAppointmentService();
+        viewModel.getAppointments(getTransitionAppointments(), true);
     }
 
     private void showAppointmentConfirmation(boolean isAutoScheduled) {
@@ -222,7 +206,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     @Override
     protected void onProfileChanged(ProfileDto profile) {
         displayToolbar(true, getScreenTitle(Label.getLabel("navigation_link_appointments")));
-        callAppointmentService();
+        viewModel.getAppointments(getTransitionAppointments(), true);
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.carecloud.carepay.patient.appointments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,19 +12,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.carecloud.carepay.patient.appointments.AppointmentViewModel;
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
 import com.carecloud.carepay.patient.appointments.adapters.AppointmentListAdapter;
 import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentFragment;
-import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentFragment;
@@ -33,7 +30,6 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,6 +49,7 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
     private PatientAppointmentNavigationCallback callback;
     private FloatingActionButton floatingActionButton;
     private boolean canScheduleAppointments;
+    private AppointmentViewModel viewModel;
 
     public static AppointmentsListFragment newInstance() {
         Bundle args = new Bundle();
@@ -84,7 +81,8 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        appointmentsResultModel = ((PatientAppointmentPresenter) callback).getMainAppointmentDto();
+        viewModel = ViewModelProviders.of(getActivity()).get(AppointmentViewModel.class);
+        appointmentsResultModel = viewModel.getAppointmentsDtoObservable().getValue();
     }
 
     @Nullable
@@ -108,6 +106,7 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
         }
         setUpViews(view);
         loadAppointmentList();
+        refreshLayout.setRefreshing(false);
     }
 
     private void setUpViews(View view) {
@@ -245,51 +244,14 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
         super.onPause();
     }
 
-    private void showAppointmentPopup(AppointmentDTO appointmentDTO) {
-        callback.displayAppointmentDetails(appointmentDTO);
-    }
-
     private void setRefreshAction() {
-        refreshLayout.setOnRefreshListener(() -> {
-            refreshLayout.setRefreshing(false);
-            doRefreshAction();
-        });
+        refreshLayout.setOnRefreshListener(() -> viewModel
+                .getAppointments(appointmentsResultModel.getMetadata().getLinks().getAppointments(), true));
     }
-
-    private void doRefreshAction() {
-        // API call to fetch latest appointments
-        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getLinks().getAppointments();
-        getWorkflowServiceHelper().execute(transitionDTO, pageRefreshCallback);
-    }
-
-    private WorkflowServiceCallback pageRefreshCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            if (appointmentsResultModel != null) {
-                Gson gson = new Gson();
-                appointmentsResultModel = gson.fromJson(workflowDTO.toString(), AppointmentsResultModel.class);
-                loadAppointmentList();
-            }
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            showErrorNotification(null);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
-
 
     @Override
     public void onItemTapped(AppointmentDTO appointmentDTO) {
-        showAppointmentPopup(appointmentDTO);
+        callback.displayAppointmentDetails(appointmentDTO);
     }
 
     @Override

@@ -9,10 +9,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.appointments.AppointmentViewModel;
 import com.carecloud.carepay.patient.appointments.adapters.AppointmentHistoricAdapter;
 import com.carecloud.carepay.patient.appointments.adapters.PracticesAdapter;
 import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentFragment;
@@ -20,25 +22,17 @@ import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPr
 import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
-import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.base.models.Paging;
-import com.carecloud.carepaylibray.utils.DateUtil;
-import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +45,7 @@ public class AppointmentHistoryFragment extends BaseFragment
         implements AppointmentHistoricAdapter.SelectAppointmentCallback {
 
     private AppointmentViewHandler callback;
-    private AppointmentsResultModel appointmentDto;
+    private AppointmentsResultModel appointmentsResultModel;
     private AppointmentHistoricAdapter adapter;
     private RecyclerView historicAppointmentsRecyclerView;
     private static final int BOTTOM_ROW_OFFSET = 10;
@@ -59,6 +53,7 @@ public class AppointmentHistoryFragment extends BaseFragment
     private Paging paging;
     private UserPracticeDTO selectedPractice;
     private List<String> excludedAppointmentStates;
+    private AppointmentViewModel viewModel;
 
     public static AppointmentHistoryFragment newInstance() {
         return new AppointmentHistoryFragment();
@@ -77,18 +72,56 @@ public class AppointmentHistoryFragment extends BaseFragment
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        appointmentDto = ((PatientAppointmentPresenter) callback.getAppointmentPresenter()).getMainAppointmentDto();
-        if (!appointmentDto.getPayload().getPagingInfo().isEmpty()) {
-            paging = appointmentDto.getPayload().getPagingInfo().get(0).getPaging();
+        viewModel = ViewModelProviders.of(getActivity()).get(AppointmentViewModel.class);
+        appointmentsResultModel = viewModel.getAppointmentsDtoObservable().getValue();
+        setUpViewModels();
+
+
+        if (!appointmentsResultModel.getPayload().getPagingInfo().isEmpty()) {
+            paging = appointmentsResultModel.getPayload().getPagingInfo().get(0).getPaging();
         } else {
             paging = new Paging();
         }
 
-        Collections.sort(appointmentDto.getPayload().getUserPractices(), (object1, object2)
+        Collections.sort(appointmentsResultModel.getPayload().getUserPractices(), (object1, object2)
                 -> object1.getPracticeName().compareTo(object2.getPracticeName()));
         excludedAppointmentStates = new ArrayList<>();
         excludedAppointmentStates.add(CarePayConstants.REQUESTED);
         excludedAppointmentStates.add(CarePayConstants.CHECKING_IN);
+    }
+
+    private void setUpViewModels() {
+        List<UserPracticeDTO> userPractices = appointmentsResultModel.getPayload().getUserPractices();
+        viewModel.getHistoricAppointmentsObservable().observe(getActivity(), appointmentsResultModel -> {
+            List<AppointmentDTO> appointments = filterAppointments(appointmentsResultModel
+                    .getPayload().getAppointments());
+            appointmentsResultModel.getPayload().setUserPractices(userPractices);
+            isPaging = false;
+            if (appointmentsResultModel.getPayload().getPagingInfo().size() > 0) {
+                paging = appointmentsResultModel.getPayload().getPagingInfo().get(0).getPaging();
+            }
+            if (isVisible()) {
+                getView().findViewById(R.id.fakeView).setVisibility(View.GONE);
+            }
+
+            hideShimmerEffect();
+            showLoadingInAdapter(false);
+
+            if (appointments.size() > 0) {
+                showHistoricAppointments(appointments);
+            } else if (!appointmentsResultModel.getPayload().canViewAppointments(selectedPractice.getPracticeId())) {
+                //when there are no permissions to see appointments, MW sends no appointments
+                showNoPermissionsLayout();
+            } else {
+                showNoAppointmentsLayout();
+            }
+        });
+
+        viewModel.getPaginationLoaderObservable().observe(getActivity(), this::showLoadingInAdapter);
+    }
+
+    private void showLoadingInAdapter(Boolean showLoading) {
+        adapter.setLoading(showLoading);
     }
 
     @Nullable
@@ -102,15 +135,15 @@ public class AppointmentHistoryFragment extends BaseFragment
         super.onViewCreated(view, savedInstanceState);
         historicAppointmentsRecyclerView = view.findViewById(R.id.historicAppointmentsRecyclerView);
 
-        if (appointmentDto.getPayload().getUserPractices().isEmpty()) {
+        if (appointmentsResultModel.getPayload().getUserPractices().isEmpty()) {
             showNoAppointmentsLayout();
         } else {
-            selectedPractice = appointmentDto.getPayload().getUserPractices().get(0);
+            selectedPractice = appointmentsResultModel.getPayload().getUserPractices().get(0);
             callAppointmentService(selectedPractice, true, true);
         }
 
         Map<String, Set<String>> enabledPracticeLocations = new HashMap<>();
-        for (AppointmentDTO appointmentDTO : appointmentDto.getPayload().getAppointments()) {
+        for (AppointmentDTO appointmentDTO : appointmentsResultModel.getPayload().getAppointments()) {
             String practiceId = appointmentDTO.getMetadata().getPracticeId();
             if (!enabledPracticeLocations.containsKey(practiceId)) {
                 enabledPracticeLocations.put(practiceId,
@@ -119,7 +152,7 @@ public class AppointmentHistoryFragment extends BaseFragment
         }
 
         adapter = new AppointmentHistoricAdapter(getContext(), new ArrayList<>(),
-                appointmentDto.getPayload().getUserPractices(), enabledPracticeLocations, this);
+                appointmentsResultModel.getPayload().getUserPractices(), enabledPracticeLocations, this);
         historicAppointmentsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         historicAppointmentsRecyclerView.setAdapter(adapter);
         historicAppointmentsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -132,7 +165,7 @@ public class AppointmentHistoryFragment extends BaseFragment
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 int last = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-                if (last > adapter.getItemCount() - BOTTOM_ROW_OFFSET && !isPaging) {
+                if (last > adapter.getItemCount() - BOTTOM_ROW_OFFSET && adapter.getItemCount() > 0 && !isPaging) {
                     if (hasMorePages()) {
                         callAppointmentService(selectedPractice, false, false);
                         isPaging = true;
@@ -141,7 +174,7 @@ public class AppointmentHistoryFragment extends BaseFragment
             }
         });
 
-        if (appointmentDto.getPayload().getUserPractices().size() > 1) {
+        if (appointmentsResultModel.getPayload().getUserPractices().size() > 1) {
             showPracticeToolbar(view);
         }
 
@@ -158,8 +191,8 @@ public class AppointmentHistoryFragment extends BaseFragment
     }
 
     private boolean canScheduleAppointments() {
-        for (UserPracticeDTO practiceDTO : appointmentDto.getPayload().getUserPractices()) {
-            if (appointmentDto.getPayload().canScheduleAppointments(practiceDTO.getPracticeId())) {
+        for (UserPracticeDTO practiceDTO : appointmentsResultModel.getPayload().getUserPractices()) {
+            if (appointmentsResultModel.getPayload().canScheduleAppointments(practiceDTO.getPracticeId())) {
                 return true;
             }
         }
@@ -171,7 +204,7 @@ public class AppointmentHistoryFragment extends BaseFragment
         practicesRecyclerView.setVisibility(View.VISIBLE);
         practicesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false));
-        PracticesAdapter adapter = new PracticesAdapter(appointmentDto.getPayload().getUserPractices());
+        PracticesAdapter adapter = new PracticesAdapter(appointmentsResultModel.getPayload().getUserPractices());
         adapter.setCallback(userPracticeDTO -> {
             selectedPractice = userPracticeDTO;
             callAppointmentService(userPracticeDTO, true, true);
@@ -182,80 +215,18 @@ public class AppointmentHistoryFragment extends BaseFragment
     private void callAppointmentService(final UserPracticeDTO userPracticeDTO,
                                         final boolean refresh,
                                         final boolean showShimmerLayout) {
-        long currentPage;
-        if (refresh) {
-            currentPage = 0;
-        } else {
-            currentPage = paging.getCurrentPage();
+        if (showShimmerLayout) {
+            showShimmerEffect();
         }
+        if (getView() != null) {
+            getView().findViewById(R.id.fakeView).setVisibility(View.VISIBLE);
+            historicAppointmentsRecyclerView.stopScroll();
+        }
+        if (refresh && adapter != null) {
+            adapter.clearData();
+        }
+        viewModel.getHistoricAppointments(userPracticeDTO, paging, refresh, showShimmerLayout);
 
-        Map<String, String> queryMap = new HashMap<>();
-        Calendar calendar = new GregorianCalendar();
-        calendar.add(Calendar.DATE, -1);
-        queryMap.put("start_date", DateUtil.getInstance().setDate(new Date(0)).getServerFormat());
-        queryMap.put("end_date", DateUtil.getInstance().setDate(calendar).getServerFormat());
-        queryMap.put("page", String.valueOf(currentPage + 1));
-        queryMap.put("limit", String.valueOf(paging.getResultsPerPage()));
-        queryMap.put("practice_mgmt", userPracticeDTO.getPracticeMgmt());
-        queryMap.put("practice_id", userPracticeDTO.getPracticeId());
-        getWorkflowServiceHelper().execute(appointmentDto.getMetadata().getLinks().getAppointments()
-                , new WorkflowServiceCallback() {
-                    @Override
-                    public void onPreExecute() {
-                        if (showShimmerLayout) {
-                            showShimmerEffect();
-                        } else if (!refresh) {
-                            adapter.setLoading(true);
-                        }
-                        if (getView() != null) {
-                            getView().findViewById(R.id.fakeView).setVisibility(View.VISIBLE);
-                        }
-                    }
-
-                    @Override
-                    public void onPostExecute(WorkflowDTO workflowDTO) {
-                        if (isVisible()) {
-                            getView().findViewById(R.id.fakeView).setVisibility(View.GONE);
-                        }
-                        if (showShimmerLayout) {
-                            hideShimmerEffect();
-                        } else if (!refresh) {
-                            adapter.setLoading(true);
-                        }
-                        List<UserPracticeDTO> userPractices = appointmentDto.getPayload().getUserPractices();
-                        appointmentDto = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
-                        appointmentDto.getPayload().setUserPractices(userPractices);
-                        isPaging = false;
-                        adapter.setLoading(false);
-                        if (appointmentDto.getPayload().getPagingInfo().size() > 0) {
-                            paging = appointmentDto.getPayload().getPagingInfo().get(0).getPaging();
-                        }
-
-                        List<AppointmentDTO> appointments = filterAppointments(appointmentDto
-                                .getPayload().getAppointments());
-                        if (appointments.size() > 0) {
-                            showHistoricAppointments(appointments, refresh);
-                        } else if (!appointmentDto.getPayload().canViewAppointments(userPracticeDTO.getPracticeId())) {
-                            //when there are no permissions to see appointments, MW sends no appointments
-                            showNoPermissionsLayout();
-                        } else {
-                            showNoAppointmentsLayout();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(String exceptionMessage) {
-                        if (isVisible()) {
-                            getView().findViewById(R.id.fakeView).setVisibility(View.GONE);
-                        }
-                        isPaging = false;
-                        adapter.setLoading(false);
-                        if (showShimmerLayout && (getActivity() != null) && ((BaseActivity) getActivity()).isVisible()) {
-                            hideShimmerEffect();
-                        }
-                        showErrorNotification(exceptionMessage);
-                    }
-                }, queryMap);
     }
 
     private void hideShimmerEffect() {
@@ -293,10 +264,10 @@ public class AppointmentHistoryFragment extends BaseFragment
         no_apt_message_desc.setText(Label.getLabel("appointments.list.history.noAppointments.subtitle"));
     }
 
-    private void showHistoricAppointments(List<AppointmentDTO> appointments, boolean refresh) {
+    private void showHistoricAppointments(List<AppointmentDTO> appointments) {
         getView().findViewById(R.id.noAppointmentsLayout).setVisibility(View.GONE);
         historicAppointmentsRecyclerView.setVisibility(View.VISIBLE);
-        adapter.setData(appointments, refresh);
+        adapter.setData(appointments);
     }
 
     private List<AppointmentDTO> filterAppointments(List<AppointmentDTO> appointments) {
@@ -336,7 +307,7 @@ public class AppointmentHistoryFragment extends BaseFragment
 
     @Override
     public boolean canCheckOut(AppointmentDTO appointmentDTO) {
-        return appointmentDto.getPayload()
+        return appointmentsResultModel.getPayload()
                 .canCheckInCheckOut(appointmentDTO.getMetadata().getPracticeId());
     }
 }
