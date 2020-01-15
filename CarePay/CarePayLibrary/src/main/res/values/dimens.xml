@@ -38,6 +38,7 @@
     <dimen name="dimen_40dp">40dp</dimen>
     <dimen name="dimen_42dp">42dp</dimen>
     <dimen name="dimen_48dp">48dp</dimen>
+    <dimen name="dimen_51dp">51dp</dimen>
     <dimen name="dimen_60dp">60dp</dimen>
     <dimen name="dimen_70dp">70dp</dimen>
     <dimen name="dimen_80dp">80dp</dimen>

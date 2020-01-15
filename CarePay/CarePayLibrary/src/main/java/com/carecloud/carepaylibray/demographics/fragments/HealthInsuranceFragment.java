@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -49,6 +48,8 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     private boolean insuranceDataRepeated = false;
     private String insuranceTypeRepeatedErrorMessage;
     private boolean shouldContinue = false;
+    private View setupInsuranceContainer;
+    private View mainInsuranceContainer;
 
     private WeakReference<FragmentActivity> callingActivityReference;
 
@@ -233,6 +234,8 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
     private void initializeViews() {
         if (demographicDTO != null) {
             if (hasInsurance()) {
+                setupInsuranceContainer.setVisibility(View.GONE);
+                mainInsuranceContainer.setVisibility(View.VISIBLE);
                 insurancePhotoAlert.setVisibility(View.GONE);
                 adapter.setInsurancesList(getInsurances(demographicDTO));
                 if (showAlert) {
@@ -241,10 +244,10 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
                     noPrimaryInsuranceFound = false;
                 }
             } else {
-                //remove the health insurance fragment from the stack
-                getFragmentManager().popBackStack(HealthInsuranceFragment.class.getName(),
-                        FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                editInsurance(null, false);
+                setupInsuranceContainer.setOnClickListener(view1 -> {
+                    editInsurance(null, false);
+                });
+                nextButton.setText(Label.getLabel("demographics_i_dont_have_health_insurance_label"));
             }
         }
     }
@@ -321,8 +324,8 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
      * @param view main view
      */
     public void initActiveSection(final View view) {
-        insurancePhotoAlert = (TextView) view.findViewById(R.id.insurancePhotoAlert);
-        Button addAnotherButton = (Button) view.findViewById(R.id.health_insurance_add_another);
+        insurancePhotoAlert = view.findViewById(R.id.insurancePhotoAlert);
+        Button addAnotherButton = view.findViewById(R.id.health_insurance_add_another);
         addAnotherButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View addAnotherButton) {
@@ -338,6 +341,9 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
                 Label.getLabel("demographics_health_insurance_subheading"),
                 view);
         initNextButton(view);
+
+        setupInsuranceContainer = view.findViewById(R.id.setupInsuranceContainer);
+        mainInsuranceContainer = view.findViewById(R.id.mainInsuranceContainer);
     }
 
     @Override
