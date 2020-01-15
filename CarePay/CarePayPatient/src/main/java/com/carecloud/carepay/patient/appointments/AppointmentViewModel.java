@@ -41,10 +41,16 @@ public class AppointmentViewModel extends BaseViewModel {
     }
 
     public MutableLiveData<AppointmentsResultModel> getHistoricAppointmentsObservable() {
+        if (historicAppointmentsObservable.getValue() != null) {
+            historicAppointmentsObservable = new MutableLiveData<>();
+        }
         return historicAppointmentsObservable;
     }
 
     public MutableLiveData<Boolean> getPaginationLoaderObservable() {
+        if (paginationLoaderObservable.getValue() != null) {
+            paginationLoaderObservable = new MutableLiveData<>();
+        }
         return paginationLoaderObservable;
     }
 
@@ -64,8 +70,8 @@ public class AppointmentViewModel extends BaseViewModel {
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 setSkeleton(false);
                 AppointmentsResultModel appointmentDto = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
-                appointmentsDtoObservable.setValue(appointmentDto);
                 paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+                appointmentsDtoObservable.setValue(appointmentDto);
             }
 
             @Override
@@ -104,44 +110,22 @@ public class AppointmentViewModel extends BaseViewModel {
                         if (showShimmerLayout) {
 
                         } else if (!refresh) {
-                            paginationLoaderObservable.setValue(true);
+                            paginationLoaderObservable.postValue(true);
                         }
-//                        if (getView() != null) {
-//                            getView().findViewById(R.id.fakeView).setVisibility(View.VISIBLE);
-//                        }
                     }
 
                     @Override
                     public void onPostExecute(WorkflowDTO workflowDTO) {
-                        paginationLoaderObservable.setValue(false);
+                        paginationLoaderObservable.postValue(false);
                         AppointmentsResultModel appointmentsResultModel = DtoHelper
                                 .getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
-                        historicAppointmentsObservable.setValue(appointmentsResultModel);
-//                        if (isVisible()) {
-//                            getView().findViewById(R.id.fakeView).setVisibility(View.GONE);
-//                        }
-//                        if (showShimmerLayout) {
-//                            hideShimmerEffect();
-//                        } else if (!refresh) {
-//                            adapter.setLoading(true);
-//                        }
-//                        List<UserPracticeDTO> userPractices = appointmentsResultModel.getPayload().getUserPractices();
-
-//                        appointmentsResultModel.getPayload().setUserPractices(userPractices);
-//                        isPaging = false;
-//                        adapter.setLoading(false);
-
-
+                        historicAppointmentsObservable.postValue(appointmentsResultModel);
                     }
 
                     @Override
                     public void onFailure(String exceptionMessage) {
-                        paginationLoaderObservable.setValue(false);
+                        paginationLoaderObservable.postValue(false);
                         setErrorMessage(exceptionMessage);
-//                        if (isVisible()) {
-//                            getView().findViewById(R.id.fakeView).setVisibility(View.GONE);
-//                        }
-//                        isPaging = false;
                     }
                 }, queryMap);
     }

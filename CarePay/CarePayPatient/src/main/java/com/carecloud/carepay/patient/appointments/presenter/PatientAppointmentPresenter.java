@@ -290,9 +290,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void displayAppointmentDetails(AppointmentDTO appointmentDTO) {
-        practiceId = appointmentDTO.getMetadata().getPracticeId();
-        practiceMgmt = appointmentDTO.getMetadata().getPracticeMgmt();
-        patientId = appointmentDTO.getMetadata().getPatientId();
+//        practiceId = appointmentDTO.getMetadata().getPracticeId();
+//        practiceMgmt = appointmentDTO.getMetadata().getPracticeMgmt();
+//        patientId = appointmentDTO.getMetadata().getPatientId();
         AppointmentDetailDialog detailDialog = AppointmentDetailDialog
                 .newInstance(appointmentDTO, getPracticeInfo(appointmentsResultModel.getPayload().getUserPractices(),
                         appointmentDTO.getMetadata().getPracticeId()).isBreezePractice(),

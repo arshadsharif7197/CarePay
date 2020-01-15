@@ -265,7 +265,9 @@ public class AppointmentHistoryFragment extends BaseFragment
     }
 
     private void showHistoricAppointments(List<AppointmentDTO> appointments) {
-        getView().findViewById(R.id.noAppointmentsLayout).setVisibility(View.GONE);
+        if (getView() != null) {
+            getView().findViewById(R.id.noAppointmentsLayout).setVisibility(View.GONE);
+        }
         historicAppointmentsRecyclerView.setVisibility(View.VISIBLE);
         adapter.setData(appointments);
     }
