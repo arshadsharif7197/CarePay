@@ -25,10 +25,11 @@ import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentFragment;
+import com.carecloud.carepaylibray.appointments.interfaces.AppointmentFlowInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.base.BaseFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class AppointmentsListFragment extends BaseAppointmentFragment
+public class AppointmentsListFragment extends BaseFragment
         implements AppointmentListAdapter.SelectAppointmentCallback {
 
     private AppointmentsResultModel appointmentsResultModel;
@@ -46,7 +47,7 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
 
     private RecyclerView appointmentRecyclerView;
 
-    private PatientAppointmentNavigationCallback callback;
+    private AppointmentFlowInterface callback;
     private FloatingActionButton floatingActionButton;
     private boolean canScheduleAppointments;
     private AppointmentViewModel viewModel;
@@ -61,20 +62,15 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        attachCallback(context);
-    }
-
-    @Override
-    protected void attachCallback(Context context) {
         try {
             if (context instanceof AppointmentViewHandler) {
-                callback = (PatientAppointmentNavigationCallback) ((AppointmentViewHandler) context)
+                callback = (AppointmentFlowInterface) ((AppointmentViewHandler) context)
                         .getAppointmentPresenter();
             } else {
-                callback = (PatientAppointmentNavigationCallback) context;
+                callback = (AppointmentFlowInterface) context;
             }
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached context must implement AppointmentNavigationCallback");
+            throw new ClassCastException("Attached context must implement AppointmentFlowInterface");
         }
     }
 
@@ -232,14 +228,6 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (callback == null) {
-            attachCallback(getContext());
-        }
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
     }
@@ -251,7 +239,8 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
 
     @Override
     public void onItemTapped(AppointmentDTO appointmentDTO) {
-        callback.displayAppointmentDetails(appointmentDTO);
+        AppointmentDetailDialog detailDialog = AppointmentDetailDialog.newInstance(appointmentDTO);
+        callback.displayDialogFragment(detailDialog, true);
     }
 
     @Override

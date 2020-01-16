@@ -18,12 +18,12 @@ import com.carecloud.carepay.patient.appointments.AppointmentViewModel;
 import com.carecloud.carepay.patient.appointments.adapters.AppointmentHistoricAdapter;
 import com.carecloud.carepay.patient.appointments.adapters.PracticesAdapter;
 import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentFragment;
-import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.interfaces.AppointmentFlowInterface;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
@@ -44,7 +44,7 @@ import java.util.Set;
 public class AppointmentHistoryFragment extends BaseFragment
         implements AppointmentHistoricAdapter.SelectAppointmentCallback {
 
-    private AppointmentViewHandler callback;
+    private AppointmentFlowInterface callback;
     private AppointmentsResultModel appointmentsResultModel;
     private AppointmentHistoricAdapter adapter;
     private RecyclerView historicAppointmentsRecyclerView;
@@ -63,9 +63,9 @@ public class AppointmentHistoryFragment extends BaseFragment
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof AppointmentViewHandler) {
-            callback = (AppointmentViewHandler) context;
+            callback = (AppointmentFlowInterface) ((AppointmentViewHandler) context).getAppointmentPresenter();
         } else {
-            throw new ClassCastException("Activity must implement AppointmentViewHandler");
+            throw new ClassCastException("Activity must implement AppointmentFlowInterface");
         }
     }
 
@@ -295,12 +295,12 @@ public class AppointmentHistoryFragment extends BaseFragment
 
     @Override
     public void onCheckoutTapped(AppointmentDTO appointmentDTO) {
-        ((PatientAppointmentPresenter) callback.getAppointmentPresenter()).onCheckOutStarted(appointmentDTO);
+        callback.onCheckOutStarted(appointmentDTO);
     }
 
     private void showAppointmentPopup(AppointmentDTO appointmentDTO) {
-        ((PatientAppointmentPresenter) callback.getAppointmentPresenter())
-                .displayAppointmentDetails(appointmentDTO);
+        AppointmentDetailDialog detailDialog = AppointmentDetailDialog.newInstance(appointmentDTO);
+        callback.displayDialogFragment(detailDialog, true);
     }
 
     private boolean hasMorePages() {

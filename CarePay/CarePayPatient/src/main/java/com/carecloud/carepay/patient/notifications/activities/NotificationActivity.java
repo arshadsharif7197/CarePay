@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.appointments.AppointmentViewModel;
+import com.carecloud.carepay.patient.appointments.fragments.AppointmentDetailDialog;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
@@ -24,19 +26,14 @@ import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFr
 import com.carecloud.carepay.patient.rate.RateDialog;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.profile.Profile;
 import com.carecloud.carepaylibray.profile.ProfileDto;
-import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,6 +49,7 @@ public class NotificationActivity extends MenuPatientActivity
 
     private PatientAppointmentPresenter appointmentPresenter;
     private NotificationViewModel viewModel;
+    private AppointmentViewModel appointmentViewModel;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -69,7 +67,7 @@ public class NotificationActivity extends MenuPatientActivity
 
     private void showNotificationFragment() {
         replaceFragment(NotificationFragment.newInstance(), false);
-        initPresenter(null);
+        setUpAppointmentViewModel();
     }
 
     protected void setUpViewModel() {
@@ -92,6 +90,18 @@ public class NotificationActivity extends MenuPatientActivity
             bundle.putString("practiceId", notificationVM.getNotification().getMetadata().getPracticeId());
             navigateToWorkflow(notificationVM.getWorkflowDTO(), bundle);
         });
+
+        setUpAppointmentViewModel();
+        appointmentViewModel.getAppointments(getTransitionAppointments(), false);
+    }
+
+    private void setUpAppointmentViewModel() {
+        appointmentViewModel = ViewModelProviders.of(this).get(AppointmentViewModel.class);
+        appointmentViewModel.getAppointmentsDtoObservable().observe(this, appointmentsResultModel -> {
+            PaymentsModel paymentsModel = appointmentViewModel.getPaymentsModel();
+            appointmentPresenter = new PatientAppointmentPresenter(NotificationActivity.this,
+                    appointmentsResultModel, paymentsModel);
+        });
     }
 
     @Override
@@ -100,7 +110,7 @@ public class NotificationActivity extends MenuPatientActivity
             case PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_FULL_WALLET:
-                appointmentPresenter.forwardAndroidPayResult(requestCode, resultCode, data);
+//                appointmentPresenter.forwardAndroidPayResult(requestCode, resultCode, data);
                 break;
             case SURVEY_FLOW:
                 if (resultCode == Activity.RESULT_OK
@@ -137,9 +147,13 @@ public class NotificationActivity extends MenuPatientActivity
             case appointment:
                 AppointmentDTO appointment = notificationItem.getPayload().getAppointment();
                 if (appointmentPresenter != null) {
-                    appointmentPresenter.displayAppointmentDetails(appointment);
+                    hideProgressDialog();
+                    AppointmentDetailDialog detailDialog = AppointmentDetailDialog
+                            .newInstance(appointment);
+                    displayDialogFragment(detailDialog, false);
                 } else {
-                    initPresenter(appointment);
+                    showProgressDialog();
+                    appointmentViewModel.getAppointments(getTransitionAppointments(), false);
                 }
                 break;
             case pending_forms:
@@ -203,59 +217,6 @@ public class NotificationActivity extends MenuPatientActivity
     @Override
     public void refreshAppointments() {
         displayToolbar(true, null);
-    }
-
-    private void initPresenter(final AppointmentDTO appointmentDTO) {
-        TransitionDTO appointmentTransition = getTransitionAppointments();
-        getWorkflowServiceHelper().execute(appointmentTransition, new WorkflowServiceCallback() {
-            @Override
-            public void onPreExecute() {
-                if (appointmentDTO != null) {
-                    showProgressDialog();
-                }
-            }
-
-            @Override
-            public void onPostExecute(WorkflowDTO workflowDTO) {
-                AppointmentsResultModel appointmentsResultModel = DtoHelper
-                        .getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
-                if (appointmentsResultModel != null) {
-                    PaymentsModel paymentModel = new PaymentsModel();
-                    paymentModel.getPaymentPayload().setPatientCreditCards(appointmentsResultModel
-                            .getPayload().getPatientCreditCards());
-                    paymentModel.getPaymentPayload().setPaymentSettings(appointmentsResultModel
-                            .getPayload().getPaymentSettings());
-                    paymentModel.getPaymentPayload().setMerchantServices(appointmentsResultModel
-                            .getPayload().getMerchantServices());
-                    paymentModel.getPaymentPayload().setPatientBalances(appointmentsResultModel
-                            .getPayload().getPatientBalances());
-                    paymentModel.getPaymentPayload().setUserPractices(appointmentsResultModel
-                            .getPayload().getUserPractices());
-                    paymentModel.getPaymentsMetadata().getPaymentsTransitions().setMakePayment(
-                            appointmentsResultModel.getMetadata().getTransitions().getMakePayment());
-                    paymentModel.getPaymentsMetadata().getPaymentsTransitions().setAddCreditCard(
-                            appointmentsResultModel.getMetadata().getTransitions().getAddCreditCard());
-
-                    appointmentPresenter = new PatientAppointmentPresenter(NotificationActivity.this,
-                            appointmentsResultModel, paymentModel);
-                }
-                if (appointmentDTO != null) {
-                    hideProgressDialog();
-                    if (appointmentPresenter != null) {
-                        appointmentPresenter.displayAppointmentDetails(appointmentDTO);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(String exceptionMessage) {
-                if (appointmentDTO != null) {
-                    hideProgressDialog();
-                    showErrorNotification(exceptionMessage);
-                }
-                appointmentPresenter = null;
-            }
-        });
     }
 
     @Override

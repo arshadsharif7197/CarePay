@@ -17,7 +17,6 @@ import com.carecloud.carepay.patient.appointments.createappointment.Availability
 import com.carecloud.carepay.patient.appointments.createappointment.RequestAppointmentDialogFragment;
 import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentFeeDialog;
 import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
-import com.carecloud.carepay.patient.appointments.fragments.AppointmentDetailDialog;
 import com.carecloud.carepay.patient.appointments.models.PracticeInformationMiniPayload;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.checkout.AllDoneDialogFragment;
@@ -117,10 +116,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
         TransitionDTO videoVisitTransition = appointmentsResultModel.getMetadata().getLinks().getVideoVisit();
         viewHandler.getWorkflowServiceHelper().execute(videoVisitTransition, startVideoVisitCallback, queryMap);
-    }
-
-    public AppointmentsResultModel getMainAppointmentDto() {
-        return appointmentsResultModel;
     }
 
     @Override
@@ -286,19 +281,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         String url = String.format("%s?%s=%s&%s=%s", transitionDTO.getUrl(), "job_id",
                 jobId, "practice_mgmt", practiceMgmt);
         return FileDownloadUtil.downloadPdf(getContext(), url, title, ".pdf", "Visit Summary");
-    }
-
-    @Override
-    public void displayAppointmentDetails(AppointmentDTO appointmentDTO) {
-//        practiceId = appointmentDTO.getMetadata().getPracticeId();
-//        practiceMgmt = appointmentDTO.getMetadata().getPracticeMgmt();
-//        patientId = appointmentDTO.getMetadata().getPatientId();
-        AppointmentDetailDialog detailDialog = AppointmentDetailDialog
-                .newInstance(appointmentDTO, getPracticeInfo(appointmentsResultModel.getPayload().getUserPractices(),
-                        appointmentDTO.getMetadata().getPracticeId()).isBreezePractice(),
-                        appointmentsResultModel.getPayload().isRescheduleEnabled(appointmentDTO
-                                .getMetadata().getPracticeId()));
-        viewHandler.displayDialogFragment(detailDialog, false);
     }
 
     private void showCancellationReasons(AppointmentDTO appointmentDTO,
