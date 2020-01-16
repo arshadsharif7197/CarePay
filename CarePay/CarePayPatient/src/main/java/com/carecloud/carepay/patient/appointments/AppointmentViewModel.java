@@ -10,7 +10,9 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.QueueStatusPayloadDTO;
 import com.carecloud.carepaylibray.base.models.Paging;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -30,6 +32,7 @@ public class AppointmentViewModel extends BaseViewModel {
     private MutableLiveData<AppointmentsResultModel> appointmentsDtoObservable = new MutableLiveData<>();
     private MutableLiveData<AppointmentsResultModel> historicAppointmentsObservable = new MutableLiveData<>();
     private MutableLiveData<Boolean> paginationLoaderObservable = new MutableLiveData<>();
+    private MutableLiveData<QueueStatusPayloadDTO> queueStatusObservable = new MutableLiveData<>();
     private PaymentsModel paymentsModel;
 
     public AppointmentViewModel(@NonNull Application application) {
@@ -52,6 +55,13 @@ public class AppointmentViewModel extends BaseViewModel {
             paginationLoaderObservable = new MutableLiveData<>();
         }
         return paginationLoaderObservable;
+    }
+
+    public MutableLiveData<QueueStatusPayloadDTO> getQueueStatusObservable() {
+        if (queueStatusObservable.getValue() != null) {
+            queueStatusObservable = new MutableLiveData<>();
+        }
+        return queueStatusObservable;
     }
 
     public PaymentsModel getPaymentsModel() {
@@ -128,5 +138,31 @@ public class AppointmentViewModel extends BaseViewModel {
                         setErrorMessage(exceptionMessage);
                     }
                 }, queryMap);
+    }
+
+    public void getQueueStatus(AppointmentDTO appointmentDTO, TransitionDTO transitionDTO) {
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
+        queryMap.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
+        queryMap.put("patient_id", appointmentDTO.getMetadata().getPatientId());
+        queryMap.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
+
+        getWorkflowServiceHelper().execute(transitionDTO, new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                QueueStatusPayloadDTO queueStatusPayloadDTO = workflowDTO.getPayload(QueueStatusPayloadDTO.class);
+                queueStatusObservable.postValue(queueStatusPayloadDTO);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+
+            }
+        }, queryMap);
     }
 }

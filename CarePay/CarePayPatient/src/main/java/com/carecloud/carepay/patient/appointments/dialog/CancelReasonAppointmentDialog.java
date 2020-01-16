@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.textfield.TextInputLayout;
 import androidx.core.content.ContextCompat;
@@ -43,7 +45,9 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
     private List<CancellationReasonDTO> cancellationReasons;
 
     public interface CancelReasonAppointmentDialogListener {
-        void onCancelReasonAppointmentDialogCancelClicked(AppointmentDTO appointmentDTO, int cancellationReason, String cancellationReasonComment);
+        void onCancelReasonAppointmentDialogCancelClicked(AppointmentDTO appointmentDTO,
+                                                          int cancellationReason,
+                                                          String cancellationReasonComment);
     }
 
     private CancelReasonAppointmentDialogListener callback;
@@ -64,7 +68,6 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
         return fragment;
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,18 +81,16 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.from(getContext()).inflate(R.layout.dialog_cancel_reason_appointment, container, false);
+        return inflater.inflate(R.layout.dialog_cancel_reason_appointment, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         onInitialization();
         onSetListener();
     }
 
-    @SuppressWarnings("deprecation")
-    @SuppressLint("InflateParams")
     private void onInitialization() {
         ((CarePayTextView) findViewById(R.id.heading_text))
                 .setText(Label.getLabel("cancel_appointment_reasons_title"));
@@ -100,7 +101,6 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
         cancelReasonRadioGroup = (RadioGroup) findViewById(R.id.cancelReasonRadioGroup);
         cancelAppointmentButton = (Button) findViewById(R.id.cancelAppointmentButton);
         cancelAppointmentButton.setText(Label.getLabel("cancel_appointments_heading"));
-        SystemUtil.setProximaNovaRegularTypeface(getContext(), cancelAppointmentButton);
 
         cancellationReasons = appointmentInfo.getPayload().getCancellationReasons();
         if (cancellationReasons != null) {
@@ -139,13 +139,11 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
     private void onSetListener() {
         findViewById(R.id.dialogCloseHeaderImageView).setOnClickListener(this);
 
-        cancelReasonRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                AppCompatRadioButton checkedRadioButton = (AppCompatRadioButton) group.findViewById(checkedId);
-                selectedReasonId = group.getCheckedRadioButtonId();
-                onSetColorStateForRadioButton(checkedRadioButton);
-                onSelectionRadioCancel(checkedRadioButton.isChecked());
-            }
+        cancelReasonRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            AppCompatRadioButton checkedRadioButton = group.findViewById(checkedId);
+            selectedReasonId = group.getCheckedRadioButtonId();
+            onSetColorStateForRadioButton(checkedRadioButton);
+            onSelectionRadioCancel(checkedRadioButton.isChecked());
         });
         cancelAppointmentButton.setOnClickListener(this);
     }

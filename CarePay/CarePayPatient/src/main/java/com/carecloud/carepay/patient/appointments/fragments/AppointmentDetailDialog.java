@@ -157,6 +157,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
 
         viewModel = ViewModelProviders.of(getActivity()).get(AppointmentViewModel.class);
         appointmentResultModel = viewModel.getAppointmentsDtoObservable().getValue();
+        setUpViewModel();
 
         isBreezePractice = getPracticeInfo(appointmentResultModel.getPayload().getUserPractices(),
                 appointmentDTO.getMetadata().getPracticeId()).isBreezePractice();
@@ -176,6 +177,19 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
             }
         });
         isCalendarAvailable = getSaveCalendarEventIntent().resolveActivity(getActivity().getPackageManager()) != null;
+    }
+
+    private void setUpViewModel() {
+        viewModel.getQueueStatusObservable().observe(getActivity(), queueStatusPayloadDTO -> {
+            List<QueueDTO> queueList = queueStatusPayloadDTO.getQueueStatus().getQueueStatusInnerPayload().getQueueList();
+            QueueDTO placeInQueue = findPlaceInQueue(queueList, appointmentDTO.getPayload().getId());
+            if (placeInQueue != null) {
+                String place = StringUtil.getOrdinal(ApplicationPreferences.getInstance().getUserLanguage(),
+                        placeInQueue.getRank());
+                queueLayout.setVisibility(View.VISIBLE);
+                queueStatus.setText(getFormattedText(Label.getLabel("appointment_queue_status"), place));
+            }
+        });
     }
 
     private UserPracticeDTO getPracticeInfo(List<UserPracticeDTO> userPractices, String practiceId) {
@@ -315,7 +329,8 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                             || !appointmentDTO.getPayload().isAppointmentOver()) {
                         if (appointmentDTO.getPayload().getAppointmentStatus().getOriginalName() == null &&
                                 !appointmentDTO.getPayload().getVisitType().hasVideoOption()) {
-                            callback.getQueueStatus(appointmentDTO, queueStatusCallback);
+                            viewModel.getQueueStatus(appointmentDTO,
+                                    appointmentResultModel.getMetadata().getLinks().getQueueStatus());
                         }
                         showCheckoutButton(enabledLocations);
                     } else if (appointmentDTO.getPayload().isAppointmentOver()) {
@@ -770,31 +785,31 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     }
 
     private View.OnClickListener scanClick = view -> {
-            callback.onCheckInOfficeStarted(appointmentDTO);
-            //log event to mixpanel
-            String[] params = {getString(R.string.param_appointment_type),
-                    getString(R.string.param_practice_id),
-                    getString(R.string.param_provider_id),
-                    getString(R.string.param_location_id),
-                    getString(R.string.param_patient_id)
-            };
-            Object[] values = {appointmentDTO.getPayload().getVisitType().getName(),
-                    appointmentDTO.getMetadata().getPracticeId(),
-                    appointmentDTO.getPayload().getProvider().getGuid(),
-                    appointmentDTO.getPayload().getLocation().getGuid(),
-                    appointmentDTO.getMetadata().getPatientId()
-            };
-            MixPanelUtil.logEvent(getString(R.string.event_qr_code), params, values);
-            dismiss();
+        callback.onCheckInOfficeStarted(appointmentDTO);
+        //log event to mixpanel
+        String[] params = {getString(R.string.param_appointment_type),
+                getString(R.string.param_practice_id),
+                getString(R.string.param_provider_id),
+                getString(R.string.param_location_id),
+                getString(R.string.param_patient_id)
+        };
+        Object[] values = {appointmentDTO.getPayload().getVisitType().getName(),
+                appointmentDTO.getMetadata().getPracticeId(),
+                appointmentDTO.getPayload().getProvider().getGuid(),
+                appointmentDTO.getPayload().getLocation().getGuid(),
+                appointmentDTO.getMetadata().getPatientId()
+        };
+        MixPanelUtil.logEvent(getString(R.string.event_qr_code), params, values);
+        dismiss();
     };
 
     private View.OnClickListener rescheduleClick = view -> {
-            dismiss();
-            callback.rescheduleAppointment(appointmentDTO);
+        dismiss();
+        callback.rescheduleAppointment(appointmentDTO);
     };
 
     private View.OnClickListener startVideoVisitClick = view -> {
-            callback.startVideoVisit(appointmentDTO);
+        callback.startVideoVisit(appointmentDTO);
     };
 
     @Override

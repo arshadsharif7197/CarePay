@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.payments.models.postmodel;
 
 import androidx.annotation.StringDef;
 
+import com.carecloud.carepaylibray.signinsignup.dto.SignInPayloadMetadata;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
@@ -45,13 +46,17 @@ public class IntegratedPaymentPostModel {
 
     @StringDef({EXECUTION_CLOVER, EXECUTION_ANDROID, EXECUTION_PAYEEZY})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface ExecutionType{};
+    public @interface ExecutionType {
+    }
+
+    ;
 
     @SerializedName("amount")
     private double amount = -1;
 
     @SerializedName("execution")
-    private @ExecutionType String execution;
+    private @ExecutionType
+    String execution;
 
     @SerializedName("external_transaction_response")
     private JsonObject transactionResponse;
@@ -74,6 +79,8 @@ public class IntegratedPaymentPostModel {
     @SerializedName("payment_date")
     private String paymentDate;
 
+    private SignInPayloadMetadata queryMetadata;
+
     public double getAmount() {
         return amount;
     }
@@ -82,7 +89,8 @@ public class IntegratedPaymentPostModel {
         this.amount = amount;
     }
 
-    public @ExecutionType String getExecution() {
+    public @ExecutionType
+    String getExecution() {
         return execution;
     }
 
@@ -122,13 +130,20 @@ public class IntegratedPaymentPostModel {
         this.papiPaymentMethod = papiPaymentMethod;
     }
 
-    public boolean isPaymentModelValid(){
+    public boolean isPaymentModelValid() {
         //// TODO: 8/29/17
         return true;
     }
 
-    public void addLineItem(IntegratedPaymentLineItem paymentLineItem){
+    public void addLineItem(IntegratedPaymentLineItem paymentLineItem) {
         lineItems.add(paymentLineItem);
     }
 
+    public SignInPayloadMetadata getQueryMetadata() {
+        return queryMetadata;
+    }
+
+    public void setQueryMetadata(SignInPayloadMetadata queryMetadata) {
+        this.queryMetadata = queryMetadata;
+    }
 }

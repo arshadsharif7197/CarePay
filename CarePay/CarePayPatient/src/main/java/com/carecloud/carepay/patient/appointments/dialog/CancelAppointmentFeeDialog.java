@@ -1,12 +1,15 @@
 package com.carecloud.carepay.patient.appointments.dialog;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentCancellationFee;
@@ -50,25 +53,17 @@ public class CancelAppointmentFeeDialog extends BaseDialogFragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         TextView cancellationFeeMessageTextView = (TextView) findViewById(R.id.cancellationFeeMessageTextView);
         cancellationFeeMessageTextView.setText(String
                 .format(Label.getLabel("appointment_cancellation_fee_message"), cancellationFeeAmount));
         Button cancelAppointmentButton = (Button) findViewById(R.id.cancelAppointment);
-        cancelAppointmentButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.onCancelAppointmentFeeAccepted();
-                cancel();
-            }
+        cancelAppointmentButton.setOnClickListener(view1 -> {
+            callback.onCancelAppointmentFeeAccepted();
+            cancel();
         });
-        findViewById(R.id.dialogCloseHeaderImageView).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                cancel();
-            }
-        });
+        findViewById(R.id.dialogCloseHeaderImageView).setOnClickListener(view12 -> cancel());
     }
 
     public void setCancelFeeDialogListener(CancelAppointmentFeeDialogListener callback) {

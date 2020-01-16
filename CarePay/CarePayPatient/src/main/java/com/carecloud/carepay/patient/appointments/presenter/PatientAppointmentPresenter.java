@@ -65,6 +65,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
+import com.carecloud.carepaylibray.signinsignup.dto.SignInPayloadMetadata;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.FileDownloadUtil;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
@@ -124,13 +125,66 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         if (cancellationFee == null) {
             showCancellationReasons(appointmentDTO, null);
         } else {
-            practiceId = appointmentDTO.getMetadata().getPracticeId();
-            practiceMgmt = appointmentDTO.getMetadata().getPracticeMgmt();
-            patientId = appointmentDTO.getMetadata().getPatientId();
             CancelAppointmentFeeDialog fragment = CancelAppointmentFeeDialog.newInstance(cancellationFee);
             fragment.setCancelFeeDialogListener(() -> showCancellationReasons(appointmentDTO, cancellationFee));
             viewHandler.displayDialogFragment(fragment, false);
         }
+    }
+
+    private void showCancellationReasons(AppointmentDTO appointmentDTO,
+                                         final AppointmentCancellationFee cancellationFee) {
+        CancelReasonAppointmentDialog dialog = CancelReasonAppointmentDialog
+                .newInstance(appointmentDTO, appointmentsResultModel);
+        dialog.setsCancelReasonAppointmentDialogListener((appointmentDTO1, cancellationReason,
+                                                          cancellationReasonComment) -> {
+            cancellationReasonString = getCancelReason(cancellationReason, cancellationReasonComment);
+            cancelAppointmentDTO = appointmentDTO1;
+            practiceName = getPracticeInfo(appointmentsResultModel.getPayload().getUserPractices(),
+                    appointmentDTO.getMetadata().getPracticeId()).getPracticeName();
+            if (cancellationFee == null) {
+                onCancelAppointment(appointmentDTO1, cancellationReason, cancellationReasonComment);
+            } else {
+                startCancelationFeePayment = true;
+                PatientAppointmentPresenter.this.appointmentDTO = appointmentDTO1;
+                IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
+                postModel.setAmount(Double.parseDouble(cancellationFee.getAmount()));
+                IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
+                paymentLineItem.setAmount(Double.parseDouble(cancellationFee.getAmount()));
+                paymentLineItem.setProviderID(appointmentDTO1.getPayload().getProvider().getGuid());
+                paymentLineItem.setLocationID(appointmentDTO1.getPayload().getLocation().getGuid());
+                paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_CANCELLATION);
+
+
+                postModel.addLineItem(paymentLineItem);
+                postModel.getMetadata().setAppointmentId(appointmentDTO1.getPayload().getId());
+                postModel.getMetadata().setCancellationReasonId(String.valueOf(cancellationReason));
+
+                SignInPayloadMetadata queryMetadata = new SignInPayloadMetadata();
+                queryMetadata.setPracticeId(appointmentDTO.getMetadata().getPracticeId());
+                queryMetadata.setPatientId(appointmentDTO.getMetadata().getPatientId());
+                queryMetadata.setPracticeMgmt(appointmentDTO.getMetadata().getPracticeMgmt());
+                postModel.setQueryMetadata(queryMetadata);
+
+                paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
+                PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
+                        .newInstance(paymentsModel, Double.parseDouble(cancellationFee.getAmount()),
+                                Label.getLabel("appointment_cancellation_fee_title"));
+                viewHandler.addFragment(prepaymentFragment, true);
+
+                String[] params = {getString(R.string.param_payment_amount),
+                        getString(R.string.param_provider_id),
+                        getString(R.string.param_practice_id),
+                        getString(R.string.param_location_id)
+                };
+                Object[] values = {cancellationFee.getAmount(),
+                        appointmentDTO1.getPayload().getProvider().getGuid(),
+                        appointmentDTO1.getMetadata().getPracticeId(),
+                        appointmentDTO1.getPayload().getLocation().getGuid()
+                };
+                MixPanelUtil.logEvent(getString(R.string.event_payment_cancellation_started), params, values);
+            }
+        });
+        viewHandler.displayDialogFragment(dialog, false);
     }
 
     @Override
@@ -158,6 +212,28 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getCancel();
         viewHandler.getWorkflowServiceHelper().execute(transitionDTO, cancelCallback, body, queries);
     }
+
+    private WorkflowServiceCallback cancelCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+            viewHandler.showProgressDialog();
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            viewHandler.hideProgressDialog();
+            SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_cancellation_success_message_HTML"));
+            viewHandler.refreshAppointments();
+            logApptCancelMixpanel();
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            viewHandler.hideProgressDialog();
+            viewHandler.showErrorNotification(exceptionMessage);
+            Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
+        }
+    };
 
     @Override
     public void onCheckInStarted(AppointmentDTO appointmentDTO) {
@@ -229,18 +305,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     @Override
-    public void getQueueStatus(AppointmentDTO appointmentDTO, WorkflowServiceCallback callback) {
-        Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
-        queryMap.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
-        queryMap.put("patient_id", appointmentDTO.getMetadata().getPatientId());
-        queryMap.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
-
-        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getLinks().getQueueStatus();
-        viewHandler.getWorkflowServiceHelper().execute(transitionDTO, callback, queryMap);
-    }
-
-    @Override
     public AppointmentsSettingDTO getAppointmentSettings(String practiceId) {
         List<AppointmentsSettingDTO> appointmentsSettingsList = appointmentsResultModel
                 .getPayload().getAppointmentsSettings();
@@ -283,55 +347,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         return FileDownloadUtil.downloadPdf(getContext(), url, title, ".pdf", "Visit Summary");
     }
 
-    private void showCancellationReasons(AppointmentDTO appointmentDTO,
-                                         final AppointmentCancellationFee cancellationFee) {
-        CancelReasonAppointmentDialog dialog = CancelReasonAppointmentDialog
-                .newInstance(appointmentDTO, appointmentsResultModel);
-        dialog.setsCancelReasonAppointmentDialogListener((appointmentDTO1, cancellationReason,
-                                                          cancellationReasonComment) -> {
-            cancellationReasonString = getCancelReason(cancellationReason, cancellationReasonComment);
-            cancelAppointmentDTO = appointmentDTO1;
-            practiceName = getPracticeInfo(appointmentsResultModel.getPayload().getUserPractices(),
-                    appointmentDTO.getMetadata().getPracticeId()).getPracticeName();
-            if (cancellationFee == null) {
-                onCancelAppointment(appointmentDTO1, cancellationReason, cancellationReasonComment);
-            } else {
-                startCancelationFeePayment = true;
-                PatientAppointmentPresenter.this.appointmentDTO = appointmentDTO1;
-                IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
-                postModel.setAmount(Double.parseDouble(cancellationFee.getAmount()));
-                IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
-                paymentLineItem.setAmount(Double.parseDouble(cancellationFee.getAmount()));
-                paymentLineItem.setProviderID(appointmentDTO1.getPayload().getProvider().getGuid());
-                paymentLineItem.setLocationID(appointmentDTO1.getPayload().getLocation().getGuid());
-                paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_CANCELLATION);
-
-
-                postModel.addLineItem(paymentLineItem);
-                postModel.getMetadata().setAppointmentId(appointmentDTO1.getPayload().getId());
-                postModel.getMetadata().setCancellationReasonId(String.valueOf(cancellationReason));
-                paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
-                PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
-                        .newInstance(paymentsModel, Double.parseDouble(cancellationFee.getAmount()),
-                                Label.getLabel("appointment_cancellation_fee_title"));
-                viewHandler.addFragment(prepaymentFragment, true);
-
-                String[] params = {getString(R.string.param_payment_amount),
-                        getString(R.string.param_provider_id),
-                        getString(R.string.param_practice_id),
-                        getString(R.string.param_location_id)
-                };
-                Object[] values = {cancellationFee.getAmount(),
-                        appointmentDTO1.getPayload().getProvider().getGuid(),
-                        appointmentDTO1.getMetadata().getPracticeId(),
-                        appointmentDTO1.getPayload().getLocation().getGuid()
-                };
-                MixPanelUtil.logEvent(getString(R.string.event_payment_cancellation_started), params, values);
-            }
-        });
-        viewHandler.displayDialogFragment(dialog, false);
-    }
-
     private String getCancelReason(int cancellationReasonId, String cancellationReasonComment) {
         for (CancellationReasonDTO cancellationReason : appointmentsResultModel.getPayload().getCancellationReasons()) {
             if (cancellationReason.getAppointmentCancellationReason().getId().equals(cancellationReasonId)) {
@@ -353,28 +368,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         }
         return null;
     }
-
-    private WorkflowServiceCallback cancelCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            viewHandler.showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            viewHandler.hideProgressDialog();
-            SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_cancellation_success_message_HTML"));
-            viewHandler.refreshAppointments();
-            logApptCancelMixpanel();
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            viewHandler.hideProgressDialog();
-            viewHandler.showErrorNotification(exceptionMessage);
-            Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
 
     private WorkflowServiceCallback getCheckInCallback(final AppointmentDTO appointmentDTO) {
         return new WorkflowServiceCallback() {
