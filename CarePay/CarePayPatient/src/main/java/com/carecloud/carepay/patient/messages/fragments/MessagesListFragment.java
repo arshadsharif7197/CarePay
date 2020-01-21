@@ -125,7 +125,7 @@ public class MessagesListFragment extends BaseFragment
 
     public void refreshListMessages() {
         refreshing = true;
-        viewModel.getThreads(0, 0);
+        viewModel.getThreads(0, 30);
     }
 
     private void setAdapters() {
@@ -220,7 +220,7 @@ public class MessagesListFragment extends BaseFragment
         public void onRefresh() {
             refreshing = true;
             refreshLayoutView.setRefreshing(refreshing);
-            viewModel.getThreads(0, 0);
+            viewModel.getThreads(0, 30);
         }
     };
 
