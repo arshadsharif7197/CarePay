@@ -95,6 +95,10 @@ public class MessagesViewModel extends BaseViewModel {
 
     private void loadDto(TransitionDTO messagesTransition) {
         Map<String, String> queryMap = new HashMap<>();
+        // increasing the number of messages being requested until middleware sorting bug is fixed
+        queryMap.put("page", String.valueOf(1));
+        queryMap.put("limit", String.valueOf(100));
+        
         getWorkflowServiceHelper().execute(messagesTransition,
                 new WorkflowServiceCallback() {
                     @Override
