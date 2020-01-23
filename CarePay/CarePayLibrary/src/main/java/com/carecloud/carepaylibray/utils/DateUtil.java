@@ -823,6 +823,21 @@ public class DateUtil {
     }
 
     /**
+     * Returns the last hour of the day for the provided Date
+     *
+     * @param date Current date set to
+     * @return the date with the last possible hour of the day
+     */
+    public static Date getLastHourOfDay(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int calMaxHourDate = calendar.getActualMaximum(Calendar.HOUR_OF_DAY);
+        calendar.set(Calendar.HOUR_OF_DAY, calMaxHourDate);
+
+        return calendar.getTime();
+    }
+
+    /**
      * Get the number of days elapsed between two dates
      *
      * @param start starting date

@@ -144,9 +144,6 @@ dependencies {
     implementation project(':CarePayPracticeLibrary')
     implementation 'com.clover.sdk:clover-android-sdk:latest.release'
     implementation 'com.clover.sdk:clover-android-connector-sdk:168'
-    implementation 'com.newrelic.agent.android:android-agent:5.22.0'
 
-    def room_version = "1.1.1"
-    implementation 'androidx.room:room-runtime:2.0.0'
-    annotationProcessor 'androidx.room:room-compiler:2.0.0'
+    annotationProcessor 'androidx.room:room-compiler:2.2.3'
 }

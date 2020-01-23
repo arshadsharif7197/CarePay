@@ -37,7 +37,8 @@ public class MedicationsAllergiesEmptyFragment extends BaseCheckinFragment {
     private MedicationsAllergiesResultsModel medicationsAllergiesDTO;
     private int selectedMode;
 
-    public static MedicationsAllergiesEmptyFragment newInstance(MedicationsAllergiesResultsModel medicationsAllergiesDTO, int mode) {
+    public static MedicationsAllergiesEmptyFragment newInstance(MedicationsAllergiesResultsModel medicationsAllergiesDTO,
+                                                                int mode) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, medicationsAllergiesDTO);
         args.putInt(KEY_DISPLAY_MODE, mode);
@@ -185,7 +186,7 @@ public class MedicationsAllergiesEmptyFragment extends BaseCheckinFragment {
         }
     };
 
-    public int getSelectedMode(){
+    public int getSelectedMode() {
         return selectedMode;
     }
 }

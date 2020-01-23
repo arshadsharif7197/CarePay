@@ -58,7 +58,7 @@ public abstract class CarePayApplication extends MultiDexApplication implements 
     @Override
     public AppAuthorizationHelper getAppAuthorizationHelper() {
         if (appAuthorizationHelper == null) {
-            appAuthorizationHelper = new AppAuthorizationHelper(this, getApplicationMode());
+            appAuthorizationHelper = new AppAuthorizationHelper(getApplicationMode());
             getWorkflowServiceHelper().setAppAuthorizationHelper(appAuthorizationHelper);
         }
 

@@ -5,7 +5,10 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
+
+import com.carecloud.carepay.service.library.WorkflowServiceHelper;
+import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
+import com.carecloud.carepaylibray.CarePayApplication;
 
 /**
  * @author pjohnson on 2019-08-12.
@@ -51,5 +54,13 @@ public class BaseViewModel extends AndroidViewModel {
 
     public void setSkeleton(Boolean showSkeleton) {
         this.skeleton.setValue(showSkeleton);
+    }
+
+    protected WorkflowServiceHelper getWorkflowServiceHelper() {
+        return ((CarePayApplication) getApplication()).getWorkflowServiceHelper();
+    }
+
+    protected AppAuthorizationHelper getAppAuthorizationHelper() {
+        return ((CarePayApplication) getApplication()).getAppAuthorizationHelper();
     }
 }

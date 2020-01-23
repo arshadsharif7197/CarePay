@@ -3,7 +3,7 @@ package com.carecloud.carepay.patient.pageObjects.payments
 import com.carecloud.carepay.patient.R
 import com.carecloud.carepay.patient.appContext
 import com.carecloud.carepay.patient.pageObjects.payments.paymentPlan.PaymentPlanAmountScreen
-import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
+import com.carecloud.test_module.actions.CustomViewActions
 
 /**
  * Created by drodriguez on 2019-09-10.
@@ -18,7 +18,7 @@ class ChoosePaymentType : CustomViewActions() {
         return PaymentMethod()
     }
 
-    fun makeFullPaymemt(): PaymentMethod {
+    fun makeFullPayment(): PaymentMethod {
         wait(milliseconds = 1000)
         click(appContext.getString(R.string.content_description_pay_total_amount_button))
         return PaymentMethod()

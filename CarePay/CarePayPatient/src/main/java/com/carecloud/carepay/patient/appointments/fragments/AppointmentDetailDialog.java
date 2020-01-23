@@ -345,7 +345,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                             leftButton.setText(Label.getLabel("sigin_how_check_in_scan_qr_code"));
                             leftButton.setOnClickListener(scanClick);
                             rightButton.setVisibility(View.VISIBLE);
-                            if (appointmentDTO.getPayload().canCheckInNow(callback.getPracticeSettings())) {
+                            if (appointmentDTO.getPayload().canCheckInNow(callback
+                                    .getAppointmentSettings(appointmentDTO.getMetadata().getPracticeId()))) {
                                 rightButton.setText(Label.getLabel("appointments_check_in_now"));
                                 rightButton.setContentDescription(getContext().getString(R.string.content_description_checkin_appointment_button));
                             } else {
@@ -414,7 +415,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                             leftButton.setOnClickListener(scanClick);
                             actionsLayout.setVisibility(View.VISIBLE);
                             rightButton.setVisibility(View.VISIBLE);
-                            if (appointmentDTO.getPayload().canCheckInNow(callback.getPracticeSettings())) {
+                            if (appointmentDTO.getPayload().canCheckInNow(callback
+                                    .getAppointmentSettings(appointmentDTO.getMetadata().getPracticeId()))) {
                                 rightButton.setText(Label.getLabel("appointments_check_in_now"));
                             } else {
                                 rightButton.setText(Label.getLabel("appointments_check_in_early"));
@@ -513,9 +515,11 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     }
 
     private boolean shouldShowCancelButton(Set<String> enabledLocations) {
-        return appointmentDTO.getPayload().isAppointmentCancellable(callback.getPracticeSettings())
+        return appointmentDTO.getPayload().isAppointmentCancellable(callback
+                .getAppointmentSettings(appointmentDTO.getMetadata().getPracticeId()))
                 && isLocationWithBreezeEnabled(enabledLocations)
-                && appointmentResultModel.getPayload().canScheduleAppointments(appointmentDTO.getMetadata().getPracticeId());
+                && appointmentResultModel.getPayload()
+                .canScheduleAppointments(appointmentDTO.getMetadata().getPracticeId());
     }
 
     private boolean isLocationWithBreezeEnabled(Set<String> enabledLocations) {

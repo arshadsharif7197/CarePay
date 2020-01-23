@@ -309,7 +309,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     }
 
     @Override
-    public void showPaymentPendingConfirmation(PaymentsModel paymentsModel) {
+    public void showPaymentPendingConfirmation(PaymentsModel paymentsModel, String practiceId) {
         new CustomMessageToast(this, Label.getLabel("payment_queued_patient"),
                 CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
         initFragments();

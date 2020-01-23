@@ -2,10 +2,6 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +9,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -55,7 +57,6 @@ import java.util.Map;
 public class ChooseCreditCardFragment extends BasePaymentDialogFragment implements CreditCardsListAdapter.CreditCardSelectionListener {
 
     protected Button nextButton;
-    private RecyclerView creditCardsRecyclerView;
 
     protected PaymentCreditCardsPayloadDTO selectedCreditCard;
     protected PaymentsModel paymentsModel;
@@ -65,7 +66,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     protected String titleLabel;
     protected ChooseCreditCardInterface callback;
 
-    protected List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = new ArrayList<>();
+    private List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardList = new ArrayList<>();
     protected boolean onlySelectMode;
 
 
@@ -134,7 +135,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle) {
+    public void onViewCreated(@NonNull View view, Bundle icicle) {
         setupTitleViews(view);
         initializeViews(view);
     }
@@ -147,21 +148,11 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
             toolbar.setTitle("");
             if (getDialog() == null) {
                 toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_nav_back));
-                toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        getActivity().onBackPressed();
-                    }
-                });
+                toolbar.setNavigationOnClickListener(view12 -> getActivity().onBackPressed());
             } else {
                 View close = view.findViewById(R.id.closeViewLayout);
                 if (close != null) {
-                    close.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            cancel();
-                        }
-                    });
+                    close.setOnClickListener(view1 -> cancel());
                 }
                 ViewGroup.LayoutParams layoutParams = title.getLayoutParams();
                 layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -182,10 +173,10 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         Button addNewCardButton = view.findViewById(R.id.addNewCardButton);
         addNewCardButton.setOnClickListener(addNewCardButtonListener);
 
-        creditCardsRecyclerView = view.findViewById(R.id.list_credit_cards);
+        RecyclerView creditCardsRecyclerView = view.findViewById(R.id.list_credit_cards);
         creditCardsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         final CreditCardsListAdapter creditCardsListAdapter = new CreditCardsListAdapter(getContext(),
-                creditCardList, this, false);
+                creditCardList, this, true);
         creditCardsRecyclerView.setAdapter(creditCardsListAdapter);
         for (PaymentsPatientsCreditCardsPayloadListDTO creditCard : creditCardList) {
             if (creditCard.getPayload().isDefault()) {
@@ -404,6 +395,7 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
         selectedCreditCard = creditCard;
         Date expDate = DateUtil.getInstance().setDateRaw(creditCard.getExpireDt()).getDate();
         expDate = DateUtil.getLastDayOfMonth(expDate);
+        expDate = DateUtil.getLastHourOfDay(expDate);
         nextButton.setEnabled(!expDate.before(new Date()));
     }
 

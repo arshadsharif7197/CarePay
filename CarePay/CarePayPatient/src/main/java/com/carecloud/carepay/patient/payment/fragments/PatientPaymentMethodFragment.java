@@ -492,7 +492,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
                     paymentJson.toString(),
                     error);
 
-            callback.showPaymentPendingConfirmation(paymentsModel);
+            callback.showPaymentPendingConfirmation(paymentsModel, practiceId);
         }
     }
 
