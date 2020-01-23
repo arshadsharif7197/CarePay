@@ -2,10 +2,6 @@ package com.carecloud.carepay.practice.library.signin.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +9,22 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.signin.SignInPracticeViewModel;
 import com.carecloud.carepay.practice.library.signin.adapters.PracticeSearchAdapter;
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionDTO;
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionUserPractice;
 import com.carecloud.carepay.practice.library.signin.interfaces.SelectPracticeCallback;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ViewUtils;
@@ -30,7 +35,6 @@ import java.util.List;
 /**
  * Created by lmenendez on 3/9/17.
  */
-
 public class ChoosePracticeFragment extends BaseDialogFragment
         implements PracticeSearchAdapter.SelectPracticeAdapterCallback {
 
@@ -43,6 +47,7 @@ public class ChoosePracticeFragment extends BaseDialogFragment
     private SearchView searchView;
 
     private SelectPracticeCallback callback;
+    private SignInPracticeViewModel viewModel;
 
     public static ChoosePracticeFragment newInstance() {
         Bundle args = new Bundle();
@@ -52,19 +57,20 @@ public class ChoosePracticeFragment extends BaseDialogFragment
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
             callback = (SelectPracticeCallback) context;
         } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached Context must implement SelectPracticeLocationAdapterCallback");
+            throw new ClassCastException("Attached Context must implement SelectPracticeCallback");
         }
     }
 
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        PracticeSelectionDTO practiceSelectionModel = (PracticeSelectionDTO) callback.getDto();
+        viewModel = ViewModelProviders.of(getActivity()).get(SignInPracticeViewModel.class);
+        PracticeSelectionDTO practiceSelectionModel = viewModel.getPracticesInfoDtoObservable().getValue();
         if (practiceSelectionModel != null) {
             practiceList = practiceSelectionModel.getPayload().getUserPracticesList();
         }
@@ -95,12 +101,9 @@ public class ChoosePracticeFragment extends BaseDialogFragment
         continueButton.setOnClickListener(continueClick);
 
         View closeButton = findViewById(R.id.closeViewLayout);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.onSelectPracticeCanceled();
-                dismiss();
-            }
+        closeButton.setOnClickListener(view1 -> {
+            callback.onSelectPracticeCanceled();
+            dismiss();
         });
 
         searchView = view.findViewById(R.id.search_entry_view);
@@ -172,7 +175,13 @@ public class ChoosePracticeFragment extends BaseDialogFragment
         @Override
         public void onClick(View view) {
             if (selectedPractice != null) {
-                callback.onSelectPractice(selectedPractice);
+                if (selectedPractice.getLocations().size() == 1) {
+                    viewModel.authenticate(selectedPractice, selectedPractice.getLocations().get(0));
+                } else {
+                    ChoosePracticeLocationFragment fragment = ChoosePracticeLocationFragment
+                            .newInstance(selectedPractice);
+                    fragment.show(getActivity().getSupportFragmentManager(), fragment.getClass().getName());
+                }
                 dismiss();
             }
         }

@@ -15,7 +15,7 @@ import com.carecloud.carepay.patient.messages.models.MessagingModelDto;
 import com.carecloud.carepay.patient.messages.models.MessagingPostModel;
 import com.carecloud.carepay.patient.messages.models.MessagingThreadDTO;
 import com.carecloud.carepay.patient.messages.models.ProviderContact;
-import com.carecloud.carepay.patient.myhealth.BaseViewModel;
+import com.carecloud.carepaylibray.common.BaseViewModel;
 import com.carecloud.carepay.service.library.RestCallServiceCallback;
 import com.carecloud.carepay.service.library.RestCallServiceHelper;
 import com.carecloud.carepay.service.library.RestDef;

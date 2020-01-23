@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.myhealth;
+package com.carecloud.carepaylibray.common;
 
 import android.app.Application;
 

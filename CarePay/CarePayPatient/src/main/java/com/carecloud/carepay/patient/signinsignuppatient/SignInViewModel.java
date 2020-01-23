@@ -9,7 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.myhealth.BaseViewModel;
+import com.carecloud.carepaylibray.common.BaseViewModel;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
 import com.carecloud.carepay.patient.session.PatientSessionService;
