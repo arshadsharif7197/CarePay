@@ -179,4 +179,25 @@ public class SignInPracticeViewModel extends BaseViewModel {
         Object[] values = {getApplication().getString(R.string.login_password), getApplication().getString(R.string.app_mode_practice)};
         MixPanelUtil.logEvent(getApplication().getString(R.string.event_signin_loginSuccess), params, values);
     }
+
+    public void authenticatePatient(TransitionDTO transitionDTO, Map<String, String> queryMap) {
+        getWorkflowServiceHelper().execute(transitionDTO, new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                setLoading(true);
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                setLoading(false);
+                authenticateDtoObservable.postValue(workflowDTO);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                setLoading(false);
+                setErrorMessage(exceptionMessage);
+            }
+        }, queryMap);
+    }
 }

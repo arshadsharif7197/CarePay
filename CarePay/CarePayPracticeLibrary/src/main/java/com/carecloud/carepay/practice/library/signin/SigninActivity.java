@@ -30,7 +30,6 @@ import com.carecloud.carepay.practice.library.signin.fragments.ChoosePracticeLoc
 import com.carecloud.carepay.practice.library.signin.interfaces.SelectPracticeCallback;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -352,20 +351,19 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             getWorkflowServiceHelper().setAppAuthorizationHelper(getAppAuthorizationHelper());
         }
 
-        Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("language", getApplicationPreferences().getUserLanguage());
 
         if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE) {
             viewModel.getPracticesInfo(transitionDTO);
         } else if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("language", getApplicationPreferences().getUserLanguage());
             queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
             queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
             queryMap.put("patient_id", signInResponse.getPayload().getSignIn().getMetadata().getPatientId());
             getApplicationMode().setPatientId(signInResponse.getPayload().getSignIn().getMetadata().getPatientId());
             ApplicationPreferences.getInstance().setPatientId(signInResponse.getPayload().getSignIn()
                     .getMetadata().getPatientId());
-            getWorkflowServiceHelper().execute(transitionDTO, signInCallback, queryMap);
-
+            viewModel.authenticatePatient(transitionDTO, queryMap);
             identifyPatientUser(signInResponse.getPayload().getSignIn().getMetadata().getUserId());
         }
     }
@@ -432,30 +430,6 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     public void setSignInButtonEnabled(boolean enable) {
         signInButton.setEnabled(enable);
     }
-
-    private WorkflowServiceCallback signInCallback = new WorkflowServiceCallback() {
-
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            setSignInButtonClickable(true);
-            getApplicationPreferences().setAppointmentCounts(null);
-            navigateToWorkFlow(workflowDTO);
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            setSignInButtonClickable(true);
-            showErrorNotification(exceptionMessage);
-            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
 
     private void navigateToWorkFlow(WorkflowDTO workflowDTO) {
         PracticeNavigationHelper.navigateToWorkflow(this, workflowDTO);
