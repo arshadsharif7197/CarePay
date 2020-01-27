@@ -1,5 +1,6 @@
 package com.carecloud.carepay.practice.library.signin.dtos;
 
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -14,13 +15,13 @@ public class PracticeSelectionPayloadDTO {
 
     @SerializedName("user_practices")
     @Expose
-    private List<PracticeSelectionUserPractice> userPracticesList = new ArrayList<>();
+    private List<UserPracticeDTO> userPracticesList = new ArrayList<>();
 
-    public List<PracticeSelectionUserPractice> getUserPracticesList() {
+    public List<UserPracticeDTO> getUserPracticesList() {
         return userPracticesList;
     }
 
-    public void setUserPracticesList(List<PracticeSelectionUserPractice> userPracticesList) {
+    public void setUserPracticesList(List<UserPracticeDTO> userPracticesList) {
         this.userPracticesList = userPracticesList;
     }
 

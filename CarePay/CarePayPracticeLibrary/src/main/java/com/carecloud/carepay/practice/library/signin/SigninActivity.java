@@ -24,7 +24,6 @@ import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionDTO;
-import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionUserPractice;
 import com.carecloud.carepay.practice.library.signin.fragments.ChoosePracticeFragment;
 import com.carecloud.carepay.practice.library.signin.fragments.ChoosePracticeLocationFragment;
 import com.carecloud.carepay.practice.library.signin.interfaces.SelectPracticeCallback;
@@ -32,6 +31,7 @@ import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
@@ -67,7 +67,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     private static final int RESET_PASSWORD = 100;
 
     private enum SignInScreenMode {
-        PRACTICE_MODE_SIGNIN, PATIENT_MODE_SIGNIN;
+        PRACTICE_MODE_SIGNIN, PATIENT_MODE_SIGNIN
     }
 
     private SignInPracticeViewModel viewModel;
@@ -134,7 +134,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
 
         viewModel.getPracticesInfoDtoObservable().observe(this, practiceInfoDto -> {
             practiceSelectionModel = practiceInfoDto;
-            List<PracticeSelectionUserPractice> practiceList = practiceSelectionModel.getPayload()
+            List<UserPracticeDTO> practiceList = practiceSelectionModel.getPayload()
                     .getUserPracticesList();
             if (practiceList.isEmpty()) {
                 onFailure("No Practice associated to this user");
@@ -142,7 +142,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             }
 
             if (practiceList.size() == 1) {
-                PracticeSelectionUserPractice selectedPractice = practiceList.get(0);
+                UserPracticeDTO selectedPractice = practiceList.get(0);
                 if (selectedPractice.getLocations().size() == 0) {
                     onFailure("No locations associated to this practice");
                     return;
@@ -401,7 +401,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     }
 
     @Override
-    public void onSelectPracticeLocationCanceled(PracticeSelectionUserPractice selectedPractice) {
+    public void onSelectPracticeLocationCanceled(UserPracticeDTO selectedPractice) {
         showPracticeSearchFragment();
     }
 

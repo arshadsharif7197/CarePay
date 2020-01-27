@@ -20,11 +20,10 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.signin.SignInPracticeViewModel;
 import com.carecloud.carepay.practice.library.signin.adapters.PracticeSearchAdapter;
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionDTO;
-import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionUserPractice;
 import com.carecloud.carepay.practice.library.signin.interfaces.SelectPracticeCallback;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ViewUtils;
@@ -38,8 +37,8 @@ import java.util.List;
 public class ChoosePracticeFragment extends BaseDialogFragment
         implements PracticeSearchAdapter.SelectPracticeAdapterCallback {
 
-    private List<PracticeSelectionUserPractice> practiceList = new ArrayList<>();
-    private PracticeSelectionUserPractice selectedPractice;
+    private List<UserPracticeDTO> practiceList = new ArrayList<>();
+    private UserPracticeDTO selectedPractice;
 
 
     private RecyclerView searchRecycler;
@@ -123,7 +122,7 @@ public class ChoosePracticeFragment extends BaseDialogFragment
         setAdapter(practiceList);
     }
 
-    private void setAdapter(List<PracticeSelectionUserPractice> practiceList) {
+    private void setAdapter(List<UserPracticeDTO> practiceList) {
         PracticeSearchAdapter practiceSearchAdapter;
         if (searchRecycler.getAdapter() == null) {
             practiceSearchAdapter = new PracticeSearchAdapter(getContext(), practiceList, this);
@@ -141,10 +140,10 @@ public class ChoosePracticeFragment extends BaseDialogFragment
         }
     }
 
-    private PracticeSelectionUserPractice getPreviousSelectedPractice(List<PracticeSelectionUserPractice> practiceList,
-                                                                      String practiceId) {
+    private UserPracticeDTO getPreviousSelectedPractice(List<UserPracticeDTO> practiceList,
+                                                        String practiceId) {
         if (practiceId != null) {
-            for (PracticeSelectionUserPractice practice : practiceList) {
+            for (UserPracticeDTO practice : practiceList) {
                 if (practice.getPracticeId().equals(practiceId)) {
                     return practice;
                 }
@@ -188,7 +187,7 @@ public class ChoosePracticeFragment extends BaseDialogFragment
     };
 
     @Override
-    public void onSelectPractice(PracticeSelectionUserPractice practice) {
+    public void onSelectPractice(UserPracticeDTO practice) {
         searchView.clearFocus();
         SystemUtil.hideSoftKeyboard(getActivity());
         selectedPractice = practice;
@@ -196,8 +195,8 @@ public class ChoosePracticeFragment extends BaseDialogFragment
     }
 
     private void findPractice(String search) {
-        List<PracticeSelectionUserPractice> searchList = new ArrayList<>();
-        for (PracticeSelectionUserPractice practice : practiceList) {
+        List<UserPracticeDTO> searchList = new ArrayList<>();
+        for (UserPracticeDTO practice : practiceList) {
             if (practice.getPracticeName().toLowerCase().contains(search.toLowerCase())) {
                 searchList.add(practice);
             }

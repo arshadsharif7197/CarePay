@@ -1,17 +1,17 @@
 package com.carecloud.carepay.practice.library.signin.adapters;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.carecloud.carepay.practice.library.R;
-import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionUserPractice;
+import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
+
 import java.util.List;
 
 /**
@@ -21,14 +21,14 @@ import java.util.List;
 public class PracticeSearchAdapter extends RecyclerView.Adapter<PracticeSearchAdapter.PracticeViewHolder> {
 
     public interface SelectPracticeAdapterCallback {
-        void onSelectPractice(PracticeSelectionUserPractice practice);
+        void onSelectPractice(UserPracticeDTO practice);
     }
 
     private Context context;
-    private List<PracticeSelectionUserPractice> practiceList = new ArrayList<>();
+    private List<UserPracticeDTO> practiceList;
     private SelectPracticeAdapterCallback callback;
 
-    private PracticeSelectionUserPractice selectedPractice;
+    private UserPracticeDTO selectedPractice;
 
     /**
      * Constructor
@@ -37,7 +37,7 @@ public class PracticeSearchAdapter extends RecyclerView.Adapter<PracticeSearchAd
      * @param practiceList list of practices
      * @param callback     select practice callback
      */
-    public PracticeSearchAdapter(Context context, List<PracticeSelectionUserPractice> practiceList, SelectPracticeAdapterCallback callback) {
+    public PracticeSearchAdapter(Context context, List<UserPracticeDTO> practiceList, SelectPracticeAdapterCallback callback) {
         this.context = context;
         this.practiceList = practiceList;
         this.callback = callback;
@@ -52,7 +52,7 @@ public class PracticeSearchAdapter extends RecyclerView.Adapter<PracticeSearchAd
 
     @Override
     public void onBindViewHolder(PracticeViewHolder holder, int position) {
-        final PracticeSelectionUserPractice practice = practiceList.get(position);
+        final UserPracticeDTO practice = practiceList.get(position);
 
         holder.getPracticeName().setText(practice.getPracticeName());
         if (selectedPractice == null || !practice.getPracticeId().equals(selectedPractice.getPracticeId())) {
@@ -61,15 +61,12 @@ public class PracticeSearchAdapter extends RecyclerView.Adapter<PracticeSearchAd
             holder.getPracticeCheck().setSelected(true);
         }
 
-        holder.getItem().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                selectedPractice = practice;
-                if (callback != null) {
-                    callback.onSelectPractice(practice);
-                }
-                notifyDataSetChanged();
+        holder.getItem().setOnClickListener(view -> {
+            selectedPractice = practice;
+            if (callback != null) {
+                callback.onSelectPractice(practice);
             }
+            notifyDataSetChanged();
         });
 
     }
@@ -79,11 +76,11 @@ public class PracticeSearchAdapter extends RecyclerView.Adapter<PracticeSearchAd
         return practiceList.size();
     }
 
-    public void setSelectedPractice(PracticeSelectionUserPractice selectedPractice) {
+    public void setSelectedPractice(UserPracticeDTO selectedPractice) {
         this.selectedPractice = selectedPractice;
     }
 
-    public void setPracticeList(List<PracticeSelectionUserPractice> practiceList) {
+    public void setPracticeList(List<UserPracticeDTO> practiceList) {
         this.practiceList = practiceList;
     }
 

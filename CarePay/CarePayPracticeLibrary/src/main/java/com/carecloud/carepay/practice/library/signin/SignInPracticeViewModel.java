@@ -7,15 +7,15 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionDTO;
-import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionUserPractice;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.AvailableLocationDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
-import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.common.BaseViewModel;
 import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInResponse;
@@ -127,7 +127,7 @@ public class SignInPracticeViewModel extends BaseViewModel {
         }, queryMap);
     }
 
-    public void authenticate(PracticeSelectionUserPractice selectedPractice, LocationDTO selectedLocation) {
+    public void authenticate(UserPracticeDTO selectedPractice, AvailableLocationDTO selectedLocation) {
         ApplicationPreferences.getInstance().setPracticeId(selectedPractice.getPracticeId());
         ApplicationPreferences.getInstance().setPracticeLocationId(selectedLocation.getId());
         Set<String> locationIds = new HashSet<>();

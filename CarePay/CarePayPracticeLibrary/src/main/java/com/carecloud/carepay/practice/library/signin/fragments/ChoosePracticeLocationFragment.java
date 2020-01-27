@@ -19,9 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.signin.SignInPracticeViewModel;
 import com.carecloud.carepay.practice.library.signin.adapters.PracticeLocationSearchAdapter;
-import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionUserPractice;
 import com.carecloud.carepay.practice.library.signin.interfaces.SelectPracticeCallback;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
+import com.carecloud.carepay.service.library.dtos.AvailableLocationDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
@@ -38,8 +39,8 @@ import java.util.List;
 public class ChoosePracticeLocationFragment extends BaseDialogFragment
         implements PracticeLocationSearchAdapter.SelectPracticeLocationAdapterCallback {
 
-    private List<LocationDTO> locationsList = new ArrayList<>();
-    private LocationDTO selectedLocation;
+    private List<AvailableLocationDTO> locationsList = new ArrayList<>();
+    private AvailableLocationDTO selectedLocation;
 
 
     private RecyclerView searchRecycler;
@@ -47,10 +48,10 @@ public class ChoosePracticeLocationFragment extends BaseDialogFragment
     private SearchView searchView;
 
     private SelectPracticeCallback callback;
-    private PracticeSelectionUserPractice selectedPractice;
+    private UserPracticeDTO selectedPractice;
     private SignInPracticeViewModel viewModel;
 
-    public static ChoosePracticeLocationFragment newInstance(PracticeSelectionUserPractice selectedPractice) {
+    public static ChoosePracticeLocationFragment newInstance(UserPracticeDTO selectedPractice) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, selectedPractice);
 
@@ -72,7 +73,7 @@ public class ChoosePracticeLocationFragment extends BaseDialogFragment
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        selectedPractice = DtoHelper.getConvertedDTO(PracticeSelectionUserPractice.class,
+        selectedPractice = DtoHelper.getConvertedDTO(UserPracticeDTO.class,
                 getArguments());
         locationsList = selectedPractice.getLocations();
         viewModel = ViewModelProviders.of(getActivity()).get(SignInPracticeViewModel.class);
@@ -126,7 +127,7 @@ public class ChoosePracticeLocationFragment extends BaseDialogFragment
         }
     }
 
-    private void setAdapter(List<LocationDTO> locationList) {
+    private void setAdapter(List<AvailableLocationDTO> locationList) {
         PracticeLocationSearchAdapter practiceLocationSearchAdapter;
         if (searchRecycler.getAdapter() == null) {
             practiceLocationSearchAdapter = new PracticeLocationSearchAdapter(locationList, this);
@@ -144,9 +145,9 @@ public class ChoosePracticeLocationFragment extends BaseDialogFragment
         }
     }
 
-    private LocationDTO getPreviousSelectedLocation(Integer practiceLocationId) {
+    private AvailableLocationDTO getPreviousSelectedLocation(Integer practiceLocationId) {
         if (practiceLocationId != null) {
-            for (LocationDTO locationDTO : locationsList) {
+            for (AvailableLocationDTO locationDTO : locationsList) {
                 if (locationDTO.getId().equals(practiceLocationId)) {
                     return locationDTO;
                 }
@@ -184,8 +185,8 @@ public class ChoosePracticeLocationFragment extends BaseDialogFragment
     };
 
     private void findPractice(String search) {
-        List<LocationDTO> searchList = new ArrayList<>();
-        for (LocationDTO location : locationsList) {
+        List<AvailableLocationDTO> searchList = new ArrayList<>();
+        for (AvailableLocationDTO location : locationsList) {
             if (location.getName().toLowerCase().contains(search.toLowerCase())) {
                 searchList.add(location);
             }
@@ -201,7 +202,7 @@ public class ChoosePracticeLocationFragment extends BaseDialogFragment
     }
 
     @Override
-    public void onSelectPracticeLocation(LocationDTO location) {
+    public void onSelectPracticeLocation(AvailableLocationDTO location) {
         searchView.clearFocus();
         SystemUtil.hideSoftKeyboard(getActivity());
         selectedLocation = location;

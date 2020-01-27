@@ -1,6 +1,6 @@
 package com.carecloud.carepay.practice.library.signin.interfaces;
 
-import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionUserPractice;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.interfaces.DTOInterface;
 
 /**
@@ -10,5 +10,5 @@ public interface SelectPracticeCallback extends DTOInterface {
 
     void onSelectPracticeCanceled();
 
-    void onSelectPracticeLocationCanceled(PracticeSelectionUserPractice selectedPractice);
+    void onSelectPracticeLocationCanceled(UserPracticeDTO selectedPractice);
 }
