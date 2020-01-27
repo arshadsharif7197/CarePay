@@ -7,6 +7,7 @@ import android.webkit.MimeTypeMap;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.carecloud.carepay.patient.messages.fragments.MessagesListFragment;
 import com.carecloud.carepay.patient.messages.fragments.MessagesNewThreadFragment;
 import com.carecloud.carepay.patient.messages.models.AttachmentPostModel;
 import com.carecloud.carepay.patient.messages.models.AttachmentUploadModel;
@@ -97,7 +98,7 @@ public class MessagesViewModel extends BaseViewModel {
         Map<String, String> queryMap = new HashMap<>();
         // increasing the number of messages being requested until middleware sorting bug is fixed
         queryMap.put("page", String.valueOf(1));
-        queryMap.put("limit", String.valueOf(100));
+        queryMap.put("limit", String.valueOf(MessagesListFragment.DEFAULT_PAGE_SIZE));
         
         getWorkflowServiceHelper().execute(messagesTransition,
                 new WorkflowServiceCallback() {
