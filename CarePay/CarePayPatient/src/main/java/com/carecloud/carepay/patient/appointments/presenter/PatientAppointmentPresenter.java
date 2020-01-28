@@ -18,6 +18,7 @@ import com.carecloud.carepay.patient.appointments.createappointment.RequestAppoi
 import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentFeeDialog;
 import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentDetailDialog;
+import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepay.patient.appointments.models.PracticeInformationMiniPayload;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.checkout.AllDoneDialogFragment;
@@ -453,7 +454,15 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void onPrepaymentFailed() {
-
+        getSupportFragmentManager().popBackStackImmediate();
+        getSupportFragmentManager().popBackStackImmediate();
+        getSupportFragmentManager().popBackStackImmediate();
+        getSupportFragmentManager().popBackStackImmediate();
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container_main);
+        displayToolbar(true, null);
+        if (fragment instanceof AppointmentsListFragment) {
+            ((AppointmentsListFragment) fragment).doRefreshAction();
+        }
     }
 
     @Override

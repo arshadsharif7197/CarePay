@@ -6,7 +6,7 @@ import android.os.Bundle;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepaylibray.appointments.interfaces.AppointmentPrepaymentCallback;
-import com.carecloud.carepaylibray.checkout.CheckOutInterface;
+import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -21,8 +21,11 @@ public class PrepaymentAddNewCreditCardFragment extends AddNewCreditCardFragment
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof CheckOutInterface) {
+        if (context instanceof AppointmentPrepaymentCallback) {
             appointmentPrepaymentCallback = (AppointmentPrepaymentCallback) context;
+        } else if (context instanceof AppointmentViewHandler) {
+            appointmentPrepaymentCallback = (AppointmentPrepaymentCallback)
+                    ((AppointmentViewHandler) context).getAppointmentPresenter();
         }
     }
 

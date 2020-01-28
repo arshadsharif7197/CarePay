@@ -249,7 +249,7 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
         });
     }
 
-    private void doRefreshAction() {
+    public void doRefreshAction() {
         // API call to fetch latest appointments
         TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getLinks().getAppointments();
         getWorkflowServiceHelper().execute(transitionDTO, pageRefreshCallback);

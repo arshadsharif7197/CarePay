@@ -32,7 +32,7 @@ public class PrepaymentPracticeChooseCreditCardFragment extends PracticeChooseCr
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof CheckOutInterface) {
+        if (context instanceof AppointmentPrepaymentCallback) {
             appointmentPrepaymentCallback = (AppointmentPrepaymentCallback) context;
         }
     }
