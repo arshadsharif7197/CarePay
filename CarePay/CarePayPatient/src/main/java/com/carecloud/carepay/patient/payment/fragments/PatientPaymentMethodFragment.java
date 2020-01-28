@@ -67,7 +67,8 @@ import static com.carecloud.carepay.patient.R.id.paymentAmount;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PatientPaymentMethodFragment extends PaymentMethodFragment implements AndroidPayAdapter.AndroidPayReadyCallback, AndroidPayAdapter.AndroidPayProcessingCallback {
+public class PatientPaymentMethodFragment extends PaymentMethodFragment
+        implements AndroidPayAdapter.AndroidPayReadyCallback, AndroidPayAdapter.AndroidPayProcessingCallback {
 
     //Patient Specific Stuff
     private ProgressBar paymentMethodFragmentProgressBar;
@@ -177,7 +178,8 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         if (androidPayAdapter == null) {
-                            androidPayAdapter = new AndroidPayAdapter(getActivity(), paymentsModel.getPaymentPayload().getMerchantServices());
+                            androidPayAdapter = new AndroidPayAdapter(getActivity(),
+                                    paymentsModel.getPaymentPayload().getMerchantServices());
                         }
                         androidPayAdapter.handleGooglePaymentData(data, papiAccount, amountToMakePayment, this);
                         break;
@@ -389,7 +391,8 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
                 queries.put("patient_id", findPatientId(userPracticeDTO.getPracticeId()));
             }
         } else {
-            PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
+            PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances()
+                    .get(0).getBalances().get(0).getMetadata();
             queries.put("practice_mgmt", metadata.getPracticeMgmt());
             queries.put("practice_id", metadata.getPracticeId());
             queries.put("patient_id", metadata.getPatientId());
@@ -424,7 +427,8 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
             public void onFailure(ServerErrorDTO serverErrorDto) {
                 hideProgressDialog();
                 System.out.print(serverErrorDto.getMessage().getBody().getError().getMessage());
-                logPaymentFail("Failed to reach make payment endpoint", true, rawResponse, serverErrorDto.getMessage().getBody().getError().getMessage());
+                logPaymentFail("Failed to reach make payment endpoint", true,
+                        rawResponse, serverErrorDto.getMessage().getBody().getError().getMessage());
             }
         };
     }
@@ -455,7 +459,8 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
             practiceId = userPracticeDTO.getPracticeId();
             practiceMgmt = findPatientId(userPracticeDTO.getPracticeId());
         } else {
-            PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
+            PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload()
+                    .getPatientBalances().get(0).getBalances().get(0).getMetadata();
             patientId = metadata.getPracticeMgmt();
             practiceId = metadata.getPracticeId();
             practiceMgmt = metadata.getPatientId();
@@ -496,7 +501,13 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         }
     }
 
-    private void queuePayment(double amount, IntegratedPaymentPostModel postModel, String patientID, String practiceId, String practiceMgmt, String paymentJson, String errorMessage) {
+    private void queuePayment(double amount,
+                              IntegratedPaymentPostModel postModel,
+                              String patientID,
+                              String practiceId,
+                              String practiceMgmt,
+                              String paymentJson,
+                              String errorMessage) {
         if (postModel != null) {
 
             if (postModel.getExecution() == null) {
@@ -537,7 +548,8 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         paymentRecord.setPatientID(patientID);
         paymentRecord.setPracticeID(practiceId);
         paymentRecord.setPracticeMgmt(practiceMgmt);
-        paymentRecord.setQueueTransition(gson.toJson(paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getQueuePayment()));
+        paymentRecord.setQueueTransition(gson.toJson(paymentsModel.getPaymentsMetadata()
+                .getPaymentsTransitions().getQueuePayment()));
         paymentRecord.setUsername(getApplicationPreferences().getUserId());
 
         String paymentModelJsonEnc = EncryptionUtil.encrypt(getContext(), paymentModelJson, practiceId);

@@ -3,6 +3,8 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -65,7 +67,7 @@ public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFr
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle) {
+    public void onViewCreated(@NonNull View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         View closeButton = view.findViewById(R.id.closeViewLayout);
         closeButton.setOnClickListener(new View.OnClickListener() {

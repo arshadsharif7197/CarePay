@@ -364,7 +364,6 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
                 dismiss();
             }
             showConfirmation(workflowDTO);
-
         }
 
         @Override
@@ -373,7 +372,6 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
             showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
             nextButton.setEnabled(true);
             System.out.print(serverErrorDto.getMessage().getBody().getError().getMessage());
-
             String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
             Object[] values = {amountToMakePayment, getString(R.string.payment_card_on_file)};
             MixPanelUtil.logEvent(getString(R.string.event_payment_failed), params, values);
