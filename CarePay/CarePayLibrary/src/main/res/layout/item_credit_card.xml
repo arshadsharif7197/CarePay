@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground">
 
     <View
         android:id="@+id/divider"
@@ -16,8 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="@dimen/payment_method_layout_checkbox_margin"
         android:layout_marginTop="@dimen/payment_method_layout_checkbox_margin"
+        android:layout_marginBottom="@dimen/payment_method_layout_checkbox_margin"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -44,10 +45,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/button_rounded_gray_background"
-            android:paddingBottom="@dimen/dimen_3dp"
-            android:paddingEnd="@dimen/dimen_8dp"
             android:paddingStart="@dimen/dimen_8dp"
             android:paddingTop="@dimen/dimen_3dp"
+            android:paddingEnd="@dimen/dimen_8dp"
+            android:paddingBottom="@dimen/dimen_3dp"
             android:text="Default"
             android:textSize="@dimen/text_size_13"
             app:customAssetFont="proxima_nova_regular" />

@@ -2,43 +2,27 @@ package com.carecloud.carepay.patient.messages.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.textfield.TextInputLayout;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.MessageNavigationCallback;
-import com.carecloud.carepay.patient.messages.models.AttachmentPostModel;
-import com.carecloud.carepay.patient.messages.models.AttachmentUploadModel;
-import com.carecloud.carepay.patient.messages.models.Messages;
-import com.carecloud.carepay.patient.messages.models.MessagingModel;
-import com.carecloud.carepay.patient.messages.models.MessagingPostModel;
-import com.carecloud.carepay.patient.messages.models.MessagingThreadDTO;
+import com.carecloud.carepay.patient.messages.MessagesViewModel;
 import com.carecloud.carepay.patient.messages.models.ProviderContact;
-import com.carecloud.carepay.service.library.RestCallServiceCallback;
-import com.carecloud.carepay.service.library.RestCallServiceHelper;
-import com.carecloud.carepay.service.library.RestDef;
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
@@ -48,12 +32,10 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.gson.JsonElement;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.File;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by lmenendez on 7/7/17
@@ -72,8 +54,7 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
     private MediaScannerPresenter mediaScannerPresenter;
 
     private File attachmentFile;
-    private AttachmentPostModel attachmentPostModel;
-    private MessagingModel messagingModel;
+    private MessagesViewModel viewModel;
 
     /**
      * Get a new instance of MessagesNewThreadFragment
@@ -84,14 +65,13 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
     public static MessagesNewThreadFragment newInstance(ProviderContact provider) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, provider);
-
         MessagesNewThreadFragment fragment = new MessagesNewThreadFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
             callback = (MessageNavigationCallback) context;
@@ -103,13 +83,18 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-
         Bundle args = getArguments();
         if (args != null) {
             provider = DtoHelper.getConvertedDTO(ProviderContact.class, args);
         }
-        messagingModel = (MessagingModel) callback.getDto();
-
+        viewModel = ViewModelProviders.of(getActivity()).get(MessagesViewModel.class);
+        viewModel.getNewThreadObservable()
+                .observe(this, messagingThreadDTO -> {
+                    String[] params = {getString(R.string.param_provider_id), getString(R.string.param_provider_name)};
+                    Object[] values = {provider.getId(), provider.getName()};
+                    MixPanelUtil.logEvent(getString(R.string.event_message_new), params, values);
+                    callback.displayThreadMessages(messagingThreadDTO.getPayload(), true);
+                });
     }
 
     @Override
@@ -126,7 +111,6 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
     @Override
     public void onViewCreated(@NonNull View view, Bundle icicle) {
         initToolbar(view);
-
         TextInputLayout subjectLayout = view.findViewById(R.id.subjectInputLayout);
         subjectInput = view.findViewById(R.id.subjectEditText);
         subjectInput.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(subjectLayout, null));
@@ -138,8 +122,8 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
         messageInput.addTextChangedListener(getEmptyTextWatcher(messageLayout));
 
         buttonCreate = view.findViewById(R.id.new_message_button);
-        buttonCreate.setOnClickListener(view1 -> postNewMessage(provider, subjectInput.getText().toString(),
-                messageInput.getText().toString()));
+        buttonCreate.setOnClickListener(view1 -> viewModel.postNewThread(provider, attachmentFile,
+                null, subjectInput.getText().toString(), messageInput.getText().toString()));
 
         attachmentInput = view.findViewById(R.id.attachmentEditText);
 
@@ -147,7 +131,6 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
         clearAttachmentButton.setOnClickListener(view12 -> {
             attachmentFile = null;
             attachmentInput.setText(null);
-            attachmentPostModel = null;
             view12.setVisibility(View.INVISIBLE);
         });
         setUpBottomSheet(view);
@@ -158,7 +141,6 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(Label.getLabel("messaging_subject_title"));
-
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
         toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
     }
@@ -171,7 +153,6 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
     }
 
     private void setUpBottomSheet(View view) {
-
         final View shadow = view.findViewById(R.id.shadow);
         LinearLayout llBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet);
         final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
@@ -245,122 +226,6 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
                     layout.setErrorEnabled(true);
                     layout.setError(Label.getLabel("demographics_required_field_msg"));
                 }
-            }
-        };
-    }
-
-    private void postNewMessage(ProviderContact providerContact, String subject, String message) {
-        if (attachmentFile != null) {
-            uploadFile(attachmentFile);
-            return;
-        }
-
-        message = message.replace("\n", "<br/>");
-        MessagingPostModel postModel = new MessagingPostModel();
-        Messages.Participant participant = postModel.getParticipant();
-        participant.setName(providerContact.getName());
-        participant.setUserId(providerContact.getId());
-        participant.setLinkedPatientId(providerContact.getPatientId());
-
-        postModel.setMessage(message);
-        postModel.setSubject(subject);
-
-        if (attachmentPostModel != null) {
-            attachmentPostModel.setPatientId(providerContact.getPatientId());
-            attachmentPostModel.setPracticeId(providerContact.getBusinessEntityId());
-
-            postModel.setAttachments(new ArrayList<>());
-            postModel.getAttachments().add(attachmentPostModel);
-        }
-
-        TransitionDTO newMessage = messagingModel.getMetadata().getLinks().getNewMessage();
-        getWorkflowServiceHelper().execute(newMessage, postNewMessageCallback(providerContact),
-                DtoHelper.getStringDTO(postModel));
-
-    }
-
-    private WorkflowServiceCallback postNewMessageCallback(final ProviderContact provider) {
-        return new WorkflowServiceCallback() {
-            @Override
-            public void onPreExecute() {
-                showProgressDialog();
-            }
-
-            @Override
-            public void onPostExecute(WorkflowDTO workflowDTO) {
-                hideProgressDialog();
-                MessagingThreadDTO messagingThreadDTO = DtoHelper
-                        .getConvertedDTO(MessagingThreadDTO.class, workflowDTO);
-                String[] params = {getString(R.string.param_provider_id), getString(R.string.param_provider_name)};
-                Object[] values = {provider.getId(), provider.getName()};
-                MixPanelUtil.logEvent(getString(R.string.event_message_new), params, values);
-                callback.displayThreadMessages(messagingThreadDTO.getPayload(), true);
-            }
-
-            @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
-                hideProgressDialog();
-                showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
-            }
-        };
-    }
-
-    private void uploadFile(File file) {
-        TransitionDTO transitionDTO = messagingModel.getMetadata().getLinks().getUploadAttachment();
-        Uri uri = Uri.parse(transitionDTO.getUrl());
-        String path = uri.getPath();
-        String baseUrl = transitionDTO.getUrl();
-        if (baseUrl != null && path != null) {
-            baseUrl = baseUrl.substring(0, baseUrl.length() - path.length());
-        }
-        RestCallServiceHelper restCallServiceHelper = new RestCallServiceHelper(getAppAuthorizationHelper(),
-                getApplicationMode());
-        restCallServiceHelper.executeRequest(RestDef.POST,
-                baseUrl,
-                getUploadCallback(file),
-                true,
-                false,
-                null,
-                new HashMap<>(),
-                null,
-                file,
-                path.replace("/", ""));
-    }
-
-    private RestCallServiceCallback getUploadCallback(final File file) {
-        return new RestCallServiceCallback() {
-            @Override
-            public void onPreExecute() {
-                showProgressDialog();
-            }
-
-            @Override
-            public void onPostExecute(JsonElement jsonElement) {
-                hideProgressDialog();
-                Log.d(MessagesNewThreadFragment.class.getName(), jsonElement != null ? jsonElement.toString() : "no data");
-                if (jsonElement != null && jsonElement.isJsonObject()) {
-                    AttachmentUploadModel uploadModel = DtoHelper.getConvertedDTO(AttachmentUploadModel.class,
-                            jsonElement.getAsJsonObject());
-                    String extension = MimeTypeMap.getFileExtensionFromUrl(URLEncoder
-                            .encode(file.getAbsolutePath()).replace("+", "%20"));
-                    attachmentPostModel = new AttachmentPostModel();
-                    attachmentPostModel.setNodeId(uploadModel.getNodeId());
-                    attachmentPostModel.setDescription(file.getName());
-                    attachmentPostModel.setFormat(extension);
-                    if (attachmentPostModel.getFormat() == null && "json".equals(extension)) {
-                        attachmentPostModel.setFormat("application/json");
-                    }
-
-                    attachmentFile = null;
-                    postNewMessage(provider, subjectInput.getText().toString(), messageInput.getText().toString());
-                }
-            }
-
-            @Override
-            public void onFailure(String errorMessage) {
-                hideProgressDialog();
-                showErrorNotification(errorMessage);
-                Log.d(MessagesNewThreadFragment.class.getName(), errorMessage);
             }
         };
     }

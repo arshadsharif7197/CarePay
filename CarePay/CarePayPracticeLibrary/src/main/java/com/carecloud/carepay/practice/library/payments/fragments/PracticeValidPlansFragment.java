@@ -34,12 +34,7 @@ public class PracticeValidPlansFragment extends ValidPlansFragment {
     @Override
     protected void setupToolBar(View view) {
         View closeButton = view.findViewById(R.id.closeViewLayout);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancel();
-            }
-        });
+        closeButton.setOnClickListener(v -> cancel());
 
     }
 
@@ -52,9 +47,10 @@ public class PracticeValidPlansFragment extends ValidPlansFragment {
             callback.displayDialogFragment(fragment, true);
             hideDialog();
         } else {
-            dismiss();
+            hideDialog(true);
             PatientModeAddExistingPaymentPlanFullFragment fragment = PatientModeAddExistingPaymentPlanFullFragment
-                .newInstance(paymentsModel, selectedBalance, paymentPlan, paymentPlanAmount);
+                    .newInstance(paymentsModel, selectedBalance, paymentPlan, paymentPlanAmount);
+            fragment.setOnCancelListener(dialog -> showDialog(true));
             callback.navigateToFragment(fragment, true);
         }
     }

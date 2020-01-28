@@ -4,12 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.widget.Toolbar;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.db.BreezeDataBase;
@@ -485,7 +486,7 @@ public class AndroidPayDialogFragment extends BaseDialogFragment implements Andr
                     paymentJson.toString(),
                     error);
 
-            callback.showPaymentPendingConfirmation(paymentsModel);
+            callback.showPaymentPendingConfirmation(paymentsModel, practiceId);
         }
     }
 

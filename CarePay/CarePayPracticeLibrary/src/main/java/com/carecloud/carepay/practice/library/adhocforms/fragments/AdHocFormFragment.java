@@ -76,7 +76,7 @@ public class AdHocFormFragment extends BaseWebFormFragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         formsList = callback.getFormsList();
         if (formsList != null) {
@@ -202,15 +202,12 @@ public class AdHocFormFragment extends BaseWebFormFragment {
     }
 
     /**
-     * @return a boolean indicating if it intercepts the event
      */
-    public boolean navigateBack() {
+    public void navigateBack() {
         if (getTotalForms() > 1 && getDisplayedFormsIndex() > 0) {
             setDisplayedFormsIndex(getDisplayedFormsIndex() - 1);
             displayNextForm(filledForms);
-            return true;
         }
-        return false;
     }
 
     @Override

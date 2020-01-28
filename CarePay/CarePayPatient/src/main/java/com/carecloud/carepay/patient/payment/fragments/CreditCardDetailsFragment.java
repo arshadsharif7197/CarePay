@@ -298,6 +298,7 @@ public class CreditCardDetailsFragment extends BaseFragment {
     private boolean checkCreditCardExpired() {
         Date expDate = DateUtil.getInstance().setDateRaw(creditCardsPayloadDTO.getPayload().getExpireDt()).getDate();
         expDate = DateUtil.getLastDayOfMonth(expDate);
+        expDate = DateUtil.getLastHourOfDay(expDate);
         return expDate.before(new Date());
     }
 }

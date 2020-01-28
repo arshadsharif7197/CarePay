@@ -115,7 +115,8 @@
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="payment_options_button"
                 tools:text="Pay Now"
-                tools:ignore="ButtonStyle"/>
+                tools:ignore="ButtonStyle"
+                android:contentDescription="@string/content_description_payment_options_button"/>
 
         </LinearLayout>
     </LinearLayout>

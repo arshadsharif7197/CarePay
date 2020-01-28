@@ -55,7 +55,7 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
         } else if (context instanceof ScheduleAppointmentInterface) {
             callback = (ScheduleAppointmentInterface) context;
         } else {
-            throw new ClassCastException("context must implement AppointmentViewHandler.");
+            throw new ClassCastException("context must implement ScheduleAppointmentInterface.");
         }
     }
 

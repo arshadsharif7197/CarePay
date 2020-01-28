@@ -172,7 +172,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
                     demographicsView.getContext().getString(R.string.param_last_completed_step),
                     demographicsView.getContext().getString(R.string.param_is_guest)
             };
-            Object[] values ={
+            Object[] values = {
                     currentStep,
                     isGuest,
             };
@@ -180,7 +180,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
                     params, values);
         }
         if (currentFragment instanceof ResponsibilityBaseFragment) {
-            logCheckinCompleted(false,false, null);
+            logCheckinCompleted(false, false, null);
         }
     }
 
@@ -356,7 +356,8 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         }
         navigateToFragment(fragment, true);
 
-        if (!checkEmpty) {
+        if (!checkEmpty && !medicationsAllergiesDTO.getPayload().getCheckinSettings().isAllowMedicationPicture()
+                && medicationsAllergiesDTO.getPayload().getMedications().getPayload().isEmpty()) {
             showMedicationAllergySearchFragment(MedicationAllergySearchFragment.MEDICATION_ITEM);
         }
 

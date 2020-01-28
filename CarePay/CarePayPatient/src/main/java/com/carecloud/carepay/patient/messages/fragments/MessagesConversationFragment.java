@@ -4,10 +4,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -16,19 +12,21 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.MessageNavigationCallback;
+import com.carecloud.carepay.patient.messages.MessagesViewModel;
 import com.carecloud.carepay.patient.messages.adapters.MessagesConversationAdapter;
 import com.carecloud.carepay.patient.messages.models.MessageAttachment;
 import com.carecloud.carepay.patient.messages.models.Messages;
-import com.carecloud.carepay.patient.messages.models.MessagingModel;
-import com.carecloud.carepay.patient.messages.models.MessagingPostModel;
-import com.carecloud.carepay.patient.messages.models.MessagingThreadDTO;
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.patient.messages.models.MessagingModelDto;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.common.DocumentDetailFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -55,13 +53,13 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
     private RecyclerView recyclerView;
     private EditText messageTextInput;
     private View sendButton;
-    private View messageInputContainer;
 
     private boolean refreshing = true;
 
     private MessageAttachment selectedAttachment;
     private String selectedAttachmentFormat;
-    private MessagingModel messagingModel;
+    private MessagingModelDto messagingDto;
+    private MessagesViewModel viewModel;
 
     /**
      * Get new instance of MessagesConversationFragment
@@ -92,12 +90,21 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        Bundle args = getArguments();
-        if (args != null) {
-            thread = DtoHelper.getConvertedDTO(Messages.Reply.class, args);
-        }
-        messagingModel = (MessagingModel) callback.getDto();
+        thread = DtoHelper.getConvertedDTO(Messages.Reply.class, getArguments());
+        setUpViewModel();
+    }
 
+    private void setUpViewModel() {
+        viewModel = ViewModelProviders.of(getActivity()).get(MessagesViewModel.class);
+        messagingDto = viewModel.getMessagesDto().getValue();
+        viewModel.getThreadMessagesObservable(true).observe(this, messagingThreadDTO
+                -> updateThreadMessages(messagingThreadDTO.getPayload()));
+        viewModel.getNewMessageInThreadObservable(true).observe(this, messagingThreadDTO
+                -> {
+            updateThreadMessages(messagingThreadDTO.getPayload());
+            MixPanelUtil.logEvent(getString(R.string.event_message_reply));
+            messageTextInput.setText(null);
+        });
     }
 
 
@@ -107,26 +114,20 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle) {
+    public void onViewCreated(@NonNull View view, Bundle icicle) {
         initToolbar(view);
-
         recyclerView = view.findViewById(R.id.messages_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View view, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                if (recyclerView.getAdapter() != null) {
-                    recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
-                }
+        recyclerView.addOnLayoutChangeListener((view1, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+            if (recyclerView.getAdapter() != null) {
+                recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
             }
         });
 
         sendButton = view.findViewById(R.id.button_send);
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                postNewMessage();
-            }
+        sendButton.setOnClickListener(view12 -> {
+            refreshing = true;
+            viewModel.postNewMessageInThread(thread, messageTextInput.getText().toString());
         });
         sendButton.setEnabled(false);
         sendButton.setClickable(false);
@@ -134,14 +135,15 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
         messageTextInput = view.findViewById(R.id.message_input);
         messageTextInput.addTextChangedListener(messageInputListener);
 
-        messageInputContainer = view.findViewById(R.id.messageInputContainer);
+        TextView threadProviderTextView = view.findViewById(R.id.threadProviderTextView);
+        threadProviderTextView.setText(digProvider(thread));
     }
 
     @Override
     public void onResume() {
         super.onResume();
         refreshing = true;
-        refreshThreadMessages();
+        viewModel.getThreadMessages(thread);
         callback.displayToolbar(false, null);
     }
 
@@ -150,16 +152,8 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(thread.getSubject());
 
-        TextView subTitle = toolbar.findViewById(R.id.toolbar_subtitle);
-        subTitle.setText(digProvider(thread));
-
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
     }
 
     private void setAdapter() {
@@ -168,33 +162,11 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
             adapter.setMessages(messages);
         } else {
             adapter = new MessagesConversationAdapter(getContext(), this, messages,
-                    messagingModel.getPayload().getInbox().getUserId(), messagingModel.getMetadata());
+                    messagingDto.getPayload().getInbox().getUserId(), messagingDto.getMetadata());
             recyclerView.setAdapter(adapter);
         }
 
         recyclerView.scrollToPosition(messages.size() - 1);
-    }
-
-    private void postNewMessage() {
-        String message = messageTextInput.getText().toString();
-        if (!StringUtil.isNullOrEmpty(message)) {
-//            callback.postMessage(thread, message);
-            message = message.replace("\n", "<br/>");
-            refreshing = true;
-
-            Map<String, String> queryMap = new HashMap<>();
-            queryMap.put("message_id", thread.getId());
-
-            MessagingPostModel postModel = new MessagingPostModel();
-            String userId = messagingModel.getPayload().getInbox().getUserId();
-            postModel.getParticipant().setUserId(userId);
-            postModel.getParticipant().setName(messagingModel.getPayload().lookupName(thread, userId));
-            postModel.setMessage(message);
-
-            TransitionDTO reply = messagingModel.getMetadata().getLinks().getReply();
-            getWorkflowServiceHelper().execute(reply, getMessagesCallback(true), DtoHelper.getStringDTO(postModel), queryMap);
-        }
-        messageTextInput.setText(null);
     }
 
     /**
@@ -219,15 +191,6 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
         messages.add(0, thread);//need to add the OP to the list of replies because its not included
         return messages;
     }
-
-    private void refreshThreadMessages() {
-        Map<String, String> queryMap = new HashMap<>();
-        queryMap.put("message_id", thread.getId());
-
-        TransitionDTO messages = messagingModel.getMetadata().getLinks().getMessage();
-        getWorkflowServiceHelper().execute(messages, getMessagesCallback(false), queryMap);
-    }
-
 
     private TextWatcher messageInputListener = new TextWatcher() {
         @Override
@@ -261,40 +224,12 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
         }
 
         for (Messages.Participant participant : thread.getParticipants()) {
-            if (!participant.getUserId().equals(messagingModel.getPayload().getInbox().getUserId())) {
+            if (!participant.getUserId().equals(messagingDto.getPayload().getInbox().getUserId())) {
                 return participant.getName();
             }
         }
 
         return null;
-    }
-
-
-    private WorkflowServiceCallback getMessagesCallback(final boolean postNewMessage) {
-        return new WorkflowServiceCallback() {
-            @Override
-            public void onPreExecute() {
-                showProgressDialog();
-            }
-
-            @Override
-            public void onPostExecute(WorkflowDTO workflowDTO) {
-                hideProgressDialog();
-                MessagingThreadDTO messagingThreadDTO = DtoHelper.getConvertedDTO(MessagingThreadDTO.class, workflowDTO);
-                updateThreadMessages(messagingThreadDTO.getPayload());
-
-                if (postNewMessage) {
-                    MixPanelUtil.logEvent(getString(R.string.event_message_reply));
-                }
-
-            }
-
-            @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
-                hideProgressDialog();
-                showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
-            }
-        };
     }
 
     @Override
@@ -314,7 +249,7 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
             return;
         }
 
-        TransitionDTO fetchAttachment = messagingModel.getMetadata().getLinks().getFetchAttachment();
+        TransitionDTO fetchAttachment = messagingDto.getMetadata().getLinks().getFetchAttachment();
 
         Map<String, String> headers = new HashMap<>();
         headers.put("x-api-key", HttpConstants.getApiStartKey());
@@ -339,7 +274,7 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
 
     @Override
     public void openImageDetailView(MessageAttachment attachment) {
-        TransitionDTO fetchAttachment = messagingModel.getMetadata().getLinks().getFetchAttachment();
+        TransitionDTO fetchAttachment = messagingDto.getMetadata().getLinks().getFetchAttachment();
         Uri uri = Uri.parse(fetchAttachment.getUrl());
         uri = uri.buildUpon()
                 .appendQueryParameter("nodeid", attachment.getDocument().getDocumentHandler())

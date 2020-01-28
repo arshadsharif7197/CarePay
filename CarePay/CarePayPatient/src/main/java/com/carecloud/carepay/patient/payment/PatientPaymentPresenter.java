@@ -252,7 +252,7 @@ public class PatientPaymentPresenter extends PaymentPresenter
     }
 
     @Override
-    public void showPaymentPendingConfirmation(PaymentsModel paymentsModel) {
+    public void showPaymentPendingConfirmation(PaymentsModel paymentsModel, String practiceId) {
         new CustomMessageToast(viewHandler.getContext(), Label.getLabel("payment_queued_patient"), CustomMessageToast.NOTIFICATION_TYPE_SUCCESS).show();
         viewHandler.exitPaymentProcess(false, paymentPlanCreated, true);
     }

@@ -3,7 +3,7 @@ package com.carecloud.carepay.patient.pageObjects
 import com.carecloud.carepay.patient.R
 import com.carecloud.carepay.patient.appContext
 import com.carecloud.carepay.patient.pageObjects.appointments.AppointmentScreen
-import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
+import com.carecloud.test_module.actions.CustomViewActions
 
 /**
  * @author pjohnson on 2019-08-28.

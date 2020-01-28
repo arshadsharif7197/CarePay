@@ -2,16 +2,17 @@ package com.carecloud.carepay.patient.payment.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
@@ -27,7 +28,8 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreditCardListFragment extends BaseFragment implements CreditCardListAdapter.OnCreditCardDetailClickListener {
+public class CreditCardListFragment extends BaseFragment
+        implements CreditCardListAdapter.OnCreditCardDetailClickListener {
 
     private RecyclerView creditCardsListRecyclerView;
     private LinearLayout noCreditCardsView;
@@ -68,28 +70,23 @@ public class CreditCardListFragment extends BaseFragment implements CreditCardLi
 
     @Override
     public void onViewCreated(View view, Bundle icicle) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_layout);
-        TextView title = (TextView) toolbar.findViewById(R.id.respons_toolbar_title);
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
+        TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(Label.getLabel("credit_cards_label"));
         SystemUtil.setGothamRoundedMediumTypeface(getActivity(), title);
 
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
         initializeViews(view);
     }
 
     private void initializeViews(View view) {
-        creditCardsListRecyclerView = (RecyclerView) view.findViewById(R.id.creditCardsListRecyclerView);
+        creditCardsListRecyclerView = view.findViewById(R.id.creditCardsListRecyclerView);
         creditCardsListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        noCreditCardsView = (LinearLayout) view.findViewById(R.id.no_credit_cards_view);
+        noCreditCardsView = view.findViewById(R.id.no_credit_cards_view);
 
-        Button addNewCardButton = (Button) view.findViewById(R.id.addNewCardButton);
+        Button addNewCardButton = view.findViewById(R.id.addNewCardButton);
         addNewCardButton.setOnClickListener(addNewCardButtonListener);
 
         loadCreditCardsList(demographicsSettingsDTO);
@@ -102,14 +99,16 @@ public class CreditCardListFragment extends BaseFragment implements CreditCardLi
      */
     public void loadCreditCardsList(DemographicDTO demographicsSettingsDTO) {
         if (demographicsSettingsDTO != null) {
-            List<DemographicsSettingsCreditCardsPayloadDTO> creditCardList = demographicsSettingsDTO.getPayload().getPatientCreditCards();
+            List<DemographicsSettingsCreditCardsPayloadDTO> creditCardList = demographicsSettingsDTO
+                    .getPayload().getPatientCreditCards();
 
             if (creditCardList.isEmpty()) {
                 creditCardsListRecyclerView.setVisibility(View.GONE);
                 noCreditCardsView.setVisibility(View.VISIBLE);
             } else {
                 noCreditCardsView.setVisibility(View.GONE);
-                creditCardsListRecyclerView.setAdapter(new CreditCardListAdapter(getContext(), creditCardList, this));
+                creditCardsListRecyclerView.setAdapter(new CreditCardListAdapter(getContext(),
+                        creditCardList, this));
             }
         }
     }

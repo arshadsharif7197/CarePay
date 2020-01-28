@@ -46,8 +46,6 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.gson.Gson;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,6 +53,7 @@ import java.util.Map;
 
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.BACK_PIC;
 import static com.carecloud.carepaylibray.demographics.scanner.DocumentScannerAdapter.FRONT_PIC;
+import static com.carecloud.carepaylibray.utils.StringUtil.checkEqualValues;
 
 /**
  * Created by lmenendez on 5/24/17
@@ -311,10 +310,6 @@ public class SettingsDocumentsFragment extends BaseFragment implements Insurance
         }
         insuranceDataRepeated = false;
         return false;
-    }
-
-    private boolean checkEqualValues(String value1, String value2) {
-        return StringUtils.equalsIgnoreCase(value1, value2) || StringUtils.isEmpty(value1) && StringUtils.isEmpty(value2);
     }
 
     private void showAlert() {

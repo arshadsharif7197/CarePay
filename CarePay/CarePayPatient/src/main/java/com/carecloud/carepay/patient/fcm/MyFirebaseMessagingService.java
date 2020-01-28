@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.util.Log;
@@ -13,6 +15,8 @@ import android.util.Log;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.notifications.activities.NotificationProxyActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.platform.AndroidPlatform;
+import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepaylibray.fcm.NotificationModel;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -102,7 +106,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void updateBadgeCounters() {
         Intent intent = new Intent(CarePayConstants.UPDATE_BADGES_BROADCAST);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+    }
 
+    @Override
+    public void onNewToken(@NonNull String token) {
+        super.onNewToken(token);
+        Log.d(TAG, "Refreshed token: " + token);
+        saveTokenToSP(token);
+    }
+
+    private void saveTokenToSP(String refreshedToken) {
+        ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences()
+                .edit().putString(CarePayConstants.FCM_TOKEN, refreshedToken).apply();
     }
 
 

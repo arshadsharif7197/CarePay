@@ -1,9 +1,6 @@
 package com.carecloud.carepay.practice.library.checkin.activities;
 
 import android.os.Bundle;
-
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
-import com.google.android.material.textfield.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -16,6 +13,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -27,6 +25,7 @@ import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -88,7 +87,8 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         phoneNumberInputLayout.setTag(Label.getLabel("personal_info_phone_number"));
         phoneNumberEditText = findViewById(R.id.phoneNumberEditText);
         phoneNumberEditText.setTag(phoneNumberInputLayout);
-        phoneNumberEditText.addTextChangedListener(commonTextWatcher);
+        phoneNumberEditText.addTextChangedListener(phoneInputFormatter);
+        phoneNumberEditText.setOnClickListener(selectEndOnClick);
     }
 
     private void setUpGender() {
@@ -178,12 +178,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
             SystemUtil.showChooseDialog(PersonalInformationActivity.this,
                     gendersArray, Label.getLabel("gender_label"), Label.getLabel("gender_cancel_label"),
                     genderButton,
-                    new SystemUtil.OnClickItemCallback() {
-                        @Override
-                        public void executeOnClick(TextView destination, String selectedOption) {
-                            genderButton.setText(selectedOption);
-                        }
-                    });
+                    (destination, selectedOption) -> genderButton.setText(selectedOption));
         }
     };
 
@@ -201,20 +196,16 @@ public class PersonalInformationActivity extends BasePracticeActivity {
     /**
      * Click listener for home icon
      */
-    View.OnClickListener homeImageViewListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            onBackPressed();
-        }
-    };
+    View.OnClickListener homeImageViewListener = view -> onBackPressed();
 
     private void callGetFindMyAppointments() {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("language", getApplicationPreferences().getUserLanguage());
         queryMap.put("first_name", firstNameEditText.getText().toString());
         queryMap.put("last_name", lastNameEditText.getText().toString());
-        queryMap.put("date_of_birth", dobEditText.getText().toString());
-        queryMap.put("phone", phoneNumberEditText.getText().toString());
+        queryMap.put("date_of_birth", DateUtil.getInstance().setDateRaw(dobEditText.getText().toString(),
+                true).toStringWithFormatYyyyDashMmDashDd());
+        queryMap.put("phone", StringUtil.revertToRawFormat(phoneNumberEditText.getText().toString()));
         queryMap.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
         queryMap.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
         queryMap.put("gender", ((TextView) findViewById(R.id.selectGenderButton)).getText().toString());
@@ -270,7 +261,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
             hideProgressDialog();
             findMyAppointmentButton.setEnabled(true);
             showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 
@@ -292,7 +283,7 @@ public class PersonalInformationActivity extends BasePracticeActivity {
             hideProgressDialog();
             findMyAppointmentButton.setEnabled(true);
             showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 
@@ -313,11 +304,28 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         }
     };
 
-    protected View.OnClickListener selectEndOnClick = new View.OnClickListener() {
+    protected View.OnClickListener selectEndOnClick = view -> {
+        EditText editText = (EditText) view;
+        editText.setSelection(editText.length());
+    };
+
+    protected TextWatcher phoneInputFormatter = new TextWatcher() {
+        int lastLength;
+
         @Override
-        public void onClick(View view) {
-            EditText editText = (EditText) view;
-            editText.setSelection(editText.length());
+        public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+            lastLength = sequence.length();
+        }
+
+        @Override
+        public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            StringUtil.autoFormatPhone(editable, lastLength);
+            enableFindMyAppointmentButton();
         }
     };
 }

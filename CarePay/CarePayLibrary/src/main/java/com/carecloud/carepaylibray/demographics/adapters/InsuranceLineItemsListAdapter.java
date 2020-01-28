@@ -17,10 +17,10 @@ import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.Insuranc
 import com.carecloud.carepaylibray.demographics.dtos.payload.DemographicInsurancePayloadDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.carecloud.carepaylibray.utils.StringUtil.checkEqualValues;
 
 public class InsuranceLineItemsListAdapter extends
         RecyclerView.Adapter<InsuranceLineItemsListAdapter.InsuranceDetailsListViewHolder> {
@@ -168,10 +168,6 @@ public class InsuranceLineItemsListAdapter extends
             }
         }
         return false;
-    }
-
-    private boolean checkEqualValues(String value1, String value2) {
-        return StringUtils.equalsIgnoreCase(value1, value2) || StringUtils.isEmpty(value1) && StringUtils.isEmpty(value2);
     }
 
     private String getInsuranceTypeLabel(String insuranceType) {
