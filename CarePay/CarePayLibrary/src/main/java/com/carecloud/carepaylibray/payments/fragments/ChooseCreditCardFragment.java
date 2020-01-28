@@ -375,8 +375,13 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
             String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
             Object[] values = {amountToMakePayment, getString(R.string.payment_card_on_file)};
             MixPanelUtil.logEvent(getString(R.string.event_payment_failed), params, values);
+            onFailureAction(serverErrorDto);
         }
     };
+
+    protected void onFailureAction(ServerErrorDTO serverErrorDto) {
+        //to implement in children
+    }
 
     private View.OnClickListener addNewCardButtonListener = new View.OnClickListener() {
         @Override

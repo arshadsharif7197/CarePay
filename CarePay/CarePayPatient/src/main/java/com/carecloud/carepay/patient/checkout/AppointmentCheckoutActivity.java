@@ -43,6 +43,7 @@ import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
+import com.carecloud.carepaylibray.checkout.BaseNextAppointmentFragment;
 import com.carecloud.carepaylibray.checkout.CheckOutFormFragment;
 import com.carecloud.carepaylibray.checkout.CheckOutInterface;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
@@ -592,6 +593,16 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     @Override
     public void onPaymentDismissed() {
 
+    }
+
+    @Override
+    public void onPrepaymentFailed() {
+        getSupportFragmentManager().popBackStackImmediate();
+        getSupportFragmentManager().popBackStackImmediate();
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+        if (fragment instanceof BaseNextAppointmentFragment) {
+            ((BaseNextAppointmentFragment) fragment).scheduleAppointmentLater();
+        }
     }
 
     @Override

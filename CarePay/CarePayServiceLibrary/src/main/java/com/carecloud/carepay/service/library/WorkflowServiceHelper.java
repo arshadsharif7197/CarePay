@@ -25,6 +25,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSyntaxException;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -393,7 +394,6 @@ public class WorkflowServiceHelper {
                         && errorBodyString.toLowerCase().contains(REVOKED))) {
                     atomicAppRestart();
                 } else {
-//                    onFailure(parseError(message, errorBodyString, "message", "exception", "error"));
                     onFailure(serverErrorDto);
                 }
             }
@@ -418,14 +418,18 @@ public class WorkflowServiceHelper {
                     try {
                         String errorBodyString = response.errorBody().string();
                         serverErrorDto = getConvertedDTO(ServerErrorDTO.class, errorBodyString);
-                    } catch (Exception ex) {
+                    } catch (JsonSyntaxException ex) {
+                        serverErrorDto.getMessage().getBody().getError().setMessage(response.raw().message());
+                        serverErrorDto.getMessage().getBody().getError()
+                                .setErrorCode(String.valueOf(response.raw().code()));
                         ex.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-//                    onFailure(parseError(response.message(), serverErrorDTO.getMessage().getBody()
-//                            .getError().getMessage(), "message", "data", "error", "exception"));
-//                    onFailure(serverErrorDTO.getMessage().getBody().getError().getMessage());
                 } else {
-                    serverErrorDto.getMessage().getBody().getError().setMessage("");
+                    serverErrorDto.getMessage().getBody().getError().setMessage(response.raw().message());
+                    serverErrorDto.getMessage().getBody().getError()
+                            .setErrorCode(String.valueOf(response.raw().code()));
                 }
                 onFailure(serverErrorDto);
             }
@@ -440,12 +444,12 @@ public class WorkflowServiceHelper {
             }
 
             void onFailure(ServerErrorDTO errorMessage) {
-                if (attemptCount < 2 && shouldRetryRequest) {
-                    // Re-try failed request with increased attempt count
-                    executeRequest(transitionDTO, callback, jsonBody, queryMap, headers, attemptCount + 1);
-                } else {
-                    callback.onFailure(errorMessage);
-                }
+//                if (attemptCount < 2 && shouldRetryRequest) {
+                // Re-try failed request with increased attempt count
+//                    executeRequest(transitionDTO, callback, jsonBody, queryMap, headers, attemptCount + 1);
+//                } else {
+                callback.onFailure(errorMessage);
+//                }
             }
         });
 

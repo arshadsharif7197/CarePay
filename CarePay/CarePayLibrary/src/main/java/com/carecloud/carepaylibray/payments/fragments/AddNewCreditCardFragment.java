@@ -2,12 +2,13 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -179,8 +180,13 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
             String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
             Object[] values = {amountToMakePayment, getString(R.string.payment_new_card)};
             MixPanelUtil.logEvent(getString(R.string.event_payment_failed), params, values);
+            onFailureAction(serverErrorDto);
         }
     };
+
+    protected void onFailureAction(ServerErrorDTO serverErrorDto) {
+        //to implement in children
+    }
 
     private void addNewCreditCardCall() {
         Gson gson = new Gson();

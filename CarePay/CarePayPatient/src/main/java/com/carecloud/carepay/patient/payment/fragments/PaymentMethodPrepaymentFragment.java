@@ -2,21 +2,32 @@ package com.carecloud.carepay.patient.payment.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.service.library.CarePayConstants;
+import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
+import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.appointments.interfaces.AppointmentPrepaymentCallback;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
+import com.carecloud.carepaylibray.checkout.CheckOutInterface;
+import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
+import com.carecloud.carepaylibray.payments.fragments.ChooseCreditCardFragment;
+import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -98,5 +109,21 @@ public class PaymentMethodPrepaymentFragment extends PatientPaymentMethodFragmen
         }
 
     }
+
+    @Override
+    protected void onPaymentMethodAction(PaymentsMethodsDTO paymentMethod,
+                                         double amount,
+                                         PaymentsModel paymentsModel) {
+        Fragment fragment;
+        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null &&
+                !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            fragment = PrepaymentChooseCreditCardFragment.newInstance(paymentsModel,
+                    paymentMethod.getLabel(), amount);
+        } else {
+            fragment = PrepaymentAddNewCreditCardFragment.newInstance(paymentsModel, amount);
+        }
+        callback.addFragment(fragment, true);
+    }
+
 
 }

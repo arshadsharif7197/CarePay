@@ -452,6 +452,11 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     }
 
     @Override
+    public void onPrepaymentFailed() {
+
+    }
+
+    @Override
     public void showAddCard(double amount, PaymentsModel paymentsModel) {
         Fragment fragment = AddNewCreditCardFragment.newInstance(paymentsModel, amount);
         viewHandler.replaceFragment(fragment, true);
