@@ -363,7 +363,7 @@ public class CloverPaymentAdapter {
             }
 
             @Override
-            public void onFailure(String errorMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 activity.hideProgressDialog();
                 if (shouldRetryShamrock(errorMessage)) {
                     postPaymentRequest(paymentRequestId, paymentPayload);

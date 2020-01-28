@@ -275,7 +275,7 @@ public class AppointmentsListFragment extends BaseAppointmentFragment
         public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
             showErrorNotification(null);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 

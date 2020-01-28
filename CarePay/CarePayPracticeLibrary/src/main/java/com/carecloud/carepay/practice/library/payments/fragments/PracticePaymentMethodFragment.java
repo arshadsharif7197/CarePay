@@ -161,7 +161,7 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
         }
 
         @Override
-        public void onFailure(String errorMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
 
         }
     };

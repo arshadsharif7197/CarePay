@@ -244,7 +244,7 @@ public class DoBVerificationActivity extends BasePracticeActivity {
         public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
             showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 

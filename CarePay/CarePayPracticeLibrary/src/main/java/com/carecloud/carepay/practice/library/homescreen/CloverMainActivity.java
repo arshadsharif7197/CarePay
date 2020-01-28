@@ -623,7 +623,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
             showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 
@@ -647,7 +647,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
             showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 
@@ -696,7 +696,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
             showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 
@@ -733,7 +733,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             hideProgressDialog();
             disableUnavailableItems();
             showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 
@@ -766,7 +766,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
             showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 

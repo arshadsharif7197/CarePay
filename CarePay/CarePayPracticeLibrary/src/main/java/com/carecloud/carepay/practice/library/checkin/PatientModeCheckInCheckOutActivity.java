@@ -138,7 +138,7 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
             hideProgressDialog();
             findViewById(R.id.logoutTextview).setEnabled(true);
             showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 
@@ -287,7 +287,7 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
             public void onFailure(ServerErrorDTO serverErrorDto) {
                 hideProgressDialog();
                 showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
-                Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+                Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
             }
         };
     }

@@ -369,7 +369,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
                 getWorkflowServiceHelper().setAppAuthorizationHelper(null);
             }
             showErrorToast(CarePayConstants.INVALID_LOGIN_ERROR_MESSAGE);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 
@@ -568,7 +568,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             getWorkflowServiceHelper().setAppAuthorizationHelper(null);
             setSignInButtonClickable(true);
             showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 
@@ -592,7 +592,7 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
             hideProgressDialog();
             setSignInButtonClickable(true);
             showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 

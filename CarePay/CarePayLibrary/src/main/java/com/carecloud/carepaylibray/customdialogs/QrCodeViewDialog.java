@@ -132,7 +132,7 @@ public class QrCodeViewDialog extends BaseDialogFragment implements View.OnClick
         public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
             callBack.onGenerateQRCodeError(serverErrorDto.getMessage().getBody().getError().getMessage());
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 

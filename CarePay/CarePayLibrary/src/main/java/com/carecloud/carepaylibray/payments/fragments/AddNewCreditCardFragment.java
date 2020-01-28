@@ -129,7 +129,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
             hideProgressDialog();
             nextButton.setEnabled(true);
             SystemUtil.showErrorToast(getContext(), serverErrorDto.getMessage().getBody().getError().getMessage());
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 

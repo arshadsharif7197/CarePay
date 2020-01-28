@@ -508,7 +508,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         }
 
         @Override
-        public void onFailure(String errorMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
             new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
         }
@@ -560,7 +560,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         }
 
         @Override
-        public void onFailure(String errorMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
         }
 
