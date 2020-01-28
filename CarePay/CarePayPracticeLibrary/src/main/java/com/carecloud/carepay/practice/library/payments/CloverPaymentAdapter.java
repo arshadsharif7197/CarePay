@@ -76,18 +76,18 @@ public class CloverPaymentAdapter {
         this.paymentsModel = paymentsModel;
         this.appointmentId = appointmentId;
         this.callback = callback;
-        if(!paymentsModel.getPaymentPayload().getUserPractices().isEmpty()) {
+        if (!paymentsModel.getPaymentPayload().getUserPractices().isEmpty()) {
             practiceInfo = paymentsModel.getPaymentPayload().getUserPractices().get(0);
         }
 
         patientId = practiceInfo.getPatientId();
-        if(patientId == null &&
+        if (patientId == null &&
                 !paymentsModel.getPaymentPayload().getPatientBalances().isEmpty() &&
-                !paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().isEmpty()){
+                !paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().isEmpty()) {
             PendingBalanceMetadataDTO metadataDTO = paymentsModel.getPaymentPayload().getPatientBalances()
                     .get(0).getBalances().get(0).getMetadata();
             patientId = metadataDTO.getPatientId();
-            if(practiceInfo == null){
+            if (practiceInfo == null) {
                 practiceInfo = new UserPracticeDTO();
                 practiceInfo.setPracticeMgmt(metadataDTO.getPracticeMgmt());
                 practiceInfo.setPracticeId(metadataDTO.getPracticeId());
@@ -363,7 +363,7 @@ public class CloverPaymentAdapter {
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
+            public void onFailure(String errorMessage) {
                 activity.hideProgressDialog();
                 if (shouldRetryShamrock(errorMessage)) {
                     postPaymentRequest(paymentRequestId, paymentPayload);

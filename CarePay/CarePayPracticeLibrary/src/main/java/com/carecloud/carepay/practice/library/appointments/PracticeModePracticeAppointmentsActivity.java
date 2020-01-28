@@ -667,4 +667,8 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         }
     };
 
+    @Override
+    public void onPrepaymentFailed() {
+        //No prepayment in practice mode
+    }
 }
