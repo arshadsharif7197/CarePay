@@ -41,6 +41,11 @@ public class DateRangePickerDialog extends BaseDialogFragment {
     private boolean isCancelable;
     private CalendarPickerView.SelectionMode selectionMode;
     private Date selectedDate;
+    private boolean todayButtonVisibility = true;
+
+    public void setTodayButtonVisibility(boolean todayButtonVisibility) {
+        this.todayButtonVisibility = todayButtonVisibility;
+    }
 
     public interface DateRangePickerDialogListener {
         void onRangeSelected(Date start, Date end);
@@ -177,6 +182,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
 
         Button todayButton = view.findViewById(R.id.dialog_date_range_picker_today_button);
         todayButton.setOnClickListener(todayButtonClickListener);
+        todayButton.setVisibility(todayButtonVisibility ? View.VISIBLE : View.GONE);
     }
 
     /**
@@ -192,7 +198,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
     };
 
     private void initializeApplyDateRangeButton(View view) {
-        applyDateRangeButton = view.findViewById(com.carecloud.carepaylibrary.R.id.applyDateRangeButton);
+        applyDateRangeButton = view.findViewById(R.id.applyDateRangeButton);
         applyDateRangeButton.setEnabled(false);
         applyDateRangeButton.setOnClickListener(view1 -> {
             if (callback != null) {
@@ -221,7 +227,7 @@ public class DateRangePickerDialog extends BaseDialogFragment {
         selectedDates.add(endDate);
 
 
-        calendarPickerView = view.findViewById(com.carecloud.carepaylibrary.R.id.calendarView);
+        calendarPickerView = view.findViewById(R.id.calendarView);
         calendarPickerView.setOnInvalidDateSelectedListener(null);
         if (selectionMode == CalendarPickerView.SelectionMode.RANGE) {
             calendarPickerView.init(minDate, maxDate)
