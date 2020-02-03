@@ -11,6 +11,7 @@ import java.util.List;
  */
 
 public class SignInPropertyDTO {
+
     @SerializedName("type")
     @Expose
     private String type;
