@@ -14,35 +14,29 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
 
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
-import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
+import com.carecloud.carepaylibray.signinsignup.ResetPasswordViewModel;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.gson.JsonObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author pjohnson on 03/12/2017
  */
 public class ResetPasswordFragment extends BaseFragment {
 
-    private TransitionDTO passwordTransition;
     private EditText emailEditText;
     private FragmentActivityInterface listener;
     private Button resetPasswordButton;
     private TextInputLayout signInEmailTextInputLayout;
     public static final int GO_TO_HOME = 200;
+    private ResetPasswordViewModel viewModel;
 
     public ResetPasswordFragment() {
         // Required empty public constructor
@@ -77,7 +71,12 @@ public class ResetPasswordFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        passwordTransition = ((SignInDTO) listener.getDto()).getMetadata().getTransitions().getForgotPassword();
+        setUpViewModel();
+    }
+
+    private void setUpViewModel() {
+        viewModel = ViewModelProviders.of(getActivity()).get(ResetPasswordViewModel.class);
+        viewModel.getResetPasswordDtoObservable().observe(this, aVoid -> goToNextScreen());
     }
 
     @Override
@@ -149,39 +148,9 @@ public class ResetPasswordFragment extends BaseFragment {
 
     private void resetPassword() {
         if (validateEmail(emailEditText.getText().toString())) {
-            resetPassword(passwordTransition, emailEditText.getText().toString());
+            viewModel.resetPassword(emailEditText.getText().toString());
         }
     }
-
-    private void resetPassword(TransitionDTO resetPasswordTransition, String email) {
-        JsonObject jsonObject2 = new JsonObject();
-        jsonObject2.addProperty("username", email);
-        JsonObject userObject = new JsonObject();
-        userObject.add("user", jsonObject2);
-        Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
-        Map<String, String> queryParams = new HashMap<>();
-        getWorkflowServiceHelper().execute(resetPasswordTransition, resetPasswordCallback,
-                userObject.toString(), queryParams, headers);
-    }
-
-    private WorkflowServiceCallback resetPasswordCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            goToNextScreen();
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            showErrorNotification(exceptionMessage);
-            hideProgressDialog();
-        }
-    };
 
     private boolean validateEmail(String email) {
         boolean isValid = ValidationHelper.isValidEmail(email);
@@ -192,7 +161,7 @@ public class ResetPasswordFragment extends BaseFragment {
     }
 
     private void goToNextScreen() {
-        listener.replaceFragment(ConfirmationResetPasswordFragment
+        listener.addFragment(ConfirmationResetPasswordFragment
                 .newInstance(emailEditText.getText().toString()), true);
     }
 

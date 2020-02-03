@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.carecloud.carepay.patient.appointments.AppointmentViewModel;
-import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
 import com.carecloud.carepay.patient.appointments.adapters.AppointmentListAdapter;
 import com.carecloud.carepay.patient.appointments.createappointment.CreateAppointmentFragment;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
