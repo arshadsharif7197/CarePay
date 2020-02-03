@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.practice.library.R;
@@ -40,10 +41,11 @@ import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
+import com.carecloud.carepaylibray.signinsignup.ResetPasswordViewModel;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.signinsignup.fragments.ResetPasswordFragment;
 import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInResponse;
-import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -62,7 +64,7 @@ import java.util.Map;
  * On failed showing the authentication failure dialog with no navigation
  */
 public class SigninActivity extends BasePracticeActivity implements SelectPracticeCallback,
-        ConfirmationCallback {
+        ConfirmationCallback, FragmentActivityInterface {
 
     private static final int RESET_PASSWORD = 100;
 
@@ -111,6 +113,10 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     }
 
     protected void setUpViewModel() {
+        ResetPasswordViewModel resetPasswordViewModel = ViewModelProviders.of(this).get(ResetPasswordViewModel.class);
+        resetPasswordViewModel.setResetPasswordTransition(signinDTO.getMetadata().getTransitions().getForgotPassword());
+        setBasicObservers(resetPasswordViewModel);
+
         viewModel = ViewModelProviders.of(this).get(SignInPracticeViewModel.class);
         setBasicObservers(viewModel);
         viewModel.getSignInDtoObservable().observe(this, unifiedSignInResponse -> {
@@ -303,11 +309,12 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         signInButton.setOnClickListener(view -> signIn());
 
         forgotPasswordTextView.setOnClickListener(view -> {
-            Intent intent = new Intent(SigninActivity.this, ResetPasswordActivity.class);
-            Bundle bundle = new Bundle();
-            DtoHelper.bundleDto(bundle, signinDTO);
-            intent.putExtras(bundle);
-            startActivityForResult(intent, RESET_PASSWORD);
+            replaceFragment(ResetPasswordFragment.newInstance(), true);
+//            Intent intent = new Intent(SigninActivity.this, ResetPasswordActivity.class);
+//            Bundle bundle = new Bundle();
+//            DtoHelper.bundleDto(bundle, signinDTO);
+//            intent.putExtras(bundle);
+//            startActivityForResult(intent, RESET_PASSWORD);
         });
 
         showPasswordButton.setOnClickListener(view -> {
@@ -503,6 +510,16 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
         String[] params = {getString(R.string.param_login_type), getString(R.string.param_app_mode)};
         Object[] values = {getString(R.string.login_password), getString(R.string.app_mode_patient)};
         MixPanelUtil.logEvent(getString(R.string.event_signin_loginSuccess), params, values);
+    }
+
+    @Override
+    public void addFragment(Fragment fragment, boolean addToBackStack) {
+        addFragment(R.id.fragmentContainer, fragment, addToBackStack);
+    }
+
+    @Override
+    public void replaceFragment(Fragment fragment, boolean addToBackStack) {
+        replaceFragment(R.id.fragmentContainer, fragment, addToBackStack);
     }
 
 

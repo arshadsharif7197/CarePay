@@ -124,7 +124,7 @@ public class ResetPasswordFragment extends BaseFragment {
         Button goBackButton = view.findViewById(R.id.goBackButton);
         if (goBackButton != null) {
             goBackButton.setVisibility(View.VISIBLE);
-            goBackButton.setOnClickListener(view12 -> getActivity().finish());
+            goBackButton.setOnClickListener(view12 -> getActivity().onBackPressed());
         }
 
         ImageView signInHome = view.findViewById(R.id.signInHome);
