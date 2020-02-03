@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -55,7 +57,7 @@ public class ConfirmationResetPasswordFragment extends BaseFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
             listener = (FragmentActivityInterface) context;
@@ -83,46 +85,29 @@ public class ConfirmationResetPasswordFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button goBackButton = (Button) view.findViewById(R.id.goBackButton);
+        Button goBackButton = view.findViewById(R.id.goBackButton);
         if (goBackButton != null) {
             goBackButton.setVisibility(View.VISIBLE);
-            goBackButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getActivity().onBackPressed();
-                }
-            });
+            goBackButton.setOnClickListener(view1 -> getActivity().onBackPressed());
         }
 
-        ImageView signInHome = (ImageView) view.findViewById(R.id.signInHome);
+        ImageView signInHome = view.findViewById(R.id.signInHome);
         if (signInHome != null) {
             signInHome.setVisibility(View.VISIBLE);
-            signInHome.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getActivity().setResult(ResetPasswordFragment.GO_TO_HOME);
-                    getActivity().finish();
-                }
+            signInHome.setOnClickListener(view12 -> {
+                getActivity().setResult(ResetPasswordFragment.GO_TO_HOME);
+                getActivity().finish();
             });
         }
 
-        view.findViewById(R.id.goToMailAppButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showMailAppChooserDialog();
-            }
-        });
+        view.findViewById(R.id.goToMailAppButton).setOnClickListener(view13 -> showMailAppChooserDialog());
 
-        view.findViewById(R.id.resendMailButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                resetPassword(((SignInDTO) listener.getDto()).getMetadata().getTransitions()
-                        .getForgotPassword(), email);
-            }
-        });
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        view.findViewById(R.id.resendMailButton).setOnClickListener(view14
+                -> resetPassword(((SignInDTO) listener.getDto()).getMetadata().getTransitions()
+                .getForgotPassword(), email));
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
         if (toolbar != null) {
             listener.setToolbar(toolbar);
             ((TextView)toolbar.findViewById(R.id.toolbar_title))
@@ -157,7 +142,7 @@ public class ConfirmationResetPasswordFragment extends BaseFragment {
         @Override
         public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            listener.showErrorToast(exceptionMessage);
+            showErrorNotification(exceptionMessage);
         }
     };
 

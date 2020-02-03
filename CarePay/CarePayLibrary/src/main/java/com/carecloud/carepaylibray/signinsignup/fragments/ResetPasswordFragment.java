@@ -2,19 +2,18 @@ package com.carecloud.carepaylibray.signinsignup.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import com.google.android.material.textfield.TextInputLayout;
-import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -27,6 +26,7 @@ import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;
@@ -48,22 +48,6 @@ public class ResetPasswordFragment extends BaseFragment {
         // Required empty public constructor
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            listener = (FragmentActivityInterface) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException("Attached Context must implement DTOInterface");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        listener = null;
-    }
-
     /**
      * @return an instance of ResetPasswordFragment
      */
@@ -72,6 +56,22 @@ public class ResetPasswordFragment extends BaseFragment {
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            listener = (FragmentActivityInterface) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Attached Context must implement FragmentActivityInterface");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
     }
 
     @Override
@@ -87,20 +87,15 @@ public class ResetPasswordFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUpUi(view);
     }
 
     private void setUpUi(View view) {
-        emailEditText = (EditText) view.findViewById(R.id.emailEditText);
-        resetPasswordButton = (Button) view.findViewById(R.id.resetPasswordButton);
-        resetPasswordButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                resetPassword();
-            }
-        });
+        emailEditText = view.findViewById(R.id.emailEditText);
+        resetPasswordButton = view.findViewById(R.id.resetPasswordButton);
+        resetPasswordButton.setOnClickListener(view1 -> resetPassword());
         emailEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
@@ -122,40 +117,29 @@ public class ResetPasswordFragment extends BaseFragment {
                 setResetPasswordButtonEnabled(editable.toString());
             }
         });
-        emailEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
-                resetPassword();
-                return false;
-            }
+        emailEditText.setOnEditorActionListener((textView, actionId, event) -> {
+            resetPassword();
+            return false;
         });
 
-        Button goBackButton = (Button) view.findViewById(R.id.goBackButton);
+        Button goBackButton = view.findViewById(R.id.goBackButton);
         if (goBackButton != null) {
             goBackButton.setVisibility(View.VISIBLE);
-            goBackButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getActivity().finish();
-                }
-            });
+            goBackButton.setOnClickListener(view12 -> getActivity().finish());
         }
 
-        ImageView signInHome = (ImageView) view.findViewById(R.id.signInHome);
+        ImageView signInHome = view.findViewById(R.id.signInHome);
         if (signInHome != null) {
             signInHome.setVisibility(View.VISIBLE);
-            signInHome.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getActivity().setResult(GO_TO_HOME);
-                    getActivity().finish();
-                }
+            signInHome.setOnClickListener(view13 -> {
+                getActivity().setResult(GO_TO_HOME);
+                getActivity().finish();
             });
         }
 
-        signInEmailTextInputLayout = (TextInputLayout) view.findViewById(R.id.signInEmailTextInputLayout);
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        CarePayTextView titleView = (CarePayTextView) view.findViewById(R.id.toolbar_title);
+        signInEmailTextInputLayout = view.findViewById(R.id.signInEmailTextInputLayout);
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        CarePayTextView titleView = view.findViewById(R.id.toolbar_title);
         if (toolbar != null) {
             listener.setToolbar(toolbar);
             titleView.setText(Label.getLabel("forgot_password_screen_title"));
@@ -193,8 +177,8 @@ public class ResetPasswordFragment extends BaseFragment {
         }
 
         @Override
-        public void onFailure(String exceptionMessage)  {
-            listener.showErrorToast(exceptionMessage);
+        public void onFailure(String exceptionMessage) {
+            showErrorNotification(exceptionMessage);
             hideProgressDialog();
         }
     };
@@ -207,16 +191,16 @@ public class ResetPasswordFragment extends BaseFragment {
         return isValid;
     }
 
-    public void goToNextScreen() {
+    private void goToNextScreen() {
         listener.replaceFragment(ConfirmationResetPasswordFragment
                 .newInstance(emailEditText.getText().toString()), true);
     }
 
-    public void setResetPasswordButtonEnabled(String email) {
+    private void setResetPasswordButtonEnabled(String email) {
         resetPasswordButton.setEnabled(email.length() > 0);
     }
 
-    public void setEmailError(String error) {
+    private void setEmailError(String error) {
         signInEmailTextInputLayout.setErrorEnabled(true);
         signInEmailTextInputLayout.setError(error);
     }
