@@ -4,11 +4,12 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import androidx.fragment.app.DialogFragment;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+
+import androidx.fragment.app.DialogFragment;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
@@ -329,11 +330,19 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
 
     protected DialogInterface.OnCancelListener onDialogCancelListener = dialogInterface -> showDialog();
 
-    public void onBackPressed() {
-        getActivity().onBackPressed();
+    public boolean onBackPressed(boolean callBackPressed) {
+        if (callBackPressed) {
+            getActivity().onBackPressed();
+        }
         if (onBackPressedInterface != null) {
             onBackPressedInterface.onBackPressed();
         }
+        return true;
+    }
+
+    public boolean onBackPressed() {
+        onBackPressed(true);
+        return true;
     }
 
     public void setOnBackPressedListener(OnBackPressedInterface onBackPressedInterface) {

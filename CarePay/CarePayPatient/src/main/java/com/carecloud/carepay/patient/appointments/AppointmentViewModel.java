@@ -5,8 +5,8 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
-import com.carecloud.carepaylibray.common.BaseViewModel;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.appointment.DataDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -14,9 +14,12 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.QueueStatusPayloadDTO;
 import com.carecloud.carepaylibray.base.models.Paging;
+import com.carecloud.carepaylibray.common.BaseViewModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.StringUtil;
+import com.google.gson.JsonObject;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -33,6 +36,7 @@ public class AppointmentViewModel extends BaseViewModel {
     private MutableLiveData<AppointmentsResultModel> historicAppointmentsObservable = new MutableLiveData<>();
     private MutableLiveData<Boolean> paginationLoaderObservable = new MutableLiveData<>();
     private MutableLiveData<QueueStatusPayloadDTO> queueStatusObservable = new MutableLiveData<>();
+    private MutableLiveData<WorkflowDTO> cancelAppointmentObservable = new MutableLiveData<>();
     private PaymentsModel paymentsModel;
 
     public AppointmentViewModel(@NonNull Application application) {
@@ -62,6 +66,10 @@ public class AppointmentViewModel extends BaseViewModel {
             queueStatusObservable = new MutableLiveData<>();
         }
         return queueStatusObservable;
+    }
+
+    public MutableLiveData<WorkflowDTO> getCancelAppointmentObservable() {
+        return cancelAppointmentObservable;
     }
 
     public PaymentsModel getPaymentsModel() {
@@ -164,5 +172,50 @@ public class AppointmentViewModel extends BaseViewModel {
 
             }
         }, queryMap);
+    }
+
+    public void cancelAppointment(AppointmentDTO appointmentDTO,
+                                  Integer cancelationReasonId,
+                                  String cancellationReasonComment) {
+        Map<String, String> queries = new HashMap<>();
+        queries.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
+        queries.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
+        queries.put("patient_id", appointmentDTO.getMetadata().getPatientId());
+        queries.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
+
+        DataDTO data = appointmentsDtoObservable.getValue().getMetadata()
+                .getTransitions().getCancel().getData();
+        JsonObject postBodyObj = new JsonObject();
+        if (!StringUtil.isNullOrEmpty(cancellationReasonComment)) {
+            postBodyObj.addProperty(data.getCancellationComments().getName() != null ?
+                    data.getCancellationComments().getName() : "cancellation_comments", cancellationReasonComment);
+        }
+        if (cancelationReasonId != -1) {
+            postBodyObj.addProperty(data.getCancellationReasonId().getName() != null ?
+                    data.getCancellationReasonId().getName() : "cancellation_reason_id", cancelationReasonId);
+        }
+
+        String body = postBodyObj.toString();
+
+        TransitionDTO transitionDTO = appointmentsDtoObservable.getValue()
+                .getMetadata().getTransitions().getCancel();
+        getWorkflowServiceHelper().execute(transitionDTO, new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                setLoading(true);
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                setLoading(false);
+                cancelAppointmentObservable.postValue(workflowDTO);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                setLoading(false);
+                setErrorMessage(exceptionMessage);
+            }
+        }, body, queries);
     }
 }

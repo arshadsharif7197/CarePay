@@ -24,6 +24,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
@@ -144,11 +145,14 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            getSupportFragmentManager().popBackStackImmediate();
-            if (getSupportFragmentManager().getBackStackEntryCount() <= 0) {
-                displayToolbar(true, null);
-                getSupportActionBar().setElevation(0);
-                toolbarHidden = false;
+            if (((BaseDialogFragment) getSupportFragmentManager().findFragmentById(R.id.container_main))
+                    .onBackPressed(false)) {
+                getSupportFragmentManager().popBackStackImmediate();
+                if (getSupportFragmentManager().getBackStackEntryCount() <= 0) {
+                    displayToolbar(true, null);
+                    getSupportActionBar().setElevation(0);
+                    toolbarHidden = false;
+                }
             }
         } else {
             // finish the app

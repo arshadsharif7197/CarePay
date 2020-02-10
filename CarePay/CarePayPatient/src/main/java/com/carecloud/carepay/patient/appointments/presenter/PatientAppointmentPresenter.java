@@ -28,7 +28,6 @@ import com.carecloud.carepay.patient.rate.RateDialog;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.appointment.DataDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -134,7 +133,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     private void showCancellationReasons(AppointmentDTO appointmentDTO,
                                          final AppointmentCancellationFee cancellationFee) {
         CancelReasonAppointmentDialog dialog = CancelReasonAppointmentDialog
-                .newInstance(appointmentDTO, appointmentsResultModel);
+                .newInstance(appointmentDTO);
         dialog.setsCancelReasonAppointmentDialogListener((appointmentDTO1, cancellationReason,
                                                           cancellationReasonComment) -> {
             cancellationReasonString = getCancelReason(cancellationReason, cancellationReasonComment);
@@ -190,50 +189,30 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     @Override
     public void onCancelAppointment(AppointmentDTO appointmentDTO, int cancellationReason,
                                     String cancellationReasonComment) {
-        Map<String, String> queries = new HashMap<>();
-        queries.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
-        queries.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
-        queries.put("patient_id", appointmentDTO.getMetadata().getPatientId());
-        queries.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
-
-        DataDTO data = appointmentsResultModel.getMetadata().getTransitions().getCancel().getData();
-        JsonObject postBodyObj = new JsonObject();
-        if (!StringUtil.isNullOrEmpty(cancellationReasonComment)) {
-            postBodyObj.addProperty(data.getCancellationComments().getName() != null ?
-                    data.getCancellationComments().getName() : "cancellation_comments", cancellationReasonComment);
-        }
-        if (cancellationReason != -1) {
-            postBodyObj.addProperty(data.getCancellationReasonId().getName() != null ?
-                    data.getCancellationReasonId().getName() : "cancellation_reason_id", cancellationReason);
-        }
-
-        String body = postBodyObj.toString();
-
-        TransitionDTO transitionDTO = appointmentsResultModel.getMetadata().getTransitions().getCancel();
-        viewHandler.getWorkflowServiceHelper().execute(transitionDTO, cancelCallback, body, queries);
+        //call to service
     }
 
-    private WorkflowServiceCallback cancelCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            viewHandler.showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            viewHandler.hideProgressDialog();
-            SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_cancellation_success_message_HTML"));
-            viewHandler.refreshAppointments();
-            logApptCancelMixpanel();
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            viewHandler.hideProgressDialog();
-            viewHandler.showErrorNotification(exceptionMessage);
-            Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
-        }
-    };
+//    private WorkflowServiceCallback cancelCallback = new WorkflowServiceCallback() {
+//        @Override
+//        public void onPreExecute() {
+//            viewHandler.showProgressDialog();
+//        }
+//
+//        @Override
+//        public void onPostExecute(WorkflowDTO workflowDTO) {
+//            viewHandler.hideProgressDialog();
+//            SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_cancellation_success_message_HTML"));
+//            viewHandler.refreshAppointments();
+//            logApptCancelMixpanel();
+//        }
+//
+//        @Override
+//        public void onFailure(String exceptionMessage) {
+//            viewHandler.hideProgressDialog();
+//            viewHandler.showErrorNotification(exceptionMessage);
+//            Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
+//        }
+//    };
 
     @Override
     public void onCheckInStarted(AppointmentDTO appointmentDTO) {

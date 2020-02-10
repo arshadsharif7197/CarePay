@@ -1,48 +1,51 @@
 package com.carecloud.carepay.patient.appointments.dialog;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.textfield.TextInputLayout;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.widget.AppCompatRadioButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RadioGroup;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.carecloud.carepay.patient.appointments.AppointmentViewModel;
+import com.carecloud.carepay.patient.appointments.adapters.CancelReasonAdapter;
+import com.carecloud.carepay.patient.appointments.fragments.AppointmentDetailDialog;
+import com.carecloud.carepay.patient.menu.MenuPatientActivity;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.appointments.models.AppointmentCancellationReasonDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentCancellationFee;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.CancellationReasonDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
-import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 
 import java.util.List;
 
-public class CancelReasonAppointmentDialog extends BaseDialogFragment implements View.OnClickListener {
+public class CancelReasonAppointmentDialog extends BaseDialogFragment
+        implements CancelReasonAdapter.CancelReasonItemInterface {
 
     private AppointmentDTO appointmentDTO;
-    private AppointmentsResultModel appointmentInfo;
 
-    private RadioGroup cancelReasonRadioGroup;
     private Button cancelAppointmentButton;
     private EditText reasonEditText;
 
-    private int selectedReasonId = -1;
-    private List<CancellationReasonDTO> cancellationReasons;
+    private AppointmentViewModel viewModel;
+    private CancellationReasonDTO selectedCancelationReason;
 
     public interface CancelReasonAppointmentDialogListener {
         void onCancelReasonAppointmentDialogCancelClicked(AppointmentDTO appointmentDTO,
@@ -50,171 +53,166 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
                                                           String cancellationReasonComment);
     }
 
-    private CancelReasonAppointmentDialogListener callback;
+    private FragmentActivityInterface callback;
 
     /**
      * Contractor for dialog.
      *
-     * @param appointmentDTO  appointment Item
-     * @param appointmentInfo Appointment Info data
+     * @param appointmentDTO appointment Item
      */
-    public static CancelReasonAppointmentDialog newInstance(AppointmentDTO appointmentDTO,
-                                         AppointmentsResultModel appointmentInfo) {
+    public static CancelReasonAppointmentDialog newInstance(AppointmentDTO appointmentDTO) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, appointmentDTO);
-        DtoHelper.bundleDto(args, appointmentInfo);
         CancelReasonAppointmentDialog fragment = new CancelReasonAppointmentDialog();
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof FragmentActivityInterface) {
+            callback = (FragmentActivityInterface) context;
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        if (args != null) {
-            appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, args);
-            appointmentInfo = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, args);
-        }
+        viewModel = ViewModelProviders.of(getActivity()).get(AppointmentViewModel.class);
+        viewModel.getCancelAppointmentObservable().observe(getActivity(), workflowDTO -> {
+            logApptCancelMixPanel(appointmentDTO);
+            getFragmentManager().popBackStackImmediate(AppointmentDetailDialog.class.getName(),
+                    FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            viewModel.getAppointments(viewModel.getAppointmentsDtoObservable().getValue()
+                    .getMetadata().getLinks().getAppointments(), true);
+        });
+        appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, getArguments());
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.dialog_cancel_reason_appointment, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        onInitialization();
-        onSetListener();
+        setUpToolbar(view);
+        setUpUI(view);
+        setUpCancelReasons(view, viewModel.getAppointmentsDtoObservable().getValue()
+                .getPayload().getCancellationReasons());
     }
 
-    private void onInitialization() {
-        ((CarePayTextView) findViewById(R.id.heading_text))
-                .setText(Label.getLabel("cancel_appointment_reasons_title"));
-        reasonEditText = (EditText) findViewById(R.id.reasonEditText);
-        reasonEditText.setHint(Label.getLabel("cancel_appointment_other_reason_hint"));
-        reasonEditText.setHintTextColor(getResources().getColor(R.color.gray));
+    private void setUpToolbar(View view) {
+        Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
+        toolbar.setNavigationIcon(com.carecloud.carepay.patient.R.drawable.icn_nav_back);
+        toolbar.setNavigationOnClickListener(view1 -> onBackPressed());
+        ((MenuPatientActivity) getActivity()).displayToolbar(false, null);
+        TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
+        title.setText(Label.getLabel("appointments_cancel_heading"));
+    }
 
-        cancelReasonRadioGroup = (RadioGroup) findViewById(R.id.cancelReasonRadioGroup);
-        cancelAppointmentButton = (Button) findViewById(R.id.cancelAppointmentButton);
-        cancelAppointmentButton.setText(Label.getLabel("cancel_appointments_heading"));
+    private void setUpUI(View view) {
+        reasonEditText = view.findViewById(R.id.reasonEditText);
+        cancelAppointmentButton = view.findViewById(R.id.cancelAppointmentButton);
+        cancelAppointmentButton.setOnClickListener(v -> onCancelAppointment());
+    }
 
-        cancellationReasons = appointmentInfo.getPayload().getCancellationReasons();
-        if (cancellationReasons != null) {
-            for (int count = 0; count < cancellationReasons.size(); count++) {
-                AppointmentCancellationReasonDTO cancellationReason
-                        = cancellationReasons.get(count).getAppointmentCancellationReason();
-                addCancelReason(cancellationReason.getName(), cancellationReason.getId());
+    private void setUpCancelReasons(View view, List<CancellationReasonDTO> cancellationReasons) {
+        RecyclerView reasonsRecyclerView = view.findViewById(R.id.reasonsRecyclerView);
+        reasonsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        reasonsRecyclerView.setAdapter(new CancelReasonAdapter(cancellationReasons, this));
+    }
+
+    private void onCancelAppointment() {
+        viewModel.cancelAppointment(appointmentDTO, selectedCancelationReason
+                .getAppointmentCancellationReason().getId(), reasonEditText.getText().toString());
+    }
+
+    public void setsCancelReasonAppointmentDialogListener(CancelReasonAppointmentDialogListener listener) {
+//        this.callback = listener;
+    }
+
+    private void logApptCancelMixPanel(AppointmentDTO appointmentDTO) {
+        AppointmentCancellationFee cancellationFee = getCancellationFee(appointmentDTO);
+
+        String[] params = {getString(R.string.param_appointment_cancel_reason),
+                getString(R.string.param_practice_id),
+                getString(R.string.param_practice_name),
+                getString(R.string.param_provider_id),
+                getString(R.string.param_patient_id),
+                getString(R.string.param_location_id),
+                getString(R.string.param_appointment_type),
+                getString(R.string.param_payment_amount)
+        };
+        Object[] values = {
+                reasonEditText.getText().toString(),
+                appointmentDTO.getMetadata().getPracticeId(),
+                getPracticeName(appointmentDTO.getMetadata().getPracticeId()),
+                appointmentDTO.getPayload().getProvider().getGuid(),
+                appointmentDTO.getMetadata().getPatientId(),
+                appointmentDTO.getPayload().getLocation().getGuid(),
+                appointmentDTO.getPayload().getVisitType().getName(),
+                cancellationFee != null ? cancellationFee.getAmount() : null
+        };
+        MixPanelUtil.logEvent(getString(R.string.event_appointment_cancelled), params, values);
+        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_appointment_cancelled), 1);
+    }
+
+    private String getPracticeName(String practiceId) {
+        for (UserPracticeDTO practiceDTO : viewModel.getAppointmentsDtoObservable().getValue()
+                .getPayload().getUserPractices()) {
+            if (practiceDTO.getPracticeId().equals(practiceId)) {
+                return practiceDTO.getPracticeName();
             }
         }
+        return null;
     }
 
-    @SuppressWarnings("deprecation")
-    @SuppressLint("InflateParams")
-    private void addCancelReason(String cancelReason, int id) {
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        AppCompatRadioButton cancelReasonView = (AppCompatRadioButton) inflater.inflate(R.layout.cancel_appointment_reason_item, null);
-        RadioGroup.LayoutParams param = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                getResources().getDimensionPixelSize(R.dimen.cancel_radio_button_height));
-        param.setMargins(getResources().getDimensionPixelSize(R.dimen.apt_popup_parent_padding), 0,
-                getResources().getDimensionPixelSize(R.dimen.apt_popup_parent_padding), 0);
-        cancelReasonView.setLayoutParams(param);
-        cancelReasonView.setText(cancelReason);
-        cancelReasonView.setId(id);
-        SystemUtil.setProximaNovaRegularTypeface(getContext(), cancelReasonView);
-        cancelReasonRadioGroup.addView(cancelReasonView);
-
-        // Add divider
-        ImageView divider = new ImageView(getContext());
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                getResources().getDimensionPixelSize(R.dimen.apt_lst_img_elevation));
-        divider.setLayoutParams(layoutParams);
-        divider.setBackgroundColor(getResources().getColor(R.color.cadet_gray));
-        cancelReasonRadioGroup.addView(divider);
+    private AppointmentCancellationFee getCancellationFee(AppointmentDTO appointmentDTO) {
+        AppointmentsSettingDTO practiceSettings = getAppointmentSettings(appointmentDTO.getMetadata().getPracticeId());
+        if (practiceSettings.shouldChargeCancellationFees()) {
+            for (AppointmentCancellationFee cancellationFee : practiceSettings.getCancellationFees()) {
+                if (appointmentDTO.getPayload().getVisitType().getId().equals(cancellationFee.getVisitType())) {
+                    return cancellationFee;
+                }
+            }
+        }
+        return null;
     }
 
-    private void onSetListener() {
-        findViewById(R.id.dialogCloseHeaderImageView).setOnClickListener(this);
-
-        cancelReasonRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            AppCompatRadioButton checkedRadioButton = group.findViewById(checkedId);
-            selectedReasonId = group.getCheckedRadioButtonId();
-            onSetColorStateForRadioButton(checkedRadioButton);
-            onSelectionRadioCancel(checkedRadioButton.isChecked());
-        });
-        cancelAppointmentButton.setOnClickListener(this);
+    private AppointmentsSettingDTO getAppointmentSettings(String practiceId) {
+        List<AppointmentsSettingDTO> appointmentsSettingsList = viewModel.getAppointmentsDtoObservable()
+                .getValue().getPayload().getAppointmentsSettings();
+        for (AppointmentsSettingDTO appointmentsSettingDTO : appointmentsSettingsList) {
+            if (appointmentsSettingDTO.getPracticeId().equals(practiceId)) {
+                return appointmentsSettingDTO;
+            }
+        }
+        return appointmentsSettingsList.get(0);
     }
 
     @Override
-    public void onClick(View view) {
-        int viewId = view.getId();
-        if (viewId == R.id.dialogCloseHeaderImageView) {
-            cancel();
-        } else if (viewId == R.id.cancelAppointmentButton) {
-            onCancelAppointment();
-            cancel();
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-    private void onSelectionRadioCancel(boolean isSelected) {
-        if (isSelected) {
-            cancelAppointmentButton.setEnabled(true);
-        }
-
-        // Check for other cancellation reason
-        if (cancellationReasons.get(cancellationReasons.size() - 1).getAppointmentCancellationReason().getId() == selectedReasonId) {
+    public void onCancelReasonSelected(CancellationReasonDTO reasonDTO) {
+        selectedCancelationReason = reasonDTO;
+        if (reasonDTO.getAppointmentCancellationReason().getCode().equals("OT")) {
             reasonEditText.setEnabled(true);
             reasonEditText.setHintTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
         } else {
             reasonEditText.setEnabled(false);
+            reasonEditText.setText("");
             reasonEditText.setHintTextColor(ContextCompat.getColor(getContext(), R.color.gray));
         }
+        cancelAppointmentButton.setEnabled(true);
     }
 
-    private void onSetColorStateForRadioButton(AppCompatRadioButton appCompatRadioButton) {
-        ColorStateList colorStateList = new ColorStateList(
-                new int[][]{
-                        new int[]{-android.R.attr.state_checked},
-                        new int[]{android.R.attr.state_checked}
-                },
-                new int[]{
-                        ContextCompat.getColor(getContext(), R.color.lightSlateGray),
-                        ContextCompat.getColor(getContext(), R.color.colorPrimary),
-                }
-        );
-        appCompatRadioButton.setSupportButtonTintList(colorStateList);
-        appCompatRadioButton.setTextColor(colorStateList);
+    @Override
+    public boolean onBackPressed() {
+        super.onBackPressed();
+        return false;
     }
-
-    private int getSelectedCancellationIndex() {
-        for (int index = 0; index < cancellationReasons.size(); index++) {
-            AppointmentCancellationReasonDTO cancellationReason
-                    = cancellationReasons.get(index).getAppointmentCancellationReason();
-            if (cancellationReason.getId() == selectedReasonId) {
-                return index;
-            }
-        }
-        return -1;
-    }
-
-    /**
-     * call cancel appointment api.
-     */
-    private void onCancelAppointment() {
-        int selectedIndex = getSelectedCancellationIndex();
-        if (selectedIndex != -1) {
-            AppointmentCancellationReasonDTO cancellationReason
-                    = cancellationReasons.get(selectedIndex).getAppointmentCancellationReason();
-            callback.onCancelReasonAppointmentDialogCancelClicked(appointmentDTO, cancellationReason.getId(), reasonEditText.getText().toString());
-        }
-    }
-
-    public void setsCancelReasonAppointmentDialogListener(CancelReasonAppointmentDialogListener listener) {
-        this.callback = listener;
-    }
-
 }

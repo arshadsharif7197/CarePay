@@ -29,8 +29,10 @@ import androidx.lifecycle.ViewModelProviders;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.AppointmentViewModel;
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
+import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
 import com.carecloud.carepay.patient.appointments.models.AppointmentCalendarEvent;
 import com.carecloud.carepay.patient.db.BreezeDataBase;
+import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.visitsummary.VisitSummaryDialogFragment;
 import com.carecloud.carepay.patient.visitsummary.dto.VisitSummaryDTO;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
@@ -227,7 +229,11 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
         closeButton.setOnClickListener(dismissDialogClick);
 
         cancelAppointment = view.findViewById(R.id.dialogCancelAppointTextView);
-        cancelAppointment.setOnClickListener(cancelAppointmentClick);
+        cancelAppointment.setOnClickListener(v -> {
+            hideDialog();
+            cancelAppointment(appointmentDTO);
+//            dismiss();
+        });
 
         header = view.findViewById(R.id.dialogHeaderLayout);
         appointmentDateTextView = view.findViewById(R.id.appointDateTextView);
@@ -259,6 +265,16 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
         rightButton = view.findViewById(R.id.appointment_button_right);
 
         videoVisitIndicator = view.findViewById(R.id.visit_type_video);
+    }
+
+    private void cancelAppointment(AppointmentDTO appointmentDTO) {
+        CancelReasonAppointmentDialog dialog = CancelReasonAppointmentDialog
+                .newInstance(appointmentDTO);
+        dialog.setOnBackPressedListener(() -> {
+            showDialog(true);
+            ((MenuPatientActivity)getActivity()).displayToolbar(true, null);
+        });
+        callback.addFragment(dialog, true);
     }
 
     private void setCommonValues() {
@@ -637,11 +653,6 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     }
 
     private View.OnClickListener dismissDialogClick = view -> dismiss();
-
-    private View.OnClickListener cancelAppointmentClick = view -> {
-        callback.onCancelAppointment(appointmentDTO);
-        dismiss();
-    };
 
     private View.OnClickListener mapClick = view -> {
         String address = appointmentDTO.getPayload().getLocation().getAddress().getPlaceAddressString();
