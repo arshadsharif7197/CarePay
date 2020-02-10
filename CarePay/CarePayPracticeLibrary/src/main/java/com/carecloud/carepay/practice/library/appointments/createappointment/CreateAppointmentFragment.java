@@ -1,6 +1,8 @@
 package com.carecloud.carepay.practice.library.appointments.createappointment;
 
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -62,7 +64,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUpToolbar(view);
     }
@@ -76,12 +78,7 @@ public class CreateAppointmentFragment extends BaseCreateAppointmentFragment imp
         Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(Label.getLabel("appointments_heading"));
-        view.findViewById(R.id.closeViewLayout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+        view.findViewById(R.id.closeViewLayout).setOnClickListener(v -> dismiss());
     }
 
     protected void showLocationList(UserPracticeDTO selectedPractice,

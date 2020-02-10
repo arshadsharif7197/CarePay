@@ -9,26 +9,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class SignInModelDTO {
 
-    @SerializedName("label")
-    @Expose
-    private String labels;
     @SerializedName("properties")
     @Expose
     private SignInPropertiesDTO properties = new SignInPropertiesDTO();
-
-    /**
-     * @return The labels
-     */
-    public String getLabels() {
-        return labels;
-    }
-
-    /**
-     * @param labels The labels
-     */
-    public void setLabels(String labels) {
-        this.labels = labels;
-    }
 
     /**
      * @return The properties

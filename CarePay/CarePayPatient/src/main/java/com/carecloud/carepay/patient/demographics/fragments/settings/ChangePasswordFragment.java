@@ -2,11 +2,6 @@ package com.carecloud.carepay.patient.demographics.fragments.settings;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import com.google.android.material.textfield.TextInputLayout;
-import androidx.fragment.app.Fragment;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +9,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
@@ -29,6 +30,7 @@ import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.api.client.util.Base64;
 
 import org.json.JSONObject;
@@ -59,7 +61,7 @@ public class ChangePasswordFragment extends DemographicsBaseSettingsFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
             callback = (DemographicsSettingsFragmentListener) context;
@@ -83,31 +85,31 @@ public class ChangePasswordFragment extends DemographicsBaseSettingsFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        final Toolbar toolbar = (Toolbar) view.findViewById(R.id.settings_toolbar);
-        TextView title = (TextView) toolbar.findViewById(R.id.settings_toolbar_title);
+        final Toolbar toolbar = view.findViewById(R.id.settings_toolbar);
+        TextView title = toolbar.findViewById(R.id.settings_toolbar_title);
         title.setText(Label.getLabel("settings_change_password"));
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getActivity(), R.drawable.icn_patient_mode_nav_close));
         callback.setToolbar(toolbar);
 
-        updatePasswordButton = (Button) view.findViewById(R.id.buttonAddDemographicInfo);
+        updatePasswordButton = view.findViewById(R.id.buttonAddDemographicInfo);
         setClickables();
 
         initViews(view);
     }
 
     private void initViews(View view) {
-        TextInputLayout currentPasswordLabel = (TextInputLayout) view.findViewById(R.id.oldPasswordTextInputLayout);
-        currentPasswordEditText = (EditText) view.findViewById(R.id.currentPasswordEditText);
+        TextInputLayout currentPasswordLabel = view.findViewById(R.id.oldPasswordTextInputLayout);
+        currentPasswordEditText = view.findViewById(R.id.currentPasswordEditText);
         currentPasswordEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(currentPasswordLabel, null));
         currentPasswordEditText.addTextChangedListener(getValidateEmptyTextWatcher(currentPasswordLabel));
 
-        TextInputLayout newPasswordLabel = (TextInputLayout) view.findViewById(R.id.newPasswordTextInputLayout);
-        newPasswordEditText = (EditText) view.findViewById(R.id.newPasswordEditText);
+        TextInputLayout newPasswordLabel = view.findViewById(R.id.newPasswordTextInputLayout);
+        newPasswordEditText = view.findViewById(R.id.newPasswordEditText);
         newPasswordEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(newPasswordLabel, null));
         newPasswordEditText.addTextChangedListener(getValidateEmptyTextWatcher(newPasswordLabel));
 
-        TextInputLayout repeatPasswordLabel = (TextInputLayout) view.findViewById(R.id.repeatPasswordTextInputLayout);
-        repeatPasswordEditText = (EditText) view.findViewById(R.id.repeatPasswordEditText);
+        TextInputLayout repeatPasswordLabel = view.findViewById(R.id.repeatPasswordTextInputLayout);
+        repeatPasswordEditText = view.findViewById(R.id.repeatPasswordEditText);
         repeatPasswordEditText.setOnFocusChangeListener(SystemUtil.getHintFocusChangeListener(repeatPasswordLabel, null));
         repeatPasswordEditText.addTextChangedListener(getValidateEmptyTextWatcher(repeatPasswordLabel));
 
@@ -140,30 +142,28 @@ public class ChangePasswordFragment extends DemographicsBaseSettingsFragment {
 
 
     private void setClickables() {
-        updatePasswordButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (passConstraints(false)) {
-                    DemographicMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getMetadata();
-                    DemographicTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
-                    TransitionDTO changePassword = demographicsSettingsTransitionsDTO.getChangePassword();
+        updatePasswordButton.setOnClickListener(view -> {
+            if (passConstraints(false)) {
+                DemographicMetadataDTO demographicsSettingsMetadataDTO = demographicsSettingsDTO.getMetadata();
+                DemographicTransitionsDTO demographicsSettingsTransitionsDTO = demographicsSettingsMetadataDTO.getTransitions();
+                TransitionDTO changePassword = demographicsSettingsTransitionsDTO.getChangePassword();
 
-                    Map<String, String> properties = new HashMap<>();
-                    properties.put("login_email", getCurrentEmail());
-                    properties.put("current_password", currentPasswordEditText.getText().toString().trim());
-                    properties.put("proposed_password", newPasswordEditText.getText().toString().trim());
-                    properties.put("id_token", getAppAuthorizationHelper().getIdToken());
-                    JSONObject attributes = new JSONObject(properties);
-                    String encodedAttributes = new String(Base64.encodeBase64(attributes.toString().getBytes()));
+                Map<String, String> properties = new HashMap<>();
+                properties.put("login_email", getCurrentEmail());
+                properties.put("current_password", currentPasswordEditText.getText().toString().trim());
+                properties.put("proposed_password", newPasswordEditText.getText().toString().trim());
+                properties.put("id_token", getAppAuthorizationHelper().getIdToken());
+                JSONObject attributes = new JSONObject(properties);
+                String encodedAttributes = new String(Base64.encodeBase64(attributes.toString().getBytes()));
 
-                    Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
-                    header.put("maintenance", encodedAttributes);
-                    header.put("AccessToken", getAppAuthorizationHelper().getAccessToken());
+                Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
+                header.put("maintenance", encodedAttributes);
+                header.put("AccessToken", getAppAuthorizationHelper().getAccessToken());
 
-                    DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
-                    if (demographicsSettingsPayloadDTO != null) {
-                        getWorkflowServiceHelper().execute(changePassword, updatePasswordCallback, null, null, header);
-                    }
+                DemographicsSettingsPayloadDTO demographicsSettingsPayloadDTO = demographicsSettingsDTO.getPayload();
+                if (demographicsSettingsPayloadDTO != null) {
+                    getWorkflowServiceHelper().execute(changePassword, updatePasswordCallback,
+                            null, null, header);
                 }
             }
         });
@@ -206,12 +206,12 @@ public class ChangePasswordFragment extends DemographicsBaseSettingsFragment {
             return false;
         }
 
-        TextInputLayout passwordLayout = (TextInputLayout) view.findViewById(R.id.newPasswordTextInputLayout);
-        if(!ValidationHelper.isValidPassword(newPasswordEditText.getText().toString().trim())){
+        TextInputLayout passwordLayout = view.findViewById(R.id.newPasswordTextInputLayout);
+        if (!ValidationHelper.isValidPassword(newPasswordEditText.getText().toString().trim())) {
             passwordLayout.setErrorEnabled(true);
             passwordLayout.setError(Label.getLabel("password_hint_text"));
             return false;
-        }else{
+        } else {
             passwordLayout.setError(null);
             passwordLayout.setErrorEnabled(false);
         }
@@ -220,14 +220,14 @@ public class ChangePasswordFragment extends DemographicsBaseSettingsFragment {
             return false;
         }
 
-        TextInputLayout repeatPasswordLabel = (TextInputLayout) view
+        TextInputLayout repeatPasswordLabel = view
                 .findViewById(R.id.repeatPasswordTextInputLayout);
         if (!repeatPasswordEditText.getText().toString().trim()
                 .equals(newPasswordEditText.getText().toString().trim())) {
             repeatPasswordLabel.setErrorEnabled(true);
             repeatPasswordLabel.setError(Label.getLabel("settings_repeat_password_error"));
             return false;
-        }else{
+        } else {
             repeatPasswordLabel.setError(null);
             repeatPasswordLabel.setErrorEnabled(false);
         }

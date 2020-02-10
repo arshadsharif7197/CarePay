@@ -24,11 +24,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.PermissionChecker;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.appointments.AppointmentViewModel;
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
 import com.carecloud.carepay.patient.appointments.models.AppointmentCalendarEvent;
-import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.db.BreezeDataBase;
 import com.carecloud.carepay.patient.visitsummary.VisitSummaryDialogFragment;
 import com.carecloud.carepay.patient.visitsummary.dto.VisitSummaryDTO;
@@ -40,7 +41,6 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayUtil;
-import com.carecloud.carepaylibray.appointments.fragments.BaseAppointmentDialogFragment;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
@@ -51,6 +51,7 @@ import com.carecloud.carepaylibray.appointments.models.QueueDTO;
 import com.carecloud.carepaylibray.appointments.models.QueueStatusPayloadDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseActivity;
+import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayProgressButton;
 import com.carecloud.carepaylibray.utils.CalendarUtil;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
@@ -72,9 +73,7 @@ import java.util.concurrent.Executors;
  * Created by lmenendez on 5/9/17
  */
 
-public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
-    private static final String KEY_BREEZE_PRACTICE = "is_breeze_practice";
-    private static final String KEY_RESCHEDULE_ENABLED = "isRescheduleEnabled";
+public class AppointmentDetailDialog extends BaseDialogFragment {
     private static final int MY_PERMISSIONS_VS_WRITE_EXTERNAL_STORAGE = 10;
     private static final int OPEN_CALENDAR_APP = 100;
 
@@ -114,6 +113,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     private boolean eventExists;
     private boolean isCalendarAvailable = false;
     private AppointmentsResultModel appointmentResultModel;
+    private AppointmentViewModel viewModel;
 
 
     /**
@@ -122,14 +122,9 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
      * @param appointmentDTO appointment info
      * @return AppointmentDetailDialog
      */
-    public static AppointmentDetailDialog newInstance(AppointmentDTO appointmentDTO,
-                                                      boolean isBreezePractice,
-                                                      boolean isRescheduleEnabled) {
+    public static AppointmentDetailDialog newInstance(AppointmentDTO appointmentDTO) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, appointmentDTO);
-        args.putBoolean(KEY_BREEZE_PRACTICE, isBreezePractice);
-        args.putBoolean(KEY_RESCHEDULE_ENABLED, isRescheduleEnabled);
-
         AppointmentDetailDialog detailDialog = new AppointmentDetailDialog();
         detailDialog.setArguments(args);
         return detailDialog;
@@ -138,11 +133,6 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        attachCallback(context);
-    }
-
-    @Override
-    protected void attachCallback(Context context) {
         try {
             if (context instanceof AppointmentViewHandler) {
                 callback = (PatientAppointmentNavigationCallback) ((AppointmentViewHandler) context).getAppointmentPresenter();
@@ -155,41 +145,62 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (callback == null) {
-            attachCallback(getContext());
-        }
+    public void onDetach() {
+        super.onDetach();
+        callback = null;
     }
 
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+        appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, getArguments());
 
-        Bundle args = getArguments();
-        if (args != null) {
-            appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, args);
-            isBreezePractice = args.getBoolean(KEY_BREEZE_PRACTICE);
-            isRescheduleEnabled = args.getBoolean(KEY_RESCHEDULE_ENABLED);
-        }
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                BreezeDataBase database = BreezeDataBase.getDatabase(getContext());
-                calendarEvent = database.getCalendarEventDao()
-                        .getAppointmentCalendarEvent(appointmentDTO.getPayload().getId());
-                eventExists = false;
-                if (calendarEvent != null) {
-                    checkIfEventExists();
-                    if (!eventExists) {
-                        database.getCalendarEventDao().delete(calendarEvent);
-                    }
+        viewModel = ViewModelProviders.of(getActivity()).get(AppointmentViewModel.class);
+        appointmentResultModel = viewModel.getAppointmentsDtoObservable().getValue();
+        setUpViewModel();
+
+        isBreezePractice = getPracticeInfo(appointmentResultModel.getPayload().getUserPractices(),
+                appointmentDTO.getMetadata().getPracticeId()).isBreezePractice();
+        isRescheduleEnabled = appointmentResultModel.getPayload()
+                .isRescheduleEnabled(appointmentDTO.getMetadata().getPracticeId());
+
+        Executors.newSingleThreadExecutor().execute(() -> {
+            BreezeDataBase database = BreezeDataBase.getDatabase(getContext());
+            calendarEvent = database.getCalendarEventDao()
+                    .getAppointmentCalendarEvent(appointmentDTO.getPayload().getId());
+            eventExists = false;
+            if (calendarEvent != null) {
+                checkIfEventExists();
+                if (!eventExists) {
+                    database.getCalendarEventDao().delete(calendarEvent);
                 }
             }
         });
-        isCalendarAvailable = getSaveCalendarEventIntent()
-                .resolveActivity(getActivity().getPackageManager()) != null;
-        appointmentResultModel = (AppointmentsResultModel) callback.getDto();
+        isCalendarAvailable = getSaveCalendarEventIntent().resolveActivity(getActivity().getPackageManager()) != null;
+    }
+
+    private void setUpViewModel() {
+        viewModel.getQueueStatusObservable().observe(getActivity(), queueStatusPayloadDTO -> {
+            List<QueueDTO> queueList = queueStatusPayloadDTO.getQueueStatus().getQueueStatusInnerPayload().getQueueList();
+            QueueDTO placeInQueue = findPlaceInQueue(queueList, appointmentDTO.getPayload().getId());
+            if (placeInQueue != null) {
+                String place = StringUtil.getOrdinal(ApplicationPreferences.getInstance().getUserLanguage(),
+                        placeInQueue.getRank());
+                queueLayout.setVisibility(View.VISIBLE);
+                queueStatus.setText(getFormattedText(Label.getLabel("appointment_queue_status"), place));
+            }
+        });
+    }
+
+    private UserPracticeDTO getPracticeInfo(List<UserPracticeDTO> userPractices, String practiceId) {
+        UserPracticeDTO userPractice = new UserPracticeDTO();
+        for (UserPracticeDTO userPracticeDTO : userPractices) {
+            if (userPracticeDTO.getPracticeId() != null && userPracticeDTO.getPracticeId().equals(practiceId)) {
+                userPractice = userPracticeDTO;
+                break;
+            }
+        }
+        return userPractice;
     }
 
     private void checkIfEventExists() {
@@ -204,7 +215,7 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle) {
+    public void onViewCreated(@NonNull View view, Bundle icicle) {
         initViews(view);
         setCommonValues();
         applyStyle();
@@ -318,7 +329,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                             || !appointmentDTO.getPayload().isAppointmentOver()) {
                         if (appointmentDTO.getPayload().getAppointmentStatus().getOriginalName() == null &&
                                 !appointmentDTO.getPayload().getVisitType().hasVideoOption()) {
-                            callback.getQueueStatus(appointmentDTO, queueStatusCallback);
+                            viewModel.getQueueStatus(appointmentDTO,
+                                    appointmentResultModel.getMetadata().getLinks().getQueueStatus());
                         }
                         showCheckoutButton(enabledLocations);
                     } else if (appointmentDTO.getPayload().isAppointmentOver()) {
@@ -491,16 +503,15 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
     }
 
     private boolean shouldShowVisitSummary() {
-        AppointmentsResultModel appointmentModelDto = ((PatientAppointmentPresenter) callback).getMainAppointmentDto();
         UserPracticeDTO appointmentPractice = null;
-        for (UserPracticeDTO userPracticeDTO : appointmentModelDto.getPayload().getUserPractices()) {
+        for (UserPracticeDTO userPracticeDTO : appointmentResultModel.getPayload().getUserPractices()) {
             if (userPracticeDTO.getPracticeId().equals(appointmentDTO.getMetadata().getPracticeId())) {
                 appointmentPractice = userPracticeDTO;
             }
         }
         if (appointmentPractice != null && appointmentPractice.isVisitSummaryEnabled()
-                && appointmentModelDto.getPayload().canViewAndCreateVisitSummaries(appointmentPractice.getPracticeId())) {
-            for (PortalSettingDTO portalSettingDTO : appointmentModelDto.getPayload().getPortalSettings()) {
+                && appointmentResultModel.getPayload().canViewAndCreateVisitSummaries(appointmentPractice.getPracticeId())) {
+            for (PortalSettingDTO portalSettingDTO : appointmentResultModel.getPayload().getPortalSettings()) {
                 if (appointmentPractice.getPracticeId().equals(portalSettingDTO.getMetadata().getPracticeId())) {
                     for (PortalSetting portalSetting : portalSettingDTO.getPayload()) {
                         if (portalSetting.getName().toLowerCase().equals("visit summary")) {
@@ -596,8 +607,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         }
 
         if (StringUtil.isNullOrEmpty(phone)) {
-            AppointmentsResultModel appointmentModelDto = ((PatientAppointmentPresenter) callback).getMainAppointmentDto();
-            UserPracticeDTO practiceDTO = appointmentModelDto.getPayload().getPractice(appointmentDTO.getMetadata().getPracticeId());
+            UserPracticeDTO practiceDTO = appointmentResultModel.getPayload()
+                    .getPractice(appointmentDTO.getMetadata().getPracticeId());
             phone = practiceDTO.getPracticePhone();
         }
 
@@ -625,49 +636,32 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         }
     }
 
-    private View.OnClickListener dismissDialogClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            dismiss();
+    private View.OnClickListener dismissDialogClick = view -> dismiss();
+
+    private View.OnClickListener cancelAppointmentClick = view -> {
+        callback.onCancelAppointment(appointmentDTO);
+        dismiss();
+    };
+
+    private View.OnClickListener mapClick = view -> {
+        String address = appointmentDTO.getPayload().getLocation().getAddress().getPlaceAddressString();
+        launchMapView(address);
+    };
+
+    private View.OnClickListener callClick = view -> {
+        String phone = getPhoneNumber();
+        if (!StringUtil.isNullOrEmpty(phone)) {
+            startPhoneCall(phone);
         }
     };
 
-    private View.OnClickListener cancelAppointmentClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            callback.onCancelAppointment(appointmentDTO);
-            dismiss();
-        }
-    };
-
-    private View.OnClickListener mapClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            String address = appointmentDTO.getPayload().getLocation().getAddress().getPlaceAddressString();
-            launchMapView(address);
-        }
-    };
-
-    private View.OnClickListener callClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            String phone = getPhoneNumber();
-            if (!StringUtil.isNullOrEmpty(phone)) {
-                startPhoneCall(phone);
-            }
-        }
-    };
-
-    private View.OnClickListener scheduleAppointmentClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (calendarEvent == null && !eventExists
-                    && PermissionsUtil.checkPermissionReadCalendar(AppointmentDetailDialog.this)) {
-                saveCalendarEvent();
-            } else if (calendarEvent != null) {
-                Toast.makeText(getContext(), Label.getLabel("appointment.schedule.event.message.repeated"),
-                        Toast.LENGTH_LONG).show();
-            }
+    private View.OnClickListener scheduleAppointmentClick = view -> {
+        if (calendarEvent == null && !eventExists
+                && PermissionsUtil.checkPermissionReadCalendar(AppointmentDetailDialog.this)) {
+            saveCalendarEvent();
+        } else if (calendarEvent != null) {
+            Toast.makeText(getContext(), Label.getLabel("appointment.schedule.event.message.repeated"),
+                    Toast.LENGTH_LONG).show();
         }
     };
 
@@ -691,20 +685,14 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                 appointmentDTO.getPayload().getLocation().getAddress().getPlaceAddressString());
     }
 
-    private View.OnClickListener checkInClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            callback.onCheckInStarted(appointmentDTO);
-            dismiss();
-        }
+    private View.OnClickListener checkInClick = view -> {
+        callback.onCheckInStarted(appointmentDTO);
+        dismiss();
     };
 
-    private View.OnClickListener checkOutClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            callback.onCheckOutStarted(appointmentDTO);
-            dismiss();
-        }
+    private View.OnClickListener checkOutClick = view -> {
+        callback.onCheckOutStarted(appointmentDTO);
+        dismiss();
     };
 
     private View.OnClickListener visitSummaryClick = view -> {
@@ -765,12 +753,8 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                         } else if (status.equals("queued") || status.equals("working")) {
                             retryIntent++;
                             statusHandler = new Handler();
-                            statusHandler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    callVisitSummaryStatusService(jobId);
-                                }
-                            }, VisitSummaryDialogFragment.RETRY_TIME);
+                            statusHandler.postDelayed(() -> callVisitSummaryStatusService(jobId),
+                                    VisitSummaryDialogFragment.RETRY_TIME);
                         }
                     }
 
@@ -800,41 +784,32 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
         showErrorNotification(Label.getLabel("visitSummary.createVisitSummary.error.label.downloadError"));
     }
 
-    private View.OnClickListener scanClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            callback.onCheckInOfficeStarted(appointmentDTO);
-            //log event to mixpanel
-            String[] params = {getString(R.string.param_appointment_type),
-                    getString(R.string.param_practice_id),
-                    getString(R.string.param_provider_id),
-                    getString(R.string.param_location_id),
-                    getString(R.string.param_patient_id)
-            };
-            Object[] values = {appointmentDTO.getPayload().getVisitType().getName(),
-                    appointmentDTO.getMetadata().getPracticeId(),
-                    appointmentDTO.getPayload().getProvider().getGuid(),
-                    appointmentDTO.getPayload().getLocation().getGuid(),
-                    appointmentDTO.getMetadata().getPatientId()
-            };
-            MixPanelUtil.logEvent(getString(R.string.event_qr_code), params, values);
-            dismiss();
-        }
+    private View.OnClickListener scanClick = view -> {
+        callback.onCheckInOfficeStarted(appointmentDTO);
+        //log event to mixpanel
+        String[] params = {getString(R.string.param_appointment_type),
+                getString(R.string.param_practice_id),
+                getString(R.string.param_provider_id),
+                getString(R.string.param_location_id),
+                getString(R.string.param_patient_id)
+        };
+        Object[] values = {appointmentDTO.getPayload().getVisitType().getName(),
+                appointmentDTO.getMetadata().getPracticeId(),
+                appointmentDTO.getPayload().getProvider().getGuid(),
+                appointmentDTO.getPayload().getLocation().getGuid(),
+                appointmentDTO.getMetadata().getPatientId()
+        };
+        MixPanelUtil.logEvent(getString(R.string.event_qr_code), params, values);
+        dismiss();
     };
 
-    private View.OnClickListener rescheduleClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            callback.rescheduleAppointment(appointmentDTO);
-            dismiss();
-        }
+    private View.OnClickListener rescheduleClick = view -> {
+        dismiss();
+        callback.rescheduleAppointment(appointmentDTO);
     };
 
-    private View.OnClickListener startVideoVisitClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            callback.startVideoVisit(appointmentDTO);
-        }
+    private View.OnClickListener startVideoVisitClick = view -> {
+        callback.startVideoVisit(appointmentDTO);
     };
 
     @Override
@@ -875,15 +850,12 @@ public class AppointmentDetailDialog extends BaseAppointmentDialogFragment {
                     if (DownloadManager.STATUS_SUCCESSFUL == cursor.getInt(columnIndex)) {
                         rightButton.setEnabled(true);
                         rightButton.setText(Label.getLabel("visitSummary.createVisitSummary.button.label.openFile"));
-                        rightButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                String downloadLocalUri = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
-                                if (downloadLocalUri != null) {
-                                    String downloadMimeType = cursor.getString(cursor
-                                            .getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE));
-                                    FileDownloadUtil.openDownloadedAttachment(context, Uri.parse(downloadLocalUri), downloadMimeType);
-                                }
+                        rightButton.setOnClickListener(v -> {
+                            String downloadLocalUri = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+                            if (downloadLocalUri != null) {
+                                String downloadMimeType = cursor.getString(cursor
+                                        .getColumnIndex(DownloadManager.COLUMN_MEDIA_TYPE));
+                                FileDownloadUtil.openDownloadedAttachment(context, Uri.parse(downloadLocalUri), downloadMimeType);
                             }
                         });
                         enqueueId = -1;

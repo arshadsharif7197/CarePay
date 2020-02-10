@@ -8,8 +8,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * @author pjohnson on 25/04/17.
  */
-
-public class SignInDTO implements DTO{
+public class SignInDTO implements DTO {
 
     @SerializedName("metadata")
     @Expose
@@ -48,6 +47,6 @@ public class SignInDTO implements DTO{
     @Override
     public String toString() {
         Gson gson = new Gson();
-        return  gson.toJson(this);
+        return gson.toJson(this);
     }
 }

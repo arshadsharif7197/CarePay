@@ -7,8 +7,8 @@ import com.google.gson.annotations.SerializedName;
 /**
  * @author pjohnson on 25/04/17.
  */
-
 public class SignInLinksDTO {
+
     @SerializedName("self")
     @Expose
     private TransitionDTO self = new TransitionDTO();

@@ -7,14 +7,17 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -23,6 +26,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
+import com.carecloud.carepaylibray.signinsignup.ResetPasswordViewModel;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.google.gson.JsonObject;
 
@@ -38,6 +42,7 @@ public class ConfirmationResetPasswordFragment extends BaseFragment {
 
     private FragmentActivityInterface listener;
     private String email;
+    private ResetPasswordViewModel viewModel;
 
     public ConfirmationResetPasswordFragment() {
     }
@@ -55,12 +60,12 @@ public class ConfirmationResetPasswordFragment extends BaseFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
             listener = (FragmentActivityInterface) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException("Attached Context must implement DTOInterface");
+            throw new ClassCastException("Attached Context must implement FragmentActivityInterface");
         }
     }
 
@@ -74,6 +79,13 @@ public class ConfirmationResetPasswordFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         email = getArguments().getString("email");
+        setUpViewModel();
+    }
+
+    private void setUpViewModel() {
+        viewModel = ViewModelProviders.of(getActivity()).get(ResetPasswordViewModel.class);
+        viewModel.getResendPasswordDtoObservable().observe(this, aVoid
+                -> listener.showSuccessToast(Label.getLabel("forgot_password_confirmation_success_message")));
     }
 
     @Override
@@ -83,83 +95,35 @@ public class ConfirmationResetPasswordFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button goBackButton = (Button) view.findViewById(R.id.goBackButton);
+        Button goBackButton = view.findViewById(R.id.goBackButton);
         if (goBackButton != null) {
             goBackButton.setVisibility(View.VISIBLE);
-            goBackButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getActivity().onBackPressed();
-                }
-            });
+            goBackButton.setOnClickListener(view1 -> getActivity().onBackPressed());
         }
 
-        ImageView signInHome = (ImageView) view.findViewById(R.id.signInHome);
+        ImageView signInHome = view.findViewById(R.id.signInHome);
         if (signInHome != null) {
             signInHome.setVisibility(View.VISIBLE);
-            signInHome.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getActivity().setResult(ResetPasswordFragment.GO_TO_HOME);
-                    getActivity().finish();
-                }
+            signInHome.setOnClickListener(view12 -> {
+                getActivity().setResult(ResetPasswordFragment.GO_TO_HOME);
+                getActivity().finish();
             });
         }
 
-        view.findViewById(R.id.goToMailAppButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showMailAppChooserDialog();
-            }
-        });
+        view.findViewById(R.id.goToMailAppButton).setOnClickListener(view13 -> showMailAppChooserDialog());
 
-        view.findViewById(R.id.resendMailButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                resetPassword(((SignInDTO) listener.getDto()).getMetadata().getTransitions()
-                        .getForgotPassword(), email);
-            }
-        });
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        view.findViewById(R.id.resendMailButton).setOnClickListener(view14
+                -> viewModel.resendPassword(email));
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
         if (toolbar != null) {
             listener.setToolbar(toolbar);
-            ((TextView)toolbar.findViewById(R.id.toolbar_title))
+            ((TextView) toolbar.findViewById(R.id.toolbar_title))
                     .setText(Label.getLabel("forgot_password_confirmation_screen_title"));
         }
 
     }
-
-    private void resetPassword(TransitionDTO resetPasswordTransition, String email) {
-        JsonObject jsonObject2 = new JsonObject();
-        jsonObject2.addProperty("username", email);
-        JsonObject userObject = new JsonObject();
-        userObject.add("user", jsonObject2);
-        Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
-        Map<String, String> queryParams = new HashMap<>();
-        getWorkflowServiceHelper().execute(resetPasswordTransition, resetPasswordCallback,
-                userObject.toString(), queryParams, headers);
-    }
-
-    private WorkflowServiceCallback resetPasswordCallback = new WorkflowServiceCallback() {
-        @Override
-        public void onPreExecute() {
-            showProgressDialog();
-        }
-
-        @Override
-        public void onPostExecute(WorkflowDTO workflowDTO) {
-            hideProgressDialog();
-            listener.showSuccessToast(Label.getLabel("forgot_password_confirmation_success_message"));
-        }
-
-        @Override
-        public void onFailure(String exceptionMessage) {
-            hideProgressDialog();
-            listener.showErrorToast(exceptionMessage);
-        }
-    };
 
     private void showMailAppChooserDialog() {
         Intent emailIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("mailto:"));
@@ -171,12 +135,13 @@ public class ConfirmationResetPasswordFragment extends BaseFragment {
             // First create an intent with only the package name of the first registered email app
             // and build a picked based on it
             Intent intentChooser = pm.getLaunchIntentForPackage(ri.activityInfo.packageName);
-            if(intentChooser == null){
+            if (intentChooser == null) {
                 showErrorNotification("No Mail Application Available");
                 return;
             }
             Intent openInChooser =
-                    Intent.createChooser(intentChooser, Label.getLabel("forgot_password_confirmation_launch_mail_dialog_button"));
+                    Intent.createChooser(intentChooser,
+                            Label.getLabel("forgot_password_confirmation_launch_mail_dialog_button"));
 
             // Then create a list of LabeledIntent for the rest of the registered email apps
             List<LabeledIntent> intentList = new ArrayList<>();

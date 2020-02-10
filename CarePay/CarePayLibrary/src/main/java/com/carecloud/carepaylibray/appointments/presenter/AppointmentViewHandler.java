@@ -21,6 +21,4 @@ public interface AppointmentViewHandler extends ISession, FragmentActivityInterf
     void confirmAppointment(boolean showSuccess, boolean isAutoScheduled);
 
     void refreshAppointments();
-
-    void newAppointment();
 }

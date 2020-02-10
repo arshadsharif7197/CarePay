@@ -1,10 +1,12 @@
 package com.carecloud.carepay.patient.appointments.adapters;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
@@ -26,6 +28,7 @@ public class PracticesAdapter extends RecyclerView.Adapter<PracticesAdapter.View
         selectedPractice = userPractices.get(0);
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -41,19 +44,16 @@ public class PracticesAdapter extends RecyclerView.Adapter<PracticesAdapter.View
             holder.practiceTextView.setSelected(true);
             selectedHolder = holder;
         }
-        holder.practiceTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (selectedHolder != null) {
-                    selectedHolder.practiceTextView.setSelected(false);
-                }
-                selectedHolder = holder;
-                selectedHolder.practiceTextView.setSelected(true);
-                if (!userPracticeDTO.getPracticeId().equals(selectedPractice.getPracticeId())) {
-                    callback.onPracticeSelected(userPracticeDTO);
-                }
-                selectedPractice = userPracticeDTO;
+        holder.practiceTextView.setOnClickListener(v -> {
+            if (selectedHolder != null) {
+                selectedHolder.practiceTextView.setSelected(false);
             }
+            selectedHolder = holder;
+            selectedHolder.practiceTextView.setSelected(true);
+            if (!userPracticeDTO.getPracticeId().equals(selectedPractice.getPracticeId())) {
+                callback.onPracticeSelected(userPracticeDTO);
+            }
+            selectedPractice = userPracticeDTO;
         });
     }
 

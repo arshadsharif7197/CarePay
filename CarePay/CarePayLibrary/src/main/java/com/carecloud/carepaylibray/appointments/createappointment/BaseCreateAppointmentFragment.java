@@ -2,6 +2,8 @@ package com.carecloud.carepaylibray.appointments.createappointment;
 
 import android.content.Context;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import android.view.View;
@@ -58,7 +60,7 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
     protected boolean isReschedule;
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof AppointmentViewHandler) {
             callback = ((AppointmentViewHandler) context).getAppointmentPresenter();
@@ -96,7 +98,7 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUpUI(view);
     }
@@ -104,57 +106,22 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
     private void setUpUI(View view) {
         providersNoDataTextView = view.findViewById(R.id.providersNoDataTextView);
         providerContainer = view.findViewById(R.id.providerContainer);
-        providersNoDataTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showProviderList(selectedPractice, selectedVisitType, selectedLocation);
-            }
-        });
-        providerContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showProviderList(selectedPractice, selectedVisitType, selectedLocation);
-            }
-        });
+        providersNoDataTextView.setOnClickListener(v -> showProviderList(selectedPractice, selectedVisitType, selectedLocation));
+        providerContainer.setOnClickListener(v -> showProviderList(selectedPractice, selectedVisitType, selectedLocation));
 
         visitTypeNoDataTextView = view.findViewById(R.id.visitTypeNoDataTextView);
         visitTypeContainer = view.findViewById(R.id.visitTypeContainer);
-        visitTypeNoDataTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showVisitTypeList(selectedPractice, selectedResource, selectedLocation);
-            }
-        });
-        visitTypeContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showVisitTypeList(selectedPractice, selectedResource, selectedLocation);
-            }
-        });
+        visitTypeNoDataTextView.setOnClickListener(v -> showVisitTypeList(selectedPractice, selectedResource, selectedLocation));
+        visitTypeContainer.setOnClickListener(v -> showVisitTypeList(selectedPractice, selectedResource, selectedLocation));
 
 
         locationNoDataTextView = view.findViewById(R.id.locationNoDataTextView);
         locationContainer = view.findViewById(R.id.locationContainer);
-        locationNoDataTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showLocationList(selectedPractice, selectedResource, selectedVisitType);
-            }
-        });
-        locationContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showLocationList(selectedPractice, selectedResource, selectedVisitType);
-            }
-        });
+        locationNoDataTextView.setOnClickListener(v -> showLocationList(selectedPractice, selectedResource, selectedVisitType));
+        locationContainer.setOnClickListener(v -> showLocationList(selectedPractice, selectedResource, selectedVisitType));
 
         checkAvailabilityButton = view.findViewById(R.id.checkAvailabilityButton);
-        checkAvailabilityButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callAvailabilityService();
-            }
-        });
+        checkAvailabilityButton.setOnClickListener(v -> callAvailabilityService());
 
         if (isReschedule) {
             setResourceProvider(selectedResource);
@@ -211,12 +178,9 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         setCardViewContent(providerContainer, providerName, speciality, true, resource.getProvider().getPhoto());
 
         ImageView deleteImageView = providerContainer.findViewById(R.id.deleteImageView);
-        deleteImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                resetProvider();
-                checkIfButtonEnabled();
-            }
+        deleteImageView.setOnClickListener(v -> {
+            resetProvider();
+            checkIfButtonEnabled();
         });
         checkIfButtonEnabled();
     }
@@ -226,7 +190,7 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         selectedVisitType = visitType;
         visitTypeNoDataTextView.setVisibility(View.GONE);
         String title = StringUtil.capitalize(visitType.getName());
-        String subtitle = null;
+        String subtitle;
         TextView subTitleTextView = visitTypeContainer.findViewById(R.id.subTitleTextView);
         if (visitType.getAmount() > 0) {
             subTitleTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
@@ -240,12 +204,9 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         setCardViewContent(visitTypeContainer, title, subtitle, false, null);
 
         ImageView deleteImageView = visitTypeContainer.findViewById(R.id.deleteImageView);
-        deleteImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                resetVisitType();
-                checkIfButtonEnabled();
-            }
+        deleteImageView.setOnClickListener(v -> {
+            resetVisitType();
+            checkIfButtonEnabled();
         });
         checkIfButtonEnabled();
     }
@@ -259,12 +220,9 @@ public abstract class BaseCreateAppointmentFragment extends BaseDialogFragment i
         setCardViewContent(locationContainer, title, subtitle, false, null);
 
         ImageView deleteImageView = locationContainer.findViewById(R.id.deleteImageView);
-        deleteImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                resetLocation();
-                checkIfButtonEnabled();
-            }
+        deleteImageView.setOnClickListener(v -> {
+            resetLocation();
+            checkIfButtonEnabled();
         });
         checkIfButtonEnabled();
     }
