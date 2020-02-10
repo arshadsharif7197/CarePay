@@ -18,7 +18,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/appointment_card_header_height">
+            android:layout_height="@dimen/appointment_card_header_height"
+            android:id="@+id/appointmentCard">
 
             <LinearLayout
                 android:id="@+id/appointment_card_header"
@@ -51,7 +52,7 @@
                     android:textSize="@dimen/appointmentCardStartDayTextSize"
                     android:textStyle="bold"
                     app:customAssetFont="proxima_nova_extra_bold"
-                    tools:text="Today, Apr 17th" />
+                    tools:text="Wednesday, Dec 25, 2019" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/appointment_start_time"
@@ -141,105 +142,167 @@
                 breeze:textKey="practice_app_check_in_text"
                 tools:text="Checked-in" />
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            <RelativeLayout
                 android:id="@+id/appointment_status_missed"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginStart="@dimen/startCheckinHorizontalMargin"
-                android:layout_marginTop="@dimen/checked_in_card_status_top_margin"
                 android:layout_marginEnd="@dimen/startCheckinHorizontalMargin"
-                android:layout_marginBottom="@dimen/startCheckinHorizontalMargin"
-                android:background="@drawable/grey_top_border"
-                android:padding="@dimen/appointmentCardStatusPadding"
-                android:gravity="center"
-                android:textColor="@color/lightning_yellow"
-                android:textSize="@dimen/appointmentCardStatusTextSize"
-                android:visibility="gone"
-                app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="appointments_missed_heading" />
+                android:visibility="gone">
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_1dp"
+                    android:layout_alignParentTop="true"
+                    android:background="@color/light_gray" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/appointmentStatusVerticalMargin"
+                    android:layout_marginBottom="@dimen/appointmentStatusVerticalMargin"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/appointmentCardStatusPadding"
+                    android:paddingBottom="@dimen/appointmentCardStatusPadding"
+                    android:textColor="@color/lightning_yellow"
+                    android:textSize="@dimen/appointmentCardStatusTextSize"
+                    app:customAssetFont="gotham_rounded_medium"
+                    breeze:textKey="appointments_missed_heading"
+                    tools:text="APPOINTMENT MISSED" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/appointment_status_checked_in"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginStart="@dimen/startCheckinHorizontalMargin"
-                android:layout_marginTop="@dimen/checked_in_card_status_top_margin"
                 android:layout_marginEnd="@dimen/startCheckinHorizontalMargin"
-                android:layout_marginBottom="@dimen/startCheckinHorizontalMargin"
-                android:background="@drawable/grey_top_border"
-                android:gravity="center"
-                android:padding="@dimen/appointmentCardStatusPadding"
-                android:textColor="@color/yellowGreen"
-                android:textSize="@dimen/appointmentCardStatusTextSize"
-                android:visibility="gone"
-                tools:text="CHECKED IN"
-                app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="appointments_checked_in_label" />
+                android:visibility="gone">
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_1dp"
+                    android:layout_alignParentTop="true"
+                    android:background="@color/light_gray" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/appointmentStatusVerticalMargin"
+                    android:layout_marginBottom="@dimen/appointmentStatusVerticalMargin"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/appointmentCardStatusPadding"
+                    android:paddingBottom="@dimen/appointmentCardStatusPadding"
+                    android:textColor="@color/yellowGreen"
+                    android:textSize="@dimen/appointmentCardStatusTextSize"
+                    app:customAssetFont="gotham_rounded_medium"
+                    breeze:textKey="appointments_checked_in_label"
+                    tools:text="CHECKED IN" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/appointment_status_requested"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginStart="@dimen/startCheckinHorizontalMargin"
-                android:layout_marginTop="@dimen/checked_in_card_status_top_margin"
                 android:layout_marginEnd="@dimen/startCheckinHorizontalMargin"
-                android:layout_marginBottom="@dimen/startCheckinHorizontalMargin"
-                android:background="@drawable/grey_top_border"
-                android:gravity="center"
-                android:padding="@dimen/appointmentCardStatusPadding"
-                android:textColor="@color/lightning_yellow"
-                android:textSize="@dimen/appointmentCardStatusTextSize"
-                android:visibility="gone"
-                app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="request_pending_label" />
+                android:visibility="gone">
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_1dp"
+                    android:layout_alignParentTop="true"
+                    android:background="@color/light_gray" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/appointmentStatusVerticalMargin"
+                    android:layout_marginBottom="@dimen/appointmentStatusVerticalMargin"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/appointmentCardStatusPadding"
+                    android:paddingBottom="@dimen/appointmentCardStatusPadding"
+                    android:textColor="@color/lightning_yellow"
+                    android:textSize="@dimen/appointmentCardStatusTextSize"
+                    app:customAssetFont="gotham_rounded_medium"
+                    breeze:textKey="request_pending_label"
+                    tools:text="REQUESTED" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/appointment_status_checked_out"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginStart="@dimen/startCheckinHorizontalMargin"
-                android:layout_marginTop="@dimen/checked_in_card_status_top_margin"
                 android:layout_marginEnd="@dimen/startCheckinHorizontalMargin"
-                android:layout_marginBottom="@dimen/startCheckinHorizontalMargin"
-                android:background="@drawable/grey_top_border"
-                android:padding="@dimen/appointmentCardStatusPadding"
-                android:gravity="center"
-                android:textColor="@color/slateGray"
-                android:textSize="@dimen/appointmentCardStatusTextSize"
-                android:visibility="gone"
-                app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="appointment_checked_out_label" />
+                android:visibility="gone">
 
-            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_1dp"
+                    android:layout_alignParentTop="true"
+                    android:background="@color/light_gray" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/appointmentStatusVerticalMargin"
+                    android:layout_marginBottom="@dimen/appointmentStatusVerticalMargin"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/appointmentCardStatusPadding"
+                    android:paddingBottom="@dimen/appointmentCardStatusPadding"
+                    android:textColor="@color/slateGray"
+                    android:textSize="@dimen/appointmentCardStatusTextSize"
+                    app:customAssetFont="gotham_rounded_medium"
+                    breeze:textKey="appointment_checked_out_label"
+                    tools:text="CHECKED-OUT" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/appointment_status_canceled"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/commonButtonHeight"
+                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginStart="@dimen/startCheckinHorizontalMargin"
-                android:layout_marginTop="@dimen/checked_in_card_status_top_margin"
                 android:layout_marginEnd="@dimen/startCheckinHorizontalMargin"
-                android:layout_marginBottom="@dimen/startCheckinHorizontalMargin"
-                android:background="@drawable/grey_top_border"
-                android:padding="@dimen/appointmentCardStatusPadding"
-                android:gravity="center"
-                android:paddingTop="@dimen/checked_in_card_status_top_margin"
-                android:textColor="@color/harvard_crimson"
-                android:textSize="@dimen/appointmentCardStatusTextSize"
-                android:visibility="gone"
-                app:customAssetFont="gotham_rounded_medium"
-                breeze:textKey="appointments_canceled_heading" />
+                android:visibility="gone">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_1dp"
+                    android:layout_alignParentTop="true"
+                    android:background="@color/light_gray" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/appointmentStatusVerticalMargin"
+                    android:layout_marginBottom="@dimen/appointmentStatusVerticalMargin"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/appointmentCardStatusPadding"
+                    android:paddingBottom="@dimen/appointmentCardStatusPadding"
+                    android:textColor="@color/harvard_crimson"
+                    android:textSize="@dimen/appointmentCardStatusTextSize"
+                    app:customAssetFont="gotham_rounded_medium"
+                    breeze:textKey="appointments_canceled_heading"
+                    tools:text="CANCELLED" />
+
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/appointment_location_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/appointment_doctor_speciality"
-                android:layout_marginTop="@dimen/dimen_18dp"
-                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:layout_marginBottom="@dimen/dimen_10dp"
                 android:orientation="vertical"
                 android:visibility="gone">
 
@@ -266,18 +329,18 @@
                     android:id="@+id/appointment_place_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_11dp"
+                    android:layout_marginTop="@dimen/dimen_5dp"
                     android:gravity="center"
                     android:textColor="@color/lightSlateGray"
-                    android:textSize="@dimen/text_size_16sp"
+                    android:textSize="@dimen/appointmentPlaceTextSize"
                     android:textStyle="bold"
                     app:customAssetFont="proxima_nova_extra_bold" />
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/appointment_place_address"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
+                    android:layout_height="@dimen/commonButtonHeight"
+                    android:gravity="center|top"
                     android:maxLines="2"
                     android:textColor="@color/lightSlateGray"
                     android:textSize="@dimen/appointmentCardAddressTextSize"

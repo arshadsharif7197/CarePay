@@ -21,6 +21,9 @@ public class UserLinks {
     @SerializedName("practice_information")
     @Expose
     private List<UserPracticeDTO> delegatePracticeInformation = new ArrayList<>();
+    @Expose
+    @SerializedName("authorized_delegates")
+    private List<ProfileDto> delegates = new ArrayList<>();
 
     public Profile getLoggedInUser() {
         return loggedInUser;
@@ -44,5 +47,13 @@ public class UserLinks {
 
     public void setDelegatePracticeInformation(List<UserPracticeDTO> delegatePracticeInformation) {
         this.delegatePracticeInformation = delegatePracticeInformation;
+    }
+
+    public List<ProfileDto> getDelegates() {
+        return delegates;
+    }
+
+    public void setDelegates(List<ProfileDto> delegates) {
+        this.delegates = delegates;
     }
 }

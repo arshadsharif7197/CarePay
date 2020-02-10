@@ -120,12 +120,15 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".fcm.MyFirebaseMessagingService">
+        <service android:name=".fcm.MyFirebaseMessagingService"
+            android:stopWithTask="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name="com.carecloud.carepaylibray.fcm.RegistrationIntentService" />
+        <service
+            android:name="com.carecloud.carepaylibray.fcm.RegistrationIntentService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <receiver
             android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
@@ -156,12 +159,21 @@
             android:name=".survey.SurveyActivity"
             android:screenOrientation="sensorPortrait" />
         <activity
+            android:name=".session.PatientWarningSessionActivity"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/WarningTimeoutTheme" />
+        <activity
             android:name=".delegate.ProfilesActivity"
             android:screenOrientation="sensorPortrait" />
 
         <service
             android:name=".payment.androidpay.AndroidPayQueueUploadService"
             android:enabled="true" />
+
+        <service
+            android:name=".session.PatientSessionService"
+            android:enabled="true"
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

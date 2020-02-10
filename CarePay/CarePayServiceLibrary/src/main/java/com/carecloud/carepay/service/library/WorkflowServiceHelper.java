@@ -2,12 +2,12 @@ package com.carecloud.carepay.service.library;
 
 import android.content.Context;
 import android.content.Intent;
-import androidx.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
-import com.carecloud.carepay.service.library.cognito.CognitoActionCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.FaultResponseDTO;
@@ -302,7 +302,7 @@ public class WorkflowServiceHelper {
                                  final Map<String, String> headers,
                                  final int attemptCount,
                                  final Call<WorkflowDTO> call) {
-
+        EspressoIdlingResource.increment();
         call.enqueue(new Callback<WorkflowDTO>() {
             boolean shouldRetryRequest = false;
             final String retryErrorCodes = "403|408|409";
@@ -312,6 +312,9 @@ public class WorkflowServiceHelper {
                 callStack.remove(call);
                 try {
                     shouldRetryRequest = retryErrorCodes.contains(String.valueOf(response.code())) || response.code() > 422;
+                    if (!shouldRetryRequest) {
+                        EspressoIdlingResource.decrement();
+                    }
                     switch (response.code()) {
                         case STATUS_CODE_OK:
                             onResponseOk(response);
@@ -447,30 +450,6 @@ public class WorkflowServiceHelper {
         });
 
         callStack.push(call);
-    }
-
-    private CognitoActionCallback getCognitoActionCallback(@NonNull final TransitionDTO transitionDTO,
-                                                           @NonNull final WorkflowServiceCallback callback,
-                                                           final String jsonBody,
-                                                           final Map<String, String> queryMap,
-                                                           final Map<String, String> headers) {
-        return new CognitoActionCallback() {
-            @Override
-            public void onBeforeLogin() {
-
-            }
-
-            @Override
-            public void onLoginSuccess() {
-                // Re-try failed request with new auth headers
-                execute(transitionDTO, callback, jsonBody, queryMap, headers);
-            }
-
-            @Override
-            public void onLoginFailure(String exceptionMessage) {
-                callback.onFailure(capitalizeMessage(exceptionMessage));
-            }
-        };
     }
 
     private void executeRefreshTokenRequest(@NonNull final WorkflowServiceCallback callback) {

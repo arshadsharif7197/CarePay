@@ -232,7 +232,7 @@ public class ResponsibilityFragment extends ResponsibilityBaseFragment {
     @Override
     public void onDetailItemClick(PendingBalancePayloadDTO paymentLineItem) {
         PaymentDetailsFragmentDialog dialog = PaymentDetailsFragmentDialog
-                .newInstance(paymentDTO, paymentLineItem, selectedBalance, false);
+                .newInstance(paymentDTO, paymentLineItem, selectedBalance, false, false);
         actionCallback.displayDialogFragment(dialog, false);
     }
 

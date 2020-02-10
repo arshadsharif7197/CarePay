@@ -14,6 +14,7 @@ import com.carecloud.carepay.practice.clover.R;
 import com.carecloud.carepay.practice.clover.models.CloverCardTransactionInfo;
 import com.carecloud.carepay.practice.clover.models.CloverPaymentDTO;
 import com.carecloud.carepay.practice.clover.models.CloverQueuePaymentRecord;
+import com.carecloud.carepay.practice.library.splash.SplashActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
@@ -157,6 +158,11 @@ public class CloverPaymentActivity extends BaseActivity {
     }
 
     @Override
+    protected void stopSessionService() {
+
+    }
+
+    @Override
     public void onBackPressed() {
         setResult(RESULT_CANCELED);
         disconnect();
@@ -226,12 +232,7 @@ public class CloverPaymentActivity extends BaseActivity {
                     SystemUtil.showErrorToast(getContext(), Label.getLabel("clover_account_not_authorized"));
                     logPaymentFail("account not authorized", false);
                     logPaymentMixpanel(getString(R.string.event_payment_failed));
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            finish();
-                        }
-                    }, 3000);
+                    handler.postDelayed(() -> finish(), 3000);
                 }
             }
         }.execute();
@@ -275,12 +276,9 @@ public class CloverPaymentActivity extends BaseActivity {
             if (order == null) {
                 setResult(RESULT_CANCELED);
                 SystemUtil.showErrorToast(CloverPaymentActivity.this, Label.getLabel("clover_payment_canceled"));
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        logPaymentMixpanel(getString(R.string.event_payment_failed));
-                        finish();
-                    }
+                handler.postDelayed(() -> {
+                    logPaymentMixpanel(getString(R.string.event_payment_failed));
+                    finish();
                 }, 3000);
                 return;
             }
@@ -621,12 +619,9 @@ public class CloverPaymentActivity extends BaseActivity {
         if (StringUtil.isNullOrEmpty(paymentModelJsonEnc)) {
             paymentRecord.setPaymentModelJson(paymentModelJson);
         }
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                BreezeDataBase dataBase = BreezeDataBase.getDatabase(getApplicationContext());
-                dataBase.getCloverPaymentDao().insert(paymentRecord);
-            }
+        Executors.newSingleThreadExecutor().execute(() -> {
+            BreezeDataBase dataBase = BreezeDataBase.getDatabase(getApplicationContext());
+            dataBase.getCloverPaymentDao().insert(paymentRecord);
         });
 
         Intent intent = new Intent(getContext(), CloverQueueUploadService.class);

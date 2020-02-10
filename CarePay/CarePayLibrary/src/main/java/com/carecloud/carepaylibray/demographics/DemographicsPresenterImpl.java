@@ -172,7 +172,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
                     demographicsView.getContext().getString(R.string.param_last_completed_step),
                     demographicsView.getContext().getString(R.string.param_is_guest)
             };
-            Object[] values ={
+            Object[] values = {
                     currentStep,
                     isGuest,
             };
@@ -180,7 +180,7 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
                     params, values);
         }
         if (currentFragment instanceof ResponsibilityBaseFragment) {
-            logCheckinCompleted(false,false, null);
+            logCheckinCompleted(false, false, null);
         }
     }
 
@@ -356,7 +356,8 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
         }
         navigateToFragment(fragment, true);
 
-        if (!checkEmpty) {
+        if (!checkEmpty && !medicationsAllergiesDTO.getPayload().getCheckinSettings().isAllowMedicationPicture()
+                && medicationsAllergiesDTO.getPayload().getMedications().getPayload().isEmpty()) {
             showMedicationAllergySearchFragment(MedicationAllergySearchFragment.MEDICATION_ITEM);
         }
 
@@ -605,11 +606,11 @@ public class DemographicsPresenterImpl implements DemographicsPresenter {
     @Override
     public void showRemovePrimaryInsuranceDialog(ConfirmationCallback callback, DialogInterface.OnCancelListener cancelListener) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        String message = isPatientMode ? Label.getLabel("demographics_insurance_primary_alert_message_patient")
-                : Label.getLabel("demographics_insurance_primary_alert_message");
-        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment
-                .newInstance(Label.getLabel("demographics_insurance_primary_alert_title"), message);
-        confirmDialogFragment.setNegativeAction(true);
+        ConfirmDialogFragment confirmDialogFragment = ConfirmDialogFragment.newInstance(
+                        Label.getLabel("demographics_insurance_primary_alert_title"),
+                        Label.getLabel("demographics_insurance_primary_alert_message_patient"),
+                        Label.getLabel("cancel"),
+                        Label.getLabel("ok"));
         confirmDialogFragment.setCallback(callback);
         if (cancelListener != null) {
             confirmDialogFragment.setOnCancelListener(cancelListener);

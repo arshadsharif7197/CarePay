@@ -1,18 +1,24 @@
 package com.carecloud.carepaylibray.payments.adapter;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.constants.CustomAssetStyleable;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsPatientsCreditCardsPayloadListDTO;
+import com.carecloud.carepaylibray.utils.DateUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,7 +41,11 @@ public class CreditCardsListAdapter extends RecyclerView.Adapter<CreditCardsList
      * @param context         Context
      * @param creditCardsList listof card info
      * @param callback        callback for selection
-     * @param showSeparator
+     *                        <<<<<<< HEAD
+     * @param showSeparator   boolean to show separator
+     *                        =======
+     * @param showSeparator   boolean to show or not the separator
+     *                        >>>>>>> QA
      */
     public CreditCardsListAdapter(Context context,
                                   List<PaymentsPatientsCreditCardsPayloadListDTO> creditCardsList,
@@ -47,8 +57,9 @@ public class CreditCardsListAdapter extends RecyclerView.Adapter<CreditCardsList
         this.showSeparator = showSeparator;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.item_credit_card, parent, false);
         return new ViewHolder(view);
@@ -58,9 +69,19 @@ public class CreditCardsListAdapter extends RecyclerView.Adapter<CreditCardsList
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final PaymentCreditCardsPayloadDTO creditCardInfo = creditCardsList.get(position).getPayload();
 
-        holder.creditCardText.setText(String.format("%s %s", creditCardInfo.getCardType(),
+        holder.creditCardText.setText(String.format("%s ****%s", creditCardInfo.getCardType(),
                 creditCardInfo.getCardNumber()));
 
+        String expiredDate = !StringUtil.isNullOrEmpty(creditCardInfo.getExpireDtDisplay()) ?
+                creditCardInfo.getExpireDtDisplay() : creditCardInfo.getExpireDt();
+
+        Date expDate = DateUtil.getInstance().setDateRaw(expiredDate).getDate();
+        expDate = DateUtil.getLastDayOfMonth(expDate);
+        expDate = DateUtil.getLastHourOfDay(expDate);
+        if (expDate.before(new Date())) {
+            holder.paymentMethodImage.setImageResource(R.drawable.icn_payment_credit_card_expiring);
+            holder.paymentMethodCheck.setVisibility(View.GONE);
+        }
         if (creditCardInfo.isDefault()) {
             holder.defaultCardText.setVisibility(View.VISIBLE);
         } else {
@@ -74,23 +95,20 @@ public class CreditCardsListAdapter extends RecyclerView.Adapter<CreditCardsList
             highlightRow(holder, false, CustomAssetStyleable.PROXIMA_NOVA_REGULAR);
         }
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (callback != null) {
-                    selectedItem = creditCardInfo;
-                    if (lastHighlightedView != null) {
-                        highlightRow(lastHighlightedView, false, CustomAssetStyleable.PROXIMA_NOVA_REGULAR);
-                    }
-                    highlightRow(holder, true, CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD);
-                    lastHighlightedView = holder;
-                    callback.onCreditCardItemSelected(creditCardInfo);
+        holder.itemView.setOnClickListener(view -> {
+            if (callback != null) {
+                selectedItem = creditCardInfo;
+                if (lastHighlightedView != null) {
+                    highlightRow(lastHighlightedView, false, CustomAssetStyleable.PROXIMA_NOVA_REGULAR);
                 }
+                highlightRow(holder, true, CustomAssetStyleable.PROXIMA_NOVA_SEMI_BOLD);
+                lastHighlightedView = holder;
+                callback.onCreditCardItemSelected(creditCardInfo);
             }
         });
     }
 
-    protected boolean isTheSameCard(PaymentCreditCardsPayloadDTO creditCardInfo) {
+    private boolean isTheSameCard(PaymentCreditCardsPayloadDTO creditCardInfo) {
         return selectedItem != null
                 && ((creditCardInfo.getCreditCardsId() != null
                 && creditCardInfo.getCreditCardsId().equals(selectedItem.getCreditCardsId()))
@@ -98,7 +116,7 @@ public class CreditCardsListAdapter extends RecyclerView.Adapter<CreditCardsList
                 && creditCardInfo.getCompleteNumber().equals(selectedItem.getCompleteNumber())));
     }
 
-    protected void highlightRow(ViewHolder holder, boolean selected, int proximaNovaSemiBold) {
+    private void highlightRow(ViewHolder holder, boolean selected, int proximaNovaSemiBold) {
         holder.creditCardText.setSelected(selected);
         holder.paymentMethodImage.setSelected(selected);
         holder.paymentMethodCheck.setSelected(selected);
@@ -119,18 +137,18 @@ public class CreditCardsListAdapter extends RecyclerView.Adapter<CreditCardsList
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        View paymentMethodImage;
+        ImageView paymentMethodImage;
         View paymentMethodCheck;
         TextView defaultCardText;
         CarePayTextView creditCardText;
         View divider;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             paymentMethodImage = itemView.findViewById(R.id.credit_card_image);
             paymentMethodCheck = itemView.findViewById(R.id.credit_card_check);
-            defaultCardText = (TextView) itemView.findViewById(R.id.credit_card_default);
-            creditCardText = (CarePayTextView) itemView.findViewById(R.id.credit_card_text);
+            defaultCardText = itemView.findViewById(R.id.credit_card_default);
+            creditCardText = itemView.findViewById(R.id.credit_card_text);
             divider = itemView.findViewById(R.id.divider);
             if (showSeparator) {
                 divider.setVisibility(View.VISIBLE);

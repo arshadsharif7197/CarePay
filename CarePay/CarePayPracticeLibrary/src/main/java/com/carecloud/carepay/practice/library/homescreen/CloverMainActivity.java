@@ -78,13 +78,15 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-
         homeScreenDTO = getConvertedDTO(HomeScreenDTO.class);
         homeScreenMode = HomeScreenMode.valueOf(homeScreenDTO.getState().toUpperCase());
         if (homeScreenMode.equals(HomeScreenMode.PRACTICE_HOME)) {
             setContentView(R.layout.activity_main_practice_mode);
+            PracticeHomeScreenTransitionsDTO transitions = DtoHelper.getConvertedDTO(PracticeHomeScreenTransitionsDTO.class,
+                    homeScreenDTO.getMetadata().getTransitions());
+            ApplicationPreferences.getInstance().setPatientModeTransition(transitions.getPatientMode());
+
         } else {
             setContentView(R.layout.activity_main_patient_mode);
         }
@@ -121,21 +123,19 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         boolean isLatest = ApplicationPreferences.getInstance().isLatestVersion();
         if (updateAlertContainer != null && !isLatest) {
             updateAlertContainer.setVisibility(View.VISIBLE);
-            updateAlertContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String appPackageName = getPackageName();
-                    try {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-                    } catch (android.content.ActivityNotFoundException anfe) {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-                    }
+            updateAlertContainer.setOnClickListener(v -> {
+                String appPackageName = getPackageName();
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
                 }
             });
         }
 
         changeScreenMode(homeScreenMode);
         getNews();
+        stopSessionService();
     }
 
     private void populateLanguageSpinner() {
@@ -160,12 +160,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         });
         languageSpinner = findViewById(R.id.languageSpinner);
         if (languageSpinner != null) {
-            languageSpinner.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    popupPickerLanguage.showAsDropDown(view);
-                }
-            });
+            languageSpinner.setOnClickListener(view -> popupPickerLanguage.showAsDropDown(view));
             languageSpinner.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
         }
     }
@@ -176,9 +171,6 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         homeLockImageView = findViewById(R.id.homeLockIcon);
         modeSwitchImageView = findViewById(R.id.homeModeSwitchClickable);
         languageSpinner = findViewById(R.id.languageSpinner);
-    }
-
-    private void populateWithLabels() {
     }
 
     private void changeScreenMode(HomeScreenMode homeScreenMode) {
@@ -277,7 +269,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     }
 
     private void setAppointmentCounts(boolean shouldUpdateNow) {
-        HomeScreenAppointmentCountsDTO appointmentCounts = (HomeScreenAppointmentCountsDTO) getApplicationPreferences().getAppointmentCounts(HomeScreenAppointmentCountsDTO.class);
+        HomeScreenAppointmentCountsDTO appointmentCounts = (HomeScreenAppointmentCountsDTO) getApplicationPreferences()
+                .getAppointmentCounts(HomeScreenAppointmentCountsDTO.class);
         if (appointmentCounts != null) {
             int checkinCounter = appointmentCounts.getCheckingInCount();
             TextView counter = findViewById(R.id.checkedInCounterTextview);
@@ -290,12 +283,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             updateCheckinCounts();
         } else {
             handler.removeCallbacksAndMessages(null);
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    setAppointmentCounts(false);
-                }
-            }, 1000 * 60);//30s
+            handler.postDelayed(() -> setAppointmentCounts(false), 1000 * 60);//30s
         }
     }
 
@@ -351,14 +339,12 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
         alertDialogBuilder
                 .setMessage(getString(R.string.unauthorized_practice_user))
                 .setCancelable(false)
-                .setPositiveButton(getString(com.carecloud.carepaylibrary.R.string.alert_ok), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // if this button is clicked, close
-                        // current activity
-                        getWorkflowServiceHelper().executeApplicationStartRequest(logOutCall);
-                        //CloverMainActivity.this.onBackPressed();
-                        dialog.dismiss();
-                    }
+                .setPositiveButton(getString(com.carecloud.carepaylibrary.R.string.alert_ok), (dialog, id) -> {
+                    // if this button is clicked, close
+                    // current activity
+                    getWorkflowServiceHelper().executeApplicationStartRequest(logOutCall);
+                    //CloverMainActivity.this.onBackPressed();
+                    dialog.dismiss();
                 });
 
         AlertDialog alertDialog = alertDialogBuilder.create();
@@ -409,12 +395,14 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     protected void onResume() {
         super.onResume();
         disableUnavailableItems();
-        updateCheckinCounts();
+        if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
+            updateCheckinCounts();
+        }
     }
 
     private void disableUnavailableItems() {
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-            setViewsDisabled((ViewGroup) findViewById(R.id.homeCheckoutClickable));
+            setViewsDisabled(findViewById(R.id.homeCheckoutClickable));
         }
     }
 
@@ -501,9 +489,10 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
         JsonObject transitionsAsJsonObject = homeScreenDTO.getMetadata().getTransitions();
         Gson gson = new Gson();
-        TransitionDTO transitionDTO = null;
+        TransitionDTO transitionDTO;
         if (homeScreenMode == HomeScreenMode.PRACTICE_HOME) {
-            PracticeHomeScreenTransitionsDTO transitionsDTO = DtoHelper.getConvertedDTO(PracticeHomeScreenTransitionsDTO.class, transitionsAsJsonObject);
+            PracticeHomeScreenTransitionsDTO transitionsDTO = DtoHelper
+                    .getConvertedDTO(PracticeHomeScreenTransitionsDTO.class, transitionsAsJsonObject);
             transitionDTO = transitionsDTO.getPracticeAppointments();
 
             String practiceId = getApplicationMode().getUserPracticeDTO().getPracticeId();
@@ -593,7 +582,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
 
     private void createChangeModeDialog() {
         String transitionsAsString = homeScreenDTO.getMetadata().getTransitions().toString();
-        ChangeModeDialogFragment.newInstance(transitionsAsString).show(getSupportFragmentManager(), ChangeModeDialogFragment.class.getName());
+        ChangeModeDialogFragment.newInstance(transitionsAsString)
+                .show(getSupportFragmentManager(), ChangeModeDialogFragment.class.getName());
     }
 
     /**
@@ -619,7 +609,8 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
             hideProgressDialog();
             if (homeScreenMode == HomeScreenMode.PATIENT_HOME) {
                 Bundle extra = new Bundle();
-                extra.putBoolean(CarePayConstants.LOGIN_OPTION_QR, getApplicationPreferences().getAppointmentNavigationOption() != Defs.NAVIGATE_APPOINTMENT);
+                extra.putBoolean(CarePayConstants.LOGIN_OPTION_QR,
+                        getApplicationPreferences().getAppointmentNavigationOption() != Defs.NAVIGATE_APPOINTMENT);
                 extra.putBoolean(CarePayConstants.LOGIN_OPTION_SEARCH, true);
                 PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, extra);
             } else {

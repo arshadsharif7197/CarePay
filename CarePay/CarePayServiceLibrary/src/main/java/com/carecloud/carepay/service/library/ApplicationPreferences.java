@@ -37,7 +37,6 @@ public class ApplicationPreferences {
 
     private static final String PREFERENCE_PATIENT_ID = "patient_id";
     private static final String PREFERENCE_PRACTICE_ID = "practice_id";
-    private static final String PREFERENCE_PREFIX = "prefix";
     private static final String PREFERENCE_USER_ID = "user_id";
     private static final String PREFERENCE_USERNAME = "username";
     private static final String PREFERENCE_PASSWORD = "password";
@@ -58,13 +57,13 @@ public class ApplicationPreferences {
     private static final String PREFERENCE_REMIND_LATEST = "remind_latest";
     private static final String PREFERENCE_FORCE_UPDATE = "force_update";
     private static final String PREFERENCE_PROFILE_ID = "profileId";
-    public static final String PREFERENCE_APPOINTMENT_COUNTS = "appointment_counts";
+    private static final String PREFERENCE_APPOINTMENT_COUNTS = "appointment_counts";
     private static final String PREFERENCE_LAST_DATE_RATE_DIALOG_SHOWN = "lastDateRateDialogShown";
+    private static final String PREFERENCE_PATIENT_MODE_TRANSITION = "patientModeTransition";
 
     private String patientId;
     private String practiceId;
     private Integer practiceLocationId;
-    private String prefix;
     private String userId;
     private String userLanguage;
     private String patientUserLanguage;
@@ -81,6 +80,7 @@ public class ApplicationPreferences {
     private TransitionDTO badgeCounterTransition;
     private int messagesBadgeCounter;
     private int formsBadgeCounter;
+    private TransitionDTO patientModeTransition;
 
 
     public static ApplicationPreferences getInstance() {
@@ -239,25 +239,6 @@ public class ApplicationPreferences {
         }
 
         return readStringFromSharedPref(PREFERENCE_PATIENT_PHOTO_URL, "");
-    }
-
-    /**
-     * @param newValue the prefix
-     */
-    public void setPrefix(String newValue) {
-        prefix = newValue;
-        writeStringToSharedPref(PREFERENCE_PREFIX, prefix);
-    }
-
-    /**
-     * @return prefix
-     */
-    public String getPrefix() {
-        if (null != prefix) {
-            return prefix;
-        }
-
-        return readStringFromSharedPref(PREFERENCE_PREFIX);
     }
 
     public void writeBooleanToSharedPref(String key, Boolean value) {
@@ -565,5 +546,17 @@ public class ApplicationPreferences {
     public void setLastDateRateDialogShown() {
         String strDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         writeStringToSharedPref(PREFERENCE_LAST_DATE_RATE_DIALOG_SHOWN, strDate);
+    }
+
+    public TransitionDTO getPatientModeTransition() {
+        if (patientModeTransition == null) {
+            patientModeTransition = getObjectFromSharedPreferences(PREFERENCE_PATIENT_MODE_TRANSITION, TransitionDTO.class);
+        }
+        return patientModeTransition;
+    }
+
+    public void setPatientModeTransition(TransitionDTO patientModeTransition) {
+        this.patientModeTransition = patientModeTransition;
+        writeObjectToSharedPreference(PREFERENCE_PATIENT_MODE_TRANSITION, patientModeTransition);
     }
 }

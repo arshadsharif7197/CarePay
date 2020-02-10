@@ -8,8 +8,6 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.carepaycamera.CarePayCameraPreview;
 
-import org.apache.commons.lang3.NotImplementedException;
-
 import java.io.File;
 
 /**
@@ -33,7 +31,7 @@ public class MediaCameraActivity extends BaseActivity implements MediaCameraFrag
 
     @Override
     public void navigateToWorkflow(WorkflowDTO workflowDTO) {
-        throw new NotImplementedException("Media Camera Activity does not handle navigating to work flows");
+        throw new UnsupportedOperationException("Media Camera Activity does not handle navigating to work flows");
     }
 
     @Override
@@ -48,5 +46,10 @@ public class MediaCameraActivity extends BaseActivity implements MediaCameraFrag
     public void displayCameraFragment(String tempFile) {
         MediaCameraFragment cameraFragment = MediaCameraFragment.newInstance(tempFile, cameraType);
         replaceFragment(R.id.content_frame, cameraFragment, false);
+    }
+
+    @Override
+    protected void stopSessionService() {
+
     }
 }

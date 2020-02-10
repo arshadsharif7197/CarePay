@@ -96,30 +96,19 @@ public class DocumentScannerAdapter {
         }
     }
 
-
     private void initViews(View view) {
-        imageFront = (ImageView) view.findViewById(R.id.demogrDocsFrontScanImage);
-        imageBack = (ImageView) view.findViewById(R.id.demogrDocsBackScanImage);
+        imageFront = view.findViewById(R.id.demogrDocsFrontScanImage);
+        imageBack = view.findViewById(R.id.demogrDocsBackScanImage);
+        scanFrontButton = view.findViewById(R.id.demogrDocsFrontScanButton);
+        scanBackButton = view.findViewById(R.id.demogrDocsBackScanButton);
+    }
 
-        final boolean isPatientApp = applicationType == ApplicationMode.ApplicationType.PATIENT;
-        scanFrontButton = (Button) view.findViewById(R.id.demogrDocsFrontScanButton);
-        scanFrontButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mediaScannerPresenter.setCaptureView(imageFront);
-                mediaScannerPresenter.selectImage(isPatientApp);
-            }
-        });
+    public void setFrontCaptureImage() {
+        mediaScannerPresenter.setCaptureView(imageFront);
+    }
 
-        scanBackButton = (Button) view.findViewById(R.id.demogrDocsBackScanButton);
-        scanBackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mediaScannerPresenter.setCaptureView(imageBack);
-                mediaScannerPresenter.selectImage(isPatientApp);
-            }
-        });
-
+    public void setBackCaptureImage() {
+        mediaScannerPresenter.setCaptureView(imageBack);
     }
 
     /**
@@ -148,24 +137,18 @@ public class DocumentScannerAdapter {
         if (!StringUtil.isNullOrEmpty(frontPic)) {
             setImageView(frontPic, imageFront, false);
             final String finalFrontPic = frontPic;
-            imageFront.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(finalFrontPic, false);
-                    fragment.show(((BaseActivity) context).getSupportFragmentManager(), "detail");
-                }
+            imageFront.setOnClickListener(view -> {
+                DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(finalFrontPic, false);
+                fragment.show(((BaseActivity) context).getSupportFragmentManager(), "detail");
             });
         }
 
         if (!StringUtil.isNullOrEmpty(backPic)) {
             setImageView(backPic, imageBack, false);
             final String finalBackPic = backPic;
-            imageBack.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(finalBackPic, false);
-                    fragment.show(((BaseActivity) context).getSupportFragmentManager(), "detail");
-                }
+            imageBack.setOnClickListener(view -> {
+                DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(finalBackPic, false);
+                fragment.show(((BaseActivity) context).getSupportFragmentManager(), "detail");
             });
         }
     }
@@ -193,12 +176,9 @@ public class DocumentScannerAdapter {
         if (!StringUtil.isNullOrEmpty(frontPic)) {
             setImageView(frontPic, imageFront, false);
             final String finalFrontPic = frontPic;
-            imageFront.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(finalFrontPic, false);
-                    fragment.show(((BaseActivity) context).getSupportFragmentManager(), "detail");
-                }
+            imageFront.setOnClickListener(view -> {
+                DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(finalFrontPic, false);
+                fragment.show(((BaseActivity) context).getSupportFragmentManager(), "detail");
             });
         }
 
@@ -206,12 +186,9 @@ public class DocumentScannerAdapter {
         if (!StringUtil.isNullOrEmpty(backPic)) {
             setImageView(backPic, imageBack, false);
             final String finalBackPic = backPic;
-            imageBack.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(finalBackPic, false);
-                    fragment.show(((BaseActivity) context).getSupportFragmentManager(), "detail");
-                }
+            imageBack.setOnClickListener(view -> {
+                DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(finalBackPic, false);
+                fragment.show(((BaseActivity) context).getSupportFragmentManager(), "detail");
             });
         }
     }
@@ -295,12 +272,9 @@ public class DocumentScannerAdapter {
                         setBackRescan();
                     }
                 }
-                imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(filePath, false);
-                        fragment.show(((BaseActivity) context).getSupportFragmentManager(), "detail");
-                    }
+                imageView.setOnClickListener(view1 -> {
+                    DocumentDetailFragment fragment = DocumentDetailFragment.newInstance(filePath, false);
+                    fragment.show(((BaseActivity) context).getSupportFragmentManager(), "detail");
                 });
                 if (callback != null) {
                     callback.onImageLoadCompleted(true);

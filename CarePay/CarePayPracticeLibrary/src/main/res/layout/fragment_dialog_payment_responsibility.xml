@@ -116,8 +116,8 @@
             android:paddingBottom="@dimen/patientResponsibilityBalanceVerticalPadding"
             android:textColor="@color/white"
             android:textSize="@dimen/patientResponsibilityBalanceTextSize"
-            tools:text="Balance: $1525.23"
-            app:customAssetFont="proxima_nova_semi_bold" />
+            app:customAssetFont="proxima_nova_semi_bold"
+            tools:text="Balance: $1525.23" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -163,6 +163,7 @@
                 android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:layout_weight="1"
                 android:background="@drawable/blue_border_rounded_button_selector"
+                android:contentDescription="@string/content_description_create_payment_plan_button"
                 android:textAllCaps="false"
                 android:textColor="@color/primary_color_enabled_selector"
                 android:textSize="@dimen/respons_button_text_size"
@@ -177,6 +178,7 @@
                 android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:layout_weight="1"
                 android:background="@drawable/primary_rounded_button_selector"
+                android:contentDescription="@string/content_description_pay_partial_button"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/respons_button_text_size"
@@ -191,6 +193,7 @@
                 android:layout_margin="@dimen/distributionButtonContainersPadding"
                 android:layout_weight="1"
                 android:background="@drawable/green_rounded_button_selector"
+                android:contentDescription="@string/content_description_pay_total_button"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/respons_button_text_size"

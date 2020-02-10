@@ -27,7 +27,7 @@ public interface PatientAppointmentNavigationCallback extends AppointmentNavigat
 
     void getQueueStatus(AppointmentDTO appointmentDTO, WorkflowServiceCallback callback);
 
-    AppointmentsSettingDTO getPracticeSettings();
+    AppointmentsSettingDTO getAppointmentSettings(String practiceId);
 
     void callVisitSummaryService(AppointmentDTO appointment, WorkflowServiceCallback callback);
 

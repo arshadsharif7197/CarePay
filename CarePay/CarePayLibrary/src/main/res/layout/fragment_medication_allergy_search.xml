@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clickable="true"
     android:orientation="vertical">
 
-    <include layout="@layout/toolbar_search"/>
+    <include layout="@layout/toolbar_search" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -20,26 +21,64 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
-            android:padding="@dimen/padding_xlarge"/>
+            android:padding="@dimen/padding_xlarge"
+            android:contentDescription="@string/content_description_medications_and_allergies_list"/>
 
-        <FrameLayout
-            android:id="@+id/emptyStateScreen"
+        <RelativeLayout
+            android:id="@+id/noResultsContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingEnd="@dimen/dimen_60dp"
             android:paddingStart="@dimen/dimen_60dp"
+            android:paddingEnd="@dimen/dimen_60dp"
             android:visibility="gone">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/no_results_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_20dp"
                 android:gravity="center"
-                android:textColor="@color/optional_gray"
-                android:textSize="@dimen/text_size_18sp"
-                app:customAssetFont="gotham_rounded_medium"/>
+                android:textColor="@color/charcoal"
+                android:textSize="@dimen/text_size_21"
+                app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="payment_retail_items_no_results" />
 
-        </FrameLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/initialScreenContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="@dimen/dimen_60dp"
+            android:paddingEnd="@dimen/dimen_60dp"
+            android:visibility="visible">
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/initialScreenTitleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:gravity="center"
+                android:textColor="@color/charcoal"
+                android:paddingStart="@dimen/dimen_20dp"
+                android:paddingEnd="@dimen/dimen_20dp"
+                android:textSize="@dimen/text_size_21"
+                app:customAssetFont="gotham_rounded_medium"
+                tools:text="Begin typing to find your medications" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/initialScreenSubTitleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/initialScreenTitleTextView"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:gravity="center"
+                android:textColor="@color/cadet_gray"
+                android:textSize="@dimen/text_size_13"
+                app:customAssetFont="proxima_nova_regular"
+                breeze:textKey="medications_allergies_search_subtitle"
+                tools:text="click on the result to add it " />
+
+        </RelativeLayout>
 
     </FrameLayout>
 
@@ -53,7 +92,7 @@
         android:textSize="@dimen/text_size_13"
         android:visibility="visible"
         app:customAssetFont="gotham_rounded_medium"
-        tools:text="Add as Unlisted Medication"/>
+        tools:text="Add as Unlisted Medication" />
 
 
 </LinearLayout>

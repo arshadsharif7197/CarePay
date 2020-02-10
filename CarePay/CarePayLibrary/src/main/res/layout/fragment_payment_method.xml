@@ -29,7 +29,8 @@
         android:layout_weight="3"
         android:choiceMode="singleChoice"
         android:padding="@dimen/payment_method_parent_layout_padding"
-        android:visibility="visible" />
+        android:visibility="visible"
+        android:contentDescription="@string/content_description_payment_methods"/>
 
     <LinearLayout
         android:layout_width="match_parent"

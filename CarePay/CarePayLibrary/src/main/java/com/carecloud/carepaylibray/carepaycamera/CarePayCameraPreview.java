@@ -1,5 +1,6 @@
 package com.carecloud.carepaylibray.carepaycamera;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -527,5 +528,12 @@ public class CarePayCameraPreview extends SurfaceView implements SurfaceHolder.C
         this.cameraType = cameraType;
     }
 
-
+    /**
+     * cCose the camera view
+     */
+    public void onClose() {
+        if(this.context instanceof Activity){
+            ((Activity)this.context).finish();
+        }
+    }
 }

@@ -21,7 +21,8 @@
         android:paddingTop="@dimen/dimen_15dp"
         android:paddingEnd="@dimen/dimen_10dp"
         android:paddingBottom="@dimen/dimen_15dp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:contentDescription="@string/content_description_list_of_practices"/>
 
     <com.carecloud.carepaylibray.customcomponents.CarePayButton
         android:id="@+id/checkAvailabilityButton"
@@ -34,7 +35,8 @@
         android:textColor="@color/white"
         app:customAssetFont="gotham_rounded_bold"
         breeze:textKey="patientMode.appointmentCreation.availabilityButton.label.available"
-        tools:text="Check Available Times" />
+        tools:text="Check Available Times"
+        android:contentDescription="@string/content_description_check_available_times"/>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -99,7 +101,8 @@
                 android:textSize="@dimen/createAppointmentNoDataTextSize"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="add_appointment_provider_hint"
-                tools:text="Tap here to choose a provider" />
+                tools:text="Tap here to choose a provider"
+                android:contentDescription="@string/content_description_choose_provider"/>
 
             <include
                 android:id="@+id/providerContainer"
@@ -161,7 +164,8 @@
                 android:textSize="@dimen/createAppointmentNoDataTextSize"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="add_appointment_visit_type_hint"
-                tools:text="Tap here to choose a visit Type" />
+                tools:text="Tap here to choose a visit Type"
+                android:contentDescription="@string/content_description_choose_visit_type"/>
 
             <include
                 android:id="@+id/visitTypeContainer"
@@ -223,7 +227,9 @@
                 android:textSize="@dimen/createAppointmentNoDataTextSize"
                 app:customAssetFont="proxima_nova_regular"
                 breeze:textKey="add_appointment_location_hint"
-                tools:text="Tap here to choose a location" />
+                tools:text="Tap here to choose a location"
+                android:contentDescription="@string/content_description_choose_location"
+                android:visibility="visible"/>
 
             <include
                 android:id="@+id/locationContainer"
