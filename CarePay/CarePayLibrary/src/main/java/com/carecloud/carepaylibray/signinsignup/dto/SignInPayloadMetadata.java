@@ -21,7 +21,7 @@ public class SignInPayloadMetadata {
     @SerializedName("practice_id")
     @Expose
     private String practiceId;
-    @SerializedName("patient_id")
+    @SerializedName(value = "patient_id", alternate = "id")
     @Expose
     private String patientId;
 
