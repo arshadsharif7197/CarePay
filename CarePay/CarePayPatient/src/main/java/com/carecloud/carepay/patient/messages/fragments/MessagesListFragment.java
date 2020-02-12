@@ -39,6 +39,7 @@ public class MessagesListFragment extends BaseFragment
 
     private static final int BOTTOM_ROW_OFFSET = 2;
     private static final long MESSAGE_DELETE_DELAY = 1000 * 5;
+    public static final int DEFAULT_PAGE_SIZE = 100;
 
     private SwipeRefreshLayout refreshLayoutView;
     private View noMessagesLayout;
@@ -125,7 +126,7 @@ public class MessagesListFragment extends BaseFragment
 
     public void refreshListMessages() {
         refreshing = true;
-        viewModel.getThreads(0, 0);
+        viewModel.getThreads(0, DEFAULT_PAGE_SIZE);
     }
 
     private void setAdapters() {
@@ -220,7 +221,7 @@ public class MessagesListFragment extends BaseFragment
         public void onRefresh() {
             refreshing = true;
             refreshLayoutView.setRefreshing(refreshing);
-            viewModel.getThreads(0, 0);
+            viewModel.getThreads(0, DEFAULT_PAGE_SIZE);
         }
     };
 
