@@ -112,7 +112,9 @@ public class AppointmentTabHostFragment extends BaseFragment {
         super.onResume();
         if (getActivity() instanceof AppointmentsActivity) {
             AppointmentsActivity activity = (AppointmentsActivity) this.getActivity();
-            activity.displayToolbar(true, null);
+            if (getActivity().getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                activity.displayToolbar(true, null);
+            }
 
             ActionBar supportActionBar = activity.getSupportActionBar();
             if (supportActionBar != null) {

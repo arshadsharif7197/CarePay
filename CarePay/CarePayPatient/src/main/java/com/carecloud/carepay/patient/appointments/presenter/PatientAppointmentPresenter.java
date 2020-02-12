@@ -21,7 +21,6 @@ import com.carecloud.carepay.patient.appointments.models.PracticeInformationMini
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.checkout.AllDoneDialogFragment;
 import com.carecloud.carepay.patient.menu.MenuPatientActivity;
-import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
 import com.carecloud.carepay.patient.rate.RateDialog;
@@ -71,7 +70,7 @@ import com.carecloud.carepaylibray.utils.FileDownloadUtil;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.android.gms.wallet.MaskedWallet;
+//import com.google.android.gms.wallet.MaskedWallet;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -607,11 +606,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             this.appointmentDTO = null;//clear this
         }
         startCancelationFeePayment = false;
-    }
-
-    @Override
-    public void createWalletFragment(MaskedWallet maskedWallet, Double amount) {
-        viewHandler.replaceFragment(AndroidPayDialogFragment.newInstance(maskedWallet, paymentsModel, amount), true);
     }
 
     @Override

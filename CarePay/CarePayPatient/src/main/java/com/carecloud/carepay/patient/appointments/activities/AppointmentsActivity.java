@@ -95,7 +95,6 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET:
-            case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_FULL_WALLET:
             case PaymentConstants.REQUEST_CODE_GOOGLE_PAYMENT:
                 presenter.forwardAndroidPayResult(requestCode, resultCode, data);
@@ -129,7 +128,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     protected void onResume() {
         super.onResume();
         selectMenuItem(R.id.appointmentMenuItem);
-        if (!toolbarHidden) {
+        if (!toolbarHidden && getSupportFragmentManager().getBackStackEntryCount() == 0) {
             displayToolbar(true, getScreenTitle(Label.getLabel("navigation_link_appointments")));
         }
     }

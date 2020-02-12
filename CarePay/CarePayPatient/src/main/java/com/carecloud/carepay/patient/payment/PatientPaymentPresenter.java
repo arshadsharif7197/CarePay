@@ -9,7 +9,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.payment.androidpay.AndroidPayDialogFragment;
 import com.carecloud.carepay.patient.payment.fragments.PatientPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.PaymentPlanPaymentMethodFragment;
 import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
@@ -43,7 +42,7 @@ import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
-import com.google.android.gms.wallet.MaskedWallet;
+//import com.google.android.gms.wallet.MaskedWallet;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -264,11 +263,6 @@ public class PatientPaymentPresenter extends PaymentPresenter
     @Override
     public Fragment getAndroidPayTargetFragment() {
         return androidPayTargetFragment;
-    }
-
-    @Override
-    public void createWalletFragment(MaskedWallet maskedWallet, Double amount) {
-        viewHandler.navigateToFragment(AndroidPayDialogFragment.newInstance(maskedWallet, paymentsModel, amount), true);
     }
 
     @Override

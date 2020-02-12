@@ -46,7 +46,6 @@ public class PaymentActivity extends BasePatientActivity implements PaymentViewH
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case PaymentConstants.REQUEST_CODE_CHANGE_MASKED_WALLET:
-            case PaymentConstants.REQUEST_CODE_MASKED_WALLET:
             case PaymentConstants.REQUEST_CODE_FULL_WALLET:
             case PaymentConstants.REQUEST_CODE_GOOGLE_PAYMENT:
                 presenter.forwardAndroidPayResult(requestCode, resultCode, data);

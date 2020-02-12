@@ -115,11 +115,6 @@
             android:name=".retail.activities.RetailActivity"
             android:screenOrientation="sensorPortrait" />
 
-        <service android:name="com.carecloud.carepaylibray.fcm.MyFirebaseInstanceIdService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
-            </intent-filter>
-        </service>
         <service android:name=".fcm.MyFirebaseMessagingService"
             android:stopWithTask="false">
             <intent-filter>
