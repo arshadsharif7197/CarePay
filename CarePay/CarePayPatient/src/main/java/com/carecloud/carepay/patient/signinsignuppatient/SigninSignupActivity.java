@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
@@ -60,9 +61,9 @@ public class SigninSignupActivity extends BasePatientActivity implements Fragmen
     }
 
     private void setUpViewModel() {
-        SignInViewModel viewModel = ViewModelProviders.of(this).get(SignInViewModel.class);
+        SignInViewModel viewModel = new ViewModelProvider(this).get(SignInViewModel.class);
         setBasicObservers(viewModel);
-        ResetPasswordViewModel resetPasswordViewModel = ViewModelProviders.of(this).get(ResetPasswordViewModel.class);
+        ResetPasswordViewModel resetPasswordViewModel = new ViewModelProvider(this).get(ResetPasswordViewModel.class);
         resetPasswordViewModel.setResetPasswordTransition(signInSignUpDTO.getMetadata().getTransitions().getForgotPassword());
         setBasicObservers(resetPasswordViewModel);
         viewModel.setSignInDto(signInSignUpDTO);

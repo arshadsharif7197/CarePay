@@ -1,6 +1,7 @@
 package com.carecloud.carepay.patient.appointments.dialog;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,7 +23,7 @@ import com.carecloud.carepay.patient.appointments.AppointmentViewModel;
 import com.carecloud.carepay.patient.appointments.adapters.CancelReasonAdapter;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentDetailDialog;
 import com.carecloud.carepay.patient.menu.MenuPatientActivity;
-import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
+import com.carecloud.carepay.patient.payment.newfragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
@@ -31,6 +32,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.CancellationReasonDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
+import com.carecloud.carepaylibray.payments.PaymentsViewModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInPayloadMetadata;
@@ -49,6 +51,7 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment
 
     private AppointmentViewModel viewModel;
     private CancellationReasonDTO selectedCancelationReason;
+    private PaymentsViewModel paymentsViewModel;
 
     public interface CancelReasonAppointmentDialogListener {
         void onCancelReasonAppointmentDialogCancelClicked(AppointmentDTO appointmentDTO,
@@ -82,15 +85,20 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = ViewModelProviders.of(getActivity()).get(AppointmentViewModel.class);
+        appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, getArguments());
+        setUpViewModel();
+    }
+
+    private void setUpViewModel() {
+        paymentsViewModel = new ViewModelProvider(getActivity()).get(PaymentsViewModel.class);
+        viewModel = new ViewModelProvider(getActivity()).get(AppointmentViewModel.class);
         viewModel.getCancelAppointmentObservable().observe(getActivity(), workflowDTO -> {
             logAppointmentCancelMixPanel(appointmentDTO);
-            getFragmentManager().popBackStackImmediate(AppointmentDetailDialog.class.getName(),
+            getChildFragmentManager().popBackStackImmediate(AppointmentDetailDialog.class.getName(),
                     FragmentManager.POP_BACK_STACK_INCLUSIVE);
             viewModel.getAppointments(viewModel.getAppointmentsDtoObservable().getValue()
                     .getMetadata().getLinks().getAppointments(), true);
         });
-        appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, getArguments());
     }
 
     @Nullable
@@ -139,8 +147,10 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment
 
     private void initPaymentFlow(AppointmentCancellationFee cancellationFee) {
         preparePostModel(cancellationFee);
+        paymentsViewModel.setAppointment(appointmentDTO);
         PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
-                .newInstance(paymentsModel, Double.parseDouble(cancellationFee.getAmount()),
+                .newInstance(appointmentDTO.getMetadata().getPracticeId(),
+                        Double.parseDouble(cancellationFee.getAmount()),
                         Label.getLabel("appointment_cancellation_fee_title"));
         callback.addFragment(prepaymentFragment, true);
         logCancelationStartedMixPanel(cancellationFee);
@@ -167,7 +177,7 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment
         queryMetadata.setPracticeMgmt(appointmentDTO.getMetadata().getPracticeMgmt());
         postModel.setQueryMetadata(queryMetadata);
 
-        paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
+        paymentsViewModel.getPaymentsModel().getPaymentPayload().setPaymentPostModel(postModel);
     }
 
     private void logCancelationStartedMixPanel(AppointmentCancellationFee cancellationFee) {
@@ -248,5 +258,11 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment
     public boolean onBackPressed() {
         super.onBackPressed();
         return false;
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialogInterface) {
+        paymentsViewModel.setAppointment(null);
+        super.onDismiss(dialogInterface);
     }
 }

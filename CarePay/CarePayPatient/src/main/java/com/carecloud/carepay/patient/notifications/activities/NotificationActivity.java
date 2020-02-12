@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
@@ -71,7 +72,7 @@ public class NotificationActivity extends MenuPatientActivity
     }
 
     protected void setUpViewModel() {
-        viewModel = ViewModelProviders.of(this).get(NotificationViewModel.class);
+        viewModel = new ViewModelProvider(this).get(NotificationViewModel.class);
         setBasicObservers(viewModel);
         viewModel.getSkeleton().observe(this, showSkeleton -> {
             if (showSkeleton) {
@@ -96,7 +97,7 @@ public class NotificationActivity extends MenuPatientActivity
     }
 
     private void setUpAppointmentViewModel() {
-        appointmentViewModel = ViewModelProviders.of(this).get(AppointmentViewModel.class);
+        appointmentViewModel = new ViewModelProvider(this).get(AppointmentViewModel.class);
         appointmentViewModel.getAppointmentsDtoObservable().observe(this, appointmentsResultModel -> {
             PaymentsModel paymentsModel = appointmentViewModel.getPaymentsModel();
             appointmentPresenter = new PatientAppointmentPresenter(NotificationActivity.this,

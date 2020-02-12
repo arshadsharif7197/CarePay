@@ -24,6 +24,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.PermissionChecker;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
@@ -159,7 +160,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
         super.onCreate(icicle);
         appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, getArguments());
 
-        viewModel = ViewModelProviders.of(getActivity()).get(AppointmentViewModel.class);
+        viewModel = new ViewModelProvider(getActivity()).get(AppointmentViewModel.class);
         appointmentResultModel = viewModel.getAppointmentsDtoObservable().getValue();
         setUpViewModel();
 
@@ -617,7 +618,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
         if (!formatString.contains("%s")) {
             return formatString;
         }
-        return String.format(formatString, fields);
+        return String.format(formatString, (Object) fields);
     }
 
     private String getPhoneNumber() {

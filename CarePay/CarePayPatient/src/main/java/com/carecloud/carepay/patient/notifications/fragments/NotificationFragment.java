@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -102,7 +103,7 @@ public class NotificationFragment extends BaseFragment
         supportedNotificationTypes.add(NotificationType.secure_message);
         supportedNotificationTypes.add(NotificationType.pending_survey);
 
-        viewModel = ViewModelProviders.of(getActivity()).get(NotificationViewModel.class);
+        viewModel = new ViewModelProvider(getActivity()).get(NotificationViewModel.class);
         viewModel.getDeleteNotificationObservable().observe(getActivity(), aVoid -> {
             notificationItems = new ArrayList<>();
             setAdapter();

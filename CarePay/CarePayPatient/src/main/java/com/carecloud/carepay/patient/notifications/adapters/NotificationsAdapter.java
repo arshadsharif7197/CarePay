@@ -503,7 +503,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         if (!messageBase.contains("%s")) {
             return messageBase;
         }
-        return String.format(messageBase, fields);
+        return String.format(messageBase, (Object) fields);
     }
 
     private void setFormattedMessage(TextView textView, String messageBase, String... fields) {

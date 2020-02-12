@@ -1,4 +1,4 @@
-package com.carecloud.carepay.patient.payment.fragments;
+package com.carecloud.carepay.patient.payment.newfragments;
 
 import android.app.Activity;
 import android.content.Context;
@@ -22,9 +22,7 @@ import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.androidpay.AndroidPayQueueUploadService;
 import com.carecloud.carepay.patient.payment.androidpay.models.AndroidPayQueuePaymentRecord;
 import com.carecloud.carepay.patient.payment.androidpay.models.PayeezyAndroidPayResponse;
-import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
 import com.carecloud.carepay.patient.utils.payments.GooglePaymentsUtil;
-import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.RestCallServiceCallback;
 import com.carecloud.carepay.service.library.RestCallServiceHelper;
 import com.carecloud.carepay.service.library.RestDef;
@@ -32,13 +30,15 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
-import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payeeze.PayeezyCall;
-import com.carecloud.carepaylibray.payments.fragments.PaymentMethodFragment;
+import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.models.MerchantServicesDTO;
 import com.carecloud.carepaylibray.payments.models.PapiAccountsDTO;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceDTO;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
@@ -47,7 +47,8 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLi
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentMetadata;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
-import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
+import com.carecloud.carepaylibray.payments.newfragments.ChooseCreditCardFragment;
+import com.carecloud.carepaylibray.payments.newfragments.PaymentMethodFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.EncryptionUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -80,51 +81,39 @@ import okhttp3.RequestBody;
 
 import static com.carecloud.carepay.patient.R.id.paymentAmount;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class PatientPaymentMethodFragment extends PaymentMethodFragment {
-
-    //Patient Specific Stuff
-    private PatientPaymentMethodInterface callback;
 
     private View mGooglePayButton;
     private PaymentsClient mPaymentsClient;
     private PapiAccountsDTO papiAccount;
 
     protected boolean shouldInitAndroidPay = true;
+    private FragmentActivityInterface callback;
 
-    /**
-     * @param paymentsModel  the payments DTO
-     * @param amount         the amount
-     * @param onlySelectMode indicates only selection mode
-     * @return an instance of PatientPaymentMethodFragment
-     */
-    public static PatientPaymentMethodFragment newInstance(PaymentsModel paymentsModel,
-                                                           double amount,
-                                                           boolean onlySelectMode) {
-        PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
-        Bundle args = new Bundle();
-        DtoHelper.bundleDto(args, paymentsModel);
-        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
-        args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
-        fragment.setArguments(args);
-        return fragment;
-    }
+//    /**
+//     * @param paymentsModel  the payments DTO
+//     * @param amount         the amount
+//     * @param onlySelectMode indicates only selection mode
+//     * @return an instance of PatientPaymentMethodFragment
+//     */
+//    public static PatientPaymentMethodFragment newInstance(PaymentsModel paymentsModel,
+//                                                           double amount,
+//                                                           boolean onlySelectMode) {
+//        PatientPaymentMethodFragment fragment = new PatientPaymentMethodFragment();
+//        Bundle args = new Bundle();
+//        DtoHelper.bundleDto(args, paymentsModel);
+//        args.putDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE, amount);
+//        args.putBoolean(CarePayConstants.ONLY_SELECT_MODE, onlySelectMode);
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
+
 
     @Override
-    public void attachCallback(Context context) {
-        super.attachCallback(context);
-        try {
-            if (context instanceof PaymentViewHandler) {
-                callback = (PatientPaymentMethodInterface) ((PaymentViewHandler) context).getPaymentPresenter();
-            } else if (context instanceof AppointmentViewHandler) {
-                callback = (PatientPaymentMethodInterface) ((AppointmentViewHandler) context).getAppointmentPresenter();
-            } else {
-                callback = (PatientPaymentMethodInterface) context;
-            }
-        } catch (ClassCastException cce) {
-            throw new ClassCastException("Attached Context must implement PaymentMethodInterface");
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof FragmentActivityInterface) {
+            callback = (FragmentActivityInterface) context;
         }
     }
 
@@ -167,7 +156,9 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment {
         task.addOnCompleteListener(getActivity(),
                 task1 -> {
                     if (task1.isSuccessful()) {
-                        callback.setAndroidPayTargetFragment(this);
+                        //TODO: Check this when refactorin google pay (viewmodel)
+//                        callback.setAndroidPayTargetFragment(this);
+
                         //TODO: Uncomment this when google pay review is ready
 //                        mGooglePayButton.setVisibility(View.VISIBLE);
                         mGooglePayButton.setClickable(true);
@@ -246,7 +237,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment {
                     case AutoResolveHelper.RESULT_ERROR:
                         Status status = AutoResolveHelper.getStatusFromIntent(data);
                         if (status != null) {
-                            Log.e(PatientPaymentMethodFragment.TAG, "" + status.getStatusMessage());
+                            Log.e(TAG, "" + status.getStatusMessage());
                         }
                         showDialog();
                         break;
@@ -370,6 +361,25 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment {
         }
     }
 
+    @Override
+    protected void onPaymentMethodAction(PaymentsMethodsDTO paymentMethod,
+                                         double amount,
+                                         PaymentsModel paymentsModel) {
+        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
+                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            Fragment fragment = ChooseCreditCardFragment.newInstance(practiceId,
+                    Label.getLabel("credit_card_heading"), amount);
+            callback.addFragment(fragment, true);
+        } else {
+            showAddCard(amount, paymentsModel);
+        }
+    }
+
+    public void showAddCard(double amount, PaymentsModel paymentsModel) {
+        Fragment fragment = AddNewCreditCardFragment.newInstance(paymentsModel, amount);
+        callback.addFragment(fragment, true);
+    }
+
     private RestCallServiceCallback getPayeezyServiceCallback() {
         return new RestCallServiceCallback() {
             @Override
@@ -414,7 +424,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment {
     }
 
     private void getPapiAccount() {
-        UserPracticeDTO userPractice = callback.getPracticeInfo(paymentsModel);
+        UserPracticeDTO userPractice = viewModel.getPracticeInfo(practiceId);
 
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("practice_id", userPractice.getPracticeId());
@@ -483,7 +493,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment {
             postModel.addLineItem(paymentLineItem);
 
             IntegratedPaymentMetadata postModelMetadata = postModel.getMetadata();
-            postModelMetadata.setAppointmentId(callback.getAppointmentId());
+            postModelMetadata.setAppointmentId(viewModel.getAppointment().getPayload().getId());
 
             postModel.setTransactionResponse(rawResponse.getAsJsonObject());
 
@@ -511,7 +521,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment {
             IntegratedPaymentMetadata postModelMetadata = postModel.getMetadata();
             if (StringUtil.isNullOrEmpty(postModel.getMetadata().getAppointmentId()) &&
                     postModel.getMetadata().getAppointmentRequestDTO() == null) {
-                postModelMetadata.setAppointmentId(callback.getAppointmentId());
+                postModelMetadata.setAppointmentId(viewModel.getAppointment().getPayload().getId());
             }
             postPayment(gson.toJson(postModel), rawResponse);
         } catch (JsonSyntaxException jsx) {
@@ -521,8 +531,8 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment {
 
     private void postPayment(String paymentModelJson, JsonElement rawResponse) {
         Map<String, String> queries = new HashMap<>();
-        UserPracticeDTO userPracticeDTO = callback.getPracticeInfo(paymentsModel);
-        AppointmentDTO appointment = callback.getAppointment();
+        UserPracticeDTO userPracticeDTO = viewModel.getPracticeInfo(practiceId);
+        AppointmentDTO appointment = viewModel.getAppointment();
         if (appointment != null) {
             queries.put("practice_mgmt", appointment.getMetadata().getPracticeMgmt());
             queries.put("practice_id", appointment.getMetadata().getPracticeId());
@@ -542,8 +552,8 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment {
             queries.put("practice_id", metadata.getPracticeId());
             queries.put("patient_id", metadata.getPatientId());
         }
-        if (callback.getAppointmentId() != null) {
-            queries.put("appointment_id", callback.getAppointmentId());
+        if (viewModel.getAppointment().getPayload().getId() != null) {
+            queries.put("appointment_id", viewModel.getAppointment().getPayload().getId());
         }
         Map<String, String> header = new HashMap<>();
         header.put("transition", "true");
@@ -563,7 +573,8 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment {
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 hideProgressDialog();
-                callback.showPaymentConfirmation(workflowDTO);
+                //TODO: Check this when refactorin google pay (viewmodel)
+//                callback.showPaymentConfirmation(workflowDTO);
                 if (getDialog() != null) {
                     dismiss();
                 }
@@ -596,7 +607,7 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment {
         eventMap.put("Successful Payment", paymentSuccess);
         eventMap.put("Fail Reason", message);
         eventMap.put("Amount", paymentAmount);
-        UserPracticeDTO userPracticeDTO = callback.getPracticeInfo(paymentsModel);
+        UserPracticeDTO userPracticeDTO = viewModel.getPracticeInfo(practiceId);
         String patientId;
         String practiceId;
         String practiceMgmt;
@@ -643,7 +654,8 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment {
                     paymentJson.toString(),
                     error);
 
-            callback.showPaymentPendingConfirmation(paymentsModel, practiceId);
+            //TODO: Check this when refactorin google pay (viewmodel)
+//            callback.showPaymentPendingConfirmation(paymentsModel, practiceId);
         }
     }
 

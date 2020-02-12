@@ -36,7 +36,9 @@ public class PaymentMethodPrepaymentFragment extends PatientPaymentMethodFragmen
      * @param amount        the amount
      * @return an instance of PatientPaymentMethodFragment
      */
-    public static PaymentMethodPrepaymentFragment newInstance(PaymentsModel paymentsModel, double amount, String title) {
+    public static PaymentMethodPrepaymentFragment newInstance(PaymentsModel paymentsModel,
+                                                              double amount,
+                                                              String title) {
         PaymentMethodPrepaymentFragment fragment = new PaymentMethodPrepaymentFragment();
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, paymentsModel);

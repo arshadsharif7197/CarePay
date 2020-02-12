@@ -17,6 +17,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -83,7 +84,7 @@ public class ConfirmationResetPasswordFragment extends BaseFragment {
     }
 
     private void setUpViewModel() {
-        viewModel = ViewModelProviders.of(getActivity()).get(ResetPasswordViewModel.class);
+        viewModel = new ViewModelProvider(getActivity()).get(ResetPasswordViewModel.class);
         viewModel.getResendPasswordDtoObservable().observe(this, aVoid
                 -> listener.showSuccessToast(Label.getLabel("forgot_password_confirmation_success_message")));
     }

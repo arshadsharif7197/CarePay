@@ -72,6 +72,9 @@ public class AppointmentViewModel extends BaseViewModel {
     }
 
     public MutableLiveData<WorkflowDTO> getCancelAppointmentObservable() {
+        if(cancelAppointmentObservable.getValue()!=null){
+            cancelAppointmentObservable = new MutableLiveData<>();
+        }
         return cancelAppointmentObservable;
     }
 

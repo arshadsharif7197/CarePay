@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -85,7 +86,7 @@ public class MyHealthListFragment extends BaseFragment {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         type = getArguments().getInt("type");
-        myHealthDto = ViewModelProviders.of(getActivity()).get(MyHealthViewModel.class).getMyHealthDto().getValue();
+        myHealthDto = new ViewModelProvider(getActivity()).get(MyHealthViewModel.class).getMyHealthDto().getValue();
     }
 
     @Nullable

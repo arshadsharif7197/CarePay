@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
@@ -42,7 +43,7 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
     }
 
     protected void setUpViewModel() {
-        viewModel = ViewModelProviders.of(this).get(MessagesViewModel.class);
+        viewModel = new ViewModelProvider(this).get(MessagesViewModel.class);
         setBasicObservers(viewModel);
         viewModel.getSkeleton().observe(this, showSkeleton -> {
             if (showSkeleton) {

@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -95,7 +96,7 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
     }
 
     private void setUpViewModel() {
-        viewModel = ViewModelProviders.of(getActivity()).get(MessagesViewModel.class);
+        viewModel = new ViewModelProvider(getActivity()).get(MessagesViewModel.class);
         messagingDto = viewModel.getMessagesDto().getValue();
         viewModel.getThreadMessagesObservable(true).observe(this, messagingThreadDTO
                 -> updateThreadMessages(messagingThreadDTO.getPayload()));
