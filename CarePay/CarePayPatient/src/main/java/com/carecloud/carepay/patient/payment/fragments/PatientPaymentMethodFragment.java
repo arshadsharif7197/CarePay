@@ -63,9 +63,6 @@ import java.util.concurrent.Executors;
 
 import static com.carecloud.carepay.patient.R.id.paymentAmount;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class PatientPaymentMethodFragment extends PaymentMethodFragment implements AndroidPayAdapter.AndroidPayReadyCallback, AndroidPayAdapter.AndroidPayProcessingCallback {
 
     //Patient Specific Stuff
@@ -278,13 +275,12 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
         public void onPostExecute(WorkflowDTO workflowDTO) {
             PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
             papiAccount = paymentsModel.getPaymentPayload().getPapiAccountByType(PaymentConstants.ANDROID_PAY_PAPI_ACCOUNT_TYPE);
-            if (papiAccount.getDefaultBankAccountMid() != null) {
-                androidPayButton.setVisibility(View.VISIBLE);
+                //TODO: Uncomment this when google pay review is ready
+//                androidPayButton.setVisibility(View.VISIBLE);
                 androidPayButton.setOnClickListener(view -> {
                     androidPayAdapter.createAndroidPayRequest(amountToMakePayment, papiAccount);
                     view.setVisibility(View.INVISIBLE);
                 });
-            }
         }
 
         @Override
@@ -296,7 +292,8 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment implemen
     @Override
     public void onAndroidPayFailed(String message) {
         showErrorNotification(message);
-        androidPayButton.setVisibility(View.VISIBLE);
+        //TODO: Uncomment this when google pay review is ready
+//        androidPayButton.setVisibility(View.VISIBLE);
     }
 
     @Override

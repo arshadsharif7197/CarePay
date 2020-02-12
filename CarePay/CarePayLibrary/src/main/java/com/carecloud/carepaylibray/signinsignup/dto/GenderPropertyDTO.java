@@ -9,8 +9,8 @@ import java.util.List;
 /**
  * @author pjohnson on 25/04/17.
  */
-
 public class GenderPropertyDTO {
+
     @SerializedName("type")
     @Expose
     private String type;

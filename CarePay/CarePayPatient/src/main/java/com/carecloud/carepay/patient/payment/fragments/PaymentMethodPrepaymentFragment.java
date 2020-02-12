@@ -2,6 +2,8 @@ package com.carecloud.carepay.patient.payment.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,7 +68,7 @@ public class PaymentMethodPrepaymentFragment extends PatientPaymentMethodFragmen
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle icicle) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle icicle) {
         return inflater.inflate(R.layout.fragment_pre_payment_method, container, false);
     }
 

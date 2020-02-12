@@ -118,15 +118,18 @@ public class AppointmentHistoricAdapter extends BaseAppointmentAdapter {
         return sortedAppointments.size();
     }
 
-    public void setData(List<AppointmentDTO> appointments, boolean refresh) {
-        if (refresh) {
-            sortedAppointments.clear();
-        }
+    public void setData(List<AppointmentDTO> appointments) {
         this.sortedAppointments.addAll(appointments);
         notifyDataSetChanged();
     }
 
     public void setLoading(boolean isLoading) {
         this.isLoading = isLoading;
+        notifyDataSetChanged();
+    }
+
+    public void clearData() {
+        sortedAppointments.clear();
+        notifyItemRangeRemoved(0,0);
     }
 }

@@ -9,6 +9,7 @@ import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.common.BaseViewModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
 import java.util.HashMap;
