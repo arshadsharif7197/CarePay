@@ -52,9 +52,7 @@ public class SplashActivity extends BasePatientActivity {
         NewRelic.withApplicationToken(newRelicId).start(this.getApplication());
 
         RegistrationIntentService.enqueueWork(getContext(), new Intent());
-
-        Intent queueIntent = new Intent(getContext(), AndroidPayQueueUploadService.class);
-        startService(queueIntent);//send any pending android pay payments
+        AndroidPayQueueUploadService.enqueueWork(getContext(), new Intent());
 
         setUncaughtExceptionHandler();
     }

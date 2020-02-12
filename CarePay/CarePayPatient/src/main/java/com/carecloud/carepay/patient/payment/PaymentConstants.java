@@ -1,7 +1,7 @@
 package com.carecloud.carepay.patient.payment;
 
 import com.carecloud.carepay.service.library.constants.HttpConstants;
-import com.google.android.gms.wallet.WalletConstants;
+//import com.google.android.gms.wallet.WalletConstants;
 
 /**
  * Created by kkannan on 12/13/16.
@@ -9,7 +9,7 @@ import com.google.android.gms.wallet.WalletConstants;
 
 public class PaymentConstants {
     // Environment to use when creating an instance of Wallet.WalletOptions
-    public static final int WALLET_ENVIRONMENT = HttpConstants.getEnvironment().equals("Production") ? WalletConstants.ENVIRONMENT_PRODUCTION : WalletConstants.ENVIRONMENT_TEST;
+//    public static final int WALLET_ENVIRONMENT = HttpConstants.getEnvironment().equals("Production") ? WalletConstants.ENVIRONMENT_PRODUCTION : WalletConstants.ENVIRONMENT_TEST;
     public static final String ANDROID_PAY = "Android Pay";
     public static final String ANDROID_PAY_PAYMENT_TYPE = "android_pay";
     public static final String MERCHANT_NAME = "First data Corporation";
@@ -36,7 +36,6 @@ public class PaymentConstants {
     public static final String ANDROID_PAY_SPENDING_LIMIT_EXCEEDED = "Spending Limit Exceeded";
 
     //  Request Codes
-    public static final int REQUEST_CODE_MASKED_WALLET = 1001;
     public static final int REQUEST_CODE_CHANGE_MASKED_WALLET = 1002;
     public static final int REQUEST_CODE_FULL_WALLET = 1003;
     public static final int REQUEST_CODE_GOOGLE_PAYMENT = 1004;

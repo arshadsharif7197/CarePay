@@ -34,12 +34,7 @@ public class PatientPartialPaymentDialog extends PartialPaymentDialog {
             hideDialog(true);
             PatientPaymentMethodFragment fragment = PatientPaymentMethodFragment
                     .newInstance(paymentsDTO, amount, false);
-            fragment.setOnBackPressedListener(new OnBackPressedInterface() {
-                @Override
-                public void onBackPressed() {
-                    showDialog(true);
-                }
-            });
+            fragment.setOnBackPressedListener(() -> showDialog(true));
             payListener.replaceFragment(fragment, true);
             ((ToolbarInterface) payListener).displayToolbar(false, null);
         } catch (NumberFormatException nfe) {

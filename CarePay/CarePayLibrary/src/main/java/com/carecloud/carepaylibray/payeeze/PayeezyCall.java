@@ -128,15 +128,12 @@ public class PayeezyCall {
         return android.util.Base64.encodeToString(toHex(macHash), android.util.Base64.NO_WRAP);
     }
 
-    private byte[] toHex(byte[] arr) {
-        String hex = byteArrayToHex(arr);
-        return hex.getBytes();
-    }
-
-    private static String byteArrayToHex(byte[] a) {
-        StringBuilder sb = new StringBuilder(a.length * 2);
-        for (byte b : a)
+    public static byte[] toHex(byte[] arr) {
+        StringBuilder sb = new StringBuilder(arr.length * 2);
+        for (byte b : arr) {
             sb.append(String.format("%02x", b & 0xff));
-        return sb.toString();
+        }
+        String hex = sb.toString();
+        return hex.getBytes();
     }
 }

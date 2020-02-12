@@ -226,7 +226,6 @@ public class AppointmentHistoryFragment extends BaseFragment
             adapter.clearData();
         }
         viewModel.getHistoricAppointments(userPracticeDTO, paging, refresh, showShimmerLayout);
-
     }
 
     private void hideShimmerEffect() {
