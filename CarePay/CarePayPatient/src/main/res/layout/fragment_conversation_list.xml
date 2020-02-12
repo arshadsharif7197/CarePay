@@ -13,6 +13,18 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar_messaging" />
 
+    <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+        android:id="@+id/threadProviderTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:gravity="center"
+        android:padding="@dimen/dimen_10dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_15"
+        app:customAssetFont="proxima_nova_semi_bold"
+        tools:text="Required Prepayment: $49.00" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"

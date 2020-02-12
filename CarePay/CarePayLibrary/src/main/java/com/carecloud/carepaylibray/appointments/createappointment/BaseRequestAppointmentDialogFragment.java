@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -47,14 +49,14 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
     protected Button requestAppointmentButton;
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof AppointmentViewHandler) {
             callback = ((AppointmentViewHandler) context).getAppointmentPresenter();
         } else if (context instanceof ScheduleAppointmentInterface) {
             callback = (ScheduleAppointmentInterface) context;
         } else {
-            throw new ClassCastException("context must implement AppointmentViewHandler.");
+            throw new ClassCastException("context must implement ScheduleAppointmentInterface.");
         }
     }
 

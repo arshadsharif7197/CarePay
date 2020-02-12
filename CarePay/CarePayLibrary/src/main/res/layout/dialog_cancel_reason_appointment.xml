@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    tools:ignore="MissingPrefix"
     android:layout_width="match_parent"
     android:layout_height="@dimen/cancel_reasons_dialog_height"
     android:background="@color/transparent_apt"
@@ -87,6 +88,7 @@
             android:enabled="false"
             android:paddingBottom="@dimen/cancel_appointment_button_padding"
             android:paddingTop="@dimen/cancel_appointment_button_padding"
+            app:customAssetFont="proxima_nova_regular"
             android:textColor="@color/white"
             android:textSize="@dimen/apt_dl_textview_size" />
     </RelativeLayout>

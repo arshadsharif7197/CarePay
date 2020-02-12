@@ -3,19 +3,18 @@ package com.carecloud.carepay.patient.demographics.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
 import com.carecloud.carepay.patient.delegate.fragments.DelegateListFragment;
-import com.carecloud.carepay.patient.delegate.fragments.ProfileListFragment;
 import com.carecloud.carepay.patient.delegate.interfaces.DelegateManagementInterface;
-import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.demographics.fragments.settings.ChangePasswordFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsExpandedFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsInformationFragment;
@@ -23,10 +22,10 @@ import com.carecloud.carepay.patient.demographics.fragments.settings.Demographic
 import com.carecloud.carepay.patient.demographics.fragments.settings.EditProfileFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.HelpFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.SettingsDocumentsFragment;
-import com.carecloud.carepay.patient.demographics.fragments.settings.SupportFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.UpdateEmailFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.UpdateNameFragment;
 import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
+import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.payment.fragments.CreditCardDetailsFragment;
 import com.carecloud.carepay.patient.payment.fragments.CreditCardListFragment;
 import com.carecloud.carepay.patient.payment.fragments.SettingAddCreditCardFragment;
@@ -37,11 +36,8 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
-import com.carecloud.carepaylibray.base.NavigationStateConstants;
-import com.carecloud.carepaylibray.profile.UserLinks;
-import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInDTO;
-import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
@@ -55,6 +51,9 @@ import com.carecloud.carepaylibray.demographics.interfaces.EmergencyContactFragm
 import com.carecloud.carepaylibray.demographics.interfaces.PhysicianFragmentInterface;
 import com.carecloud.carepaylibray.demographicsettings.models.DemographicsSettingsCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.interfaces.DTO;
+import com.carecloud.carepaylibray.profile.UserLinks;
+import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInDTO;
+import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -150,12 +149,6 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     }
 
     @Override
-    public void displayEditProfileFragment() {
-        EditProfileFragment editProfileFragment = EditProfileFragment.newInstance();
-        replaceFragment(editProfileFragment, true);
-    }
-
-    @Override
     public void displayUpdateEmailFragment() {
         UpdateEmailFragment updateEmailFragment = UpdateEmailFragment.newInstance();
         replaceFragment(updateEmailFragment, true);
@@ -203,7 +196,7 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
 
     @Override
     public void displayCreditCardListFragment() {
-        CreditCardListFragment creditCardListFragment = new CreditCardListFragment();
+        CreditCardListFragment creditCardListFragment = CreditCardListFragment.newInstance();
         replaceFragment(creditCardListFragment, true);
     }
 
@@ -225,11 +218,6 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
     public void displayHelpFragment() {
         replaceFragment(new HelpFragment(), true);
         MixPanelUtil.logEvent(getString(R.string.event_help_clicked));
-    }
-
-    @Override
-    public void showSupportFragment() {
-        replaceFragment(new SupportFragment(), true);
     }
 
     @Override

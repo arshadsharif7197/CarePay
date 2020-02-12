@@ -6,7 +6,6 @@ import com.google.gson.annotations.SerializedName;
 /**
  * @author pjohnson on 25/04/17.
  */
-
 public class GenderValidationDTO {
     @SerializedName("type")
     @Expose

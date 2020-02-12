@@ -112,5 +112,6 @@
     <color name="filterBackground">#2A4550</color>
     <color name="filterSectionTitleBackground">#21353D</color>
     <color name="filterSeparatorBackground">#344A55</color>
+    <color name="roseBackground">#F8D4D9</color>
 
 </resources>

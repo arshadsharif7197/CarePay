@@ -15,7 +15,7 @@ import com.carecloud.carepay.patient.messages.models.MessagingModelDto;
 import com.carecloud.carepay.patient.messages.models.MessagingPostModel;
 import com.carecloud.carepay.patient.messages.models.MessagingThreadDTO;
 import com.carecloud.carepay.patient.messages.models.ProviderContact;
-import com.carecloud.carepay.patient.myhealth.BaseViewModel;
+import com.carecloud.carepaylibray.common.BaseViewModel;
 import com.carecloud.carepay.service.library.RestCallServiceCallback;
 import com.carecloud.carepay.service.library.RestCallServiceHelper;
 import com.carecloud.carepay.service.library.RestDef;
@@ -95,7 +95,7 @@ public class MessagesViewModel extends BaseViewModel {
 
     private void loadDto(TransitionDTO messagesTransition) {
         Map<String, String> queryMap = new HashMap<>();
-        ((CarePayApplication) getApplication()).getWorkflowServiceHelper().execute(messagesTransition,
+        getWorkflowServiceHelper().execute(messagesTransition,
                 new WorkflowServiceCallback() {
                     @Override
                     public void onPreExecute() {
@@ -125,7 +125,7 @@ public class MessagesViewModel extends BaseViewModel {
         queryMap.put("limit", String.valueOf(size < 15 ? 15 : size));//default size if 15, should not be less than that
 
         TransitionDTO inbox = messagesDto.getValue().getMetadata().getLinks().getInbox();
-        ((CarePayApplication) getApplication()).getWorkflowServiceHelper()
+        getWorkflowServiceHelper()
                 .execute(inbox, new WorkflowServiceCallback() {
                     @Override
                     public void onPreExecute() {
@@ -151,7 +151,7 @@ public class MessagesViewModel extends BaseViewModel {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("message_id", thread.getId());
         TransitionDTO messages = messagesDto.getValue().getMetadata().getLinks().getMessage();
-        ((CarePayApplication) getApplication()).getWorkflowServiceHelper()
+        getWorkflowServiceHelper()
                 .execute(messages, new WorkflowServiceCallback() {
                     @Override
                     public void onPreExecute() {
@@ -186,7 +186,7 @@ public class MessagesViewModel extends BaseViewModel {
         postModel.setMessage(message);
 
         TransitionDTO replyTransition = messagesDto.getValue().getMetadata().getLinks().getReply();
-        ((CarePayApplication) getApplication()).getWorkflowServiceHelper().execute(replyTransition,
+        getWorkflowServiceHelper().execute(replyTransition,
                 new WorkflowServiceCallback() {
                     @Override
                     public void onPreExecute() {
@@ -215,7 +215,7 @@ public class MessagesViewModel extends BaseViewModel {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("message_id", threadId);
         TransitionDTO deleteMessage = messagesDto.getValue().getMetadata().getLinks().getDeleteMessage();
-        ((CarePayApplication) getApplication()).getWorkflowServiceHelper()
+        getWorkflowServiceHelper()
                 .execute(deleteMessage, new WorkflowServiceCallback() {
                     @Override
                     public void onPreExecute() {
@@ -263,7 +263,7 @@ public class MessagesViewModel extends BaseViewModel {
         }
 
         TransitionDTO newMessage = messagesDto.getValue().getMetadata().getLinks().getNewMessage();
-        ((CarePayApplication) getApplication()).getWorkflowServiceHelper().execute(newMessage,
+        getWorkflowServiceHelper().execute(newMessage,
                 postNewMessageCallback(), DtoHelper.getStringDTO(postModel));
 
     }
@@ -349,7 +349,7 @@ public class MessagesViewModel extends BaseViewModel {
             public void onFailure(String errorMessage) {
                 setLoading(false);
                 setErrorMessage(errorMessage);
-                Log.e(MessagesNewThreadFragment.class.getName(), errorMessage);
+                Log.e("Server Error", errorMessage);
             }
         };
     }

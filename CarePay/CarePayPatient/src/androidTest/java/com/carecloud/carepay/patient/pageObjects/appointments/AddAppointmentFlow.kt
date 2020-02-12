@@ -2,8 +2,8 @@ package com.carecloud.carepay.patient.pageObjects.appointments
 
 import com.carecloud.carepay.patient.R
 import com.carecloud.carepay.patient.appContext
-import com.carecloud.carepaylibray.androidTest.actions.CustomViewActions
-import com.carecloud.carepaylibray.androidTest.actions.stringHolder
+import com.carecloud.test_module.actions.CustomViewActions
+import com.carecloud.test_module.actions.stringHolder
 
 /**
  * Created by drodriguez on 2019-08-28.

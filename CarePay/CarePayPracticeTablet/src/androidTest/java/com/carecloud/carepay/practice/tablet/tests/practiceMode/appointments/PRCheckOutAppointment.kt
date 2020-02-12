@@ -3,10 +3,10 @@ package com.carecloud.carepay.practice.tablet.tests.practiceMode.appointments
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.carecloud.carepay.practice.tablet.pageObjects.practiceMode.PracticeMainScreen
 import com.carecloud.carepay.practice.tablet.tests.BaseTest
-import com.carecloud.carepaylibray.androidTest.graphql.checkinAppointment
-import com.carecloud.carepaylibray.androidTest.graphql.createAppointment
-import com.carecloud.carepaylibray.androidTest.graphql.getBreezeToken
-import com.carecloud.carepaylibray.androidTest.providers.makeRequest
+import com.carecloud.test_module.graphqlrequests.checkinAppointment
+import com.carecloud.test_module.graphqlrequests.createAppointment
+import com.carecloud.test_module.providers.formatAppointmentTime
+import com.carecloud.test_module.providers.initXavierProvider
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,23 +17,25 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class PRCheckOutAppointment : BaseTest() {
 
+    var appointmentTime: String = ""
+
     @Before
     override
     fun setup() {
-        val response = makeRequest(getBreezeToken(appMode = "practice"))
-        val authToken = response.data?.getBreezeSessionToken?.xavier_token.toString()
-        val appointmentResponse  = makeRequest(createAppointment(),
-                authHeader = authToken)
-        makeRequest(checkinAppointment(appointmentResponse.data?.createAppointment?.id), authToken)
+        initXavierProvider()
+        val appointmentResponse  = createAppointment()
+        appointmentTime = formatAppointmentTime(
+                appointmentResponse.data?.createAppointment?.start_time.toString(), true)
+        checkinAppointment(appointmentResponse.data?.createAppointment?.id)
         super.setup()
     }
 
 
     @Test
-    fun pmCheckOutAppointment() {
+    fun prCheckOutAppointment() {
         PracticeMainScreen()
                 .pressAppointmentsButton()
-                .checkOutFirstAppointmentOnList()
+                .checkOutAppointmentAtTime(appointmentTime)
                 .scheduleLater()
                 .verifyAppointmentStatus("Just Checked Out")
                 .goHome()
