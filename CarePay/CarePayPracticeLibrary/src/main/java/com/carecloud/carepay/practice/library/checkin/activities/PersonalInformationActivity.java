@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -228,6 +229,8 @@ public class PersonalInformationActivity extends BasePracticeActivity {
             Gson gson = new Gson();
             SignInDTO signInDTO = gson.fromJson(workflowDTO.toString(), SignInDTO.class);
             getApplicationMode().setPatientId(signInDTO.getPayload().getPatientModePersonalInfoCheck()
+                    .getMetadata().getPatientId());
+            ApplicationPreferences.getInstance().setPatientId(signInDTO.getPayload().getPatientModePersonalInfoCheck()
                     .getMetadata().getPatientId());
             if (signInDTO.getPayload().getPatientModePersonalInfoCheck().getPersonalInfoCheckSuccessful()) {
                 queryMap.put("language", getApplicationPreferences().getUserLanguage());
