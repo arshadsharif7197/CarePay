@@ -120,14 +120,14 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void onCancelAppointment(final AppointmentDTO appointmentDTO) {
-        final AppointmentCancellationFee cancellationFee = getCancellationFee(appointmentDTO);
-        if (cancellationFee == null) {
-            showCancellationReasons(appointmentDTO, null);
-        } else {
-            CancelAppointmentFeeDialog fragment = CancelAppointmentFeeDialog.newInstance(cancellationFee);
-            fragment.setCancelFeeDialogListener(() -> showCancellationReasons(appointmentDTO, cancellationFee));
-            viewHandler.displayDialogFragment(fragment, false);
-        }
+//        final AppointmentCancellationFee cancellationFee = getCancellationFee(appointmentDTO);
+//        if (cancellationFee == null) {
+//            showCancellationReasons(appointmentDTO, null);
+//        } else {
+//            CancelAppointmentFeeDialog fragment = CancelAppointmentFeeDialog.newInstance(cancellationFee);
+//            fragment.setCancelFeeDialogListener(() -> showCancellationReasons(appointmentDTO, cancellationFee));
+//            viewHandler.displayDialogFragment(fragment, false);
+//        }
     }
 
     private void showCancellationReasons(AppointmentDTO appointmentDTO,
@@ -141,46 +141,46 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             practiceName = getPracticeInfo(appointmentsResultModel.getPayload().getUserPractices(),
                     appointmentDTO.getMetadata().getPracticeId()).getPracticeName();
             if (cancellationFee == null) {
-                onCancelAppointment(appointmentDTO1, cancellationReason, cancellationReasonComment);
+//                onCancelAppointment(appointmentDTO1, cancellationReason, cancellationReasonComment);
             } else {
                 startCancelationFeePayment = true;
                 PatientAppointmentPresenter.this.appointmentDTO = appointmentDTO1;
-                IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
-                postModel.setAmount(Double.parseDouble(cancellationFee.getAmount()));
-                IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
-                paymentLineItem.setAmount(Double.parseDouble(cancellationFee.getAmount()));
-                paymentLineItem.setProviderID(appointmentDTO1.getPayload().getProvider().getGuid());
-                paymentLineItem.setLocationID(appointmentDTO1.getPayload().getLocation().getGuid());
-                paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_CANCELLATION);
-
-
-                postModel.addLineItem(paymentLineItem);
-                postModel.getMetadata().setAppointmentId(appointmentDTO1.getPayload().getId());
-                postModel.getMetadata().setCancellationReasonId(String.valueOf(cancellationReason));
-
-                SignInPayloadMetadata queryMetadata = new SignInPayloadMetadata();
-                queryMetadata.setPracticeId(appointmentDTO.getMetadata().getPracticeId());
-                queryMetadata.setPatientId(appointmentDTO.getMetadata().getPatientId());
-                queryMetadata.setPracticeMgmt(appointmentDTO.getMetadata().getPracticeMgmt());
-                postModel.setQueryMetadata(queryMetadata);
-
-                paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
-                PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
-                        .newInstance(paymentsModel, Double.parseDouble(cancellationFee.getAmount()),
-                                Label.getLabel("appointment_cancellation_fee_title"));
-                viewHandler.addFragment(prepaymentFragment, true);
-
-                String[] params = {getString(R.string.param_payment_amount),
-                        getString(R.string.param_provider_id),
-                        getString(R.string.param_practice_id),
-                        getString(R.string.param_location_id)
-                };
-                Object[] values = {cancellationFee.getAmount(),
-                        appointmentDTO1.getPayload().getProvider().getGuid(),
-                        appointmentDTO1.getMetadata().getPracticeId(),
-                        appointmentDTO1.getPayload().getLocation().getGuid()
-                };
-                MixPanelUtil.logEvent(getString(R.string.event_payment_cancellation_started), params, values);
+//                IntegratedPaymentPostModel postModel = new IntegratedPaymentPostModel();
+//                postModel.setAmount(Double.parseDouble(cancellationFee.getAmount()));
+//                IntegratedPaymentLineItem paymentLineItem = new IntegratedPaymentLineItem();
+//                paymentLineItem.setAmount(Double.parseDouble(cancellationFee.getAmount()));
+//                paymentLineItem.setProviderID(appointmentDTO1.getPayload().getProvider().getGuid());
+//                paymentLineItem.setLocationID(appointmentDTO1.getPayload().getLocation().getGuid());
+//                paymentLineItem.setItemType(IntegratedPaymentLineItem.TYPE_CANCELLATION);
+//
+//
+//                postModel.addLineItem(paymentLineItem);
+//                postModel.getMetadata().setAppointmentId(appointmentDTO1.getPayload().getId());
+//                postModel.getMetadata().setCancellationReasonId(String.valueOf(cancellationReason));
+//
+//                SignInPayloadMetadata queryMetadata = new SignInPayloadMetadata();
+//                queryMetadata.setPracticeId(appointmentDTO.getMetadata().getPracticeId());
+//                queryMetadata.setPatientId(appointmentDTO.getMetadata().getPatientId());
+//                queryMetadata.setPracticeMgmt(appointmentDTO.getMetadata().getPracticeMgmt());
+//                postModel.setQueryMetadata(queryMetadata);
+//
+//                paymentsModel.getPaymentPayload().setPaymentPostModel(postModel);
+//                PaymentMethodPrepaymentFragment prepaymentFragment = PaymentMethodPrepaymentFragment
+//                        .newInstance(paymentsModel, Double.parseDouble(cancellationFee.getAmount()),
+//                                Label.getLabel("appointment_cancellation_fee_title"));
+//                viewHandler.addFragment(prepaymentFragment, true);
+//
+//                String[] params = {getString(R.string.param_payment_amount),
+//                        getString(R.string.param_provider_id),
+//                        getString(R.string.param_practice_id),
+//                        getString(R.string.param_location_id)
+//                };
+//                Object[] values = {cancellationFee.getAmount(),
+//                        appointmentDTO1.getPayload().getProvider().getGuid(),
+//                        appointmentDTO1.getMetadata().getPracticeId(),
+//                        appointmentDTO1.getPayload().getLocation().getGuid()
+//                };
+//                MixPanelUtil.logEvent(getString(R.string.event_payment_cancellation_started), params, values);
             }
         });
         viewHandler.displayDialogFragment(dialog, false);

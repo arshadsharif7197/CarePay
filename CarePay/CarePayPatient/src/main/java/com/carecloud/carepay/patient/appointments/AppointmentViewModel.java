@@ -10,8 +10,10 @@ import com.carecloud.carepay.service.library.appointment.DataDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepaylibray.appointments.models.AppointmentCancellationFee;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.QueueStatusPayloadDTO;
 import com.carecloud.carepaylibray.base.models.Paging;
 import com.carecloud.carepaylibray.common.BaseViewModel;
@@ -25,6 +27,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -217,5 +220,28 @@ public class AppointmentViewModel extends BaseViewModel {
                 setErrorMessage(exceptionMessage);
             }
         }, body, queries);
+    }
+
+    public AppointmentCancellationFee getCancellationFee(AppointmentDTO appointmentDTO) {
+        AppointmentsSettingDTO practiceSettings = getAppointmentSettings(appointmentDTO.getMetadata().getPracticeId());
+        if (practiceSettings.shouldChargeCancellationFees()) {
+            for (AppointmentCancellationFee cancellationFee : practiceSettings.getCancellationFees()) {
+                if (appointmentDTO.getPayload().getVisitType().getId().equals(cancellationFee.getVisitType())) {
+                    return cancellationFee;
+                }
+            }
+        }
+        return null;
+    }
+
+    private AppointmentsSettingDTO getAppointmentSettings(String practiceId) {
+        List<AppointmentsSettingDTO> appointmentsSettingsList = getAppointmentsDtoObservable()
+                .getValue().getPayload().getAppointmentsSettings();
+        for (AppointmentsSettingDTO appointmentsSettingDTO : appointmentsSettingsList) {
+            if (appointmentsSettingDTO.getPracticeId().equals(practiceId)) {
+                return appointmentsSettingDTO;
+            }
+        }
+        return appointmentsSettingsList.get(0);
     }
 }

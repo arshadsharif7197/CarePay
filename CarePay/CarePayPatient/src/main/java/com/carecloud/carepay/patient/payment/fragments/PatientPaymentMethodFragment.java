@@ -63,7 +63,8 @@ import java.util.concurrent.Executors;
 
 import static com.carecloud.carepay.patient.R.id.paymentAmount;
 
-public class PatientPaymentMethodFragment extends PaymentMethodFragment implements AndroidPayAdapter.AndroidPayReadyCallback, AndroidPayAdapter.AndroidPayProcessingCallback {
+public class PatientPaymentMethodFragment extends PaymentMethodFragment
+        implements AndroidPayAdapter.AndroidPayReadyCallback, AndroidPayAdapter.AndroidPayProcessingCallback {
 
     //Patient Specific Stuff
     private ProgressBar paymentMethodFragmentProgressBar;
