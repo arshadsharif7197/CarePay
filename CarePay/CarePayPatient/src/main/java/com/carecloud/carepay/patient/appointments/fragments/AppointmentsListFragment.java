@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -233,8 +232,12 @@ public class AppointmentsListFragment extends BaseFragment
     }
 
     private void setRefreshAction() {
-        refreshLayout.setOnRefreshListener(() -> viewModel
-                .getAppointments(appointmentsResultModel.getMetadata().getLinks().getAppointments(), true));
+        refreshLayout.setOnRefreshListener(() -> doRefreshAction());
+    }
+
+    public void doRefreshAction() {
+        viewModel.getAppointments(appointmentsResultModel.getMetadata()
+                .getLinks().getAppointments(), true);
     }
 
     @Override

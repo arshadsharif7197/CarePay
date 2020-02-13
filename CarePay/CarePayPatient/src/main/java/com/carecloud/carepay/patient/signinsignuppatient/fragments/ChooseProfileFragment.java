@@ -152,4 +152,5 @@ public class ChooseProfileFragment extends BaseDialogFragment {
         profileDto.setProfile(profile);
         return profileDto;
     }
+
 }

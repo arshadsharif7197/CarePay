@@ -2,18 +2,21 @@ package com.carecloud.carepay.patient.selectlanguage.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.selectlanguage.adapters.LanguageListAdapter;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseFragment;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
@@ -31,7 +34,6 @@ import java.util.Map;
  */
 public class SelectLanguageFragment extends BaseFragment implements LanguageListAdapter.OnItemClickListener {
 
-    private static final String LOG_TAG = SelectLanguageFragment.class.getSimpleName();
     private SignInDTO dto;
     private FragmentActivityInterface callback;
     private ImageButton languageConfirmButton;
@@ -71,18 +73,13 @@ public class SelectLanguageFragment extends BaseFragment implements LanguageList
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        RecyclerView languageListView = (RecyclerView) view.findViewById(R.id.languageRecyclerView);
+        RecyclerView languageListView = view.findViewById(R.id.languageRecyclerView);
         languageListView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        languageConfirmButton = (ImageButton) view.findViewById(R.id.languageConfirmButton);
+        languageConfirmButton = view.findViewById(R.id.languageConfirmButton);
         languageConfirmButton.setEnabled(false);
-        languageConfirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View onClickListener) {
-                changeLanguage();
-            }
-        });
+        languageConfirmButton.setOnClickListener(onClickListener -> changeLanguage());
         List<OptionDTO> languages = dto.getPayload().getLanguages();
         languageListView.setAdapter(new LanguageListAdapter(languages, this));
     }
@@ -118,10 +115,10 @@ public class SelectLanguageFragment extends BaseFragment implements LanguageList
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
-            showErrorNotification(exceptionMessage);
-            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 

@@ -9,12 +9,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.appointments.interfaces.AppointmentPrepaymentCallback;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
@@ -77,10 +79,8 @@ public class PaymentMethodPrepaymentFragment extends PatientPaymentMethodFragmen
     @Override
     public void onViewCreated(@NonNull View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
-
         TextView prepaymentAmount = view.findViewById(R.id.prepaymentAmount);
         prepaymentAmount.setText(NumberFormat.getCurrencyInstance(Locale.US).format(amountToMakePayment));
-
     }
 
     @Override
@@ -102,5 +102,21 @@ public class PaymentMethodPrepaymentFragment extends PatientPaymentMethodFragmen
         }
 
     }
+
+    @Override
+    protected void onPaymentMethodAction(PaymentsMethodsDTO paymentMethod,
+                                         double amount,
+                                         PaymentsModel paymentsModel) {
+        Fragment fragment;
+        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null &&
+                !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            fragment = PrepaymentChooseCreditCardFragment.newInstance(paymentsModel,
+                    paymentMethod.getLabel(), amount);
+        } else {
+            fragment = PrepaymentAddNewCreditCardFragment.newInstance(paymentsModel, amount);
+        }
+        callback.addFragment(fragment, true);
+    }
+
 
 }

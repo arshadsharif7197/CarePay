@@ -15,8 +15,8 @@ import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
 import com.carecloud.carepay.patient.appointments.createappointment.AvailabilityHourFragment;
 import com.carecloud.carepay.patient.appointments.createappointment.RequestAppointmentDialogFragment;
-import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentFeeDialog;
 import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
+import com.carecloud.carepay.patient.appointments.fragments.AppointmentsListFragment;
 import com.carecloud.carepay.patient.appointments.models.PracticeInformationMiniPayload;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.checkout.AllDoneDialogFragment;
@@ -27,6 +27,7 @@ import com.carecloud.carepay.patient.rate.RateDialog;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -63,13 +64,11 @@ import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
-import com.carecloud.carepaylibray.signinsignup.dto.SignInPayloadMetadata;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.FileDownloadUtil;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-//import com.google.android.gms.wallet.MaskedWallet;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -77,6 +76,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * Created by lmenendez on 5/15/17
@@ -201,7 +201,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 //        public void onPostExecute(WorkflowDTO workflowDTO) {
 //            viewHandler.hideProgressDialog();
 //            SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_cancellation_success_message_HTML"));
-//            viewHandler.refreshAppointments();
+//            viewHandler.doRefreshAction();
 //            logApptCancelMixpanel();
 //        }
 //
@@ -264,10 +264,10 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 viewHandler.hideProgressDialog();
-                viewHandler.showErrorNotification(exceptionMessage);
-                Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
+                viewHandler.showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+                Log.e(getContext().getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
             }
         }, queries, header);
     }
@@ -363,10 +363,10 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 viewHandler.hideProgressDialog();
-                viewHandler.showErrorNotification(exceptionMessage);
-                Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
+                viewHandler.showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+                Log.e(getContext().getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
             }
         };
     }
@@ -399,6 +399,19 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         startCancelationFeePayment = false;
         if (appointmentDTO != null) {
             viewHandler.refreshAppointments();
+        }
+    }
+
+    @Override
+    public void onPrepaymentFailed() {
+        getSupportFragmentManager().popBackStackImmediate();
+        getSupportFragmentManager().popBackStackImmediate();
+        getSupportFragmentManager().popBackStackImmediate();
+        getSupportFragmentManager().popBackStackImmediate();
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container_main);
+        displayToolbar(true, null);
+        if (fragment instanceof AppointmentsListFragment) {
+            ((AppointmentsListFragment) fragment).doRefreshAction();
         }
     }
 
@@ -759,9 +772,9 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             viewHandler.hideProgressDialog();
-            viewHandler.showErrorNotification(exceptionMessage);
+            viewHandler.showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 }

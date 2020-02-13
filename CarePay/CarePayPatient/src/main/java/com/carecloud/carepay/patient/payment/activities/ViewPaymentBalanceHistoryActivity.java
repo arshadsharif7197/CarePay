@@ -23,6 +23,7 @@ import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityI
 import com.carecloud.carepay.patient.rate.RateDialog;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -116,8 +117,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
-                showErrorNotification(exceptionMessage);
+            public void onFailure(ServerErrorDTO serverErrorDto) {
+                showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
             }
         }, queryMap);
     }
@@ -610,11 +611,11 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 if (showProgress) {
                     hideProgressDialog();
                 }
-                showErrorNotification(exceptionMessage);
+                showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
             }
         };
     }

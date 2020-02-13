@@ -72,7 +72,7 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
             callback = (MessageNavigationCallback) context;

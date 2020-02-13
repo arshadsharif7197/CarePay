@@ -28,6 +28,7 @@ import com.carecloud.carepay.patient.notifications.models.NotificationItem;
 import com.carecloud.carepay.patient.notifications.models.NotificationType;
 import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -85,7 +86,7 @@ public class NotificationFragment extends BaseFragment
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
             callback = (NotificationCallback) context;
@@ -199,7 +200,6 @@ public class NotificationFragment extends BaseFragment
         String tag = fragment.getClass().getName();
         fragment.show(getFragmentManager().beginTransaction(), tag);
     }
-
 
     private void setAdapter() {
         boolean canViewNotifications = notificationsDTO.getPayload().getDelegate() == null ||
@@ -319,13 +319,13 @@ public class NotificationFragment extends BaseFragment
 
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 refreshLayout.setRefreshing(false);
                 if (!refresh) {
                     notificationsAdapter.setLoading(false);
                 }
                 isPaging = false;
-                showErrorNotification(exceptionMessage);
+                showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
             }
         };
     }

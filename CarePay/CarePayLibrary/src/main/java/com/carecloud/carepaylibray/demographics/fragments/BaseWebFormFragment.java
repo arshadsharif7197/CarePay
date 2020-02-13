@@ -34,6 +34,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.CarePayApplication;
@@ -443,12 +444,12 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 enableNextButton(true);
                 hideProgressDialog();
                 if (isAdded()) {
-                    showErrorNotification(exceptionMessage);
-                    Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+                    showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+                    Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
                 }
             }
         };

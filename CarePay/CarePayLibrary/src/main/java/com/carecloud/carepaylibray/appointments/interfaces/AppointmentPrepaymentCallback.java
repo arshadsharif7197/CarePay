@@ -16,4 +16,6 @@ public interface AppointmentPrepaymentCallback extends PaymentMethodInterface, C
 
     void onPaymentDismissed();
 
+    void onPrepaymentFailed();
+
 }

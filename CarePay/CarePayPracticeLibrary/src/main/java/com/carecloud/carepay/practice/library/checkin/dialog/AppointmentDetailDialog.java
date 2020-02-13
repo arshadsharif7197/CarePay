@@ -31,6 +31,7 @@ import com.carecloud.carepay.practice.library.payments.fragments.PaymentDistribu
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -455,10 +456,10 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
-            showErrorNotification(exceptionMessage);
+        public void onFailure(ServerErrorDTO serverErrorDto) {
+            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
             if (getActivity() != null) {
-                Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+                Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
             }
         }
     };
@@ -483,8 +484,8 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
-                Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            public void onFailure(ServerErrorDTO serverErrorDto) {
+                Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
             }
         };
     }
@@ -839,10 +840,10 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 hideProgressDialog();
-                showErrorNotification(exceptionMessage);
-                Log.e(TAG, exceptionMessage);
+                showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+                Log.e(TAG, serverErrorDto.getMessage().getBody().getError().getMessage());
             }
         };
     }
@@ -879,7 +880,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment implements PageP
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             sessionHandler.showErrorNotification(Label.getLabel("push_notification_failed"));
         }
     };

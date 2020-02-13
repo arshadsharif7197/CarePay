@@ -2,6 +2,8 @@ package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -64,7 +66,7 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle) {
+    public void onViewCreated(@NonNull View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         setSwipeCardNowVisibility(view);
     }
@@ -159,7 +161,7 @@ public class PracticePaymentMethodFragment extends PaymentMethodFragment {
         }
 
         @Override
-        public void onFailure(String errorMessage) {
+        public void onFailure(String serverErrorDto) {
 
         }
     };

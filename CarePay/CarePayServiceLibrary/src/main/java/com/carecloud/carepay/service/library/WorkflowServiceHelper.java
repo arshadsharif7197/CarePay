@@ -10,8 +10,8 @@ import androidx.annotation.NonNull;
 import com.carecloud.carepay.service.library.cognito.AppAuthorizationHelper;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
-import com.carecloud.carepay.service.library.dtos.FaultResponseDTO;
 import com.carecloud.carepay.service.library.dtos.RefreshDTO;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -25,6 +25,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSyntaxException;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -55,6 +56,7 @@ public class WorkflowServiceHelper {
     private static final int STATUS_CODE_UNAUTHORIZED = 401;
     private static final int STATUS_BAD_REQUEST = 400;
     private static final int STATUS_CODE_UNPROCESSABLE_ENTITY = 422;
+    private static final int STATUS_CODE_SERVER_ERROR = 500;
 
     private AppAuthorizationHelper appAuthorizationHelper;
     private ApplicationPreferences applicationPreferences;
@@ -338,12 +340,14 @@ public class WorkflowServiceHelper {
             }
 
             private void handleException(Exception exception) {
+                ServerErrorDTO serverErrorDto = new ServerErrorDTO();
                 if (exception.getMessage() != null) {
-                    callback.onFailure(capitalizeMessage(exception.getMessage()));
+                    serverErrorDto.getMessage().getBody().getError().setMessage(capitalizeMessage(exception.getMessage()));
                     Log.e("WorkflowServiceHelper", exception.getMessage(), exception);
                 } else {
-                    callback.onFailure(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
+                    serverErrorDto.getMessage().getBody().getError().setMessage(CarePayConstants.CONNECTION_ISSUE_ERROR_MESSAGE);
                 }
+                callback.onFailure(serverErrorDto);
             }
 
             private void onResponseOk(Response<WorkflowDTO> response) throws IOException {
@@ -373,34 +377,24 @@ public class WorkflowServiceHelper {
                 }
             }
 
-            private void onResponseBadRequest(Response<WorkflowDTO> response) throws IOException {
-                String message = response.message().toLowerCase();
-                String errorBodyString = "";
+            private void onResponseBadRequest(Response<WorkflowDTO> response) {
+                ServerErrorDTO serverErrorDto = new ServerErrorDTO();
                 try {
-                    errorBodyString = response.errorBody().string();
+                    String errorBodyString = response.errorBody().string();
+                    serverErrorDto = getConvertedDTO(ServerErrorDTO.class, errorBodyString);
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
 
+                String errorBodyString = serverErrorDto.getMessage().getBody().getError().getMessage();
+                String message = response.message().toLowerCase();
                 if ((message.contains(TOKEN) && message.contains(REVOKED))
                         || (errorBodyString.toLowerCase().contains(TOKEN)
                         && errorBodyString.toLowerCase().contains(REVOKED))) {
                     atomicAppRestart();
                 } else {
-                    onFailure(parseError(message, errorBodyString, "message", "exception", "error"));
-                }
-            }
-
-            private void onValidationError(Response<WorkflowDTO> response) throws IOException {
-                if (null != response.errorBody()) {
-                    try {
-                        FaultResponseDTO fault = getConvertedDTO(FaultResponseDTO.class, response.errorBody().string());
-                        onFailure(fault.getException().getBody().getError().getMessage());
-                    } catch (Exception e) {
-                        onFailure(response.errorBody().string());
-                    }
-                } else {
-                    onFailure("");
+                    onFailure(serverErrorDto);
                 }
             }
 
@@ -418,34 +412,44 @@ public class WorkflowServiceHelper {
 
             }
 
-            private void onFailure(Response<WorkflowDTO> response) throws IOException {
+            private void onFailure(Response<WorkflowDTO> response) {
+                ServerErrorDTO serverErrorDto = new ServerErrorDTO();
                 if (response.errorBody() != null) {
-                    String errorBodyString = "";
                     try {
-                        errorBodyString = response.errorBody().string();
-                    } catch (Exception ex) {
+                        String errorBodyString = response.errorBody().string();
+                        serverErrorDto = getConvertedDTO(ServerErrorDTO.class, errorBodyString);
+                    } catch (JsonSyntaxException ex) {
+                        serverErrorDto.getMessage().getBody().getError().setMessage(response.raw().message());
+                        serverErrorDto.getMessage().getBody().getError()
+                                .setErrorCode(String.valueOf(response.raw().code()));
                         ex.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                    onFailure(parseError(response.message(), errorBodyString, "message", "data", "error", "exception"));
                 } else {
-                    onFailure("");
+                    serverErrorDto.getMessage().getBody().getError().setMessage(response.raw().message());
+                    serverErrorDto.getMessage().getBody().getError()
+                            .setErrorCode(String.valueOf(response.raw().code()));
                 }
+                onFailure(serverErrorDto);
             }
 
             @Override
             public void onFailure(Call<WorkflowDTO> call, Throwable throwable) {
                 shouldRetryRequest = true;
                 callStack.remove(call);
-                onFailure(throwable.getMessage());
+                ServerErrorDTO serverErrorDTO = new ServerErrorDTO();
+                serverErrorDTO.getMessage().getBody().getError().setMessage(throwable.getMessage());
+                onFailure(serverErrorDTO);
             }
 
-            void onFailure(String errorMessage) {
-                if (attemptCount < 2 && shouldRetryRequest) {
-                    // Re-try failed request with increased attempt count
-                    executeRequest(transitionDTO, callback, jsonBody, queryMap, headers, attemptCount + 1);
-                } else {
-                    callback.onFailure(capitalizeMessage(errorMessage));
-                }
+            void onFailure(ServerErrorDTO errorMessage) {
+//                if (attemptCount < 2 && shouldRetryRequest) {
+                // Re-try failed request with increased attempt count
+//                    executeRequest(transitionDTO, callback, jsonBody, queryMap, headers, attemptCount + 1);
+//                } else {
+                callback.onFailure(errorMessage);
+//                }
             }
         });
 
@@ -491,8 +495,8 @@ public class WorkflowServiceHelper {
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
-                callback.onFailure(capitalizeMessage(exceptionMessage));
+            public void onFailure(ServerErrorDTO serverErrorDto) {
+                callback.onFailure(serverErrorDto);
             }
         };
     }

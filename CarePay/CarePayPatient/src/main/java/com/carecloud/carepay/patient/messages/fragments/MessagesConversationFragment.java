@@ -149,7 +149,7 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
     }
 
     private void initToolbar(View view) {
-        Toolbar toolbar = view.findViewById(R.id.toolbar    );
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(thread.getSubject());
 
