@@ -35,6 +35,7 @@ public class PaymentsViewModel extends BaseViewModel {
     private MutableLiveData<Void> createCreditCardErrorObservable = new MutableLiveData<>();
     private MutableLiveData<PaymentsModel> makePaymentFromCreateCardObservable = new MutableLiveData<>();
     private MutableLiveData<Void> paymentErrorFromCreateCardObservable = new MutableLiveData<>();
+    private MutableLiveData<Void> finishFlowObservable = new MutableLiveData<>();
     private PaymentsModel paymentsModel;
     private AppointmentDTO appointment;
 
@@ -70,6 +71,10 @@ public class PaymentsViewModel extends BaseViewModel {
 
     public MutableLiveData<Void> getPaymentErrorFromCreateCardObservable() {
         return paymentErrorFromCreateCardObservable;
+    }
+
+    public MutableLiveData<Void> getFinishFlowObservable() {
+        return finishFlowObservable;
     }
 
     public PaymentsModel getPaymentsModel() {

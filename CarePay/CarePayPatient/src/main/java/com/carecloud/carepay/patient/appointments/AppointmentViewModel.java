@@ -39,7 +39,7 @@ public class AppointmentViewModel extends BaseViewModel {
     private MutableLiveData<AppointmentsResultModel> historicAppointmentsObservable = new MutableLiveData<>();
     private MutableLiveData<Boolean> paginationLoaderObservable = new MutableLiveData<>();
     private MutableLiveData<QueueStatusPayloadDTO> queueStatusObservable = new MutableLiveData<>();
-    private MutableLiveData<WorkflowDTO> cancelAppointmentObservable = new MutableLiveData<>();
+    private MutableLiveData<Void> cancelAppointmentObservable = new MutableLiveData<>();
     private PaymentsModel paymentsModel;
 
     public AppointmentViewModel(@NonNull Application application) {
@@ -71,7 +71,7 @@ public class AppointmentViewModel extends BaseViewModel {
         return queueStatusObservable;
     }
 
-    public MutableLiveData<WorkflowDTO> getCancelAppointmentObservable() {
+    public MutableLiveData<Void> getCancelAppointmentObservable() {
         if (cancelAppointmentObservable.getValue() != null) {
             cancelAppointmentObservable = new MutableLiveData<>();
         }
@@ -210,7 +210,7 @@ public class AppointmentViewModel extends BaseViewModel {
             @Override
             public void onPostExecute(WorkflowDTO workflowDTO) {
                 setLoading(false);
-                cancelAppointmentObservable.postValue(workflowDTO);
+                cancelAppointmentObservable.postValue(null);
             }
 
             @Override

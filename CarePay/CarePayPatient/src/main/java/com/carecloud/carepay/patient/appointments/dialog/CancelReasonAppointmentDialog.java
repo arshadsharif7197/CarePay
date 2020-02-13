@@ -38,6 +38,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPo
 import com.carecloud.carepaylibray.signinsignup.dto.SignInPayloadMetadata;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.SystemUtil;
 
 import java.util.List;
 
@@ -52,12 +53,6 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment
     private AppointmentViewModel viewModel;
     private CancellationReasonDTO selectedCancelationReason;
     private PaymentsViewModel paymentsViewModel;
-
-    public interface CancelReasonAppointmentDialogListener {
-        void onCancelReasonAppointmentDialogCancelClicked(AppointmentDTO appointmentDTO,
-                                                          int cancellationReason,
-                                                          String cancellationReasonComment);
-    }
 
     private FragmentActivityInterface callback;
 
@@ -90,15 +85,22 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment
     }
 
     private void setUpViewModel() {
-        paymentsViewModel = new ViewModelProvider(getActivity()).get(PaymentsViewModel.class);
         viewModel = new ViewModelProvider(getActivity()).get(AppointmentViewModel.class);
-        viewModel.getCancelAppointmentObservable().observe(getActivity(), workflowDTO -> {
-            logAppointmentCancelMixPanel(appointmentDTO);
-            getChildFragmentManager().popBackStackImmediate(AppointmentDetailDialog.class.getName(),
-                    FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            viewModel.getAppointments(viewModel.getAppointmentsDtoObservable().getValue()
-                    .getMetadata().getLinks().getAppointments(), true);
-        });
+        viewModel.getCancelAppointmentObservable().observe(getActivity(), aVoid
+                -> onSuccessAppointmentCancelled());
+
+        paymentsViewModel = new ViewModelProvider(getActivity()).get(PaymentsViewModel.class);
+        paymentsViewModel.getFinishFlowObservable().observe(getActivity(), aVoid
+                -> onSuccessAppointmentCancelled());
+    }
+
+    private void onSuccessAppointmentCancelled() {
+        SystemUtil.showSuccessToast(getContext(), Label.getLabel("appointment_cancellation_success_message_HTML"));
+        logAppointmentCancelMixPanel(appointmentDTO);
+        getChildFragmentManager().popBackStackImmediate(AppointmentDetailDialog.class.getName(),
+                FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        viewModel.getAppointments(viewModel.getAppointmentsDtoObservable().getValue()
+                .getMetadata().getLinks().getAppointments(), true);
     }
 
     @Nullable
@@ -198,10 +200,6 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment
         RecyclerView reasonsRecyclerView = view.findViewById(R.id.reasonsRecyclerView);
         reasonsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         reasonsRecyclerView.setAdapter(new CancelReasonAdapter(cancellationReasons, this));
-    }
-
-    public void setsCancelReasonAppointmentDialogListener(CancelReasonAppointmentDialogListener listener) {
-//        this.callback = listener;
     }
 
     private void logAppointmentCancelMixPanel(AppointmentDTO appointmentDTO) {

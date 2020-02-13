@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
@@ -36,6 +35,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPo
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -131,7 +131,7 @@ public class ChooseCreditCardFragment extends BaseDialogFragment implements Cred
             if (getDialog() != null) {
                 dismiss();
             }
-//            showConfirmation(workflowDTO);
+            showConfirmation(paymentsModel1);
         });
 
         viewModel.getMakePaymentErrorObservable().observe(this, aVoid -> {
@@ -296,8 +296,38 @@ public class ChooseCreditCardFragment extends BaseDialogFragment implements Cred
         nextButton.setEnabled(!expDate.before(new Date()));
     }
 
-    protected void showConfirmation(WorkflowDTO workflowDTO) {
+    protected void showConfirmation(PaymentsModel paymentsModel) {
 //        callback.showPaymentConfirmation(workflowDTO);
+
+//        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload()
+                .getPatientPayments().getPayload();
+        if (!payload.getProcessingErrors().isEmpty()
+                && payload.getTotalPaid() == 0D) {
+            StringBuilder builder = new StringBuilder();
+            for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
+                builder.append(processingError.getError());
+                builder.append("\n");
+            }
+            int last = builder.lastIndexOf("\n");
+            builder.replace(last, builder.length(), "");
+            viewModel.getErrorMessage().postValue(builder.toString());
+        } else {
+            String paymentType = Label.getLabel("appointment.confirmationScreen.type.label.paymentType");
+            if (!StringUtil.isNullOrEmpty(paymentsModel.getPaymentPayload().getPatientPayments()
+                    .getPayload().getMetadata().getCancellationReasonId())) {
+                paymentType = Label.getLabel("appointment.confirmationScreen.paymentType.label.cancellationType");
+            }
+            viewModel.setPaymentsModel(paymentsModel);
+            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
+                    .newInstance(paymentType, Label.getLabel("add_appointment_back_to_appointments_button"));
+            callback.displayDialogFragment(confirmationFragment, false);
+
+            if (paymentType.equals(Label.getLabel("appointment.confirmationScreen.type.label.paymentType"))) {
+                //this is a prepayment
+                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_prepayments_completed), 1);
+            }
+        }
     }
 
     private void logPaymentStartedEventMixPanel() {

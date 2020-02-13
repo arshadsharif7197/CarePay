@@ -11,13 +11,13 @@ import androidx.annotation.Nullable;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.payments.interfaces.PaymentConfirmationInterface;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
+import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentCardData;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLineItem;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentMetadata;
@@ -25,6 +25,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPo
 import com.carecloud.carepaylibray.payments.models.postmodel.PapiPaymentMethod;
 import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 /**
  * Created by lmenendez on 3/1/17
@@ -89,7 +90,6 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
 
     private void setUpViewModel() {
         viewModel.getCreateCreditCardObservable().observe(getActivity(), aVoid -> {
-            nextButton.setEnabled(true);
             makePaymentCall();
             MixPanelUtil.logEvent(getString(R.string.event_updated_credit_cards));
         });
@@ -97,6 +97,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
                 aVoid -> nextButton.setEnabled(true));
 
         viewModel.getMakePaymentFromCreateCardObservable().observe(getActivity(), paymentsModel1 -> {
+            nextButton.setEnabled(true);
             IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
             if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
                 logEventPaymentFailedMixPanel();
@@ -109,7 +110,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
                     dismiss();
                 }
                 logEventPaymentCompleteMixPanel();
-//                showConfirmation(workflowDTO);
+                showConfirmation(paymentsModel1);
             }
         });
         viewModel.getPaymentErrorFromCreateCardObservable().observe(getActivity(),
@@ -214,8 +215,38 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
         };
     }
 
-    protected void showConfirmation(WorkflowDTO workflowDTO) {
-        callback.showPaymentConfirmation(workflowDTO);
+    protected void showConfirmation(PaymentsModel paymentsModel) {
+//        callback.showPaymentConfirmation(workflowDTO);
+
+//        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload()
+                .getPatientPayments().getPayload();
+        if (!payload.getProcessingErrors().isEmpty()
+                && payload.getTotalPaid() == 0D) {
+            StringBuilder builder = new StringBuilder();
+            for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
+                builder.append(processingError.getError());
+                builder.append("\n");
+            }
+            int last = builder.lastIndexOf("\n");
+            builder.replace(last, builder.length(), "");
+            viewModel.getErrorMessage().postValue(builder.toString());
+        } else {
+            String paymentType = Label.getLabel("appointment.confirmationScreen.type.label.paymentType");
+            if (!StringUtil.isNullOrEmpty(paymentsModel.getPaymentPayload().getPatientPayments()
+                    .getPayload().getMetadata().getCancellationReasonId())) {
+                paymentType = Label.getLabel("appointment.confirmationScreen.paymentType.label.cancellationType");
+            }
+            viewModel.setPaymentsModel(paymentsModel);
+            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
+                    .newInstance(paymentType, Label.getLabel("add_appointment_back_to_appointments_button"));
+            callback.displayDialogFragment(confirmationFragment, false);
+
+            if (paymentType.equals(Label.getLabel("appointment.confirmationScreen.type.label.paymentType"))) {
+                //this is a prepayment
+                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_prepayments_completed), 1);
+            }
+        }
     }
 
     private void logPaymentStartedEventMixPanel() {
