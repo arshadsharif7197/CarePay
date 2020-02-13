@@ -9,16 +9,14 @@ import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.common.BaseViewModel;
-import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PatientBalanceDTO;
+import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.payments.models.PendingBalanceMetadataDTO;
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.gson.Gson;
 
@@ -32,6 +30,10 @@ public class PaymentsViewModel extends BaseViewModel {
 
     private MutableLiveData<PaymentsModel> makePaymentObservable = new MutableLiveData<>();
     private MutableLiveData<Void> makePaymentErrorObservable = new MutableLiveData<>();
+    private MutableLiveData<Void> createCreditCardObservable = new MutableLiveData<>();
+    private MutableLiveData<Void> createCreditCardErrorObservable = new MutableLiveData<>();
+    private MutableLiveData<PaymentsModel> makePaymentFromCreateCardObservable = new MutableLiveData<>();
+    private MutableLiveData<Void> paymentErrorFromCreateCardObservable = new MutableLiveData<>();
     private PaymentsModel paymentsModel;
     private AppointmentDTO appointment;
 
@@ -51,6 +53,22 @@ public class PaymentsViewModel extends BaseViewModel {
             makePaymentErrorObservable = new MutableLiveData<>();
         }
         return makePaymentErrorObservable;
+    }
+
+    public MutableLiveData<Void> getCreateCreditCardObservable() {
+        return createCreditCardObservable;
+    }
+
+    public MutableLiveData<Void> getCreateCreditCardErrorObservable() {
+        return createCreditCardErrorObservable;
+    }
+
+    public MutableLiveData<PaymentsModel> getMakePaymentFromCreateCardObservable() {
+        return makePaymentFromCreateCardObservable;
+    }
+
+    public MutableLiveData<Void> getPaymentErrorFromCreateCardObservable() {
+        return paymentErrorFromCreateCardObservable;
     }
 
     public PaymentsModel getPaymentsModel() {
@@ -73,7 +91,44 @@ public class PaymentsViewModel extends BaseViewModel {
         return appointment;
     }
 
-    public void postPayment(IntegratedPaymentPostModel paymentModelJson, String practiceId) {
+    public void addNewCreditCardCall(PaymentCreditCardsPayloadDTO creditCardsPayloadDTO) {
+        Gson gson = new Gson();
+        TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getAddCreditCard();
+        String body = gson.toJson(creditCardsPayloadDTO);
+        getWorkflowServiceHelper().execute(transitionDTO, new WorkflowServiceCallback() {
+            @Override
+            public void onPreExecute() {
+                setLoading(false);
+            }
+
+            @Override
+            public void onPostExecute(WorkflowDTO workflowDTO) {
+                setLoading(true);
+                createCreditCardObservable.postValue(null);
+            }
+
+            @Override
+            public void onFailure(String exceptionMessage) {
+                setLoading(true);
+                setErrorMessage(exceptionMessage);
+                createCreditCardObservable.postValue(null);
+            }
+        }, body, getWorkflowServiceHelper().getPreferredLanguageHeader());
+    }
+
+    public void postPaymentFromChooseMethod(IntegratedPaymentPostModel paymentModelJson, String practiceId) {
+        postPayment(paymentModelJson, practiceId, makePaymentObservable, makePaymentErrorObservable);
+    }
+
+    public void postPaymentFromNewCard(IntegratedPaymentPostModel paymentModelJson, String practiceId) {
+        postPayment(paymentModelJson, practiceId,
+                makePaymentFromCreateCardObservable, paymentErrorFromCreateCardObservable);
+    }
+
+    private void postPayment(IntegratedPaymentPostModel paymentModelJson,
+                             String practiceId,
+                             MutableLiveData<PaymentsModel> makePaymentObservable,
+                             MutableLiveData<Void> makePaymentErrorObservable) {
         UserPracticeDTO userPracticeDTO = getPracticeInfo(practiceId);
         Map<String, String> queries = getQuery(paymentModelJson, userPracticeDTO);
 
@@ -118,7 +173,8 @@ public class PaymentsViewModel extends BaseViewModel {
             queries.put("practice_id", userPracticeDTO.getPracticeId());
             queries.put("patient_id", userPracticeDTO.getPatientId());
         } else if (!paymentsModel.getPaymentPayload().getPatientBalances().isEmpty()) {
-            PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0).getMetadata();
+            PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload()
+                    .getPatientBalances().get(0).getBalances().get(0).getMetadata();
             queries.put("practice_mgmt", metadata.getPracticeMgmt());
             queries.put("practice_id", metadata.getPracticeId());
             queries.put("patient_id", metadata.getPatientId());

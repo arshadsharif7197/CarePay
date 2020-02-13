@@ -25,7 +25,6 @@ import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.PaymentsViewModel;
 import com.carecloud.carepaylibray.payments.adapter.CreditCardsListAdapter;
-import com.carecloud.carepaylibray.payments.fragments.AddNewCreditCardFragment;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -92,35 +91,8 @@ public class ChooseCreditCardFragment extends BaseDialogFragment implements Cred
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         viewModel = new ViewModelProvider(getActivity()).get(PaymentsViewModel.class);
-        viewModel.getMakePaymentObservable().observe(this, paymentsModel1 -> {
-            nextButton.setEnabled(true);
-            IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
-            if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
-                String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
-                Object[] values = {amountToMakePayment, getString(R.string.payment_card_on_file)};
-                MixPanelUtil.logEvent(getString(R.string.event_payment_failed), params, values);
-            } else {
-                String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
-                Object[] values = {amountToMakePayment, getString(R.string.payment_card_on_file)};
-                MixPanelUtil.logEvent(getString(R.string.event_payment_complete), params, values);
-                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payments_completed), 1);
-                MixPanelUtil.incrementPeopleProperty(getString(R.string.total_payments_amount), amountToMakePayment);
-            }
-
-            if (getDialog() != null) {
-                dismiss();
-            }
-//            showConfirmation(workflowDTO);
-        });
-
-        viewModel.getMakePaymentErrorObservable().observe(this, aVoid -> {
-            nextButton.setEnabled(true);
-            String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
-            Object[] values = {amountToMakePayment, getString(R.string.payment_card_on_file)};
-            MixPanelUtil.logEvent(getString(R.string.event_payment_failed), params, values);
-        });
-
         paymentsModel = viewModel.getPaymentsModel();
+        setUpViewModel();
 
         Bundle arguments = getArguments();
         if (arguments != null) {
@@ -144,6 +116,28 @@ public class ChooseCreditCardFragment extends BaseDialogFragment implements Cred
     public void onViewCreated(@NonNull View view, Bundle icicle) {
         setupTitleViews(view);
         initializeViews(view);
+    }
+
+    private void setUpViewModel() {
+        viewModel.getMakePaymentObservable().observe(this, paymentsModel1 -> {
+            nextButton.setEnabled(true);
+            IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
+            if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
+                logEventPaymentFailedMixPanel();
+            } else {
+                logEventPaymentCompleteMixPanel();
+            }
+
+            if (getDialog() != null) {
+                dismiss();
+            }
+//            showConfirmation(workflowDTO);
+        });
+
+        viewModel.getMakePaymentErrorObservable().observe(this, aVoid -> {
+            nextButton.setEnabled(true);
+            logEventPaymentFailedMixPanel();
+        });
     }
 
     private void setupTitleViews(View view) {
@@ -231,7 +225,7 @@ public class ChooseCreditCardFragment extends BaseDialogFragment implements Cred
             postModelMetadata.setAppointmentId(viewModel.getAppointment().getPayload().getId());
         }
 
-        viewModel.postPayment(postModel, practiceId);
+        viewModel.postPaymentFromChooseMethod(postModel, practiceId);
 
         logPaymentStartedEventMixPanel();
     }
@@ -259,7 +253,7 @@ public class ChooseCreditCardFragment extends BaseDialogFragment implements Cred
         IntegratedPaymentMetadata postModelMetadata = postModel.getMetadata();
         postModelMetadata.setAppointmentId(viewModel.getAppointment().getPayload().getId());
 
-        viewModel.postPayment(postModel, practiceId);
+        viewModel.postPaymentFromChooseMethod(postModel, practiceId);
 
         logPaymentStartedEventMixPanel();
     }
@@ -287,15 +281,9 @@ public class ChooseCreditCardFragment extends BaseDialogFragment implements Cred
         return creditCardModel;
     }
 
-    private void logPaymentStartedEventMixPanel() {
-        String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
-        Object[] values = {amountToMakePayment, getString(R.string.payment_card_on_file)};
-        MixPanelUtil.logEvent(getString(R.string.event_payment_started), params, values);
-    }
-
     protected void showAddCard(double amountToMakePayment, PaymentsModel paymentsModel) {
 //        callback.showAddCard(amountToMakePayment, paymentsModel);
-        Fragment fragment = AddNewCreditCardFragment.newInstance(paymentsModel, amountToMakePayment);
+        Fragment fragment = AddNewCreditCardFragment.newInstance(practiceId, amountToMakePayment);
         callback.addFragment(fragment, true);
     }
 
@@ -310,6 +298,26 @@ public class ChooseCreditCardFragment extends BaseDialogFragment implements Cred
 
     protected void showConfirmation(WorkflowDTO workflowDTO) {
 //        callback.showPaymentConfirmation(workflowDTO);
+    }
+
+    private void logPaymentStartedEventMixPanel() {
+        String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
+        Object[] values = {amountToMakePayment, getString(R.string.payment_card_on_file)};
+        MixPanelUtil.logEvent(getString(R.string.event_payment_started), params, values);
+    }
+
+    private void logEventPaymentCompleteMixPanel() {
+        String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
+        Object[] values = {amountToMakePayment, getString(R.string.payment_card_on_file)};
+        MixPanelUtil.logEvent(getString(R.string.event_payment_complete), params, values);
+        MixPanelUtil.incrementPeopleProperty(getString(R.string.count_payments_completed), 1);
+        MixPanelUtil.incrementPeopleProperty(getString(R.string.total_payments_amount), amountToMakePayment);
+    }
+
+    private void logEventPaymentFailedMixPanel() {
+        String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
+        Object[] values = {amountToMakePayment, getString(R.string.payment_card_on_file)};
+        MixPanelUtil.logEvent(getString(R.string.event_payment_failed), params, values);
     }
 
 }

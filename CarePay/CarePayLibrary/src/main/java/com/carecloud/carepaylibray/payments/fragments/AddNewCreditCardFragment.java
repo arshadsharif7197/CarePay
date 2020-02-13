@@ -83,7 +83,6 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         if (arguments != null) {
-//            String paymentsDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
             paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
             if (paymentsModel != null) {
                 if (!paymentsModel.getPaymentPayload().getPatientBalances().isEmpty()) {

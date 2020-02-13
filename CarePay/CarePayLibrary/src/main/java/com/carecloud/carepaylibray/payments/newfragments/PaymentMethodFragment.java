@@ -51,9 +51,9 @@ public abstract class PaymentMethodFragment extends BaseDialogFragment {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        Bundle bundle = getArguments();
         viewModel = new ViewModelProvider(getActivity()).get(PaymentsViewModel.class);
         paymentsModel = viewModel.getPaymentsModel();
+        Bundle bundle = getArguments();
         if (bundle != null) {
             amountToMakePayment = bundle.getDouble(CarePayConstants.PAYMENT_AMOUNT_BUNDLE);
             onlySelectMode = bundle.getBoolean(CarePayConstants.ONLY_SELECT_MODE);

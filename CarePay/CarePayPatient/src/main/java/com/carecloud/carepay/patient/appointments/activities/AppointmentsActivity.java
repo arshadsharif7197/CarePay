@@ -75,7 +75,6 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
     protected void setUpViewModel() {
         viewModel = new ViewModelProvider(this).get(AppointmentViewModel.class);
-        paymentsViewModel = new ViewModelProvider(this).get(PaymentsViewModel.class);
         setBasicObservers(viewModel);
         viewModel.getSkeleton().observe(this, showSkeleton -> {
             if (showSkeleton) {
@@ -87,6 +86,8 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                 replaceFragment(shimmerFragment, false);
             }
         });
+        paymentsViewModel = new ViewModelProvider(this).get(PaymentsViewModel.class);
+        setBasicObservers(paymentsViewModel);
     }
 
     private void resumeOnCreate() {
