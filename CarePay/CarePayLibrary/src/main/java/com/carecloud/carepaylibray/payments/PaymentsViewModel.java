@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -108,9 +109,9 @@ public class PaymentsViewModel extends BaseViewModel {
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDTO) {
                 setLoading(true);
-                setErrorMessage(exceptionMessage);
+                setErrorMessage(serverErrorDTO.getMessage().getBody().getError().getMessage());
                 createCreditCardObservable.postValue(null);
             }
         }, body, getWorkflowServiceHelper().getPreferredLanguageHeader());
@@ -151,9 +152,9 @@ public class PaymentsViewModel extends BaseViewModel {
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDTO) {
                 setLoading(false);
-                setErrorMessage(exceptionMessage);
+                setErrorMessage(serverErrorDTO.getMessage().getBody().getError().getMessage());
                 makePaymentErrorObservable.postValue(null);
             }
         }, gson.toJson(paymentModelJson), queries, header);

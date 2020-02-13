@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.appointment.DataDTO;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -72,7 +72,7 @@ public class AppointmentViewModel extends BaseViewModel {
     }
 
     public MutableLiveData<WorkflowDTO> getCancelAppointmentObservable() {
-        if(cancelAppointmentObservable.getValue()!=null){
+        if (cancelAppointmentObservable.getValue() != null) {
             cancelAppointmentObservable = new MutableLiveData<>();
         }
         return cancelAppointmentObservable;
@@ -99,9 +99,9 @@ public class AppointmentViewModel extends BaseViewModel {
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDTO) {
                 setSkeleton(false);
-                setErrorMessage(exceptionMessage);
+                setErrorMessage(serverErrorDTO.getMessage().getBody().getError().getMessage());
             }
         }, queryMap);
     }
@@ -147,9 +147,9 @@ public class AppointmentViewModel extends BaseViewModel {
                     }
 
                     @Override
-                    public void onFailure(String exceptionMessage) {
+                    public void onFailure(ServerErrorDTO serverErrorDTO) {
                         paginationLoaderObservable.postValue(false);
-                        setErrorMessage(exceptionMessage);
+                        setErrorMessage(serverErrorDTO.getMessage().getBody().getError().getMessage());
                     }
                 }, queryMap);
     }
@@ -174,7 +174,7 @@ public class AppointmentViewModel extends BaseViewModel {
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDTO) {
 
             }
         }, queryMap);
@@ -189,16 +189,12 @@ public class AppointmentViewModel extends BaseViewModel {
         queries.put("patient_id", appointmentDTO.getMetadata().getPatientId());
         queries.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
 
-        DataDTO data = appointmentsDtoObservable.getValue().getMetadata()
-                .getTransitions().getCancel().getData();
         JsonObject postBodyObj = new JsonObject();
         if (!StringUtil.isNullOrEmpty(cancellationReasonComment)) {
-            postBodyObj.addProperty(data.getCancellationComments().getName() != null ?
-                    data.getCancellationComments().getName() : "cancellation_comments", cancellationReasonComment);
+            postBodyObj.addProperty("cancellation_comments", cancellationReasonComment);
         }
         if (cancelationReasonId != -1) {
-            postBodyObj.addProperty(data.getCancellationReasonId().getName() != null ?
-                    data.getCancellationReasonId().getName() : "cancellation_reason_id", cancelationReasonId);
+            postBodyObj.addProperty("cancellation_reason_id", cancelationReasonId);
         }
 
         String body = postBodyObj.toString();
@@ -218,9 +214,9 @@ public class AppointmentViewModel extends BaseViewModel {
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDTO) {
                 setLoading(false);
-                setErrorMessage(exceptionMessage);
+                setErrorMessage(serverErrorDTO.getMessage().getBody().getError().getMessage());
             }
         }, body, queries);
     }

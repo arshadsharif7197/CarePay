@@ -93,6 +93,8 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
             makePaymentCall();
             MixPanelUtil.logEvent(getString(R.string.event_updated_credit_cards));
         });
+        viewModel.getCreateCreditCardErrorObservable().observe(getActivity(),
+                aVoid -> nextButton.setEnabled(true));
 
         viewModel.getMakePaymentFromCreateCardObservable().observe(getActivity(), paymentsModel1 -> {
             IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();

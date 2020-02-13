@@ -27,6 +27,7 @@ import com.carecloud.carepay.service.library.RestCallServiceCallback;
 import com.carecloud.carepay.service.library.RestCallServiceHelper;
 import com.carecloud.carepay.service.library.RestDef;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -451,9 +452,9 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment {
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDTO) {
             hideProgressDialog();
-            Log.d(TAG, exceptionMessage);
+            Log.d(TAG, serverErrorDTO.getMessage().getBody().getError().getMessage());
         }
     };
 
@@ -581,11 +582,12 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment {
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDTO) {
                 hideProgressDialog();
-                System.out.print(exceptionMessage);
+                System.out.print(serverErrorDTO.getMessage().getBody().getError().getMessage());
                 logPaymentFail("Failed to reach make payment endpoint",
-                        true, rawResponse, exceptionMessage);
+                        true, rawResponse, serverErrorDTO
+                                .getMessage().getBody().getError().getMessage());
             }
         };
     }
