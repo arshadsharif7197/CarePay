@@ -6,11 +6,11 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.notifications.activities.NotificationProxyActivity;
@@ -18,7 +18,6 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepaylibray.fcm.NotificationModel;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -35,9 +34,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        if(notificationManager != null && Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
+        if (notificationManager != null && Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
             NotificationChannel channel = notificationManager.getNotificationChannel(NOTIFICATION_CHANNEL_ID);
-            if(channel == null){
+            if (channel == null) {
                 channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID,
                         getString(R.string.notification_channel_name),
                         NotificationManager.IMPORTANCE_HIGH);
@@ -80,7 +79,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             int notificationId = 001;
             // Gets an instance of the NotificationManager service
             // Builds the notification and issues it.
-            if(notificationManager != null) {
+            if (notificationManager != null) {
                 notificationManager.notify(notificationId, builder.build());
             }
             updateBadgeCounters();
@@ -114,19 +113,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         super.onNewToken(token);
         Log.d(TAG, "Refreshed token: " + token);
         saveTokenToSP(token);
-    }
-
-    private void saveTokenToSP(String refreshedToken) {
-        ((AndroidPlatform) Platform.get()).openDefaultSharedPreferences()
-                .edit().putString(CarePayConstants.FCM_TOKEN, refreshedToken).apply();
-    }
-
-    @Override
-    public void onNewToken(@NonNull String s) {
-        super.onNewToken(s);
-        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d(TAG, "Refreshed token: " + refreshedToken);
-        saveTokenToSP(refreshedToken);
     }
 
     private void saveTokenToSP(String refreshedToken) {
