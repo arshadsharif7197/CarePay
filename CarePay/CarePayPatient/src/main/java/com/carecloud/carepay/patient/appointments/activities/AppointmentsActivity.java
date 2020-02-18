@@ -154,7 +154,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                 getSupportFragmentManager().popBackStackImmediate();
                 if (getSupportFragmentManager().getBackStackEntryCount() <= 0) {
                     displayToolbar(true, null);
-                    getSupportActionBar().setElevation(0);
+//                    getSupportActionBar().setElevation(getResources().getDimension(R.dimen.respons_toolbar_elevation));
                     toolbarHidden = false;
                 }
             }

@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import com.carecloud.carepay.service.library.ApplicationPreferences;
@@ -98,7 +99,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     }
 
     @Override
-    public void onDismiss(DialogInterface dialogInterface) {
+    public void onDismiss(@NonNull DialogInterface dialogInterface) {
         super.onDismiss(dialogInterface);
         if (onDismissListener != null) {
             onDismissListener.onDismiss(dialogInterface);

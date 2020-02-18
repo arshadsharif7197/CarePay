@@ -149,7 +149,7 @@ public class NotificationActivity extends MenuPatientActivity
                     hideProgressDialog();
                     AppointmentDetailDialog detailDialog = AppointmentDetailDialog
                             .newInstance(appointment);
-                    displayDialogFragment(detailDialog, false);
+                    addFragment(detailDialog, false);
                 } else {
                     showProgressDialog();
                     appointmentViewModel.getAppointments(getTransitionAppointments(), false);

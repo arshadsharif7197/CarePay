@@ -243,7 +243,7 @@ public class AppointmentsListFragment extends BaseFragment
     @Override
     public void onItemTapped(AppointmentDTO appointmentDTO) {
         AppointmentDetailDialog detailDialog = AppointmentDetailDialog.newInstance(appointmentDTO);
-        callback.displayDialogFragment(detailDialog, true);
+        callback.addFragment(detailDialog, true);
     }
 
     @Override

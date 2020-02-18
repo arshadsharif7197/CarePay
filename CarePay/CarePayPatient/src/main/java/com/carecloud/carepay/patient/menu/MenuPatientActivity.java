@@ -13,6 +13,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -368,7 +369,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
     }
 
     @Override
-    public void onSaveInstanceState(Bundle icicle) {
+    public void onSaveInstanceState(@NonNull Bundle icicle) {
         super.onSaveInstanceState(icicle);
         icicle.clear();
     }
@@ -645,7 +646,6 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         if (visibility) {
             setSupportActionBar(toolbar);
             if (getSupportActionBar() != null) {
-                getSupportActionBar().setElevation(getResources().getDimension(R.dimen.respons_toolbar_elevation));
                 getSupportActionBar().show();
             }
         } else if (getSupportActionBar() != null) {

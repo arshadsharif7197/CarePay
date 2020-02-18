@@ -90,7 +90,6 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         toolBarTitle = getScreenTitle(Label.getLabel("payment_patient_balance_toolbar"));
         displayToolbar(true, toolBarTitle);
         paymentsDTO = getConvertedDTO(PaymentsModel.class);
-        inflateDrawer();
         if (paymentsDTO == null) {
             callPaymentsService();
         } else {

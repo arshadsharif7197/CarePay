@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.carecloud.carepay.patient.appointments.AppointmentViewModel;
 import com.carecloud.carepay.patient.appointments.adapters.CancelReasonAdapter;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentDetailDialog;
-import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.payment.newfragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -124,7 +123,6 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment
         Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
         toolbar.setNavigationOnClickListener(view1 -> onBackPressed());
-        ((MenuPatientActivity) getActivity()).displayToolbar(false, null);
         TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(Label.getLabel("appointments_cancel_heading"));
     }
@@ -259,7 +257,7 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment
     }
 
     @Override
-    public void onDismiss(DialogInterface dialogInterface) {
+    public void onDismiss(@NonNull DialogInterface dialogInterface) {
         paymentsViewModel.setAppointment(null);
         super.onDismiss(dialogInterface);
     }

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:breeze="http://schemas.carecloud.com/breeze"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingTop="?actionBarSize">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/practice_retail_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"/>
+        android:visibility="visible" />
 
     <LinearLayout
         android:id="@+id/no_purchase_layout"
@@ -22,11 +22,11 @@
         android:visibility="gone">
 
         <ImageView
+            android:id="@+id/no_apt_placeholder_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/no_apt_placeholder_icon"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/icn_empty_state_shop"/>
+            android:src="@drawable/icn_empty_state_shop" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/no_purchase_message_title"
@@ -36,27 +36,27 @@
             android:gravity="center"
             android:textColor="@color/textview_default_textcolor"
             android:textSize="21sp"
-            tools:text="No retail options available"
             app:customAssetFont="gotham_rounded_medium"
-            breeze:textKey="no_shop_message_title"/>
+            breeze:textKey="no_shop_message_title"
+            tools:text="No retail options available" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
             android:id="@+id/no_purchase_message_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/no_apt_message_desc_margin"
             android:layout_marginStart="@dimen/no_apt_message_desc_margin"
             android:layout_marginTop="@dimen/no_apt_message_desc_margin_top"
+            android:layout_marginEnd="@dimen/no_apt_message_desc_margin"
             android:gravity="center"
             android:textColor="@color/optionl_gray"
             android:textSize="13sp"
-            tools:text="You are not connected to a practice that offers online retail options."
             app:customAssetFont="proxima_nova_regular"
-            breeze:textKey="no_shop_message_text"/>
+            breeze:textKey="no_shop_message_text"
+            tools:text="You are not connected to a practice that offers online retail options." />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_60dp"/>
+            android:layout_height="@dimen/dimen_60dp" />
     </LinearLayout>
 
 

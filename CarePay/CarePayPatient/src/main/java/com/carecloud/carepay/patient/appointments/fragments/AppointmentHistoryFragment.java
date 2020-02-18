@@ -299,7 +299,7 @@ public class AppointmentHistoryFragment extends BaseFragment
 
     private void showAppointmentPopup(AppointmentDTO appointmentDTO) {
         AppointmentDetailDialog detailDialog = AppointmentDetailDialog.newInstance(appointmentDTO);
-        callback.displayDialogFragment(detailDialog, true);
+        callback.addFragment(detailDialog, true);
     }
 
     private boolean hasMorePages() {
