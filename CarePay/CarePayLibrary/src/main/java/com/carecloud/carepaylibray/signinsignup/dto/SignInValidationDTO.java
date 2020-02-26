@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class SignInValidationDTO {
+
     @SerializedName("type")
     @Expose
     private String type;

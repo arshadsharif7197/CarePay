@@ -1,6 +1,7 @@
 package com.carecloud.carepay.practice.library.appointments;
 
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -182,6 +183,9 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
     @Override
     public UserPracticeDTO getPracticeInfo(PaymentsModel paymentsModel) {
         UserPracticeDTO userPracticeDTO = paymentsModel.getPaymentPayload().getUserPractices().get(0);
+        if (patientModel.getPatientId().equals("-")) {
+            patientModel.setPatientId(getApplicationMode().getPatientId());
+        }
         userPracticeDTO.setPatientId(patientModel.getPatientId());
         return userPracticeDTO;
     }

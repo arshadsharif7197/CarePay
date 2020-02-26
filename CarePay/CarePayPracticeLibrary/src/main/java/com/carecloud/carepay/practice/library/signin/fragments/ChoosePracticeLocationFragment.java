@@ -2,10 +2,6 @@ package com.carecloud.carepay.practice.library.signin.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +9,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.carecloud.carepay.practice.library.R;
+import com.carecloud.carepay.practice.library.signin.SignInPracticeViewModel;
 import com.carecloud.carepay.practice.library.signin.adapters.PracticeLocationSearchAdapter;
-import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionDTO;
-import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionUserPractice;
 import com.carecloud.carepay.practice.library.signin.interfaces.SelectPracticeCallback;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
+import com.carecloud.carepay.service.library.dtos.AvailableLocationDTO;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
@@ -36,8 +39,8 @@ import java.util.List;
 public class ChoosePracticeLocationFragment extends BaseDialogFragment
         implements PracticeLocationSearchAdapter.SelectPracticeLocationAdapterCallback {
 
-    private List<LocationDTO> locationsList = new ArrayList<>();
-    private LocationDTO selectedLocation;
+    private List<AvailableLocationDTO> locationsList = new ArrayList<>();
+    private AvailableLocationDTO selectedLocation;
 
 
     private RecyclerView searchRecycler;
@@ -45,16 +48,12 @@ public class ChoosePracticeLocationFragment extends BaseDialogFragment
     private SearchView searchView;
 
     private SelectPracticeCallback callback;
-    private PracticeSelectionUserPractice selectedPractice;
-    private WorkflowDTO workflowDTO;
+    private UserPracticeDTO selectedPractice;
+    private SignInPracticeViewModel viewModel;
 
-    public static ChoosePracticeLocationFragment newInstance(PracticeSelectionUserPractice selectedPractice,
-                                                             WorkflowDTO workflowDTO) {
+    public static ChoosePracticeLocationFragment newInstance(UserPracticeDTO selectedPractice) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, selectedPractice);
-        if (workflowDTO != null) {
-            DtoHelper.bundleDto(args, workflowDTO);
-        }
 
         ChoosePracticeLocationFragment fragment = new ChoosePracticeLocationFragment();
         fragment.setArguments(args);
@@ -62,7 +61,7 @@ public class ChoosePracticeLocationFragment extends BaseDialogFragment
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
             callback = (SelectPracticeCallback) context;
@@ -74,15 +73,10 @@ public class ChoosePracticeLocationFragment extends BaseDialogFragment
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        workflowDTO = DtoHelper.getConvertedDTO(WorkflowDTO.class, getArguments());
-        selectedPractice = DtoHelper.getConvertedDTO(PracticeSelectionUserPractice.class,
+        selectedPractice = DtoHelper.getConvertedDTO(UserPracticeDTO.class,
                 getArguments());
-        if (selectedPractice == null && workflowDTO != null) {
-            PracticeSelectionDTO practiceSelectionDTO = DtoHelper
-                    .getConvertedDTO(PracticeSelectionDTO.class, workflowDTO);
-            selectedPractice = practiceSelectionDTO.getPayload().getUserPracticesList().get(0);
-        }
         locationsList = selectedPractice.getLocations();
+        viewModel = ViewModelProviders.of(getActivity()).get(SignInPracticeViewModel.class);
     }
 
     @Override
@@ -92,9 +86,9 @@ public class ChoosePracticeLocationFragment extends BaseDialogFragment
 
     @Override
     public void onViewCreated(View view, Bundle icicle) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.search_toolbar);
+        Toolbar toolbar = view.findViewById(R.id.search_toolbar);
         if (toolbar != null) {
-            TextView title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+            TextView title = toolbar.findViewById(R.id.toolbar_title);
             if (title != null) {
                 ViewGroup.LayoutParams layoutParams = title.getLayoutParams();
                 layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -109,15 +103,12 @@ public class ChoosePracticeLocationFragment extends BaseDialogFragment
         continueButton.setOnClickListener(continueClick);
 
         View closeButton = findViewById(R.id.closeViewLayout);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-                callback.onSelectPracticeLocationCanceled(selectedPractice);
-            }
+        closeButton.setOnClickListener(view1 -> {
+            dismiss();
+            callback.onSelectPracticeLocationCanceled(selectedPractice);
         });
 
-        searchView = (SearchView) view.findViewById(R.id.search_entry_view);
+        searchView = view.findViewById(R.id.search_entry_view);
         for (TextView textView : ViewUtils.findChildrenByClass(searchView, TextView.class)) {
             textView.setHintTextColor(getResources().getColor(R.color.textview_default_textcolor));
             textView.setTextColor(getResources().getColor(R.color.textview_default_textcolor));
@@ -127,7 +118,7 @@ public class ChoosePracticeLocationFragment extends BaseDialogFragment
         searchView.setOnQueryTextListener(queryTextListener);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        searchRecycler = (RecyclerView) view.findViewById(R.id.search_recycler);
+        searchRecycler = view.findViewById(R.id.search_recycler);
         searchRecycler.setLayoutManager(layoutManager);
 
         setAdapter(locationsList);
@@ -136,7 +127,7 @@ public class ChoosePracticeLocationFragment extends BaseDialogFragment
         }
     }
 
-    private void setAdapter(List<LocationDTO> locationList) {
+    private void setAdapter(List<AvailableLocationDTO> locationList) {
         PracticeLocationSearchAdapter practiceLocationSearchAdapter;
         if (searchRecycler.getAdapter() == null) {
             practiceLocationSearchAdapter = new PracticeLocationSearchAdapter(locationList, this);
@@ -154,9 +145,9 @@ public class ChoosePracticeLocationFragment extends BaseDialogFragment
         }
     }
 
-    private LocationDTO getPreviousSelectedLocation(Integer practiceLocationId) {
+    private AvailableLocationDTO getPreviousSelectedLocation(Integer practiceLocationId) {
         if (practiceLocationId != null) {
-            for (LocationDTO locationDTO : locationsList) {
+            for (AvailableLocationDTO locationDTO : locationsList) {
                 if (locationDTO.getId().equals(practiceLocationId)) {
                     return locationDTO;
                 }
@@ -188,18 +179,14 @@ public class ChoosePracticeLocationFragment extends BaseDialogFragment
         public void onClick(View view) {
             if (selectedLocation != null) {
                 dismiss();
-                if (workflowDTO != null) {
-                    callback.onSelectPracticeLocation(workflowDTO, selectedPractice, selectedLocation);
-                } else {
-                    callback.onSelectPracticeLocation(selectedPractice, selectedLocation);
-                }
+                viewModel.authenticate(selectedPractice, selectedLocation);
             }
         }
     };
 
     private void findPractice(String search) {
-        List<LocationDTO> searchList = new ArrayList<>();
-        for (LocationDTO location : locationsList) {
+        List<AvailableLocationDTO> searchList = new ArrayList<>();
+        for (AvailableLocationDTO location : locationsList) {
             if (location.getName().toLowerCase().contains(search.toLowerCase())) {
                 searchList.add(location);
             }
@@ -215,7 +202,7 @@ public class ChoosePracticeLocationFragment extends BaseDialogFragment
     }
 
     @Override
-    public void onSelectPracticeLocation(LocationDTO location) {
+    public void onSelectPracticeLocation(AvailableLocationDTO location) {
         searchView.clearFocus();
         SystemUtil.hideSoftKeyboard(getActivity());
         selectedLocation = location;

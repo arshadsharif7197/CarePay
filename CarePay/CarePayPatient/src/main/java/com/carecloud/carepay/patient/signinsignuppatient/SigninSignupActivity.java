@@ -20,6 +20,7 @@ import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
+import com.carecloud.carepaylibray.signinsignup.ResetPasswordViewModel;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
@@ -61,6 +62,9 @@ public class SigninSignupActivity extends BasePatientActivity implements Fragmen
     private void setUpViewModel() {
         SignInViewModel viewModel = ViewModelProviders.of(this).get(SignInViewModel.class);
         setBasicObservers(viewModel);
+        ResetPasswordViewModel resetPasswordViewModel = ViewModelProviders.of(this).get(ResetPasswordViewModel.class);
+        resetPasswordViewModel.setResetPasswordTransition(signInSignUpDTO.getMetadata().getTransitions().getForgotPassword());
+        setBasicObservers(resetPasswordViewModel);
         viewModel.setSignInDto(signInSignUpDTO);
     }
 

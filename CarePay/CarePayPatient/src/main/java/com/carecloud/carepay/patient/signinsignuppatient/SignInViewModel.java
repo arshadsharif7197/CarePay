@@ -9,7 +9,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
-import com.carecloud.carepay.patient.myhealth.BaseViewModel;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
 import com.carecloud.carepay.patient.session.PatientSessionService;
@@ -24,6 +23,7 @@ import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepay.service.library.unifiedauth.UnifiedAuthenticationTokens;
 import com.carecloud.carepaylibray.CarePayApplication;
+import com.carecloud.carepaylibray.common.BaseViewModel;
 import com.carecloud.carepaylibray.profile.UserLinks;
 import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
 import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInDTO;

@@ -31,6 +31,7 @@ import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
+import com.carecloud.carepaylibray.common.BaseViewModel;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.session.SessionService;
 import com.carecloud.carepaylibray.utils.CustomPopupNotification;
@@ -439,6 +440,18 @@ public abstract class BaseActivity extends AppCompatActivity implements ISession
         stopSessionService();
         finishAffinity();
         System.exit(crash ? 2 : 0);
+    }
+
+    public void setBasicObservers(BaseViewModel viewModel) {
+        viewModel.getLoading().observe(this, isLoading -> {
+            if (isLoading) {
+                showProgressDialog();
+            } else {
+                hideProgressDialog();
+            }
+        });
+        viewModel.getErrorMessage().observe(this, this::showErrorNotification);
+        viewModel.getSuccessMessage().observe(this, this::showSuccessToast);
     }
 
     protected abstract void stopSessionService();
