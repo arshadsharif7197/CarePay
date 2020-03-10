@@ -96,7 +96,7 @@
                             app:customAssetFont="gotham_rounded_medium" />
 
                         <ImageView
-                            android:id="@+id/editProfileImageView"
+                            android:id="@+id/providerPicImageView"
                             android:layout_width="@dimen/dimen_60dp"
                             android:layout_height="@dimen/dimen_60dp"
                             android:layout_centerInParent="true"

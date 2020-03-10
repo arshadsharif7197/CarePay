@@ -36,7 +36,7 @@
                 android:layout_height="match_parent">
 
                 <ImageView
-                    android:id="@+id/editProfileImageView"
+                    android:id="@+id/providerPicImageView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="gone"/>

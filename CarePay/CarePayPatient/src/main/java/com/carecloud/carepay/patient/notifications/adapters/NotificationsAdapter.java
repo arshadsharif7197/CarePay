@@ -561,7 +561,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             super(itemView);
             initials = itemView.findViewById(R.id.avatarTextView);
             cellAvatar = itemView.findViewById(R.id.cellAvatarImageView);
-            picImage = itemView.findViewById(R.id.editProfileImageView);
+            picImage = itemView.findViewById(R.id.providerPicImageView);
             header = itemView.findViewById(R.id.notification_header);
             message = itemView.findViewById(R.id.notification_message);
             time = itemView.findViewById(R.id.notification_time);
