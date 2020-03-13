@@ -27,13 +27,33 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_40dp">
 
-            <ImageView
-                android:id="@+id/providerPicImageView"
+            <RelativeLayout
+                android:id="@+id/fragmentProfileImageViewLayout"
                 android:layout_width="@dimen/dialog_profile_pic_size"
                 android:layout_height="@dimen/dialog_profile_pic_size"
                 android:layout_alignParentStart="true"
-                android:contentDescription="@string/profile_picture"
-                android:src="@drawable/icn_placeholder_user_profile_png" />
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/providerPicImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/profile_picture"
+                    android:visibility="gone" />
+
+                <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                    android:id="@+id/editProfileAvatarTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:background="@drawable/round_list_tv"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:src="@drawable/icn_placeholder_user_profile_png"
+                    android:text="DP"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/apt_dl_text_big"
+                    app:customAssetFont="gotham_rounded_medium" />
+            </RelativeLayout>
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
                 android:id="@+id/changeCurrentPhotoButton"
@@ -43,7 +63,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/dimen_20dp"
-                android:layout_toEndOf="@id/providerPicImageView"
+                android:layout_toEndOf="@id/fragmentProfileImageViewLayout"
                 android:foreground="?android:selectableItemBackground"
                 android:minHeight="@dimen/dimen_10dp"
                 android:padding="@dimen/dimen_10dp"
@@ -60,6 +80,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

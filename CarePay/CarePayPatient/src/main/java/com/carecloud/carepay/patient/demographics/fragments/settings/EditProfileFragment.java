@@ -7,11 +7,13 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
+import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -57,6 +60,7 @@ public class EditProfileFragment extends BaseFragment implements MediaViewInterf
     private DemographicDTO demographicsSettingsDTO = null;
 
     private ImageView profileImageView;
+    private TextView initials;
     private TextView patientNameValue;
     private TextView patientEmailValue;
 
@@ -106,6 +110,7 @@ public class EditProfileFragment extends BaseFragment implements MediaViewInterf
         callback.setToolbar(toolbar);
 
         profileImageView = view.findViewById(R.id.providerPicImageView);
+        initials = view.findViewById(R.id.editProfileAvatarTextView);
         patientNameValue = view.findViewById(R.id.patientNameTextView);
         patientEmailValue = (CarePayTextView) view.findViewById(R.id.patientEmailTextView);
 
@@ -123,6 +128,10 @@ public class EditProfileFragment extends BaseFragment implements MediaViewInterf
         PatientModel demographicsPersonalDetails = demographicsSettingsDTO.getPayload()
                 .getDemographics().getPayload().getPersonalDetails();
         String imageUrl = demographicsPersonalDetails.getProfilePhoto();
+        if (!StringUtil.isNullOrEmpty(ApplicationPreferences.getInstance().getFullName())) {
+            initials.setText(StringUtil.getShortName(ApplicationPreferences.getInstance().getFullName()));
+        }
+
         if (!StringUtil.isNullOrEmpty(imageUrl)) {
             displayImage(imageUrl, profileImageView);
         }
@@ -224,11 +233,6 @@ public class EditProfileFragment extends BaseFragment implements MediaViewInterf
     private void displayImage(String filePath, View view) {
         final ImageView imageView = (ImageView) view;
 
-        imageView.measure(0, 0);
-        ViewGroup.LayoutParams lp = imageView.getLayoutParams();
-        final int width = Math.max(imageView.getMeasuredWidth(), lp.width);
-        final int height = Math.max(imageView.getMeasuredHeight(), lp.height);
-
         File file = new File(filePath);
         Uri fileUri;
         if (file.exists()) {
@@ -237,26 +241,23 @@ public class EditProfileFragment extends BaseFragment implements MediaViewInterf
             fileUri = Uri.parse(filePath);
         }
 
+        int size = getResources().getDimensionPixelSize(R.dimen.dialog_profile_pic_size);
         Picasso.with(getContext()).load(fileUri)
-                .placeholder(R.drawable.icn_placeholder_user_profile_png)
-                .resize(width, height)
-                .centerCrop()
+                .resize(size, size)
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
+                .centerCrop()
                 .transform(new CircleImageTransform())
                 .into(imageView, new Callback() {
                     @Override
                     public void onSuccess() {
-                        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                        ViewGroup.LayoutParams lp = imageView.getLayoutParams();
-                        lp.width = width;
-                        lp.height = height;
-                        imageView.setLayoutParams(lp);
+                        imageView.setVisibility(View.VISIBLE);
+                        initials.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onError() {
-                        imageView.setImageDrawable(ContextCompat.getDrawable(getActivity(),
-                                R.drawable.icn_placeholder_user_profile_png));
+                        imageView.setVisibility(View.GONE);
+                        initials.setVisibility(View.VISIBLE);
                     }
                 });
 

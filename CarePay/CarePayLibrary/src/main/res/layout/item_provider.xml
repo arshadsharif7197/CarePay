@@ -29,7 +29,7 @@
             app:customAssetFont="gotham_rounded_medium" />
 
         <ImageView
-            android:id="@+id/providerPicImageView"
+            android:id="@+id/editProfileImageView"
             android:layout_width="@dimen/payment_details_dialog_icon_size"
             android:layout_height="@dimen/payment_details_dialog_icon_size" />
 
@@ -39,7 +39,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/textview_margin"
-            android:layout_toEndOf="@id/providerPicImageView"
+            android:layout_toEndOf="@id/editProfileImageView"
             android:gravity="center_vertical"
             android:orientation="vertical">
 

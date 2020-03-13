@@ -313,7 +313,7 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
 
             //Appointment Views
             cellAvatar = itemView.findViewById(R.id.cellAvatarImageView);
-            profileImage = itemView.findViewById(R.id.providerPicImageView);
+            profileImage = itemView.findViewById(R.id.editProfileImageView);
             initials = itemView.findViewById(R.id.avatarTextView);
             doctorName = itemView.findViewById(R.id.doctor_name);
             doctorType = itemView.findViewById(R.id.doctor_type);
