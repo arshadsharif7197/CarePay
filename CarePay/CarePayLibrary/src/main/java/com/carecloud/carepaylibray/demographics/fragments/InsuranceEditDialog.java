@@ -96,7 +96,6 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     private Button scanFrontButton;
     private Button scanBackButton;
     private EditText planEditText;
-    private Button noInsuranceButton;
 
     private boolean hadInsurance;
     private boolean isPatientMode;
@@ -226,7 +225,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         hadInsurance = hasInsurance();
-        if (getDialog() != null || (hadInsurance && !isPatientMode) || !isCheckin) {
+        if (getDialog() != null || (hadInsurance && !isPatientMode) || !isCheckin || (isCheckin && !isPatientMode)) {
             View view = inflater.inflate(R.layout.dialog_add_edit_insurance, container, false);
 
             hideKeyboardOnViewTouch(view.findViewById(R.id.dialog_content_layout));
@@ -296,9 +295,14 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             container.setPadding(0, 0, 0, 0);
             toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);
         }
+        if (!isPatientMode && isCheckin) {
+            toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);
+            toolbar.setNavigationOnClickListener(view1 -> onBackPressed());
+        }
 
         TextView textView = view.findViewById(R.id.toolbar_title);
-        textView.setText(StringUtil.capitalize(Label.getLabel("demographics_add_insurance_link")));
+        textView.setText(StringUtil.capitalize(Label.getLabel(isCheckin ?
+                "demographics_add_health_insurance_button_title" : "demographics_add_insurance_link")));
     }
 
     @Override
@@ -324,11 +328,7 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         scrollView = view.findViewById(R.id.demographicsScrollView);
         scanFrontButton = view.findViewById(com.carecloud.carepaylibrary.R.id.demogrDocsFrontScanButton);
         scanBackButton = view.findViewById(com.carecloud.carepaylibrary.R.id.demogrDocsBackScanButton);
-        if (!isPatientMode) {
-            noInsuranceButton = view.findViewById(R.id.noInsuranceButton);
-        }
-
-        if (getDialog() != null || (hadInsurance && !isPatientMode) || !isCheckin) {
+        if (getDialog() != null || (hadInsurance && !isPatientMode) || !isCheckin || (isCheckin && !isPatientMode)) {
             saveInsuranceButton = (Button) findViewById(R.id.save_insurance_changes);
         } else {
             saveInsuranceButton = (Button) findViewById(R.id.checkinDemographicsNextButton);
@@ -346,32 +346,23 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                     Label.getLabel("demographics_insurance_take_back_photo"));
 
 
-            if (hasInsurance() && (getDialog() != null || !isPatientMode) || !isCheckin) {
+            if (hasInsurance() && (getDialog() != null || !isPatientMode) || !isCheckin || (isCheckin && !isPatientMode)) {
                 disappearViewById(R.id.remove_insurance_entry);
                 ((CarePayTextView) findViewById(R.id.toolbar_title)).setText(StringUtil.capitalize(
                         Label.getLabel("demographics_add_insurance_link")));
                 saveInsuranceButton.setText(Label.getLabel("demographics.insuranceEdit.button.label.newInsurance"));
             } else {
-                showViewById(R.id.check_in_demographics_left_button);
-                findViewById(R.id.check_in_demographics_left_button).setOnClickListener(getNoInsuranceListener());
                 saveInsuranceButton.setText(Label.getLabel("practice_checkin_demogr_ins_add_new_button_label"));
             }
 
             isDataHolderSelf = true;
             initInsuranceData(view, new DemographicInsurancePayloadDTO());
-            if (!isPatientMode) {
-                noInsuranceButton.setVisibility(isCheckin ? View.VISIBLE : View.GONE);
-                noInsuranceButton.setOnClickListener(noInsurance);
-            }
         } else {
             DemographicInsurancePayloadDTO demographicInsurancePayload = demographicDTO.getPayload()
                     .getDemographics().getPayload().getInsurances().get(editedIndex);
             initInsuranceData(view, demographicInsurancePayload);
 
             findViewById(R.id.remove_insurance_entry).setOnClickListener(removeButtonListener);
-            if (!isPatientMode) {
-                noInsuranceButton.setVisibility(View.GONE);
-            }
         }
 
 
