@@ -4,20 +4,21 @@ package com.carecloud.carepay.patient.payment.fragments;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import com.google.android.material.tabs.TabLayout;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.viewpager.widget.ViewPager;
 
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.payment.adapters.PaymentsSectionsPagerAdapter;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.google.android.material.tabs.TabLayout;
 
 /**
  * Created by jorge on 29/12/16
@@ -27,7 +28,7 @@ public class PaymentBalanceHistoryFragment extends BaseFragment {
     public static final int PAGE_HISTORY = 1;
     private static final String KEY_INDEX = "index";
 
-    int requestedPage;
+    private int requestedPage;
 
     /**
      * @return a new instance of PaymentBalanceHistoryFragment
@@ -54,7 +55,7 @@ public class PaymentBalanceHistoryFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupViewPager(view);
     }
@@ -67,7 +68,7 @@ public class PaymentBalanceHistoryFragment extends BaseFragment {
         tabs.setTabTextColors(Color.LTGRAY, Color.WHITE);
         tabs.setupWithViewPager(viewPager);
 
-        setShadow(tabs);
+//        setShadow(tabs);
 
         PaymentsSectionsPagerAdapter adapter = new PaymentsSectionsPagerAdapter(getChildFragmentManager());
         PatientPendingPaymentFragment pendingPaymentsFragment = new PatientPendingPaymentFragment();
@@ -111,12 +112,6 @@ public class PaymentBalanceHistoryFragment extends BaseFragment {
         if (getActivity() instanceof ViewPaymentBalanceHistoryActivity) {
             ViewPaymentBalanceHistoryActivity activity = (ViewPaymentBalanceHistoryActivity) this.getActivity();
             activity.displayToolbar(true, null);
-
-            ActionBar supportActionBar = activity.getSupportActionBar();
-            if (supportActionBar != null) {
-                supportActionBar.setElevation(0);
-            }
-
         }
     }
 

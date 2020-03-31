@@ -22,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.hardware.fingerprint.FingerprintManagerCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
@@ -120,7 +121,7 @@ public class SigninFragment extends BaseFragment {
     }
 
     private void setUpViewModel() {
-        viewModel = ViewModelProviders.of(getActivity()).get(SignInViewModel.class);
+        viewModel = new ViewModelProvider(getActivity()).get(SignInViewModel.class);
         viewModel.getSignInResultNavigatorObservable().observe(this, workflowDTO -> {
             PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO, getActivity()
                     .getIntent().getExtras());

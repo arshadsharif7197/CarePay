@@ -58,7 +58,7 @@ public class CancelAppointmentFeeDialog extends BaseDialogFragment {
         TextView cancellationFeeMessageTextView = (TextView) findViewById(R.id.cancellationFeeMessageTextView);
         cancellationFeeMessageTextView.setText(String
                 .format(Label.getLabel("appointment_cancellation_fee_message"), cancellationFeeAmount));
-        Button cancelAppointmentButton = (Button) findViewById(R.id.cancelAppointment);
+        Button cancelAppointmentButton = (Button) findViewById(R.id.cancelAppointmentButton);
         cancelAppointmentButton.setOnClickListener(view1 -> {
             callback.onCancelAppointmentFeeAccepted();
             cancel();

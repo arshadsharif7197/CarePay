@@ -3,6 +3,8 @@
     xmlns:breeze="http://schemas.carecloud.com/breeze"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clickable="true"
     android:contentDescription="@string/content_description_credit_cards_screen"
     android:orientation="vertical">
 

@@ -76,7 +76,6 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
             if (!paymentsModel.getPaymentPayload().getPaymentSettings().isEmpty()) {
                 paymentMethodsList = getPaymentMethodList();
             }
-            initPaymentTypeMap();
         }
     }
 
@@ -109,8 +108,9 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
 //        createPaymentPlanButton.setText(Label.getLabel("payment_create_plan_text"));
 //        createPaymentPlanButton.setEnabled(false);//TODO enable this when ready to support payment plans
 
+        //TODO: Change this to recycler view!!
         ListView paymentMethodList = view.findViewById(R.id.list_payment_types);
-        final PaymentMethodAdapter paymentMethodAdapter = new PaymentMethodAdapter(getContext(), paymentMethodsList, paymentTypeMap);
+        final PaymentMethodAdapter paymentMethodAdapter = new PaymentMethodAdapter(getContext(), paymentMethodsList);
 
         paymentMethodList.setAdapter(paymentMethodAdapter);
         paymentMethodList.setOnItemClickListener((parent, view1, position, id) -> {
@@ -119,20 +119,6 @@ public abstract class PaymentMethodFragment extends BasePaymentDialogFragment {
         });
 
     }
-
-    private void initPaymentTypeMap() {
-        // Initialize HashMap.
-        paymentTypeMap = new HashMap<>();
-        paymentTypeMap.put(CarePayConstants.TYPE_CASH, R.drawable.payment_cash_button_selector);
-        paymentTypeMap.put(CarePayConstants.TYPE_CREDIT_CARD, R.drawable.payment_credit_card_button_selector);
-        paymentTypeMap.put(CarePayConstants.TYPE_CHECK, R.drawable.payment_check_button_selector);
-        paymentTypeMap.put(CarePayConstants.TYPE_GIFT_CARD, R.drawable.payment_credit_card_button_selector);
-        paymentTypeMap.put(CarePayConstants.TYPE_PAYPAL, R.drawable.payment_paypal_button_selector);
-        paymentTypeMap.put(CarePayConstants.TYPE_HSA, R.drawable.payment_credit_card_button_selector);
-        paymentTypeMap.put(CarePayConstants.TYPE_FSA, R.drawable.payment_credit_card_button_selector);
-        paymentTypeMap.put(CarePayConstants.TYPE_PAYMENT_PLAN, R.drawable.payment_credit_card_button_selector);
-    }
-
 
     protected void handlePaymentButton(PaymentsMethodsDTO paymentMethod, double amount) {
         switch (paymentMethod.getType()) {

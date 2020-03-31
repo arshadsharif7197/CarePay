@@ -25,6 +25,7 @@ import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInte
 import com.carecloud.carepay.patient.survey.SurveyActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -41,6 +42,7 @@ import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
+import com.carecloud.carepaylibray.checkout.BaseNextAppointmentFragment;
 import com.carecloud.carepaylibray.checkout.CheckOutFormFragment;
 import com.carecloud.carepaylibray.checkout.CheckOutInterface;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
@@ -67,12 +69,13 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPo
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
-//import com.google.android.gms.wallet.MaskedWallet;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+//import com.google.android.gms.wallet.MaskedWallet;
 
 public class AppointmentCheckoutActivity extends BasePatientActivity implements CheckOutInterface,
         PaymentNavigationCallback,
@@ -532,10 +535,10 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 hideProgressDialog();
-                showErrorNotification(exceptionMessage);
-                Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
+                showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+                Log.e(getContext().getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
             }
         };
     }
@@ -592,6 +595,16 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     }
 
     @Override
+    public void onPrepaymentFailed() {
+        getSupportFragmentManager().popBackStackImmediate();
+        getSupportFragmentManager().popBackStackImmediate();
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+        if (fragment instanceof BaseNextAppointmentFragment) {
+            ((BaseNextAppointmentFragment) fragment).scheduleAppointmentLater();
+        }
+    }
+
+    @Override
     public void forwardAndroidPayResult(int requestCode, int resultCode, Intent data) {
         Fragment targetFragment = getAndroidPayTargetFragment();
         if (targetFragment != null) {
@@ -643,9 +656,9 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
-            showErrorNotification(exceptionMessage);
+            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 

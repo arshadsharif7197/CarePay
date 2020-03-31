@@ -17,6 +17,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.adapter.ExistingChargesItemAdapter;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticeModePaymentPlanFragment;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -174,10 +175,11 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
             cancelPaymentPlanButton.setText(Label.getLabel("payment.editPaymentPlan.delete.button.label"));
         }
         final boolean finalDeletePaymentPlan = deletePaymentPlan;
-        cancelPaymentPlanButton.setOnClickListener(v -> showCancelPaymentPlanConfirmDialog(finalDeletePaymentPlan));
 
         Button addNewCardButton = view.findViewById(R.id.addNewCardButton);
         addNewCardButton.setOnClickListener(v -> onAddPaymentPlanCard(paymentsModel, null, true));
+        cancelPaymentPlanButton.setOnClickListener(v -> showCancelPaymentPlanConfirmDialog(finalDeletePaymentPlan));
+
     }
 
     private void showCancelPaymentPlanConfirmDialog(final boolean deletePaymentPlan) {
@@ -231,9 +233,9 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 hideProgressDialog();
-                SystemUtil.showErrorToast(getContext(), exceptionMessage);
+                SystemUtil.showErrorToast(getContext(), serverErrorDto.getMessage().getBody().getError().getMessage());
             }
         }, queryMap);
     }
@@ -310,9 +312,9 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 hideProgressDialog();
-                SystemUtil.showErrorToast(getContext(), exceptionMessage);
+                SystemUtil.showErrorToast(getContext(), serverErrorDto.getMessage().getBody().getError().getMessage());
 
             }
         }, new Gson().toJson(postModel), queryMap);

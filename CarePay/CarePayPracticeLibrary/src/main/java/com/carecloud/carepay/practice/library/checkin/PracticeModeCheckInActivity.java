@@ -39,6 +39,7 @@ import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionUserP
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -491,9 +492,9 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
-            showErrorNotification(exceptionMessage);
+            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
             findViewById(R.id.drop_down_area_view).setVisibility(View.GONE);
             findViewById(R.id.drop_down_checking_area_view).setVisibility(View.GONE);
         }
@@ -799,9 +800,9 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 hideProgressDialog();
-                showErrorNotification(exceptionMessage);
+                showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
             }
         };
     }
@@ -960,7 +961,7 @@ public class PracticeModeCheckInActivity extends BasePracticeActivity
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 hideProgressDialog();
             }
         }, queryMap);

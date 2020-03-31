@@ -5,7 +5,6 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 /**
  * @author pjohnson on 29/05/17.
  */
-
 public interface PaymentCompletedInterface {
 
     /**

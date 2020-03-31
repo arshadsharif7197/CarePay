@@ -10,6 +10,7 @@ import com.carecloud.carepay.patient.patientsplash.SplashActivity;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.profile.Profile;
@@ -54,8 +55,8 @@ public class NotificationProxyActivity extends MenuPatientActivity {
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
-            showErrorNotification(exceptionMessage);
+        public void onFailure(ServerErrorDTO serverErrorDto) {
+            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
             finish();
         }
     };

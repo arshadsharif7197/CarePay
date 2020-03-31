@@ -22,6 +22,7 @@ import com.carecloud.carepay.patient.delegate.interfaces.ProfileConfirmationCall
 import com.carecloud.carepay.patient.delegate.interfaces.ProfileManagementInterface;
 import com.carecloud.carepay.patient.delegate.model.DelegateDto;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -225,7 +226,7 @@ public class ProfileDetailFragment extends BaseDialogFragment implements Profile
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 hideProgressDialog();
                 Log.e("Error", "error");
             }

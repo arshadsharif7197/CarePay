@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -72,7 +73,7 @@ public class MessagesListFragment extends BaseFragment
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         handler = new Handler();
-        viewModel = ViewModelProviders.of(getActivity()).get(MessagesViewModel.class);
+        viewModel = new ViewModelProvider(getActivity()).get(MessagesViewModel.class);
         messagingDto = viewModel.getMessagesDto().getValue();
         viewModel.getThreadsObservable().observe(this, this::updateDisplayDataModel);
         viewModel.getDeleteMessageObservable().observe(MessagesListFragment.this,

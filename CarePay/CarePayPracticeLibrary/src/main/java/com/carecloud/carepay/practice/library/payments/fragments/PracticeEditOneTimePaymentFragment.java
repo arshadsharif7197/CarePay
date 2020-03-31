@@ -10,6 +10,7 @@ import android.widget.EditText;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -72,6 +73,7 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         minDate = calendar.getTimeInMillis();
+        todayCalendarButtonVisibility = false;
     }
 
     @Override
@@ -101,12 +103,7 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
         amountTextView.setText(currencyFormat.format(scheduledPaymentModel.getPayload().getAmount()));
 
         View deleteButton = findViewById(R.id.deleteButton);
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                deletePayment(scheduledPaymentModel);
-            }
-        });
+        deleteButton.setOnClickListener(view1 -> deletePayment(scheduledPaymentModel));
 
         updateLayout();
     }
@@ -183,9 +180,9 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
-            showErrorNotification(exceptionMessage);
+            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
 
         }
     };
@@ -204,9 +201,9 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
-            showErrorNotification(exceptionMessage);
+            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
 
         }
     };

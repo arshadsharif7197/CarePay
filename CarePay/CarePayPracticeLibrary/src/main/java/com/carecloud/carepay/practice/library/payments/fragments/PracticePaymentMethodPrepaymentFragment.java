@@ -8,11 +8,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.interfaces.AppointmentPrepaymentCallback;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.payments.models.PaymentsMethodsDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 
@@ -61,18 +64,39 @@ public class PracticePaymentMethodPrepaymentFragment extends PracticePaymentMeth
     }
 
     @Override
-    public void onViewCreated(View view, Bundle icicle){
+    public void onViewCreated(@NonNull View view, Bundle icicle){
         super.onViewCreated(view, icicle);
 
-        TextView prepaymentAmount = (TextView) view.findViewById(R.id.prepaymentAmount);
+        TextView prepaymentAmount = view.findViewById(R.id.prepaymentAmount);
         prepaymentAmount.setText(NumberFormat.getCurrencyInstance(Locale.US).format(amountToMakePayment));
 
-        TextView title = (TextView) view.findViewById(R.id.respons_toolbar_title);
+        TextView title = view.findViewById(R.id.respons_toolbar_title);
         title.setText(Label.getLabel("appointments_prepayment_title"));
 
-        Button swipeCreditCarNowButton = (Button) view.findViewById(R.id.swipeCreditCarNowButton);
+        Button swipeCreditCarNowButton = view.findViewById(R.id.swipeCreditCarNowButton);
         if(swipeCreditCarNowButton != null){
             swipeCreditCarNowButton.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    protected void onPaymentMethodAction(PaymentsMethodsDTO paymentMethod,
+                                         double amount,
+                                         PaymentsModel paymentsModel) {
+        if (paymentsModel.getPaymentPayload().getPatientCreditCards() != null
+                && !paymentsModel.getPaymentPayload().getPatientCreditCards().isEmpty()) {
+            PrepaymentPracticeChooseCreditCardFragment fragment = PrepaymentPracticeChooseCreditCardFragment
+                    .newInstance(paymentsModel,
+                            paymentMethod.getLabel(), amount);
+            fragment.setOnCancelListener(onDialogCancelListener);
+            callback.displayDialogFragment(fragment, true);
+            hideDialog();
+        } else {
+            PrepaymentPracticeAddNewCreditCardFragment fragment = PrepaymentPracticeAddNewCreditCardFragment
+                    .newInstance(paymentsModel, amount);
+            fragment.setOnCancelListener(onDialogCancelListener);
+            callback.displayDialogFragment(fragment, true);
+            hideDialog();
         }
     }
 

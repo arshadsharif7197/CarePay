@@ -17,23 +17,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.TransitionDTO;
-import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.interfaces.BaseFragmentInterface;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.signinsignup.ResetPasswordViewModel;
-import com.carecloud.carepaylibray.signinsignup.dto.SignInDTO;
-import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author pjohnson on 03/12/2017
@@ -41,6 +35,7 @@ import java.util.Map;
 public class ConfirmationResetPasswordFragment extends BaseFragment {
 
     private FragmentActivityInterface listener;
+    private BaseFragmentInterface baseFragmentListener;
     private String email;
     private ResetPasswordViewModel viewModel;
 
@@ -64,6 +59,8 @@ public class ConfirmationResetPasswordFragment extends BaseFragment {
         super.onAttach(context);
         try {
             listener = (FragmentActivityInterface) context;
+            baseFragmentListener = (BaseFragmentInterface) context;
+
         } catch (ClassCastException e) {
             throw new ClassCastException("Attached Context must implement FragmentActivityInterface");
         }
@@ -83,7 +80,7 @@ public class ConfirmationResetPasswordFragment extends BaseFragment {
     }
 
     private void setUpViewModel() {
-        viewModel = ViewModelProviders.of(getActivity()).get(ResetPasswordViewModel.class);
+        viewModel = new ViewModelProvider(getActivity()).get(ResetPasswordViewModel.class);
         viewModel.getResendPasswordDtoObservable().observe(this, aVoid
                 -> listener.showSuccessToast(Label.getLabel("forgot_password_confirmation_success_message")));
     }
@@ -114,8 +111,8 @@ public class ConfirmationResetPasswordFragment extends BaseFragment {
 
         view.findViewById(R.id.goToMailAppButton).setOnClickListener(view13 -> showMailAppChooserDialog());
 
-        view.findViewById(R.id.resendMailButton).setOnClickListener(view14
-                -> viewModel.resendPassword(email));
+        view.findViewById(R.id.backToSignInButton).setOnClickListener(view14
+                -> baseFragmentListener.startBaseFragment());
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         if (toolbar != null) {
             listener.setToolbar(toolbar);

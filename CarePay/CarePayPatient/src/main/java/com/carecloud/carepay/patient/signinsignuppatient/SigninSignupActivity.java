@@ -8,16 +8,19 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.BasePatientActivity;
+import com.carecloud.carepay.patient.patientsplash.SplashActivity;
 import com.carecloud.carepay.patient.signinsignuppatient.fragments.SigninFragment;
 import com.carecloud.carepay.patient.tutorial.tutorial.TutorialActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
+import com.carecloud.carepaylibray.interfaces.BaseFragmentInterface;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.signinsignup.ResetPasswordViewModel;
@@ -28,7 +31,7 @@ import com.carecloud.carepaylibray.utils.SystemUtil;
  * Created by harish_revuri on 9/7/2016.
  * Activity supporting Signin and Sign-up
  */
-public class SigninSignupActivity extends BasePatientActivity implements FragmentActivityInterface,
+public class SigninSignupActivity extends BasePatientActivity implements FragmentActivityInterface, BaseFragmentInterface,
         FingerPrintInterface {
 
     private SignInDTO signInSignUpDTO;
@@ -60,9 +63,9 @@ public class SigninSignupActivity extends BasePatientActivity implements Fragmen
     }
 
     private void setUpViewModel() {
-        SignInViewModel viewModel = ViewModelProviders.of(this).get(SignInViewModel.class);
+        SignInViewModel viewModel = new ViewModelProvider(this).get(SignInViewModel.class);
         setBasicObservers(viewModel);
-        ResetPasswordViewModel resetPasswordViewModel = ViewModelProviders.of(this).get(ResetPasswordViewModel.class);
+        ResetPasswordViewModel resetPasswordViewModel = new ViewModelProvider(this).get(ResetPasswordViewModel.class);
         resetPasswordViewModel.setResetPasswordTransition(signInSignUpDTO.getMetadata().getTransitions().getForgotPassword());
         setBasicObservers(resetPasswordViewModel);
         viewModel.setSignInDto(signInSignUpDTO);
@@ -114,6 +117,12 @@ public class SigninSignupActivity extends BasePatientActivity implements Fragmen
     @Override
     public void addFragment(Fragment fragment, boolean addToBackStack) {
         addFragment(R.id.layoutSigninSignup, fragment, addToBackStack);
+    }
+
+    @Override
+    public void startBaseFragment() {
+        String name = getSupportFragmentManager().getBackStackEntryAt(0).getName();
+        getSupportFragmentManager().popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     @Override

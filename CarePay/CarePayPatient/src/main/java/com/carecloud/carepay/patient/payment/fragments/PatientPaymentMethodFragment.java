@@ -29,6 +29,7 @@ import com.carecloud.carepay.service.library.RestCallServiceCallback;
 import com.carecloud.carepay.service.library.RestCallServiceHelper;
 import com.carecloud.carepay.service.library.RestDef;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -441,9 +442,9 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment {
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
-            Log.d(TAG, exceptionMessage);
+            Log.d(TAG, serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 
@@ -570,11 +571,11 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment {
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 hideProgressDialog();
-                System.out.print(exceptionMessage);
-                logPaymentFail("Failed to reach make payment endpoint",
-                        true, rawResponse, exceptionMessage);
+                System.out.print(serverErrorDto.getMessage().getBody().getError().getMessage());
+                logPaymentFail("Failed to reach make payment endpoint", true,
+                        rawResponse, serverErrorDto.getMessage().getBody().getError().getMessage());
             }
         };
     }
@@ -605,8 +606,8 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment {
             practiceId = userPracticeDTO.getPracticeId();
             practiceMgmt = findPatientId(userPracticeDTO.getPracticeId());
         } else {
-            PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload().getPatientBalances()
-                    .get(0).getBalances().get(0).getMetadata();
+            PendingBalanceMetadataDTO metadata = paymentsModel.getPaymentPayload()
+                    .getPatientBalances().get(0).getBalances().get(0).getMetadata();
             patientId = metadata.getPracticeMgmt();
             practiceId = metadata.getPracticeId();
             practiceMgmt = metadata.getPatientId();
@@ -649,7 +650,8 @@ public class PatientPaymentMethodFragment extends PaymentMethodFragment {
 
     private void queuePayment(double amount,
                               IntegratedPaymentPostModel postModel,
-                              String patientID, String practiceId,
+                              String patientID,
+                              String practiceId,
                               String practiceMgmt,
                               String paymentJson,
                               String errorMessage) {

@@ -19,18 +19,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.PermissionChecker;
 
@@ -40,16 +36,17 @@ import com.carecloud.carepay.patient.myhealth.dtos.PatientDto;
 import com.carecloud.carepay.patient.visitsummary.dto.VisitSummaryDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
 import com.carecloud.carepaylibray.appointments.models.PortalSetting;
 import com.carecloud.carepaylibray.appointments.models.PortalSettingDTO;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.common.DatePickerFragment;
+import com.carecloud.carepaylibray.common.options.SelectOptionFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayProgressButton;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -208,14 +205,18 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
             practiceTextView.setText(selectedPractice.getPracticeName());
             practiceTextView.getOnFocusChangeListener().onFocusChange(practiceTextView, true);
         } else {
-            practiceTextView.setOnClickListener(v -> showChooseDialog(getContext(), practices,
-                    Label.getLabel("visitSummary.createVisitSummary.choosePracticeDialog.title.choose"),
-                    (option, index) -> {
-                        selectedPractice = practices.get(index);
-                        practiceTextView.setText(selectedPractice.getPracticeName());
-                        practiceTextView.getOnFocusChangeListener().onFocusChange(practiceTextView, true);
-                        enableExportButton();
-                    }));
+            practiceTextView.setOnClickListener(v -> {
+                SelectOptionFragment fragment = SelectOptionFragment.newInstance(
+                        Label.getLabel("visitSummary.createVisitSummary.choosePracticeDialog.title.choose"));
+                fragment.setOptions(practices);
+                fragment.setCallback((option, position) -> {
+                    selectedPractice = practices.get(position);
+                    practiceTextView.setText(selectedPractice.getPracticeName());
+                    practiceTextView.getOnFocusChangeListener().onFocusChange(practiceTextView, true);
+                    enableExportButton();
+                });
+                fragment.show(getActivity().getSupportFragmentManager(), fragment.getClass().getName());
+            });
         }
 
         TextInputLayout dateFromTextInputLayout = view.findViewById(R.id.dateFromTextInputLayout);
@@ -366,42 +367,6 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
         callback.displayDialogFragment(fragment, true);
     }
 
-    private void showChooseDialog(Context context,
-                                  List<UserPracticeDTO> options,
-                                  String title,
-                                  final OnOptionSelectedListener listener) {
-
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        dialog.setNegativeButton(Label.getLabel("demographics_cancel_label"),
-                (dialogInterface, pos) -> dialogInterface.dismiss());
-
-        View customView = LayoutInflater.from(context).inflate(R.layout.alert_list_layout,
-                null, false);
-        dialog.setView(customView);
-        TextView titleTextView = customView.findViewById(R.id.title_view);
-        titleTextView.setText(title);
-        titleTextView.setVisibility(View.VISIBLE);
-
-
-        ListView listView = customView.findViewById(R.id.dialoglist);
-        CustomOptionsAdapter customOptionsAdapter = new CustomOptionsAdapter(context, options);
-        listView.setAdapter(customOptionsAdapter);
-
-
-        final AlertDialog alert = dialog.create();
-        alert.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        alert.show();
-
-        AdapterView.OnItemClickListener clickListener = (adapterView, view, position, row) -> {
-            UserPracticeDTO practice = (UserPracticeDTO) adapterView.getAdapter().getItem(position);
-            if (listener != null) {
-                listener.onOptionSelected(practice.getPracticeName(), position);
-            }
-            alert.dismiss();
-        };
-        listView.setOnItemClickListener(clickListener);
-    }
-
     private void callVisitSummaryService(final UserPracticeDTO selectedPractice) {
         TransitionDTO transition = myHealthDto.getMetadata().getLinks().getVisitSummary();
         JsonObject query = new JsonObject();
@@ -436,8 +401,8 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
-                Log.e("okHttp", exceptionMessage);
+            public void onFailure(ServerErrorDTO serverErrorDto) {
+                Log.e("okHttp", serverErrorDto.getMessage().getBody().getError().getMessage());
                 hideProgressDialog();
                 showErrorNotification(Label.getLabel("visitSummary.createVisitSummary.error.label.downloadError"));
             }
@@ -461,7 +426,7 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                 try {
                     visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
                 } catch (Exception ex) {
-                    onFailure("");
+                    onFailure(new ServerErrorDTO());
                 }
                 String status = visitSummaryDTO.getPayload().getVisitSummary().getStatus();
                 if (retryIntent > MAX_NUMBER_RETRIES) {
@@ -474,9 +439,9 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
-                Log.e("OkHttp", exceptionMessage);
-                if (exceptionMessage.contains("JSON")) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
+                Log.e("OkHttp", serverErrorDto.getMessage().getBody().getError().getMessage());
+                if (serverErrorDto.getMessage().getBody().getError().getMessage().contains("JSON")) {
                     downloadFile(jobId, selectedPractice, format);
                 } else {
                     resetProcess();
@@ -552,10 +517,6 @@ public class VisitSummaryDialogFragment extends BaseDialogFragment {
                 && (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
             callVisitSummaryService(selectedPractice);
         }
-    }
-
-    public interface OnOptionSelectedListener {
-        void onOptionSelected(String option, int index);
     }
 
     @Override

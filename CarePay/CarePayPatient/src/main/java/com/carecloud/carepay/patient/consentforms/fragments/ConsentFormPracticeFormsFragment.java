@@ -18,6 +18,7 @@ import com.carecloud.carepay.patient.consentforms.adapters.ConsentFormsAdapter;
 import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormPracticeFormInterface;
 import com.carecloud.carepay.patient.consentforms.interfaces.ConsentFormsFormsInterface;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -264,10 +265,10 @@ public class ConsentFormPracticeFormsFragment extends BaseFragment implements Co
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             adapter.setLoading(false);
             isPaging = false;
-            showErrorNotification(exceptionMessage);
+            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 
