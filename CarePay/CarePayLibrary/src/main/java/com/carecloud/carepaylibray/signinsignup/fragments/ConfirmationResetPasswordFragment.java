@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.interfaces.BaseFragmentInterface;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.signinsignup.ResetPasswordViewModel;
 
@@ -34,6 +35,7 @@ import java.util.List;
 public class ConfirmationResetPasswordFragment extends BaseFragment {
 
     private FragmentActivityInterface listener;
+    private BaseFragmentInterface baseFragmentListener;
     private String email;
     private ResetPasswordViewModel viewModel;
 
@@ -57,6 +59,8 @@ public class ConfirmationResetPasswordFragment extends BaseFragment {
         super.onAttach(context);
         try {
             listener = (FragmentActivityInterface) context;
+            baseFragmentListener = (BaseFragmentInterface) context;
+
         } catch (ClassCastException e) {
             throw new ClassCastException("Attached Context must implement FragmentActivityInterface");
         }
@@ -107,8 +111,8 @@ public class ConfirmationResetPasswordFragment extends BaseFragment {
 
         view.findViewById(R.id.goToMailAppButton).setOnClickListener(view13 -> showMailAppChooserDialog());
 
-        view.findViewById(R.id.resendMailButton).setOnClickListener(view14
-                -> viewModel.resendPassword(email));
+        view.findViewById(R.id.backToSignInButton).setOnClickListener(view14
+                -> baseFragmentListener.startBaseFragment());
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         if (toolbar != null) {
             listener.setToolbar(toolbar);
