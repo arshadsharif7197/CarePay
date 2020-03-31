@@ -18,7 +18,9 @@ import com.carecloud.carepay.patient.delegate.interfaces.DelegateManagementInter
 import com.carecloud.carepay.patient.demographics.fragments.settings.ChangePasswordFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.DemographicsSettingsFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.EditProfileFragment;
+import com.carecloud.carepay.patient.demographics.fragments.settings.HelpFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.SettingsDocumentsFragment;
+import com.carecloud.carepay.patient.demographics.fragments.settings.SupportFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.UpdateEmailFragment;
 import com.carecloud.carepay.patient.demographics.fragments.settings.UpdateNameFragment;
 import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
@@ -53,6 +55,7 @@ import com.carecloud.carepaylibray.profile.UserLinks;
 import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInDTO;
 import com.carecloud.carepaylibray.unifiedauth.UnifiedSignInUser;
 import com.carecloud.carepaylibray.utils.DtoHelper;
+import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
 
@@ -169,12 +172,6 @@ public class DemographicsSettingsActivity extends BasePatientActivity implements
                 .newInstance(demographicDTO, editedIndex, false, false);
 
         replaceFragment(insuranceEditDialog, true);
-    }
-
-    @Override
-    public void displayCreditCardListFragment() {
-        CreditCardListFragment creditCardListFragment = CreditCardListFragment.newInstance();
-        replaceFragment(creditCardListFragment, true);
     }
 
     @Override
