@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -180,10 +179,10 @@ public class MedicationsAllergiesEmptyFragment extends BaseCheckinFragment {
         }
 
         @Override
-        public void onFailure(ServerErrorDTO serverErrorDto) {
+        public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
-            Log.e(getContext().getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+            showErrorNotification(exceptionMessage);
+            Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:paddingLeft="@dimen/apt_available_hours_list_padding"
+    android:paddingRight="@dimen/apt_available_hours_list_padding"
+    android:paddingBottom="@dimen/apt_dl_view_margin"
+    android:paddingTop="@dimen/margintop"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/haveyouTreatedHeaderTextView"
+        android:layout_width="wrap_content"
+        android:text="HAVE YOU EVER BEEN TREATED FOR ANY OF THE FOLLOWING?"
+        android:textSize="@dimen/textview_textsize"
+        android:layout_marginTop="@dimen/apt_popup_button_margin"
+        android:textColor="@color/colorPrimary"
+        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/apt_dl_view_margin"
+        android:layout_height="wrap_content">
+        <CheckBox
+            android:id="@+id/chestPainCheckBox"
+            android:text="Chest Pain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:textSize="@dimen/consent_minor_textsize"
+            android:paddingTop="@dimen/checkbox_padding_top_bottom"
+            android:paddingBottom="@dimen/checkbox_padding_top_bottom"
+            android:paddingLeft="@dimen/checkbox_padding_left_right"
+            android:paddingRight="@dimen/checkbox_padding_left_right"
+            android:textColor="@color/slateGray"
+            android:drawableRight="@drawable/check_box_intake"/>
+        <View
+            style="@style/Consent_Form_View_Style"
+            android:layout_width="match_parent" />
+        <CheckBox
+            android:id="@+id/nauseaCheckBox"
+            android:text="Nausea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:textSize="@dimen/consent_minor_textsize"
+            android:paddingTop="@dimen/checkbox_padding_top_bottom"
+            android:paddingBottom="@dimen/checkbox_padding_top_bottom"
+            android:paddingLeft="@dimen/checkbox_padding_left_right"
+            android:paddingRight="@dimen/checkbox_padding_left_right"
+            android:textColor="@color/slateGray"
+            android:drawableRight="@drawable/check_box_intake"/>
+        <View
+            style="@style/Consent_Form_View_Style"
+            android:layout_width="match_parent" />
+        <CheckBox
+            android:id="@+id/perspirationCheckBox"
+            android:text="Perspiration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:textSize="@dimen/consent_minor_textsize"
+            android:paddingTop="@dimen/checkbox_padding_top_bottom"
+            android:paddingBottom="@dimen/checkbox_padding_top_bottom"
+            android:paddingLeft="@dimen/checkbox_padding_left_right"
+            android:paddingRight="@dimen/checkbox_padding_left_right"
+            android:textColor="@color/slateGray"
+            android:drawableRight="@drawable/check_box_intake"/>
+        <View
+            style="@style/Consent_Form_View_Style"
+            android:layout_width="match_parent" />
+        <CheckBox
+            android:id="@+id/SOBCheckBox"
+            android:text="Shortness of Breath - SOB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:textSize="@dimen/consent_minor_textsize"
+            android:paddingTop="@dimen/checkbox_padding_top_bottom"
+            android:paddingBottom="@dimen/checkbox_padding_top_bottom"
+            android:paddingLeft="@dimen/checkbox_padding_left_right"
+            android:paddingRight="@dimen/checkbox_padding_left_right"
+            android:textColor="@color/slateGray"
+            android:drawableRight="@drawable/check_box_intake"/>
+        <View
+            style="@style/Consent_Form_View_Style"
+            android:layout_width="match_parent" />
+        <CheckBox
+            android:id="@+id/swellingCheckBox"
+            android:text="Swelling (Edema)"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:textSize="@dimen/consent_minor_textsize"
+            android:paddingTop="@dimen/checkbox_padding_top_bottom"
+            android:paddingBottom="@dimen/checkbox_padding_top_bottom"
+            android:paddingLeft="@dimen/checkbox_padding_left_right"
+            android:paddingRight="@dimen/checkbox_padding_left_right"
+            android:textColor="@color/slateGray"
+            android:drawableRight="@drawable/check_box_intake"/>
+        <View
+            style="@style/Consent_Form_View_Style"
+            android:layout_width="match_parent" />
+        <CheckBox
+            android:id="@+id/palpitationsCheckBox"
+            android:text="Palpitations"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:textSize="@dimen/consent_minor_textsize"
+            android:paddingTop="@dimen/checkbox_padding_top_bottom"
+            android:paddingBottom="@dimen/checkbox_padding_top_bottom"
+            android:paddingLeft="@dimen/checkbox_padding_left_right"
+            android:paddingRight="@dimen/checkbox_padding_left_right"
+            android:textColor="@color/slateGray"
+            android:drawableRight="@drawable/check_box_intake"/>
+        <View
+            style="@style/Consent_Form_View_Style"
+            android:layout_width="match_parent" />
+        <CheckBox
+            android:id="@+id/syncopeCheckBox"
+            android:text="Fainting (Syncope)"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:textSize="@dimen/consent_minor_textsize"
+            android:paddingTop="@dimen/checkbox_padding_top_bottom"
+            android:paddingBottom="@dimen/checkbox_padding_top_bottom"
+            android:paddingLeft="@dimen/checkbox_padding_left_right"
+            android:paddingRight="@dimen/checkbox_padding_left_right"
+            android:textColor="@color/slateGray"
+            android:drawableRight="@drawable/check_box_intake"/>
+        <View
+            style="@style/Consent_Form_View_Style"
+            android:layout_width="match_parent" />
+        <CheckBox
+            android:id="@+id/nearSyncopeCheckBox"
+            android:text="Near Fainting (Near Syncope)"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/consent_minor_textsize"
+            android:button="@null"
+            android:paddingTop="@dimen/checkbox_padding_top_bottom"
+            android:paddingBottom="@dimen/checkbox_padding_top_bottom"
+            android:paddingLeft="@dimen/checkbox_padding_left_right"
+            android:paddingRight="@dimen/checkbox_padding_left_right"
+            android:textColor="@color/slateGray"
+            android:drawableRight="@drawable/check_box_intake"/>
+        <View
+            style="@style/Consent_Form_View_Style"
+            android:layout_width="match_parent" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -11,7 +11,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.PermissionChecker;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
@@ -68,7 +67,7 @@ public class MyHealthActivity extends MenuPatientActivity implements MyHealthInt
     }
 
     private void setUpViewModel() {
-        viewModel = new ViewModelProvider(this).get(MyHealthViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(MyHealthViewModel.class);
         setBasicObservers(viewModel);
         viewModel.getSkeleton().observe(this, showSkeleton -> {
             if (showSkeleton) {

@@ -27,7 +27,6 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticePayment
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanConfirmationFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -361,9 +360,9 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
         }
 
         @Override
-        public void onFailure(ServerErrorDTO serverErrorDto) {
+        public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+            showErrorNotification(exceptionMessage);
         }
     };
 

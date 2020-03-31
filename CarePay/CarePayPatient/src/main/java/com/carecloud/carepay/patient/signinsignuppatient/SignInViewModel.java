@@ -16,7 +16,6 @@ import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -147,11 +146,11 @@ public class SignInViewModel extends BaseViewModel {
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
+            public void onFailure(String exceptionMessage) {
                 setLoading(false);
                 getWorkflowServiceHelper().setAppAuthorizationHelper(null);
                 setErrorMessage(CarePayConstants.INVALID_LOGIN_ERROR_MESSAGE);
-                Log.e("Server Error", serverErrorDto.getMessage().getBody().getError().getMessage());
+                Log.e("Server Error", exceptionMessage);
                 signInResultObservable.setValue(SIGN_IN_ERROR);
             }
         };
@@ -214,10 +213,10 @@ public class SignInViewModel extends BaseViewModel {
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
+            public void onFailure(String exceptionMessage) {
                 setLoading(false);
-                setErrorMessage(serverErrorDto.getMessage().getBody().getError().getMessage());
-                Log.e("Server Error", serverErrorDto.getMessage().getBody().getError().getMessage());
+                setErrorMessage(exceptionMessage);
+                Log.e("Server Error", exceptionMessage);
             }
         };
     }
@@ -261,10 +260,10 @@ public class SignInViewModel extends BaseViewModel {
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
+            public void onFailure(String exceptionMessage) {
                 setLoading(false);
-                setErrorMessage(serverErrorDto.getMessage().getBody().getError().getMessage());
-                Log.e("Server Error", serverErrorDto.getMessage().getBody().getError().getMessage());
+                setErrorMessage(exceptionMessage);
+                Log.e("Server Error", exceptionMessage);
             }
         });
     }
@@ -290,8 +289,8 @@ public class SignInViewModel extends BaseViewModel {
                     }
 
                     @Override
-                    public void onFailure(ServerErrorDTO serverErrorDto) {
-                        Log.e("Breeze", serverErrorDto.getMessage().getBody().getError().getMessage());
+                    public void onFailure(String exceptionMessage) {
+                        Log.e("Breeze", exceptionMessage);
                     }
                 }, query, headers);
     }

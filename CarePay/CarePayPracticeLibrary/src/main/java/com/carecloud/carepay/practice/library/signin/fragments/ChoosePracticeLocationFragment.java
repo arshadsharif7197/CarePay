@@ -12,7 +12,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -77,7 +76,7 @@ public class ChoosePracticeLocationFragment extends BaseDialogFragment
         selectedPractice = DtoHelper.getConvertedDTO(UserPracticeDTO.class,
                 getArguments());
         locationsList = selectedPractice.getLocations();
-        viewModel = new ViewModelProvider(getActivity()).get(SignInPracticeViewModel.class);
+        viewModel = ViewModelProviders.of(getActivity()).get(SignInPracticeViewModel.class);
     }
 
     @Override

@@ -14,7 +14,6 @@ import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -129,12 +128,12 @@ public class BaseRequestAppointmentDialogFragment extends BaseDialogFragment {
                     }
 
                     @Override
-                    public void onFailure(ServerErrorDTO serverErrorDto) {
+                    public void onFailure(String exceptionMessage) {
                         hideProgressDialog();
                         requestAppointmentButton.setEnabled(true);
-                        showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+                        showErrorNotification(exceptionMessage);
                         if (isVisible()) {
-                            Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+                            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
                         }
                     }
                 },

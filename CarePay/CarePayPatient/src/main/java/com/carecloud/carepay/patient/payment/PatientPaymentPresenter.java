@@ -14,7 +14,6 @@ import com.carecloud.carepay.patient.payment.fragments.PaymentPlanPaymentMethodF
 import com.carecloud.carepay.patient.payment.fragments.ResponsibilityFragment;
 import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -341,9 +340,9 @@ public class PatientPaymentPresenter extends PaymentPresenter
         }
 
         @Override
-        public void onFailure(ServerErrorDTO serverErrorDto) {
+        public void onFailure(String exceptionMessage) {
             viewHandler.getISession().hideProgressDialog();
-            viewHandler.getISession().showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+            viewHandler.getISession().showErrorNotification(exceptionMessage);
         }
     };
 

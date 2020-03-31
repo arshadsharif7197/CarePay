@@ -16,7 +16,6 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.adapter.PaymentHistoryAdapter;
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentHistoryCallback;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -231,10 +230,10 @@ public class PaymentHistoryFragment extends BaseDialogFragment implements Paymen
         }
 
         @Override
-        public void onFailure(ServerErrorDTO serverErrorDto) {
+        public void onFailure(String exceptionMessage) {
             adapter.setLoading(false);
             isPaging = false;
-            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+            showErrorNotification(exceptionMessage);
         }
     };
 }

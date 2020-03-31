@@ -48,7 +48,12 @@ public class ProviderListFragment extends BaseProviderListFragment {
     private void setUpToolbar(View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar_layout);
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
-        toolbar.setNavigationOnClickListener(view1 -> getActivity().onBackPressed());
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
         TextView title = toolbar.findViewById(R.id.respons_toolbar_title);
         title.setText(Label.getLabel("add_appointment_provider"));
         callback.displayToolbar(false, null);

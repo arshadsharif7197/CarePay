@@ -8,9 +8,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
-
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceHelper;
 import com.carecloud.carepay.service.library.base.IApplicationSession;
@@ -79,7 +76,7 @@ public abstract class BaseDialogFragment extends BlurDialogFragment implements I
     }
 
     @Override
-    public void onDismiss(@NonNull DialogInterface dialogInterface) {
+    public void onDismiss(DialogInterface dialogInterface) {
         super.onDismiss(dialogInterface);
         if (onDismissListener != null) {
             onDismissListener.onDismiss(dialogInterface);
@@ -297,19 +294,11 @@ public abstract class BaseDialogFragment extends BlurDialogFragment implements I
 
     protected DialogInterface.OnCancelListener onDialogCancelListener = dialogInterface -> showDialog();
 
-    public boolean onBackPressed(boolean callBackPressed) {
-        if (callBackPressed) {
-            getActivity().onBackPressed();
-        }
+    public void onBackPressed() {
+        getActivity().onBackPressed();
         if (onBackPressedInterface != null) {
             onBackPressedInterface.onBackPressed();
         }
-        return true;
-    }
-
-    public boolean onBackPressed() {
-        onBackPressed(true);
-        return true;
     }
 
     public void setOnBackPressedListener(OnBackPressedInterface onBackPressedInterface) {

@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
@@ -51,7 +50,7 @@ public class ChooseProfileFragment extends BaseDialogFragment {
     }
 
     private void setUpViewModel() {
-        viewModel = new ViewModelProvider(getActivity()).get(SignInViewModel.class);
+        viewModel = ViewModelProviders.of(getActivity()).get(SignInViewModel.class);
         userLinks = viewModel.getUserLinksObservable().getValue();
         viewModel.getSignInResultNavigatorObservable().observe(this, workflowDTO -> {
             Log.e("Pablo", "Yeah");
@@ -152,5 +151,4 @@ public class ChooseProfileFragment extends BaseDialogFragment {
         profileDto.setProfile(profile);
         return profileDto;
     }
-
 }

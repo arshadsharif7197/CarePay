@@ -13,13 +13,13 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.interfaces.PracticeAppointmentDialogListener;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
@@ -122,10 +122,10 @@ public class CancelAppointmentConfirmDialogFragment extends BaseDialogFragment {
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
+            public void onFailure(String exceptionMessage) {
                 hideProgressDialog();
-                showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
-                Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+                showErrorNotification(exceptionMessage);
+                Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
             }
 
         };

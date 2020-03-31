@@ -11,7 +11,6 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.session.WarningSessionActivity;
@@ -69,9 +68,9 @@ public class PracticeWarningSessionActivity extends WarningSessionActivity {
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
+            public void onFailure(String exceptionMessage) {
                 hideProgressDialog();
-                Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+                Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
             }
         });
     }

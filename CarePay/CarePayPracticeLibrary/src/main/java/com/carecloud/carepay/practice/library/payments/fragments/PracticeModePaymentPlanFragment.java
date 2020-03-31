@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.adapter.PaymentPlanItemAdapter;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -452,9 +451,9 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
+            public void onFailure(String exceptionMessage) {
                 hideProgressDialog();
-                SystemUtil.showErrorToast(getContext(), serverErrorDto.getMessage().getBody().getError().getMessage());
+                SystemUtil.showErrorToast(getContext(), exceptionMessage);
 
             }
         }, new Gson().toJson(postModel), queryMap);
@@ -554,10 +553,10 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
         }
 
         @Override
-        public void onFailure(ServerErrorDTO serverErrorDto) {
+        public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            SystemUtil.showErrorToast(getContext(), serverErrorDto.getMessage().getBody().getError().getMessage());
-            Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+            SystemUtil.showErrorToast(getContext(), exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 

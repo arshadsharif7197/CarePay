@@ -14,6 +14,10 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 public interface PatientAppointmentNavigationCallback extends AppointmentNavigationCallback,
         AppointmentPrepaymentCallback, AppointmentFlowInterface {
 
+    void onCancelAppointment(AppointmentDTO appointmentDTO);
+
+    void onCancelAppointment(AppointmentDTO appointmentDTO, int cancellationReason, String cancellationReasonComment);
+
     void onCheckInStarted(AppointmentDTO appointmentDTO);
 
     void onCheckInOfficeStarted(AppointmentDTO appointmentDTO);

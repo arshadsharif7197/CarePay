@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.common.BaseViewModel;
@@ -74,9 +73,9 @@ public class ResetPasswordViewModel extends BaseViewModel {
                     }
 
                     @Override
-                    public void onFailure(ServerErrorDTO serverErrorDTO) {
+                    public void onFailure(String exceptionMessage) {
                         setLoading(false);
-                        setErrorMessage(serverErrorDTO.getMessage().getBody().getError().getMessage());
+                        setErrorMessage(exceptionMessage);
                     }
                 },
                 userObject.toString(), queryParams, headers);

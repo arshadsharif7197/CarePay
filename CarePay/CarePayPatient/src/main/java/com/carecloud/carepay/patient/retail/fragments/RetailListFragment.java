@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.retail.adapters.RetailStoreListAdapter;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -140,9 +139,9 @@ public class RetailListFragment extends BaseFragment implements RetailStoreListA
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
+            public void onFailure(String exceptionMessage) {
                 hideProgressDialog();
-                showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+                showErrorNotification(exceptionMessage);
             }
         };
     }

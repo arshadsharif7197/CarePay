@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -55,7 +54,7 @@ public class MessagesProvidersFragment extends BaseFragment implements MessagesP
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        messagingDto = new ViewModelProvider(getActivity()).get(MessagesViewModel.class)
+        messagingDto = ViewModelProviders.of(getActivity()).get(MessagesViewModel.class)
                 .getMessagesDto().getValue();
     }
 

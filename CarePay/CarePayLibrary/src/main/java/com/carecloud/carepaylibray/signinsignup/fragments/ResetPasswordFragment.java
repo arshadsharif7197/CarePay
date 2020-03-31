@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
@@ -75,7 +75,7 @@ public class ResetPasswordFragment extends BaseFragment {
     }
 
     private void setUpViewModel() {
-        viewModel = new ViewModelProvider(getActivity()).get(ResetPasswordViewModel.class);
+        viewModel = ViewModelProviders.of(getActivity()).get(ResetPasswordViewModel.class);
         viewModel.getResetPasswordDtoObservable().observe(this, aVoid -> goToNextScreen());
     }
 

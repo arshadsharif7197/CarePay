@@ -27,7 +27,6 @@ import com.carecloud.carepay.practice.library.payments.interfaces.AddPaymentItem
 import com.carecloud.carepay.practice.library.payments.interfaces.PracticePaymentNavigationCallback;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -1188,9 +1187,9 @@ public class PaymentDistributionFragment extends BaseDialogFragment
         }
 
         @Override
-        public void onFailure(ServerErrorDTO serverErrorDto) {
+        public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+            showErrorNotification(exceptionMessage);
         }
     };
 

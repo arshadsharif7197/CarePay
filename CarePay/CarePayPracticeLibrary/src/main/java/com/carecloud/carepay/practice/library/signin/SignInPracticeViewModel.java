@@ -11,7 +11,6 @@ import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.AvailableLocationDTO;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -86,9 +85,9 @@ public class SignInPracticeViewModel extends BaseViewModel {
                         }
 
                         @Override
-                        public void onFailure(ServerErrorDTO serverErrorDTO) {
+                        public void onFailure(String exceptionMessage) {
                             setLoading(false);
-                            setErrorMessage(serverErrorDTO.getMessage().getBody().getError().getMessage());
+                            setErrorMessage(exceptionMessage);
                         }
                     }, gson.toJson(signInDTO),
                     queryParams, headers);
@@ -120,9 +119,9 @@ public class SignInPracticeViewModel extends BaseViewModel {
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDTO) {
+            public void onFailure(String exceptionMessage) {
                 setLoading(false);
-                setErrorMessage(serverErrorDTO.getMessage().getBody().getError().getMessage());
+                setErrorMessage(exceptionMessage);
                 getWorkflowServiceHelper().setAppAuthorizationHelper(null);
             }
         }, queryMap);
@@ -164,9 +163,9 @@ public class SignInPracticeViewModel extends BaseViewModel {
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDTO) {
+            public void onFailure(String exceptionMessage) {
                 setLoading(false);
-                setErrorMessage(serverErrorDTO.getMessage().getBody().getError().getMessage());
+                setErrorMessage(exceptionMessage);
             }
         }, queryMap);
     }
@@ -195,9 +194,9 @@ public class SignInPracticeViewModel extends BaseViewModel {
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDTO) {
+            public void onFailure(String exceptionMessage) {
                 setLoading(false);
-                setErrorMessage(serverErrorDTO.getMessage().getBody().getError().getMessage());
+                setErrorMessage(exceptionMessage);
             }
         }, queryMap);
     }

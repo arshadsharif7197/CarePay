@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.adapter.PatientSearchResultAdapter;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
@@ -173,7 +172,7 @@ public class FindPatientDialog extends BaseDialogFragment {
         }
 
         @Override
-        public void onFailure(ServerErrorDTO serverErrorDto) {
+        public void onFailure(String exceptionMessage) {
             if (isAdded()) {
                 findViewById(R.id.patient_searched_list).setVisibility(View.GONE);
                 findViewById(R.id.patient_not_found_text).setVisibility(View.VISIBLE);

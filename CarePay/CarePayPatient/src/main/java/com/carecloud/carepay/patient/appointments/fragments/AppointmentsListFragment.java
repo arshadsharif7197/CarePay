@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -76,7 +76,7 @@ public class AppointmentsListFragment extends BaseFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(getActivity()).get(AppointmentViewModel.class);
+        viewModel = ViewModelProviders.of(getActivity()).get(AppointmentViewModel.class);
         appointmentsResultModel = viewModel.getAppointmentsDtoObservable().getValue();
     }
 
@@ -232,18 +232,14 @@ public class AppointmentsListFragment extends BaseFragment
     }
 
     private void setRefreshAction() {
-        refreshLayout.setOnRefreshListener(() -> doRefreshAction());
-    }
-
-    public void doRefreshAction() {
-        viewModel.getAppointments(appointmentsResultModel.getMetadata()
-                .getLinks().getAppointments(), true);
+        refreshLayout.setOnRefreshListener(() -> viewModel
+                .getAppointments(appointmentsResultModel.getMetadata().getLinks().getAppointments(), true));
     }
 
     @Override
     public void onItemTapped(AppointmentDTO appointmentDTO) {
         AppointmentDetailDialog detailDialog = AppointmentDetailDialog.newInstance(appointmentDTO);
-        callback.addFragment(detailDialog, true);
+        callback.displayDialogFragment(detailDialog, true);
     }
 
     @Override

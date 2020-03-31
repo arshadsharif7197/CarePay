@@ -18,7 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
@@ -113,11 +113,11 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     }
 
     protected void setUpViewModel() {
-        ResetPasswordViewModel resetPasswordViewModel = new ViewModelProvider(this).get(ResetPasswordViewModel.class);
+        ResetPasswordViewModel resetPasswordViewModel = ViewModelProviders.of(this).get(ResetPasswordViewModel.class);
         resetPasswordViewModel.setResetPasswordTransition(signinDTO.getMetadata().getTransitions().getForgotPassword());
         setBasicObservers(resetPasswordViewModel);
 
-        viewModel = new ViewModelProvider(this).get(SignInPracticeViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(SignInPracticeViewModel.class);
         setBasicObservers(viewModel);
         viewModel.getSignInDtoObservable().observe(this, unifiedSignInResponse -> {
             TransitionDTO transition = null;

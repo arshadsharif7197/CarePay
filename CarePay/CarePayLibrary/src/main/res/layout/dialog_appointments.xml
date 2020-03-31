@@ -6,20 +6,16 @@
     android:id="@+id/rootDialogAppointLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/blur_image"
-    android:clickable="true"
+    android:layout_marginBottom="@dimen/dimen_10dp"
+    android:background="@color/transparent_apt"
     android:orientation="vertical"
     android:paddingStart="@dimen/dimen_10dp"
-    android:paddingTop="?actionBarSize"
-    android:paddingEnd="@dimen/dimen_10dp"
-    android:paddingBottom="@dimen/dimen_10dp">
+    android:paddingEnd="@dimen/dimen_10dp">
 
     <RelativeLayout
         android:id="@+id/closeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="@dimen/dimen_10dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -50,11 +46,9 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/mainLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/closeLayout"
-        android:layout_centerVertical="true"
         android:layout_marginBottom="@dimen/apt_dl_margin"
         android:background="@drawable/bg_cardview"
         android:paddingBottom="@dimen/dimen_20dp">
@@ -77,12 +71,12 @@
                 android:layout_margin="@dimen/dimen_10dp"
                 android:layout_weight="0.5"
                 android:background="@drawable/button_green_fill_background"
-                android:contentDescription="@string/content_description_request_appointment"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_13"
                 app:customAssetFont="gotham_rounded_medium"
-                tools:text="Request Appointment" />
+                tools:text="Request Appointment"
+                android:contentDescription="@string/content_description_request_appointment"/>
         </LinearLayout>
 
         <ScrollView
@@ -372,7 +366,6 @@
                         android:layout_marginEnd="@dimen/dimen_10dp"
                         android:layout_weight="1"
                         android:background="@drawable/button_blue_border_selector"
-                        android:foreground="?selectableItemBackground"
                         android:textAllCaps="true"
                         android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/text_size_13"

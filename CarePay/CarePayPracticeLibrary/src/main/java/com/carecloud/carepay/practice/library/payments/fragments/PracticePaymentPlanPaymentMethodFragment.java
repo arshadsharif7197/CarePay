@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import androidx.annotation.NonNull;
-
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
@@ -131,7 +129,7 @@ public class PracticePaymentPlanPaymentMethodFragment extends PracticePaymentMet
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, Bundle icicle) {
+    public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         //hide swipe card because these cards are not reusable
         Button swipeCreditCarNowButton = view.findViewById(R.id.swipeCreditCarNowButton);

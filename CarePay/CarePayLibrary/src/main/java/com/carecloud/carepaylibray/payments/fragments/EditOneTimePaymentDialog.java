@@ -14,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -204,9 +203,9 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
         }
 
         @Override
-        public void onFailure(ServerErrorDTO serverErrorDto) {
+        public void onFailure(String exceptionMessage) {
             ((ISession) getContext()).hideProgressDialog();
-            ((ISession) getContext()).showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+            ((ISession) getContext()).showErrorNotification(exceptionMessage);
 
         }
     };
@@ -225,9 +224,9 @@ public class EditOneTimePaymentDialog extends OneTimePaymentDialog {
         }
 
         @Override
-        public void onFailure(ServerErrorDTO serverErrorDto) {
+        public void onFailure(String exceptionMessage) {
             ((ISession) getContext()).hideProgressDialog();
-            ((ISession) getContext()).showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+            ((ISession) getContext()).showErrorNotification(exceptionMessage);
 
         }
     };

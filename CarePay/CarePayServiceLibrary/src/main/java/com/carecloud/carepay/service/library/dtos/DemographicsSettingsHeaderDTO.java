@@ -9,17 +9,17 @@ import com.google.gson.annotations.SerializedName;
 
 public class DemographicsSettingsHeaderDTO {
 
-    @SerializedName("maintenance")
-    @Expose
-    private DemographicsSettingsMaintainanceDTO maintenance = new DemographicsSettingsMaintainanceDTO();
+        @SerializedName("maintenance")
+        @Expose
+        private DemographicsSettingsMaintainanceDTO maintenance = new DemographicsSettingsMaintainanceDTO();
 
-    public DemographicsSettingsMaintainanceDTO getMaintenance() {
-        return maintenance;
-    }
+        public DemographicsSettingsMaintainanceDTO getMaintenance() {
+            return maintenance;
+        }
 
-    public void setMaintenance(DemographicsSettingsMaintainanceDTO maintenance) {
-        this.maintenance = maintenance;
-    }
+        public void setMaintenance(DemographicsSettingsMaintainanceDTO maintenance) {
+            this.maintenance = maintenance;
+        }
 }
 
 

@@ -3,16 +3,15 @@ package com.carecloud.carepay.practice.library.payments.dialogs;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BreezeDataBase;
@@ -32,7 +31,6 @@ import com.carecloud.carepay.service.library.RestDef;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -370,11 +368,10 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         }
 
         @Override
-        public void onFailure(ServerErrorDTO errorMessage) {
+        public void onFailure(String errorMessage) {
             hideProgressDialog();
             toggleSelectDevice(false);
-            new CustomMessageToast(getContext(), errorMessage.getMessage().getBody().getError().getMessage(),
-                    CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
+            new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
         }
     };
 
@@ -494,7 +491,7 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
+            public void onFailure(String exceptionMessage) {
                 hideProgressDialog();
 
                 queuePayment(paymentRequestId);

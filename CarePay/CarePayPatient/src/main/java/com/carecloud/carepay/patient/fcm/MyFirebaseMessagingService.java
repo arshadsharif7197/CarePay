@@ -32,7 +32,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String NOTIFICATION_CHANNEL_ID = "breeze_notifications";
 
     @Override
-    public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
+    public void onMessageReceived(RemoteMessage remoteMessage) {
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         if (notificationManager != null && Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
             NotificationChannel channel = notificationManager.getNotificationChannel(NOTIFICATION_CHANNEL_ID);

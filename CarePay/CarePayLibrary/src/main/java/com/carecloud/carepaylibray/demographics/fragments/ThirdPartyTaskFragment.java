@@ -24,7 +24,6 @@ import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibrary.R;
@@ -223,9 +222,9 @@ public class ThirdPartyTaskFragment extends BaseCheckinFragment {
         }
 
         @Override
-        public void onFailure(ServerErrorDTO serverErrorDto) {
+        public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+            showErrorNotification(exceptionMessage);
         }
     };
 

@@ -14,7 +14,6 @@ import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -260,11 +259,11 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         }
 
         @Override
-        public void onFailure(ServerErrorDTO serverErrorDto) {
+        public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             findMyAppointmentButton.setEnabled(true);
-            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
-            Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+            showErrorNotification(exceptionMessage);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -282,11 +281,11 @@ public class PersonalInformationActivity extends BasePracticeActivity {
         }
 
         @Override
-        public void onFailure(ServerErrorDTO serverErrorDto) {
+        public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             findMyAppointmentButton.setEnabled(true);
-            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
-            Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+            showErrorNotification(exceptionMessage);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 

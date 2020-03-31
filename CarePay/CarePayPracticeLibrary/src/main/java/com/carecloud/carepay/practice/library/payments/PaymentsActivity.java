@@ -30,7 +30,6 @@ import com.carecloud.carepay.practice.library.payments.interfaces.ShamrockPaymen
 import com.carecloud.carepay.practice.library.util.PracticeUtil;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -313,9 +312,9 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
         }
 
         @Override
-        public void onFailure(ServerErrorDTO serverErrorDto) {
+        public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+            showErrorNotification(exceptionMessage);
         }
     };
 
@@ -659,9 +658,9 @@ public class PaymentsActivity extends BasePracticeActivity implements FilterDial
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
+            public void onFailure(String exceptionMessage) {
                 hideProgressDialog();
-                showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+                showErrorNotification(exceptionMessage);
             }
         };
     }

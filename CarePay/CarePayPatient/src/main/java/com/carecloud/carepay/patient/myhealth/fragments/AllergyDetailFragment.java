@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -70,7 +69,7 @@ public class AllergyDetailFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        MyHealthViewModel model = new ViewModelProvider(getActivity()).get(MyHealthViewModel.class);
+        MyHealthViewModel model = ViewModelProviders.of(getActivity()).get(MyHealthViewModel.class);
         myHealthDto = model.getMyHealthDto().getValue();
         allergy = getAllergy(getArguments().getInt("allergyId"));
     }

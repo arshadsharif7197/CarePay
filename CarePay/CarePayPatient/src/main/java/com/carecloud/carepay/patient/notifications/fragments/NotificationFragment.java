@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,7 +27,6 @@ import com.carecloud.carepay.patient.notifications.models.NotificationItem;
 import com.carecloud.carepay.patient.notifications.models.NotificationType;
 import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -86,7 +84,7 @@ public class NotificationFragment extends BaseFragment
     }
 
     @Override
-    public void onAttach(@NonNull Context context) {
+    public void onAttach(Context context) {
         super.onAttach(context);
         try {
             callback = (NotificationCallback) context;
@@ -104,7 +102,7 @@ public class NotificationFragment extends BaseFragment
         supportedNotificationTypes.add(NotificationType.secure_message);
         supportedNotificationTypes.add(NotificationType.pending_survey);
 
-        viewModel = new ViewModelProvider(getActivity()).get(NotificationViewModel.class);
+        viewModel = ViewModelProviders.of(getActivity()).get(NotificationViewModel.class);
         viewModel.getDeleteNotificationObservable().observe(getActivity(), aVoid -> {
             notificationItems = new ArrayList<>();
             setAdapter();
@@ -200,6 +198,7 @@ public class NotificationFragment extends BaseFragment
         String tag = fragment.getClass().getName();
         fragment.show(getFragmentManager().beginTransaction(), tag);
     }
+
 
     private void setAdapter() {
         boolean canViewNotifications = notificationsDTO.getPayload().getDelegate() == null ||
@@ -319,13 +318,13 @@ public class NotificationFragment extends BaseFragment
 
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
+            public void onFailure(String exceptionMessage) {
                 refreshLayout.setRefreshing(false);
                 if (!refresh) {
                     notificationsAdapter.setLoading(false);
                 }
                 isPaging = false;
-                showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+                showErrorNotification(exceptionMessage);
             }
         };
     }

@@ -17,7 +17,6 @@ import com.carecloud.carepay.service.library.RestDef;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -76,18 +75,18 @@ public class CloverPaymentAdapter {
         this.paymentsModel = paymentsModel;
         this.appointmentId = appointmentId;
         this.callback = callback;
-        if (!paymentsModel.getPaymentPayload().getUserPractices().isEmpty()) {
+        if(!paymentsModel.getPaymentPayload().getUserPractices().isEmpty()) {
             practiceInfo = paymentsModel.getPaymentPayload().getUserPractices().get(0);
         }
 
         patientId = practiceInfo.getPatientId();
-        if (patientId == null &&
+        if(patientId == null &&
                 !paymentsModel.getPaymentPayload().getPatientBalances().isEmpty() &&
-                !paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().isEmpty()) {
+                !paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().isEmpty()){
             PendingBalanceMetadataDTO metadataDTO = paymentsModel.getPaymentPayload().getPatientBalances()
                     .get(0).getBalances().get(0).getMetadata();
             patientId = metadataDTO.getPatientId();
-            if (practiceInfo == null) {
+            if(practiceInfo == null){
                 practiceInfo = new UserPracticeDTO();
                 practiceInfo.setPracticeMgmt(metadataDTO.getPracticeMgmt());
                 practiceInfo.setPracticeId(metadataDTO.getPracticeId());
@@ -258,9 +257,9 @@ public class CloverPaymentAdapter {
         }
 
         @Override
-        public void onFailure(ServerErrorDTO serverErrorDto) {
+        public void onFailure(String exceptionMessage) {
             activity.hideProgressDialog();
-            activity.showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+            activity.showErrorNotification(exceptionMessage);
         }
     };
 
@@ -403,7 +402,7 @@ public class CloverPaymentAdapter {
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
+            public void onFailure(String exceptionMessage) {
                 activity.hideProgressDialog();
 
                 queuePayment(paymentRequestId, true);

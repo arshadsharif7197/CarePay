@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -72,7 +72,7 @@ public class AppointmentHistoryFragment extends BaseFragment
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        viewModel = new ViewModelProvider(getActivity()).get(AppointmentViewModel.class);
+        viewModel = ViewModelProviders.of(getActivity()).get(AppointmentViewModel.class);
         appointmentsResultModel = viewModel.getAppointmentsDtoObservable().getValue();
 
 
@@ -300,7 +300,7 @@ public class AppointmentHistoryFragment extends BaseFragment
 
     private void showAppointmentPopup(AppointmentDTO appointmentDTO) {
         AppointmentDetailDialog detailDialog = AppointmentDetailDialog.newInstance(appointmentDTO);
-        callback.addFragment(detailDialog, true);
+        callback.displayDialogFragment(detailDialog, true);
     }
 
     private boolean hasMorePages() {
