@@ -1,11 +1,8 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import com.google.android.material.textfield.TextInputLayout;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
@@ -14,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
@@ -29,6 +28,7 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
+import com.google.android.material.textfield.TextInputLayout;
 import com.squareup.timessquare.CalendarPickerView;
 
 import java.util.Calendar;
@@ -46,6 +46,7 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
     protected Date paymentDate;
     protected EditText schedulePaymentDateText;
     protected long minDate;
+    protected boolean todayCalendarButtonVisibility = true;
 
     /**
      * @param paymentResultModel the payment model
@@ -145,12 +146,7 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
     private void onStartOneTimePayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
         PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
                 .newInstance(paymentsModel, paymentPlanDTO, false);
-        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                showDialog();
-            }
-        });
+        fragment.setOnCancelListener(dialog -> showDialog());
         callback.displayDialogFragment(fragment, true);
         hideDialog();
         logOneTimePaymentStartedMixPanelEvent();
@@ -159,12 +155,7 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
     private void onScheduleOneTimePayment(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO, Date paymentDate) {
         PracticePaymentPlanPaymentMethodFragment fragment = PracticePaymentPlanPaymentMethodFragment
                 .newInstance(paymentsModel, paymentPlanDTO, false, paymentDate);
-        fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                showDialog();
-            }
-        });
+        fragment.setOnCancelListener(dialog -> showDialog());
         callback.displayDialogFragment(fragment, true);
         hideDialog();
     }
@@ -272,6 +263,7 @@ public class PracticeOneTimePaymentFragment extends PracticePartialPaymentDialog
                         showDialog();
                     }
                 }, CalendarPickerView.SelectionMode.SINGLE.name());
+        dialog.setTodayButtonVisibility(todayCalendarButtonVisibility);
 
         callback.displayDialogFragment(dialog, false);
 
