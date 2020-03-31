@@ -18,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepaylibray.common.options.OnOptionSelectedListener;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -315,7 +316,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                 getSelectOptionsListener(employmentInfoSection.getProperties().getEmploymentStatus().getOptions(),
                         new OnOptionSelectedListener() {
                             @Override
-                            public void onOptionSelected(DemographicsOption option) {
+                            public void onOptionSelected(DemographicsOption option, int position) {
                                 employmentStatusEditText.setText(option.getLabel());
                                 employmentStatusRequired.setVisibility(View.GONE);
 
@@ -428,7 +429,7 @@ public class DemographicsExpandedFragment extends DemographicsBaseSettingsFragme
                                 .getState().getOptions(),
                         new OnOptionSelectedListener() {
                             @Override
-                            public void onOptionSelected(DemographicsOption option) {
+                            public void onOptionSelected(DemographicsOption option, int position) {
                                 stateEditText.setText(option.getLabel());
                             }
                         },

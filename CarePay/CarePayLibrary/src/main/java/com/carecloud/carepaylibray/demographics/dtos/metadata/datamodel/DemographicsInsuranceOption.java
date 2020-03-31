@@ -27,6 +27,6 @@ public class DemographicsInsuranceOption extends DemographicsOption {
 
     @Override
     public String getDisplayName() {
-        return label;
+        return super.getDisplayName();
     }
 }
