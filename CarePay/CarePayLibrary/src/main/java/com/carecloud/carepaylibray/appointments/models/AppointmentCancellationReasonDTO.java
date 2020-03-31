@@ -14,6 +14,9 @@ public class AppointmentCancellationReasonDTO {
     @SerializedName("name")
     @Expose
     private String name;
+    @SerializedName("code")
+    @Expose
+    private String code;
 
     /**
      * @return The description
@@ -57,4 +60,11 @@ public class AppointmentCancellationReasonDTO {
         this.name = name;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 }

@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.selectlanguage.adapters;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -33,6 +34,7 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
         this.itemClickListener = itemClickListener;
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.languages_row_view, parent, false);
@@ -44,19 +46,16 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
         final OptionDTO languageSelected = languageListLanguageOptionModels.get(position);
         String languageName = languageSelected.getLabel();
         holder.languageNameRadioButton.setText(languageName);
-        holder.languageNameRadioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!holder.languageNameRadioButton.equals(selectedLanguage)) {
-                    selectedLanguage.setTextColor(ContextCompat.getColor(selectedLanguage.getContext(), R.color.slateGray));
-                    selectedLanguage.setChecked(false);
-                    holder.languageNameRadioButton.setTextColor(ContextCompat
-                            .getColor(holder.languageNameRadioButton.getContext(), R.color.colorPrimary));
-                    holder.languageNameRadioButton.setChecked(true);
-                    selectedLanguage = holder.languageNameRadioButton;
-                    itemClickListener.onLanguageSelected(languageSelected);
+        holder.languageNameRadioButton.setOnClickListener(view -> {
+            if (!holder.languageNameRadioButton.equals(selectedLanguage)) {
+                selectedLanguage.setTextColor(ContextCompat.getColor(selectedLanguage.getContext(), R.color.slateGray));
+                selectedLanguage.setChecked(false);
+                holder.languageNameRadioButton.setTextColor(ContextCompat
+                        .getColor(holder.languageNameRadioButton.getContext(), R.color.colorPrimary));
+                holder.languageNameRadioButton.setChecked(true);
+                selectedLanguage = holder.languageNameRadioButton;
+                itemClickListener.onLanguageSelected(languageSelected);
 
-                }
             }
         });
         if (holder.languageNameRadioButton.isChecked()) {
@@ -90,9 +89,9 @@ public class LanguageListAdapter extends RecyclerView.Adapter<LanguageListAdapte
     class ViewHolder extends RecyclerView.ViewHolder {
         RadioButton languageNameRadioButton;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
-            languageNameRadioButton = (RadioButton) itemView.findViewById(R.id.languageNameRadioButton);
+            languageNameRadioButton = itemView.findViewById(R.id.languageNameRadioButton);
         }
     }
 }

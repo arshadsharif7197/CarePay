@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.AppointmentViewModel;
@@ -71,7 +71,7 @@ public class NotificationActivity extends MenuPatientActivity
     }
 
     protected void setUpViewModel() {
-        viewModel = ViewModelProviders.of(this).get(NotificationViewModel.class);
+        viewModel = new ViewModelProvider(this).get(NotificationViewModel.class);
         setBasicObservers(viewModel);
         viewModel.getSkeleton().observe(this, showSkeleton -> {
             if (showSkeleton) {
@@ -96,7 +96,7 @@ public class NotificationActivity extends MenuPatientActivity
     }
 
     private void setUpAppointmentViewModel() {
-        appointmentViewModel = ViewModelProviders.of(this).get(AppointmentViewModel.class);
+        appointmentViewModel = new ViewModelProvider(this).get(AppointmentViewModel.class);
         appointmentViewModel.getAppointmentsDtoObservable().observe(this, appointmentsResultModel -> {
             PaymentsModel paymentsModel = appointmentViewModel.getPaymentsModel();
             appointmentPresenter = new PatientAppointmentPresenter(NotificationActivity.this,
@@ -149,7 +149,7 @@ public class NotificationActivity extends MenuPatientActivity
                     hideProgressDialog();
                     AppointmentDetailDialog detailDialog = AppointmentDetailDialog
                             .newInstance(appointment);
-                    displayDialogFragment(detailDialog, false);
+                    addFragment(detailDialog, false);
                 } else {
                     showProgressDialog();
                     appointmentViewModel.getAppointments(getTransitionAppointments(), false);

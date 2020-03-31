@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -68,7 +69,7 @@ public class ChoosePracticeFragment extends BaseDialogFragment
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        viewModel = ViewModelProviders.of(getActivity()).get(SignInPracticeViewModel.class);
+        viewModel = new ViewModelProvider(getActivity()).get(SignInPracticeViewModel.class);
         PracticeSelectionDTO practiceSelectionModel = viewModel.getPracticesInfoDtoObservable().getValue();
         if (practiceSelectionModel != null) {
             practiceList = practiceSelectionModel.getPayload().getUserPracticesList();

@@ -34,12 +34,25 @@ public class PaymentMethodAdapter extends BaseAdapter {
      *
      * @param context            context for adapter
      * @param paymentMethodsList list of payment methods
-     * @param paymentTypeMap     map of payment types for icons
      */
-    public PaymentMethodAdapter(Context context, List<PaymentsMethodsDTO> paymentMethodsList, HashMap<String, Integer> paymentTypeMap) {
+    public PaymentMethodAdapter(Context context, List<PaymentsMethodsDTO> paymentMethodsList) {
         this.context = context;
         this.paymentMethodsList = paymentMethodsList;
-        this.paymentTypeMap = paymentTypeMap;
+        this.paymentTypeMap = initPaymentTypeMap();
+    }
+
+    private HashMap<String, Integer> initPaymentTypeMap() {
+        // Initialize HashMap.
+        paymentTypeMap = new HashMap<>();
+        paymentTypeMap.put(CarePayConstants.TYPE_CASH, R.drawable.payment_cash_button_selector);
+        paymentTypeMap.put(CarePayConstants.TYPE_CREDIT_CARD, R.drawable.payment_credit_card_button_selector);
+        paymentTypeMap.put(CarePayConstants.TYPE_CHECK, R.drawable.payment_check_button_selector);
+        paymentTypeMap.put(CarePayConstants.TYPE_GIFT_CARD, R.drawable.payment_credit_card_button_selector);
+        paymentTypeMap.put(CarePayConstants.TYPE_PAYPAL, R.drawable.payment_paypal_button_selector);
+        paymentTypeMap.put(CarePayConstants.TYPE_HSA, R.drawable.payment_credit_card_button_selector);
+        paymentTypeMap.put(CarePayConstants.TYPE_FSA, R.drawable.payment_credit_card_button_selector);
+        paymentTypeMap.put(CarePayConstants.TYPE_PAYMENT_PLAN, R.drawable.payment_credit_card_button_selector);
+        return paymentTypeMap;
     }
 
     public void setSelectedItem(int position) {
@@ -68,18 +81,18 @@ public class PaymentMethodAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.item_payment_method, parent, false);
         }
 
-        CarePayTextView paymentMethodText = (CarePayTextView) convertView.findViewById(R.id.payment_method_text);
+        CarePayTextView paymentMethodText = convertView.findViewById(R.id.payment_method_text);
         String methodLabel = Label.getLabel("payment_method_" + paymentMethodsList.get(position).getType());
         paymentMethodText.setText(methodLabel);
 
-        ImageView paymentMethodImage = (ImageView) convertView.findViewById(R.id.payment_method_image);
+        ImageView paymentMethodImage = convertView.findViewById(R.id.payment_method_image);
         Integer drawable = paymentTypeMap.get(paymentMethodsList.get(position).getType());
         if (drawable == null) {
             drawable = paymentTypeMap.get(CarePayConstants.TYPE_CREDIT_CARD);
         }
         paymentMethodImage.setImageResource(drawable);
 
-        ImageView paymentMethodCheck = (ImageView) convertView.findViewById(R.id.payment_method_check);
+        ImageView paymentMethodCheck = convertView.findViewById(R.id.payment_method_check);
 
         if (selectedItem == position) {
             paymentMethodText.setSelected(true);

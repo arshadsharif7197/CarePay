@@ -13,6 +13,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -39,6 +40,7 @@ import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
@@ -367,7 +369,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
     }
 
     @Override
-    public void onSaveInstanceState(Bundle icicle) {
+    public void onSaveInstanceState(@NonNull Bundle icicle) {
         super.onSaveInstanceState(icicle);
         icicle.clear();
     }
@@ -484,10 +486,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
-            showErrorNotification(exceptionMessage);
+        public void onFailure(ServerErrorDTO serverErrorDto) {
+            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
             hideProgressDialog();
-            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 
@@ -509,10 +511,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
-            showErrorNotification(exceptionMessage);
-            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 
@@ -530,10 +532,10 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
-            showErrorNotification(exceptionMessage);
-            Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
+            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+            Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
 
@@ -552,7 +554,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
         }
     };
@@ -644,7 +646,6 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         if (visibility) {
             setSupportActionBar(toolbar);
             if (getSupportActionBar() != null) {
-                getSupportActionBar().setElevation(getResources().getDimension(R.dimen.respons_toolbar_elevation));
                 getSupportActionBar().show();
             }
         } else if (getSupportActionBar() != null) {
@@ -674,7 +675,7 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
 
             }
         }, queryMap);

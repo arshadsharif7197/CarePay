@@ -1,19 +1,19 @@
 package com.carecloud.carepay.patient.base;
 
-import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.LayoutRes;
-import androidx.annotation.Nullable;
-import com.google.android.material.tabs.TabLayout;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.fragment.app.Fragment;
+
 import com.carecloud.carepay.patient.R;
+import com.google.android.material.tabs.TabLayout;
 
 /**
  * @author pjohnson on 13/08/18.
@@ -62,7 +62,7 @@ public class ShimmerFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         int headerLayoutId = getArguments().getInt("headerLayoutId");
@@ -92,13 +92,9 @@ public class ShimmerFragment extends Fragment {
         }
     }
 
-    protected void manageTabLayout(View view) {
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setElevation(0);
+    private void manageTabLayout(View view) {
         TabLayout tabs = view.findViewById(R.id.tabLayout);
         tabs.setVisibility(View.VISIBLE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            tabs.setElevation(getResources().getDimension(R.dimen.respons_toolbar_elevation));
-        }
         TabLayout.Tab leftTab = tabs.getTabAt(0);
         if (leftTab != null) {
             leftTab.setCustomView(R.layout.page_tab_layout);

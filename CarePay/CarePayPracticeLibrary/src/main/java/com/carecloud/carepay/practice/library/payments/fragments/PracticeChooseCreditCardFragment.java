@@ -64,20 +64,17 @@ public class PracticeChooseCreditCardFragment extends ChooseCreditCardFragment {
         }
     }
 
-    private View.OnClickListener swipeCreditCarNowButtonClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            CloverPaymentAdapter cloverPaymentAdapter = new CloverPaymentAdapter((BaseActivity) getActivity(), paymentsModel, callback.getAppointmentId(), callback);
-            IntegratedPaymentPostModel paymentPostModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
-            if (paymentPostModel == null) {
-                cloverPaymentAdapter.setCloverPayment(amountToMakePayment);//TODO switch back to connector
-            } else {
-                cloverPaymentAdapter.setCloverPayment(paymentPostModel);
-            }
+    private View.OnClickListener swipeCreditCarNowButtonClickListener = view -> {
+        CloverPaymentAdapter cloverPaymentAdapter = new CloverPaymentAdapter((BaseActivity) getActivity(), paymentsModel, callback.getAppointmentId(), callback);
+        IntegratedPaymentPostModel paymentPostModel = paymentsModel.getPaymentPayload().getPaymentPostModel();
+        if (paymentPostModel == null) {
+            cloverPaymentAdapter.setCloverPayment(amountToMakePayment);//TODO switch back to connector
+        } else {
+            cloverPaymentAdapter.setCloverPayment(paymentPostModel);
+        }
 
-            if (getDialog() != null) {
-                dismiss();
-            }
+        if (getDialog() != null) {
+            dismiss();
         }
     };
 

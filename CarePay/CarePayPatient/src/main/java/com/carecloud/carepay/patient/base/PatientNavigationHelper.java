@@ -18,7 +18,6 @@ import com.carecloud.carepay.patient.notifications.activities.NotificationActivi
 import com.carecloud.carepay.patient.payment.activities.PaymentActivity;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.retail.activities.RetailActivity;
-import com.carecloud.carepay.patient.selectlanguage.SelectLanguageActivity;
 import com.carecloud.carepay.patient.signinsignuppatient.SigninSignupActivity;
 import com.carecloud.carepay.patient.survey.SurveyActivity;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
@@ -77,11 +76,6 @@ public class PatientNavigationHelper {
             info = new Bundle();
         }
         switch (workflowDTO.getState()) {
-            case NavigationStateConstants.LANGUAGE_SELECTION:
-                intent = new Intent(context, SelectLanguageActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                break;
-
             case NavigationStateConstants.APPOINTMENTS: {
                 intent = new Intent(context, AppointmentsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

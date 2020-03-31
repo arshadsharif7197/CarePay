@@ -21,6 +21,7 @@ import com.carecloud.carepay.service.library.RestCallServiceCallback;
 import com.carecloud.carepay.service.library.RestCallServiceHelper;
 import com.carecloud.carepay.service.library.RestDef;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.CarePayApplication;
@@ -114,9 +115,9 @@ public class MessagesViewModel extends BaseViewModel {
                     }
 
                     @Override
-                    public void onFailure(String exceptionMessage) {
+                    public void onFailure(ServerErrorDTO serverErrorDto) {
                         setSkeleton(false);
-                        setErrorMessage(exceptionMessage);
+                        setErrorMessage(serverErrorDto.getMessage().getBody().getError().getMessage());
                     }
                 }, queryMap);
     }
@@ -144,9 +145,9 @@ public class MessagesViewModel extends BaseViewModel {
                     }
 
                     @Override
-                    public void onFailure(String errorMessage) {
+                    public void onFailure(ServerErrorDTO serverErrorDto) {
                         setLoading(false);
-                        setErrorMessage(errorMessage);
+                        setErrorMessage(serverErrorDto.getMessage().getBody().getError().getMessage());
                     }
                 }, queryMap);
         return threadsObservable;
@@ -172,9 +173,9 @@ public class MessagesViewModel extends BaseViewModel {
                     }
 
                     @Override
-                    public void onFailure(String exceptionMessage) {
+                    public void onFailure(ServerErrorDTO serverErrorDto) {
                         setLoading(false);
-                        setErrorMessage(exceptionMessage);
+                        setErrorMessage(serverErrorDto.getMessage().getBody().getError().getMessage());
                     }
                 }, queryMap);
     }
@@ -207,9 +208,9 @@ public class MessagesViewModel extends BaseViewModel {
                     }
 
                     @Override
-                    public void onFailure(String exceptionMessage) {
+                    public void onFailure(ServerErrorDTO serverErrorDto) {
                         setLoading(false);
-                        setErrorMessage(exceptionMessage);
+                        setErrorMessage(serverErrorDto.getMessage().getBody().getError().getMessage());
                     }
                 },
                 DtoHelper.getStringDTO(postModel), queryMap);
@@ -233,8 +234,8 @@ public class MessagesViewModel extends BaseViewModel {
                     }
 
                     @Override
-                    public void onFailure(String exceptionMessage) {
-                        setErrorMessage(exceptionMessage);
+                    public void onFailure(ServerErrorDTO serverErrorDto) {
+                        setErrorMessage(serverErrorDto.getMessage().getBody().getError().getMessage());
                     }
                 }, queryMap);
     }
@@ -288,9 +289,9 @@ public class MessagesViewModel extends BaseViewModel {
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 setLoading(false);
-                setErrorMessage(exceptionMessage);
+                setErrorMessage(serverErrorDto.getMessage().getBody().getError().getMessage());
             }
         };
     }

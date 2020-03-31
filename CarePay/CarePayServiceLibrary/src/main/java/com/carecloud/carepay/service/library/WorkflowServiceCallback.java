@@ -1,5 +1,6 @@
 package com.carecloud.carepay.service.library;
 
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 
 /**
@@ -24,9 +25,8 @@ public interface WorkflowServiceCallback {
 
     /**
      * Call API failure UI functionality
-     * @param exceptionMessage return exception message. If needed client will customized
+     * @param serverErrorDto return server error. If needed client will customized
      *                         the default exception message
      */
-
-    void onFailure(String exceptionMessage);
+    void onFailure(ServerErrorDTO serverErrorDto);
 }

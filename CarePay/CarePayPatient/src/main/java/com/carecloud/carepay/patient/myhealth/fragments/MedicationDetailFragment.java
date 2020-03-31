@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
@@ -69,7 +70,7 @@ public class MedicationDetailFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        model = ViewModelProviders.of(getActivity()).get(MyHealthViewModel.class);
+        model = new ViewModelProvider(getActivity()).get(MyHealthViewModel.class);
         myHealthDto = model.getMyHealthDto().getValue();
         medication = getMedication(getArguments().getInt("medicationId"));
     }

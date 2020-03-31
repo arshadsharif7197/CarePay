@@ -3,14 +3,14 @@ package com.carecloud.carepay.service.library.dtos;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class FaultResponseDTO {
+public class ServerErrorDTO {
 
     @SerializedName("status")
     @Expose
     private String status;
-    @SerializedName("exception")
+    @SerializedName("message")
     @Expose
-    private ExceptionDTO exception;
+    private MessageErrorDTO message = new MessageErrorDTO();
     @SerializedName("method")
     @Expose
     private String method;
@@ -26,12 +26,12 @@ public class FaultResponseDTO {
         this.status = status;
     }
 
-    public ExceptionDTO getException() {
-        return exception;
+    public MessageErrorDTO getMessage() {
+        return message;
     }
 
-    public void setException(ExceptionDTO exception) {
-        this.exception = exception;
+    public void setMessage(MessageErrorDTO message) {
+        this.message = message;
     }
 
     public String getMethod() {

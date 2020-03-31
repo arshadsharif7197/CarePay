@@ -4,17 +4,17 @@ package com.carecloud.carepay.service.library.dtos;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ExceptionDTO {
+public class MessageErrorDTO {
 
     @SerializedName("body")
     @Expose
-    private FaultErrorBodyDTO body;
+    private ErrorBodyDTO body = new ErrorBodyDTO();
 
-    public FaultErrorBodyDTO getBody() {
+    public ErrorBodyDTO getBody() {
         return body;
     }
 
-    public void setBody(FaultErrorBodyDTO body) {
+    public void setBody(ErrorBodyDTO body) {
         this.body = body;
     }
 

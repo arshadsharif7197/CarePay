@@ -21,6 +21,7 @@ import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -28,10 +29,9 @@ import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
+import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.annotations.SerializedName;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -253,37 +253,19 @@ public class ConfirmationPinDialog extends BaseDialogFragment implements View.On
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
-            Gson gson = new Gson();
-            String displayMessage;
-            try {
-                PinError pinError = gson.fromJson(exceptionMessage, PinError.class);
-                displayMessage = pinError.getException();
-            } catch (JsonSyntaxException jsx) {
-                jsx.printStackTrace();
+        public void onFailure(ServerErrorDTO serverErrorDto) {
+            String displayMessage = serverErrorDto.getMessage().getBody().getError().getMessage();
+            if (StringUtil.isNullOrEmpty(displayMessage)) {
                 displayMessage = "Pin Error, Please try again";
             }
 
             hideProgressDialog();
             pinEditText.setText("");
             SystemUtil.showErrorToast(getContext(), displayMessage);
-            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+            Log.e(getString(R.string.alert_title_server_error),
+                    serverErrorDto.getMessage().getBody().getError().getMessage());
         }
     };
-
-
-    private class PinError {
-        @SerializedName("exception")
-        private String exception;
-
-        public String getException() {
-            return exception;
-        }
-
-        public void setException(String exception) {
-            this.exception = exception;
-        }
-    }
 
     private void identifyPracticeUser(String userId) {
         MixPanelUtil.setUser(getContext(), userId, null);

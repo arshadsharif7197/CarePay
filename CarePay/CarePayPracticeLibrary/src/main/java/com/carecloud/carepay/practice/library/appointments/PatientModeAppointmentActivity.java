@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.carecloud.carepay.practice.library.R;
@@ -14,8 +15,10 @@ import com.carecloud.carepay.practice.library.appointments.createappointment.Loc
 import com.carecloud.carepay.practice.library.appointments.createappointment.ProviderListFragment;
 import com.carecloud.carepay.practice.library.appointments.createappointment.VisitTypeListFragment;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PatientModeRequestAppointmentDialog;
+import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -29,6 +32,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
+import com.carecloud.carepaylibray.checkout.BaseNextAppointmentFragment;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.models.PaymentCreditCardsPayloadDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
@@ -115,10 +119,10 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
             }
 
             @Override
-            public void onFailure(String exceptionMessage) {
+            public void onFailure(ServerErrorDTO serverErrorDto) {
                 hideProgressDialog();
-                showErrorNotification(exceptionMessage);
-                Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
+                showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+                Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
             }
         }, queryMap);
     }
@@ -309,5 +313,11 @@ public class PatientModeAppointmentActivity extends BasePracticeAppointmentsActi
     @Override
     public TransitionDTO getLogoutTransition() {
         return appointmentsResultModel.getMetadata().getTransitions().getLogout();
+    }
+
+    @Override
+    public void onPrepaymentFailed() {
+        getSupportFragmentManager().popBackStackImmediate(AvailabilityHourFragment.class.getName(),
+                FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 }

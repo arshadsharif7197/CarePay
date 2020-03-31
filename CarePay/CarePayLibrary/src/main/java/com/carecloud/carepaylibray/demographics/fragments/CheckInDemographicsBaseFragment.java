@@ -4,6 +4,13 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.os.Bundle;
+
+import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -281,11 +288,11 @@ public abstract class CheckInDemographicsBaseFragment extends BaseCheckinFragmen
         }
 
         @Override
-        public void onFailure(String exceptionMessage) {
+        public void onFailure(ServerErrorDTO serverErrorDto) {
             hideProgressDialog();
-            showErrorNotification(exceptionMessage);
+            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
             if (getActivity() != null) {
-                Log.e(getActivity().getString(R.string.alert_title_server_error), exceptionMessage);
+                Log.e(getActivity().getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
             }
         }
     };
