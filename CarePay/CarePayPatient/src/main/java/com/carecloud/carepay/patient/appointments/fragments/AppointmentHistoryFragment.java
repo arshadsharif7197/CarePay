@@ -74,7 +74,6 @@ public class AppointmentHistoryFragment extends BaseFragment
         super.onCreate(icicle);
         viewModel = new ViewModelProvider(getActivity()).get(AppointmentViewModel.class);
         appointmentsResultModel = viewModel.getAppointmentsDtoObservable().getValue();
-        setUpViewModels();
 
 
         if (!appointmentsResultModel.getPayload().getPagingInfo().isEmpty()) {
@@ -90,7 +89,7 @@ public class AppointmentHistoryFragment extends BaseFragment
         excludedAppointmentStates.add(CarePayConstants.CHECKING_IN);
     }
 
-    private void setUpViewModels() {
+    private void setUpViewModels(View view) {
         List<UserPracticeDTO> userPractices = appointmentsResultModel.getPayload().getUserPractices();
         viewModel.getHistoricAppointmentsObservable().observe(getActivity(), appointmentsResultModel -> {
             List<AppointmentDTO> appointments = filterAppointments(appointmentsResultModel
@@ -111,9 +110,9 @@ public class AppointmentHistoryFragment extends BaseFragment
                 showHistoricAppointments(appointments);
             } else if (!appointmentsResultModel.getPayload().canViewAppointments(selectedPractice.getPracticeId())) {
                 //when there are no permissions to see appointments, MW sends no appointments
-                showNoPermissionsLayout();
+                showNoPermissionsLayout(view);
             } else {
-                showNoAppointmentsLayout();
+                showNoAppointmentsLayout(view);
             }
         });
 
@@ -127,7 +126,9 @@ public class AppointmentHistoryFragment extends BaseFragment
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_history_appointment, container, false);
+        View view = inflater.inflate(R.layout.fragment_history_appointment, container, false);
+        setUpViewModels(view);
+        return view;
     }
 
     @Override
@@ -136,7 +137,7 @@ public class AppointmentHistoryFragment extends BaseFragment
         historicAppointmentsRecyclerView = view.findViewById(R.id.historicAppointmentsRecyclerView);
 
         if (appointmentsResultModel.getPayload().getUserPractices().isEmpty()) {
-            showNoAppointmentsLayout();
+            showNoAppointmentsLayout(view);
         } else {
             selectedPractice = appointmentsResultModel.getPayload().getUserPractices().get(0);
             callAppointmentService(selectedPractice, true, true);
@@ -242,9 +243,9 @@ public class AppointmentHistoryFragment extends BaseFragment
                 .commit();
     }
 
-    private void showNoPermissionsLayout() {
+    private void showNoPermissionsLayout(View view) {
         historicAppointmentsRecyclerView.setVisibility(View.GONE);
-        View noAppointmentsLayout = getView().findViewById(R.id.noAppointmentsLayout);
+        View noAppointmentsLayout = view.findViewById(R.id.noAppointmentsLayout);
         noAppointmentsLayout.setVisibility(View.VISIBLE);
         noAppointmentsLayout.findViewById(R.id.newAppointmentClassicButton).setVisibility(View.GONE);
         TextView no_apt_message_title = noAppointmentsLayout.findViewById(R.id.no_apt_message_title);
@@ -252,9 +253,9 @@ public class AppointmentHistoryFragment extends BaseFragment
         noAppointmentsLayout.findViewById(R.id.no_apt_message_desc).setVisibility(View.GONE);
     }
 
-    private void showNoAppointmentsLayout() {
+    private void showNoAppointmentsLayout(View view) {
         historicAppointmentsRecyclerView.setVisibility(View.GONE);
-        View noAppointmentsLayout = getView().findViewById(R.id.noAppointmentsLayout);
+        View noAppointmentsLayout = view.findViewById(R.id.noAppointmentsLayout);
         noAppointmentsLayout.setVisibility(View.VISIBLE);
         noAppointmentsLayout.findViewById(R.id.newAppointmentClassicButton).setVisibility(View.GONE);
         TextView no_apt_message_title = noAppointmentsLayout.findViewById(R.id.no_apt_message_title);
