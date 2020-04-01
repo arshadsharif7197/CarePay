@@ -219,12 +219,10 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment {
         paymentDateEditText.getOnFocusChangeListener().onFocusChange(paymentDateEditText, true);
 
         SelectOptionFragment fragment = SelectOptionFragment.newInstance(dialogTitle);
-        fragment.setOptions(selectedDateOptions);
         fragment.setCallback((option, position) -> {
             paymentDateOption = option;
             paymentDateEditText.setText(option.getLabel());
         });
-        fragment.show(getActivity().getSupportFragmentManager(), fragment.getClass().getName());
 
         frequencyCodeEditText = view.findViewById(R.id.frequencyCodeEditText);
         TextInputLayout frequencyCodeInputLayout = view.findViewById(R.id.frequencyCodeInputLayout);
@@ -312,6 +310,12 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment {
             interval = PaymentSettingsBalanceRangeRule.INTERVAL_WEEKS;
             dialogTitle = Label.getLabel("payment.paymentPlan.frequency.weekly.hint");
         }
+
+        paymentDateEditText.setOnClickListener(view1 -> {
+            fragment.setOptions(selectedDateOptions);
+            fragment.show(getActivity().getSupportFragmentManager(), fragment.getClass().getName());
+        });
+
         updateHints();
         if (applyRangeRules) {
             paymentPlanBalanceRules = getPaymentPlanSettings(interval);
