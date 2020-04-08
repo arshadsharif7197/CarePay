@@ -44,7 +44,7 @@
             app:customAssetFont="proxima_nova_regular" />
 
         <com.carecloud.carepaylibray.customcomponents.CarePayButton
-            android:id="@+id/cancelAppointmentButton"
+            android:id="@+id/cancelAppointment"
             style="@style/SigninNewAccountButtonStyle"
             android:layout_marginTop="@dimen/dimen_20dp"
             android:foreground="?android:selectableItemBackground"

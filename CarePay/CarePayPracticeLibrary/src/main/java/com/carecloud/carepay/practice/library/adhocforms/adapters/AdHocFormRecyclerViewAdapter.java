@@ -30,7 +30,6 @@ public class AdHocFormRecyclerViewAdapter extends RecyclerView
         this.forms = forms;
     }
 
-    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())

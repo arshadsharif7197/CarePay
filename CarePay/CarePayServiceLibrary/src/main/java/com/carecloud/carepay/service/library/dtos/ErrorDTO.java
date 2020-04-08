@@ -15,6 +15,9 @@ public class ErrorDTO {
     @SerializedName("message")
     @Expose
     private String message;
+    @SerializedName("details")
+    @Expose
+    private String details;
 
     public String getErrorCode() {
         return errorCode;
@@ -38,6 +41,14 @@ public class ErrorDTO {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
     }
 
 }

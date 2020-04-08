@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -306,10 +305,10 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
+            public void onFailure(String exceptionMessage) {
                 hideProgressDialog();
-                showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
-                Log.e("Server Error", serverErrorDto.getMessage().getBody().getError().getMessage());
+                showErrorNotification(exceptionMessage);
+                Log.e("Server Error", exceptionMessage);
             }
         }, queryMap);
     }

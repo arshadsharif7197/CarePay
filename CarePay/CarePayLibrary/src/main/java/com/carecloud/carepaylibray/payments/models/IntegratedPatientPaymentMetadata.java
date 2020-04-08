@@ -32,9 +32,6 @@ public class IntegratedPatientPaymentMetadata {
     @SerializedName("externally_processed")
     private boolean externallyProcessed = false;
 
-    @SerializedName("cancellation_reason_id")
-    private String cancellationReasonId;
-
     public String getPracticeMgmt() {
         return practiceMgmt;
     }
@@ -97,13 +94,5 @@ public class IntegratedPatientPaymentMetadata {
 
     public void setExternallyProcessed(boolean externallyProcessed) {
         this.externallyProcessed = externallyProcessed;
-    }
-
-    public String getCancellationReasonId() {
-        return cancellationReasonId;
-    }
-
-    public void setCancellationReasonId(String cancellationReasonId) {
-        this.cancellationReasonId = cancellationReasonId;
     }
 }

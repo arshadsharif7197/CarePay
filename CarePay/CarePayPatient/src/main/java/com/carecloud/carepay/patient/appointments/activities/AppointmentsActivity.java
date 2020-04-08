@@ -8,7 +8,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.AppointmentViewModel;
@@ -24,11 +24,9 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
-import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
-import com.carecloud.carepaylibray.payments.PaymentsViewModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.profile.Profile;
 import com.carecloud.carepaylibray.profile.ProfileDto;
@@ -43,7 +41,6 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
     private boolean toolbarHidden = false;
     private AppointmentViewModel viewModel;
-    private PaymentsViewModel paymentsViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +57,6 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             viewModel.getAppointmentsDtoObservable().observe(this, appointmentsResultModel -> {
                 this.appointmentsResultModel = appointmentsResultModel;
                 paymentsModel = viewModel.getPaymentsModel();
-                paymentsViewModel.setPaymentsModel(paymentsModel);
                 resumeOnCreate();
             });
             viewModel.getAppointments(getTransitionAppointments(), true);
@@ -72,7 +68,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     }
 
     protected void setUpViewModel() {
-        viewModel = new ViewModelProvider(this).get(AppointmentViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(AppointmentViewModel.class);
         setBasicObservers(viewModel);
         viewModel.getSkeleton().observe(this, showSkeleton -> {
             if (showSkeleton) {
@@ -84,8 +80,6 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                 replaceFragment(shimmerFragment, false);
             }
         });
-        paymentsViewModel = new ViewModelProvider(this).get(PaymentsViewModel.class);
-        setBasicObservers(paymentsViewModel);
     }
 
     private void resumeOnCreate() {
@@ -149,14 +143,11 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            if (((BaseDialogFragment) getSupportFragmentManager().findFragmentById(R.id.container_main))
-                    .onBackPressed(false)) {
-                getSupportFragmentManager().popBackStackImmediate();
-                if (getSupportFragmentManager().getBackStackEntryCount() <= 0) {
-                    displayToolbar(true, null);
-//                    getSupportActionBar().setElevation(getResources().getDimension(R.dimen.respons_toolbar_elevation));
-                    toolbarHidden = false;
-                }
+            getSupportFragmentManager().popBackStackImmediate();
+            if (getSupportFragmentManager().getBackStackEntryCount() <= 0) {
+                displayToolbar(true, null);
+                getSupportActionBar().setElevation(0);
+                toolbarHidden = false;
             }
         } else {
             // finish the app

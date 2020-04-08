@@ -13,7 +13,6 @@ import com.carecloud.carepay.patient.notifications.models.NotificationStatus;
 import com.carecloud.carepay.patient.notifications.models.NotificationVM;
 import com.carecloud.carepay.patient.notifications.models.NotificationsDTO;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepaylibray.profile.Profile;
@@ -69,9 +68,9 @@ public class NotificationViewModel extends BaseViewModel {
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
+            public void onFailure(String exceptionMessage) {
                 setSkeleton(false);
-                setErrorMessage(serverErrorDto.getMessage().getBody().getError().getMessage());
+                setErrorMessage(exceptionMessage);
             }
         }, queryMap);
         return notificationsDtoObservable;
@@ -98,9 +97,9 @@ public class NotificationViewModel extends BaseViewModel {
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
+            public void onFailure(String exceptionMessage) {
                 Log.d(NotificationActivity.class.getName(), "Notification NOT marked as read");
-                Log.e("Server Error", serverErrorDto.getMessage().getBody().getError().getMessage());
+                Log.e("Server Error", exceptionMessage);
             }
         }, payload.toString(), properties);
 
@@ -130,10 +129,10 @@ public class NotificationViewModel extends BaseViewModel {
                     }
 
                     @Override
-                    public void onFailure(ServerErrorDTO serverErrorDto) {
+                    public void onFailure(String exceptionMessage) {
                         setLoading(false);
-                        setErrorMessage(serverErrorDto.getMessage().getBody().getError().getMessage());
-                        Log.e("Server Error", serverErrorDto.getMessage().getBody().getError().getMessage());
+                        setErrorMessage(exceptionMessage);
+                        Log.e("Server Error", exceptionMessage);
                     }
                 }, queryMap);
     }
@@ -155,9 +154,9 @@ public class NotificationViewModel extends BaseViewModel {
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
+            public void onFailure(String exceptionMessage) {
                 setLoading(false);
-                setErrorMessage(serverErrorDto.getMessage().getBody().getError().getMessage());
+                setErrorMessage(exceptionMessage);
             }
         });
     }
@@ -193,9 +192,9 @@ public class NotificationViewModel extends BaseViewModel {
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
+            public void onFailure(String exceptionMessage) {
                 setLoading(false);
-                Log.e("Server Error", serverErrorDto.getMessage().getBody().getError().getMessage());
+                Log.e("Server Error", exceptionMessage);
             }
         }, queryMap);
     }
@@ -215,8 +214,8 @@ public class NotificationViewModel extends BaseViewModel {
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
-                Log.d("Server Error", serverErrorDto.getMessage().getBody().getError().getMessage());
+            public void onFailure(String exceptionMessage) {
+                Log.d("Server Error", exceptionMessage);
             }
         }, queryMap);
     }

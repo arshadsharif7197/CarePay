@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -360,24 +359,21 @@ public class ChooseCreditCardFragment extends BasePaymentDialogFragment implemen
                 dismiss();
             }
             showConfirmation(workflowDTO);
+
         }
 
         @Override
-        public void onFailure(ServerErrorDTO serverErrorDto) {
+        public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+            showErrorNotification(exceptionMessage);
             nextButton.setEnabled(true);
-            System.out.print(serverErrorDto.getMessage().getBody().getError().getMessage());
+            System.out.print(exceptionMessage);
+
             String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
             Object[] values = {amountToMakePayment, getString(R.string.payment_card_on_file)};
             MixPanelUtil.logEvent(getString(R.string.event_payment_failed), params, values);
-            onFailureAction(serverErrorDto);
         }
     };
-
-    protected void onFailureAction(ServerErrorDTO serverErrorDto) {
-        //to implement in children
-    }
 
     private View.OnClickListener addNewCardButtonListener = new View.OnClickListener() {
         @Override

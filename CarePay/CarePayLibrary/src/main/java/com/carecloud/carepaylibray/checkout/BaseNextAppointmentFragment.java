@@ -3,6 +3,9 @@ package com.carecloud.carepaylibray.checkout;
 
 import android.content.Context;
 import android.os.Bundle;
+import androidx.annotation.Nullable;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -11,13 +14,8 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
-
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -41,7 +39,6 @@ import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -82,7 +79,7 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
     }
 
     @Override
-    public void onAttach(@NonNull Context context) {
+    public void onAttach(Context context) {
         super.onAttach(context);
         try {
             callback = (CheckOutInterface) context;
@@ -98,7 +95,7 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         appointmentsResultModel = (AppointmentsResultModel) callback.getDto();
         selectedAppointment = getAppointmentSelected();
@@ -129,10 +126,20 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
         setUpProviderMessage(view, selectedResource.getProvider());
 
         Button scheduleLaterButton = view.findViewById(R.id.scheduleLaterButton);
-        scheduleLaterButton.setOnClickListener(view1 -> scheduleAppointmentLater());
+        scheduleLaterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                scheduleAppointmentLater();
+            }
+        });
 
         scheduleAppointmentButton = getView().findViewById(R.id.scheduleAppointmentButton);
-        scheduleAppointmentButton.setOnClickListener(view12 -> scheduleAppointment());
+        scheduleAppointmentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                scheduleAppointment();
+            }
+        });
 
         setUpProviderField(view);
         setUpLocationField(view);
@@ -140,10 +147,13 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
         setUpVisitTimeField(view);
 
         final ScrollView scrollContainer = view.findViewById(R.id.scrollContainer);
-        view.postDelayed(() -> {
-            SystemUtil.hideSoftKeyboard(getContext(), view);
-            if (scrollContainer != null) {
-                scrollContainer.fullScroll(View.FOCUS_UP);
+        view.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                SystemUtil.hideSoftKeyboard(getContext(), view);
+                if (scrollContainer != null) {
+                    scrollContainer.fullScroll(View.FOCUS_UP);
+                }
             }
         }, 300);
 
@@ -153,7 +163,12 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
     private void setUpProviderField(View view) {
         providerTextInputLayout = view.findViewById(R.id.providerTextInputLayout);
         chooseProviderTextView = view.findViewById(R.id.providerTextView);
-        chooseProviderTextView.setOnClickListener(view1 -> showChooseProviderFragment());
+        chooseProviderTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showChooseProviderFragment();
+            }
+        });
         chooseProviderTextView.setText(selectedResource.getProvider().getName());
         chooseProviderTextView.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(providerTextInputLayout, null));
@@ -161,23 +176,31 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
                 !StringUtil.isNullOrEmpty(chooseProviderTextView.getText().toString().trim()));
 
         providerResetImage = view.findViewById(R.id.providerResetImage);
-        providerResetImage.setOnClickListener(v -> {
-            selectedResource = null;
-            chooseProviderTextView.setText(null);
-            setHint(chooseProviderTextView, providerTextInputLayout, null);
-            providerResetImage.setVisibility(View.GONE);
-            chooseProviderTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
-                    getResources().getDrawable(R.drawable.icon_drop_down), null);
-            enableTimeSlotField();
-            enableScheduleAppointmentButton();
-            chooseProviderTextView.getOnFocusChangeListener().onFocusChange(chooseProviderTextView, false);
+        providerResetImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedResource = null;
+                chooseProviderTextView.setText(null);
+                setHint(chooseProviderTextView, providerTextInputLayout, null);
+                providerResetImage.setVisibility(View.GONE);
+                chooseProviderTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                        getResources().getDrawable(R.drawable.icon_drop_down), null);
+                enableTimeSlotField();
+                enableScheduleAppointmentButton();
+                chooseProviderTextView.getOnFocusChangeListener().onFocusChange(chooseProviderTextView, false);
+            }
         });
     }
 
     private void setUpLocationField(View view) {
         locationTextInputLayout = view.findViewById(R.id.locationTextInputLayout);
         locationTextView = view.findViewById(R.id.locationTextView);
-        locationTextView.setOnClickListener(view1 -> showChooseLocationFragment());
+        locationTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showChooseLocationFragment();
+            }
+        });
         locationTextView.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(locationTextInputLayout, null));
         locationTextView.setText(StringUtil.capitalize(selectedLocation.getName()));
@@ -187,16 +210,19 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
                 !StringUtil.isNullOrEmpty(locationTextView.getText().toString().trim()));
 
         locationResetImage = view.findViewById(R.id.locationResetImage);
-        locationResetImage.setOnClickListener(v -> {
-            selectedLocation = null;
-            locationTextView.setText(null);
-            setHint(locationTextView, locationTextInputLayout, null);
-            locationResetImage.setVisibility(View.GONE);
-            locationTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
-                    getResources().getDrawable(R.drawable.icon_drop_down), null);
-            enableTimeSlotField();
-            enableScheduleAppointmentButton();
-            locationTextView.getOnFocusChangeListener().onFocusChange(locationTextView, false);
+        locationResetImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedLocation = null;
+                locationTextView.setText(null);
+                setHint(locationTextView, locationTextInputLayout, null);
+                locationResetImage.setVisibility(View.GONE);
+                locationTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                        getResources().getDrawable(R.drawable.icon_drop_down), null);
+                enableTimeSlotField();
+                enableScheduleAppointmentButton();
+                locationTextView.getOnFocusChangeListener().onFocusChange(locationTextView, false);
+            }
         });
     }
 
@@ -205,22 +231,30 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
         visitTypeTextView = view.findViewById(R.id.visitTypeTextView);
         visitTypeTextView.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(visitTypeTextInputLayout, null));
-        visitTypeTextView.setOnClickListener(view1 -> showVisitTypeFragment());
+        visitTypeTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showVisitTypeFragment();
+            }
+        });
         setHint(visitTypeTextView, visitTypeTextInputLayout, null);
         visitTypeTextView.getOnFocusChangeListener().onFocusChange(visitTypeTextView,
                 !StringUtil.isNullOrEmpty(visitTypeTextView.getText().toString().trim()));
 
         visitTypeResetImage = view.findViewById(R.id.visitTypeResetImage);
-        visitTypeResetImage.setOnClickListener(v -> {
-            selectedVisitType = null;
-            visitTypeTextView.setText(null);
-            setHint(visitTypeTextView, visitTypeTextInputLayout, null);
-            visitTypeResetImage.setVisibility(View.GONE);
-            visitTypeTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
-                    getResources().getDrawable(R.drawable.icon_drop_down), null);
-            enableTimeSlotField();
-            enableScheduleAppointmentButton();
-            visitTypeTextView.getOnFocusChangeListener().onFocusChange(visitTypeTextView, false);
+        visitTypeResetImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedVisitType = null;
+                visitTypeTextView.setText(null);
+                setHint(visitTypeTextView, visitTypeTextInputLayout, null);
+                visitTypeResetImage.setVisibility(View.GONE);
+                visitTypeTextView.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                        getResources().getDrawable(R.drawable.icon_drop_down), null);
+                enableTimeSlotField();
+                enableScheduleAppointmentButton();
+                visitTypeTextView.getOnFocusChangeListener().onFocusChange(visitTypeTextView, false);
+            }
         });
     }
 
@@ -229,13 +263,23 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
         visitTimeTextView = view.findViewById(R.id.visitTimeTextView);
         visitTimeTextView.setOnFocusChangeListener(SystemUtil
                 .getHintFocusChangeListener(visitTimeTextInputLayout, null));
-        visitTimeTextView.setOnClickListener(view1 -> showAvailabilityFragment());
+        visitTimeTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showAvailabilityFragment();
+            }
+        });
         setHint(visitTimeTextView, visitTimeTextInputLayout, null);
         visitTimeTextView.getOnFocusChangeListener().onFocusChange(visitTimeTextView,
                 !StringUtil.isNullOrEmpty(visitTimeTextView.getText().toString().trim()));
 
         visitTimeResetImage = view.findViewById(R.id.visitTimeResetImage);
-        visitTimeResetImage.setOnClickListener(v -> resetVisitTime());
+        visitTimeResetImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetVisitTime();
+            }
+        });
     }
 
     private void resetVisitTime() {
@@ -259,7 +303,7 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
         setDefaultMessage();
     }
 
-    public void scheduleAppointmentLater() {
+    private void scheduleAppointmentLater() {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("practice_mgmt", selectedAppointment.getMetadata().getPracticeMgmt());
         queryMap.put("practice_id", selectedAppointment.getMetadata().getPracticeId());
@@ -320,7 +364,7 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
         SystemUtil.showSuccessToast(getContext(), appointmentRequestSuccessMessage);
     }
 
-    private WorkflowServiceCallback getContinueCallback(final boolean appointmentMade) {
+    WorkflowServiceCallback getContinueCallback(final boolean appointmentMade) {
         return new WorkflowServiceCallback() {
             @Override
             public void onPreExecute() {
@@ -351,10 +395,10 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
+            public void onFailure(String exceptionMessage) {
                 hideProgressDialog();
-                showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
-                Log.e("Server Error", serverErrorDto.getMessage().getBody().getError().getMessage());
+                showErrorNotification(exceptionMessage);
+                Log.e("Server Error", exceptionMessage);
             }
         };
     }

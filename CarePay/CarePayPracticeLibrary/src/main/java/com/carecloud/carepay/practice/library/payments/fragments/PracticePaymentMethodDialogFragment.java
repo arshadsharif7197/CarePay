@@ -1,15 +1,14 @@
 package com.carecloud.carepay.practice.library.payments.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import androidx.fragment.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.payments.dialogs.ConfirmCashDialogFragment;
@@ -66,10 +65,15 @@ public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFr
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, Bundle icicle) {
+    public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         View closeButton = view.findViewById(R.id.closeViewLayout);
-        closeButton.setOnClickListener(view1 -> cancel());
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cancel();
+            }
+        });
         TextView title = view.findViewById(R.id.respons_toolbar_title);
         ViewGroup.LayoutParams layoutParams = title.getLayoutParams();
         layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -82,9 +86,18 @@ public class PracticePaymentMethodDialogFragment extends PracticePaymentMethodFr
         if (paymentMethod.getType().equals(CarePayConstants.TYPE_CASH) &&
                 getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE) {
             ConfirmCashDialogFragment fragment = new ConfirmCashDialogFragment();
-            fragment.setOnCancelListener(dialog -> ((PaymentInterface) callback)
-                    .onPayButtonClicked(amount, paymentsModel));
-            fragment.setConfirmCashCallback(() -> dialogCallback.onCashSelected(paymentsModel));
+            fragment.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    ((PaymentInterface) callback).onPayButtonClicked(amount, paymentsModel);
+                }
+            });
+            fragment.setConfirmCashCallback(new ConfirmCashDialogFragment.ConfirmCashCallback() {
+                @Override
+                public void onConfirmCash() {
+                    dialogCallback.onCashSelected(paymentsModel);
+                }
+            });
             fragment.show(getFragmentManager(), fragment.getClass().getName());
             logPaymentMethodSelection(getString(com.carecloud.carepaylibrary.R.string.payment_cash));
         } else {

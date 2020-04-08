@@ -23,7 +23,6 @@ import com.carecloud.carepay.patient.payment.interfaces.PaymentFragmentActivityI
 import com.carecloud.carepay.patient.rate.RateDialog;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -90,6 +89,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         toolBarTitle = getScreenTitle(Label.getLabel("payment_patient_balance_toolbar"));
         displayToolbar(true, toolBarTitle);
         paymentsDTO = getConvertedDTO(PaymentsModel.class);
+        inflateDrawer();
         if (paymentsDTO == null) {
             callPaymentsService();
         } else {
@@ -116,8 +116,8 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
-                showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+            public void onFailure(String exceptionMessage) {
+                showErrorNotification(exceptionMessage);
             }
         }, queryMap);
     }
@@ -610,11 +610,11 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
+            public void onFailure(String exceptionMessage) {
                 if (showProgress) {
                     hideProgressDialog();
                 }
-                showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+                showErrorNotification(exceptionMessage);
             }
         };
     }

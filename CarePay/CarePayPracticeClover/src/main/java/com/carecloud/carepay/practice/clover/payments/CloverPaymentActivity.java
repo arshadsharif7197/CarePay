@@ -14,10 +14,10 @@ import com.carecloud.carepay.practice.clover.R;
 import com.carecloud.carepay.practice.clover.models.CloverCardTransactionInfo;
 import com.carecloud.carepay.practice.clover.models.CloverPaymentDTO;
 import com.carecloud.carepay.practice.clover.models.CloverQueuePaymentRecord;
+import com.carecloud.carepay.practice.library.splash.SplashActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
@@ -478,10 +478,10 @@ public class CloverPaymentActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
+            public void onFailure(String exceptionMessage) {
                 hideProgressDialog();
-                System.out.print(serverErrorDto.getMessage().getBody().getError().getMessage());
-                logPaymentFail("Failed to reach make payment endpoint", true, payment.getJSONObject(), serverErrorDto.getMessage().getBody().getError().getMessage());
+                System.out.print(exceptionMessage);
+                logPaymentFail("Failed to reach make payment endpoint", true, payment.getJSONObject(), exceptionMessage);
             }
         };
     }

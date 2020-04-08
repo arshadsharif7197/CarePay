@@ -5,29 +5,23 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import com.carecloud.carepaylibray.common.BaseViewModel;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
-import com.carecloud.carepaylibray.appointments.models.AppointmentCancellationFee;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
-import com.carecloud.carepaylibray.appointments.models.AppointmentsSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.QueueStatusPayloadDTO;
 import com.carecloud.carepaylibray.base.models.Paging;
-import com.carecloud.carepaylibray.common.BaseViewModel;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.DtoHelper;
-import com.carecloud.carepaylibray.utils.StringUtil;
-import com.google.gson.JsonObject;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,7 +33,6 @@ public class AppointmentViewModel extends BaseViewModel {
     private MutableLiveData<AppointmentsResultModel> historicAppointmentsObservable = new MutableLiveData<>();
     private MutableLiveData<Boolean> paginationLoaderObservable = new MutableLiveData<>();
     private MutableLiveData<QueueStatusPayloadDTO> queueStatusObservable = new MutableLiveData<>();
-    private MutableLiveData<Void> cancelAppointmentObservable = new MutableLiveData<>();
     private PaymentsModel paymentsModel;
 
     public AppointmentViewModel(@NonNull Application application) {
@@ -71,13 +64,6 @@ public class AppointmentViewModel extends BaseViewModel {
         return queueStatusObservable;
     }
 
-    public MutableLiveData<Void> getCancelAppointmentObservable() {
-        if (cancelAppointmentObservable.getValue() != null) {
-            cancelAppointmentObservable = new MutableLiveData<>();
-        }
-        return cancelAppointmentObservable;
-    }
-
     public PaymentsModel getPaymentsModel() {
         return paymentsModel;
     }
@@ -99,9 +85,9 @@ public class AppointmentViewModel extends BaseViewModel {
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDTO) {
+            public void onFailure(String exceptionMessage) {
                 setSkeleton(false);
-                setErrorMessage(serverErrorDTO.getMessage().getBody().getError().getMessage());
+                setErrorMessage(exceptionMessage);
             }
         }, queryMap);
     }
@@ -147,9 +133,9 @@ public class AppointmentViewModel extends BaseViewModel {
                     }
 
                     @Override
-                    public void onFailure(ServerErrorDTO serverErrorDTO) {
+                    public void onFailure(String exceptionMessage) {
                         paginationLoaderObservable.postValue(false);
-                        setErrorMessage(serverErrorDTO.getMessage().getBody().getError().getMessage());
+                        setErrorMessage(exceptionMessage);
                     }
                 }, queryMap);
     }
@@ -174,73 +160,9 @@ public class AppointmentViewModel extends BaseViewModel {
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDTO) {
+            public void onFailure(String exceptionMessage) {
 
             }
         }, queryMap);
-    }
-
-    public void cancelAppointment(AppointmentDTO appointmentDTO,
-                                  Integer cancelationReasonId,
-                                  String cancellationReasonComment) {
-        Map<String, String> queries = new HashMap<>();
-        queries.put("practice_mgmt", appointmentDTO.getMetadata().getPracticeMgmt());
-        queries.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
-        queries.put("patient_id", appointmentDTO.getMetadata().getPatientId());
-        queries.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
-
-        JsonObject postBodyObj = new JsonObject();
-        if (!StringUtil.isNullOrEmpty(cancellationReasonComment)) {
-            postBodyObj.addProperty("cancellation_comments", cancellationReasonComment);
-        }
-        if (cancelationReasonId != -1) {
-            postBodyObj.addProperty("cancellation_reason_id", cancelationReasonId);
-        }
-
-        String body = postBodyObj.toString();
-
-        TransitionDTO transitionDTO = appointmentsDtoObservable.getValue()
-                .getMetadata().getTransitions().getCancel();
-        getWorkflowServiceHelper().execute(transitionDTO, new WorkflowServiceCallback() {
-            @Override
-            public void onPreExecute() {
-                setLoading(true);
-            }
-
-            @Override
-            public void onPostExecute(WorkflowDTO workflowDTO) {
-                setLoading(false);
-                cancelAppointmentObservable.postValue(null);
-            }
-
-            @Override
-            public void onFailure(ServerErrorDTO serverErrorDTO) {
-                setLoading(false);
-                setErrorMessage(serverErrorDTO.getMessage().getBody().getError().getMessage());
-            }
-        }, body, queries);
-    }
-
-    public AppointmentCancellationFee getCancellationFee(AppointmentDTO appointmentDTO) {
-        AppointmentsSettingDTO practiceSettings = getAppointmentSettings(appointmentDTO.getMetadata().getPracticeId());
-        if (practiceSettings.shouldChargeCancellationFees()) {
-            for (AppointmentCancellationFee cancellationFee : practiceSettings.getCancellationFees()) {
-                if (appointmentDTO.getPayload().getVisitType().getId().equals(cancellationFee.getVisitType())) {
-                    return cancellationFee;
-                }
-            }
-        }
-        return null;
-    }
-
-    private AppointmentsSettingDTO getAppointmentSettings(String practiceId) {
-        List<AppointmentsSettingDTO> appointmentsSettingsList = getAppointmentsDtoObservable()
-                .getValue().getPayload().getAppointmentsSettings();
-        for (AppointmentsSettingDTO appointmentsSettingDTO : appointmentsSettingsList) {
-            if (appointmentsSettingDTO.getPracticeId().equals(practiceId)) {
-                return appointmentsSettingDTO;
-            }
-        }
-        return appointmentsSettingsList.get(0);
     }
 }

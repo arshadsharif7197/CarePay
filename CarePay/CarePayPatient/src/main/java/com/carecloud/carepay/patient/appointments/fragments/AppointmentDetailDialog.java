@@ -24,28 +24,23 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.PermissionChecker;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.AppointmentViewModel;
 import com.carecloud.carepay.patient.appointments.PatientAppointmentNavigationCallback;
-import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentFeeDialog;
-import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
 import com.carecloud.carepay.patient.appointments.models.AppointmentCalendarEvent;
 import com.carecloud.carepay.patient.db.BreezeDataBase;
-import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.visitsummary.VisitSummaryDialogFragment;
 import com.carecloud.carepay.patient.visitsummary.dto.VisitSummaryDTO;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayStyle;
 import com.carecloud.carepaylibray.appointments.AppointmentDisplayUtil;
-import com.carecloud.carepaylibray.appointments.models.AppointmentCancellationFee;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
@@ -53,6 +48,7 @@ import com.carecloud.carepaylibray.appointments.models.PortalSetting;
 import com.carecloud.carepaylibray.appointments.models.PortalSettingDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
 import com.carecloud.carepaylibray.appointments.models.QueueDTO;
+import com.carecloud.carepaylibray.appointments.models.QueueStatusPayloadDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
@@ -86,7 +82,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     private PatientAppointmentNavigationCallback callback;
 
     private View header;
-    private View cancelAppointmentTextView;
+    private View cancelAppointment;
     private TextView appointmentDateTextView;
     private TextView appointmentVisitTypeTextView;
     private TextView appointmentTimeTextView;
@@ -135,7 +131,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     }
 
     @Override
-    public void onAttach(@NonNull Context context) {
+    public void onAttach(Context context) {
         super.onAttach(context);
         try {
             if (context instanceof AppointmentViewHandler) {
@@ -159,7 +155,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
         super.onCreate(icicle);
         appointmentDTO = DtoHelper.getConvertedDTO(AppointmentDTO.class, getArguments());
 
-        viewModel = new ViewModelProvider(getActivity()).get(AppointmentViewModel.class);
+        viewModel = ViewModelProviders.of(getActivity()).get(AppointmentViewModel.class);
         appointmentResultModel = viewModel.getAppointmentsDtoObservable().getValue();
         setUpViewModel();
 
@@ -225,22 +221,13 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
         applyStyle();
     }
 
+
     private void initViews(View view) {
         View closeButton = view.findViewById(R.id.dialogAppointDismiss);
         closeButton.setOnClickListener(dismissDialogClick);
 
-        cancelAppointmentTextView = view.findViewById(R.id.dialogCancelAppointTextView);
-        cancelAppointmentTextView.setOnClickListener(v -> {
-//            dismiss();
-            final AppointmentCancellationFee cancellationFee = viewModel.getCancellationFee(appointmentDTO);
-            if (cancellationFee == null) {
-                showCancelAppointmentFragment(appointmentDTO);
-            } else {
-                CancelAppointmentFeeDialog fragment = CancelAppointmentFeeDialog.newInstance(cancellationFee);
-                fragment.setCancelFeeDialogListener(() -> showCancelAppointmentFragment(appointmentDTO));
-                callback.displayDialogFragment(fragment, false);
-            }
-        });
+        cancelAppointment = view.findViewById(R.id.dialogCancelAppointTextView);
+        cancelAppointment.setOnClickListener(cancelAppointmentClick);
 
         header = view.findViewById(R.id.dialogHeaderLayout);
         appointmentDateTextView = view.findViewById(R.id.appointDateTextView);
@@ -272,15 +259,6 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
         rightButton = view.findViewById(R.id.appointment_button_right);
 
         videoVisitIndicator = view.findViewById(R.id.visit_type_video);
-    }
-
-    private void showCancelAppointmentFragment(AppointmentDTO appointmentDTO) {
-        CancelReasonAppointmentDialog dialog = CancelReasonAppointmentDialog
-                .newInstance(appointmentDTO);
-        dialog.setOnBackPressedListener(() -> {
-            ((MenuPatientActivity) getActivity()).displayToolbar(true, null);
-        });
-        callback.addFragment(dialog, true);
     }
 
     private void setCommonValues() {
@@ -370,7 +348,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                     actionsLayout.setVisibility(View.VISIBLE);
                     if (!appointmentDTO.getPayload().isAppointmentOver() && appointmentDTO.getPayload().isAppointmentToday()) {
                         if (shouldShowCancelButton(enabledLocations)) {
-                            cancelAppointmentTextView.setVisibility(View.VISIBLE);
+                            cancelAppointment.setVisibility(View.VISIBLE);
                         }
                         if (isLocationWithBreezeEnabled(enabledLocations)
                                 && appointmentResultModel.getPayload()
@@ -439,7 +417,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                     appointmentVisitTypeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.slateGray));
                     if (!appointmentDTO.getPayload().isAppointmentOver()) {
                         if (shouldShowCancelButton(enabledLocations)) {
-                            cancelAppointmentTextView.setVisibility(View.VISIBLE);
+                            cancelAppointment.setVisibility(View.VISIBLE);
                         }
                         if (isLocationWithBreezeEnabled(enabledLocations)
                                 && appointmentResultModel.getPayload()
@@ -572,10 +550,35 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
         actionsLayout.setVisibility(View.GONE);
         rightButton.setVisibility(View.GONE);
         leftButton.setVisibility(View.GONE);
-        cancelAppointmentTextView.setVisibility(View.GONE);
+        cancelAppointment.setVisibility(View.GONE);
         queueLayout.setVisibility(View.GONE);
         appointmentStatus.setVisibility(View.GONE);
     }
+
+    private WorkflowServiceCallback queueStatusCallback = new WorkflowServiceCallback() {
+        @Override
+        public void onPreExecute() {
+
+        }
+
+        @Override
+        public void onPostExecute(WorkflowDTO workflowDTO) {
+            QueueStatusPayloadDTO queueStatusPayloadDTO = workflowDTO.getPayload(QueueStatusPayloadDTO.class);
+            List<QueueDTO> queueList = queueStatusPayloadDTO.getQueueStatus().getQueueStatusInnerPayload().getQueueList();
+
+            QueueDTO placeInQueue = findPlaceInQueue(queueList, appointmentDTO.getPayload().getId());
+            String place = StringUtil.getOrdinal(ApplicationPreferences.getInstance().getUserLanguage(),
+                    placeInQueue.getRank());
+
+            queueLayout.setVisibility(View.VISIBLE);
+            queueStatus.setText(getFormattedText(Label.getLabel("appointment_queue_status"), place));
+        }
+
+        @Override
+        public void onFailure(String exceptionMessage) {
+            queueLayout.setVisibility(View.GONE);
+        }
+    };
 
     private QueueDTO findPlaceInQueue(List<QueueDTO> queueDTOList, String appointmentId) {
         for (QueueDTO queueDTO : queueDTOList) {
@@ -590,7 +593,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
         if (!formatString.contains("%s")) {
             return formatString;
         }
-        return String.format(formatString, (Object) fields);
+        return String.format(formatString, fields);
     }
 
     private String getPhoneNumber() {
@@ -634,6 +637,11 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     }
 
     private View.OnClickListener dismissDialogClick = view -> dismiss();
+
+    private View.OnClickListener cancelAppointmentClick = view -> {
+        callback.onCancelAppointment(appointmentDTO);
+        dismiss();
+    };
 
     private View.OnClickListener mapClick = view -> {
         String address = appointmentDTO.getPayload().getLocation().getAddress().getPlaceAddressString();
@@ -714,8 +722,8 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
-                Log.e("okHttp", serverErrorDto.getMessage().getBody().getError().getMessage());
+            public void onFailure(String exceptionMessage) {
+                Log.e("okHttp", exceptionMessage);
                 hideProgressDialog();
                 showErrorNotification(Label.getLabel("visitSummary.createVisitSummary.error.label.downloadError"));
 
@@ -737,7 +745,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                         try {
                             visitSummaryDTO = DtoHelper.getConvertedDTO(VisitSummaryDTO.class, workflowDTO);
                         } catch (Exception ex) {
-                            onFailure(new ServerErrorDTO());
+                            onFailure("");
                         }
                         String status = visitSummaryDTO.getPayload().getVisitSummary().getStatus();
                         if (retryIntent > VisitSummaryDialogFragment.MAX_NUMBER_RETRIES) {
@@ -751,9 +759,9 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                     }
 
                     @Override
-                    public void onFailure(ServerErrorDTO serverErrorDto) {
-                        Log.e("OkHttp", serverErrorDto.getMessage().getBody().getError().getMessage());
-                        if (serverErrorDto.getMessage().getBody().getError().getMessage().contains("JSON")) {
+                    public void onFailure(String exceptionMessage) {
+                        Log.e("OkHttp", exceptionMessage);
+                        if (exceptionMessage.contains("JSON")) {
                             String title = String.format("%s - %s",
                                     appointmentDTO.getPayload().getProvider().getFullName(),
                                     DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime())
@@ -826,7 +834,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
         super.onStop();
     }
 
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
+    BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(final Context context, Intent intent) {
             String action = intent.getAction();
@@ -881,14 +889,17 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
 
     private void saveEventOnLocalDB() {
         if (lastEventId > -1 && lastEventId != CalendarUtil.getNewEventId(getContext())) {
-            Executors.newSingleThreadExecutor().execute(() -> {
-                AppointmentCalendarEvent appointmentCalendarEvent = new AppointmentCalendarEvent();
-                appointmentCalendarEvent.setAppointmentId(appointmentDTO.getPayload().getId());
-                appointmentCalendarEvent.setEventId(lastEventId);
-                BreezeDataBase database = BreezeDataBase.getDatabase(getContext());
-                database.getCalendarEventDao().insert(appointmentCalendarEvent);
-                calendarEvent = database.getCalendarEventDao()
-                        .getAppointmentCalendarEvent(appointmentDTO.getPayload().getId());
+            Executors.newSingleThreadExecutor().execute(new Runnable() {
+                @Override
+                public void run() {
+                    AppointmentCalendarEvent appointmentCalendarEvent = new AppointmentCalendarEvent();
+                    appointmentCalendarEvent.setAppointmentId(appointmentDTO.getPayload().getId());
+                    appointmentCalendarEvent.setEventId(lastEventId);
+                    BreezeDataBase database = BreezeDataBase.getDatabase(getContext());
+                    database.getCalendarEventDao().insert(appointmentCalendarEvent);
+                    calendarEvent = database.getCalendarEventDao()
+                            .getAppointmentCalendarEvent(appointmentDTO.getPayload().getId());
+                }
             });
             eventExists = true;
         }

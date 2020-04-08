@@ -2,17 +2,15 @@ package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import androidx.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
-
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -85,6 +83,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         if (arguments != null) {
+//            String paymentsDTOString = arguments.getString(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE);
             paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, arguments);
             if (paymentsModel != null) {
                 if (!paymentsModel.getPaymentPayload().getPatientBalances().isEmpty()) {
@@ -125,11 +124,11 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
         }
 
         @Override
-        public void onFailure(ServerErrorDTO serverErrorDto) {
+        public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             nextButton.setEnabled(true);
-            SystemUtil.showErrorToast(getContext(), serverErrorDto.getMessage().getBody().getError().getMessage());
-            Log.e(getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+            SystemUtil.showErrorToast(getContext(), exceptionMessage);
+            Log.e(getString(com.carecloud.carepaylibrary.R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -170,22 +169,17 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
         }
 
         @Override
-        public void onFailure(ServerErrorDTO serverErrorDto) {
+        public void onFailure(String exceptionMessage) {
             hideProgressDialog();
             nextButton.setEnabled(true);
-            SystemUtil.showErrorToast(getContext(), serverErrorDto.getMessage().getBody().getError().getMessage());
-            Log.e("Server Error", serverErrorDto.getMessage().getBody().getError().getMessage());
+            SystemUtil.showErrorToast(getContext(), exceptionMessage);
+            Log.e("Server Error", exceptionMessage);
 
             String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
             Object[] values = {amountToMakePayment, getString(R.string.payment_new_card)};
             MixPanelUtil.logEvent(getString(R.string.event_payment_failed), params, values);
-            onFailureAction(serverErrorDto);
         }
     };
-
-    protected void onFailureAction(ServerErrorDTO serverErrorDto) {
-        //to implement in children
-    }
 
     private void addNewCreditCardCall() {
         Gson gson = new Gson();
@@ -223,7 +217,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
 
         Gson gson = new Gson();
         if (postModel.isPaymentModelValid()) {
-            postPayment(gson.toJson(postModel));
+            postPayment(postModel);
         } else {
             Toast.makeText(getContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
         }
@@ -250,16 +244,22 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
 
         Gson gson = new Gson();
         if (postModel.isPaymentModelValid()) {
-            postPayment(gson.toJson(postModel));
+            postPayment(postModel);
         } else {
             Toast.makeText(getContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
         }
 
     }
 
-    private void postPayment(String paymentModelJson) {
+    private void postPayment(IntegratedPaymentPostModel paymentModelJson) {
         Map<String, String> queries = new HashMap<>();
-        if (userPracticeDTO != null) {
+
+        if (paymentModelJson.getQueryMetadata() != null) {
+            queries.put("practice_mgmt", paymentModelJson.getQueryMetadata().getPracticeMgmt());
+            queries.put("practice_id", paymentModelJson.getQueryMetadata().getPracticeId());
+            queries.put("patient_id", paymentModelJson.getQueryMetadata().getPatientId());
+            paymentModelJson.setQueryMetadata(null);
+        } else if (userPracticeDTO != null) {
             queries.put("practice_mgmt", userPracticeDTO.getPracticeMgmt());
             queries.put("practice_id", userPracticeDTO.getPracticeId());
             queries.put("patient_id", userPracticeDTO.getPatientId());
@@ -298,7 +298,8 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
         header.put("transition", "true");
 
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment();
-        getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, paymentModelJson, queries, header);
+        Gson gson = new Gson();
+        getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, gson.toJson(paymentModelJson), queries, header);
 
         String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
         Object[] values = {amountToMakePayment, getString(R.string.payment_new_card)};

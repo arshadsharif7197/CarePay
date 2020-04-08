@@ -5,8 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:clickable="true"
     android:orientation="vertical">
 
     <include
@@ -61,8 +59,8 @@
                         android:maxLines="1"
                         android:nextFocusForward="@+id/creditCardNoEditText"
                         android:paddingStart="@dimen/dimen_10dp"
-                        android:paddingTop="@dimen/dimen_10dp"
                         android:paddingEnd="@dimen/dimen_10dp"
+                        android:paddingTop="@dimen/dimen_10dp"
                         android:paddingBottom="@dimen/dimen_20dp"
                         app:customAssetFont="proxima_nova_regular"
                         breeze:hintKey="payment_name_on_card_text" />
@@ -74,9 +72,9 @@
                     layout="@layout/layout_required_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="visible"
                     android:layout_gravity="center_vertical|end"
-                    android:layout_marginEnd="@dimen/dimen_48dp"
-                    android:visibility="visible" />
+                    android:layout_marginEnd="@dimen/dimen_48dp"/>
 
             </FrameLayout>
 
@@ -107,9 +105,9 @@
                         android:imeOptions="actionNext"
                         android:inputType="number"
                         android:maxLength="19"
+                        android:paddingTop="@dimen/dimen_10dp"
                         android:nextFocusForward="@+id/verificationCodeEditText"
                         android:paddingStart="@dimen/dimen_10dp"
-                        android:paddingTop="@dimen/dimen_10dp"
                         android:paddingEnd="@dimen/dimen_10dp"
                         android:paddingBottom="@dimen/dimen_20dp"
                         app:customAssetFont="proxima_nova_regular"
@@ -135,9 +133,9 @@
                     layout="@layout/layout_required_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="visible"
                     android:layout_gravity="center_vertical|end"
-                    android:layout_marginEnd="@dimen/dimen_48dp"
-                    android:visibility="visible" />
+                    android:layout_marginEnd="@dimen/dimen_48dp"/>
 
             </FrameLayout>
 
@@ -168,8 +166,8 @@
                         android:imeOptions="actionDone"
                         android:inputType="number"
                         android:maxLength="4"
-                        android:paddingStart="@dimen/dimen_10dp"
                         android:paddingTop="@dimen/dimen_10dp"
+                        android:paddingStart="@dimen/dimen_10dp"
                         android:paddingEnd="@dimen/dimen_10dp"
                         android:paddingBottom="@dimen/dimen_20dp"
                         app:customAssetFont="proxima_nova_regular"
@@ -192,9 +190,9 @@
                     layout="@layout/layout_required_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="visible"
                     android:layout_gravity="center_vertical|end"
-                    android:layout_marginEnd="@dimen/dimen_48dp"
-                    android:visibility="visible" />
+                    android:layout_marginEnd="@dimen/dimen_48dp"/>
 
             </FrameLayout>
 
@@ -228,8 +226,8 @@
                         android:editable="false"
                         android:focusableInTouchMode="false"
                         android:imeOptions="actionNext"
-                        android:paddingStart="@dimen/dimen_10dp"
                         android:paddingTop="@dimen/dimen_10dp"
+                        android:paddingStart="@dimen/dimen_10dp"
                         android:paddingEnd="@dimen/dimen_10dp"
                         android:paddingBottom="@dimen/dimen_20dp"
                         app:customAssetFont="proxima_nova_regular"
@@ -244,9 +242,9 @@
                     layout="@layout/layout_required_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="visible"
                     android:layout_gravity="center_vertical|end"
-                    android:layout_marginEnd="@dimen/dimen_48dp"
-                    android:visibility="visible" />
+                    android:layout_marginEnd="@dimen/dimen_48dp"/>
 
             </FrameLayout>
 

@@ -17,7 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
@@ -72,7 +71,7 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
     }
 
     @Override
-    public void onAttach(@NonNull Context context) {
+    public void onAttach(Context context) {
         super.onAttach(context);
         try {
             callback = (MessageNavigationCallback) context;
@@ -88,7 +87,7 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
         if (args != null) {
             provider = DtoHelper.getConvertedDTO(ProviderContact.class, args);
         }
-        viewModel = new ViewModelProvider(getActivity()).get(MessagesViewModel.class);
+        viewModel = ViewModelProviders.of(getActivity()).get(MessagesViewModel.class);
         viewModel.getNewThreadObservable()
                 .observe(this, messagingThreadDTO -> {
                     String[] params = {getString(R.string.param_provider_id), getString(R.string.param_provider_name)};

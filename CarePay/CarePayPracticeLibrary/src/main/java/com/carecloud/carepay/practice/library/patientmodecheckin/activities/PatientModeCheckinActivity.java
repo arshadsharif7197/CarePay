@@ -26,7 +26,6 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticePayment
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentPlanConfirmationFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
@@ -142,9 +141,9 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
                     }
 
                     @Override
-                    public void onFailure(ServerErrorDTO serverErrorDto) {
+                    public void onFailure(String exceptionMessage) {
                         hideProgressDialog();
-                        showErrorToast(serverErrorDto.getMessage().getBody().getError().getMessage());
+                        showErrorToast(exceptionMessage);
                     }
                 }, query);
     }
@@ -429,10 +428,10 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         }
 
         @Override
-        public void onFailure(ServerErrorDTO serverErrorDto) {
+        public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
-            Log.e(getContext().getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+            showErrorNotification(exceptionMessage);
+            Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -733,7 +732,7 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
+            public void onFailure(String exceptionMessage) {
                 hideProgressDialog();
                 //could not continue for some reason so lets show the confirmation dialog anyway
                 PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, paymentPlanWorkflowDTO);
@@ -782,9 +781,9 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
+            public void onFailure(String exceptionMessage) {
                 hideProgressDialog();
-                showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+                showErrorNotification(exceptionMessage);
             }
         };
     }

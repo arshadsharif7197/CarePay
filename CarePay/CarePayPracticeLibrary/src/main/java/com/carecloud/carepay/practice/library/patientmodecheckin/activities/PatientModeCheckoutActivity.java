@@ -7,11 +7,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.carecloud.carepay.practice.library.R;
@@ -19,6 +17,7 @@ import com.carecloud.carepay.practice.library.appointments.createappointment.Ava
 import com.carecloud.carepay.practice.library.appointments.dtos.PracticeAppointmentDTO;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
 import com.carecloud.carepay.practice.library.checkout.NextAppointmentFragment;
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckOutFragment;
@@ -31,7 +30,6 @@ import com.carecloud.carepay.practice.library.payments.fragments.PracticePayment
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.constants.ApplicationMode;
-import com.carecloud.carepay.service.library.dtos.ServerErrorDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
@@ -72,6 +70,7 @@ import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentLi
 import com.carecloud.carepaylibray.payments.models.postmodel.IntegratedPaymentPostModel;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentExecution;
 import com.carecloud.carepaylibray.payments.models.postmodel.PaymentPlanPostModel;
+import com.carecloud.carepaylibray.signinsignup.dto.OptionDTO;
 import com.carecloud.carepaylibray.survey.model.SurveyDTO;
 import com.carecloud.carepaylibray.translation.TranslatableFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -157,31 +156,40 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         headers.put("username", getApplicationPreferences().getUserName());
         headers.put("username_patient", getApplicationPreferences().getPatientId());
         final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), true,
-                appointmentsResultModel.getPayload().getLanguages(), language -> {
-            TransitionDTO transition;
-            if (appointmentsResultModel != null) {
-                transition = appointmentsResultModel.getMetadata().getLinks().getLanguage();
-            } else {
-                transition = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getLanguage();
-            }
-            changeLanguage(transition, language.getCode().toLowerCase(), headers, () -> {
-                changeLeftMenuLabels();
-                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.root_layout);
-                getSupportFragmentManager().popBackStackImmediate();
-                if (fragment instanceof BaseNextAppointmentFragment) {
-                    showNextAppointmentFragment(appointmentId);
-                } else if (fragment instanceof ResponsibilityCheckOutFragment) {
-                    showResponsibilityFragment();
-                } else if (fragment instanceof CheckOutFormFragment) {
-                    showCheckOutFormFragment();
+                appointmentsResultModel.getPayload().getLanguages(), new LanguageAdapter.LanguageInterface() {
+            @Override
+            public void onLanguageSelected(OptionDTO language) {
+                TransitionDTO transition;
+                if (appointmentsResultModel != null) {
+                    transition = appointmentsResultModel.getMetadata().getLinks().getLanguage();
+                } else {
+                    transition = paymentsModel.getPaymentsMetadata().getPaymentsLinks().getLanguage();
                 }
-                languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
-            });
+                changeLanguage(transition, language.getCode().toLowerCase(), headers, new SimpleCallback() {
+                    @Override
+                    public void callback() {
+                        changeLeftMenuLabels();
+                        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.root_layout);
+                        getSupportFragmentManager().popBackStackImmediate();
+                        if (fragment instanceof BaseNextAppointmentFragment) {
+                            showNextAppointmentFragment(appointmentId);
+                        } else if (fragment instanceof ResponsibilityCheckOutFragment) {
+                            showResponsibilityFragment();
+                        } else if (fragment instanceof CheckOutFormFragment) {
+                            showCheckOutFormFragment();
+                        }
+                        languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
+                    }
+                });
+            }
         });
-        languageSwitch.setOnClickListener(view -> {
-            int offsetX = view.getWidth() / 2 - popupPickerLanguage.getWidth() / 2;
-            int offsetY = -view.getHeight() - popupPickerLanguage.getHeight();
-            popupPickerLanguage.showAsDropDown(view, offsetX, offsetY);
+        languageSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int offsetX = view.getWidth() / 2 - popupPickerLanguage.getWidth() / 2;
+                int offsetY = -view.getHeight() - popupPickerLanguage.getHeight();
+                popupPickerLanguage.showAsDropDown(view, offsetX, offsetY);
+            }
         });
         languageSwitch.setText(getApplicationPreferences().getUserLanguage().toUpperCase());
     }
@@ -283,8 +291,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         queryMap.put("payment_plan", "true");
 
         TransitionDTO transition = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getContinueTransition();
-        getWorkflowServiceHelper().execute(transition, getCompletePlanAction(workflowDTO,
-                PaymentPlanConfirmationFragment.MODE_CREATE, false), queryMap);
+        getWorkflowServiceHelper().execute(transition, getCompletePlanAction(workflowDTO, PaymentPlanConfirmationFragment.MODE_CREATE, false), queryMap);
     }
 
     @Override
@@ -299,8 +306,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         queryMap.put("payment_plan", "true");
 
         TransitionDTO transition = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getContinueTransition();
-        getWorkflowServiceHelper().execute(transition, getCompletePlanAction(workflowDTO,
-                PaymentPlanConfirmationFragment.MODE_ADD, false), queryMap);
+        getWorkflowServiceHelper().execute(transition, getCompletePlanAction(workflowDTO, PaymentPlanConfirmationFragment.MODE_ADD, false), queryMap);
     }
 
 //    @Override
@@ -488,6 +494,16 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         addFragment(R.id.root_layout, fragment, addToBackStack);
     }
 
+//    @Override
+//    public void showAvailableHoursFragment(Date start, Date end,
+//                                           AppointmentsResultModel appointmentsResultModel,
+//                                           AppointmentResourcesItemDTO resourcesItemDTO,
+//                                           VisitTypeDTO visitTypeDTO) {
+//        PracticeAvailableHoursDialogFragment fragment = PracticeAvailableHoursDialogFragment
+//                .newInstance(appointmentsResultModel, resourcesItemDTO, start, end, visitTypeDTO);
+//        fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
+//    }
+
     @Override
     public void showAllDone(WorkflowDTO workflowDTO) {
         PracticeAppointmentDTO practiceAppointmentDTO = DtoHelper
@@ -551,6 +567,23 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     public boolean shouldAllowNavigateBack() {
         return getSupportFragmentManager().getBackStackEntryCount() > 1;
     }
+
+//    @Override
+//    public void showChooseProviderFragment() {
+//        if (appointmentsResultModel.getPayload().getResourcesToSchedule().isEmpty()) {
+//            selectedAppointment = getAppointment();
+//            Map<String, String> queries = new HashMap<>();
+//            queries.put("practice_mgmt", selectedAppointment.getMetadata().getPracticeMgmt());
+//            queries.put("practice_id", selectedAppointment.getMetadata().getPracticeId());
+//            TransitionDTO transitionDTO = appointmentsResultModel.getMetadata()
+//                    .getLinks().getResourcesToSchedule();
+//            Map<String, String> header = getWorkflowServiceHelper().getApplicationStartHeaders();
+//            getWorkflowServiceHelper().execute(transitionDTO, resourcesToScheduleCallback, queries, header);
+//        } else {
+//            showChooseProviderDialogFragment();
+//        }
+//
+//    }
 
     @Override
     public void completeCheckout(boolean paymentMade, double paymentAmount, boolean surveyAvailable, boolean paymentPlanCreated) {
@@ -624,10 +657,10 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         }
 
         @Override
-        public void onFailure(ServerErrorDTO serverErrorDto) {
+        public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
-            Log.e(getContext().getString(R.string.alert_title_server_error), serverErrorDto.getMessage().getBody().getError().getMessage());
+            showErrorNotification(exceptionMessage);
+            Log.e(getContext().getString(R.string.alert_title_server_error), exceptionMessage);
         }
     };
 
@@ -667,8 +700,12 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         if (resultCode == CarePayConstants.PAYMENT_RETRY_PENDING_RESULT_CODE) {
             //Display a success notification and do some cleanup
             PaymentQueuedDialogFragment dialogFragment = new PaymentQueuedDialogFragment();
-            DialogInterface.OnDismissListener dismissListener = dialog
-                    -> onPayLaterClicked(paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0));
+            DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    onPayLaterClicked(paymentsModel.getPaymentPayload().getPatientBalances().get(0).getBalances().get(0));
+                }
+            };
             dialogFragment.setOnDismissListener(dismissListener);
             displayDialogFragment(dialogFragment, false);
 
@@ -734,16 +771,6 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     }
 
-    @Override
-    public void onPrepaymentFailed() {
-        getSupportFragmentManager().popBackStackImmediate(PracticePaymentMethodPrepaymentFragment.class.getName(),
-                FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.root_layout);
-        if (fragment instanceof BaseNextAppointmentFragment) {
-            ((BaseNextAppointmentFragment) fragment).scheduleAppointmentLater();
-        }
-    }
-
     private void logCheckoutCancelled() {
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.root_layout);
         String currentStep = null;
@@ -781,7 +808,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
     }
 
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
+    protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean("shouldReload", true);
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.root_layout);
@@ -842,8 +869,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                         //hold the workflow response so that we can navigate to is after they click ok in confirm
                         continuePaymentsDTO = workflowDTO;
                         PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, paymentPlanWorkflowDTO);
-                        PracticePaymentPlanConfirmationFragment confirmationFragment = PracticePaymentPlanConfirmationFragment
-                                .newInstance(paymentPlanWorkflowDTO, getPracticeInfo(paymentsModel), mode);
+                        PracticePaymentPlanConfirmationFragment confirmationFragment = PracticePaymentPlanConfirmationFragment.newInstance(paymentPlanWorkflowDTO, getPracticeInfo(paymentsModel), mode);
                         displayDialogFragment(confirmationFragment, false);
                     } else {
                         PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
@@ -896,12 +922,11 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             }
 
             @Override
-            public void onFailure(ServerErrorDTO serverErrorDto) {
+            public void onFailure(String exceptionMessage) {
                 hideProgressDialog();
                 //could not continue for some reason so lets show the confirmation dialog anyway
                 PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, paymentPlanWorkflowDTO);
-                PracticePaymentPlanConfirmationFragment confirmationFragment = PracticePaymentPlanConfirmationFragment
-                        .newInstance(paymentPlanWorkflowDTO, getPracticeInfo(paymentsModel), mode);
+                PracticePaymentPlanConfirmationFragment confirmationFragment = PracticePaymentPlanConfirmationFragment.newInstance(paymentPlanWorkflowDTO, getPracticeInfo(paymentsModel), mode);
                 displayDialogFragment(confirmationFragment, false);
             }
         };
@@ -933,9 +958,9 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         }
 
         @Override
-        public void onFailure(ServerErrorDTO serverErrorDto) {
+        public void onFailure(String exceptionMessage) {
             hideProgressDialog();
-            showErrorNotification(serverErrorDto.getMessage().getBody().getError().getMessage());
+            showErrorNotification(exceptionMessage);
         }
     };
 

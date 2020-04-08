@@ -3,9 +3,9 @@ package com.carecloud.carepaylibray.customcomponents;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
-import android.util.AttributeSet;
-
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatRadioButton;
+import android.util.AttributeSet;
 
 import com.carecloud.carepaylibrary.R;
 
@@ -116,7 +116,7 @@ public class CarePayRadioButton extends AppCompatRadioButton {
         setFont();
     }
 
-    private void setFont() {
+    private void setFont(){
         String assetFontName = "";
         switch (fontAttribute) {
             case GOTHAM_ROUNDED_BOLD: {

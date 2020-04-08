@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
@@ -74,7 +73,7 @@ public class CareTeamDetailFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        MyHealthViewModel model = new ViewModelProvider(getActivity()).get(MyHealthViewModel.class);
+        MyHealthViewModel model = ViewModelProviders.of(getActivity()).get(MyHealthViewModel.class);
         myHealthDto = model.getMyHealthDto().getValue();
         provider = getProvider(getArguments().getInt("providerId"));
     }
