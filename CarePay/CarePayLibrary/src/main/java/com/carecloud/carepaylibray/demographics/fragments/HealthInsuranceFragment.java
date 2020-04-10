@@ -244,6 +244,10 @@ public class HealthInsuranceFragment extends CheckInDemographicsBaseFragment imp
                     noPrimaryInsuranceFound = false;
                 }
             } else {
+                setupInsuranceContainer.setVisibility(View.VISIBLE);
+                mainInsuranceContainer.setVisibility(View.GONE);
+                insurancePhotoAlert.setVisibility(View.GONE);
+                showAlert = false;
                 setupInsuranceContainer.setOnClickListener(view1 -> {
                     editInsurance(null, false);
                 });
