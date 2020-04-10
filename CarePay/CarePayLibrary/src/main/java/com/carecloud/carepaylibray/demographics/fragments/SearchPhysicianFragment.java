@@ -1,10 +1,8 @@
 package com.carecloud.carepaylibray.demographics.fragments;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.SearchView;
@@ -13,10 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -24,9 +19,10 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.common.options.OnOptionSelectedListener;
+import com.carecloud.carepaylibray.common.options.SelectOptionFragment;
 import com.carecloud.carepaylibray.demographics.DemographicsView;
 import com.carecloud.carepaylibray.demographics.adapters.PhysicianAdapter;
 import com.carecloud.carepaylibray.demographics.dtos.DemographicDTO;
@@ -163,9 +159,9 @@ public class SearchPhysicianFragment extends BaseDialogFragment implements Physi
                 .getState().getOptions());
         stateTextView = view.findViewById(R.id.stateSelectorTextView);
         stateTextView.setOnClickListener(getOptionsListener(states,
-                new CheckInDemographicsBaseFragment.OnOptionSelectedListener() {
+                new OnOptionSelectedListener() {
                     @Override
-                    public void onOptionSelected(DemographicsOption option) {
+                    public void onOptionSelected(DemographicsOption option, int position) {
                         selectedState = option;
                         stateTextView.setText(option.getLabel());
                         if (!StringUtil.isNullOrEmpty(searchView.getQuery().toString())) {
@@ -246,61 +242,17 @@ public class SearchPhysicianFragment extends BaseDialogFragment implements Physi
 
 
     protected View.OnClickListener getOptionsListener(final List<DemographicsOption> options,
-                                                      final CheckInDemographicsBaseFragment.OnOptionSelectedListener listener,
+                                                      final OnOptionSelectedListener listener,
                                                       final String title) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showChooseDialog(getContext(), options, title, listener);
+                SelectOptionFragment fragment = SelectOptionFragment.newInstance(title);
+                fragment.setOptions(options);
+                fragment.setCallback(listener);
+                fragment.show(getActivity().getSupportFragmentManager(), fragment.getClass().getName());
             }
         };
-    }
-
-    private void showChooseDialog(Context context,
-                                  List<DemographicsOption> options,
-                                  String title,
-                                  final CheckInDemographicsBaseFragment.OnOptionSelectedListener listener) {
-
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        // add cancel button
-        dialog.setNegativeButton(Label.getLabel("demographics_cancel_label"), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int pos) {
-                dialogInterface.dismiss();
-            }
-        });
-
-        // create dialog layout
-        View customView = LayoutInflater.from(context).inflate(R.layout.alert_list_layout, null, false);
-        dialog.setView(customView);
-        TextView titleTextView = customView.findViewById(R.id.title_view);
-        titleTextView.setText(title);
-        titleTextView.setVisibility(View.VISIBLE);
-
-
-        // create the adapter
-        ListView listView = customView.findViewById(R.id.dialoglist);
-        CustomOptionsAdapter customOptionsAdapter = new CustomOptionsAdapter(context, options);
-        listView.setAdapter(customOptionsAdapter);
-
-
-        final AlertDialog alert = dialog.create();
-        alert.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        alert.show();
-
-        // set item click listener
-        AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long row) {
-                DemographicsOption selectedOption = (DemographicsOption) adapterView.getAdapter()
-                        .getItem(position);
-                if (listener != null) {
-                    listener.onOptionSelected(selectedOption);
-                }
-                alert.dismiss();
-            }
-        };
-        listView.setOnItemClickListener(clickListener);
     }
 
     private WorkflowServiceCallback searchPhysicianCallback = new WorkflowServiceCallback() {
