@@ -217,7 +217,7 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
 
         Gson gson = new Gson();
         if (postModel.isPaymentModelValid()) {
-            postPayment(gson.toJson(postModel));
+            postPayment(postModel);
         } else {
             Toast.makeText(getContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
         }
@@ -244,16 +244,22 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
 
         Gson gson = new Gson();
         if (postModel.isPaymentModelValid()) {
-            postPayment(gson.toJson(postModel));
+            postPayment(postModel);
         } else {
             Toast.makeText(getContext(), getString(R.string.payment_failed), Toast.LENGTH_SHORT).show();
         }
 
     }
 
-    private void postPayment(String paymentModelJson) {
+    private void postPayment(IntegratedPaymentPostModel paymentModelJson) {
         Map<String, String> queries = new HashMap<>();
-        if (userPracticeDTO != null) {
+
+        if (paymentModelJson.getQueryMetadata() != null) {
+            queries.put("practice_mgmt", paymentModelJson.getQueryMetadata().getPracticeMgmt());
+            queries.put("practice_id", paymentModelJson.getQueryMetadata().getPracticeId());
+            queries.put("patient_id", paymentModelJson.getQueryMetadata().getPatientId());
+            paymentModelJson.setQueryMetadata(null);
+        } else if (userPracticeDTO != null) {
             queries.put("practice_mgmt", userPracticeDTO.getPracticeMgmt());
             queries.put("practice_id", userPracticeDTO.getPracticeId());
             queries.put("patient_id", userPracticeDTO.getPatientId());
@@ -292,7 +298,8 @@ public class AddNewCreditCardFragment extends BaseAddCreditCardFragment
         header.put("transition", "true");
 
         TransitionDTO transitionDTO = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getMakePayment();
-        getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, paymentModelJson, queries, header);
+        Gson gson = new Gson();
+        getWorkflowServiceHelper().execute(transitionDTO, makePaymentCallback, gson.toJson(paymentModelJson), queries, header);
 
         String[] params = {getString(R.string.param_payment_amount), getString(R.string.param_payment_type)};
         Object[] values = {amountToMakePayment, getString(R.string.payment_new_card)};

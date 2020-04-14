@@ -72,6 +72,7 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         minDate = calendar.getTimeInMillis();
+        todayCalendarButtonVisibility = false;
     }
 
     @Override
@@ -101,12 +102,7 @@ public class PracticeEditOneTimePaymentFragment extends PracticeOneTimePaymentFr
         amountTextView.setText(currencyFormat.format(scheduledPaymentModel.getPayload().getAmount()));
 
         View deleteButton = findViewById(R.id.deleteButton);
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                deletePayment(scheduledPaymentModel);
-            }
-        });
+        deleteButton.setOnClickListener(view1 -> deletePayment(scheduledPaymentModel));
 
         updateLayout();
     }

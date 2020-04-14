@@ -1,7 +1,6 @@
 package com.carecloud.carepaylibray.payments.fragments;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,21 +8,18 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibrary.R;
-import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
+import com.carecloud.carepaylibray.adapters.PaymentLineItemsListAdapter;
 import com.carecloud.carepaylibray.appointments.models.BalanceItemDTO;
+import com.carecloud.carepaylibray.common.options.SelectOptionFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsToggleOption;
@@ -54,7 +50,9 @@ import java.util.Locale;
 
 import static com.carecloud.carepaylibray.payments.models.PendingBalancePayloadDTO.PATIENT_BALANCE;
 
+
 public class PaymentPlanFragment extends BasePaymentDialogFragment {
+//        implements PaymentLineItemsListAdapter.PaymentLineItemCallback {
 
     protected static final String KEY_PLAN_AMOUNT = "plan_amount";
     protected PaymentsModel paymentsModel;
@@ -220,11 +218,11 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment {
         paymentDateEditText.setText(paymentDateOption.getLabel());
         paymentDateEditText.getOnFocusChangeListener().onFocusChange(paymentDateEditText, true);
 
-        paymentDateEditText.setOnClickListener(v -> showChooseDialog(getContext(), selectedDateOptions, dialogTitle,
-                option -> {
-                    paymentDateOption = option;
-                    paymentDateEditText.setText(option.getLabel());
-                }));
+        SelectOptionFragment fragment = SelectOptionFragment.newInstance(dialogTitle);
+        fragment.setCallback((option, position) -> {
+            paymentDateOption = option;
+            paymentDateEditText.setText(option.getLabel());
+        });
 
         frequencyCodeEditText = view.findViewById(R.id.frequencyCodeEditText);
         TextInputLayout frequencyCodeInputLayout = view.findViewById(R.id.frequencyCodeInputLayout);
@@ -233,14 +231,17 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment {
         frequencyCodeEditText.setText(frequencyOption.getLabel());
         frequencyCodeEditText.getOnFocusChangeListener().onFocusChange(frequencyCodeEditText, true);
         if (frequencyOptions.size() > 1) {
-            frequencyCodeEditText.setOnClickListener(v -> showChooseDialog(getContext(), frequencyOptions,
-                    Label.getLabel("payment.paymentPlan.frequency.dialog.title"),
-                    option -> {
-                        if (!frequencyOption.getName().equals(option.getName())) {
-                            manageFrequencyChange((DemographicsToggleOption) option, true);
-                        }
-
-                    }));
+            frequencyCodeEditText.setOnClickListener(v -> {
+                SelectOptionFragment fragment1 = SelectOptionFragment.newInstance(
+                        Label.getLabel("payment.paymentPlan.frequency.dialog.title"));
+                fragment1.setOptions(frequencyOptions);
+                fragment1.setCallback((option, position) -> {
+                    if (!frequencyOption.getName().equals(option.getName())) {
+                        manageFrequencyChange((DemographicsToggleOption) option, true);
+                    }
+                });
+                fragment1.show(getActivity().getSupportFragmentManager(), fragment1.getClass().getName());
+            });
         } else {
             frequencyCodeEditText.setCompoundDrawables(null, null, null, null);
         }
@@ -298,6 +299,7 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment {
             installmentsInputLayout.setHint(Label.getLabel("payment_number_of_months"));
             amountPaymentInputLayout.setHint(Label.getLabel("payment_monthly_payment"));
             selectedDateOptions = dateOptions;
+            dialogTitle = Label.getLabel("payment.paymentPlan.frequency.monthly.hint");
             interval = PaymentSettingsBalanceRangeRule.INTERVAL_MONTHS;
         } else {
             paymentDayInputLayout.setHint(Label
@@ -306,7 +308,14 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment {
             amountPaymentInputLayout.setHint(Label.getLabel("payment.paymentPlan.frequency.weekly.weeklyPayments"));
             selectedDateOptions = dayOfWeekOptions;
             interval = PaymentSettingsBalanceRangeRule.INTERVAL_WEEKS;
+            dialogTitle = Label.getLabel("payment.paymentPlan.frequency.weekly.hint");
         }
+
+        paymentDateEditText.setOnClickListener(view1 -> {
+            fragment.setOptions(selectedDateOptions);
+            fragment.show(getActivity().getSupportFragmentManager(), fragment.getClass().getName());
+        });
+
         updateHints();
         if (applyRangeRules) {
             paymentPlanBalanceRules = getPaymentPlanSettings(interval);
@@ -867,50 +876,8 @@ public class PaymentPlanFragment extends BasePaymentDialogFragment {
         }
     };
 
-    private void showChooseDialog(Context context,
-                                  List<? extends DemographicsOption> options,
-                                  String title,
-                                  final ValueOptionCallback valueInputCallback) {
-
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        // add cancel button
-        dialog.setNegativeButton(Label.getLabel("demographics_cancel_label"), (dialogInterface, pos) -> dialogInterface.dismiss());
-
-        // create dialog layout
-        View customView = LayoutInflater.from(context).inflate(R.layout.alert_list_layout, null, false);
-        dialog.setView(customView);
-        TextView titleTextView = customView.findViewById(R.id.title_view);
-        titleTextView.setText(title);
-        titleTextView.setVisibility(View.VISIBLE);
-
-
-        // create the adapter
-        ListView listView = customView.findViewById(R.id.dialoglist);
-        CustomOptionsAdapter customOptionsAdapter = new CustomOptionsAdapter(context, options);
-        listView.setAdapter(customOptionsAdapter);
-
-
-        final AlertDialog alert = dialog.create();
-        alert.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        alert.show();
-
-        // set item click listener
-        AdapterView.OnItemClickListener clickListener = (adapterView, view, position, row) -> {
-            DemographicsOption selectedOption = (DemographicsOption) adapterView.getAdapter()
-                    .getItem(position);
-            valueInputCallback.onValueOption(selectedOption);
-            alert.dismiss();
-            enableCreatePlanButton();
-        };
-        listView.setOnItemClickListener(clickListener);
-    }
-
     private interface ValueInputCallback {
         void onValueInput(String input);
-    }
-
-    private interface ValueOptionCallback {
-        void onValueOption(DemographicsOption option);
     }
 
 }

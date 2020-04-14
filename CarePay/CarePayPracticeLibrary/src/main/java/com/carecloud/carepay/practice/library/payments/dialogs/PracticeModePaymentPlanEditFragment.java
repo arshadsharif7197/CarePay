@@ -174,10 +174,11 @@ public class PracticeModePaymentPlanEditFragment extends PracticeModePaymentPlan
             cancelPaymentPlanButton.setText(Label.getLabel("payment.editPaymentPlan.delete.button.label"));
         }
         final boolean finalDeletePaymentPlan = deletePaymentPlan;
-        cancelPaymentPlanButton.setOnClickListener(v -> showCancelPaymentPlanConfirmDialog(finalDeletePaymentPlan));
 
         Button addNewCardButton = view.findViewById(R.id.addNewCardButton);
         addNewCardButton.setOnClickListener(v -> onAddPaymentPlanCard(paymentsModel, null, true));
+        cancelPaymentPlanButton.setOnClickListener(v -> showCancelPaymentPlanConfirmDialog(finalDeletePaymentPlan));
+
     }
 
     private void showCancelPaymentPlanConfirmDialog(final boolean deletePaymentPlan) {

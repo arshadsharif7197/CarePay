@@ -16,21 +16,15 @@ public interface DemographicsSettingsFragmentListener extends FragmentActivityIn
 
     void displayUpdateNameFragment();
 
-    void displayDemographicsFragment();
-
-    void displayExpandedDemographicsFragment();
-
-    void displayDocumentsFragment();
-
     void editInsurance(DemographicDTO demographicDTO, int position);
-
-    void displayCreditCardListFragment();
 
     void displayAddCreditCardFragment();
 
     void displayCreditCardDetailsFragment(DemographicsSettingsCreditCardsPayloadDTO creditCardsPayloadDTO);
 
     void displayHelpFragment();
+
+    void showSupportFragment();
 
     void onCreditCardOperation(DemographicDTO demographicsSettingsDTO);
 

@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.delegate.fragments.DelegateListFragment;
 import com.carecloud.carepay.patient.demographics.interfaces.DemographicsSettingsFragmentListener;
+import com.carecloud.carepay.patient.payment.fragments.CreditCardListFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -34,6 +35,8 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.google.gson.JsonObject;
+
+import retrofit2.http.HEAD;
 
 
 /**
@@ -110,7 +113,6 @@ public class DemographicsSettingsFragment extends BaseFragment {
         if (demographicsSettingsDTO.getPayload().getDelegate() != null) {
             view.findViewById(R.id.notificationsLayout).setVisibility(View.GONE);
         }
-
         MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_enabled_push), pushNotificationCheckBox.isChecked());
         MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_enabled_email), emailNotificationCheckBox.isChecked());
         MixPanelUtil.addCustomPeopleProperty(getString(R.string.people_enabled_sms), smsNotificationCheckBox.isChecked());
@@ -118,31 +120,40 @@ public class DemographicsSettingsFragment extends BaseFragment {
 
     @Override
     public void onDetach() {
-        super.onDetach();
         callback = null;
+        super.onDetach();
     }
 
     private void initializeHelpButton(View view) {
         TextView textView = view.findViewById(R.id.helpTextView);
         textView.setOnClickListener(view1 -> {
-            if (callback != null) {
-                callback.displayHelpFragment();
-            }
+            callback.replaceFragment(new HelpFragment(), true);
+            MixPanelUtil.logEvent(getString(R.string.event_help_clicked));
         });
     }
 
     private void setClickListeners(View view) {
         Button signOutButton = view.findViewById(R.id.signOutButton);
-        signOutButton.setOnClickListener(view1 -> callback.logOut());
+        signOutButton.setOnClickListener(view16 -> callback.logOut());
 
-        CarePayTextView demographicsTextview = view.findViewById(R.id.demographicsTextView);
-        demographicsTextview.setOnClickListener(view12 -> callback.displayDemographicsFragment());
+        CarePayTextView demographicsTextView = view.findViewById(R.id.demographicsTextView);
+        demographicsTextView.setOnClickListener(view18 -> {
+            DemographicsInformationFragment demographicsInformationFragment =
+                    DemographicsInformationFragment.newInstance();
+            callback.replaceFragment(demographicsInformationFragment, true);
+        });
 
         CarePayTextView documentsTextview = view.findViewById(R.id.documentsTextView);
-        documentsTextview.setOnClickListener(view13 -> callback.displayDocumentsFragment());
+        documentsTextview.setOnClickListener(view19 -> {
+            SettingsDocumentsFragment settingsDocumentsFragment = SettingsDocumentsFragment.newInstance();
+            callback.replaceFragment(settingsDocumentsFragment, true);
+        });
 
         CarePayTextView creditCardsTextView = view.findViewById(R.id.creditCardsTextView);
-        creditCardsTextView.setOnClickListener(view14 -> callback.displayCreditCardListFragment());
+        creditCardsTextView.setOnClickListener(view110 -> {
+            CreditCardListFragment creditCardListFragment = new CreditCardListFragment();
+            callback.replaceFragment(creditCardListFragment, true);
+        });
 
         if (demographicsSettingsDTO.getPayload().getDelegate() != null
                 || demographicsSettingsDTO.getPayload().getUserLinks().getDelegates().isEmpty()) {

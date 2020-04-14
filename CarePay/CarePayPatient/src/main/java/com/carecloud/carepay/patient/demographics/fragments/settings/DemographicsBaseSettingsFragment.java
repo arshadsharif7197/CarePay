@@ -1,23 +1,15 @@
 package com.carecloud.carepay.patient.demographics.fragments.settings;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
-
-import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
 import com.carecloud.carepaylibray.base.BaseFragment;
+import com.carecloud.carepaylibray.common.options.OnOptionSelectedListener;
+import com.carecloud.carepaylibray.common.options.SelectOptionFragment;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsField;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.utils.StringUtil;
@@ -45,7 +37,7 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
     }
 
     protected boolean checkTextEmptyValue(int textEditableId, View view) {
-        EditText editText = (EditText) view.findViewById(textEditableId);
+        EditText editText = view.findViewById(textEditableId);
         return StringUtil.isNullOrEmpty(editText.getText().toString());
     }
 
@@ -56,7 +48,7 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
 
         if (!StringUtil.isNullOrEmpty(value)) {
             textView.setText(storeOption.getLabel());
-        }else if (optional != null) {
+        } else if (optional != null) {
             optional.setVisibility(View.VISIBLE);
         }
 
@@ -219,7 +211,7 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
                                                                            final View optional) {
         return new OnOptionSelectedListener() {
             @Override
-            public void onOptionSelected(DemographicsOption option) {
+            public void onOptionSelected(DemographicsOption option, int position) {
                 if (textView != null) {
                     textView.setText(option.getLabel());
                 }
@@ -232,70 +224,6 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
 
             }
         };
-    }
-
-
-    protected View.OnClickListener getSelectOptionsListener(final List<DemographicsOption> options,
-                                                            final OnOptionSelectedListener listener,
-                                                            final String title) {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showChooseDialog(getContext(), options, title, listener);
-            }
-        };
-    }
-
-
-    private void showChooseDialog(Context context,
-                                  List<DemographicsOption> options,
-                                  String title,
-                                  final OnOptionSelectedListener listener) {
-
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        // add cancel button
-        dialog.setNegativeButton(Label.getLabel("demographics_cancel_label"), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int pos) {
-                dialogInterface.dismiss();
-            }
-        });
-
-        // create dialog layout
-        View customView = LayoutInflater.from(context).inflate(R.layout.alert_list_layout, null, false);
-        dialog.setView(customView);
-        TextView titleTextView = (TextView) customView.findViewById(R.id.title_view);
-        titleTextView.setText(title);
-        titleTextView.setVisibility(View.VISIBLE);
-
-
-        // create the adapter
-        ListView listView = (ListView) customView.findViewById(R.id.dialoglist);
-        CustomOptionsAdapter customOptionsAdapter = new CustomOptionsAdapter(context, options);
-        listView.setAdapter(customOptionsAdapter);
-
-
-        final AlertDialog alert = dialog.create();
-        alert.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        alert.show();
-
-        // set item click listener
-        AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long row) {
-                DemographicsOption selectedOption = (DemographicsOption) adapterView.getAdapter()
-                        .getItem(position);
-                if (listener != null) {
-                    listener.onOptionSelected(selectedOption);
-                }
-                alert.dismiss();
-            }
-        };
-        listView.setOnItemClickListener(clickListener);
-    }
-
-    public interface OnOptionSelectedListener {
-        void onOptionSelected(DemographicsOption option);
     }
 
     protected void setUpDemographicField(View view, String value, DemographicsField demographicsField,
@@ -322,34 +250,94 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
         }
     }
 
-    protected View.OnClickListener getEditTextClickListener(List<DemographicsOption> options,
+    protected View.OnClickListener getEditTextClickListener(final List<DemographicsOption> options,
                                                             final TextInputLayout inputLayout,
                                                             final EditText editText,
                                                             final View optionalLabel,
                                                             final DemographicsOption demographicsOption,
                                                             final String dialogTitle) {
-        return getSelectOptionsListener(options,
-                new OnOptionSelectedListener() {
-                    @Override
-                    public void onOptionSelected(DemographicsOption option) {
-                        if (demographicsOption != null) {
-                            demographicsOption.setLabel(option.getLabel());
-                            demographicsOption.setName(option.getName());
-                            demographicsOption.setId(option.getId());
-                        }
-                        editText.setText(option.getLabel());
-                        editText.getOnFocusChangeListener()
-                                .onFocusChange(editText, !StringUtil.isNullOrEmpty(editText.getText().toString()));
-                        inputLayout.setError(null);
-                        inputLayout.setErrorEnabled(false);
-                        if (optionalLabel != null) {
-                            optionalLabel.setVisibility(View.GONE);
-                        }
-                        checkIfEnableButton(false);
-                    }
-                },
-                dialogTitle);
+        return getSelectOptionsListener(options, new OnOptionSelectedListener() {
+            @Override
+            public void onOptionSelected(DemographicsOption option, int position) {
+                if (demographicsOption != null) {
+                    demographicsOption.setLabel(option.getLabel());
+                    demographicsOption.setName(option.getName());
+                    demographicsOption.setId(option.getId());
+                }
+                editText.setText(option.getLabel());
+                editText.getOnFocusChangeListener()
+                        .onFocusChange(editText, !StringUtil.isNullOrEmpty(editText.getText().toString()));
+                inputLayout.setError(null);
+                inputLayout.setErrorEnabled(false);
+                if (optionalLabel != null) {
+                    optionalLabel.setVisibility(View.GONE);
+                }
+                checkIfEnableButton(false);
+            }
+        }, dialogTitle);
     }
+
+
+    protected View.OnClickListener getSelectOptionsListener(final List<DemographicsOption> options,
+                                                            final OnOptionSelectedListener listener,
+                                                            final String title) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SelectOptionFragment fragment = SelectOptionFragment.newInstance(title);
+                fragment.setOptions(options);
+                fragment.setCallback(listener);
+                fragment.show(getActivity().getSupportFragmentManager(), fragment.getClass().getName());
+            }
+        };
+    }
+
+//    private void showChooseDialog(Context context,
+//                                  List<DemographicsOption> options,
+//                                  String title,
+//                                  final OnOptionSelectedListener listener) {
+//
+//        final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+//        // add cancel button
+//        dialog.setNegativeButton(Label.getLabel("demographics_cancel_label"), new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int pos) {
+//                dialogInterface.dismiss();
+//            }
+//        });
+//
+//        // create dialog layout
+//        View customView = LayoutInflater.from(context).inflate(R.layout.alert_list_layout, null, false);
+//        dialog.setView(customView);
+//        TextView titleTextView = customView.findViewById(R.id.title_view);
+//        titleTextView.setText(title);
+//        titleTextView.setVisibility(View.VISIBLE);
+//
+//
+//        // create the adapter
+//        ListView listView = customView.findViewById(R.id.dialoglist);
+//        CustomOptionsAdapter customOptionsAdapter = new CustomOptionsAdapter(context, options);
+//        listView.setAdapter(customOptionsAdapter);
+//
+//
+//        final AlertDialog alert = dialog.create();
+//        alert.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        alert.show();
+//
+//        // set item click listener
+//        AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long row) {
+//                DemographicsOption selectedOption = (DemographicsOption) adapterView.getAdapter()
+//                        .getItem(position);
+//                if (listener != null) {
+//                    listener.onOptionSelected(selectedOption);
+//                }
+//                alert.dismiss();
+//            }
+//        };
+//        listView.setOnItemClickListener(clickListener);
+//    }
 
     protected void setUpField(TextInputLayout textInputLayout, EditText editText, boolean isVisible,
                               String value, boolean isRequired, View optionalView) {
@@ -393,7 +381,7 @@ public abstract class DemographicsBaseSettingsFragment extends BaseFragment {
     }
 
     protected void setFieldError(View baseView, int id, String error, boolean shouldRequestFocus) {
-        TextInputLayout inputLayout = (TextInputLayout) baseView.findViewById(id);
+        TextInputLayout inputLayout = baseView.findViewById(id);
         setFieldError(inputLayout, error, shouldRequestFocus);
     }
 

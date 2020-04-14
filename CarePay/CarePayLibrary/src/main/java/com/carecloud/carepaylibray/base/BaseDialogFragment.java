@@ -2,9 +2,7 @@ package com.carecloud.carepaylibray.base;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import androidx.fragment.app.DialogFragment;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,17 +17,13 @@ import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-import fr.tvbarthel.lib.blurdialogfragment.BlurDialogEngine;
-
 /**
  * Created by cocampo on 2/6/17
  */
 
-public abstract class BaseDialogFragment extends DialogFragment implements ISession {
-    private static final int FULLSCREEN_VALUE = 0x10000000;
-    public static final float DOWN_SCALE_FACTOR = 16.0F;
-    public static final int BLUR_RADIUS = 8;
+public abstract class BaseDialogFragment extends BlurDialogFragment implements ISession {
 
+    private static final int FULLSCREEN_VALUE = 0x10000000;
     private Dialog dialog;
     private boolean isPracticeAppPatientMode;
     private boolean isPracticeAppPracticeMode;
@@ -39,8 +33,6 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     protected OnBackPressedInterface onBackPressedInterface;
 
     private long lastFullScreenSet;
-    private BlurDialogEngine mBlurEngine;
-    private boolean blurDismissed;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -53,24 +45,14 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
 
     @Override
     public void setupDialog(Dialog dialog, int style) {
+        super.setupDialog(dialog, style);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.dialog = getDialog();
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         setCancelable(false);
 
         if (isPracticeAppPatientMode) {
             setNavigationBarVisibility();
         }
-//        setUpBlur();
-    }
-
-    private void setUpBlur() {
-        mBlurEngine = new BlurDialogEngine(getActivity());
-        mBlurEngine.setBlurRadius(BLUR_RADIUS);
-        mBlurEngine.setDownScaleFactor(DOWN_SCALE_FACTOR);
-        mBlurEngine.debug(false);
-        mBlurEngine.setBlurActionBar(false);
-        mBlurEngine.setUseRenderScript(true);
     }
 
     @Override
@@ -90,9 +72,6 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
                 });
             }
         }
-        if (mBlurEngine != null) {
-            mBlurEngine.onResume(getRetainInstance());
-        }
         setLastInteraction(System.currentTimeMillis());
     }
 
@@ -102,21 +81,11 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
         if (onDismissListener != null) {
             onDismissListener.onDismiss(dialogInterface);
         }
-        if (mBlurEngine != null) {
-            mBlurEngine.onDismiss();
-            blurDismissed = true;
-        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mBlurEngine != null) {
-            if (!blurDismissed) {
-                mBlurEngine.onDismiss();
-            }
-            mBlurEngine.onDetach();
-        }
     }
 
     @Override
@@ -293,10 +262,8 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     public void showDialog(boolean showBlur) {
         if (getDialog() != null) {
             getDialog().show();
-            if (showBlur && mBlurEngine != null) {
-                mBlurEngine.onResume(getRetainInstance());
-            }
         }
+        super.showDialog(showBlur);
     }
 
     /**
@@ -309,9 +276,7 @@ public abstract class BaseDialogFragment extends DialogFragment implements ISess
     public void hideDialog(boolean hideBlur) {
         if (getDialog() != null) {
             getDialog().hide();
-            if (hideBlur && mBlurEngine != null) {
-                mBlurEngine.onDismiss();
-            }
+            super.hideDialog(hideBlur);
         }
     }
 

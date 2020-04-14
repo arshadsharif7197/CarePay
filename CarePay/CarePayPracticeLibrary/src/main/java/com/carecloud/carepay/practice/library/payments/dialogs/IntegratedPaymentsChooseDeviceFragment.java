@@ -1,7 +1,6 @@
 package com.carecloud.carepay.practice.library.payments.dialogs;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
@@ -12,9 +11,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.carecloud.carepay.practice.library.R;
@@ -39,9 +35,10 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.adapters.CustomOptionsAdapter;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.common.options.OnOptionSelectedListener;
+import com.carecloud.carepaylibray.common.options.SelectOptionFragment;
 import com.carecloud.carepaylibray.customcomponents.CustomMessageToast;
 import com.carecloud.carepaylibray.demographics.dtos.metadata.datamodel.DemographicsOption;
 import com.carecloud.carepaylibray.payments.models.IntegratedPatientPaymentPayload;
@@ -144,7 +141,19 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
         selectedLocationText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showChooseDialog(getContext(), locationsSelectList);
+                SelectOptionFragment fragment = SelectOptionFragment.newInstance("");
+                fragment.setOptions(locationsSelectList);
+                fragment.setCallback(new OnOptionSelectedListener() {
+                    @Override
+                    public void onOptionSelected(DemographicsOption option, int position) {
+                        selectedLocation = locationsMap.get(option.getId());
+                        getApplicationPreferences().writeStringToSharedPref(KEY_LAST_SELECTED_LOCATION, option.getId());
+                        selectedDevice = null;
+                        updateSelectedLocation();
+                    }
+                });
+                fragment.show(getActivity().getSupportFragmentManager(), fragment.getClass().getName());
+//                showChooseDialog(getContext(), locationsSelectList);
             }
         });
 
@@ -365,50 +374,6 @@ public class IntegratedPaymentsChooseDeviceFragment extends BaseDialogFragment i
             new CustomMessageToast(getContext(), errorMessage, CustomMessageToast.NOTIFICATION_TYPE_ERROR).show();
         }
     };
-
-    private void showChooseDialog(Context context, List<DemographicsOption> options) {
-
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        // add cancel button
-        dialog.setNegativeButton(Label.getLabel("demographics_cancel_label"), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int pos) {
-                dialogInterface.dismiss();
-            }
-        });
-
-        // create dialog layout
-        View customView = LayoutInflater.from(context).inflate(R.layout.alert_list_layout, null, false);
-        dialog.setView(customView);
-        TextView titleTextView = customView.findViewById(R.id.title_view);
-        titleTextView.setText(Label.getLabel("payment_choose_location"));
-        titleTextView.setVisibility(View.VISIBLE);
-
-
-        // create the adapter
-        ListView listView = customView.findViewById(R.id.dialoglist);
-        CustomOptionsAdapter customOptionsAdapter = new CustomOptionsAdapter(context, options);
-        listView.setAdapter(customOptionsAdapter);
-
-
-        final AlertDialog alert = dialog.create();
-        alert.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        alert.show();
-
-        // set item click listener
-        AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long row) {
-                DemographicsOption selectedOption = (DemographicsOption) adapterView.getAdapter().getItem(position);
-                selectedLocation = locationsMap.get(selectedOption.getId());
-                getApplicationPreferences().writeStringToSharedPref(KEY_LAST_SELECTED_LOCATION, selectedOption.getId());
-                selectedDevice = null;
-                updateSelectedLocation();
-                alert.dismiss();
-            }
-        };
-        listView.setOnItemClickListener(clickListener);
-    }
 
     private void getDeviceGroups() {
         String endpoint = String.format(getString(R.string.carepay_device_groups), paymentsModel.getPaymentPayload().getOrganizationId());
