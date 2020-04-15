@@ -102,6 +102,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     private Button leftButton;
     private CarePayProgressButton rightButton;
     private View videoVisitIndicator;
+    private View joinVideoVisitButton;
 
     private boolean isBreezePractice = true;
     private boolean isRescheduleEnabled = true;
@@ -259,6 +260,8 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
         rightButton = view.findViewById(R.id.appointment_button_right);
 
         videoVisitIndicator = view.findViewById(R.id.visit_type_video);
+        joinVideoVisitButton = view.findViewById(R.id.join_video_visit_button);
+        joinVideoVisitButton.setOnClickListener(joinVideoVisitClick);
     }
 
     private void setCommonValues() {
@@ -301,6 +304,9 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
         mapButton.setEnabled(!StringUtil.isNullOrEmpty(location.getAddress().geAddressStringWithShortZipWOCounty()));
 
         videoVisitIndicator.setVisibility(appointmentDTO.getPayload().getVisitType().hasVideoOption() ?
+                View.VISIBLE : View.GONE);
+
+        joinVideoVisitButton.setVisibility(appointmentDTO.getPayload().getVisitType().hasVideoOption() ?
                 View.VISIBLE : View.GONE);
 
     }
@@ -649,6 +655,13 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     };
 
     private View.OnClickListener callClick = view -> {
+        String phone = getPhoneNumber();
+        if (!StringUtil.isNullOrEmpty(phone)) {
+            startPhoneCall(phone);
+        }
+    };
+
+    private View.OnClickListener joinVideoVisitClick = view -> {
         String phone = getPhoneNumber();
         if (!StringUtil.isNullOrEmpty(phone)) {
             startPhoneCall(phone);
