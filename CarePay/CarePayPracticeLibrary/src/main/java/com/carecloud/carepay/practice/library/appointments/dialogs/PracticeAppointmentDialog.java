@@ -162,9 +162,9 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         setTextViewById(R.id.appointment_visit_type, StringUtil.captialize(appointmentPayloadDTO.getVisitType().getName()));
         setTextViewById(R.id.appointment_visit_type_label, Label.getLabel("visit_type_heading"));
 
-        View videoVisitIndicator = findViewById(R.id.visit_type_video);
+  /*      View videoVisitIndicator = findViewById(R.id.visit_type_video);
         videoVisitIndicator.setVisibility(appointmentPayloadDTO.getVisitType().hasVideoOption() ?
-                View.VISIBLE : View.GONE);
+                View.VISIBLE : View.GONE);*/
 
         initializeButtons();
     }
