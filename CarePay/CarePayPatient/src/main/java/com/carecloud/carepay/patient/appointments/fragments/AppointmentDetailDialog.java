@@ -18,6 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +54,7 @@ import com.carecloud.carepaylibray.appointments.models.QueueStatusPayloadDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
+import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayProgressButton;
 import com.carecloud.carepaylibray.utils.CalendarUtil;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
@@ -102,7 +105,8 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     private Button leftButton;
     private CarePayProgressButton rightButton;
     private View videoVisitIndicator;
-    private View joinVideoVisitButton;
+    private CarePayButton joinVideoVisitBtn;
+    private RelativeLayout joinVideoVisitLayout;
 
     private boolean isBreezePractice = true;
     private boolean isRescheduleEnabled = true;
@@ -260,8 +264,9 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
         rightButton = view.findViewById(R.id.appointment_button_right);
 
         videoVisitIndicator = view.findViewById(R.id.visit_type_video);
-        joinVideoVisitButton = view.findViewById(R.id.join_video_visit_button);
-        joinVideoVisitButton.setOnClickListener(joinVideoVisitClick);
+        joinVideoVisitLayout = view.findViewById(R.id.join_video_visit_layout);
+        joinVideoVisitLayout.setOnClickListener(joinVideoVisitClick);
+        joinVideoVisitBtn = view.findViewById(R.id.join_video_visit_btn);
     }
 
     private void setCommonValues() {
@@ -306,9 +311,11 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
         videoVisitIndicator.setVisibility(appointmentDTO.getPayload().getVisitType().hasVideoOption() ?
                 View.VISIBLE : View.GONE);
 
-        joinVideoVisitButton.setVisibility(appointmentDTO.getPayload().getVisitType().hasVideoOption() ?
-                View.VISIBLE : View.GONE);
-
+        if (!appointmentDTO.getPayload().isAppointmentOver()) {
+            joinVideoVisitLayout.setVisibility(appointmentDTO.getPayload().getVisitType().hasVideoOption() ?
+                    View.VISIBLE : View.GONE);
+            joinVideoVisitBtn.setText(Label.getLabel("appointment_video_visit_start"));
+        }
     }
 
     private void applyStyle() {
@@ -324,14 +331,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                     appointmentTimeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                     appointmentVisitTypeTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
 
-                    if (appointmentDTO.getPayload().getVisitType().hasVideoOption() &&
-                            !appointmentDTO.getPayload().isAppointmentOver()) {
-                        actionsLayout.setVisibility(View.VISIBLE);
-                        leftButton.setVisibility(View.VISIBLE);
-                        leftButton.setText(Label.getLabel("appointment_video_visit_start"));
-                        leftButton.setOnClickListener(startVideoVisitClick);
-                        leftButton.setEnabled(appointmentDTO.getPayload().canStartVideoVisit());
-                    } else if (appointmentDTO.getPayload().isAppointmentToday()
+                    if (appointmentDTO.getPayload().isAppointmentToday()
                             || !appointmentDTO.getPayload().isAppointmentOver()) {
                         if (appointmentDTO.getPayload().getAppointmentStatus().getOriginalName() == null &&
                                 !appointmentDTO.getPayload().getVisitType().hasVideoOption()) {
@@ -344,6 +344,8 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                     }
                     scheduleAppointmentButton.setEnabled(isCalendarAvailable
                             && !appointmentDTO.getPayload().isAppointmentOver());
+
+                    updateStartVideoVisitBtn(true);
                     break;
                 }
                 case PENDING: {
@@ -374,6 +376,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                         }
                     }
                     scheduleAppointmentButton.setEnabled(isCalendarAvailable);
+                    updateStartVideoVisitBtn(true);
                     break;
                 }
                 case REQUESTED_UPCOMING:
@@ -387,6 +390,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                     appointmentStatus.setText(Label.getLabel("appointments_request_pending_heading"));
                     scheduleAppointmentButton.setEnabled(isCalendarAvailable
                             && !appointmentDTO.getPayload().isAppointmentOver());
+                    updateStartVideoVisitBtn(true);
                     break;
                 }
                 case MISSED: {
@@ -443,6 +447,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                         }
                     }
                     scheduleAppointmentButton.setEnabled(isCalendarAvailable);
+                    updateStartVideoVisitBtn(true);
                     break;
                 }
                 case CHECKED_OUT: {
@@ -457,6 +462,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                     if (isAPastAppointment()) {
                         showVisitSummaryButton();
                     }
+                    updateStartVideoVisitBtn(true);
                     break;
                 }
                 case DENIED: {
@@ -559,6 +565,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
         cancelAppointment.setVisibility(View.GONE);
         queueLayout.setVisibility(View.GONE);
         appointmentStatus.setVisibility(View.GONE);
+        updateStartVideoVisitBtn(false);
     }
 
     private WorkflowServiceCallback queueStatusCallback = new WorkflowServiceCallback() {
@@ -655,13 +662,6 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     };
 
     private View.OnClickListener callClick = view -> {
-        String phone = getPhoneNumber();
-        if (!StringUtil.isNullOrEmpty(phone)) {
-            startPhoneCall(phone);
-        }
-    };
-
-    private View.OnClickListener joinVideoVisitClick = view -> {
         String phone = getPhoneNumber();
         if (!StringUtil.isNullOrEmpty(phone)) {
             startPhoneCall(phone);
@@ -821,9 +821,19 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
         callback.rescheduleAppointment(appointmentDTO);
     };
 
-    private View.OnClickListener startVideoVisitClick = view -> {
+    private View.OnClickListener joinVideoVisitClick = view -> {
         callback.startVideoVisit(appointmentDTO);
     };
+
+    private void updateStartVideoVisitBtn(boolean isEnable) {
+        if (isEnable) {
+            joinVideoVisitLayout.setBackground(getResources().getDrawable(R.drawable.button_green_fill_background));
+            joinVideoVisitLayout.setEnabled(true);
+        } else {
+            joinVideoVisitLayout.setBackground(getResources().getDrawable(R.drawable.button_light_gray_background));
+            joinVideoVisitLayout.setEnabled(false);
+        }
+    }
 
     @Override
     public void onStart() {
