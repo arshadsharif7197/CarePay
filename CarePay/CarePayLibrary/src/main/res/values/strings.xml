@@ -443,6 +443,7 @@ Etiam porta sem malesuada magna mollis euismod. Aenean eu leo quam. Pellentesque
     <string name="content_description_add_appointment_button">Add Appointment Button</string>
     <string name="content_description_check_available_times_button">Check Available Times</string>
     <string name="content_description_request_appointment">Request Appointment</string>
+    <string name="content_description_join_video_visit">Join Video Visit</string>
     <string name="content_description_list_of_practices">List of Practices</string>
     <string name="content_description_available_hours_list">Available Hours List</string>
     <string name="content_description_appointments_list">Appointments List</string>

@@ -2,6 +2,8 @@ package com.carecloud.carepay.patient.appointments.presenter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,10 +30,12 @@ import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.appointment.DataDTO;
+import com.carecloud.carepay.service.library.dtos.RefreshDTO;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
+import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.createappointment.CreateAppointmentFragmentInterface;
 import com.carecloud.carepaylibray.appointments.createappointment.availabilityhour.BaseAvailabilityHourFragment;
 import com.carecloud.carepaylibray.appointments.interfaces.DateCalendarRangeInterface;
@@ -47,6 +51,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.CancellationReasonDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentRequestDTO;
+import com.carecloud.carepaylibray.appointments.models.VideoVisitModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
@@ -71,6 +76,7 @@ import com.carecloud.carepaylibray.utils.MixPanelUtil;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 //import com.google.android.gms.wallet.MaskedWallet;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -114,8 +120,14 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         queryMap.put("patient_id", appointmentDTO.getMetadata().getPatientId());
         queryMap.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
 
+//        Map<String, String> header = new HashMap<>();
+//        header.put("username", ApplicationPreferences.getInstance().getUserName());
+
+        Gson gson = new Gson();
+        String jsonBody = gson.toJson(new RefreshDTO(ApplicationPreferences.getInstance().getRefreshToken()));
+
         TransitionDTO videoVisitTransition = appointmentsResultModel.getMetadata().getLinks().getVideoVisit();
-        viewHandler.getWorkflowServiceHelper().execute(videoVisitTransition, startVideoVisitCallback, queryMap);
+        viewHandler.getWorkflowServiceHelper().execute(videoVisitTransition, startVideoVisitCallback, jsonBody, queryMap);
     }
 
     @Override
@@ -768,15 +780,44 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         public void onPostExecute(WorkflowDTO workflowDTO) {
             viewHandler.hideProgressDialog();
             AppointmentsResultModel appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
-            String url = appointmentsResultModel.getPayload().getVideoVisitModel().getPayload().getVisitUrl();
+            VideoVisitModel.Urls url = appointmentsResultModel.getPayload().getVideoVisitModel().getUrls();
 
-            Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(url));
+            Intent ccLiveIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url.getAndroid()));
+            String ccLivePackageName = getPackageName(url.getGoogle_play());
 
-            if (intent.resolveActivity(getContext().getPackageManager()) != null) {
-                ((Activity) getContext()).startActivityForResult(intent, 555);
+            if (isAppInstalled(ccLiveIntent, ccLivePackageName)) {
+                ccLiveIntent.setPackage(ccLivePackageName);
+                ((Activity) getContext()).startActivityForResult(ccLiveIntent, 555);
+
+            } else {
+
+                try {
+                    Intent appStoreIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + ccLivePackageName));
+                    appStoreIntent.setPackage("com.android.vending");
+                    getContext().startActivity(appStoreIntent);
+
+                } catch (android.content.ActivityNotFoundException exception) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url.getGoogle_play()));
+                    getContext().startActivity(browserIntent);
+
+                }
             }
+        }
+
+        private String getPackageName(String android) {
+            String[] urlParts = android.split("id=");
+            return urlParts[1].trim();
+        }
+
+        public boolean isAppInstalled(Intent intent, String packageName) {
+            List<ResolveInfo> activities = getContext().getPackageManager().queryIntentActivities(intent, 0);
+
+            for (ResolveInfo info : activities) {
+                if (info.activityInfo.packageName.equals(packageName)) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         @Override

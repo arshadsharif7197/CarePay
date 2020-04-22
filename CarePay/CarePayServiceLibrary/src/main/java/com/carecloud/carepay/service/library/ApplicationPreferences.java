@@ -60,6 +60,8 @@ public class ApplicationPreferences {
     private static final String PREFERENCE_APPOINTMENT_COUNTS = "appointment_counts";
     private static final String PREFERENCE_LAST_DATE_RATE_DIALOG_SHOWN = "lastDateRateDialogShown";
     private static final String PREFERENCE_PATIENT_MODE_TRANSITION = "patientModeTransition";
+    private static final String PREFERENCE_REFRESH_TOKEN = "refresh_token";
+
 
     private String patientId;
     private String practiceId;
@@ -558,5 +560,13 @@ public class ApplicationPreferences {
     public void setPatientModeTransition(TransitionDTO patientModeTransition) {
         this.patientModeTransition = patientModeTransition;
         writeObjectToSharedPreference(PREFERENCE_PATIENT_MODE_TRANSITION, patientModeTransition);
+    }
+
+    public void setRefreshToken(String newValue) {
+        writeStringToSharedPref(PREFERENCE_REFRESH_TOKEN, newValue);
+    }
+
+    public String getRefreshToken() {
+        return readStringFromSharedPref(PREFERENCE_REFRESH_TOKEN, "");
     }
 }

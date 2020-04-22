@@ -14,8 +14,8 @@
         android:orientation="vertical">
 
         <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/button_bg"
@@ -155,8 +155,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                     android:id="@+id/appointment_visit_type_label"
@@ -167,7 +167,7 @@
                     android:textColor="@color/textview_default_textcolor"
                     android:textSize="@dimen/visitTypeLabelTextSize"
                     app:customAssetFont="proxima_nova_regular"
-                    tools:text="Visit Type"/>
+                    tools:text="Visit Type" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -183,7 +183,7 @@
                         android:layout_margin="@dimen/dimen_5dp"
                         android:src="@drawable/icn_video_visit"
                         android:tint="@color/textview_default_textcolor"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <com.carecloud.carepaylibray.customcomponents.CarePayTextView
                         android:id="@+id/appointment_visit_type"
@@ -212,7 +212,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@drawable/grey_bottom_border"/>
+            android:background="@drawable/grey_bottom_border" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -261,6 +261,7 @@
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/appointmentDialogButtonTextSize"
+                android:visibility="gone"
                 app:customAssetFont="gotham_rounded_medium" />
         </LinearLayout>
     </LinearLayout>
