@@ -122,6 +122,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     private boolean isCalendarAvailable = false;
     private AppointmentsResultModel appointmentResultModel;
     private AppointmentViewModel viewModel;
+    private boolean isCheckInAlertNeeded;
 
 
     /**
@@ -368,6 +369,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                             leftButton.setText(Label.getLabel("sigin_how_check_in_scan_qr_code"));
                             leftButton.setOnClickListener(scanClick);
                             rightButton.setVisibility(View.VISIBLE);
+                            isCheckInAlertNeeded = true;
                             if (appointmentDTO.getPayload().canCheckInNow(callback
                                     .getAppointmentSettings(appointmentDTO.getMetadata().getPracticeId()))) {
                                 rightButton.setText(Label.getLabel("appointments_check_in_now"));
@@ -439,6 +441,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                             leftButton.setOnClickListener(scanClick);
                             actionsLayout.setVisibility(View.VISIBLE);
                             rightButton.setVisibility(View.VISIBLE);
+                            isCheckInAlertNeeded = true;
                             if (appointmentDTO.getPayload().canCheckInNow(callback
                                     .getAppointmentSettings(appointmentDTO.getMetadata().getPracticeId()))) {
                                 rightButton.setText(Label.getLabel("appointments_check_in_now"));
@@ -824,7 +827,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     };
 
     private View.OnClickListener joinVideoVisitClick = view -> {
-        if (appointmentDTO.getPayload().getAppointmentStatus().getCode().equals(CarePayConstants.PENDING)) {
+        if (isCheckInAlertNeeded) {
             alertCheckInDialog();
         } else {
             callback.startVideoVisit(appointmentDTO);
