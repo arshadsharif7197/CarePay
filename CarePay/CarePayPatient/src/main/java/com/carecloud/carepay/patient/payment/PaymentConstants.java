@@ -39,5 +39,6 @@ public class PaymentConstants {
     public static final int REQUEST_CODE_CHANGE_MASKED_WALLET = 1002;
     public static final int REQUEST_CODE_FULL_WALLET = 1003;
     public static final int REQUEST_CODE_GOOGLE_PAYMENT = 1004;
+    public static final int REQUEST_CODE_CCLIVE = 1005;
 
 }
