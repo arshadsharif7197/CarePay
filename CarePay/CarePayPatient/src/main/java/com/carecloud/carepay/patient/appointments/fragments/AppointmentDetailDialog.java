@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.PermissionChecker;
 import androidx.lifecycle.ViewModelProviders;
@@ -56,6 +58,7 @@ import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.customcomponents.CarePayButton;
 import com.carecloud.carepaylibray.customcomponents.CarePayProgressButton;
+import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
 import com.carecloud.carepaylibray.utils.CalendarUtil;
 import com.carecloud.carepaylibray.utils.CircleImageTransform;
 import com.carecloud.carepaylibray.utils.DateUtil;
@@ -119,6 +122,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     private boolean isCalendarAvailable = false;
     private AppointmentsResultModel appointmentResultModel;
     private AppointmentViewModel viewModel;
+    private boolean isCheckInAlertNeeded;
 
 
     /**
@@ -365,6 +369,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                             leftButton.setText(Label.getLabel("sigin_how_check_in_scan_qr_code"));
                             leftButton.setOnClickListener(scanClick);
                             rightButton.setVisibility(View.VISIBLE);
+                            isCheckInAlertNeeded = true;
                             if (appointmentDTO.getPayload().canCheckInNow(callback
                                     .getAppointmentSettings(appointmentDTO.getMetadata().getPracticeId()))) {
                                 rightButton.setText(Label.getLabel("appointments_check_in_now"));
@@ -390,7 +395,6 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                     appointmentStatus.setText(Label.getLabel("appointments_request_pending_heading"));
                     scheduleAppointmentButton.setEnabled(isCalendarAvailable
                             && !appointmentDTO.getPayload().isAppointmentOver());
-                    updateStartVideoVisitBtn(true);
                     break;
                 }
                 case MISSED: {
@@ -437,6 +441,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                             leftButton.setOnClickListener(scanClick);
                             actionsLayout.setVisibility(View.VISIBLE);
                             rightButton.setVisibility(View.VISIBLE);
+                            isCheckInAlertNeeded = true;
                             if (appointmentDTO.getPayload().canCheckInNow(callback
                                     .getAppointmentSettings(appointmentDTO.getMetadata().getPracticeId()))) {
                                 rightButton.setText(Label.getLabel("appointments_check_in_now"));
@@ -822,8 +827,39 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     };
 
     private View.OnClickListener joinVideoVisitClick = view -> {
-        callback.startVideoVisit(appointmentDTO);
+        if (isCheckInAlertNeeded) {
+            alertCheckInDialog();
+        } else {
+            callback.startVideoVisit(appointmentDTO);
+            dismiss();
+        }
     };
+
+    private void alertCheckInDialog() {
+        VideoVisitConfirmDialogFragment confirmDialogFragment = VideoVisitConfirmDialogFragment.newInstance(
+                Label.getLabel("appointment_video_visit_indicator"),
+                Label.getLabel("appointment_video_visit_warning_message"),
+                Label.getLabel("appointment_video_visit_indicator"), // button no
+                Label.getLabel("appointments_check_in_now"));// button yes
+
+        confirmDialogFragment.setNegativeAction(true);
+
+        confirmDialogFragment.setCallback(new VideoVisitConfirmDialogFragment.ConfirmationCallback() {
+            @Override
+            public void onConfirm() {
+                callback.onCheckInStarted(appointmentDTO);
+                dismiss();
+            }
+
+            @Override
+            public void onReject() {
+                callback.startVideoVisit(appointmentDTO);
+                dismiss();
+            }
+        });
+
+        confirmDialogFragment.show(((AppCompatActivity) getContext()).getSupportFragmentManager(), null);
+    }
 
     private void updateStartVideoVisitBtn(boolean isEnable) {
         if (isEnable) {

@@ -23,6 +23,7 @@ import com.carecloud.carepay.patient.appointments.models.PracticeInformationMini
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.checkout.AllDoneDialogFragment;
 import com.carecloud.carepay.patient.menu.MenuPatientActivity;
+import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
 import com.carecloud.carepay.patient.rate.RateDialog;
@@ -119,9 +120,6 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
         queryMap.put("practice_id", appointmentDTO.getMetadata().getPracticeId());
         queryMap.put("patient_id", appointmentDTO.getMetadata().getPatientId());
         queryMap.put("appointment_id", appointmentDTO.getMetadata().getAppointmentId());
-
-//        Map<String, String> header = new HashMap<>();
-//        header.put("username", ApplicationPreferences.getInstance().getUserName());
 
         Gson gson = new Gson();
         String jsonBody = gson.toJson(new RefreshDTO(ApplicationPreferences.getInstance().getRefreshToken()));
@@ -787,7 +785,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
             if (isAppInstalled(ccLiveIntent, ccLivePackageName)) {
                 ccLiveIntent.setPackage(ccLivePackageName);
-                ((Activity) getContext()).startActivityForResult(ccLiveIntent, 555);
+                ((Activity) getContext()).startActivityForResult(ccLiveIntent, PaymentConstants.REQUEST_CODE_CCLIVE);
 
             } else {
 

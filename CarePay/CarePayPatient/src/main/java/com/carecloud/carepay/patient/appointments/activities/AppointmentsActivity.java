@@ -112,6 +112,9 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                     }, 100);
                 }
                 break;
+            case PaymentConstants.REQUEST_CODE_CCLIVE:
+//                onBackPressed();
+                break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
                 break;
@@ -212,4 +215,5 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
     protected Profile getCurrentProfile() {
         return appointmentsResultModel.getPayload().getDelegate();
     }
+
 }
