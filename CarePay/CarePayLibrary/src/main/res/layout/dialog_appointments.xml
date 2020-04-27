@@ -58,10 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:gravity="center_horizontal"
             android:orientation="horizontal"
-            android:paddingStart="@dimen/dimen_10dp"
-            android:paddingEnd="@dimen/dimen_10dp"
             android:visibility="gone">
 
             <com.carecloud.carepaylibray.customcomponents.CarePayButton
@@ -71,12 +68,12 @@
                 android:layout_margin="@dimen/dimen_10dp"
                 android:layout_weight="0.5"
                 android:background="@drawable/button_green_fill_background"
+                android:contentDescription="@string/content_description_request_appointment"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_13"
                 app:customAssetFont="gotham_rounded_medium"
-                tools:text="Request Appointment"
-                android:contentDescription="@string/content_description_request_appointment"/>
+                tools:text="Request Appointment" />
         </LinearLayout>
 
         <ScrollView
@@ -401,6 +398,34 @@
                     </RelativeLayout>
 
                 </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/join_video_visit_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/apt_dl_margin"
+                    android:layout_marginTop="@dimen/apt_dl_margin"
+                    android:layout_marginRight="@dimen/apt_dl_margin"
+                    android:background="@drawable/button_green_fill_background"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <com.carecloud.carepaylibray.customcomponents.CarePayButton
+                        android:id="@+id/join_video_visit_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:clickable="false"
+                        android:contentDescription="@string/content_description_join_video_visit"
+                        android:drawableRight="@drawable/join_video_visit_icon"
+                        android:drawablePadding="@dimen/dimen_10dp"
+                        android:text="Join Video Visit"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_13"
+                        app:customAssetFont="gotham_rounded_medium" />
+                </RelativeLayout>
 
             </LinearLayout>
         </ScrollView>

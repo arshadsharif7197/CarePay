@@ -162,9 +162,9 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
         setTextViewById(R.id.appointment_visit_type, StringUtil.captialize(appointmentPayloadDTO.getVisitType().getName()));
         setTextViewById(R.id.appointment_visit_type_label, Label.getLabel("visit_type_heading"));
 
-        View videoVisitIndicator = findViewById(R.id.visit_type_video);
+  /*      View videoVisitIndicator = findViewById(R.id.visit_type_video);
         videoVisitIndicator.setVisibility(appointmentPayloadDTO.getVisitType().hasVideoOption() ?
-                View.VISIBLE : View.GONE);
+                View.VISIBLE : View.GONE);*/
 
         initializeButtons();
     }
@@ -235,12 +235,12 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     private void initializeButtons() {
         initializeButton(R.id.button_left_action, leftActionLabel, view -> onLeftActionTapped(appointmentDTO));
         initializeButton(R.id.button_right_action, rightActionLabel, view -> {
-            if (appointmentDTO.getPayload().getVisitType().hasVideoOption()) {
+            /*if (appointmentDTO.getPayload().getVisitType().hasVideoOption()) {
                 ((VideoAppointmentCallback) callback).startVideoVisit(appointmentDTO);
                 dismiss();
                 return;
             }
-            onRightActionTapped(appointmentDTO);
+            onRightActionTapped(appointmentDTO);*/
         });
 
         initializeButton(R.id.button_middle_action, middleActionLabel, view -> showAdHocFormsDialog(appointmentDTO));
