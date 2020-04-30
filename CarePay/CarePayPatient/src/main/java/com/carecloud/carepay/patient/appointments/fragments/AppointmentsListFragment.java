@@ -149,6 +149,7 @@ public class AppointmentsListFragment extends BaseFragment
     private void loadAppointmentList() {
         if (canViewAnyAppointment(appointmentsResultModel.getPayload().getAppointments(),
                 appointmentsResultModel.getPayload().getUserPractices())) {
+
             if (appointmentsResultModel.getPayload().getAppointments().size() > 0) {
                 List<AppointmentDTO> appointmentsItems = appointmentsResultModel.getPayload().getAppointments();
                 noAppointmentView.setVisibility(View.GONE);

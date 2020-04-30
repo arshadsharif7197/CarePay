@@ -1,6 +1,8 @@
 package com.carecloud.carepay.practice.library.appointments;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,6 +48,7 @@ import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
 import com.carecloud.carepaylibray.appointments.models.LocationDTO;
 import com.carecloud.carepaylibray.appointments.models.ProviderDTO;
+import com.carecloud.carepaylibray.appointments.models.VideoVisitModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.base.models.PatientModel;
 import com.carecloud.carepaylibray.interfaces.DTO;
@@ -648,15 +651,44 @@ public class PracticeModePracticeAppointmentsActivity extends BasePracticeAppoin
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
             AppointmentsResultModel appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
-            String url = appointmentsResultModel.getPayload().getVideoVisitModel().getPayload().getVisitUrl();
+            VideoVisitModel.Urls url = appointmentsResultModel.getPayload().getVideoVisitModel().getUrls();
 
-            Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(url));
+            Intent ccLiveIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url.getAndroid()));
+            String ccLivePackageName = getPackageName(url.getGoogle_play());
 
-            if (intent.resolveActivity(getContext().getPackageManager()) != null) {
-                startActivityForResult(intent, 555);
+            if (isAppInstalled(ccLiveIntent, ccLivePackageName)) {
+                ccLiveIntent.setPackage(ccLivePackageName);
+                ((Activity) getContext()).startActivityForResult(ccLiveIntent, 555);
+
+            } else {
+
+                try {
+                    Intent appStoreIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + ccLivePackageName));
+                    appStoreIntent.setPackage("com.android.vending");
+                    getContext().startActivity(appStoreIntent);
+
+                } catch (android.content.ActivityNotFoundException exception) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url.getGoogle_play()));
+                    getContext().startActivity(browserIntent);
+
+                }
             }
+        }
+
+        private String getPackageName(String android) {
+            String[] urlParts = android.split("id=");
+            return urlParts[1].trim();
+        }
+
+        public boolean isAppInstalled(Intent intent, String packageName) {
+            List<ResolveInfo> activities = getContext().getPackageManager().queryIntentActivities(intent, 0);
+
+            for (ResolveInfo info : activities) {
+                if (info.activityInfo.packageName.equals(packageName)) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         @Override

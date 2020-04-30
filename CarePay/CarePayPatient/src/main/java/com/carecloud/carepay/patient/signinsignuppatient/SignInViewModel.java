@@ -93,7 +93,6 @@ public class SignInViewModel extends BaseViewModel {
 
         UnifiedSignInDTO bodyDto = new UnifiedSignInDTO();
         bodyDto.setUser(user);
-
         Map<String, String> queryParams = new HashMap<>();
         Map<String, String> headers = getWorkflowServiceHelper().getApplicationStartHeaders();
         Gson gson = new Gson();
@@ -132,6 +131,10 @@ public class SignInViewModel extends BaseViewModel {
                 getAppAuthorizationHelper().setAuthorizationTokens(authTokens);
                 getAppAuthorizationHelper().setRefreshTransition(signInDto.getMetadata().getTransitions().getRefresh());
                 getWorkflowServiceHelper().setAppAuthorizationHelper(getAppAuthorizationHelper());
+
+                ApplicationPreferences.getInstance()
+                        .setRefreshToken(authTokens.getRefreshToken());
+
                 if (signInResponse.getPayload().getAuthorizationModel().getUserLinks().getRepresentedUsers().size() > 0) {
                     setLoading(false);
                     userLinksObservable.setValue(signInResponse.getPayload().getAuthorizationModel().getUserLinks());
