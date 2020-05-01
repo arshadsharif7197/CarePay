@@ -261,7 +261,6 @@
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/appointmentDialogButtonTextSize"
-                android:visibility="gone"
                 app:customAssetFont="gotham_rounded_medium" />
         </LinearLayout>
     </LinearLayout>

@@ -239,8 +239,8 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
                 ((VideoAppointmentCallback) callback).startVideoVisit(appointmentDTO);
                 dismiss();
                 return;
-            }
-            onRightActionTapped(appointmentDTO);*/
+            }*/
+            onRightActionTapped(appointmentDTO);
         });
 
         initializeButton(R.id.button_middle_action, middleActionLabel, view -> showAdHocFormsDialog(appointmentDTO));
