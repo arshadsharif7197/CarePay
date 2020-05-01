@@ -9,8 +9,8 @@ android {
         applicationId "com.carecloud.carepay.patient"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 144
-        versionName "1.1.34"
+        versionCode 153
+        versionName "1.1.38"
         multiDexEnabled true
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         renderscriptTargetApi 22
@@ -164,7 +164,7 @@ dependencies {
 
     annotationProcessor 'androidx.room:room-compiler:2.2.3'
 
-    androidTestImplementation "androidx.core:core-ktx:1.2.0"
+    androidTestImplementation "androidx.core:core-ktx:1.1.0"
     androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation('androidx.test.espresso:espresso-contrib:3.2.0') {

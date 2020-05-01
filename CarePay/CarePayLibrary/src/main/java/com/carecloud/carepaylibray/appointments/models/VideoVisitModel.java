@@ -15,10 +15,15 @@ public class VideoVisitModel {
     }
 
     public class Urls {
+        @SerializedName("web")
         private String web;
+        @SerializedName("ios")
         private String ios;
+        @SerializedName("android")
         private String android;
+        @SerializedName("apple_store")
         private String apple_store;
+        @SerializedName("google_play")
         private String google_play;
 
         public String getWeb() {
