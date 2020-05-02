@@ -785,6 +785,8 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
             if (isAppInstalled(ccLiveIntent, ccLivePackageName)) {
                 ccLiveIntent.setPackage(ccLivePackageName);
+                ccLiveIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                ccLiveIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 ((Activity) getContext()).startActivityForResult(ccLiveIntent, PaymentConstants.REQUEST_CODE_CCLIVE);
 
             } else {
