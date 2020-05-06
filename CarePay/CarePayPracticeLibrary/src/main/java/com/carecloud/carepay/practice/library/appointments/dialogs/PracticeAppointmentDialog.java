@@ -195,11 +195,11 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
                 headerColor = R.color.dark_blue;
                 timeColor = R.color.colorPrimary;
                 leftActionLabel = Label.getLabel("cancel_appointment_short_label");
-                if (appointmentDTO.getPayload().getVisitType().hasVideoOption()) {
-                    rightActionLabel = Label.getLabel("appointment_video_visit_start_short");
-                } else {
-                    rightActionLabel = Label.getLabel("start_checkin_label");
-                }
+//                if (appointmentDTO.getPayload().getVisitType().hasVideoOption()) {
+//                    rightActionLabel = Label.getLabel("appointment_video_visit_start_short");
+//                } else {
+                rightActionLabel = Label.getLabel("start_checkin_label");
+//                }
                 middleActionLabel = Label.getLabel("adhoc_show_forms_button_label");
                 break;
             case REQUESTED:
@@ -212,11 +212,11 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
                 headerColor = R.color.dark_blue;
                 timeColor = R.color.colorPrimary;
                 leftActionLabel = Label.getLabel("cancel_appointment_short_label");
-                if (appointmentDTO.getPayload().getVisitType().hasVideoOption()) {
-                    rightActionLabel = Label.getLabel("appointment_video_visit_start_short");
-                } else {
-                    rightActionLabel = Label.getLabel("start_checkout_label");
-                }
+//                if (appointmentDTO.getPayload().getVisitType().hasVideoOption()) {
+//                    rightActionLabel = Label.getLabel("appointment_video_visit_start_short");
+//                } else {
+                rightActionLabel = Label.getLabel("start_checkout_label");
+//                }
                 middleActionLabel = Label.getLabel("adhoc_show_forms_button_label");
                 break;
             case MISSED:
