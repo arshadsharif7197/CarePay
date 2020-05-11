@@ -123,6 +123,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     private AppointmentsResultModel appointmentResultModel;
     private AppointmentViewModel viewModel;
     private boolean isCheckInAlertNeeded;
+    private boolean isTelehealthAppointment;
 
 
     /**
@@ -312,14 +313,9 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                 .capitalize(location.getAddress().geAddressStringWithShortZipWOCounty().toLowerCase()));
         mapButton.setEnabled(!StringUtil.isNullOrEmpty(location.getAddress().geAddressStringWithShortZipWOCounty()));
 
-        videoVisitIndicator.setVisibility(appointmentDTO.getPayload().getVisitType().hasVideoOption() ?
-                View.VISIBLE : View.GONE);
+        isTelehealthAppointment = appointmentDTO.getPayload().getVisitType().hasVideoOption();
+        videoVisitIndicator.setVisibility(isTelehealthAppointment ? View.VISIBLE : View.GONE);
 
-        if (!appointmentDTO.getPayload().isAppointmentOver()) {
-            joinVideoVisitLayout.setVisibility(appointmentDTO.getPayload().getVisitType().hasVideoOption() ?
-                    View.VISIBLE : View.GONE);
-            joinVideoVisitBtn.setText(Label.getLabel("appointment_video_visit_start"));
-        }
     }
 
     private void applyStyle() {
@@ -349,7 +345,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                     scheduleAppointmentButton.setEnabled(isCalendarAvailable
                             && !appointmentDTO.getPayload().isAppointmentOver());
 
-                    updateStartVideoVisitBtn(true);
+                    updateStartVideoVisitBtn();
                     break;
                 }
                 case PENDING: {
@@ -365,9 +361,12 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                         if (isLocationWithBreezeEnabled(enabledLocations)
                                 && appointmentResultModel.getPayload()
                                 .canCheckInCheckOut(appointmentDTO.getMetadata().getPracticeId())) {
-                            leftButton.setVisibility(View.VISIBLE);
-                            leftButton.setText(Label.getLabel("sigin_how_check_in_scan_qr_code"));
-                            leftButton.setOnClickListener(scanClick);
+                            if (!isTelehealthAppointment) {
+                                leftButton.setVisibility(View.VISIBLE);
+                                leftButton.setText(Label.getLabel("sigin_how_check_in_scan_qr_code"));
+                                leftButton.setOnClickListener(scanClick);
+                            }
+//
                             rightButton.setVisibility(View.VISIBLE);
                             isCheckInAlertNeeded = true;
                             if (appointmentDTO.getPayload().canCheckInNow(callback
@@ -381,7 +380,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                         }
                     }
                     scheduleAppointmentButton.setEnabled(isCalendarAvailable);
-                    updateStartVideoVisitBtn(true);
+                    updateStartVideoVisitBtn();
                     break;
                 }
                 case REQUESTED_UPCOMING:
@@ -436,9 +435,12 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                         if (isLocationWithBreezeEnabled(enabledLocations)
                                 && appointmentResultModel.getPayload()
                                 .canCheckInCheckOut(appointmentDTO.getMetadata().getPracticeId())) {
-                            leftButton.setVisibility(View.VISIBLE);
-                            leftButton.setText(Label.getLabel("sigin_how_check_in_scan_qr_code"));
-                            leftButton.setOnClickListener(scanClick);
+                            if (!isTelehealthAppointment) {
+                                leftButton.setVisibility(View.VISIBLE);
+                                leftButton.setText(Label.getLabel("sigin_how_check_in_scan_qr_code"));
+                                leftButton.setOnClickListener(scanClick);
+                            }
+
                             actionsLayout.setVisibility(View.VISIBLE);
                             rightButton.setVisibility(View.VISIBLE);
                             isCheckInAlertNeeded = true;
@@ -452,7 +454,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                         }
                     }
                     scheduleAppointmentButton.setEnabled(isCalendarAvailable);
-                    updateStartVideoVisitBtn(true);
+                    updateStartVideoVisitBtn();
                     break;
                 }
                 case CHECKED_OUT: {
@@ -467,7 +469,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
                     if (isAPastAppointment()) {
                         showVisitSummaryButton();
                     }
-                    updateStartVideoVisitBtn(true);
+                    updateStartVideoVisitBtn();
                     break;
                 }
                 case DENIED: {
@@ -570,7 +572,7 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
         cancelAppointment.setVisibility(View.GONE);
         queueLayout.setVisibility(View.GONE);
         appointmentStatus.setVisibility(View.GONE);
-        updateStartVideoVisitBtn(false);
+        joinVideoVisitLayout.setVisibility(View.GONE);
     }
 
     private WorkflowServiceCallback queueStatusCallback = new WorkflowServiceCallback() {
@@ -861,13 +863,18 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
         confirmDialogFragment.show(((AppCompatActivity) getContext()).getSupportFragmentManager(), null);
     }
 
-    private void updateStartVideoVisitBtn(boolean isEnable) {
-        if (isEnable) {
-            joinVideoVisitLayout.setBackground(getResources().getDrawable(R.drawable.button_green_fill_background));
-            joinVideoVisitLayout.setEnabled(true);
-        } else {
-            joinVideoVisitLayout.setBackground(getResources().getDrawable(R.drawable.button_light_gray_background));
-            joinVideoVisitLayout.setEnabled(false);
+    private void updateStartVideoVisitBtn() {
+        if (isTelehealthAppointment) {
+            leftButton.setText(Label.getLabel("appointment_video_visit_indicator"));
+            joinVideoVisitBtn.setText(Label.getLabel("appointment_video_visit_start"));
+
+            if (rightButton.getVisibility() != View.VISIBLE) {
+                actionsLayout.setVisibility(View.GONE);
+                joinVideoVisitLayout.setVisibility(View.VISIBLE);
+            } else {
+                leftButton.setVisibility(View.VISIBLE);
+                leftButton.setOnClickListener(joinVideoVisitClick);
+            }
         }
     }
 
