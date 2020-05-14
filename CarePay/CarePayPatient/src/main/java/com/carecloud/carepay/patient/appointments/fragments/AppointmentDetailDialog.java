@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -864,16 +865,27 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     }
 
     private void updateStartVideoVisitBtn() {
-        if (isTelehealthAppointment) {
-            leftButton.setText(Label.getLabel("appointment_video_visit_indicator"));
+        if (isTelehealthAppointment && !appointmentDTO.getPayload().isAppointmentOver()) {
             joinVideoVisitBtn.setText(Label.getLabel("appointment_video_visit_start"));
 
             if (rightButton.getVisibility() != View.VISIBLE) {
-                actionsLayout.setVisibility(View.GONE);
+//                actionsLayout.setVisibility(View.GONE);
                 joinVideoVisitLayout.setVisibility(View.VISIBLE);
             } else {
+                leftButton.setText(Label.getLabel("appointment_video_visit_start"));
                 leftButton.setVisibility(View.VISIBLE);
                 leftButton.setOnClickListener(joinVideoVisitClick);
+            }
+
+            if (appointmentDTO.getPayload().canStartVideoVisit()) {
+                leftButton.setEnabled(true);
+                joinVideoVisitLayout.setEnabled(true);
+                joinVideoVisitLayout.setBackground(getResources().getDrawable(R.drawable.button_green_fill_background));
+            } else {
+                leftButton.setEnabled(false);
+                leftButton.setTextColor(Color.WHITE);
+                joinVideoVisitLayout.setEnabled(false);
+                joinVideoVisitLayout.setBackground(getResources().getDrawable(R.drawable.button_light_gray_background));
             }
         }
     }
