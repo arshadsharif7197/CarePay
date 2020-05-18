@@ -2,6 +2,7 @@ package com.carecloud.carepaylibray.appointments.createappointment.availabilityh
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import com.carecloud.carepaylibrary.R;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsSlotsDTO;
+import com.carecloud.carepaylibray.customcomponents.CarePayTextView;
 import com.carecloud.carepaylibray.utils.DateUtil;
 
 import java.util.List;
@@ -16,7 +18,7 @@ import java.util.List;
 /**
  * @author pjohnson on 1/17/19.
  */
-public class AvailabilityHourAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class AvailabilityHourAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements StickHeaderItemDecoration.StickyHeaderInterface {
 
     private static final int CELL_HEADER = 0;
     private static final int CELL_CARD = 1;
@@ -79,6 +81,7 @@ public class AvailabilityHourAdapter extends RecyclerView.Adapter<RecyclerView.V
         return timeSlots.size();
     }
 
+
     public interface OnTimeSlotListItemClickListener {
         void onTimeSlotListItemClickListener(AppointmentsSlotsDTO slot);
     }
@@ -99,5 +102,39 @@ public class AvailabilityHourAdapter extends RecyclerView.Adapter<RecyclerView.V
             super(view);
             textViewTimeSlot = view.findViewById(R.id.textview_timeslot);
         }
+    }
+
+    @Override
+    public int getHeaderPositionForItem(int itemPosition) {
+        int headerPosition = 0;
+        do {
+            if (this.isHeader(itemPosition)) {
+                headerPosition = itemPosition;
+                break;
+            }
+            itemPosition -= 1;
+        } while (itemPosition >= 0);
+        return headerPosition;
+    }
+
+    @Override
+    public int getHeaderLayout(int headerPosition) {
+        if (timeSlots.get(headerPosition).isHeader())
+            return R.layout.apt_available_hours_list_header_row;
+        else {
+            return R.layout.apt_available_hours_list_data_row;
+        }
+    }
+
+    @Override
+    public void bindHeaderData(View header, int headerPosition) {
+        CarePayTextView carePayTextView = header.findViewById(R.id.textview_section_header);
+        carePayTextView.setBackgroundResource(R.color.white);
+        carePayTextView.setText(timeSlots.get(headerPosition).getStartTime());
+    }
+
+    @Override
+    public boolean isHeader(int itemPosition) {
+        return getItemViewType(itemPosition) == CELL_HEADER;
     }
 }
