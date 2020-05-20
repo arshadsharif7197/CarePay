@@ -291,7 +291,6 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
          * start displaying content once interface is ready
          */
         @JavascriptInterface
-
         public void webviewReady(String message) {
             getActivity().runOnUiThread(() -> {
                 displayNextForm();
