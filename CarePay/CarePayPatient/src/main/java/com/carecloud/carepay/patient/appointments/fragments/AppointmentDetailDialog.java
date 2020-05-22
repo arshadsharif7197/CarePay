@@ -869,7 +869,6 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
             joinVideoVisitBtn.setText(Label.getLabel("appointment_video_visit_start"));
 
             if (rightButton.getVisibility() != View.VISIBLE) {
-//                actionsLayout.setVisibility(View.GONE);
                 joinVideoVisitLayout.setVisibility(View.VISIBLE);
             } else {
                 leftButton.setText(Label.getLabel("appointment_video_visit_start"));
