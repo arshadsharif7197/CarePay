@@ -124,10 +124,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
         View noAppointmentLayout = view.findViewById(R.id.no_appointment_layout);
         RecyclerView availableHoursRecyclerView = view.findViewById(R.id.availableHoursRecyclerView);
         if (appointmentModelDto.getPayload().getAppointmentAvailability().getPayload().get(0).getSlots().size() > 0) {
-            noAppointmentLayout.setVisibility(View.GONE);
-            availableHoursRecyclerView.setVisibility(View.VISIBLE);
-            availableHoursRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            availableHoursRecyclerView.setAdapter(new AvailabilityHourAdapter(getAllAvailableTimeSlots(appointmentModelDto
+            AvailabilityHourAdapter availabilityHourAdapter = new AvailabilityHourAdapter(getAllAvailableTimeSlots(appointmentModelDto
                     .getPayload().getAppointmentAvailability().getPayload().get(0).getSlots()),
                     slot -> {
                         if (mode == SCHEDULE_MODE) {
@@ -136,7 +133,14 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
                             dismiss();
                             callback.setAppointmentSlot(slot);
                         }
-                    }));
+                    });
+
+            noAppointmentLayout.setVisibility(View.GONE);
+            availableHoursRecyclerView.setVisibility(View.VISIBLE);
+            availableHoursRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            availableHoursRecyclerView.addItemDecoration(new StickHeaderItemDecoration(availabilityHourAdapter));
+            availableHoursRecyclerView.setAdapter(availabilityHourAdapter);
+
         } else {
             availableHoursRecyclerView.setVisibility(View.GONE);
             noAppointmentLayout.setVisibility(View.VISIBLE);
