@@ -869,23 +869,11 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
             joinVideoVisitBtn.setText(Label.getLabel("appointment_video_visit_start"));
 
             if (rightButton.getVisibility() != View.VISIBLE) {
-//                actionsLayout.setVisibility(View.GONE);
                 joinVideoVisitLayout.setVisibility(View.VISIBLE);
             } else {
                 leftButton.setText(Label.getLabel("appointment_video_visit_start"));
                 leftButton.setVisibility(View.VISIBLE);
                 leftButton.setOnClickListener(joinVideoVisitClick);
-            }
-
-            if (appointmentDTO.getPayload().canStartVideoVisit()) {
-                leftButton.setEnabled(true);
-                joinVideoVisitLayout.setEnabled(true);
-                joinVideoVisitLayout.setBackground(getResources().getDrawable(R.drawable.button_green_fill_background));
-            } else {
-                leftButton.setEnabled(false);
-                leftButton.setTextColor(Color.WHITE);
-                joinVideoVisitLayout.setEnabled(false);
-                joinVideoVisitLayout.setBackground(getResources().getDrawable(R.drawable.button_light_gray_background));
             }
         }
     }
