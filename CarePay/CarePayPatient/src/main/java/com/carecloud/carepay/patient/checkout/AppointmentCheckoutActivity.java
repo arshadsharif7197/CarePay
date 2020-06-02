@@ -83,6 +83,7 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
     private AppointmentDTO selectedAppointment;
 
     private AppointmentsResultModel appointmentsResultModel;
+    private AppointmentsResultModel checkoutFormModel;
     private PaymentsModel paymentsModel;
 
     private boolean shouldAddBackStack = false;
@@ -188,13 +189,13 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
             }
             showResponsibilityFragment();
         } else if (NavigationStateConstants.PATIENT_FORM_CHECKOUT.equals(workflowDTO.getState())) {
-            appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
+            checkoutFormModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
             showCheckOutFormFragment();
         }
     }
 
     private void showCheckOutFormFragment() {
-        replaceFragment(CheckOutFormFragment.newInstance(appointmentsResultModel), shouldAddBackStack);
+        replaceFragment(CheckOutFormFragment.newInstance(checkoutFormModel), shouldAddBackStack);
     }
 
     private void showNextAppointmentFragment(String appointmentId) {
