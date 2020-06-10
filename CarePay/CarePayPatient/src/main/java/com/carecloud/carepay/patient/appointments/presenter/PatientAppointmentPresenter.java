@@ -2,6 +2,7 @@ package com.carecloud.carepay.patient.appointments.presenter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
@@ -780,38 +781,36 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             AppointmentsResultModel appointmentsResultModel = DtoHelper.getConvertedDTO(AppointmentsResultModel.class, workflowDTO);
             VideoVisitModel.Urls url = appointmentsResultModel.getPayload().getVideoVisitModel().getUrls();
 
-            Intent ccLiveIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url.getAndroid()));
-            String ccLivePackageName = getPackageName(url.getGoogle_play());
+            Intent chromeIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url.getAndroid()));
+            String chromePackageName = "com.android.chrome";
 
-            if (isAppInstalled(ccLiveIntent, ccLivePackageName)) {
-                ccLiveIntent.setPackage(ccLivePackageName);
-                ccLiveIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                ccLiveIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                ((Activity) getContext()).startActivityForResult(ccLiveIntent, PaymentConstants.REQUEST_CODE_CCLIVE);
-
-            } else {
-
-                try {
-                    Intent appStoreIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + ccLivePackageName));
+            if (isAppInstalled(chromeIntent, chromePackageName)) {
+                if (isAppEnable(chromePackageName)) {
+                    chromeIntent.setPackage(chromePackageName);
+                    chromeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    chromeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    getContext().startActivity(chromeIntent);
+                } else {
+                    Intent appStoreIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + chromePackageName));
                     appStoreIntent.setPackage("com.android.vending");
                     getContext().startActivity(appStoreIntent);
-
-                } catch (android.content.ActivityNotFoundException exception) {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url.getGoogle_play()));
+                }
+            } else {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url.getAndroid()));
+                if (browserIntent.resolveActivity(getContext().getPackageManager()) != null) {
+                    chromeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    chromeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     getContext().startActivity(browserIntent);
-
+                } else {
+                    Intent appStoreIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + chromePackageName));
+                    appStoreIntent.setPackage("com.android.vending");
+                    getContext().startActivity(appStoreIntent);
                 }
             }
         }
 
-        private String getPackageName(String android) {
-            String[] urlParts = android.split("id=");
-            return urlParts[1].trim();
-        }
-
         public boolean isAppInstalled(Intent intent, String packageName) {
             List<ResolveInfo> activities = getContext().getPackageManager().queryIntentActivities(intent, 0);
-
             for (ResolveInfo info : activities) {
                 if (info.activityInfo.packageName.equals(packageName)) {
                     return true;
@@ -819,6 +818,18 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
             }
             return false;
         }
+
+        private boolean isAppEnable(String chromePackageName) {
+            boolean isAppEnable = false;
+            try {
+                ApplicationInfo applicationInfo = getContext().getPackageManager().getApplicationInfo(chromePackageName, 0);
+                isAppEnable = applicationInfo.enabled;
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+            return isAppEnable;
+        }
+
 
         @Override
         public void onFailure(String exceptionMessage) {
