@@ -370,9 +370,9 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
             new Handler().postDelayed(() -> {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        enableNextButton(pageScrollOffsetPercentage > 98);
-                        hideProgressDialog();
                         webView.scrollTo(0, 0);
+                        enableNextButton(false);
+                        hideProgressDialog();
                     });
                 }
             }, 500);
