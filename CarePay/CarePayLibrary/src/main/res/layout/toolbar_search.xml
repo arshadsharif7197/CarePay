@@ -19,6 +19,7 @@
             android:id="@+id/search_entry_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:queryHint="Search"
             android:theme="@style/SearchViewStyleLight"
             app:customAssetFont="proxima_nova_regular"
             app:iconifiedByDefault="false" />
