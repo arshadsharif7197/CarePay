@@ -88,7 +88,7 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
     }
 
     @Override
-    public void displayThreadMessages(Messages.Reply thread, boolean dismissAndRefresh) {
+    public void displayThreadMessages(Messages.Reply thread, String practiceName, boolean dismissAndRefresh) {
         if (dismissAndRefresh) {
             getSupportFragmentManager().popBackStackImmediate();
             getSupportFragmentManager().popBackStackImmediate();
@@ -102,7 +102,7 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
                     .setMessagesBadgeCounter(ApplicationPreferences.getInstance().getMessagesBadgeCounter() - 1);
             updateBadgeCounterViews();
         }
-        addFragment(MessagesConversationFragment.newInstance(thread), true);
+        addFragment(MessagesConversationFragment.newInstance(thread, practiceName), true);
     }
 
     @Override
