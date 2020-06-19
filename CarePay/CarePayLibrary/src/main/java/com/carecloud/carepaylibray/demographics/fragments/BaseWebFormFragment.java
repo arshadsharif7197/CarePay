@@ -287,7 +287,6 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
             this.context = context;
         }
 
-
         /**
          * start displaying content once interface is ready
          */
@@ -356,6 +355,7 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
                     getActivity().runOnUiThread(() -> {
                         enableNextButton(true);
                         hideProgressDialog();
+                        webView.scrollTo(0, 0);
                     });
                 }
             }, 500);
@@ -370,7 +370,8 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
             new Handler().postDelayed(() -> {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        enableNextButton(pageScrollOffsetPercentage > 98);
+                        webView.scrollTo(0, 0);
+                        enableNextButton(false);
                         hideProgressDialog();
                     });
                 }
