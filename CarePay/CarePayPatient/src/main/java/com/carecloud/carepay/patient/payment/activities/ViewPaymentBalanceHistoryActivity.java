@@ -82,6 +82,7 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     private Fragment androidPayTargetFragment;
     private int displayPage = PAGE_BALANCES;
     private boolean paymentEnabled;
+    private PatientPaymentPlanDetailsDialogFragment patientPaymentPlanDetailsDialogFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -237,6 +238,13 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
         if (!toolbarVisibility && getSupportFragmentManager().getBackStackEntryCount() < 2) {
             displayToolbar(true, toolBarTitle);
         }
+
+        if (patientPaymentPlanDetailsDialogFragment != null) {
+            Fragment currentFragment = patientPaymentPlanDetailsDialogFragment.getChildFragment();
+            if (currentFragment != null && currentFragment instanceof PatientPaymentPlanEditFragment) {
+                patientPaymentPlanDetailsDialogFragment.showDialog();
+            }
+        }
         super.onBackPressed();
     }
 
@@ -366,9 +374,9 @@ public class ViewPaymentBalanceHistoryActivity extends MenuPatientActivity imple
     @Override
     public void loadPaymentPlanScreen(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
         selectedUserPractice = paymentsModel.getPaymentPayload().getUserPractice(paymentPlanDTO.getMetadata().getPracticeId());
-        PatientPaymentPlanDetailsDialogFragment fragment = PatientPaymentPlanDetailsDialogFragment
+        patientPaymentPlanDetailsDialogFragment = PatientPaymentPlanDetailsDialogFragment
                 .newInstance(paymentsModel, paymentPlanDTO);
-        displayDialogFragment(fragment, false);
+        displayDialogFragment(patientPaymentPlanDetailsDialogFragment, false);
     }
 
     @Override
