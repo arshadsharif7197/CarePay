@@ -52,6 +52,10 @@ public class FormsFragment extends BaseWebFormFragment {
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         setHeader(Label.getLabel("demographics_consent_forms_title"));
+
+        nextButton.setOnClickListener(view1 -> {
+            validateForm();
+        });
     }
 
 
@@ -122,7 +126,7 @@ public class FormsFragment extends BaseWebFormFragment {
     }
 
     @Override
-    protected void validateForm() {
+    public void validateForm() {
         validateForm("save_form");
     }
 
