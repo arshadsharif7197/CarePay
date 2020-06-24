@@ -156,8 +156,8 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment
         TextView headerSubtitle = view.findViewById(R.id.search_header_subtitle);
         if (headerSubtitle != null) {
             headerSubtitle.setText(searchMode == ALLERGY_ITEM ?
-                    Label.getLabel("medications_allergies_search_allergy_subtitle") :
-                    Label.getLabel("medications_allergies_search_medication_subtitle"));
+                    Label.getLabel("medicationsAndAllergies.search.allergies.hint.subtitle_1") :
+                    Label.getLabel("medicationsAndAllergies.search.medication.hint.subtitle_1"));
         }
 
         unlisted = view.findViewById(R.id.add_unlisted);
@@ -196,8 +196,8 @@ public class MedicationAllergySearchFragment extends BaseDialogFragment
                     Label.getLabel("medications_allergies_search_medication_title"));
             TextView initialScreenSubTitleTextView = view.findViewById(R.id.initialScreenSubTitleTextView);
             initialScreenSubTitleTextView.setText(searchMode == ALLERGY_ITEM ?
-                    Label.getLabel("medications_allergies_search_subtitle") :
-                    Label.getLabel("medications_allergies_search_medication_subtitle"));
+                    Label.getLabel("medicationsAndAllergies.search.allergies.hint.subtitle_1") :
+                    Label.getLabel("medicationsAndAllergies.search.medication.hint.subtitle_1"));
         }
     }
 
