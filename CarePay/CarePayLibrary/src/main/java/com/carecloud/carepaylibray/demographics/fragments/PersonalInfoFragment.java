@@ -6,13 +6,18 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.textfield.TextInputLayout;
+
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
+
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -180,7 +185,7 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
         boolean isCloverDevice = HttpConstants.getDeviceInformation().getDeviceType().equals(CarePayConstants.CLOVER_DEVICE);
         if (isCloverDevice) {
             buttonChangeCurrentPhoto.setVisibility(View.INVISIBLE);
-        } else if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT){
+        } else if (getApplicationMode().getApplicationType() == ApplicationMode.ApplicationType.PATIENT) {
             setUpBottomSheet(view);
         } else {
             buttonChangeCurrentPhoto.setOnClickListener(view1 -> mediaScannerPresenter.handlePictureAction());
@@ -191,6 +196,60 @@ public class PersonalInfoFragment extends CheckInDemographicsBaseFragment implem
                 displayProfileImage(profilePicURL, profileImage);
             }
         }
+    }
+
+    protected TextWatcher dateInputFormatter = new TextWatcher() {
+        int lastLength;
+
+        @Override
+        public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+            lastLength = sequence.length();
+        }
+
+        @Override
+        public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            StringUtil.autoFormatDateOfBirth(editable, lastLength);
+            updateDOBError();
+        }
+    };
+
+    private void updateDOBError() {
+        View view = getView();
+        ViewGroup container = view.findViewById(R.id.dateOfBirthContainer);
+        EditText dobEditText = view.findViewById(R.id.revewidemogrDOBEdit);
+        TextInputLayout dateBirthLayout = view.findViewById(R.id.reviewdemogrDOBTextInput);
+        if (validateError(StringUtil.isNullOrEmpty(dobEditText.getText().toString().trim()), true, container,
+                dateBirthLayout)) {
+        }
+
+        if (!StringUtil.isNullOrEmpty(dobEditText.getText().toString().trim())) {
+            String dateValidationResult = DateUtil
+                    .getDateOfBirthValidationResultMessage(dobEditText.getText().toString().trim());
+            if (dateValidationResult != null) {
+                setFieldError(dateBirthLayout, dateValidationResult, true);
+            } else {
+                unsetFieldError(dateBirthLayout);
+            }
+        }
+    }
+
+    public boolean validateError(boolean inputDataBad, boolean userInteraction, View container, TextInputLayout inputLayout) {
+        if (inputDataBad) {
+            if (userInteraction) {
+                inputLayout.setErrorEnabled(true);
+                inputLayout.setError(Label.getLabel("demographics_required_field_msg"));
+            }
+            return true;
+        } else {
+            inputLayout.setError(null);
+            inputLayout.setErrorEnabled(false);
+        }
+        return false;
     }
 
     @Override
