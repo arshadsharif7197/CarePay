@@ -142,7 +142,7 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':CarePayPracticeLibrary')
-    implementation 'com.clover.sdk:clover-android-sdk:latest.release'
+    implementation 'com.clover.sdk:clover-android-sdk:248.4'
     implementation 'com.clover.sdk:clover-android-connector-sdk:168'
 
     annotationProcessor 'androidx.room:room-compiler:2.2.3'
