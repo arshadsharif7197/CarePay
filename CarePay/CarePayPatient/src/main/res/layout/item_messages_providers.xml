@@ -85,7 +85,7 @@
                 tools:text="Dr. Mary O'Hare" />
 
             <com.carecloud.carepaylibray.customcomponents.CarePayTextView
-                android:id="@+id/provider_title"
+                android:id="@+id/provider_speciality"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -95,7 +95,20 @@
                 android:textColor="@color/lightSlateGray"
                 android:textSize="@dimen/textview_textsize"
                 app:customAssetFont="proxima_nova_regular"
-                tools:text="Cardiology" />
+                tools:text="Speciality" />
+
+            <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+                android:id="@+id/practice_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:ellipsize="end"
+                android:gravity="start"
+                android:maxLines="1"
+                android:textColor="@color/lightSlateGray"
+                android:textSize="@dimen/textview_textsize"
+                app:customAssetFont="proxima_nova_regular"
+                tools:text="Practice Name" />
         </LinearLayout>
 
 

@@ -136,7 +136,7 @@
                 android:layout_marginBottom="@dimen/startCheckinHorizontalMargin"
                 android:background="@drawable/bg_yellow_overlay"
                 android:textColor="@color/white"
-                android:textSize="@dimen/respons_button_text_size"
+                android:textSize="@dimen/appointmentCardStartHourTextSize"
                 android:visibility="visible"
                 app:customAssetFont="gotham_rounded_medium"
                 breeze:textKey="practice_app_check_in_text"

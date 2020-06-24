@@ -136,7 +136,7 @@ public class MessagesListFragment extends BaseFragment
             adapter.setThreads(threads);
         } else {
             adapter = new MessagesListAdapter(getContext(), threads, this,
-                    messagingDto.getPayload().getInbox().getUserId());
+                    messagingDto.getPayload().getInbox().getUserId(), messagingDto.getPayload());
             recyclerView.setAdapter(adapter);
         }
         Profile delegateUser = messagingDto.getPayload().getDelegate();
@@ -188,8 +188,8 @@ public class MessagesListFragment extends BaseFragment
     }
 
     @Override
-    public void onMessageSelected(Messages.Reply thread) {
-        callback.displayThreadMessages(thread, false);
+    public void onMessageSelected(Messages.Reply thread, String practiceName) {
+        callback.displayThreadMessages(thread, practiceName, false);
     }
 
     @Override
