@@ -58,6 +58,7 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
 
     private MessageAttachment selectedAttachment;
     private String selectedAttachmentFormat;
+    private String practiceName;
     private MessagingModelDto messagingDto;
     private MessagesViewModel viewModel;
 
@@ -67,10 +68,11 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
      * @param thread base thread
      * @return new MessagesConversationFragment
      */
-    public static MessagesConversationFragment newInstance(Messages.Reply thread) {
+    public static MessagesConversationFragment newInstance(Messages.Reply thread, String practiceName) {
 
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, thread);
+        args.putString("practiceName", practiceName);
 
         MessagesConversationFragment fragment = new MessagesConversationFragment();
         fragment.setArguments(args);
@@ -91,6 +93,7 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         thread = DtoHelper.getConvertedDTO(Messages.Reply.class, getArguments());
+        this.practiceName = getArguments().getString("practiceName");
         setUpViewModel();
     }
 
@@ -136,7 +139,11 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
         messageTextInput.addTextChangedListener(messageInputListener);
 
         TextView threadProviderTextView = view.findViewById(R.id.threadProviderTextView);
-        threadProviderTextView.setText(digProvider(thread));
+        if (practiceName != null && !practiceName.isEmpty()) {
+            threadProviderTextView.setText(digProvider(thread) + " | " + practiceName);
+        } else {
+            threadProviderTextView.setText(digProvider(thread));
+        }
     }
 
     @Override
@@ -148,7 +155,7 @@ public class MessagesConversationFragment extends BaseFragment implements Messag
     }
 
     private void initToolbar(View view) {
-        Toolbar toolbar = view.findViewById(R.id.toolbar    );
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(thread.getSubject());
 

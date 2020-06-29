@@ -2,9 +2,10 @@ package com.carecloud.carepay.patient.payment.fragments;
 
 import android.os.Bundle;
 
+import androidx.fragment.app.Fragment;
+
 import com.carecloud.carepay.patient.base.ToolbarInterface;
 import com.carecloud.carepaylibray.payments.fragments.PaymentPlanDetailsDialogFragment;
-import com.carecloud.carepaylibray.payments.fragments.PaymentPlanEditFragment;
 import com.carecloud.carepaylibray.payments.models.PaymentPlanDTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.utils.DtoHelper;
@@ -13,6 +14,8 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
  * @author pjohnson on 4/2/19.
  */
 public class PatientPaymentPlanDetailsDialogFragment extends PaymentPlanDetailsDialogFragment {
+
+    private PatientPaymentPlanEditFragment paymentPlanEditFragment;
 
     /**
      * @param paymentsModel  the payment model
@@ -35,9 +38,9 @@ public class PatientPaymentPlanDetailsDialogFragment extends PaymentPlanDetailsD
     @Override
     protected void onEditPaymentPlan(PaymentsModel paymentsModel, PaymentPlanDTO paymentPlanDTO) {
         hideDialog(true);
-        PaymentPlanEditFragment fragment = PatientPaymentPlanEditFragment.newInstance(paymentsModel, paymentPlanDTO);
-        fragment.setOnBackPressedListener(() -> showDialog(true));
-        callback.replaceFragment(fragment, true);
+        paymentPlanEditFragment = PatientPaymentPlanEditFragment.newInstance(paymentsModel, paymentPlanDTO);
+        paymentPlanEditFragment.setOnBackPressedListener(() -> showDialog(true));
+        callback.replaceFragment(paymentPlanEditFragment, true);
         ((ToolbarInterface) callback).displayToolbar(false, null);
     }
 
@@ -48,5 +51,7 @@ public class PatientPaymentPlanDetailsDialogFragment extends PaymentPlanDetailsD
         callback.displayDialogFragment(fragment, false);
     }
 
-
+    public Fragment getChildFragment() {
+        return paymentPlanEditFragment;
+    }
 }

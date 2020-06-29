@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -677,13 +678,42 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     };
 
     private View.OnClickListener scheduleAppointmentClick = view -> {
-        if (calendarEvent == null && !eventExists
-                && PermissionsUtil.checkPermissionReadCalendar(AppointmentDetailDialog.this)) {
-            saveCalendarEvent();
-        } else if (calendarEvent != null) {
-            Toast.makeText(getContext(), Label.getLabel("appointment.schedule.event.message.repeated"),
-                    Toast.LENGTH_LONG).show();
-        }
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                showProgressDialog();
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                BreezeDataBase database = BreezeDataBase.getDatabase(getContext());
+                calendarEvent = database.getCalendarEventDao()
+                        .getAppointmentCalendarEvent(appointmentDTO.getPayload().getId());
+                eventExists = false;
+                if (calendarEvent != null) {
+                    checkIfEventExists();
+                    if (!eventExists) {
+                        database.getCalendarEventDao().delete(calendarEvent);
+                        calendarEvent = null;
+                    }
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                hideProgressDialog();
+                if (calendarEvent == null && !eventExists
+                        && PermissionsUtil.checkPermissionReadCalendar(AppointmentDetailDialog.this)) {
+                    saveCalendarEvent();
+                } else if (calendarEvent != null) {
+                    Toast.makeText(getContext(), Label.getLabel("appointment.schedule.event.message.repeated"),
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        }.execute();
     };
 
     private void saveCalendarEvent() {
@@ -882,9 +912,6 @@ public class AppointmentDetailDialog extends BaseDialogFragment {
     public void onStart() {
         super.onStart();
         getActivity().registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-        if (!eventExists) {
-            saveEventOnLocalDB();
-        }
     }
 
     @Override

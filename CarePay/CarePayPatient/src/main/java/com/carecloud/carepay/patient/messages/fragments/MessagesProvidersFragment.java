@@ -20,6 +20,7 @@ import com.carecloud.carepay.patient.messages.MessagesViewModel;
 import com.carecloud.carepay.patient.messages.adapters.MessagesProvidersAdapter;
 import com.carecloud.carepay.patient.messages.models.MessagingModelDto;
 import com.carecloud.carepay.patient.messages.models.ProviderContact;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.base.BaseFragment;
 
@@ -88,7 +89,8 @@ public class MessagesProvidersFragment extends BaseFragment implements MessagesP
 
     private void setAdapter() {
         List<ProviderContact> providers = messagingDto.getPayload().getProviderContacts();
-        MessagesProvidersAdapter adapter = new MessagesProvidersAdapter(getContext(), providers, this);
+        List<UserPracticeDTO> practices = messagingDto.getPayload().getUserPractices();
+        MessagesProvidersAdapter adapter = new MessagesProvidersAdapter(getContext(), providers, practices, this);
         providersRecycler.setAdapter(adapter);
         providersRecycler.setVisibility(providers.isEmpty() ? View.GONE : View.VISIBLE);
         noProvidersMessage.setVisibility(providers.isEmpty() ? View.VISIBLE : View.GONE);

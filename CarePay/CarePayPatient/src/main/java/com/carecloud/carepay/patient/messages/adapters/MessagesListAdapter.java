@@ -4,6 +4,7 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,9 @@ import android.widget.TextView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.models.Messages;
+import com.carecloud.carepay.patient.messages.models.MessagingDataModel;
+import com.carecloud.carepay.patient.messages.models.ProviderContact;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.customcomponents.SwipeViewHolder;
 import com.carecloud.carepaylibray.utils.DateUtil;
 import com.carecloud.carepaylibray.utils.PicassoHelper;
@@ -27,13 +31,14 @@ import java.util.List;
 public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapter.ViewHolder> {
 
     public interface SelectMessageThreadCallback {
-        void onMessageSelected(Messages.Reply thread);
+        void onMessageSelected(Messages.Reply thread, String practiceName);
 
         void undoDeleteMessage(Messages.Reply thread);
     }
 
     private Context context;
     private List<Messages.Reply> threads;
+    private MessagingDataModel messagingDataModel;
     private SelectMessageThreadCallback callback;
     private String userId;
     private List<Messages.Reply> removeThreads = new ArrayList<>();
@@ -41,15 +46,18 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
     /**
      * Constructor
      *
-     * @param context  context
-     * @param threads  list of threads
-     * @param callback callback
+     * @param context            context
+     * @param threads            list of threads
+     * @param callback           callback
+     * @param messagingDataModel
      */
-    public MessagesListAdapter(Context context, List<Messages.Reply> threads, SelectMessageThreadCallback callback, String userId) {
+    public MessagesListAdapter(Context context, List<Messages.Reply> threads, SelectMessageThreadCallback callback, String userId, MessagingDataModel messagingDataModel) {
         this.context = context;
         this.threads = threads;
         this.callback = callback;
         this.userId = userId;
+        this.messagingDataModel = messagingDataModel;
+
     }
 
     @NonNull
@@ -69,7 +77,20 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
         holder.swipeLayout.setVisibility(View.VISIBLE);
 
         Messages.Participant provider = digProvider(thread);
-        holder.providerName.setText(provider.getName());
+        UserPracticeDTO practice = digPractice(provider.getUserId());
+
+        if (provider != null) {
+            holder.providerName.setText(provider.getName());
+            holder.providerName.setVisibility(View.VISIBLE);
+        } else {
+            holder.providerName.setVisibility(View.GONE);
+        }
+        if (practice != null) {
+            holder.practiceName.setText(practice.getPracticeName());
+            holder.practiceName.setVisibility(View.VISIBLE);
+        } else {
+            holder.practiceName.setVisibility(View.GONE);
+        }
         holder.providerInitials.setText(StringUtil.getShortName(provider.getName()));
         holder.providerTitle.setText(thread.getSubject());
 
@@ -85,7 +106,11 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
 
         holder.swipeLayout.setOnClickListener(view -> {
             holder.unreadCount.setVisibility(View.GONE);
-            callback.onMessageSelected(thread);
+            if (practice != null) {
+                callback.onMessageSelected(thread, practice.getPracticeName());
+            } else {
+                callback.onMessageSelected(thread, "");
+            }
             thread.setRead(true);
         });
 
@@ -187,12 +212,26 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
         return null;
     }
 
+    private UserPracticeDTO digPractice(String providerId) {
+        for (ProviderContact providerContact : messagingDataModel.getProviderContacts()) {
+            if (providerContact.getId().equals(providerId)) {
+                for (UserPracticeDTO userPracticeDTO : messagingDataModel.getUserPractices()) {
+                    if (userPracticeDTO.getPracticeId().equals(providerContact.getBusinessEntityId())) {
+                        return userPracticeDTO;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     class ViewHolder extends SwipeViewHolder {
 
         TextView unreadCount;
         ImageView providerImage;
         TextView providerInitials;
         TextView providerName;
+        TextView practiceName;
         TextView providerTitle;
         TextView timeStamp;
         View swipeLayout;
@@ -205,6 +244,7 @@ public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapte
             providerImage = itemView.findViewById(R.id.provider_image);
             providerInitials = itemView.findViewById(R.id.provider_initials);
             providerName = itemView.findViewById(R.id.provider_name);
+            practiceName = itemView.findViewById(R.id.practice_name);
             providerTitle = itemView.findViewById(R.id.provider_title);
             timeStamp = itemView.findViewById(R.id.time_stamp);
             swipeLayout = itemView.findViewById(R.id.swipe_layout);
