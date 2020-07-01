@@ -22,6 +22,7 @@ import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.dobverification.DoBVerificationActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.Defs;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkFlowRecord;
@@ -352,6 +353,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
 
     private void launchPatientModeCheckIn(AppointmentDTO appointmentDTO) {
         getApplicationPreferences().setAppointmentNavigationOption(Defs.NAVIGATE_CHECKIN);
+        getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
 
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("appointment_id", appointmentDTO.getPayload().getId());
@@ -385,7 +387,7 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
                 Bundle appointmentInfo = new Bundle();
                 appointmentInfo.putString(CarePayConstants.APPOINTMENT_ID, appointmentDTO.getPayload().getId());
 
-                if (workflowDTO.getState().equals("demographics_verify")) {
+               /* if (workflowDTO.getState().equals("demographics_verify")) {
                     WorkFlowRecord workFlowRecord = new WorkFlowRecord(workflowDTO);
                     workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
 
@@ -397,7 +399,10 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
                     startActivity(intent);
                 } else {
                     PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, appointmentInfo);
-                }
+                }*/
+
+                PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, appointmentInfo);
+
                 dismiss();
                 getActivity().finish();
 

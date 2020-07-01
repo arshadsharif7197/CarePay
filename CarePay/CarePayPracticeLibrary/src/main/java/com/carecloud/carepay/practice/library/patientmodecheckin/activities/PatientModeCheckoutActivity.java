@@ -20,6 +20,7 @@ import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
 import com.carecloud.carepay.practice.library.checkout.NextAppointmentFragment;
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
+import com.carecloud.carepay.practice.library.dobverification.DoBVerificationActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckOutFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
@@ -104,6 +105,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     private WorkflowDTO continuePaymentsDTO;
     private boolean isCashPayment = false;
+    private WorkflowDTO workflowDTO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +113,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
         appointmentId = extra.getString(CarePayConstants.APPOINTMENT_ID);
         if (savedInstanceState == null || savedInstanceState.getBoolean("shouldReload", false)) {
-            WorkflowDTO workflowDTO = getConvertedDTO(WorkflowDTO.class);
+            workflowDTO = getConvertedDTO(WorkflowDTO.class);
             initDto(workflowDTO);
 
         }
@@ -120,6 +122,20 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
         initViews();
         initializeLanguageSpinner();
         logCheckoutStarted();
+
+        startDOBVerification();
+    }
+
+    private void startDOBVerification() {
+        WorkFlowRecord workFlowRecord = new WorkFlowRecord(workflowDTO);
+        workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
+
+        Intent intent = new Intent(getContext(), DoBVerificationActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putLong(WorkflowDTO.class.getName(), workFlowRecord.save(getContext()));
+        intent.putExtras(bundle);
+
+        startActivityForResult(intent, CarePayConstants.DOB_VERIFICATION_REQUEST);
     }
 
     /**
@@ -1066,6 +1082,16 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             return logoutTransition = paymentsModel.getPaymentsMetadata().getPaymentsTransitions().getLogout();
         } else {
             return null;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CarePayConstants.DOB_VERIFICATION_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                finish();
+            }
         }
     }
 }

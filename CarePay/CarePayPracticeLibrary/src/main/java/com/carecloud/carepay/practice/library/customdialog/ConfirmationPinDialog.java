@@ -240,7 +240,7 @@ public class ConfirmationPinDialog extends BaseDialogFragment implements View.On
                                     //do nothing more
                                 });
                     }
-                    practiceActivity.getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
+//                    practiceActivity.getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE);
                     practiceActivity.getAppAuthorizationHelper().setUser(practiceActivity.getApplicationMode()
                             .getUserPracticeDTO().getUserName());
                     practiceActivity.onPinConfirmationCheck(true, pinEditText.getText().toString());
