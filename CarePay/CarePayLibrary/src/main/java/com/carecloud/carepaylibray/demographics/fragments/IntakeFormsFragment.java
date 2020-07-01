@@ -48,6 +48,13 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
     public void onViewCreated(View view, Bundle icicle) {
         super.onViewCreated(view, icicle);
         setHeader(Label.getLabel("practice_chekin_section_intake_forms"));
+
+        nextButton.setOnClickListener(view1 -> {
+            isFormSaving = true;
+            enableNextButton(false);
+            showProgressDialog();
+            validateForm();
+        });
     }
 
     @Override
@@ -117,7 +124,7 @@ public class IntakeFormsFragment extends BaseWebFormFragment {
     }
 
     @Override
-    protected void validateForm() {
+    public void validateForm() {
         validateForm("save_intake");
     }
 

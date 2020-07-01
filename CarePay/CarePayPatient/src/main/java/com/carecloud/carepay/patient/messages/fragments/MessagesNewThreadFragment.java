@@ -93,7 +93,7 @@ public class MessagesNewThreadFragment extends BaseFragment implements MediaView
                     String[] params = {getString(R.string.param_provider_id), getString(R.string.param_provider_name)};
                     Object[] values = {provider.getId(), provider.getName()};
                     MixPanelUtil.logEvent(getString(R.string.event_message_new), params, values);
-                    callback.displayThreadMessages(messagingThreadDTO.getPayload(), true);
+                    callback.displayThreadMessages(messagingThreadDTO.getPayload(), "", true);
                 });
     }
 

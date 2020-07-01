@@ -9,7 +9,7 @@ import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 
 public interface MessageNavigationCallback extends FragmentActivityInterface {
 
-    void displayThreadMessages(Messages.Reply thread, boolean dismissDialogs);
+    void displayThreadMessages(Messages.Reply thread, String practiceName, boolean dismissDialogs);
 
     void displayToolbar(boolean display, String title);
 

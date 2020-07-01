@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.messages.models.ProviderContact;
+import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepaylibray.utils.PicassoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
@@ -29,6 +30,7 @@ public class MessagesProvidersAdapter extends RecyclerView.Adapter<MessagesProvi
 
     private Context context;
     private List<ProviderContact> providers;
+    private List<UserPracticeDTO> practices;
     private SelectProviderCallback callback;
 
     /**
@@ -36,12 +38,14 @@ public class MessagesProvidersAdapter extends RecyclerView.Adapter<MessagesProvi
      *
      * @param context   context
      * @param providers list of providers
+     * @param practices
      * @param callback  callback
      */
-    public MessagesProvidersAdapter(Context context, List<ProviderContact> providers, SelectProviderCallback callback) {
+    public MessagesProvidersAdapter(Context context, List<ProviderContact> providers, List<UserPracticeDTO> practices, SelectProviderCallback callback) {
         this.context = context;
         this.providers = providers;
         this.callback = callback;
+        this.practices = practices;
     }
 
     @NonNull
@@ -54,12 +58,21 @@ public class MessagesProvidersAdapter extends RecyclerView.Adapter<MessagesProvi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final ProviderContact provider = providers.get(position);
+        UserPracticeDTO practice = digPractice(provider.getBusinessEntityId());
 
         String providerName = provider.getName();
         holder.providerName.setText(providerName);
+        holder.speciality.setText(provider.getPrimarySpecialty());
         holder.providerInitials.setText(StringUtil.getShortName(providerName));
         holder.providerImage.setVisibility(View.GONE);
         holder.providerInitials.setVisibility(View.VISIBLE);
+
+        if (practice != null) {
+            holder.practiceName.setText(practice.getPracticeName());
+            holder.practiceName.setVisibility(View.VISIBLE);
+        } else {
+            holder.practiceName.setVisibility(View.GONE);
+        }
 
 
         holder.itemView.setOnClickListener(view -> callback.onProviderSelected(provider));
@@ -75,13 +88,23 @@ public class MessagesProvidersAdapter extends RecyclerView.Adapter<MessagesProvi
     }
 
 
+    private UserPracticeDTO digPractice(String providerEntity) {
+        for (UserPracticeDTO userPracticeDTO : practices) {
+            if (userPracticeDTO.getPracticeId().equals(providerEntity)) {
+                return userPracticeDTO;
+            }
+        }
+        return null;
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView unreadCount;
         ImageView providerImage;
         TextView providerInitials;
         TextView providerName;
-        TextView providerTitle;
+        TextView speciality;
+        TextView practiceName;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -89,7 +112,8 @@ public class MessagesProvidersAdapter extends RecyclerView.Adapter<MessagesProvi
             providerImage = itemView.findViewById(R.id.provider_image);
             providerInitials = itemView.findViewById(R.id.provider_initials);
             providerName = itemView.findViewById(R.id.provider_name);
-            providerTitle = itemView.findViewById(R.id.provider_title);
+            speciality = itemView.findViewById(R.id.provider_speciality);
+            practiceName = itemView.findViewById(R.id.practice_name);
         }
     }
 }
