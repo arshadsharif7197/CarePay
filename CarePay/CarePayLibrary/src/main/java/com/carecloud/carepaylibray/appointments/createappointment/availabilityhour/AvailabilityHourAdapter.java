@@ -69,9 +69,14 @@ public class AvailabilityHourAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public int getItemViewType(int position) {
-        final AppointmentsSlotsDTO slot = timeSlots.get(position);
-        if (slot.isHeader()) {
-            return CELL_HEADER;
+        final AppointmentsSlotsDTO slot;
+        try {
+            slot = timeSlots.get(position);
+            if (slot.isHeader()) {
+                return CELL_HEADER;
+            }
+        } catch (Exception e) {
+            return CELL_CARD;
         }
         return CELL_CARD;
     }
