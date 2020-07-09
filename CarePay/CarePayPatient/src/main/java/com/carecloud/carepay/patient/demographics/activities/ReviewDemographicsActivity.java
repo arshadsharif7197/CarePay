@@ -259,6 +259,7 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
 
     @Override
     public void exitPaymentProcess(boolean cancelled, boolean paymentPlanCreated, boolean paymentMade) {
+        SystemUtil.showSuccessToast(getContext(), Label.getLabel("confirm_appointment_checkin"));
         if (getCallingActivity() != null) {
             setResult(cancelled ? RESULT_CANCELED : RESULT_OK);
         }
