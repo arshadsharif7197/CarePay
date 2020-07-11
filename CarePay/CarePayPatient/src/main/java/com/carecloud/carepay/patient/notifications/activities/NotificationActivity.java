@@ -169,7 +169,7 @@ public class NotificationActivity extends MenuPatientActivity
                 }
                 break;
             case secure_message:
-                callMessagesScreen();
+                callMessagesScreen(notificationItem);
                 break;
             default:
                 //todo handle other notification types
@@ -177,8 +177,8 @@ public class NotificationActivity extends MenuPatientActivity
         }
     }
 
-    private void callMessagesScreen() {
-        displayMessagesScreen();
+    private void callMessagesScreen(NotificationItem notificationItem) {
+        displayMessagesScreen(notificationItem);
     }
 
     @Override

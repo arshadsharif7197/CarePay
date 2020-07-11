@@ -28,6 +28,10 @@ public class NotificationModel {
     @Expose
     private String appointmentId;
 
+    @SerializedName("event")
+    @Expose
+    private NotificationResponse event;
+
     public String getPatientId() {
         return patientId;
     }
@@ -66,5 +70,13 @@ public class NotificationModel {
 
     public void setAppointmentId(String appointmentId) {
         this.appointmentId = appointmentId;
+    }
+
+    public NotificationResponse getEvent() {
+        return event;
+    }
+
+    public void setEvent(NotificationResponse event) {
+        this.event = event;
     }
 }
