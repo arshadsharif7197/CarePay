@@ -13,13 +13,16 @@ import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.messages.activities.MessagesActivity;
 import com.carecloud.carepay.patient.notifications.activities.NotificationProxyActivity;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.platform.AndroidPlatform;
 import com.carecloud.carepay.service.library.platform.Platform;
 import com.carecloud.carepaylibray.fcm.NotificationModel;
+import com.carecloud.carepaylibray.fcm.NotificationResponse;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
 
 import java.util.Map;
 
@@ -62,6 +65,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             .setStyle(new NotificationCompat.BigTextStyle()
                                     .bigText(notificationModel.getAlert()));
             Intent resultIntent = new Intent(this, NotificationProxyActivity.class);
+            resultIntent.putExtra(MessagesActivity.KEY_MESSAGE_ID, notificationModel.getEvent().getPayload().getMessageId());
             PendingIntent resultPendingIntent =
                     PendingIntent.getActivity(
                             this,
@@ -100,6 +104,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         notificationModel.setPatientId(data.get("patient_id"));
         notificationModel.setPracticeId(data.get("practice_id"));
         notificationModel.setPracticeMgmt(data.get("practice_mgmt"));
+        NotificationResponse notificationResponse = new Gson().fromJson(data.get("event"), NotificationResponse.class);
+        notificationModel.setEvent(notificationResponse);
         return notificationModel;
     }
 
