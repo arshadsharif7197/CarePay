@@ -16,8 +16,9 @@ import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.customdialog.ConfirmationPinDialog;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
+import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.constants.ApplicationMode;
+import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
@@ -29,6 +30,7 @@ import com.carecloud.carepaylibray.utils.StringUtil;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 import com.carecloud.carepaylibray.utils.ValidationHelper;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -208,10 +210,11 @@ public class DoBVerificationActivity extends BasePracticeActivity {
     }
 
     @Override
-    public void onPinConfirmationCheck(boolean isCorrectPin, String pin) {
-//        setResult(RESULT_OK);
-//        finish();
-        goToHome(appointmentsResultModel.getMetadata().getTransitions().getLogout());
+    public void onPinConfirmationCheck(boolean isCorrectPin, String pin, TransitionDTO transitionDTO) {
+        Map<String, String> query = new HashMap<>();
+        query.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
+        query.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());
+        getWorkflowServiceHelper().execute(transitionDTO, practiceModeCallback, query);
     }
 
     WorkflowServiceCallback practiceModeCallback = new WorkflowServiceCallback() {

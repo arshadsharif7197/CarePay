@@ -13,18 +13,18 @@ public class PatientModeSwitchPinResponseDTO {
 
     @SerializedName("metadata")
     @Expose
-    private JsonObject metadata;
+    private PatientModeMetaDataDTO metadata;
 
     @SerializedName("payload")
     @Expose
     private PatientModeSwitchPinPaylodDTO payload = new PatientModeSwitchPinPaylodDTO();
 
-    public JsonObject getMetadata() {
-        return metadata;
+    public void setMetadata(PatientModeMetaDataDTO metadata) {
+        this.metadata = metadata;
     }
 
-    public void setMetadata(JsonObject metadata) {
-        this.metadata = metadata;
+    public PatientModeMetaDataDTO getMetadata() {
+        return metadata;
     }
 
     public PatientModeSwitchPinPaylodDTO getPayload() {

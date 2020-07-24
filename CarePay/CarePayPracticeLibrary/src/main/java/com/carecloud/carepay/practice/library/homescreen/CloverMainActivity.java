@@ -738,7 +738,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
     };
 
     @Override
-    public void onPinConfirmationCheck(boolean isCorrectPin, String pin) {
+    public void onPinConfirmationCheck(boolean isCorrectPin, String pin, TransitionDTO dto) {
         // call for transition
         Gson gson = new Gson();
         PatientHomeScreenTransitionsDTO transitions = gson.fromJson(homeScreenDTO.getMetadata().getTransitions(),

@@ -187,7 +187,7 @@ public class AdHocFormsActivity extends BasePracticeActivity implements AdHocFor
     }
 
     @Override
-    public void onPinConfirmationCheck(boolean isCorrectPin, String pin) {
+    public void onPinConfirmationCheck(boolean isCorrectPin, String pin, TransitionDTO dTO) {
         TransitionDTO transitionDTO = adhocFormsModel.getMetadata().getTransitions().getPracticeMode();
         Map<String, String> query = new HashMap<>();
         query.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
