@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ public class HelpFragment extends BaseFragment {
         initializeToolbar(view);
         initializeSupportButton(view);
         initializeFaqButton(view);
+        initializeTelehealthButton(view);
         initializeTosButton(view);
         initializePrivacyButton(view);
         initializePlayAgainButton(view);
@@ -71,6 +73,11 @@ public class HelpFragment extends BaseFragment {
         textView.setOnClickListener(view1 -> openUrl(Label.getLabel("support_url_faq")));
     }
 
+    private void initializeTelehealthButton(View view) {
+        View telehealthBtn = view.findViewById(R.id.telehealthBtn);
+        telehealthBtn.setOnClickListener(view1 -> openUrl(Label.getLabel("support_url_telehealth"))); //"https://www.carecloud.com/telehealth-patient-breeze"
+    }
+
     private void initializeTosButton(View view) {
         View textView = view.findViewById(R.id.tosTextView);
         textView.setOnClickListener(view1 -> openUrl(Label.getLabel("support_url_tos")));
@@ -87,6 +94,10 @@ public class HelpFragment extends BaseFragment {
     }
 
     private void openUrl(String url) {
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
