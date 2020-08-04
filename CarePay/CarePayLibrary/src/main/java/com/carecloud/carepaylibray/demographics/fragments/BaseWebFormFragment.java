@@ -376,8 +376,12 @@ public abstract class BaseWebFormFragment extends BaseCheckinFragment {
                     getActivity().runOnUiThread(() -> {
                         isFormSaving = false;
                         webView.scrollTo(0, 0);
-                        enableNextButton(false);
                         hideProgressDialog();
+                        if (webView.getHeight() < webView.getContentHeight()) {
+                            enableNextButton(false);
+                        } else {
+                            enableNextButton(true);
+                        }
                     });
                 }
             }, 500);
