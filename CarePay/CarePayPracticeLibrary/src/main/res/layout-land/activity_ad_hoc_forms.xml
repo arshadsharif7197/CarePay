@@ -73,6 +73,7 @@
                 android:textSize="@dimen/text_size_20sp"
                 app:customAssetFont="gotham_rounded_light"
                 breeze:textKey="demographics_back_text"
+                android:visibility="gone"
                 tools:text="Back" />
 
             <include
