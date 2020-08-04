@@ -12,19 +12,39 @@
     android:paddingBottom="13dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <ImageView
-        android:id="@+id/appointmentDrawerIdImageView"
+    <RelativeLayout
+        android:id="@+id/appointmentDrawerIdImageViewLayout"
         android:layout_width="@dimen/dimen_70dp"
         android:layout_height="@dimen/dimen_70dp"
         android:layout_marginTop="@dimen/nav_header_vertical_spacing"
-        android:layout_marginBottom="@dimen/nav_image_padding"
-        android:src="@drawable/icn_placeholder_user_profile_png" />
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/appointmentDrawerIdImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+        <com.carecloud.carepaylibray.customcomponents.CarePayTextView
+            android:id="@+id/appointmentDrawerAvatarTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:background="@drawable/round_list_tv"
+            android:gravity="center_vertical|center_horizontal"
+            android:src="@drawable/icn_placeholder_user_profile_png"
+            android:text="DP"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/apt_dl_text_big"
+            app:customAssetFont="gotham_rounded_medium" />
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/patientNameLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/appointmentDrawerIdImageView"
+        android:layout_below="@id/appointmentDrawerIdImageViewLayout"
+        android:layout_alignParentStart="true"
         android:orientation="horizontal">
 
         <com.carecloud.carepaylibray.customcomponents.CarePayTextView
