@@ -158,7 +158,7 @@ public class PatientModeSplashActivity extends BasePracticeActivity {
     }
 
     @Override
-    public void onPinConfirmationCheck(boolean isCorrectPin, String pin) {
+    public void onPinConfirmationCheck(boolean isCorrectPin, String pin, TransitionDTO dto) {
         TransitionDTO transitionDTO = patientModeSplashDTO.getMetadata().getTransitions().getPracticeMode();
         Map<String, String> query = new HashMap<>();
         query.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());

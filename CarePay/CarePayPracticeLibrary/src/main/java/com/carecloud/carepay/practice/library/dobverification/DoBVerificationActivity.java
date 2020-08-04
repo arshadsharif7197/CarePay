@@ -15,15 +15,13 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.customdialog.ConfirmationPinDialog;
-import com.carecloud.carepay.practice.library.dobverification.model.DoBDto;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
-import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.base.NavigationStateConstants;
+import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.customcomponents.CarePayTextInputLayout;
 import com.carecloud.carepaylibray.customdialogs.LargeAlertDialogFragment;
 import com.carecloud.carepaylibray.demographics.fragments.ConfirmDialogFragment;
@@ -42,7 +40,7 @@ public class DoBVerificationActivity extends BasePracticeActivity {
 
     private static final int DOB_LENGTH = 10;
     private static final int MAX_INTENTS = 3;
-    private DoBDto doBDto;
+    private AppointmentsResultModel appointmentsResultModel;
     private EditText dobEditText;
     private int retries = 0;
     private CarePayTextInputLayout dobTextInputLayout;
@@ -51,9 +49,9 @@ public class DoBVerificationActivity extends BasePracticeActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dob_verification);
-        doBDto = getConvertedDTO(DoBDto.class);
-        getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
-        getAppAuthorizationHelper().setUser(doBDto.getPayload().getCheckinModeDTO().getMetadata().getUsername());
+        appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
+
+        getAppAuthorizationHelper().setUser(appointmentsResultModel.getPayload().getDemographicDTO().getMetadata().getUsername());
 
         setUpUi();
     }
@@ -134,27 +132,20 @@ public class DoBVerificationActivity extends BasePracticeActivity {
 
     private String getPatientName() {
         String firstName;
-        if (StringUtil.isNullOrEmpty(doBDto.getPayload().getDemographicDTO().getPayload()
+        if (StringUtil.isNullOrEmpty(appointmentsResultModel.getPayload().getDemographicDTO().getPayload()
                 .getPersonalDetails().getFirstName())) {
             firstName = "";
         } else {
-            firstName = doBDto.getPayload().getDemographicDTO().getPayload()
+            firstName = appointmentsResultModel.getPayload().getDemographicDTO().getPayload()
                     .getPersonalDetails().getFirstName().substring(0, 1);
         }
-        String lastName = doBDto.getPayload().getDemographicDTO().getPayload()
+        String lastName = appointmentsResultModel.getPayload().getDemographicDTO().getPayload()
                 .getPersonalDetails().getLastName();
         return StringUtil.capitalize(String.format("%s. %s", firstName, lastName));
     }
 
     private void onVerifyButtonClick() {
         if (validateDoB(dobEditText.getText().toString())) {
-            WorkflowDTO workflowDTO = getConvertedDTO(WorkflowDTO.class);
-            Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
-            String appointmentId = extra.getString(CarePayConstants.APPOINTMENT_ID);
-            Bundle info = new Bundle();
-            info.putString(CarePayConstants.APPOINTMENT_ID, appointmentId);
-            info.putBoolean(CarePayConstants.HANDLE_HOME, true);
-            PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, info);
             finish();
         } else {
             retries++;
@@ -169,9 +160,9 @@ public class DoBVerificationActivity extends BasePracticeActivity {
 
     private void showPasswordFragment() {
         ConfirmationPinDialog confirmationPinDialog = ConfirmationPinDialog.newInstance(
-                doBDto.getMetadata().getLinks().getPinpad(),
+                appointmentsResultModel.getMetadata().getLinks().getPinpad(),
                 false,
-                doBDto.getMetadata().getLinks().getLanguage());
+                appointmentsResultModel.getMetadata().getLinks().getLanguage());
         displayDialogFragment(confirmationPinDialog, false);
     }
 
@@ -186,10 +177,10 @@ public class DoBVerificationActivity extends BasePracticeActivity {
         String dob;
         boolean isGuest = !ValidationHelper.isValidEmail(getAppAuthorizationHelper().getCurrUser());
         if (isGuest) {
-            dob = DateUtil.getInstance().setDateRaw(doBDto.getPayload().getAppointments().get(0)
+            dob = DateUtil.getInstance().setDateRaw(appointmentsResultModel.getPayload().getAppointments().get(0)
                     .getPayload().getPatient().getDateOfBirth()).toStringWithFormatMmSlashDdSlashYyyy();
         } else {
-            dob = doBDto.getPayload().getDemographicDTO().getPayload().getPersonalDetails()
+            dob = appointmentsResultModel.getPayload().getDemographicDTO().getPayload().getPersonalDetails()
                     .getFormattedDateOfBirth();
         }
         return dobInput.equals(dob);
@@ -211,7 +202,7 @@ public class DoBVerificationActivity extends BasePracticeActivity {
         headers.put("username_patient", getApplicationPreferences().getPatientId());
 
         final PopupPickerLanguage popupPickerLanguage = new PopupPickerLanguage(getContext(), false,
-                doBDto.getPayload().getLanguages(), language -> changeLanguage(doBDto.getMetadata().getLinks().getLanguage(),
+                appointmentsResultModel.getPayload().getLanguages(), language -> changeLanguage(appointmentsResultModel.getMetadata().getLinks().getLanguage(),
                 language.getCode().toLowerCase(), headers));
         TextView languageSpinner = findViewById(R.id.languageSpinner);
         languageSpinner.setOnClickListener(popupPickerLanguage::showAsDropDown);
@@ -219,8 +210,7 @@ public class DoBVerificationActivity extends BasePracticeActivity {
     }
 
     @Override
-    public void onPinConfirmationCheck(boolean isCorrectPin, String pin) {
-        TransitionDTO transitionDTO = doBDto.getMetadata().getTransitions().getPracticeMode();
+    public void onPinConfirmationCheck(boolean isCorrectPin, String pin, TransitionDTO transitionDTO) {
         Map<String, String> query = new HashMap<>();
         query.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
         query.put("practice_id", getApplicationMode().getUserPracticeDTO().getPracticeId());

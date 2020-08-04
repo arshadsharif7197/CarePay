@@ -2,8 +2,10 @@ package com.carecloud.carepay.practice.library.patientmodecheckin.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import android.util.Log;
 
 import com.carecloud.carepay.practice.library.R;
@@ -160,7 +162,7 @@ public class CompleteCheckActivity extends BasePracticeActivity implements Check
     }
 
     @Override
-    public void onPinConfirmationCheck(boolean isCorrectPin, String pin) {
+    public void onPinConfirmationCheck(boolean isCorrectPin, String pin, TransitionDTO dto) {
         TransitionDTO transitionDTO = metadataModel.getMetadata().getTransitions().getPracticeMode();
         Map<String, String> query = new HashMap<>();
         query.put("practice_mgmt", getApplicationMode().getUserPracticeDTO().getPracticeMgmt());
