@@ -16,6 +16,7 @@ import com.carecloud.carepay.patient.appointments.fragments.AppointmentTabHostFr
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.patient.menu.MenuPatientActivity;
+import com.carecloud.carepay.patient.messages.activities.MessagesActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.rate.RateDialog;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
@@ -47,6 +48,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         super.onCreate(savedInstanceState);
         setUpViewModel();
         Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
+
         boolean forceRefresh = false;
         boolean showSurvey = false;
         if (extra != null) {
@@ -89,6 +91,15 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         initPresenter();
         AppointmentTabHostFragment fragment = AppointmentTabHostFragment.newInstance(0);
         replaceFragment(R.id.container_main, fragment, false);
+
+        String messageId = ApplicationPreferences.getInstance().getMessageId();
+        if (!messageId.isEmpty()) {
+            ApplicationPreferences.getInstance().setMessageId("");
+            Intent intent = new Intent(this, MessagesActivity.class);
+            intent.putExtra(MessagesActivity.KEY_MESSAGE_ID, messageId);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
     }
 
     @Override

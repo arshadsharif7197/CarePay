@@ -170,6 +170,10 @@ public class NotificationItemMetadata {
         @SerializedName("event_name")
         private String eventName;
 
+        @Expose
+        @SerializedName("message_id")
+        private String messageId;
+
         public boolean isPaymentSuccessful() {
             return isPaymentSuccessful;
         }
@@ -200,6 +204,14 @@ public class NotificationItemMetadata {
 
         public void setEventName(String eventName) {
             this.eventName = eventName;
+        }
+
+        public String getMessageId() {
+            return messageId;
+        }
+
+        public void setMessageId(String messageId) {
+            this.messageId = messageId;
         }
     }
 
