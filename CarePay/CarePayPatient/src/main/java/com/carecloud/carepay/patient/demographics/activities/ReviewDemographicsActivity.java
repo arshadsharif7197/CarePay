@@ -2,9 +2,11 @@ package com.carecloud.carepay.patient.demographics.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,6 +22,7 @@ import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.base.ISession;
+import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.common.ConfirmationCallback;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenter;
 import com.carecloud.carepaylibray.demographics.DemographicsPresenterImpl;
@@ -260,8 +263,17 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     @Override
     public void exitPaymentProcess(boolean cancelled, boolean paymentPlanCreated, boolean paymentMade) {
         SystemUtil.showSuccessToast(getContext(), Label.getLabel("confirm_appointment_checkin"));
+        boolean isTelehealthAppointment = demographicsPresenter.getAppointment().getPayload().getVisitType().hasVideoOption();
+        String appointmentId = demographicsPresenter.getAppointment().getPayload().getId();
+        Intent intent = new Intent();
+        intent.putExtra(NavigationStateConstants.APPOINTMENT_ID, appointmentId);
+        intent.putExtra(NavigationStateConstants.APPOINTMENT_TYPE, isTelehealthAppointment);
         if (getCallingActivity() != null) {
-            setResult(cancelled ? RESULT_CANCELED : RESULT_OK);
+            if (isTelehealthAppointment) {
+                setResult(cancelled ? RESULT_CANCELED : RESULT_OK, intent);
+            } else {
+                setResult(cancelled ? RESULT_CANCELED : RESULT_OK);
+            }
         }
         demographicsPresenter.logCheckinCompleted(paymentPlanCreated, paymentMade, paymentsModel);
         finish();

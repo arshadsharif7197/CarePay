@@ -3,6 +3,7 @@ package com.carecloud.carepay.patient.appointments.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.Toast;
 
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -18,6 +19,7 @@ import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.patient.menu.MenuPatientActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.rate.RateDialog;
+import com.carecloud.carepay.patient.utils.payments.Constants;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
@@ -99,19 +101,18 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             case PaymentConstants.REQUEST_CODE_GOOGLE_PAYMENT:
                 presenter.forwardAndroidPayResult(requestCode, resultCode, data);
                 break;
-            case PatientAppointmentPresenter.CHECK_IN_FLOW_REQUEST_CODE:
+            case PatientAppointmentPresenter.CHECK_IN_FLOW_REQUEST_CODE: {
                 if (resultCode == RESULT_CANCELED) {
-                    new Handler().postDelayed(() -> {
-                        refreshAppointments();
-                        showRateDialogFragment();
-                    }, 100);
+                    if (!isTeleHealthAppointment(data)) {
+                        refreshUI();
+                    }
                 } else if (resultCode == RESULT_OK) {
-                    new Handler().postDelayed(() -> {
-                        refreshAppointments();
-                        showRateDialogFragment();
-                    }, 100);
+                    if (!isTeleHealthAppointment(data)) {
+                        refreshUI();
+                    }
                 }
                 break;
+            }
             case PaymentConstants.REQUEST_CODE_CCLIVE:
 //                onBackPressed();
                 break;
@@ -119,6 +120,26 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                 super.onActivityResult(requestCode, resultCode, data);
                 break;
         }
+    }
+
+    private void refreshUI() {
+        new Handler().postDelayed(() -> {
+            refreshAppointments();
+            showRateDialogFragment();
+        }, 100);
+    }
+
+    private boolean isTeleHealthAppointment(Intent data) {
+        boolean isTelehealthAppointment = false;
+        if (data != null && data.hasExtra(NavigationStateConstants.APPOINTMENT_ID) &&
+                data.hasExtra(NavigationStateConstants.APPOINTMENT_TYPE)) {
+            String appointmentId = data.getStringExtra(NavigationStateConstants.APPOINTMENT_ID);
+            isTelehealthAppointment = (boolean) data.getExtras().get(NavigationStateConstants.APPOINTMENT_TYPE);
+
+            // TODO: 8/15/2020 create Telehealth Appointment screen here
+            Toast.makeText(this, "Telehealth Appointment", Toast.LENGTH_SHORT).show();
+        }
+        return isTelehealthAppointment;
     }
 
     private void showRateDialogFragment() {

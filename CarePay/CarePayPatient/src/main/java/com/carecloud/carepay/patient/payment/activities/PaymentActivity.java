@@ -2,8 +2,10 @@ package com.carecloud.carepay.patient.payment.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
@@ -104,8 +106,17 @@ public class PaymentActivity extends BasePatientActivity implements PaymentViewH
 
     @Override
     public void exitPaymentProcess(boolean cancelled, boolean paymentPlanCreated, boolean paymentMade) {
+        boolean isTelehealthAppointment = presenter.getAppointment().getPayload().getVisitType().hasVideoOption();
+        String appointmentId = presenter.getAppointment().getPayload().getId();
+        Intent intent = new Intent();
+        intent.putExtra(NavigationStateConstants.APPOINTMENT_ID, appointmentId);
+        intent.putExtra(NavigationStateConstants.APPOINTMENT_TYPE, isTelehealthAppointment);
         if (getCallingActivity() != null) {
-            setResult(cancelled ? RESULT_CANCELED : RESULT_OK);
+            if (isTelehealthAppointment) {
+                setResult(cancelled ? RESULT_CANCELED : RESULT_OK, intent);
+            } else {
+                setResult(cancelled ? RESULT_CANCELED : RESULT_OK);
+            }
         }
         finish();
     }
