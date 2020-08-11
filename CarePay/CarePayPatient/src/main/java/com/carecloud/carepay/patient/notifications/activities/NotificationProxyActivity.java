@@ -69,6 +69,7 @@ public class NotificationProxyActivity extends MenuPatientActivity {
         public void onPostExecute(WorkflowDTO workflowDTO) {
             PatientNavigationHelper.setAccessPaymentsBalances(false);
             navigateToWorkflow(workflowDTO);
+            finish();
         }
 
         @Override

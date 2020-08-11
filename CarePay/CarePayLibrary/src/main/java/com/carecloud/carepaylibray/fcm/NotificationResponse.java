@@ -30,7 +30,7 @@ public class NotificationResponse {
     public class Metadata {
         @SerializedName("event_source_guid")
         @Expose
-        private Integer eventSourceGuid;
+        private String eventSourceGuid;
         @SerializedName("generated_at")
         @Expose
         private String generatedAt;
@@ -65,11 +65,11 @@ public class NotificationResponse {
         @Expose
         private String practiceMgmt;
 
-        public Integer getEventSourceGuid() {
+        public String getEventSourceGuid() {
             return eventSourceGuid;
         }
 
-        public void setEventSourceGuid(Integer eventSourceGuid) {
+        public void setEventSourceGuid(String eventSourceGuid) {
             this.eventSourceGuid = eventSourceGuid;
         }
 
@@ -166,7 +166,7 @@ public class NotificationResponse {
     public class Payload {
         @SerializedName("event_source_guid")
         @Expose
-        private Integer eventSourceGuid;
+        private String eventSourceGuid;
         @SerializedName("sender")
         @Expose
         private String sender;
@@ -186,11 +186,11 @@ public class NotificationResponse {
         @Expose
         private String senderName;
 
-        public Integer getEventSourceGuid() {
+        public String getEventSourceGuid() {
             return eventSourceGuid;
         }
 
-        public void setEventSourceGuid(Integer eventSourceGuid) {
+        public void setEventSourceGuid(String eventSourceGuid) {
             this.eventSourceGuid = eventSourceGuid;
         }
 

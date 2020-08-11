@@ -71,7 +71,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             .setStyle(new NotificationCompat.BigTextStyle()
                                     .bigText(notificationModel.getAlert()));
             Intent resultIntent = new Intent(this, NotificationProxyActivity.class);
-            resultIntent.putExtra(MessagesActivity.KEY_MESSAGE_ID, notificationModel.getEvent().getPayload().getMessageId());
+            if (notificationModel.getEvent().getPayload().getMessageId() != null) {
+                resultIntent.putExtra(MessagesActivity.KEY_MESSAGE_ID, notificationModel.getEvent().getPayload().getMessageId());
+            }
             PendingIntent resultPendingIntent =
                     PendingIntent.getActivity(
                             this,
