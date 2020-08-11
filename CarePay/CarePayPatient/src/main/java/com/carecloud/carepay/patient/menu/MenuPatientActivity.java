@@ -32,6 +32,7 @@ import com.carecloud.carepay.patient.messages.activities.MessagesActivity;
 import com.carecloud.carepay.patient.myhealth.MyHealthActivity;
 import com.carecloud.carepay.patient.myhealth.dtos.MyHealthDto;
 import com.carecloud.carepay.patient.notifications.activities.NotificationActivity;
+import com.carecloud.carepay.patient.notifications.models.NotificationItem;
 import com.carecloud.carepay.patient.payment.activities.ViewPaymentBalanceHistoryActivity;
 import com.carecloud.carepay.patient.retail.activities.RetailActivity;
 import com.carecloud.carepay.patient.session.PatientSessionService;
@@ -58,6 +59,7 @@ import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -341,18 +343,34 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
 
     private void setUserImage(String imageUrl) {
         ImageView userImageView = navigationView.findViewById(R.id.appointmentDrawerIdImageView);
+        TextView initials = navigationView.findViewById(R.id.appointmentDrawerAvatarTextView);
+
+        if (!StringUtil.isNullOrEmpty(ApplicationPreferences.getInstance().getFullName())) {
+            initials.setText(StringUtil.getShortName(ApplicationPreferences.getInstance().getFullName()));
+        }
+
+        int size = getResources().getDimensionPixelSize(R.dimen.dimen_70dp);
         if (!StringUtil.isNullOrEmpty(imageUrl)) {
-            Picasso.with(this)
-                    .load(imageUrl)
-                    .placeholder(R.drawable.icn_placeholder_user_profile_png)
-                    .resize(160, 160)
+            Picasso.with(this).load(imageUrl)
+                    .resize(size, size)
                     .centerCrop()
                     .transform(new CircleImageTransform())
-                    .into(userImageView);
-        } else {
-            userImageView.setImageDrawable(getResources().getDrawable(R.drawable.icn_placeholder_user_profile_png));
+                    .into(userImageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            userImageView.setVisibility(View.VISIBLE);
+                            initials.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onError() {
+                            userImageView.setVisibility(View.GONE);
+                            initials.setVisibility(View.VISIBLE);
+                        }
+                    });
         }
     }
+
 
     @Override
     protected void onResume() {
@@ -626,9 +644,11 @@ public abstract class MenuPatientActivity extends BasePatientActivity implements
         return transitionMessaging;
     }
 
-    protected void displayMessagesScreen() {
+    protected void displayMessagesScreen(NotificationItem notificationItem) {
         //backward compat for pending notification merge
-        startActivity(MessagesActivity.class);
+        Intent intent = new Intent(this, MessagesActivity.class);
+        intent.putExtra(MessagesActivity.KEY_MESSAGE_ID, notificationItem.getMetadata().getEvent().getPayload().getMessageId());
+        startActivity(intent);
     }
 
     /**

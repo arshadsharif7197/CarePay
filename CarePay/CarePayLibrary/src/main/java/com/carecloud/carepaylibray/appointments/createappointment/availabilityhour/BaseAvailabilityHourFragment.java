@@ -203,7 +203,7 @@ public abstract class BaseAvailabilityHourFragment extends BaseDialogFragment im
             if (appointmentsSettingDTO.getPracticeId().equals(appointmentModelDto.getPayload()
                     .getAppointmentAvailability().getMetadata().getPracticeId())) {
                 for (AppointmentsPrePaymentDTO prePaymentDTO : appointmentsSettingDTO.getPrePayments()) {
-                    if (prePaymentDTO.getVisitType().equals(visitTypeId)) {
+                    if (prePaymentDTO.getVisitType() != null && prePaymentDTO.getVisitType().equals(visitTypeId)) {
                         return prePaymentDTO.getAmount();
                     }
                 }

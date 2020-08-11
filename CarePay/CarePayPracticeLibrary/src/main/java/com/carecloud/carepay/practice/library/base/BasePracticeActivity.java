@@ -60,7 +60,7 @@ public abstract class BasePracticeActivity extends BaseActivity implements IConf
     }
 
     @Override
-    public void onPinConfirmationCheck(boolean isCorrectPin, String pin) {
+    public void onPinConfirmationCheck(boolean isCorrectPin, String pin, TransitionDTO transitionDTO) {
 
     }
 

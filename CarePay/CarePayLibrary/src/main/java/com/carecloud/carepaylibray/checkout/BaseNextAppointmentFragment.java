@@ -555,4 +555,11 @@ public abstract class BaseNextAppointmentFragment extends BaseFragment
         }
         return appointmentsSettingDTO.getRequests().getAutomaticallyApproveRequests();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        enableTimeSlotField();
+        enableScheduleAppointmentButton();
+    }
 }

@@ -61,6 +61,8 @@ public class ApplicationPreferences {
     private static final String PREFERENCE_LAST_DATE_RATE_DIALOG_SHOWN = "lastDateRateDialogShown";
     private static final String PREFERENCE_PATIENT_MODE_TRANSITION = "patientModeTransition";
     private static final String PREFERENCE_REFRESH_TOKEN = "refresh_token";
+    private static final String PREFERENCE_MESSAGE_ID = "message_id";
+    private static final String PREFERENCE_NOTIFICATION_ID = "notification_id";
 
 
     private String patientId;
@@ -568,5 +570,21 @@ public class ApplicationPreferences {
 
     public String getRefreshToken() {
         return readStringFromSharedPref(PREFERENCE_REFRESH_TOKEN, "");
+    }
+
+    public void setMessageId(String newValue) {
+        writeStringToSharedPref(PREFERENCE_MESSAGE_ID, newValue);
+    }
+
+    public String getMessageId() {
+        return readStringFromSharedPref(PREFERENCE_MESSAGE_ID, "");
+    }
+
+    public void setNotificationId(String newValue) {
+        writeStringToSharedPref(PREFERENCE_NOTIFICATION_ID, newValue);
+    }
+
+    public String getNotificationId() {
+        return readStringFromSharedPref(PREFERENCE_NOTIFICATION_ID, "0");
     }
 }
