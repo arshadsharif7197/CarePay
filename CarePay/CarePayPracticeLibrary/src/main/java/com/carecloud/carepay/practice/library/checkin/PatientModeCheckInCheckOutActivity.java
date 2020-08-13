@@ -18,6 +18,7 @@ import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
+import com.carecloud.carepay.service.library.constants.ApplicationMode;
 import com.carecloud.carepay.service.library.constants.Defs;
 import com.carecloud.carepay.service.library.constants.HttpConstants;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;
@@ -76,27 +77,6 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
         } catch (JsonSyntaxException ex) {
             showErrorNotification(null);
             ex.printStackTrace();
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case CarePayConstants.CLOVER_PAYMENT_INTENT_REQUEST_CODE: {
-                if (resultCode == CarePayConstants.HOME_PRESSED) {
-                    Handler handler = new Handler();
-                    handler.postDelayed(() -> {
-                        //need to do this delayed because onActivityResult executes before onResume
-                        // and thus it does not show the progress dialog
-                        goToHome(appointmentsResultModel.getMetadata().getTransitions().getLogout());
-                    }, 300);
-                }
-                break;
-            }
-            default: {
-                super.onActivityResult(requestCode, resultCode, data);
-            }
         }
     }
 
@@ -255,6 +235,8 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
 
     @Override
     public void onStartCheckOut(AppointmentDTO selectedAppointment) {
+        getApplicationMode().setApplicationType(ApplicationMode.ApplicationType.PRACTICE_PATIENT_MODE);
+
         Map<String, String> queries = new HashMap<>();
         queries.put("appointment_id", selectedAppointment.getMetadata().getAppointmentId());
         queries.put("patient_id", selectedAppointment.getMetadata().getPatientId());
@@ -299,6 +281,28 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
     @Override
     public TransitionDTO getLogoutTransition() {
         return appointmentsResultModel.getMetadata().getTransitions().getLogout();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case CarePayConstants.DOB_VERIFICATION_REQUEST:
+            case CarePayConstants.CLOVER_PAYMENT_INTENT_REQUEST_CODE: {
+                if (resultCode == RESULT_OK) {
+                    Handler handler = new Handler();
+                    handler.postDelayed(() -> {
+                        //need to do this delayed because onActivityResult executes before onResume
+                        // and thus it does not show the progress dialog
+                        goToHome(appointmentsResultModel.getMetadata().getTransitions().getLogout());
+                    }, 300);
+                }
+            }
+            break;
+            default: {
+                super.onActivityResult(requestCode, resultCode, data);
+            }
+        }
     }
 
 }

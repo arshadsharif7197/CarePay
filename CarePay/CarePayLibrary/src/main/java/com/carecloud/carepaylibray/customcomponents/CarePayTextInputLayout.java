@@ -3,7 +3,9 @@ package com.carecloud.carepaylibray.customcomponents;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+
 import com.google.android.material.textfield.TextInputLayout;
+
 import android.util.AttributeSet;
 
 import com.carecloud.carepaylibrary.R;
@@ -150,14 +152,6 @@ public class CarePayTextInputLayout extends TextInputLayout {
         this.setTypeface(tf);
     }
 
-    @Override
-    public void setError(CharSequence errorMessage) {
-        super.setError(errorMessage);
-        if (errorMessage != null && requestFocusWhenError) {
-            requestFocus();
-        }
-    }
-
     public void setRequestFocusWhenError(boolean requestFocusWhenError) {
         this.requestFocusWhenError = requestFocusWhenError;
     }
@@ -170,6 +164,23 @@ public class CarePayTextInputLayout extends TextInputLayout {
         setFont(font);
         invalidate();
         requestLayout();
+    }
+
+    /**
+     * set helper text instead of error text (requirement color difference of hint & error)
+     */
+
+    @Override
+    public void setError(CharSequence errorMessage) {
+        super.setHelperText(errorMessage);
+        if (errorMessage != null && requestFocusWhenError) {
+            requestFocus();
+        }
+    }
+
+    @Override
+    public void setErrorEnabled(boolean enabled) {
+        super.setHelperTextEnabled(enabled);
     }
 
 }

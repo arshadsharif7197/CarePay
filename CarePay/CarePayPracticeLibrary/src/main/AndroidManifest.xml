@@ -13,18 +13,24 @@
         <activity
             android:name=".signin.ResetPasswordActivity"
             android:screenOrientation="sensorLandscape" />
+
         <activity
             android:name=".adhocforms.AdHocFormsActivity"
             android:screenOrientation="sensorLandscape" />
         <activity
             android:name="com.carecloud.carepay.practice.library.dobverification.DoBVerificationActivity"
-            android:screenOrientation="sensorLandscape"/>
+            android:screenOrientation="sensorLandscape" />
         <activity
             android:name=".session.PracticeWarningSessionActivity"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/WarningTimeoutTheme" />
-        <service android:name=".payments.IntegratedPaymentsQueueUploadService" android:enabled="true"/>
-        <service android:name=".homescreen.AppointmentCountUpdateService" android:enabled="true" />
+
+        <service
+            android:name=".payments.IntegratedPaymentsQueueUploadService"
+            android:enabled="true" />
+        <service
+            android:name=".homescreen.AppointmentCountUpdateService"
+            android:enabled="true" />
 
         <service
             android:name=".session.PracticeSessionService"
