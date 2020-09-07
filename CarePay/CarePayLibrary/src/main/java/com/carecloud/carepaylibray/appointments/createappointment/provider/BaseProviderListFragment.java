@@ -1,9 +1,12 @@
 package com.carecloud.carepaylibray.appointments.createappointment.provider;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.View;
 
@@ -22,11 +25,16 @@ import com.carecloud.carepaylibray.base.BaseDialogFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.StringUtil;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author pjohnson on 1/15/19.
@@ -104,7 +112,7 @@ public abstract class BaseProviderListFragment extends BaseDialogFragment {
                         !resourcesDto.getPayload().getResourcesToSchedule().get(0).getResourcesV2().isEmpty()) {
                     List<AppointmentResourcesItemDTO> providers = sortProviders(resourcesDto
                             .getPayload().getResourcesToSchedule().get(0).getResourcesV2());
-                    showResources(providers);
+                    showResources(getUniqueProviders(providers));
                 } else {
                     getView().findViewById(R.id.providers_recycler_view).setVisibility(View.GONE);
                     getView().findViewById(R.id.emptyStateScreen).setVisibility(View.VISIBLE);
@@ -118,6 +126,23 @@ public abstract class BaseProviderListFragment extends BaseDialogFragment {
                 Log.e(getString(R.string.alert_title_server_error), exceptionMessage);
             }
         }, queryMap);
+    }
+
+    private List<AppointmentResourcesItemDTO> getUniqueProviders(List<AppointmentResourcesItemDTO> providers) {
+        List<AppointmentResourcesItemDTO> uniqueProviders = new ArrayList<>();
+        for (AppointmentResourcesItemDTO providerInfo : providers) {
+            if (uniqueProviders.size() > 0) {
+                for (AppointmentResourcesItemDTO uniqueProvider : uniqueProviders) {
+                    if (!uniqueProvider.getProvider().getName().equalsIgnoreCase(providerInfo.getProvider().getName())) {
+                        uniqueProviders.add(providerInfo);
+                        break;
+                    }
+                }
+            } else {
+                uniqueProviders.add(providerInfo);
+            }
+        }
+        return uniqueProviders;
     }
 
     private List<AppointmentResourcesItemDTO> sortProviders(List<AppointmentResourcesItemDTO> resourcesDto) {
