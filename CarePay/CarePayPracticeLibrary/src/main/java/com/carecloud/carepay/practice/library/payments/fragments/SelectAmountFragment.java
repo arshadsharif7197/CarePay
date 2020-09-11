@@ -63,7 +63,7 @@ public class SelectAmountFragment extends BaseDialogFragment {
         applyAmountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
+                cancel();
                 callback.onAmountSelected(Double.parseDouble(numberStr));
             }
         });
@@ -73,12 +73,7 @@ public class SelectAmountFragment extends BaseDialogFragment {
         amountSymbol.setText(symbol);
         setEntryListeners(view);
         View close = view.findViewById(R.id.closeViewLayout);
-        close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+        close.setOnClickListener(v -> cancel());
     }
 
     public void setCallback(SelectAmountInterface callback) {
