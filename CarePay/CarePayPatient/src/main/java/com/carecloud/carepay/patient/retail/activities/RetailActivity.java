@@ -243,25 +243,27 @@ public class RetailActivity extends MenuPatientActivity implements RetailPatient
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
-        RetailModel retailModel = DtoHelper.getConvertedDTO(RetailModel.class, workflowDTO);
-        if (hasMultipleStores) {
-            getSupportFragmentManager().popBackStack(RetailFragment.class.getName(), 0);
-        } else {
-            while (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-                getSupportFragmentManager().popBackStackImmediate();//these need to go immediately
+        if (workflowDTO != null) {
+            RetailModel retailModel = DtoHelper.getConvertedDTO(RetailModel.class, workflowDTO);
+            if (hasMultipleStores) {
+                getSupportFragmentManager().popBackStack(RetailFragment.class.getName(), 0);
+            } else {
+                while (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+                    getSupportFragmentManager().popBackStackImmediate();//these need to go immediately
+                }
+                getSupportFragmentManager().popBackStack();//last one needs to go after we load the redirect
             }
-            getSupportFragmentManager().popBackStack();//last one needs to go after we load the redirect
-        }
-        RetailFragment retailFragment = (RetailFragment) getSupportFragmentManager()
-                .findFragmentByTag(RetailFragment.class.getName());
-        if (retailFragment != null) {
-            retailFragment.loadPaymentRedirectUrl(retailModel.getPayload().getReturnUrl(), false);
-        } else {
-            retailFragment = RetailFragment.newInstance(retailModel,
-                    selectedPractice, userPracticeDTO,
-                    getSupportFragmentManager().getBackStackEntryCount() > 0);
-            retailFragment.loadPaymentRedirectUrl(retailModel.getPayload().getReturnUrl(), false);
-            replaceFragment(retailFragment, true);
+            RetailFragment retailFragment = (RetailFragment) getSupportFragmentManager()
+                    .findFragmentByTag(RetailFragment.class.getName());
+            if (retailFragment != null) {
+                retailFragment.loadPaymentRedirectUrl(retailModel.getPayload().getReturnUrl(), false);
+            } else {
+                retailFragment = RetailFragment.newInstance(retailModel,
+                        selectedPractice, userPracticeDTO,
+                        getSupportFragmentManager().getBackStackEntryCount() > 0);
+                retailFragment.loadPaymentRedirectUrl(retailModel.getPayload().getReturnUrl(), false);
+                replaceFragment(retailFragment, true);
+            }
         }
     }
 

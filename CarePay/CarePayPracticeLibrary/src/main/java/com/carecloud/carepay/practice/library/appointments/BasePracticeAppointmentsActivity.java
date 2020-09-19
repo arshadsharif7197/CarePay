@@ -156,27 +156,29 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
-        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload()
-                .getPatientPayments().getPayload();
-        if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
-            StringBuilder builder = new StringBuilder();
-            for (IntegratedPatientPaymentPayload.ProcessingError processingError
-                    : payload.getProcessingErrors()) {
-                builder.append(processingError.getError());
-                builder.append("\n");
-            }
-            int last = builder.lastIndexOf("\n");
-            builder.replace(last, builder.length(), "");
-            showErrorNotification(builder.toString());
-        } else {
-            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
-                    .newInstance(workflowDTO, Label.getLabel("appointment.confirmationScreen.type.label.paymentType"),
-                            Label.getLabel("add_appointment_back_to_appointments_button"));
-            displayDialogFragment(confirmationFragment, false);
+        if (workflowDTO != null) {
+            PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+            IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload()
+                    .getPatientPayments().getPayload();
+            if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
+                StringBuilder builder = new StringBuilder();
+                for (IntegratedPatientPaymentPayload.ProcessingError processingError
+                        : payload.getProcessingErrors()) {
+                    builder.append(processingError.getError());
+                    builder.append("\n");
+                }
+                int last = builder.lastIndexOf("\n");
+                builder.replace(last, builder.length(), "");
+                showErrorNotification(builder.toString());
+            } else {
+                PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
+                        .newInstance(workflowDTO, Label.getLabel("appointment.confirmationScreen.type.label.paymentType"),
+                                Label.getLabel("add_appointment_back_to_appointments_button"));
+                displayDialogFragment(confirmationFragment, false);
 
-            //this is a prepayment
-            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_prepayments_completed), 1);
+                //this is a prepayment
+                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_prepayments_completed), 1);
+            }
         }
     }
 

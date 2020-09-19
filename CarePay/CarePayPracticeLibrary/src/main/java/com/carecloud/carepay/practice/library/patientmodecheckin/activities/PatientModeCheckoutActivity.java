@@ -390,28 +390,30 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
-        String state = workflowDTO.getState();
-        if (NavigationStateConstants.PATIENT_FORM_CHECKOUT.equals(state) ||
-                (NavigationStateConstants.PATIENT_PAY_CHECKOUT.equals(state) && !paymentStarted)) {
-            navigateToWorkflow(workflowDTO);
-        } else {
-            PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-            IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
-            if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
-                StringBuilder builder = new StringBuilder();
-                for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
-                    builder.append(processingError.getError());
-                    builder.append("\n");
-                }
-                int last = builder.lastIndexOf("\n");
-                builder.replace(last, builder.length(), "");
-                showErrorNotification(builder.toString());
+        if (workflowDTO != null) {
+            String state = workflowDTO.getState();
+            if (NavigationStateConstants.PATIENT_FORM_CHECKOUT.equals(state) ||
+                    (NavigationStateConstants.PATIENT_PAY_CHECKOUT.equals(state) && !paymentStarted)) {
+                navigateToWorkflow(workflowDTO);
             } else {
-                paymentConfirmationWorkflow = workflowDTO;
-                completePaymentProcess(workflowDTO);
+                PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+                IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
+                if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
+                    StringBuilder builder = new StringBuilder();
+                    for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
+                        builder.append(processingError.getError());
+                        builder.append("\n");
+                    }
+                    int last = builder.lastIndexOf("\n");
+                    builder.replace(last, builder.length(), "");
+                    showErrorNotification(builder.toString());
+                } else {
+                    paymentConfirmationWorkflow = workflowDTO;
+                    completePaymentProcess(workflowDTO);
 
-                //this is a prepayment
-                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_prepayments_completed), 1);
+                    //this is a prepayment
+                    MixPanelUtil.incrementPeopleProperty(getString(R.string.count_prepayments_completed), 1);
+                }
             }
         }
     }

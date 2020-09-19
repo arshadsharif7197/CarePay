@@ -2,9 +2,12 @@ package com.carecloud.carepay.patient.demographics.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,14 +34,14 @@ import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.interfaces.IcicleInterface;
 import com.carecloud.carepaylibray.media.MediaResultListener;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.presenter.PaymentConnectivityHandler;
 import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
-import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.practice.BaseCheckinFragment;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
 public class ReviewDemographicsActivity extends BasePatientActivity implements DemographicsView,
-        PaymentViewHandler, ConfirmationCallback, FragmentActivityInterface, ToolbarInterface {
+        PaymentConnectivityHandler, ConfirmationCallback, FragmentActivityInterface, ToolbarInterface {
 
 
     private static final String KEY_PAYMENT_DTO = "KEY_PAYMENT_DTO";
@@ -329,5 +332,13 @@ public class ReviewDemographicsActivity extends BasePatientActivity implements D
     @Override
     public void displayToolbar(boolean display, String title) {
 
+    }
+
+    @Override
+    public void onPaymentFlowFailure() {
+        new Handler().postDelayed(() -> {
+            setResult(RESULT_CANCELED);
+            finish();
+        }, 2000);
     }
 }

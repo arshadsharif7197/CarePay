@@ -518,20 +518,22 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
-        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
-        if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
-            StringBuilder builder = new StringBuilder();
-            for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
-                builder.append(processingError.getError());
-                builder.append("\n");
+        if (workflowDTO != null) {
+            PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+            IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
+            if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
+                StringBuilder builder = new StringBuilder();
+                for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
+                    builder.append(processingError.getError());
+                    builder.append("\n");
+                }
+                int last = builder.lastIndexOf("\n");
+                builder.replace(last, builder.length(), "");
+                showErrorNotification(builder.toString());
+            } else {
+                getIntent().putExtra(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
+                completePaymentProcess(workflowDTO);
             }
-            int last = builder.lastIndexOf("\n");
-            builder.replace(last, builder.length(), "");
-            showErrorNotification(builder.toString());
-        } else {
-            getIntent().putExtra(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
-            completePaymentProcess(workflowDTO);
         }
     }
 
