@@ -1,6 +1,8 @@
 package com.carecloud.carepay.practice.library.appointments;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,6 +16,8 @@ import com.carecloud.carepay.practice.library.appointments.createappointment.Loc
 import com.carecloud.carepay.practice.library.appointments.createappointment.ProviderListFragment;
 import com.carecloud.carepay.practice.library.appointments.createappointment.VisitTypeListFragment;
 import com.carecloud.carepay.practice.library.appointments.dialogs.PatientModeRequestAppointmentDialog;
+import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
+import com.carecloud.carepay.practice.library.signin.SigninActivity;
 import com.carecloud.carepay.service.library.ApplicationPreferences;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
 import com.carecloud.carepay.service.library.dtos.TransitionDTO;

@@ -24,7 +24,7 @@ import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
-import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.appointments.presenter.AppointmentConnectivityHandler;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
@@ -33,7 +33,7 @@ import com.carecloud.carepaylibray.profile.Profile;
 import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-public class AppointmentsActivity extends MenuPatientActivity implements AppointmentViewHandler,
+public class AppointmentsActivity extends MenuPatientActivity implements AppointmentConnectivityHandler,
         FragmentActivityInterface {
 
     private AppointmentsResultModel appointmentsResultModel;
@@ -227,4 +227,13 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         return appointmentsResultModel.getPayload().getDelegate();
     }
 
+    @Override
+    public void onAppointmentScheduleFlowFailure() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        int backStackCount = fragmentManager.getBackStackEntryCount();
+        for (int i = 0; i < backStackCount; i++) {
+            fragmentManager.popBackStackImmediate();
+        }
+        displayToolbar(true, getScreenTitle(Label.getLabel("navigation_link_appointments")));
+    }
 }

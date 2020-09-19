@@ -74,7 +74,7 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
         try {
             appointmentsResultModel = getConvertedDTO(AppointmentsResultModel.class);
             getAppointmentList();
-        } catch (JsonSyntaxException ex) {
+        } catch (Exception ex) {
             showErrorNotification(null);
             ex.printStackTrace();
         }

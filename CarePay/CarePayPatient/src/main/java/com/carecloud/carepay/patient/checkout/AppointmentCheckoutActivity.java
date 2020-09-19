@@ -2,6 +2,7 @@ package com.carecloud.carepay.patient.checkout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -325,27 +326,34 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
-        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload()
-                .getPatientPayments().getPayload();
-        if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
-            StringBuilder builder = new StringBuilder();
-            for (IntegratedPatientPaymentPayload.ProcessingError processingError
-                    : payload.getProcessingErrors()) {
-                builder.append(processingError.getError());
-                builder.append("\n");
-            }
-            int last = builder.lastIndexOf("\n");
-            builder.replace(last, builder.length(), "");
-            showErrorNotification(builder.toString());
+        if (workflowDTO == null) {
+            new Handler().postDelayed(() -> {
+                setResult(RESULT_CANCELED);
+                finish();
+            }, 2000);
         } else {
-            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment.newInstance(workflowDTO);
-            displayDialogFragment(confirmationFragment, false);
+            PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+            IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload()
+                    .getPatientPayments().getPayload();
+            if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
+                StringBuilder builder = new StringBuilder();
+                for (IntegratedPatientPaymentPayload.ProcessingError processingError
+                        : payload.getProcessingErrors()) {
+                    builder.append(processingError.getError());
+                    builder.append("\n");
+                }
+                int last = builder.lastIndexOf("\n");
+                builder.replace(last, builder.length(), "");
+                showErrorNotification(builder.toString());
+            } else {
+                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment.newInstance(workflowDTO);
+                displayDialogFragment(confirmationFragment, false);
 
-            //this is a prepayment
-            if (!paymentStarted) {
-                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_prepayments_completed), 1);
+                //this is a prepayment
+                if (!paymentStarted) {
+                    MixPanelUtil.incrementPeopleProperty(getString(R.string.count_prepayments_completed), 1);
+                }
             }
         }
     }
