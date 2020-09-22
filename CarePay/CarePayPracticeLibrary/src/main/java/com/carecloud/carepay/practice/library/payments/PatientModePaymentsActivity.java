@@ -470,24 +470,26 @@ public class PatientModePaymentsActivity extends BasePracticeActivity
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO, boolean isOneTimePayment) {
-        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
-        if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
-            StringBuilder builder = new StringBuilder();
-            for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
-                builder.append(processingError.getError());
-                builder.append("\n");
-            }
-            int last = builder.lastIndexOf("\n");
-            builder.replace(last, builder.length(), "");
-            showErrorNotification(builder.toString());
-        } else {
-            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
-                    .newInstance(workflowDTO, isOneTimePayment);
-            displayDialogFragment(confirmationFragment, false);
+        if (workflowDTO != null) {
+            PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+            IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
+            if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
+                StringBuilder builder = new StringBuilder();
+                for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
+                    builder.append(processingError.getError());
+                    builder.append("\n");
+                }
+                int last = builder.lastIndexOf("\n");
+                builder.replace(last, builder.length(), "");
+                showErrorNotification(builder.toString());
+            } else {
+                PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
+                        .newInstance(workflowDTO, isOneTimePayment);
+                displayDialogFragment(confirmationFragment, false);
 
-            if (isOneTimePayment) {
-                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_one_time_payments_completed), 1);
+                if (isOneTimePayment) {
+                    MixPanelUtil.incrementPeopleProperty(getString(R.string.count_one_time_payments_completed), 1);
+                }
             }
         }
     }

@@ -613,6 +613,7 @@ public class CloverMainActivity extends BasePracticeActivity implements View.OnC
                         getApplicationPreferences().getAppointmentNavigationOption() != Defs.NAVIGATE_APPOINTMENT);
                 extra.putBoolean(CarePayConstants.LOGIN_OPTION_SEARCH, true);
                 PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, extra);
+//                PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO, true, 0, extra);
             } else {
                 PracticeNavigationHelper.navigateToWorkflow(getContext(), workflowDTO);
                 AppointmentCountUpdateService.cancelScheduledServiceRun(CloverMainActivity.this);

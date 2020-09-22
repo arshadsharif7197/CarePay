@@ -2,8 +2,11 @@ package com.carecloud.carepay.patient.payment.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import android.os.Handler;
 import android.view.MenuItem;
 
 import com.carecloud.carepay.patient.base.BasePatientActivity;
@@ -17,12 +20,12 @@ import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
+import com.carecloud.carepaylibray.payments.presenter.PaymentConnectivityHandler;
 import com.carecloud.carepaylibray.payments.presenter.PaymentPresenter;
-import com.carecloud.carepaylibray.payments.presenter.PaymentViewHandler;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-public class PaymentActivity extends BasePatientActivity implements PaymentViewHandler, FragmentActivityInterface,
+public class PaymentActivity extends BasePatientActivity implements PaymentConnectivityHandler, FragmentActivityInterface,
         ToolbarInterface {
     PaymentsModel paymentsDTO;
     AppointmentDTO appointmentDTO;
@@ -148,5 +151,13 @@ public class PaymentActivity extends BasePatientActivity implements PaymentViewH
     @Override
     public void displayToolbar(boolean display, String title) {
 //        ((MenuPatientActivity) this).displayToolbar(display, title);
+    }
+
+    @Override
+    public void onPaymentFlowFailure() {
+        new Handler().postDelayed(() -> {
+            setResult(RESULT_CANCELED);
+            finish();
+        }, 2000);
     }
 }
