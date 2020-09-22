@@ -630,7 +630,9 @@ public class AppointmentCheckoutActivity extends BasePatientActivity implements 
         @Override
         public void onPostExecute(WorkflowDTO workflowDTO) {
             hideProgressDialog();
+            clearFragments();
             completedPaymentPlan = true;
+
             Bundle info = new Bundle();
             if (getAppointment() != null) {
                 DtoHelper.bundleDto(info, getAppointment());
