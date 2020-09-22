@@ -18,7 +18,7 @@ import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 public abstract class AppointmentPresenter implements AppointmentNavigationCallback, ScheduleAppointmentInterface {
 
     protected AppointmentsResultModel appointmentsResultModel;
-    protected AppointmentViewHandler viewHandler;
+    protected AppointmentConnectivityHandler viewHandler;
     protected PaymentsModel paymentsModel;
 
     /**
@@ -28,7 +28,7 @@ public abstract class AppointmentPresenter implements AppointmentNavigationCallb
      * @param appointmentsResultModel appointment model
      * @param paymentsModel           payment model
      */
-    public AppointmentPresenter(AppointmentViewHandler viewHandler,
+    public AppointmentPresenter(AppointmentConnectivityHandler viewHandler,
                                 AppointmentsResultModel appointmentsResultModel,
                                 PaymentsModel paymentsModel) {
         this.viewHandler = viewHandler;
