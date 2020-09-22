@@ -18,6 +18,7 @@ import com.carecloud.carepay.practice.library.appointments.createappointment.Ava
 import com.carecloud.carepay.practice.library.appointments.dtos.PracticeAppointmentDTO;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.practice.library.checkin.PatientModeCheckInCheckOutActivity;
 import com.carecloud.carepay.practice.library.checkin.adapters.LanguageAdapter;
 import com.carecloud.carepay.practice.library.checkout.NextAppointmentFragment;
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
@@ -419,7 +420,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
             }
         } else {
             new Handler().postDelayed(() -> {
-                getAppAuthorizationHelper().setUser(null);
+                setResult(PatientModeCheckInCheckOutActivity.CONNECTIVITY_ERROR_RESULT);
                 finish();
             }, 2000);
         }

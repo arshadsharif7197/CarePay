@@ -15,6 +15,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.adapters.AppointmentsListAdapter;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepay.service.library.WorkflowServiceCallback;
@@ -49,6 +50,7 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
 
     private @Defs.AppointmentNavigationTypeDef
     int appointmentNavigationType;
+    public static final int CONNECTIVITY_ERROR_RESULT = 504;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -296,6 +298,9 @@ public class PatientModeCheckInCheckOutActivity extends BasePracticeActivity imp
                         // and thus it does not show the progress dialog
                         goToHome(appointmentsResultModel.getMetadata().getTransitions().getLogout());
                     }, 300);
+                } else if (resultCode == CONNECTIVITY_ERROR_RESULT) {
+                    setResult(PatientModeCheckInCheckOutActivity.CONNECTIVITY_ERROR_RESULT);
+                    finish();
                 }
             }
             break;
