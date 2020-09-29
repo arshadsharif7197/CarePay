@@ -47,6 +47,7 @@ public abstract class BaseProviderListFragment extends BaseDialogFragment {
     protected ScheduleAppointmentInterface callback;
     private AppointmentsResultModel appointmentResultDto;
     private boolean alreadyCalled;
+    private ArrayList<AppointmentResourcesItemDTO> uniqueProviders;
 
     @Override
     public void onAttach(Context context) {
@@ -129,20 +130,26 @@ public abstract class BaseProviderListFragment extends BaseDialogFragment {
     }
 
     private List<AppointmentResourcesItemDTO> getUniqueProviders(List<AppointmentResourcesItemDTO> providers) {
-        List<AppointmentResourcesItemDTO> uniqueProviders = new ArrayList<>();
+        uniqueProviders = new ArrayList<>();
         for (AppointmentResourcesItemDTO providerInfo : providers) {
             if (uniqueProviders.size() > 0) {
-                for (AppointmentResourcesItemDTO uniqueProvider : uniqueProviders) {
-                    if (!uniqueProvider.getProvider().getName().equalsIgnoreCase(providerInfo.getProvider().getName())) {
-                        uniqueProviders.add(providerInfo);
-                        break;
-                    }
+                if (validateProvider(providerInfo)) {
+                    uniqueProviders.add(providerInfo);
                 }
             } else {
                 uniqueProviders.add(providerInfo);
             }
         }
         return uniqueProviders;
+    }
+
+    private boolean validateProvider(AppointmentResourcesItemDTO providerInfo) {
+        for (AppointmentResourcesItemDTO uniqueProvider : uniqueProviders) {
+            if (uniqueProvider.getProvider().getName().equalsIgnoreCase(providerInfo.getProvider().getName())) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private List<AppointmentResourcesItemDTO> sortProviders(List<AppointmentResourcesItemDTO> resourcesDto) {
