@@ -145,7 +145,7 @@ public class TelehealthAppointmentFragment extends BaseDialogFragment implements
         toolbar.setNavigationIcon(R.drawable.icn_nav_back);
         toolbar.setNavigationOnClickListener(view1 -> callback.onCancel());
         TextView title = toolbar.findViewById(R.id.toolbarTitle);
-        title.setText(Label.getLabel("patient.delegate.profileList.title.label"));
+        title.setText(Label.getLabel("checkin_telehealth_section_header"));
     }
 
     @Override

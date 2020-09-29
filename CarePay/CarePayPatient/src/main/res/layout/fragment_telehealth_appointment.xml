@@ -197,6 +197,7 @@
                         android:textColor="@color/lightSlateGray"
                         android:textSize="@dimen/dimen_17dp"
                         app:customAssetFont="proxima_nova_regular"
+                        breeze:textKey="checkin_telehealth_section_text"
                         tools:text="Thank you for checking in to your telehealth appointment. Please join the video session and your provider will be with you shortly." />
 
                 </LinearLayout>
@@ -343,6 +344,7 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_13"
                 app:customAssetFont="gotham_rounded_medium"
+                breeze:textKey="checkin_telehealth_section_appointment_button"
                 tools:text="Take Me Back to Appointments" />
         </LinearLayout>
 

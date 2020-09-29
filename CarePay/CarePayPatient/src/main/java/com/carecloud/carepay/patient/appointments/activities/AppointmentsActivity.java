@@ -125,7 +125,6 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             String appointmentId = data.getStringExtra(NavigationStateConstants.APPOINTMENT_ID);
             isTelehealthAppointment = (boolean) data.getExtras().get(NavigationStateConstants.APPOINTMENT_TYPE);
 
-            Toast.makeText(this, "Telehealth Appointment", Toast.LENGTH_SHORT).show();
             appointmentDTO = getAppointmentInfo(appointmentId);
             if (appointmentDTO != null) {
                 Bundle info = new Bundle();
@@ -251,11 +250,13 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                 break;
             }
             case CarePayConstants.TELEHEALTH_APPOINTMENT_REQUEST:
-                refreshUI();
                 if (resultCode == RESULT_OK) {
+                    refreshAppointments();
                     new Handler().postDelayed(() -> {
                         presenter.startVideoVisit(appointmentDTO);
                     }, 1000);
+                } else {
+                    refreshUI();
                 }
                 break;
             case PaymentConstants.REQUEST_CODE_CCLIVE:
