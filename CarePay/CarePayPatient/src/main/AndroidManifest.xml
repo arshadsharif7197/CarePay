@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
+
     <uses-feature android:name="android.hardware.camera" />
 
     <uses-permission
@@ -94,6 +95,9 @@
             android:name=".appointments.activities.AppointmentsActivity"
             android:screenOrientation="sensorPortrait" />
         <activity
+            android:name=".appointments.activities.TelehealthAppoinmentActivity"
+            android:screenOrientation="sensorPortrait" />
+        <activity
             android:name=".payment.activities.ViewPaymentBalanceHistoryActivity"
             android:screenOrientation="sensorPortrait" />
         <activity
@@ -114,7 +118,8 @@
             android:name=".retail.activities.RetailActivity"
             android:screenOrientation="sensorPortrait" />
 
-        <service android:name=".fcm.MyFirebaseMessagingService"
+        <service
+            android:name=".fcm.MyFirebaseMessagingService"
             android:stopWithTask="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -162,7 +167,7 @@
 
         <service
             android:name=".payment.androidpay.AndroidPayQueueUploadService"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <service
             android:name=".session.PatientSessionService"
