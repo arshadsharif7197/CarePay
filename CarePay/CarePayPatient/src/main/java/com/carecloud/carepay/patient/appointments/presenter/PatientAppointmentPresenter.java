@@ -1,6 +1,5 @@
 package com.carecloud.carepay.patient.appointments.presenter;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -24,7 +23,6 @@ import com.carecloud.carepay.patient.appointments.models.PracticeInformationMini
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
 import com.carecloud.carepay.patient.checkout.AllDoneDialogFragment;
 import com.carecloud.carepay.patient.menu.MenuPatientActivity;
-import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.payment.fragments.PaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.patient.payment.interfaces.PatientPaymentMethodInterface;
 import com.carecloud.carepay.patient.rate.RateDialog;
@@ -37,7 +35,6 @@ import com.carecloud.carepay.service.library.dtos.TransitionDTO;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
 import com.carecloud.carepay.service.library.label.Label;
-import com.carecloud.carepaylibray.CarePayApplication;
 import com.carecloud.carepaylibray.appointments.createappointment.CreateAppointmentFragmentInterface;
 import com.carecloud.carepaylibray.appointments.createappointment.availabilityhour.BaseAvailabilityHourFragment;
 import com.carecloud.carepaylibray.appointments.interfaces.DateCalendarRangeInterface;
@@ -56,7 +53,7 @@ import com.carecloud.carepaylibray.appointments.models.ScheduleAppointmentReques
 import com.carecloud.carepaylibray.appointments.models.VideoVisitModel;
 import com.carecloud.carepaylibray.appointments.models.VisitTypeDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
-import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.appointments.presenter.AppointmentConnectivityHandler;
 import com.carecloud.carepaylibray.base.BaseActivity;
 import com.carecloud.carepaylibray.base.ISession;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
@@ -108,7 +105,7 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
     private String cancellationReasonString;
     private AppointmentDTO cancelAppointmentDTO;
 
-    public PatientAppointmentPresenter(AppointmentViewHandler viewHandler,
+    public PatientAppointmentPresenter(AppointmentConnectivityHandler viewHandler,
                                        AppointmentsResultModel appointmentsResultModel,
                                        PaymentsModel paymentsModel) {
         super(viewHandler, appointmentsResultModel, paymentsModel);
@@ -487,37 +484,41 @@ public class PatientAppointmentPresenter extends AppointmentPresenter
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
-        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload()
-                .getPatientPayments().getPayload();
-        if (!payload.getProcessingErrors().isEmpty()
-                && payload.getTotalPaid() == 0D) {
-            StringBuilder builder = new StringBuilder();
-            for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
-                builder.append(processingError.getError());
-                builder.append("\n");
-            }
-            int last = builder.lastIndexOf("\n");
-            builder.replace(last, builder.length(), "");
-            ((ISession) viewHandler.getContext()).showErrorNotification(builder.toString());
+        if (workflowDTO == null) {
+            viewHandler.onAppointmentScheduleFlowFailure();
         } else {
-            String paymentType = Label.getLabel("appointment.confirmationScreen.type.label.paymentType");
-            try {
-                if (workflowDTO.getPayload().getAsJsonObject("appointments") != null) {
-                    paymentType = Label.getLabel("appointment.confirmationScreen.paymentType.label.cancellationType");
+            PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+            IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload()
+                    .getPatientPayments().getPayload();
+            if (!payload.getProcessingErrors().isEmpty()
+                    && payload.getTotalPaid() == 0D) {
+                StringBuilder builder = new StringBuilder();
+                for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
+                    builder.append(processingError.getError());
+                    builder.append("\n");
                 }
-            } catch (Exception e) {
-                //Using this try catch because middleware returns different structure for the appointment.
-                //In appointment prepayment it returns an array with 1 appointment and for cancellation it returns an object.
-            }
-            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
-                    .newInstance(workflowDTO, paymentType,
-                            Label.getLabel("add_appointment_back_to_appointments_button"));
-            viewHandler.displayDialogFragment(confirmationFragment, false);
+                int last = builder.lastIndexOf("\n");
+                builder.replace(last, builder.length(), "");
+                ((ISession) viewHandler.getContext()).showErrorNotification(builder.toString());
+            } else {
+                String paymentType = Label.getLabel("appointment.confirmationScreen.type.label.paymentType");
+                try {
+                    if (workflowDTO.getPayload().getAsJsonObject("appointments") != null) {
+                        paymentType = Label.getLabel("appointment.confirmationScreen.paymentType.label.cancellationType");
+                    }
+                } catch (Exception e) {
+                    //Using this try catch because middleware returns different structure for the appointment.
+                    //In appointment prepayment it returns an array with 1 appointment and for cancellation it returns an object.
+                }
+                PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
+                        .newInstance(workflowDTO, paymentType,
+                                Label.getLabel("add_appointment_back_to_appointments_button"));
+                viewHandler.displayDialogFragment(confirmationFragment, false);
 
-            if (paymentType.equals(Label.getLabel("appointment.confirmationScreen.type.label.paymentType"))) {
-                //this is a prepayment
-                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_prepayments_completed), 1);
+                if (paymentType.equals(Label.getLabel("appointment.confirmationScreen.type.label.paymentType"))) {
+                    //this is a prepayment
+                    MixPanelUtil.incrementPeopleProperty(getString(R.string.count_prepayments_completed), 1);
+                }
             }
         }
     }

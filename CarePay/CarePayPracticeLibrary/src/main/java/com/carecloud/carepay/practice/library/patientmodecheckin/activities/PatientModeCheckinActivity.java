@@ -3,6 +3,7 @@ package com.carecloud.carepay.practice.library.patientmodecheckin.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -17,6 +18,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.dtos.PracticeAppointmentDTO;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.PatientModeDemographicsPresenter;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
 import com.carecloud.carepay.practice.library.payments.dialogs.PaymentQueuedDialogFragment;
@@ -518,20 +520,27 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
-        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
-        if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
-            StringBuilder builder = new StringBuilder();
-            for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
-                builder.append(processingError.getError());
-                builder.append("\n");
+        if (workflowDTO != null) {
+            PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+            IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload().getPatientPayments().getPayload();
+            if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
+                StringBuilder builder = new StringBuilder();
+                for (IntegratedPatientPaymentPayload.ProcessingError processingError : payload.getProcessingErrors()) {
+                    builder.append(processingError.getError());
+                    builder.append("\n");
+                }
+                int last = builder.lastIndexOf("\n");
+                builder.replace(last, builder.length(), "");
+                showErrorNotification(builder.toString());
+            } else {
+                getIntent().putExtra(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
+                completePaymentProcess(workflowDTO);
             }
-            int last = builder.lastIndexOf("\n");
-            builder.replace(last, builder.length(), "");
-            showErrorNotification(builder.toString());
         } else {
-            getIntent().putExtra(CarePayConstants.PAYMENT_PAYLOAD_BUNDLE, workflowDTO.toString());
-            completePaymentProcess(workflowDTO);
+            new Handler().postDelayed(() -> {
+                getAppAuthorizationHelper().setUser(null);
+                startActivity(new Intent(this, CloverMainActivity.class).addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+            }, 2000);
         }
     }
 

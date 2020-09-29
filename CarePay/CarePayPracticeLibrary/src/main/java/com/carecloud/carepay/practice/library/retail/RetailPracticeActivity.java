@@ -166,22 +166,24 @@ public class RetailPracticeActivity extends BasePracticeActivity implements Reta
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
-        RetailModel retailModel = DtoHelper.getConvertedDTO(RetailModel.class, workflowDTO);
-        RetailFragment retailFragment = (RetailFragment) getSupportFragmentManager()
-                .findFragmentByTag(RetailFragment.class.getName());
-        if (retailFragment != null) {
-            retailFragment.loadPaymentRedirectUrl(retailModel.getPayload().getReturnUrl(), true);
-        } else {
-            retailFragment = RetailFragment.newInstance(retailModel,
-                    retailPractice, userPracticeDTO,
-                    getSupportFragmentManager().getBackStackEntryCount() > 0);
-            retailFragment.loadPaymentRedirectUrl(retailModel.getPayload().getReturnUrl(), false);
-            replaceFragment(retailFragment, true);
-        }
+        if (workflowDTO != null) {
+            RetailModel retailModel = DtoHelper.getConvertedDTO(RetailModel.class, workflowDTO);
+            RetailFragment retailFragment = (RetailFragment) getSupportFragmentManager()
+                    .findFragmentByTag(RetailFragment.class.getName());
+            if (retailFragment != null) {
+                retailFragment.loadPaymentRedirectUrl(retailModel.getPayload().getReturnUrl(), true);
+            } else {
+                retailFragment = RetailFragment.newInstance(retailModel,
+                        retailPractice, userPracticeDTO,
+                        getSupportFragmentManager().getBackStackEntryCount() > 0);
+                retailFragment.loadPaymentRedirectUrl(retailModel.getPayload().getReturnUrl(), false);
+                replaceFragment(retailFragment, true);
+            }
 
-        //need to reset fullscreen after dismissing payment dialogs
-        setSystemUiVisibility();
-        setNavigationBarVisibility();
+            //need to reset fullscreen after dismissing payment dialogs
+            setSystemUiVisibility();
+            setNavigationBarVisibility();
+        }
     }
 
     @Override

@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.practice.library.checkin.PatientModeCheckInCheckOutActivity;
 import com.carecloud.carepay.practice.library.payments.dialogs.PopupPickerLanguage;
 import com.carecloud.carepay.practice.library.signin.dtos.PracticeSelectionDTO;
 import com.carecloud.carepay.practice.library.signin.fragments.ChoosePracticeFragment;
@@ -439,7 +440,8 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     }
 
     private void navigateToWorkFlow(WorkflowDTO workflowDTO) {
-        PracticeNavigationHelper.navigateToWorkflow(this, workflowDTO);
+        PracticeNavigationHelper.navigateToWorkflow(this, workflowDTO, true, PatientModeCheckInCheckOutActivity.CONNECTIVITY_ERROR_RESULT);
+        finish();
     }
 
     private void showPracticeSearchFragment() {
@@ -491,6 +493,9 @@ public class SigninActivity extends BasePracticeActivity implements SelectPracti
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RESET_PASSWORD && resultCode == ResetPasswordFragment.GO_TO_HOME) {
+            finish();
+        } else if (requestCode == PatientModeCheckInCheckOutActivity.CONNECTIVITY_ERROR_RESULT &&
+                resultCode == PatientModeCheckInCheckOutActivity.CONNECTIVITY_ERROR_RESULT) {
             finish();
         }
     }

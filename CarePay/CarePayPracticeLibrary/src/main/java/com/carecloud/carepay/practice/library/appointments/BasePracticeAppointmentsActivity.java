@@ -1,10 +1,13 @@
 package com.carecloud.carepay.practice.library.appointments;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.carecloud.carepay.practice.library.R;
@@ -12,6 +15,7 @@ import com.carecloud.carepay.practice.library.appointments.createappointment.Ava
 import com.carecloud.carepay.practice.library.appointments.createappointment.CreateAppointmentFragment;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.customdialog.DateRangePickerDialog;
+import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.payments.fragments.PracticePaymentMethodPrepaymentFragment;
 import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.dtos.WorkflowDTO;
@@ -156,27 +160,34 @@ public abstract class BasePracticeAppointmentsActivity extends BasePracticeActiv
 
     @Override
     public void showPaymentConfirmation(WorkflowDTO workflowDTO) {
-        PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
-        IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload()
-                .getPatientPayments().getPayload();
-        if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
-            StringBuilder builder = new StringBuilder();
-            for (IntegratedPatientPaymentPayload.ProcessingError processingError
-                    : payload.getProcessingErrors()) {
-                builder.append(processingError.getError());
-                builder.append("\n");
-            }
-            int last = builder.lastIndexOf("\n");
-            builder.replace(last, builder.length(), "");
-            showErrorNotification(builder.toString());
-        } else {
-            PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
-                    .newInstance(workflowDTO, Label.getLabel("appointment.confirmationScreen.type.label.paymentType"),
-                            Label.getLabel("add_appointment_back_to_appointments_button"));
-            displayDialogFragment(confirmationFragment, false);
+        if (workflowDTO != null) {
+            PaymentsModel paymentsModel = DtoHelper.getConvertedDTO(PaymentsModel.class, workflowDTO);
+            IntegratedPatientPaymentPayload payload = paymentsModel.getPaymentPayload()
+                    .getPatientPayments().getPayload();
+            if (!payload.getProcessingErrors().isEmpty() && payload.getTotalPaid() == 0D) {
+                StringBuilder builder = new StringBuilder();
+                for (IntegratedPatientPaymentPayload.ProcessingError processingError
+                        : payload.getProcessingErrors()) {
+                    builder.append(processingError.getError());
+                    builder.append("\n");
+                }
+                int last = builder.lastIndexOf("\n");
+                builder.replace(last, builder.length(), "");
+                showErrorNotification(builder.toString());
+            } else {
+                PaymentConfirmationFragment confirmationFragment = PaymentConfirmationFragment
+                        .newInstance(workflowDTO, Label.getLabel("appointment.confirmationScreen.type.label.paymentType"),
+                                Label.getLabel("add_appointment_back_to_appointments_button"));
+                displayDialogFragment(confirmationFragment, false);
 
-            //this is a prepayment
-            MixPanelUtil.incrementPeopleProperty(getString(R.string.count_prepayments_completed), 1);
+                //this is a prepayment
+                MixPanelUtil.incrementPeopleProperty(getString(R.string.count_prepayments_completed), 1);
+            }
+        } else {
+            new Handler().postDelayed(() -> {
+                getAppAuthorizationHelper().setUser(null);
+                startActivity(new Intent(this, CloverMainActivity.class).addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+            }, 2000);
         }
     }
 
