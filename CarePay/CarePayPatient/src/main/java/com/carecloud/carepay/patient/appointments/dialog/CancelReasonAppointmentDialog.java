@@ -7,9 +7,10 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.material.textfield.TextInputLayout;
+
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.widget.AppCompatRadioButton;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,8 @@ import java.util.List;
 
 public class CancelReasonAppointmentDialog extends BaseDialogFragment implements View.OnClickListener {
 
+    private static CancelReasonAppointmentDialog fragment;
+    public static boolean isCancelReasonRequired;
     private AppointmentDTO appointmentDTO;
     private AppointmentsResultModel appointmentInfo;
 
@@ -59,12 +62,16 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
      * @param appointmentInfo Appointment Info data
      */
     public static CancelReasonAppointmentDialog newInstance(AppointmentDTO appointmentDTO,
-                                         AppointmentsResultModel appointmentInfo) {
+                                                            AppointmentsResultModel appointmentInfo) {
         Bundle args = new Bundle();
         DtoHelper.bundleDto(args, appointmentDTO);
         DtoHelper.bundleDto(args, appointmentInfo);
-        CancelReasonAppointmentDialog fragment = new CancelReasonAppointmentDialog();
+        fragment = new CancelReasonAppointmentDialog();
         fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static CancelReasonAppointmentDialog getInstance() {
         return fragment;
     }
 
@@ -154,8 +161,8 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
         if (viewId == R.id.dialogCloseHeaderImageView) {
             cancel();
         } else if (viewId == R.id.cancelAppointmentButton) {
+            hideDialog();
             onCancelAppointment();
-            cancel();
         }
     }
 
@@ -216,5 +223,4 @@ public class CancelReasonAppointmentDialog extends BaseDialogFragment implements
     public void setsCancelReasonAppointmentDialogListener(CancelReasonAppointmentDialogListener listener) {
         this.callback = listener;
     }
-
 }

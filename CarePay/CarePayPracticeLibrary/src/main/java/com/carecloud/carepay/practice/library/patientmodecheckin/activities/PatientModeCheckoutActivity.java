@@ -797,6 +797,11 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
 
     }
 
+    @Override
+    public void onPaymentCancel() {
+
+    }
+
     private void logCheckoutCancelled() {
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.root_layout);
         String currentStep = null;

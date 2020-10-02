@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
 import com.carecloud.carepay.patient.R;
+import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.service.library.CarePayConstants;
 import com.carecloud.carepaylibray.appointments.interfaces.AppointmentPrepaymentCallback;
@@ -91,8 +92,15 @@ public class PaymentMethodPrepaymentFragment extends PatientPaymentMethodFragmen
 
             toolbar.setNavigationIcon(R.drawable.icn_patient_mode_nav_close);
             toolbar.setNavigationOnClickListener(view1 -> {
-                getActivity().onBackPressed();
-                callback.onPaymentDismissed();
+                if (CancelReasonAppointmentDialog.isCancelReasonRequired) {
+                    CancelReasonAppointmentDialog.isCancelReasonRequired = false;
+                    callback.onPaymentCancel();
+                    ((PatientAppointmentPresenter) callback).displayToolbar(true, null);
+                } else {
+                    getActivity().onBackPressed();
+                    callback.onPaymentDismissed();
+                }
+                cancel();
             });
             if (callback instanceof PatientAppointmentPresenter) {
                 ((PatientAppointmentPresenter) callback).displayToolbar(false, null);

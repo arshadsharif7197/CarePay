@@ -12,6 +12,9 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.AppointmentViewModel;
+import com.carecloud.carepay.patient.appointments.dialog.CancelAppointmentFeeDialog;
+import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
+import com.carecloud.carepay.patient.appointments.fragments.AppointmentDetailDialog;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentTabHostFragment;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
@@ -181,6 +184,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
     @Override
     public void confirmAppointment(boolean showSuccess, boolean isAutoScheduled) {
+        clearDialogs();
         FragmentManager fragmentManager = getSupportFragmentManager();
         int backStackCount = fragmentManager.getBackStackEntryCount();
         for (int i = 0; i < backStackCount; i++) {
@@ -196,6 +200,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
     @Override
     public void refreshAppointments() {
+        clearDialogs();
         viewModel.getAppointments(getTransitionAppointments(), true);
     }
 
@@ -235,5 +240,17 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
             fragmentManager.popBackStackImmediate();
         }
         displayToolbar(true, getScreenTitle(Label.getLabel("navigation_link_appointments")));
+    }
+
+    private void clearDialogs() {
+        if (CancelReasonAppointmentDialog.getInstance() != null) {
+            CancelReasonAppointmentDialog.getInstance().dismiss();
+        }
+        if (CancelAppointmentFeeDialog.getInstance() != null) {
+            CancelAppointmentFeeDialog.getInstance().dismiss();
+        }
+        if (AppointmentDetailDialog.getInstance() != null) {
+            AppointmentDetailDialog.getInstance().dismiss();
+        }
     }
 }
