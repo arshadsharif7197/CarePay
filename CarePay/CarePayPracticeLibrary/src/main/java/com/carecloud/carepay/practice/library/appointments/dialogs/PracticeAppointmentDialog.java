@@ -193,8 +193,8 @@ public class PracticeAppointmentDialog extends BaseDialogFragment {
     private void setupDialogStyle() {
         switch (this.style) {
             case PENDING:
-                headerColor = R.color.colorPrimary;
-                timeColor = R.color.white;
+                headerColor = R.color.dark_blue;
+                timeColor = R.color.colorPrimary;
                 leftActionLabel = Label.getLabel("cancel_appointment_short_label");
 //                if (appointmentDTO.getPayload().getVisitType().hasVideoOption()) {
 //                    rightActionLabel = Label.getLabel("appointment_video_visit_start_short");
