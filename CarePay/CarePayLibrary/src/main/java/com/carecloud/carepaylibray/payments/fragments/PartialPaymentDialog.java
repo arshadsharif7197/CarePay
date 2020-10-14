@@ -271,7 +271,7 @@ public class PartialPaymentDialog extends BaseDialogFragment implements View.OnC
                 amountEditText = "0.";
             }
             double amountPay = Double.parseDouble(amountEditText);
-            if ((amountPay > 0) && (amountPay <= fullAmount)) {
+            if (amountPay > 1 && amountPay <= fullAmount) {
                 payPartialButton.setEnabled(true);
             } else {
                 payPartialButton.setEnabled(false);
