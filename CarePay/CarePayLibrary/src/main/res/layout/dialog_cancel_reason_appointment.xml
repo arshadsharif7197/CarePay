@@ -16,7 +16,7 @@
         android:layout_gravity="start"
         android:layout_marginBottom="@dimen/dimen_8dp"
         android:gravity="end"
-        android:src="@drawable/icn_patient_mode_nav_close" />
+        android:src="@drawable/icn_nav_back" />
 
     <RelativeLayout
         android:layout_width="match_parent"

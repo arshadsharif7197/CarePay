@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.appointments.AppointmentViewModel;
+import com.carecloud.carepay.patient.appointments.dialog.CancelReasonAppointmentDialog;
 import com.carecloud.carepay.patient.appointments.fragments.AppointmentTabHostFragment;
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
@@ -181,6 +182,9 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
     @Override
     public void confirmAppointment(boolean showSuccess, boolean isAutoScheduled) {
+        if (CancelReasonAppointmentDialog.getInstance() != null) {
+            CancelReasonAppointmentDialog.getInstance().dismiss();
+        }
         FragmentManager fragmentManager = getSupportFragmentManager();
         int backStackCount = fragmentManager.getBackStackEntryCount();
         for (int i = 0; i < backStackCount; i++) {
@@ -196,6 +200,9 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
 
     @Override
     public void refreshAppointments() {
+        if (CancelReasonAppointmentDialog.getInstance() != null) {
+            CancelReasonAppointmentDialog.getInstance().dismiss();
+        }
         viewModel.getAppointments(getTransitionAppointments(), true);
     }
 
