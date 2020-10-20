@@ -103,8 +103,7 @@ public class AppointmentHistoricAdapter extends BaseAppointmentAdapter {
                 holder.upcomingMonthTextView.setText(dateUtil.getDateAsMonthLiteralDay());
                 holder.upcomingTimeTextView.setText(dateUtil.getTime12Hour());
         }
-        DateUtil.getInstance().setDateRaw(appointmentsPayload.getEndTime());
-        if (style.equals(AppointmentDisplayStyle.CHECKED_IN) && DateUtil.getInstance().isWithinHours(24) && shouldShowCheckoutButton){
+        if (style.equals(AppointmentDisplayStyle.CHECKED_IN) && shouldShowCheckoutButton){
             holder.checkOutButton.setVisibility(View.VISIBLE);
             holder.upcomingDateLayout.setVisibility(View.GONE);
         }

@@ -1,8 +1,10 @@
 package com.carecloud.carepay.patient.appointments.adapters;
 
 import android.content.Context;
+
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,10 +105,10 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
 
         switch (style) {
             case CHECKED_IN: {
-                if (appointmentsPayload.getVisitType().hasVideoOption() && !shouldShowCheckoutButton){
-                    if(appointmentsPayload.canStartVideoVisit()) {
+                if (appointmentsPayload.getVisitType().hasVideoOption() && !shouldShowCheckoutButton) {
+                    if (appointmentsPayload.canStartVideoVisit()) {
                         holder.videoVisitIndicator.setVisibility(View.VISIBLE);
-                    }else{
+                    } else {
                         holder.todayTimeTextView.setText(dateUtil.getTime12Hour());
                         holder.todayTimeTextView.setTextColor(ContextCompat.getColor(context, R.color.emerald));
                         holder.todayTimeLayout.setVisibility(View.VISIBLE);
@@ -264,6 +266,7 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
     protected boolean shouldShowCheckOutButton(AppointmentDTO appointmentDTO,
                                                Set<String> enabledLocations,
                                                boolean isBreezePractice) {
+        DateUtil.getInstance().setDateRaw(appointmentDTO.getPayload().getStartTime());
         boolean isTheLocationWithBreezeEnabled = enabledLocations == null;
         if (enabledLocations != null) {
             for (String locationId : enabledLocations) {
@@ -276,7 +279,8 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
 
         return isBreezePractice && isTheLocationWithBreezeEnabled
                 && appointmentDTO.getPayload().canCheckOut()
-                && callback.canCheckOut(appointmentDTO);
+                && callback.canCheckOut(appointmentDTO)
+                && DateUtil.getInstance().isWithinHours(24);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
