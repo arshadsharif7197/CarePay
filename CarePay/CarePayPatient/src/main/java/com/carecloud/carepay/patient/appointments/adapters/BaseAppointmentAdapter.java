@@ -280,7 +280,7 @@ public abstract class BaseAppointmentAdapter extends RecyclerView.Adapter<BaseAp
         return isBreezePractice && isTheLocationWithBreezeEnabled
                 && appointmentDTO.getPayload().canCheckOut()
                 && callback.canCheckOut(appointmentDTO)
-                && DateUtil.getInstance().isWithinHours(24);
+                && DateUtil.getInstance().isToday();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
