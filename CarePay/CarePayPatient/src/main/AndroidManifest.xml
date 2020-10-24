@@ -95,6 +95,9 @@
             android:name=".appointments.activities.AppointmentsActivity"
             android:screenOrientation="sensorPortrait" />
         <activity
+            android:name=".appointments.activities.TelehealthAppoinmentActivity"
+            android:screenOrientation="sensorPortrait" />
+        <activity
             android:name=".payment.activities.ViewPaymentBalanceHistoryActivity"
             android:screenOrientation="sensorPortrait" />
         <activity
