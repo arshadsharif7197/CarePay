@@ -17,6 +17,7 @@ import com.carecloud.carepay.patient.appointments.fragments.AppointmentTabHostFr
 import com.carecloud.carepay.patient.appointments.presenter.PatientAppointmentPresenter;
 import com.carecloud.carepay.patient.base.ShimmerFragment;
 import com.carecloud.carepay.patient.menu.MenuPatientActivity;
+import com.carecloud.carepay.patient.messages.activities.MessagesActivity;
 import com.carecloud.carepay.patient.payment.PaymentConstants;
 import com.carecloud.carepay.patient.rate.RateDialog;
 import com.carecloud.carepay.patient.utils.payments.Constants;
@@ -26,7 +27,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.models.AppointmentsResultModel;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
-import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.appointments.presenter.AppointmentConnectivityHandler;
 import com.carecloud.carepaylibray.base.NavigationStateConstants;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.interfaces.FragmentActivityInterface;
@@ -36,7 +37,7 @@ import com.carecloud.carepaylibray.profile.ProfileDto;
 import com.carecloud.carepaylibray.utils.DtoHelper;
 import com.carecloud.carepaylibray.utils.SystemUtil;
 
-public class AppointmentsActivity extends MenuPatientActivity implements AppointmentViewHandler,
+public class AppointmentsActivity extends MenuPatientActivity implements AppointmentConnectivityHandler,
         FragmentActivityInterface {
 
     private AppointmentsResultModel appointmentsResultModel;
@@ -52,6 +53,7 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         super.onCreate(savedInstanceState);
         setUpViewModel();
         Bundle extra = getIntent().getBundleExtra(NavigationStateConstants.EXTRA_INFO);
+
         boolean forceRefresh = false;
         boolean showSurvey = false;
         if (extra != null) {
@@ -94,6 +96,15 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
         initPresenter();
         AppointmentTabHostFragment fragment = AppointmentTabHostFragment.newInstance(0);
         replaceFragment(R.id.container_main, fragment, false);
+
+        String messageId = ApplicationPreferences.getInstance().getMessageId();
+        if (!messageId.isEmpty()) {
+            ApplicationPreferences.getInstance().setMessageId("");
+            Intent intent = new Intent(this, MessagesActivity.class);
+            intent.putExtra(MessagesActivity.KEY_MESSAGE_ID, messageId);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
     }
 
     private void refreshUI() {
@@ -266,5 +277,14 @@ public class AppointmentsActivity extends MenuPatientActivity implements Appoint
                 super.onActivityResult(requestCode, resultCode, data);
                 break;
         }
+    }
+
+    public void onAppointmentScheduleFlowFailure() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        int backStackCount = fragmentManager.getBackStackEntryCount();
+        for (int i = 0; i < backStackCount; i++) {
+            fragmentManager.popBackStackImmediate();
+        }
+        displayToolbar(true, getScreenTitle(Label.getLabel("navigation_link_appointments")));
     }
 }

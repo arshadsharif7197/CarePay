@@ -186,7 +186,7 @@ public class PaymentPlanDashboardFragment extends BaseDialogFragment
         PracticeModePaymentPlanFragment fragment = PracticeModePaymentPlanFragment
                 .newInstance(paymentsModel, selectedBalance);
         fragment.setOnCancelListener(dialog -> showDialog());
-        callback.displayDialogFragment(fragment, false);
+        callback.displayDialogFragment(fragment, true);
         logMixPanelPaymentPlanStartedEvent(selectedBalance);
         hideDialog();
     }

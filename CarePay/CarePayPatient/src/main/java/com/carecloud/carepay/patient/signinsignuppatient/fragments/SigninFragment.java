@@ -2,6 +2,7 @@ package com.carecloud.carepay.patient.signinsignuppatient.fragments;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.security.keystore.KeyGenParameterSpec;
@@ -26,6 +27,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.carecloud.carepay.patient.R;
 import com.carecloud.carepay.patient.base.PatientNavigationHelper;
+import com.carecloud.carepay.patient.messages.activities.MessagesActivity;
 import com.carecloud.carepay.patient.selectlanguage.fragments.SelectLanguageFragment;
 import com.carecloud.carepay.patient.signinsignuppatient.SignInViewModel;
 import com.carecloud.carepay.patient.utils.FingerprintUiHelper;
@@ -122,8 +124,15 @@ public class SigninFragment extends BaseFragment {
     private void setUpViewModel() {
         viewModel = ViewModelProviders.of(getActivity()).get(SignInViewModel.class);
         viewModel.getSignInResultNavigatorObservable().observe(this, workflowDTO -> {
-            PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO, getActivity()
-                    .getIntent().getExtras());
+            if (getActivity().getIntent().hasExtra(MessagesActivity.KEY_MESSAGE_ID)) {
+                Intent intent = new Intent(getActivity(), MessagesActivity.class);
+                intent.putExtra(MessagesActivity.KEY_MESSAGE_ID, getActivity().getIntent().getStringExtra(MessagesActivity.KEY_MESSAGE_ID));
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }else{
+                PatientNavigationHelper.navigateToWorkflow(getActivity(), workflowDTO, getActivity()
+                        .getIntent().getExtras());
+            }
         });
         viewModel.getSignInResultObservable().observe(this, response -> {
             if (response.equals(SignInViewModel.SHOW_CHOOSE_PROFILE_SCREEN)) {

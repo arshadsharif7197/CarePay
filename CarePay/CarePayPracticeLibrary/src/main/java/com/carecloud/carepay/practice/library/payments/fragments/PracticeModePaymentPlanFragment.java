@@ -389,12 +389,26 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
     }
 
     protected void showSelectAmountFragment(final BalanceItemDTO itemDTO, double total) {
+        hideDialog();
         SelectAmountFragment fragment = SelectAmountFragment
                 .newInstance(Math
                         .min(SystemUtil.safeSubtract(itemDTO.getBalance(), itemDTO.getAmountInPaymentPlan()),
                                 SystemUtil.safeSubtract(total,
                                         SystemUtil.safeSubtract(paymentPlanAmount, itemDTO.getAmountSelected()))));
-        String tag = fragment.getClass().getName();
+        fragment.setCallback(amount -> {
+            paymentPlanAmount = SystemUtil.safeSubtract(paymentPlanAmount, itemDTO.getAmountSelected());
+            itemDTO.setAmountSelected(amount);
+            itemDTO.setSelected(true);
+            paymentPlanAmount = SystemUtil.safeAdd(paymentPlanAmount, itemDTO.getAmountSelected());
+            paymentValueTextView.setText(currencyFormatter.format(paymentPlanAmount));
+            adapter.notifyDataSetChanged();
+            refreshNumberOfPayments(String.valueOf(installments));
+            enableCreatePlanButton();
+        });
+        fragment.setOnCancelListener(dialog -> showDialog());
+        callback.displayDialogFragment(fragment, true);
+
+        /*   String tag = fragment.getClass().getName();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         Fragment prev = getFragmentManager().findFragmentByTag(tag);
         if (prev != null) {
@@ -410,7 +424,7 @@ public class PracticeModePaymentPlanFragment extends PaymentPlanFragment
             refreshNumberOfPayments(String.valueOf(installments));
             enableCreatePlanButton();
         });
-        fragment.show(ft, tag);
+        fragment.show(ft, tag);*/
     }
 
     @Override

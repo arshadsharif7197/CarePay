@@ -1,5 +1,6 @@
 package com.carecloud.carepay.patient.messages.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -21,6 +22,7 @@ import com.carecloud.carepay.service.library.dtos.UserPracticeDTO;
 import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.profile.Profile;
 import com.carecloud.carepaylibray.profile.ProfileDto;
+import com.carecloud.carepaylibray.utils.StringUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,6 +35,8 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
 
     private MessagingModelDto messagingDto;
     private MessagesViewModel viewModel;
+    public static final String KEY_MESSAGE_ID = "messageId";
+    private String practiceName = "";
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -51,6 +55,15 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
         });
     }
 
+    private Messages.Reply getThread(String messageId) {
+        for (Messages.Reply message : messagingDto.getPayload().getMessages().getData()) {
+            if (message.getId().equals(messageId)) {
+                return message;
+            }
+        }
+        return null;
+    }
+
     private void callMessagingService() {
         MutableLiveData<MessagingModelDto> observable = viewModel.getMessagesDto(getTransitionMessaging(), true);
         observable.observe(this, dto -> {
@@ -64,6 +77,17 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
         List<ProviderContact> providerContacts = messagingDto.getPayload().getProviderContacts();
         Collections.sort(providerContacts, (o1, o2) -> o1.getName().compareTo(o2.getName()));
         replaceFragment(new MessagesListFragment(), false);
+
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra(MessagesActivity.KEY_MESSAGE_ID)) {
+            String messageId = intent.getStringExtra(KEY_MESSAGE_ID);
+            if (!StringUtil.isNullOrEmpty(messageId)) {
+                Messages.Reply thread = getThread(messageId);
+                if (thread != null) {
+                    displayThreadMessages(thread, practiceName, false);
+                }
+            }
+        }
     }
 
     @Override
@@ -89,6 +113,7 @@ public class MessagesActivity extends MenuPatientActivity implements MessageNavi
 
     @Override
     public void displayThreadMessages(Messages.Reply thread, String practiceName, boolean dismissAndRefresh) {
+        this.practiceName = practiceName;
         if (dismissAndRefresh) {
             getSupportFragmentManager().popBackStackImmediate();
             getSupportFragmentManager().popBackStackImmediate();

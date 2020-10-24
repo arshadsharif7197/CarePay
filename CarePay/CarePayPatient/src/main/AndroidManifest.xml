@@ -113,7 +113,9 @@
         <activity
             android:name=".notifications.activities.NotificationActivity"
             android:screenOrientation="sensorPortrait" />
-        <activity android:name=".notifications.activities.NotificationProxyActivity" />
+        <activity
+            android:name=".notifications.activities.NotificationProxyActivity"
+            android:launchMode="singleTask" />
         <activity
             android:name=".retail.activities.RetailActivity"
             android:screenOrientation="sensorPortrait" />

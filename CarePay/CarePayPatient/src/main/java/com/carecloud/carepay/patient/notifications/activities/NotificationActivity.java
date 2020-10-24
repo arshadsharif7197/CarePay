@@ -30,6 +30,7 @@ import com.carecloud.carepay.service.library.label.Label;
 import com.carecloud.carepaylibray.appointments.models.AppointmentDTO;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentPresenter;
 import com.carecloud.carepaylibray.appointments.presenter.AppointmentViewHandler;
+import com.carecloud.carepaylibray.appointments.presenter.AppointmentConnectivityHandler;
 import com.carecloud.carepaylibray.interfaces.DTO;
 import com.carecloud.carepaylibray.payments.models.PaymentsModel;
 import com.carecloud.carepaylibray.profile.Profile;
@@ -43,7 +44,7 @@ import java.util.Map;
  */
 
 public class NotificationActivity extends MenuPatientActivity
-        implements NotificationFragment.NotificationCallback, AppointmentViewHandler {
+        implements NotificationFragment.NotificationCallback, AppointmentViewHandler, AppointmentConnectivityHandler {
 
     private static final int SURVEY_FLOW = 100;
 
@@ -169,7 +170,7 @@ public class NotificationActivity extends MenuPatientActivity
                 }
                 break;
             case secure_message:
-                callMessagesScreen();
+                callMessagesScreen(notificationItem);
                 break;
             default:
                 //todo handle other notification types
@@ -177,8 +178,8 @@ public class NotificationActivity extends MenuPatientActivity
         }
     }
 
-    private void callMessagesScreen() {
-        displayMessagesScreen();
+    private void callMessagesScreen(NotificationItem notificationItem) {
+        displayMessagesScreen(notificationItem);
     }
 
     @Override
@@ -232,5 +233,10 @@ public class NotificationActivity extends MenuPatientActivity
     @Override
     protected Profile getCurrentProfile() {
         return viewModel.getDelegate();
+    }
+
+    @Override
+    public void onAppointmentScheduleFlowFailure() {
+        // N/A for this activity
     }
 }

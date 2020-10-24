@@ -118,6 +118,9 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
     private DemographicsOption selectedRelationshipOption = new DemographicsOption();
     private DemographicsOption selectedGenderOption = new DemographicsOption();
 
+    private EditText dobEditText;
+    private TextInputLayout dateBirthLayout;
+
     @Override
     public DTO getDto() {
         return demographicDTO;
@@ -626,11 +629,13 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
                                   InsuranceModelProperties insuranceModelProperties) {
         String dob = demographicInsurancePayload.getFormattedPolicyDateOfBirthHolder();
         final TextInputLayout dobTextInputLayout = view.findViewById(R.id.health_insurance_policy_birth_date_holder_layout);
-        EditText dobEditText = view.findViewById(R.id.health_insurance_policy_birth_date_holder);
+        dobEditText = view.findViewById(R.id.health_insurance_policy_birth_date_holder);
+        dateBirthLayout = view.findViewById(R.id.health_insurance_policy_birth_date_holder_layout);
         setUpDemographicField(view, dob, true, new ArrayList<DemographicsOption>(),
                 R.id.health_insurance_policy_birth_date_holder_layout, dobTextInputLayout, dobEditText,
                 R.id.healthInsuranceDateOfBirthRequired, null, null, null, false);
         dobEditText.addTextChangedListener(dateInputFormatter);
+
 
         String selectedGender = demographicInsurancePayload.getPolicyGenderHolder();
         TextInputLayout genderInputLayout = view.findViewById(R.id.healthInsuranceGenderInputLayout);
@@ -1057,9 +1062,27 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
         @Override
         public void afterTextChanged(Editable editable) {
             StringUtil.autoFormatDateOfBirth(editable, lastLength);
-            checkIfEnableButton();
+            updateDOBError();
         }
     };
+
+    private void updateDOBError() {
+        View view = getView();
+        ViewGroup container = view.findViewById(R.id.dateOfBirthContainer);
+        if (validateError(StringUtil.isNullOrEmpty(dobEditText.getText().toString().trim()), true, container,
+                dateBirthLayout)) {
+        }
+
+        if (!StringUtil.isNullOrEmpty(dobEditText.getText().toString().trim())) {
+            String dateValidationResult = DateUtil
+                    .getDateOfBirthValidationResultMessage(dobEditText.getText().toString().trim());
+            if (dateValidationResult != null) {
+                setFieldError(dateBirthLayout, dateValidationResult, true);
+            } else {
+                unsetFieldError(dateBirthLayout);
+            }
+        }
+    }
 
     /**
      * First time setup of individual field that uses ids for all UI components
@@ -1340,5 +1363,24 @@ public class InsuranceEditDialog extends BaseDialogFragment implements MediaView
             closeDialog();
         }
     };
+
+    protected void setFieldError(TextInputLayout inputLayout, String error, boolean shouldRequestFocus) {
+        if (inputLayout != null) {
+            if (!inputLayout.isErrorEnabled()) {
+                inputLayout.setErrorEnabled(true);
+                inputLayout.setError(error);
+            }
+            if (shouldRequestFocus) {
+                inputLayout.clearFocus();
+                inputLayout.requestFocus();
+            }
+        }
+
+    }
+
+    protected void unsetFieldError(TextInputLayout inputLayout) {
+        inputLayout.setError(null);
+        inputLayout.setErrorEnabled(false);
+    }
 
 }
