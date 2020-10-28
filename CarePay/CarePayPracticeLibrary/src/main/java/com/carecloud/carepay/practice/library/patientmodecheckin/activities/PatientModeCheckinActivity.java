@@ -18,6 +18,7 @@ import com.carecloud.carepay.practice.library.R;
 import com.carecloud.carepay.practice.library.appointments.dtos.PracticeAppointmentDTO;
 import com.carecloud.carepay.practice.library.base.BasePracticeActivity;
 import com.carecloud.carepay.practice.library.base.PracticeNavigationHelper;
+import com.carecloud.carepay.practice.library.dobverification.DoBVerificationActivity;
 import com.carecloud.carepay.practice.library.homescreen.CloverMainActivity;
 import com.carecloud.carepay.practice.library.patientmodecheckin.PatientModeDemographicsPresenter;
 import com.carecloud.carepay.practice.library.patientmodecheckin.fragments.ResponsibilityCheckInFragment;
@@ -105,6 +106,20 @@ public class PatientModeCheckinActivity extends BasePracticeActivity implements
         initializeHomeButton();
         initializeLeftNavigation();
         initializeLanguageSpinner();
+
+        startDOBVerification();
+    }
+
+    private void startDOBVerification() {
+        WorkFlowRecord workFlowRecord = new WorkFlowRecord(getConvertedDTO(WorkflowDTO.class));
+        workFlowRecord.setSessionKey(WorkflowSessionHandler.getCurrentSession(getContext()));
+
+        Intent intent = new Intent(getContext(), DoBVerificationActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putLong(WorkflowDTO.class.getName(), workFlowRecord.save(getContext()));
+        intent.putExtras(bundle);
+
+        startActivityForResult(intent, CarePayConstants.DOB_VERIFICATION_REQUEST);
     }
 
     private void initializeLanguageSpinner() {

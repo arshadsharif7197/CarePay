@@ -587,6 +587,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                 getPaymentAmount(paymentConfirmationWorkflow),
                 surveyDTO.getPayload().getSurvey() != null,
                 completedPaymentPlan);
+        finish();
     }
 
     @Override
@@ -943,7 +944,7 @@ public class PatientModeCheckoutActivity extends BasePracticeActivity implements
                             getPaymentAmount(paymentConfirmationWorkflow),
                             NavigationStateConstants.SURVEYS_CHECKOUT.equals(workflowDTO.getState()),
                             completedPaymentPlan);
-
+                    finish();
                 }
             }
 
